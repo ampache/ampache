@@ -3797,9 +3797,9 @@ abstract class Catalog extends database_object
     public static function update_catalog_map($media_type): void
     {
         if ($media_type == 'music') {
-            self::update_mapping('artist');
             self::update_mapping('album');
             self::update_mapping('album_disk');
+            self::update_mapping('artist');
         } elseif ($media_type == 'podcast') {
             self::update_mapping('podcast');
             self::update_mapping('podcast_episode');
@@ -4422,6 +4422,13 @@ abstract class Catalog extends database_object
             Label::migrate($object_type, $old_object_id, $new_object_id);
             if ($object_type === 'artist') {
                 self::getWantedRepository()->migrateArtist($old_object_id, $new_object_id);
+                Artist::update_artist_count($new_object_id);
+                Artist::update_artist_count($old_object_id);
+            }
+
+            if ($object_type === 'album') {
+                Album::update_album_count($new_object_id);
+                Album::update_album_count($old_object_id);
             }
 
             self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);
