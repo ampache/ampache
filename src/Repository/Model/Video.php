@@ -801,7 +801,7 @@ class Video extends database_object implements
         }
 
         /* If it hasn't been played, set it! */
-        Video::update_played(true, $this->id);
+        self::update_played(true, $this->id);
 
         return true;
     }
