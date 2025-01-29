@@ -1021,8 +1021,6 @@ class Song extends database_object implements
      */
     public static function compare_song_information(Song $song, Song $new_song): array
     {
-        // Remove some stuff we don't care about as this function only needs to check song information.
-        unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
         $string_array = [
             'comment',
             'composer',
@@ -1031,19 +1029,26 @@ class Song extends database_object implements
             'time',
             'title',
         ];
+        // Skip stuff we don't care about as this function only needs to check song information.
         $skip_array   = [
-            'album_mbid',
-            'albumartist_mbid',
+            'addition_time',
             'albumartist',
+            'albumartist_mbid',
+            'album_mbid',
             'artist_mbid',
+            'catalog',
             'disabledMetadataFields',
+            'enabled',
             'id',
             'mb_albumid_group',
             'mbid',
             'mime',
+            'played',
             'tag_id',
             'total_count',
             'total_skip',
+            'type',
+            'update_time',
             'waveform',
         ];
 
