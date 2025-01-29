@@ -25,7 +25,6 @@ Pre-translating files before loading media templates should speed those pages up
 ### Removed
 
 * Don't check file modification time on verify. Just use the database `last_update` value
-SFO0qmKx2haasH
 
 ### Fixed
 

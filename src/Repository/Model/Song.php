@@ -67,7 +67,7 @@ class Song extends database_object implements
 
     public ?string $file = null;
 
-    public int $catalog;
+    public int $catalog = 0;
 
     public int $album = 0;
 
