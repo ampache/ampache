@@ -8,6 +8,7 @@ Pre-translating files before loading media templates should speed those pages up
 
 ### Added
 
+* Translations 2025-01-28
 * Added option to show separate Artist column for playlist media
 * Pre-translate common strings on repeated tasks before loading media row templates
 * Clean empty albums after each verify chunk
@@ -17,6 +18,9 @@ Pre-translating files before loading media templates should speed those pages up
 ### Changed
 
 * Update NPM `vite` package
+* Update table counts for `album` and `artist` objects on update
+* Clean up empty albums during migration
+* Only collect garbage maps for the catalog media type used
 
 ### Removed
 
@@ -32,6 +36,7 @@ Pre-translating files before loading media templates should speed those pages up
 * Remove hidden tags from the `tag_map` table and do not delete them from the `tag` table
 * Update parent tag lists when change occured on verify
 * Don't put string tags in the int list for comparison
+* Speed up `catalog_map` delete queries for 'artist' type
 * webplayer
   * Not escaping bad characters correctly
 * CLI

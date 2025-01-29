@@ -4448,7 +4448,7 @@ abstract class Catalog extends database_object
 
             if ($object_type === 'album') {
                 Album::update_album_count($new_object_id);
-                Album::update_album_count($new_object_id);
+                Album::update_album_count($old_object_id);
                 self::clean_empty_albums(false);
                 self::update_mapping('album');
                 self::update_mapping('album_disk');
