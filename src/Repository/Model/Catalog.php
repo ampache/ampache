@@ -3432,6 +3432,12 @@ abstract class Catalog extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $sql = "DELETE FROM `album` WHERE `id` = ?";
             Dba::write($sql, [$row['id']]);
+            $sql = "DELETE FROM `album_map` WHERE `album_id` = ?";
+            Dba::write($sql, [$row['id']]);
+            $sql = "DELETE FROM `artist_map` WHERE `object_id` = ? AND `object_type` = 'album'";
+            Dba::write($sql, [$row['id']]);
+            $sql = "DELETE FROM `catalog_map` WHERE `object_id` = ? AND `object_type` = 'album'";
+            Dba::write($sql, [$row['id']]);
             debug_event(self::class, 'clean_empty_albums deleted ' . $row['id'], 5);
         }
 
@@ -3829,9 +3835,14 @@ abstract class Catalog extends database_object
             Dba::write($sql);
         }
 
-        // delete catalog_map artists
-        $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` INNER JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` INNER JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'song_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` INNER JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'album_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` INNER JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL GROUP BY `album`.`catalog`, `artist_map`.`object_type`, `artist_map`.`artist_id`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` AND `valid_maps`.`map_type` = `catalog_map`.`object_type` WHERE `catalog_map`.`object_type` IN ('artist', 'song_artist', 'album_artist') AND `valid_maps`.`object_id` IS NULL;";
+        // delete catalog_map artists (artist is a combined song_artist and album_artist so delete that using the table itself)
+        $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'album_artist' AND `object_id` NOT IN (SELECT `artist_map`.`artist_id` AS `object_id` FROM `album` INNER JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL);";
         Dba::write($sql);
+        $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'song_artist' AND `object_id` NOT IN (SELECT `artist_map`.`artist_id` AS `object_id` FROM `song` INNER JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL);";
+        Dba::write($sql);
+        $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'artist' AND `object_id` NOT IN (SELECT `object_id` FROM `catalog_map` WHERE `object_type` in ('song_artist', 'album_artist'));";
+        Dba::write($sql);
+
         // empty catalogs
         $sql = "DELETE FROM `catalog_map` WHERE `catalog_id` = 0";
         Dba::write($sql);
@@ -4409,9 +4420,6 @@ abstract class Catalog extends database_object
             debug_event(self::class, sprintf('migrate %d %s: {%d} to {%d}', $song_id, $object_type, $old_object_id, $new_object_id), 4);
 
             Stats::migrate($object_type, $old_object_id, $new_object_id, $song_id);
-            // migrating affects song count
-            Dba::write("UPDATE `$object_type` SET `song_count` = `song_count` - 1 WHERE `id` = ? AND `song_count` > 0", [$old_object_id]);
-            Dba::write("UPDATE `$object_type` SET `song_count` = `song_count` + 1 WHERE `id` = ?", [$new_object_id]);
             Useractivity::migrate($object_type, $old_object_id, $new_object_id);
             Recommendation::migrate($object_type, $old_object_id);
             self::getShareRepository()->migrate($object_type, $old_object_id, $new_object_id);
