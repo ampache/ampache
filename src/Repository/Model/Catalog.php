@@ -2956,16 +2956,16 @@ abstract class Catalog extends database_object
 
             // If you've migrated from an existing artist you need to migrate their data
             if (($song->artist > 0 && $new_song->artist) && $song->artist != $new_song->artist) {
-                self::migrate('artist', $song->artist, $new_song->artist, $song->id);
+                self::migrate('artist', $song->artist, $new_song->artist, $song->id, $song->catalog);
             }
 
             // albums changes also require album_disk changes
             if (($song->album > 0 && $new_song->album) && $song->album != $new_song->album) {
-                self::migrate('album', $song->album, $new_song->album, $song->id);
+                self::migrate('album', $song->album, $new_song->album, $song->id, $song->catalog);
                 $song->album = $new_song->album;
             }
             if (($song->album_disk > 0 && $new_song->album_disk) && $song->album_disk != $new_song->album_disk) {
-                self::migrate('album_disk', $song->album_disk, $new_song->album_disk, $song->id);
+                self::migrate('album_disk', $song->album_disk, $new_song->album_disk, $song->id, $song->catalog);
             }
 
             if ($song->tags != $new_song->tags) {
@@ -4439,8 +4439,9 @@ abstract class Catalog extends database_object
      * @param int $old_object_id
      * @param int $new_object_id
      * @param int $song_id
+     * @param int $catalog_id
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id, $song_id): bool
+    public static function migrate($object_type, $old_object_id, $new_object_id, $song_id, $catalog_id): bool
     {
         if ($old_object_id != $new_object_id) {
             debug_event(self::class, sprintf('migrate %d %s: {%d} to {%d}', $song_id, $object_type, $old_object_id, $new_object_id), 4);
@@ -4460,7 +4461,7 @@ abstract class Catalog extends database_object
                 self::getWantedRepository()->migrateArtist($old_object_id, $new_object_id);
                 Artist::update_artist_count($new_object_id);
                 Artist::update_artist_count($old_object_id);
-                self::update_mapping('artist');
+                self::update_map($catalog_id, 'artist', $new_object_id);
                 self::garbage_collect_mapping(['artist']);
             }
 
@@ -4468,8 +4469,8 @@ abstract class Catalog extends database_object
                 Album::update_album_count($new_object_id);
                 Album::update_album_count($old_object_id);
                 self::clean_empty_albums(false);
-                self::update_mapping('album');
-                self::update_mapping('album_disk');
+                self::update_map($catalog_id, 'album', $new_object_id);
+                self::update_map($catalog_id, 'album_disk', $new_object_id);
                 self::garbage_collect_mapping(['album', 'album_disk']);
             }
 
