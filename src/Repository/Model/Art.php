@@ -105,7 +105,7 @@ class Art extends database_object
             return;
         }
 
-        if (Art::is_valid_type($type)) {
+        if (self::is_valid_type($type)) {
             $this->type = $type;
             $this->uid  = (int)($uid);
             $this->kind = $kind;
@@ -1179,7 +1179,7 @@ class Art extends database_object
 
         if (
             !$new_object_id ||
-            Art::has_db($new_object_id, $write_type) ||
+            self::has_db($new_object_id, $write_type) ||
             $old_object_id == $new_object_id
         ) {
             return;
@@ -1411,7 +1411,7 @@ class Art extends database_object
         }
 
         // This to keep browser cache feature but force a refresh in case image just changed
-        if (Art::has_db($object_id, $object_type)) {
+        if (self::has_db($object_id, $object_type)) {
             $art = new Art($object_id, $object_type);
             if ($art->has_db_info()) {
                 $imgurl .= '&fooid=' . $art->id;

@@ -189,7 +189,7 @@ class Api4
             }
             if (empty($input[$parameter])) {
                 debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
-                Api4::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '401', $input['api_format']);
+                self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '401', $input['api_format']);
 
                 return false;
             }

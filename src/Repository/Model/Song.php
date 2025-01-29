@@ -2026,7 +2026,7 @@ class Song extends database_object implements
      */
     public static function get_fields(): array
     {
-        $fields = get_class_vars(Song::class);
+        $fields = get_class_vars(self::class);
 
         unset($fields['id'], $fields['_transcoded'], $fields['_fake'], $fields['cache_hit'], $fields['mime'], $fields['type']);
 
