@@ -3819,21 +3819,9 @@ abstract class Catalog extends database_object
     /**
      * Update the catalog mapping for various types
      */
-    public static function garbage_collect_mapping(array $table = []): void
+    public static function garbage_collect_mapping(array $tables): void
     {
         // delete non-existent maps
-        $tables = (!empty($table))
-            ? $table
-            : [
-                'album',
-                'artist',
-                'live_stream',
-                'podcast_episode',
-                'podcast',
-                'song',
-                'video',
-            ];
-
         foreach ($tables as $type) {
             switch ($type) {
                 case 'artist':
@@ -4264,9 +4252,19 @@ abstract class Catalog extends database_object
                         }
 
                         self::update_catalog_map($catalog_media_type);
+                        switch ($catalog_media_type) {
+                            case 'podcast':
+                                Catalog::garbage_collect_mapping(['podcast_episode', 'podcast']);
+                                break;
+                            case 'video':
+                                Catalog::garbage_collect_mapping(['video']);
+                                break;
+                            case 'music':
+                                Catalog::garbage_collect_mapping(['album', 'artist', 'song']);
+                                break;
+                        }
                     }
 
-                    self::garbage_collect_mapping();
                     self::garbage_collect_filters();
                     self::update_counts();
                 }
