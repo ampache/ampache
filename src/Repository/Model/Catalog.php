@@ -3819,29 +3819,38 @@ abstract class Catalog extends database_object
     /**
      * Update the catalog mapping for various types
      */
-    public static function garbage_collect_mapping(): void
+    public static function garbage_collect_mapping(array $table = []): void
     {
         // delete non-existent maps
-        $tables = [
-            'album',
-            'live_stream',
-            'podcast_episode',
-            'podcast',
-            'song',
-            'video',
-        ];
-        foreach ($tables as $type) {
-            $sql = sprintf('DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `%s`.`catalog` AS `catalog_id`, `%s`.`id` AS `object_id` FROM `%s`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` WHERE `catalog_map`.`object_type` = \'%s\' AND `valid_maps`.`object_id` IS NULL;', $type, $type, $type, $type);
-            Dba::write($sql);
-        }
+        $tables = (!empty($table))
+            ? $table
+            : [
+                'album',
+                'artist',
+                'live_stream',
+                'podcast_episode',
+                'podcast',
+                'song',
+                'video',
+            ];
 
-        // delete catalog_map artists (artist is a combined song_artist and album_artist so delete that using the table itself)
-        $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'album_artist' AND `object_id` NOT IN (SELECT `artist_map`.`artist_id` AS `object_id` FROM `album` INNER JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL);";
-        Dba::write($sql);
-        $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'song_artist' AND `object_id` NOT IN (SELECT `artist_map`.`artist_id` AS `object_id` FROM `song` INNER JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL);";
-        Dba::write($sql);
-        $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'artist' AND `object_id` NOT IN (SELECT `object_id` FROM `catalog_map` WHERE `object_type` in ('song_artist', 'album_artist'));";
-        Dba::write($sql);
+        foreach ($tables as $type) {
+            switch ($type) {
+                case 'artist':
+                    // delete catalog_map artists (artist is a combined song_artist and album_artist so delete that using the table itself)
+                    $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'album_artist' AND `object_id` NOT IN (SELECT `artist_map`.`artist_id` AS `object_id` FROM `album` INNER JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL);";
+                    Dba::write($sql);
+                    $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'song_artist' AND `object_id` NOT IN (SELECT `artist_map`.`artist_id` AS `object_id` FROM `song` INNER JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL);";
+                    Dba::write($sql);
+                    $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'artist' AND `object_id` NOT IN (SELECT `object_id` FROM `catalog_map` WHERE `object_type` in ('song_artist', 'album_artist'));";
+                    Dba::write($sql);
+                    break;
+                default:
+                    $sql = sprintf('DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `%s`.`catalog` AS `catalog_id`, `%s`.`id` AS `object_id` FROM `%s`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` WHERE `catalog_map`.`object_type` = \'%s\' AND `valid_maps`.`object_id` IS NULL;', $type, $type, $type, $type);
+                    Dba::write($sql);
+                    break;
+            }
+        }
 
         // empty catalogs
         $sql = "DELETE FROM `catalog_map` WHERE `catalog_id` = 0";
@@ -4434,12 +4443,17 @@ abstract class Catalog extends database_object
                 self::getWantedRepository()->migrateArtist($old_object_id, $new_object_id);
                 Artist::update_artist_count($new_object_id);
                 Artist::update_artist_count($old_object_id);
+                self::update_mapping('artist');
+                self::garbage_collect_mapping(['artist']);
             }
 
             if ($object_type === 'album') {
                 Album::update_album_count($new_object_id);
                 Album::update_album_count($new_object_id);
                 self::clean_empty_albums(false);
+                self::update_mapping('album');
+                self::update_mapping('album_disk');
+                self::garbage_collect_mapping(['album', 'album_disk']);
             }
 
             self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);

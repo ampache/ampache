@@ -81,17 +81,20 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
             switch ($catalog->gather_types) {
                 case 'podcast':
                     $type      = 'podcast_episode';
+                    $tables    = ['podcast_episode', 'podcast'];
                     $file_ids  = Catalog::get_ids_from_folder($folderPath, $type);
                     $className = Podcast_Episode::class;
                     break;
                 case 'video':
                     $type      = 'video';
+                    $tables    = ['video'];
                     $file_ids  = Catalog::get_ids_from_folder($folderPath, $type);
                     $className = Video::class;
                     break;
                 case 'music':
                 default:
                     $type      = 'song';
+                    $tables    = ['album', 'artist', 'song'];
                     $file_ids  = Catalog::get_ids_from_folder($folderPath, $type);
                     $className = Song::class;
                     break;
@@ -173,7 +176,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                 }
                 // clean up after the action
                 Catalog::update_catalog_map($catalog->gather_types);
-                Catalog::garbage_collect_mapping();
+                Catalog::garbage_collect_mapping($tables);
                 Catalog::garbage_collect_filters();
             }
         }
