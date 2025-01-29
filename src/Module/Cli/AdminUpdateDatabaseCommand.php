@@ -29,10 +29,7 @@ use Ahc\Cli\Input\Command;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\UpdateInfoEnum;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 
@@ -209,10 +206,6 @@ final class AdminUpdateDatabaseCommand extends Command
                     sprintf(T_('Database version: %s'), $this->retrieveVersion()),
                     true
                 );
-
-                Song::clear_cache();
-                Artist::clear_cache();
-                Album::clear_cache();
             } else {
                 $interactor->info(
                     T_('No update needed'),
