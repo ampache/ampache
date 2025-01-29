@@ -2747,7 +2747,9 @@ abstract class Catalog extends database_object
         $album_map_songArtist  = $albumRepository->getArtistMap($new_song_album, 'song');
         $album_map_albumArtist = $albumRepository->getArtistMap($new_song_album, 'album');
         // don't update counts unless something changes
-        $map_change = false;
+        $map_change    = false;
+        $artist_change = false;
+        $album_change  = false;
 
         // add song artists with a valid mbid to the list
         if (!empty($artist_mbid_array)) {
@@ -2826,7 +2828,8 @@ abstract class Catalog extends database_object
                     Stats::delete_map('song', $song->id, 'artist', $existing_map);
                 }
 
-                $map_change = true;
+                $map_change    = true;
+                $artist_change = true;
             }
         }
 
@@ -2849,7 +2852,8 @@ abstract class Catalog extends database_object
             if (!in_array($existing_map, $albumArtist_array)) {
                 Artist::remove_artist_map($existing_map, 'album', $song->album);
                 Album::check_album_map($song->album, 'album', $existing_map);
-                $map_change = true;
+                $map_change    = true;
+                $artist_change = true;
             }
         }
 
@@ -2863,7 +2867,8 @@ abstract class Catalog extends database_object
         foreach ($album_map_albumArtist as $existing_map) {
             if (!in_array($existing_map, $albumArtist_array)) {
                 Album::remove_album_map($song->album, 'album', $existing_map);
-                $map_change = true;
+                $map_change   = true;
+                $album_change = true;
             }
         }
 
@@ -2989,11 +2994,12 @@ abstract class Catalog extends database_object
             }
         }
 
-        if ($map_change) {
+        if ($artist_change) {
             debug_event(self::class, "delete bad artist_map rows", 5);
-            Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);");
-            Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` NOT IN (SELECT `album` FROM `song`);");
+            Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND (`artist_map`.`object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL) OR `artist_map`.`object_id` NOT IN (SELECT `album` FROM `song`));");
             Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `song`);");
+        }
+        if ($album_change) {
             debug_event(self::class, "delete bad album_map rows", 5);
             Dba::write("DELETE FROM `album_map` WHERE `album_map`.`object_type` = 'album' AND `album_map`.`album_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);");
             Dba::write("DELETE FROM `album_map` WHERE `album_map`.`object_id` NOT IN (SELECT `id` FROM `artist`);");
