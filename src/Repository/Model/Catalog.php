@@ -3425,7 +3425,7 @@ abstract class Catalog extends database_object
     /**
      * clean_empty_albums
      */
-    public static function clean_empty_albums(): void
+    public static function clean_empty_albums(bool $song_check = true): void
     {
         $sql        = "SELECT `id`, `album_artist` FROM `album` WHERE NOT EXISTS (SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`);";
         $db_results = Dba::read($sql);
@@ -3435,11 +3435,13 @@ abstract class Catalog extends database_object
             debug_event(self::class, 'clean_empty_albums deleted ' . $row['id'], 5);
         }
 
-        // these files have missing albums so you can't verify them without updating from tags first
-        $sql        = "SELECT `id` FROM `song` WHERE `album` in (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` FROM `album`));";
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            self::update_single_item('song', $row['id'], true);
+        if ($song_check) {
+            // these files have missing albums so you can't verify them without updating from tags first
+            $sql        = "SELECT `id` FROM `song` WHERE `album` in (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` FROM `album`));";
+            $db_results = Dba::read($sql);
+            while ($row = Dba::fetch_assoc($db_results)) {
+                self::update_single_item('song', $row['id'], true);
+            }
         }
     }
 
@@ -4137,7 +4139,7 @@ abstract class Catalog extends database_object
 
                             if ($changed > 0) {
                                 if ($catalog->gather_types === 'music') {
-                                    Catalog::clean_empty_albums();
+                                    self::clean_empty_albums();
                                     Album::update_album_artist();
                                     Album::update_table_counts();
                                     Artist::update_table_counts();
@@ -4428,7 +4430,8 @@ abstract class Catalog extends database_object
 
             if ($object_type === 'album') {
                 Album::update_album_count($new_object_id);
-                Album::update_album_count($old_object_id);
+                Album::update_album_count($new_object_id);
+                self::clean_empty_albums(false);
             }
 
             self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);
