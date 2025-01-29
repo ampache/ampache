@@ -3818,6 +3818,7 @@ abstract class Catalog extends database_object
 
     /**
      * Update the catalog mapping for various types
+     * @param string[] $tables
      */
     public static function garbage_collect_mapping(array $tables): void
     {
