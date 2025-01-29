@@ -1,5 +1,51 @@
 # CHANGELOG
 
+## Ampache 7.2.1
+
+This update has a lot of updates for verification and tag updates.
+
+Pre-translating files before loading media templates should speed those pages up a bit too.
+
+### Added
+
+* Translations 2025-01-28
+* Added option to show separate Artist column for playlist media
+* Pre-translate common strings on repeated tasks before loading media row templates
+* Clean empty albums after each verify chunk
+* Database 721001
+  * Add user preference to show/hide the Artist column on playlist media
+
+### Changed
+
+* Update NPM `vite` package
+* Update table counts for `album` and `artist` objects on update
+* Clean up empty albums during migration
+* Only collect garbage maps for the catalog media type used
+
+### Removed
+
+* Don't check file modification time on verify. Just use the database `last_update` value
+
+### Fixed
+
+* Rate every instance of star ratings for the object instead of the first one found
+* Don't show query error on duplicate stream session
+* RSS generation without `SCRIPT_URI`
+* Building Song cache didn't include `album_disk` column
+* Don't check tag case changes for genres
+* Remove hidden tags from the `tag_map` table and do not delete them from the `tag` table
+* Update parent tag lists when change occured on verify
+* Don't put string tags in the int list for comparison
+* Speed up `catalog_map` delete queries for 'artist' type
+* webplayer
+  * Not escaping bad characters correctly
+* CLI
+  * Hide invalid default command values. (e.g. Verbose and Version are not required)
+* Search
+  * Album and AlbumDisk parameter not included for `release_type`, `release_status`, `barcode` and `catalog_number` searches
+* SubSonic
+  * OpenSubsonic extention (`openSubsonicExtensions`) incorrect case
+
 ## Ampache 7.2.0
 
 ### Added

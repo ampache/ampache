@@ -306,8 +306,18 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             // clean up after the action
             foreach ($gather_types as $media_type) {
                 Catalog::update_catalog_map($media_type);
+                switch ($media_type) {
+                    case 'podcast':
+                        Catalog::garbage_collect_mapping(['podcast_episode', 'podcast']);
+                        break;
+                    case 'video':
+                        Catalog::garbage_collect_mapping(['video']);
+                        break;
+                    case 'music':
+                        Catalog::garbage_collect_mapping(['album', 'artist', 'song']);
+                        break;
+                }
             }
-            Catalog::garbage_collect_mapping();
             Catalog::garbage_collect_filters();
             $interactor->info(
                 '------------------',

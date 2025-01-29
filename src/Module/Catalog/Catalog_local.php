@@ -663,7 +663,7 @@ class Catalog_local extends Catalog
         $count   = $chunk * $chunk_size;
         $changed = 0;
 
-        $verify_by_time = ($tableName !== 'podcast_episode' && AmpConfig::get('catalog_verify_by_time', false));
+        $verify_by_time = (in_array($tableName, ['song', 'video']) && AmpConfig::get('catalog_verify_by_time', false));
         $sql            = match ($tableName) {
             'album' => "SELECT `song`.`album` AS `id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = " . ((int)$this->catalog_id) . ") GROUP BY `song`.`album` ORDER BY `min_update_time` DESC LIMIT $count, $chunk_size",
             'podcast_episode' => "SELECT `podcast_episode`.`id`, `podcast_episode`.`file` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = " . ((int)$this->catalog_id) . " AND `podcast_episode`.`file` IS NOT NULL ORDER BY `podcast_episode`.`podcast`, `podcast_episode`.`pubdate` DESC LIMIT $count, $chunk_size",
