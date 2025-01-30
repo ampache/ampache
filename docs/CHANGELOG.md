@@ -20,6 +20,7 @@ Pre-translating files before loading media templates should speed those pages up
 * Update NPM `vite` package
 * Update table counts for `album` and `artist` objects on update
 * Clean up empty albums during migration
+* Rework catalog_map insert and remove during file updates
 * Only collect garbage maps for the catalog media type used
 
 ### Removed
@@ -37,6 +38,7 @@ Pre-translating files before loading media templates should speed those pages up
 * Update parent tag lists when change occured on verify
 * Don't put string tags in the int list for comparison
 * Speed up `catalog_map` delete queries for 'artist' type
+* Don't unset object properties during tag chane comparison
 * webplayer
   * Not escaping bad characters correctly
 * CLI

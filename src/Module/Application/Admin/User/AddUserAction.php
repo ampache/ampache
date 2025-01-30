@@ -82,7 +82,7 @@ final class AddUserAction extends AbstractUserAction
         $body = (array)$request->getParsedBody();
 
         $this->ui->showHeader();
-
+        $user_id              = 0;
         $username             = scrub_in(htmlspecialchars($body['username'] ?? '', ENT_NOQUOTES));
         $fullname             = scrub_in(htmlspecialchars($body['fullname'] ?? '', ENT_NOQUOTES));
         $email                = scrub_in((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
@@ -126,7 +126,10 @@ final class AddUserAction extends AbstractUserAction
         }
 
         /* If we've got an error then show add form! */
-        if (AmpError::occurred()) {
+        if (
+            AmpError::occurred() ||
+            $user_id < 1
+        ) {
             require_once Ui::find_template('show_add_user.inc.php');
 
             $this->ui->showQueryStats();

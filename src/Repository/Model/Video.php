@@ -801,7 +801,7 @@ class Video extends database_object implements
         }
 
         /* If it hasn't been played, set it! */
-        Video::update_played(true, $this->id);
+        self::update_played(true, $this->id);
 
         return true;
     }
@@ -1169,18 +1169,24 @@ class Video extends database_object implements
      */
     public static function compare_video_information(Video $video, Video $new_video): array
     {
-        // Remove some stuff we don't care about
-        unset($video->catalog, $video->played, $video->enabled, $video->addition_time, $video->update_time, $video->type);
         $string_array = [
             'title',
             'tags',
         ];
-        $skip_array   = [
+
+        // Skip some stuff we don't care about
+        $skip_array = [
+            'addition_time',
+            'catalog',
             'disabledMetadataFields',
+            'enabled',
             'id',
             'mime',
+            'played',
             'tag_id',
             'total_count',
+            'type',
+            'update_time',
         ];
 
         return Song::compare_media_information($video, $new_video, $string_array, $skip_array);

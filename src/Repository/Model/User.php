@@ -170,8 +170,8 @@ class User extends database_object
      */
     private function has_info(int $user_id): array
     {
-        if (User::is_cached('user', $user_id)) {
-            return User::get_from_cache('user', $user_id);
+        if (self::is_cached('user', $user_id)) {
+            return self::get_from_cache('user', $user_id);
         }
 
         // If the ID is -1 then send back generic data
@@ -198,7 +198,7 @@ class User extends database_object
 
         $data = Dba::fetch_assoc($db_results);
 
-        User::add_to_cache('user', $user_id, $data);
+        self::add_to_cache('user', $user_id, $data);
 
         return $data;
     }

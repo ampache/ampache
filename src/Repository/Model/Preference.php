@@ -695,7 +695,7 @@ class Preference extends database_object
         debug_event(self::class, 'Inserted preference: ' . $name, 3);
 
         // clear current user preferences
-        Preference::clear_from_session();
+        self::clear_from_session();
 
         return true;
     }
@@ -707,7 +707,7 @@ class Preference extends database_object
      */
     public static function delete($preference): bool
     {
-        if (Preference::exists($preference) === 0) {
+        if (self::exists($preference) === 0) {
             return true;
         }
 

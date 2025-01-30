@@ -67,7 +67,7 @@ class Song extends database_object implements
 
     public ?string $file = null;
 
-    public int $catalog;
+    public int $catalog = 0;
 
     public int $album = 0;
 
@@ -1021,8 +1021,6 @@ class Song extends database_object implements
      */
     public static function compare_song_information(Song $song, Song $new_song): array
     {
-        // Remove some stuff we don't care about as this function only needs to check song information.
-        unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
         $string_array = [
             'comment',
             'composer',
@@ -1031,19 +1029,27 @@ class Song extends database_object implements
             'time',
             'title',
         ];
-        $skip_array   = [
-            'album_mbid',
-            'albumartist_mbid',
+
+        // Skip stuff we don't care about as this function only needs to check song information.
+        $skip_array = [
+            'addition_time',
             'albumartist',
+            'albumartist_mbid',
+            'album_mbid',
             'artist_mbid',
+            'catalog',
             'disabledMetadataFields',
+            'enabled',
             'id',
             'mb_albumid_group',
             'mbid',
             'mime',
+            'played',
             'tag_id',
             'total_count',
             'total_skip',
+            'type',
+            'update_time',
             'waveform',
         ];
 
@@ -2026,7 +2032,7 @@ class Song extends database_object implements
      */
     public static function get_fields(): array
     {
-        $fields = get_class_vars(Song::class);
+        $fields = get_class_vars(self::class);
 
         unset($fields['id'], $fields['_transcoded'], $fields['_fake'], $fields['cache_hit'], $fields['mime'], $fields['type']);
 

@@ -1562,7 +1562,7 @@ class Subsonic_Xml_Data
      */
     private static function _getVideoId($video_id): int
     {
-        return $video_id + Subsonic_Xml_Data::AMPACHEID_VIDEO;
+        return $video_id + self::AMPACHEID_VIDEO;
     }
 
     /**
@@ -1638,14 +1638,14 @@ class Subsonic_Xml_Data
      */
     public static function _getAmpacheObject($object_id)
     {
-        if (Subsonic_Xml_Data::_isSong($object_id)) {
-            return new Song(Subsonic_Xml_Data::_getAmpacheId($object_id));
+        if (self::_isSong($object_id)) {
+            return new Song(self::_getAmpacheId($object_id));
         }
-        if (Subsonic_Xml_Data::_isVideo($object_id)) {
-            return new Video(Subsonic_Xml_Data::_getAmpacheId($object_id));
+        if (self::_isVideo($object_id)) {
+            return new Video(self::_getAmpacheId($object_id));
         }
-        if (Subsonic_Xml_Data::_isPodcastEpisode($object_id)) {
-            return new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($object_id));
+        if (self::_isPodcastEpisode($object_id)) {
+            return new Podcast_Episode(self::_getAmpacheId($object_id));
         }
         debug_event(self::class, 'Couldn\'t identify Ampache object from ' . $object_id, 5);
 
