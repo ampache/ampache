@@ -59,19 +59,19 @@ class AmpError
     public static function add($name, $message, $clobber = 0): void
     {
         // Make sure its set first
-        if (!isset(AmpError::$errors[$name])) {
-            AmpError::$errors[$name]   = $message;
-            AmpError::$state           = true;
+        if (!isset(self::$errors[$name])) {
+            self::$errors[$name]       = $message;
+            self::$state               = true;
             $_SESSION['errors'][$name] = $message;
         } elseif ($clobber) {
             // They want us to clobber it
-            AmpError::$state           = true;
-            AmpError::$errors[$name]   = $message;
+            self::$state               = true;
+            self::$errors[$name]       = $message;
             $_SESSION['errors'][$name] = $message;
         } else {
             // They want us to append the error, add a BR\n and then the message
-            AmpError::$state = true;
-            AmpError::$errors[$name] .= "<br />\n" . $message;
+            self::$state = true;
+            self::$errors[$name] .= "<br />\n" . $message;
             $_SESSION['errors'][$name] .= "<br />\n" . $message;
         }
 
@@ -103,11 +103,11 @@ class AmpError
      */
     public static function get($name): string
     {
-        if (!isset(AmpError::$errors[$name])) {
+        if (!isset(self::$errors[$name])) {
             return '';
         }
 
-        return AmpError::$errors[$name];
+        return self::$errors[$name];
     }
 
     /**
@@ -119,7 +119,7 @@ class AmpError
     public static function display($name): string
     {
         // Be smart about this, if no error don't print
-        if (isset(AmpError::$errors[$name])) {
+        if (isset(self::$errors[$name])) {
             return self::getErrorsFormatted($name);
         }
 
@@ -128,8 +128,8 @@ class AmpError
 
     public static function getErrorsFormatted(string $name): string
     {
-        if (isset(AmpError::$errors[$name])) {
-            return '<p class="alert alert-danger">' . T_(AmpError::$errors[$name]) . '</p>';
+        if (isset(self::$errors[$name])) {
+            return '<p class="alert alert-danger">' . T_(self::$errors[$name]) . '</p>';
         }
 
         return '';

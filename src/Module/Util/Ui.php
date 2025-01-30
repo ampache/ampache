@@ -84,7 +84,7 @@ class Ui implements UiInterface
 
         $string = '<a class="nohtml" href="' . AmpConfig::get(
             'web_path'
-        ) . '/rss.php?type=' . $type->value . $rsstoken . $strparams . '" target="_blank">' . Ui::get_material_symbol(
+        ) . '/rss.php?type=' . $type->value . $rsstoken . $strparams . '" target="_blank">' . self::get_material_symbol(
             'rss_feed',
             T_('RSS Feed')
         );
@@ -1325,7 +1325,7 @@ class Ui implements UiInterface
                 $api_key     = rawurlencode(AmpConfig::get('lastfm_api_key'));
                 $callback    = rawurlencode(AmpConfig::get_web_path('/client') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
                 /* HINT: Plugin Name */
-                echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . Ui::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
+                echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . self::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
                 break;
             case 'bandwidth':
             case 'features':

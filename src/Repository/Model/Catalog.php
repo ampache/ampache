@@ -2747,7 +2747,9 @@ abstract class Catalog extends database_object
         $album_map_songArtist  = $albumRepository->getArtistMap($new_song_album, 'song');
         $album_map_albumArtist = $albumRepository->getArtistMap($new_song_album, 'album');
         // don't update counts unless something changes
-        $map_change = false;
+        $map_change    = false;
+        $artist_change = false;
+        $album_change  = false;
 
         // add song artists with a valid mbid to the list
         if (!empty($artist_mbid_array)) {
@@ -2826,7 +2828,8 @@ abstract class Catalog extends database_object
                     Stats::delete_map('song', $song->id, 'artist', $existing_map);
                 }
 
-                $map_change = true;
+                $map_change    = true;
+                $artist_change = true;
             }
         }
 
@@ -2849,7 +2852,8 @@ abstract class Catalog extends database_object
             if (!in_array($existing_map, $albumArtist_array)) {
                 Artist::remove_artist_map($existing_map, 'album', $song->album);
                 Album::check_album_map($song->album, 'album', $existing_map);
-                $map_change = true;
+                $map_change    = true;
+                $artist_change = true;
             }
         }
 
@@ -2863,7 +2867,8 @@ abstract class Catalog extends database_object
         foreach ($album_map_albumArtist as $existing_map) {
             if (!in_array($existing_map, $albumArtist_array)) {
                 Album::remove_album_map($song->album, 'album', $existing_map);
-                $map_change = true;
+                $map_change   = true;
+                $album_change = true;
             }
         }
 
@@ -2951,16 +2956,16 @@ abstract class Catalog extends database_object
 
             // If you've migrated from an existing artist you need to migrate their data
             if (($song->artist > 0 && $new_song->artist) && $song->artist != $new_song->artist) {
-                self::migrate('artist', $song->artist, $new_song->artist, $song->id);
+                self::migrate('artist', $song->artist, $new_song->artist, $song->id, $song->catalog);
             }
 
             // albums changes also require album_disk changes
             if (($song->album > 0 && $new_song->album) && $song->album != $new_song->album) {
-                self::migrate('album', $song->album, $new_song->album, $song->id);
+                self::migrate('album', $song->album, $new_song->album, $song->id, $song->catalog);
                 $song->album = $new_song->album;
             }
             if (($song->album_disk > 0 && $new_song->album_disk) && $song->album_disk != $new_song->album_disk) {
-                self::migrate('album_disk', $song->album_disk, $new_song->album_disk, $song->id);
+                self::migrate('album_disk', $song->album_disk, $new_song->album_disk, $song->id, $song->catalog);
             }
 
             if ($song->tags != $new_song->tags) {
@@ -2987,6 +2992,19 @@ abstract class Catalog extends database_object
                 $o_rating = new Rating($song->id, 'song');
                 $o_rating->set_rating((int)$rating, $user);
             }
+        }
+
+        if ($artist_change) {
+            debug_event(self::class, "delete bad artist_map rows", 5);
+            Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND (`artist_map`.`object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL) OR `artist_map`.`object_id` NOT IN (SELECT `album` FROM `song`));");
+            Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `song`);");
+        }
+        if ($album_change) {
+            debug_event(self::class, "delete bad album_map rows", 5);
+            Dba::write("DELETE FROM `album_map` WHERE `album_map`.`object_type` = 'album' AND `album_map`.`album_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);");
+            Dba::write("DELETE FROM `album_map` WHERE `album_map`.`object_id` NOT IN (SELECT `id` FROM `artist`);");
+            Dba::write("DELETE FROM `album_map` WHERE `album_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`);");
+            Dba::write("DELETE FROM `album_map` WHERE `album_map`.`album_id` IN (SELECT `album_id` FROM (SELECT DISTINCT `album_map`.`album_id` FROM `album_map` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = `album_map`.`object_type` AND `artist_map`.`artist_id` = `album_map`.`object_id` AND `artist_map`.`object_id` = `album_map`.`album_id` WHERE `artist_map`.`artist_id` IS NULL AND `album_map`.`object_type` = 'album') AS `null_album`);");
         }
 
         $info['maps'] = $map_change;
@@ -4421,8 +4439,9 @@ abstract class Catalog extends database_object
      * @param int $old_object_id
      * @param int $new_object_id
      * @param int $song_id
+     * @param int $catalog_id
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id, $song_id): bool
+    public static function migrate($object_type, $old_object_id, $new_object_id, $song_id, $catalog_id): bool
     {
         if ($old_object_id != $new_object_id) {
             debug_event(self::class, sprintf('migrate %d %s: {%d} to {%d}', $song_id, $object_type, $old_object_id, $new_object_id), 4);
@@ -4442,7 +4461,7 @@ abstract class Catalog extends database_object
                 self::getWantedRepository()->migrateArtist($old_object_id, $new_object_id);
                 Artist::update_artist_count($new_object_id);
                 Artist::update_artist_count($old_object_id);
-                self::update_mapping('artist');
+                self::update_map($catalog_id, 'artist', $new_object_id);
                 self::garbage_collect_mapping(['artist']);
             }
 
@@ -4450,8 +4469,8 @@ abstract class Catalog extends database_object
                 Album::update_album_count($new_object_id);
                 Album::update_album_count($old_object_id);
                 self::clean_empty_albums(false);
-                self::update_mapping('album');
-                self::update_mapping('album_disk');
+                self::update_map($catalog_id, 'album', $new_object_id);
+                self::update_map($catalog_id, 'album_disk', $new_object_id);
                 self::garbage_collect_mapping(['album', 'album_disk']);
             }
 

@@ -117,7 +117,7 @@ class Tmp_Playlist extends database_object
         $row        = Dba::fetch_row($db_results);
 
         if ($row === []) {
-            $row[0] = Tmp_Playlist::create(['session_id' => $session_id, 'type' => 'user', 'object_type' => 'song']);
+            $row[0] = self::create(['session_id' => $session_id, 'type' => 'user', 'object_type' => 'song']);
         }
 
         return new Tmp_Playlist((int)$row[0]);
