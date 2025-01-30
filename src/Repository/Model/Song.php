@@ -1029,8 +1029,9 @@ class Song extends database_object implements
             'time',
             'title',
         ];
+
         // Skip stuff we don't care about as this function only needs to check song information.
-        $skip_array   = [
+        $skip_array = [
             'addition_time',
             'albumartist',
             'albumartist_mbid',
