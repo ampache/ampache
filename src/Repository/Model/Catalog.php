@@ -3845,11 +3845,11 @@ abstract class Catalog extends database_object
             switch ($type) {
                 case 'artist':
                     // delete catalog_map artists (artist is a combined song_artist and album_artist so delete that using the table itself)
-                    $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'album_artist' AND `object_id` NOT IN (SELECT `artist_map`.`artist_id` AS `object_id` FROM `album` INNER JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL);";
+                    $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'album_artist' AND `object_id` NOT IN (SELECT `object_id` FROM (SELECT `artist_map`.`artist_id` AS `object_id` FROM `album` INNER JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL) AS orphanalbumartist);";
                     Dba::write($sql);
-                    $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'song_artist' AND `object_id` NOT IN (SELECT `artist_map`.`artist_id` AS `object_id` FROM `song` INNER JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL);";
+                    $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'song_artist' AND `object_id` NOT IN (SELECT `object_id` FROM (SELECT `artist_map`.`artist_id` AS `object_id` FROM `song` INNER JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL) AS orphansongartist);";
                     Dba::write($sql);
-                    $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'artist' AND `object_id` NOT IN (SELECT `object_id` FROM `catalog_map` WHERE `object_type` in ('song_artist', 'album_artist'));";
+                    $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'artist' AND `object_id` NOT IN (SELECT `object_id` FROM (SELECT `object_id` FROM `catalog_map` WHERE `object_type` IN ('song_artist', 'album_artist')) AS orphanartist);";
                     Dba::write($sql);
                     break;
                 default:
