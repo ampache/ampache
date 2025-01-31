@@ -24,7 +24,6 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
 global $dic;
@@ -62,7 +61,7 @@ $albumString     = (AmpConfig::get('album_group'))
         <a class="category <?php echo ($filter_str == 'podcast') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=podcast"><?php echo T_('Podcasts'); ?></a>
         <a class="category <?php echo ($filter_str == 'podcast_episode') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=podcast_episode"><?php echo T_('Podcast Episodes'); ?></a>
     <?php }
-    if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
+    if (AmpConfig::get('allow_video') && $videoRepository->getItemCount()) { ?>
         <a class="category <?php echo ($filter_str == 'video') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo T_('Videos'); ?></a>
     <?php } ?>
 </div>

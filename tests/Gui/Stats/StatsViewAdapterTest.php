@@ -62,7 +62,6 @@ class StatsViewAdapterTest extends MockeryTestCase
     public function testDisplayVideoReturnsTrueIfItemsExist(): void
     {
         $this->videoRepository->shouldReceive('getItemCount')
-            ->with(Video::class)
             ->once()
             ->andReturn(42);
 

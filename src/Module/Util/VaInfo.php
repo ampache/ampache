@@ -1277,7 +1277,7 @@ final class VaInfo implements VaInfoInterface
             }
 
             // look for set ratings using email address
-            foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) as $user_rating) {
+            foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) ?: [] as $user_rating) {
                 $rating_user = $this->userRepository->findByEmail(ltrim($user_rating, "rating:"));
                 if ($rating_user instanceof User) {
                     $parsed['rating'][$rating_user->id] = floor(((int)$parsed[$user_rating]) * 5 / 100);
@@ -1459,7 +1459,7 @@ final class VaInfo implements VaInfoInterface
                         $parsed['mb_albumid_group'] = self::parse_mbid($id3v2['comments']['text'][$txxx['description']]);
                         break;
                     case 'musicbrainz album type':
-                        $parsed['release_type'] = (is_array($id3v2['comments']['text'][$txxx['description']])) ? implode(", ", $id3v2['comments']['text'][$txxx['description']]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]), ['']));
+                        $parsed['release_type'] = (is_array($id3v2['comments']['text'][$txxx['description']])) ? implode(", ", $id3v2['comments']['text'][$txxx['description']]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]) ?: [], ['']));
                         break;
                     case 'musicbrainz album status':
                         $parsed['release_status'] = $id3v2['comments']['text'][$txxx['description']];

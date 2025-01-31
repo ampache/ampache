@@ -122,14 +122,15 @@ class WebPlayer
     /**
      * Check if the playlist is a video playlist.
      * @param array $urlinfo
-     * @return Media|null
      */
-    public static function get_media_object($urlinfo)
+    public static function get_media_object($urlinfo): ?Media
     {
         if (array_key_exists('id', $urlinfo) && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
             $className = ObjectTypeToClassNameMapper::map($urlinfo['type']);
+            /** @var Media $media */
+            $media = new $className($urlinfo['id']);
 
-            return new $className($urlinfo['id']);
+            return $media;
         }
         if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
             return new Song_Preview($urlinfo['id']);
