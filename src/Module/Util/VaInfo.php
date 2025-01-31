@@ -1277,7 +1277,7 @@ final class VaInfo implements VaInfoInterface
             }
 
             // look for set ratings using email address
-            foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) as $user_rating) {
+            foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) ?: [] as $user_rating) {
                 $rating_user = $this->userRepository->findByEmail(ltrim($user_rating, "rating:"));
                 if ($rating_user instanceof User) {
                     $parsed['rating'][$rating_user->id] = floor(((int)$parsed[$user_rating]) * 5 / 100);
@@ -1459,7 +1459,7 @@ final class VaInfo implements VaInfoInterface
                         $parsed['mb_albumid_group'] = self::parse_mbid($id3v2['comments']['text'][$txxx['description']]);
                         break;
                     case 'musicbrainz album type':
-                        $parsed['release_type'] = (is_array($id3v2['comments']['text'][$txxx['description']])) ? implode(", ", $id3v2['comments']['text'][$txxx['description']]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]), ['']));
+                        $parsed['release_type'] = (is_array($id3v2['comments']['text'][$txxx['description']])) ? implode(", ", $id3v2['comments']['text'][$txxx['description']]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]) ?: [], ['']));
                         break;
                     case 'musicbrainz album status':
                         $parsed['release_status'] = $id3v2['comments']['text'][$txxx['description']];
@@ -1915,18 +1915,17 @@ final class VaInfo implements VaInfoInterface
     /**
      * parseGenres
      * @param array|string $data
-     * @return array
+     * @return string[]
      * @throws Exception
      */
-    private function parseGenres($data)
+    private function parseGenres($data): array
     {
         //debug_event(self::class, "parseGenres: " . print_r($data, true), 5);
-        $result = null;
+        $result = [];
         if (is_array($data)) {
-            $result = [];
             foreach ($data as $row) {
                 if (!empty($row)) {
-                    foreach (self::splitSlashedlist(str_replace("\x00", ';', str_replace('Folk, World, & Country', 'Folk World & Country', $row)), false) as $genre) {
+                    foreach (self::splitSlashedlist(str_replace("\x00", ';', str_replace('Folk, World, & Country', 'Folk World & Country', $row))) as $genre) {
                         $result[] = $genre;
                     }
                 }
@@ -1934,7 +1933,7 @@ final class VaInfo implements VaInfoInterface
         }
         if (is_string($data) && !empty($data)) {
             $filter_str = (string)str_replace("\x00", ';', str_replace('Folk, World, & Country', 'Folk World & Country', $data));
-            $result     = self::splitSlashedlist($filter_str, false);
+            $result     = self::splitSlashedlist($filter_str);
         }
 
         return $result;
@@ -1971,11 +1970,10 @@ final class VaInfo implements VaInfoInterface
      * Return first item as string = default
      * Return all items as array if doTrim = false passed as optional parameter
      * @param string $data
-     * @param bool $doTrim
-     * @return string|array
+     * @return string[]
      * @throws Exception
      */
-    public function splitSlashedlist($data, $doTrim = true)
+    public function splitSlashedlist($data): array
     {
         //debug_event(self::class, "splitSlashedlist: " . print_r($data, true), 5);
         $delimiters = $this->configContainer->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
@@ -1988,11 +1986,10 @@ final class VaInfo implements VaInfoInterface
             }
             $data = $items;
         }
-        if (isset($data[0]) && $doTrim) {
-            return $data[0];
-        }
 
-        return $data;
+        return is_array($data)
+            ? $data
+            : [$data];
     }
 
     /**

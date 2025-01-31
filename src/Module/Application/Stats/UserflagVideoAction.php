@@ -29,7 +29,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -64,7 +63,7 @@ final readonly class UserflagVideoAction implements ApplicationActionInterface
 
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
-            $this->videoRepository->getItemCount(Video::class)
+            $this->videoRepository->getItemCount()
         ) {
             $objects = Userflag::get_latest('video', $gatekeeper->getUser(), -1);
             $browse  = $this->modelFactory->createBrowse();

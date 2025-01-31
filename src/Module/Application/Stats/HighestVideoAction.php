@@ -31,7 +31,6 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -83,7 +82,7 @@ final class HighestVideoAction implements ApplicationActionInterface
 
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
-            $this->videoRepository->getItemCount(Video::class)
+            $this->videoRepository->getItemCount()
         ) {
             $objects = Rating::get_highest('video', $limit, 0, $user_id);
             $browse  = $this->modelFactory->createBrowse();

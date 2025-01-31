@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util\Captcha;
 
+use GdImage;
+
 /**
  * Class easy_captcha_graphic_image_disturbed
  *
@@ -32,6 +34,11 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
 {
+    /**
+     * @var GdImage
+     */
+    private $img;
+
     /**
      * returns jpeg file stream with unscannable letters encoded
      * in front of colorful disturbing background

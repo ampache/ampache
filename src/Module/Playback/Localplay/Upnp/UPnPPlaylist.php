@@ -52,7 +52,7 @@ class UPnPPlaylist
      * @param string $name
      * @param $link
      */
-    public function Add($name, $link)
+    public function Add($name, $link): void
     {
         $this->_songs[] = ['name' => $name, 'link' => $link];
         $this->PlayListSave();
@@ -61,7 +61,7 @@ class UPnPPlaylist
     /**
      * @param $track
      */
-    public function RemoveTrack($track)
+    public function RemoveTrack($track): void
     {
         unset($this->_songs[$track - 1]);
         $this->PlayListSave();
@@ -158,7 +158,7 @@ class UPnPPlaylist
         return false;
     }
 
-    private function PlayListRead()
+    private function PlayListRead(): void
     {
         $sid      = 'upnp_pls_' . $this->_deviceGUID;
         $pls_data = json_decode(Session::read($sid), true);
@@ -167,7 +167,7 @@ class UPnPPlaylist
         $this->_current = $pls_data['upnp_current'];
     }
 
-    private function PlayListSave()
+    private function PlayListSave(): void
     {
         $sid      = 'upnp_pls_' . $this->_deviceGUID;
         $pls_data = json_encode(

@@ -32,7 +32,6 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -63,7 +62,7 @@ final readonly class NewestVideoAction implements ApplicationActionInterface
 
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
-            $this->videoRepository->getItemCount(Video::class)
+            $this->videoRepository->getItemCount()
         ) {
             $objects = Stats::get_newest('video', -1, 0, 0, $gatekeeper->getUser());
             $browse  = $this->modelFactory->createBrowse();

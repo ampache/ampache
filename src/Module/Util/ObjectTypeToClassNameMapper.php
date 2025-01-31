@@ -82,11 +82,6 @@ final class ObjectTypeToClassNameMapper
         ObjectTypeEnum::WANTED->value => Wanted::class,
     ];
 
-    /** @var array<class-string, ObjectTypeEnum> */
-    public const VIDEO_TYPES = [
-        Video::class => ObjectTypeEnum::VIDEO,
-    ];
-
     /**
      * @return class-string<database_object>|string
      */
