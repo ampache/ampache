@@ -209,7 +209,7 @@ final class VaInfo implements VaInfoInterface
 
                 $this->_broken = true;
 
-                return false;
+                return;
             }
             //$logger->error('RAW TAGS: ' . print_r($this->_raw, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
@@ -254,8 +254,6 @@ final class VaInfo implements VaInfoInterface
         $this->userRepository  = $userRepository;
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
-
-        return true;
     }
 
     /**
@@ -1105,12 +1103,12 @@ final class VaInfo implements VaInfoInterface
                 case 'musicbrainz_albumtype':
                     $parsed['release_type'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]) ?: [], ['']));
                     break;
                 case 'musicbrainz_albumstatus':
                     $parsed['release_status'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]) ?: [], ['']));
                     break;
                 case 'originalyear':
                 case 'originalreleaseyear':
@@ -1225,13 +1223,13 @@ final class VaInfo implements VaInfoInterface
                 case 'musicbrainz_albumtype':
                     $parsed['release_type'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]) ?: [], ['']));
                     break;
                 case 'releasestatus':
                 case 'musicbrainz_albumstatus':
                     $parsed['release_status'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]) ?: [], ['']));
                     break;
                 case 'unsyncedlyrics':
                 case 'unsynced lyrics':
@@ -1613,12 +1611,12 @@ final class VaInfo implements VaInfoInterface
                 case 'musicbrainz album type':
                     $parsed['release_type'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]) ?: [], ['']));
                     break;
                 case 'musicbrainz album status':
                     $parsed['release_status'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]) ?: [], ['']));
                     break;
                 case 'track_number':
                     //$parsed['track'] = $data[0];
@@ -1720,12 +1718,12 @@ final class VaInfo implements VaInfoInterface
                 case 'musicbrainz_albumtype':
                     $parsed['release_type'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]) ?: [], ['']));
                     break;
                 case 'musicbrainz_albumstatus':
                     $parsed['release_status'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]) ?: [], ['']));
                     break;
                 case 'releasecomment':
                 case 'version':

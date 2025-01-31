@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 /**
  * UserPlaylist Class
@@ -181,9 +180,8 @@ class User_Playlist extends database_object
     /**
      * add_items
      * Add an array of songs to the playlist
-     * @return PDOStatement|false
      */
-    public function add_items(array $data, int $time)
+    public function add_items(array $data, int $time): void
     {
         $sql    = 'INSERT INTO `user_playlist` (`playqueue_time`, `playqueue_client`, `user`, `object_type`, `object_id`, `track`) VALUES ';
         $values = [];
@@ -201,8 +199,7 @@ class User_Playlist extends database_object
 
         // remove last comma
         $sql = substr($sql, 0, -1) . ';';
-
-        return Dba::write($sql, $values);
+        Dba::write($sql, $values);
     }
 
     /**

@@ -6001,11 +6001,6 @@ parameters:
 			path: src/Module/Playback/Stream_Url.php
 
 		-
-			message: "#^Variable \\$elements in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Url.php
-
-		-
 			message: "#^Class Ampache\\\\Module\\\\Playback\\\\Stream_Url referenced with incorrect case\\: Ampache\\\\Module\\\\Playback\\\\Stream_URL\\.$#"
 			count: 2
 			path: src/Module/Playback/WebPlayer.php
@@ -6457,11 +6452,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Session\\:\\:write\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/Session.php
-
-		-
-			message: "#^Parameter \\#6 \\$gc of function session_set_save_handler expects callable\\(string\\)\\: bool, Closure\\(\\)\\: void given\\.$#"
 			count: 1
 			path: src/Module/System/Session.php
 
@@ -8251,16 +8241,6 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_asf\\(\\) has parameter \\$tags with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -8482,7 +8462,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$array of function array_diff expects array, array\\<int, string\\>\\|false given\\.$#"
-			count: 9
+			count: 1
 			path: src/Module/Util/VaInfo.php
 
 		-
@@ -10006,12 +9986,7 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_deleted\\(\\) should return array\\<int\\> but returns array\\<int\\<0, max\\>, array\\>\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_deleted\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -10433,11 +10408,6 @@ parameters:
 		-
 			message: "#^PHPDoc tag @var for variable \\$release has no value type specified in iterable type array\\.$#"
 			count: 2
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:\\$songs type has no value type specified in iterable type array\\.$#"
-			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-
