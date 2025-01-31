@@ -546,9 +546,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param int $object_id
      * @param int $tag_id
      * @param int $user
-     * @return bool|int
      */
-    public static function tag_map_exists($type, $object_id, $tag_id, $user)
+    public static function tag_map_exists($type, $object_id, $tag_id, $user): bool
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             debug_event(self::class, 'Requested type is not a library item.', 3);
@@ -561,7 +560,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $results    = Dba::fetch_assoc($db_results);
 
         if (array_key_exists('id', $results)) {
-            return (int)$results['id'];
+            return true;
         }
 
         return false;
@@ -599,12 +598,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * Display all tags that apply to matching target type of the specified id
      * @param string $type
      * @param int $object_id
-     * @return array|bool
      */
-    public static function get_object_tags($type, $object_id = null)
+    public static function get_object_tags($type, $object_id = null): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return false;
+            return [];
         }
 
         $params = [$type];

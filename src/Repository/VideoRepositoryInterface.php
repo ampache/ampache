@@ -38,5 +38,5 @@ interface VideoRepositoryInterface
     /**
      * Return the number of entries in the database...
      */
-    public function getItemCount(string $type): int;
+    public function getItemCount(): int;
 }

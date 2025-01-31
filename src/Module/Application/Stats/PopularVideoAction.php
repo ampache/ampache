@@ -28,7 +28,6 @@ namespace Ampache\Module\Application\Stats;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Stats;
@@ -64,7 +63,7 @@ final readonly class PopularVideoAction implements ApplicationActionInterface
 
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
-            $this->videoRepository->getItemCount(Video::class)
+            $this->videoRepository->getItemCount()
         ) {
             $objects = Stats::get_top('video', -1, $thresh_value, 0, $gatekeeper->getUser());
             $browse  = $this->modelFactory->createBrowse();

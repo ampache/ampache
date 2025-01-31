@@ -5,7 +5,6 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Tag;
-use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
 global $dic;
@@ -27,7 +26,7 @@ $albumString     = (AmpConfig::get('album_group'))
     <a class="category <?php echo ($filter_str == 'artist' || $filter_str == 'album_artist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist">
         <?php echo T_('Artists'); ?>
     </a>
-    <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
+    <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount()) { ?>
         <a class="category <?php echo ($filter_str == 'video') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=video">
             <?php echo T_('Videos'); ?>
         </a>

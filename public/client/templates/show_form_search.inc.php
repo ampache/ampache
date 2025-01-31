@@ -28,7 +28,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Search;
-use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\VideoRepositoryInterface;
@@ -87,7 +86,7 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
         <a class="category <?php echo ($currentType == 'podcast') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/search.php?type=podcast"><?php echo T_('Podcasts'); ?></a>
         <a class="category <?php echo ($currentType == 'podcast_episode') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/search.php?type=podcast_episode"><?php echo T_('Podcast Episodes'); ?></a>
     <?php } ?>
-    <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
+    <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount()) { ?>
         <a class="category <?php echo ($currentType == 'video') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/search.php?type=video"><?php echo T_('Videos'); ?></a>
     <?php } ?>
 </div>

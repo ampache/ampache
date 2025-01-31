@@ -33,7 +33,6 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -193,17 +192,6 @@ class Video extends database_object implements
      */
     public static function create_from_id($video_id): Video
     {
-        foreach (ObjectTypeToClassNameMapper::VIDEO_TYPES as $dtype) {
-            $sql        = "SELECT `id` FROM `" . strtolower($dtype->value) . "` WHERE `id` = ?";
-            $db_results = Dba::read($sql, [$video_id]);
-            $results    = Dba::fetch_assoc($db_results);
-            if (array_key_exists('id', $results)) {
-                $className = ObjectTypeToClassNameMapper::map(strtolower($dtype->value));
-
-                return new $className($video_id);
-            }
-        }
-
         return new Video($video_id);
     }
 
@@ -501,7 +489,7 @@ class Video extends database_object implements
      * @param string $additional_params
      * @param string $player
      * @param bool $local
-     * @param int|string $uid
+     * @param int|string|false $uid
      * @param null|string $streamToken
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
@@ -826,7 +814,7 @@ class Video extends database_object implements
         $pinfo     = pathinfo($this->file);
         $filter    = ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $pinfo['filename'] . '*.srt';
 
-        foreach (glob($filter) as $srt) {
+        foreach (glob($filter) ?: [] as $srt) {
             $psrt      = explode('.', $srt);
             $lang_code = '__';
             $lang_name = T_('Unknown');

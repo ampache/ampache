@@ -164,15 +164,14 @@ class Waveform
      * Return full path of the Waveform file.
      * @param int $object_id
      * @param string $object_type
-     * @return string|false
      */
-    public static function get_filepath($object_id, $object_type)
+    public static function get_filepath($object_id, $object_type): ?string
     {
         $path = AmpConfig::get('local_metadata_dir');
         if (!$path) {
             debug_event(self::class, 'local_metadata_dir setting is required to store waveform on disk.', 1);
 
-            return false;
+            return null;
         }
         // Create subdirectory based on the 2 last digit of the Song Id. We prevent having thousands of file in one directory.
         $dir1 = substr((string)$object_id, -1, 1);
@@ -199,7 +198,7 @@ class Waveform
     public static function get_from_file($object_id, $object_type): ?string
     {
         $file = self::get_filepath($object_id, $object_type);
-        if ($file !== false && file_exists($file)) {
+        if (!empty($file) && file_exists($file)) {
             debug_event(self::class, 'get_from_file ' . $file, 5);
             $waveform = file_get_contents($file);
 
@@ -216,16 +215,13 @@ class Waveform
      * @param int $object_id
      * @param string $object_type
      * @param string $waveform
-     * @return int|bool
      */
-    public static function save_to_file($object_id, $object_type, $waveform)
+    public static function save_to_file($object_id, $object_type, $waveform): void
     {
         $file = self::get_filepath($object_id, $object_type);
-        if (!$file) {
-            return false;
+        if (!empty($file)) {
+            file_put_contents($file, $waveform);
         }
-
-        return file_put_contents($file, $waveform);
     }
 
     /**

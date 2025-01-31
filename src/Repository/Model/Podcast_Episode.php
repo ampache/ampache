@@ -589,7 +589,7 @@ class Podcast_Episode extends database_object implements
      * @param string $additional_params
      * @param string $player
      * @param bool $local
-     * @param int|string $uid
+     * @param int|string|false $uid
      * @param null|string $streamToken
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string

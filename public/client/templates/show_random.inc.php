@@ -29,7 +29,6 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Random;
-use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
 /** @var VideoRepositoryInterface $videoRepository */
@@ -63,7 +62,7 @@ Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
     <a class="category <?php echo ($currentType == 'artist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=artist">
         <?php echo T_('Artists'); ?>
     </a>
-    <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
+    <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount()) { ?>
         <a class="category <?php echo ($currentType == 'video') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=video">
             <?php echo T_('Videos'); ?>
         </a>

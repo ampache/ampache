@@ -508,9 +508,9 @@ class Subsonic_Xml_Data
             if ($song->year > 0) {
                 $xsong->addAttribute('year', (string)$song->year);
             }
-            $tags = Tag::get_object_tags('song', (int)$song->id);
-            if (is_array($tags) && count($tags) > 0) {
-                $xsong->addAttribute('genre', (string)$tags[0]['name']);
+            $tags = Tag::get_object_tags('song', $song->id);
+            if (!empty($tags)) {
+                $xsong->addAttribute('genre', (string)($tags[0]['name'] ?? ''));
             }
             $xsong->addAttribute('size', (string)$song->size);
             $disk = $song->disk;
@@ -687,7 +687,7 @@ class Subsonic_Xml_Data
             $xvideo->addAttribute('year', (string)$video->year);
         }
         $tags = Tag::get_object_tags('video', (int)$video->id);
-        if (is_array($tags) && count($tags) > 0) {
+        if (!empty($tags)) {
             $xvideo->addAttribute('genre', (string)$tags[0]['name']);
         }
         $xvideo->addAttribute('size', (string)$video->size);

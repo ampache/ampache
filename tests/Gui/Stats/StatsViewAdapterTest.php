@@ -29,7 +29,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 use Mockery\MockInterface;
 
@@ -62,7 +61,6 @@ class StatsViewAdapterTest extends MockeryTestCase
     public function testDisplayVideoReturnsTrueIfItemsExist(): void
     {
         $this->videoRepository->shouldReceive('getItemCount')
-            ->with(Video::class)
             ->once()
             ->andReturn(42);
 
