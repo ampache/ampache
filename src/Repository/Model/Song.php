@@ -51,7 +51,6 @@ use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use DateTime;
 use DateTimeInterface;
-use PDOStatement;
 use Traversable;
 
 class Song extends database_object implements
@@ -702,9 +701,8 @@ class Song extends database_object implements
      * This function gathers information from the song_ext_info table and adds it to the
      * current object
      * @param string $select
-     * @return array
      */
-    public function _get_ext_info($select = '')
+    public function _get_ext_info($select = ''): array
     {
         $song_id = $this->id;
         $columns = (empty($select)) ? '*' : Dba::escape($select);
@@ -946,12 +944,12 @@ class Song extends database_object implements
             return Artist::get_fullname_by_id($album_artist_id);
         }
 
-        if (!$this->albumartist) {
-            return '';
-        }
-
         if ($this->albumartist === null) {
             $this->albumartist = $this->getAlbumRepository()->getAlbumArtistId($this->album);
+        }
+
+        if (!$this->albumartist) {
+            return '';
         }
 
         return Artist::get_fullname_by_id($this->albumartist);
@@ -1562,9 +1560,8 @@ class Song extends database_object implements
      * @param string|int|null $value
      * @param int $song_id
      * @param bool $check_owner
-     * @return PDOStatement|bool
      */
-    private static function _update_item($field, $value, $song_id, AccessLevelEnum $level, $check_owner = false)
+    private static function _update_item($field, $value, $song_id, AccessLevelEnum $level, $check_owner = false): bool
     {
         if ($check_owner && Core::get_global('user') instanceof User) {
             $item = new Song($song_id);
@@ -1585,7 +1582,7 @@ class Song extends database_object implements
 
         $sql = sprintf('UPDATE `song` SET `%s` = ? WHERE `id` = ?', $field);
 
-        return Dba::write($sql, [$value, $song_id]);
+        return (Dba::write($sql, [$value, $song_id]) !== false);
     }
 
     /**
@@ -1596,9 +1593,8 @@ class Song extends database_object implements
      * @param string $value
      * @param int $song_id
      * @param bool $check_owner
-     * @return PDOStatement|bool
      */
-    private static function _update_ext_item($field, $value, $song_id, AccessLevelEnum $level, $check_owner = false)
+    private static function _update_ext_item($field, $value, $song_id, AccessLevelEnum $level, $check_owner = false): void
     {
         if ($check_owner) {
             $item = new Song($song_id);
@@ -1607,14 +1603,10 @@ class Song extends database_object implements
             }
         }
 
-        /* Check them rights boy! */
-        if (!Access::check(AccessTypeEnum::INTERFACE, $level)) {
-            return false;
+        if (Access::check(AccessTypeEnum::INTERFACE, $level)) {
+            $sql = sprintf('UPDATE `song_data` SET `%s` = ? WHERE `song_id` = ?', $field);
+            Dba::write($sql, [$value, $song_id]) !== false;
         }
-
-        $sql = sprintf('UPDATE `song_data` SET `%s` = ? WHERE `song_id` = ?', $field);
-
-        return Dba::write($sql, [$value, $song_id]);
     }
 
     /**
@@ -2026,27 +2018,6 @@ class Song extends database_object implements
     }
 
     /**
-     * get_fields
-     * This returns all of the 'data' fields for this object, we need to filter out some that we don't
-     * want to present to a user, and add some that don't exist directly on the object but are related
-     */
-    public static function get_fields(): array
-    {
-        $fields = get_class_vars(self::class);
-
-        unset($fields['id'], $fields['_transcoded'], $fields['_fake'], $fields['cache_hit'], $fields['mime'], $fields['type']);
-
-        // Some additional fields
-        $fields['tag']     = true;
-        $fields['catalog'] = true;
-        // FIXME: These are here to keep the ideas, don't want to have to worry about them for now
-        // $fields['rating'] = true;
-        // $fields['recently Played'] = true;
-
-        return $fields;
-    }
-
-    /**
      * play_url
      * This function takes all the song information and correctly formats a
      * stream URL taking into account the downsampling mojo and everything
@@ -2306,7 +2277,6 @@ class Song extends database_object implements
     /**
      * get_deleted
      * get items from the deleted_songs table
-     * @return int[]
      */
     public static function get_deleted(): array
     {

@@ -76,11 +76,11 @@ class OAuthUtil
     {
         $params = [];
         if (preg_match_all('/(' . (($oauth_parameters) ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', $header, $matches)) {
-            foreach ($matches[1] as $i => $h) {
-                $params[$h] = OAuthUtil::urldecode_rfc3986(
-                    (empty($matches[3][$i]))
-                        ? $matches[4][$i]
-                        : $matches[3][$i]
+            foreach ($matches[1] as $key => $value) {
+                $params[$value] = OAuthUtil::urldecode_rfc3986(
+                    (empty($matches[3][$key]))
+                        ? $matches[4][$key]
+                        : $matches[3][$key]
                 );
             }
             if (isset($params['realm'])) {

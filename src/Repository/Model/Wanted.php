@@ -73,7 +73,7 @@ class Wanted extends database_object
     /** @var null|string $f_user */
     public $f_user;
 
-    /** @var array $songs */
+    /** @var Song_Preview[] $songs */
     public $songs;
 
     /**

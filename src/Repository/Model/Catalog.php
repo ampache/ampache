@@ -69,7 +69,6 @@ use Ampache\Repository\WantedRepositoryInterface;
 use DateTime;
 use Exception;
 use Generator;
-use PDOStatement;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionException;
@@ -550,10 +549,8 @@ abstract class Catalog extends database_object
      * add_catalog_filter_group
      *
      * @param array<string, int> $catalogs
-     *
-     * @return PDOStatement|false
      */
-    public static function add_catalog_filter_group(string $filter_name, array $catalogs)
+    public static function add_catalog_filter_group(string $filter_name, array $catalogs): bool
     {
         // Create the filter
         Dba::write(
@@ -581,7 +578,7 @@ abstract class Catalog extends database_object
         // Remove last comma to avoid SQL error
         $sql = substr($sql, 0, -1);
 
-        return Dba::write($sql);
+        return (Dba::write($sql) !== false);
     }
 
     /**
@@ -622,9 +619,8 @@ abstract class Catalog extends database_object
 
     /**
      * delete_catalog_filter
-     * @return PDOStatement|false
      */
-    public static function delete_catalog_filter(int $filter_id)
+    public static function delete_catalog_filter(int $filter_id): bool
     {
         if ($filter_id > 0) {
             $params = [$filter_id];
@@ -632,7 +628,7 @@ abstract class Catalog extends database_object
             if (Dba::write($sql, $params)) {
                 $sql = "DELETE FROM `catalog_filter_group_map` WHERE `group_id` = ?";
 
-                return Dba::write($sql, $params);
+                return (Dba::write($sql, $params) !== false);
             }
         }
 
@@ -937,9 +933,8 @@ abstract class Catalog extends database_object
      * sets the enabled flag
      * @param bool $new_enabled
      * @param int $catalog_id
-     * @return PDOStatement|bool
      */
-    public static function update_enabled($new_enabled, $catalog_id)
+    public static function update_enabled($new_enabled, $catalog_id): bool
     {
         /* Check them Rights! */
         if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
@@ -958,9 +953,8 @@ abstract class Catalog extends database_object
      * @param string $field
      * @param string|int $value
      * @param int $catalog_id
-     * @return PDOStatement|bool
      */
-    private static function _update_item($field, $value, $catalog_id)
+    private static function _update_item($field, $value, $catalog_id): bool
     {
         /* Can't update to blank */
         if (trim((string)$value) === '') {
@@ -969,7 +963,7 @@ abstract class Catalog extends database_object
 
         $sql = sprintf('UPDATE `catalog` SET `%s` = ? WHERE `id` = ?', $field);
 
-        return Dba::write($sql, [$value, $catalog_id]);
+        return (Dba::write($sql, [$value, $catalog_id]) !== false);
     }
 
     /**
@@ -3845,11 +3839,11 @@ abstract class Catalog extends database_object
             switch ($type) {
                 case 'artist':
                     // delete catalog_map artists (artist is a combined song_artist and album_artist so delete that using the table itself)
-                    $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'album_artist' AND `object_id` NOT IN (SELECT `artist_map`.`artist_id` AS `object_id` FROM `album` INNER JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL);";
+                    $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'album_artist' AND `object_id` NOT IN (SELECT `object_id` FROM (SELECT `artist_map`.`artist_id` AS `object_id` FROM `album` INNER JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL) AS orphanalbumartist);";
                     Dba::write($sql);
-                    $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'song_artist' AND `object_id` NOT IN (SELECT `artist_map`.`artist_id` AS `object_id` FROM `song` INNER JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL);";
+                    $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'song_artist' AND `object_id` NOT IN (SELECT `object_id` FROM (SELECT `artist_map`.`artist_id` AS `object_id` FROM `song` INNER JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL) AS orphansongartist);";
                     Dba::write($sql);
-                    $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'artist' AND `object_id` NOT IN (SELECT `object_id` FROM `catalog_map` WHERE `object_type` in ('song_artist', 'album_artist'));";
+                    $sql = "DELETE FROM `catalog_map` WHERE `object_type` = 'artist' AND `object_id` NOT IN (SELECT `object_id` FROM (SELECT `object_id` FROM `catalog_map` WHERE `object_type` IN ('song_artist', 'album_artist')) AS orphanartist);";
                     Dba::write($sql);
                     break;
                 default:
@@ -3896,14 +3890,13 @@ abstract class Catalog extends database_object
      * @param string $object_type
      * @param int $old_object_id
      * @param int $new_object_id
-     * @return PDOStatement|bool
      */
-    public static function migrate_map($object_type, $old_object_id, $new_object_id)
+    public static function migrate_map($object_type, $old_object_id, $new_object_id): bool
     {
         $sql    = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
         $params = [$new_object_id, $object_type, $old_object_id];
 
-        return Dba::write($sql, $params);
+        return (Dba::write($sql, $params) !== false);
     }
 
     /**

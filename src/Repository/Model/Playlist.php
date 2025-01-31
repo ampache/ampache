@@ -31,7 +31,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 /**
  * This class handles playlists in ampache. it references the playlist* tables
@@ -631,9 +630,8 @@ class Playlist extends playlist_object
      * This is the generic update function, it does the escaping and error checking
      * @param string $field
      * @param string|int $value
-     * @return PDOStatement|bool
      */
-    private function _update_item($field, $value)
+    private function _update_item($field, $value): bool
     {
         if (Core::get_global('user')?->getId() != $this->user && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
             return false;
@@ -641,7 +639,7 @@ class Playlist extends playlist_object
 
         $sql = sprintf('UPDATE `playlist` SET `%s` = ? WHERE `id` = ?', $field);
 
-        return Dba::write($sql, [$value, $this->id]);
+        return (Dba::write($sql, [$value, $this->id]) !== false);
     }
 
     /**

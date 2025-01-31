@@ -31,7 +31,6 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
-use PDOStatement;
 
 class Share extends database_object
 {
@@ -210,9 +209,8 @@ class Share extends database_object
 
     /**
      * update
-     * @return PDOStatement|bool
      */
-    public function update(array $data, User $user)
+    public function update(array $data, User $user): bool
     {
         $this->max_counter    = (int)($data['max_counter']);
         $this->expire_days    = (int)($data['expire']);
@@ -234,7 +232,7 @@ class Share extends database_object
             $params[] = $user->id;
         }
 
-        return Dba::write($sql, $params);
+        return (Dba::write($sql, $params) !== false);
     }
 
     /**
