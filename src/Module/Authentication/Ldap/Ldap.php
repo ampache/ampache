@@ -54,16 +54,16 @@ class Ldap
     {
         $sr_clean = [];
 
-        foreach (self::array_filter_key($searchresult, 'is_int') as $i => $result) {
-            $sr_clean[$i] = [];
+        foreach (self::array_filter_key($searchresult, 'is_int') as $key => $result) {
+            $sr_clean[$key] = [];
 
             foreach ($result as $field => $values) {
                 if ($field == 'count' || is_int($field)) {
                     continue;
                 } elseif ($field == 'dn') {
-                    $sr_clean[$i][$field] = $values;
+                    $sr_clean[$key][$field] = $values;
                 } else {
-                    $sr_clean[$i][$field] = self::array_filter_key($values, 'is_int');
+                    $sr_clean[$key][$field] = self::array_filter_key($values, 'is_int');
                 }
             }
         }
