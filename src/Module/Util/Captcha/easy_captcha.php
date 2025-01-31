@@ -312,8 +312,8 @@ class easy_captcha
         $filepath = $this->data_file();
         if (file_exists($filepath)) {
             $saved = (array)unserialize(fread(fopen($filepath, "r"), 1 << 20));
-            foreach ($saved as $i => $v) {
-                $this->{$i} = $v;
+            foreach ($saved as $index => $value) {
+                $this->{$index} = $value;
             }
         } else {
             $this->log("::load()", "MISSING", "captcha file does not exist $filepath");

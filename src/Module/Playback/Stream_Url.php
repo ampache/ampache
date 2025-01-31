@@ -77,11 +77,11 @@ class Stream_Url extends MemoryObject
                 $url     = substr($url, 0, $posargs + 6) . 'index.php?';
                 $args    = explode('/', $argsstr);
                 $a_count = count($args);
-                for ($i = 0; $i < $a_count; $i += 2) {
-                    if ($i > 0) {
+                for ($index = 0; $index < $a_count; $index += 2) {
+                    if ($index > 0) {
                         $url .= '&';
                     }
-                    $url .= $args[$i] . '=' . $args[$i + 1];
+                    $url .= $args[$index] . '=' . $args[$index + 1];
                 }
             }
         }
@@ -92,7 +92,7 @@ class Stream_Url extends MemoryObject
 
         $results['base_url'] = $url;
 
-        if (!empty($elements)) {
+        if (is_array($elements)) {
             foreach ($elements as $element) {
                 if (strpos((string)$element, '=')) {
                     list($key, $value) = explode('=', $element);

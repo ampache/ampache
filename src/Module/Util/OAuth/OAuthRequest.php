@@ -280,15 +280,15 @@ class OAuthRequest
             $out = 'Authorization: OAuth';
         }
 
-        foreach ($this->parameters as $k => $v) {
-            if (substr($k, 0, 5) != "oauth") {
+        foreach ($this->parameters as $key => $value) {
+            if (substr($key, 0, 5) != "oauth") {
                 continue;
             }
-            if (is_array($v)) {
+            if (is_array($value)) {
                 throw new Exception\OAuthException('Arrays not supported in headers');
             }
             $out .= ($first) ? ' ' : ', ';
-            $out .= OAuthUtil::urlencode_rfc3986($k) . '="' . OAuthUtil::urlencode_rfc3986($v) . '"';
+            $out .= OAuthUtil::urlencode_rfc3986($key) . '="' . OAuthUtil::urlencode_rfc3986($value) . '"';
             $first = false;
         }
 

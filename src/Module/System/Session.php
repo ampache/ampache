@@ -637,8 +637,10 @@ final class Session implements SessionInterface
             static function ($key): bool {
                 return self::destroy($key);
             },
-            static function (): void {
+            static function (): bool {
                 self::garbage_collection();
+
+                return true;
             }
         );
 

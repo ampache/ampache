@@ -32,7 +32,6 @@ use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
-use PDOStatement;
 use RuntimeException;
 
 /**
@@ -431,14 +430,13 @@ class Waveform
      * @param int $object_id
      * @param string $object_type
      * @param string $waveform
-     * @return PDOStatement|bool
      */
-    protected static function save_to_db($object_id, $object_type, $waveform)
+    protected static function save_to_db($object_id, $object_type, $waveform): void
     {
         $sql = ($object_type == 'podcast_episode')
             ? "UPDATE `podcast_episode` SET `waveform` = ? WHERE `id` = ?"
             : "UPDATE `song_data` SET `waveform` = ? WHERE `song_id` = ?";
 
-        return Dba::write($sql, [$waveform, $object_id]);
+        Dba::write($sql, [$waveform, $object_id]);
     }
 }

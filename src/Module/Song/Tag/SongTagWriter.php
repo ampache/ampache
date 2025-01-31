@@ -420,9 +420,9 @@ final class SongTagWriter implements SongTagWriterInterface
     private function search_txxx($description, $ndata): ?int
     {
         $cnt = count($ndata);
-        for ($i = 0; $i < $cnt; $i++) {
-            if (strtolower($ndata[$i]['description']) == strtolower((string)$description)) {
-                return $i;
+        for ($index = 0; $index < $cnt; $index++) {
+            if (strtolower($ndata[$index]['description']) == strtolower((string)$description)) {
+                return $index;
             }
         }
 
