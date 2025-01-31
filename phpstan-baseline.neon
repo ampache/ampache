@@ -5636,11 +5636,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlaylist\\:\\:Add\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlaylist.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlaylist\\:\\:Add\\(\\) has parameter \\$link with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlaylist.php
@@ -5652,21 +5647,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlaylist\\:\\:CurrentItem\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlaylist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlaylist\\:\\:PlayListRead\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlaylist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlaylist\\:\\:PlayListSave\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlaylist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlaylist\\:\\:RemoveTrack\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlaylist.php
 
@@ -6027,11 +6007,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:get_media_object\\(\\) has parameter \\$urlinfo with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/WebPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:get_media_object\\(\\) should return Ampache\\\\Repository\\\\Model\\\\Media\\|null but returns object\\.$#"
 			count: 1
 			path: src/Module/Playback/WebPlayer.php
 
@@ -7004,11 +6979,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$width has no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_disturbed\\:\\:\\$img\\.$#"
-			count: 6
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_disturbed\\:\\:background_letters\\(\\) has no return type specified\\.$#"
@@ -8226,11 +8196,6 @@ parameters:
 			path: src/Module/Util/UtilityFactoryInterface.php
 
 		-
-			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Argument of an invalid type array\\|string supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -8457,11 +8422,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:write_id3\\(\\) has parameter \\$tagData with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function array_diff expects array, array\\<int, string\\>\\|false given\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -9261,11 +9221,6 @@ parameters:
 			path: src/Repository/Model/Browse.php
 
 		-
-			message: "#^Argument of an invalid type array\\|true supplied for foreach, only iterables are supported\\.$#"
-			count: 2
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:add_to_catalog\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -9654,11 +9609,6 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Default value of the parameter \\#4 \\$uid \\(false\\) of method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:play_url\\(\\) is incompatible with type int\\|string\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -10306,22 +10256,7 @@ parameters:
 			path: src/Repository/Model/Userflag.php
 
 		-
-			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Default value of the parameter \\#4 \\$uid \\(false\\) of method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:play_url\\(\\) is incompatible with type int\\|string\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:compare_video_information\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:create_from_id\\(\\) should return Ampache\\\\Repository\\\\Model\\\\Video but returns object\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 

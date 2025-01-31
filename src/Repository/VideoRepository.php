@@ -27,7 +27,6 @@ namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 final class VideoRepository implements VideoRepositoryInterface
 {
@@ -53,11 +52,9 @@ final class VideoRepository implements VideoRepositoryInterface
     /**
      * Return the number of entries in the database...
      */
-    public function getItemCount(string $type): int
+    public function getItemCount(): int
     {
-        $type = ObjectTypeToClassNameMapper::VIDEO_TYPES[$type];
-
-        $sql        = 'SELECT COUNT(*) AS `count` FROM `' . strtolower($type->value) . '`;';
+        $sql        = 'SELECT COUNT(*) AS `count` FROM `video`;';
         $db_results = Dba::read($sql);
         if (($results = Dba::fetch_assoc($db_results)) && array_key_exists('count', $results)) {
             return (int) $results['count'];

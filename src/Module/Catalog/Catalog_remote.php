@@ -33,7 +33,7 @@ use Ampache\Repository\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
-use AmpacheApi;
+use AmpacheApi\AmpacheApi;
 use Exception;
 use SimpleXMLElement;
 
@@ -227,12 +227,11 @@ class Catalog_remote extends Catalog
      * connect
      *
      * Connects to the remote catalog that we are.
-     * @return AmpacheApi\AmpacheApi|false
      */
-    public function connect()
+    public function connect(): ?AmpacheApi
     {
         try {
-            $remote_handle = new AmpacheApi\AmpacheApi(
+            $remote_handle = new AmpacheApi(
                 [
                     'username' => $this->username,
                     'password' => $this->password,
@@ -256,7 +255,7 @@ class Catalog_remote extends Catalog
                 flush();
             }
 
-            return false;
+            return null;
         }
 
         if ($remote_handle->state() != 'CONNECTED') {
@@ -270,7 +269,7 @@ class Catalog_remote extends Catalog
                 echo AmpError::display('general');
             }
 
-            return false;
+            return null;
         }
 
         return $remote_handle;

@@ -30,7 +30,6 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
 final readonly class StatsViewAdapter implements StatsViewAdapterInterface
@@ -41,7 +40,7 @@ final readonly class StatsViewAdapter implements StatsViewAdapterInterface
 
     public function displayVideo(): bool
     {
-        return $this->videoRepository->getItemCount(Video::class) > 0;
+        return $this->videoRepository->getItemCount() > 0;
     }
 
     public function displayPodcast(): bool
