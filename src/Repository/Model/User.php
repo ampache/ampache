@@ -38,7 +38,6 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\IpHistoryRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Exception;
-use PDOStatement;
 
 /**
  * This class handles all of the user related functions including the creation
@@ -573,12 +572,11 @@ class User extends database_object
      * Use this function to update the validation key
      * NOTE: crap this doesn't have update_item the humanity of it all
      * @param string $new_validation
-     * @return PDOStatement|bool
      */
-    public function update_validation($new_validation)
+    public function update_validation($new_validation): bool
     {
         $sql              = "UPDATE `user` SET `validation` = ?, `disabled`='1' WHERE `id` = ?";
-        $db_results       = Dba::write($sql, [$new_validation, $this->id]);
+        $db_results       = (Dba::write($sql, [$new_validation, $this->id]) !== false);
         $this->validation = $new_validation;
 
         return $db_results;
