@@ -98,9 +98,9 @@ class Song extends database_object implements
 
     public bool $enabled;
 
-    public int $update_time;
+    public ?int $update_time = null;
 
-    public int $addition_time;
+    public ?int $addition_time = null;
 
     public ?int $user_upload = null;
 
