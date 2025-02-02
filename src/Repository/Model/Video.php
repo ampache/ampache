@@ -69,7 +69,7 @@ class Video extends database_object implements
 
     public ?string $mime = null;
 
-    public int $addition_time;
+    public ?int $addition_time = null;
 
     public ?int $update_time = null;
 
