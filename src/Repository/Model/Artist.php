@@ -57,7 +57,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     public int $last_update;
 
-    public int $addition_time;
+    public ?int $addition_time = null;
 
     public ?int $user = null;
 

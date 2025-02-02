@@ -76,7 +76,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     public ?string $release_status = null;
 
-    public int $addition_time;
+    public ?int $addition_time = null;
 
     public int $catalog;
 
