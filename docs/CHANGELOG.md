@@ -39,6 +39,7 @@ Pre-translating files before loading media templates should speed those pages up
 * Don't put string tags in the int list for comparison
 * Speed up `catalog_map` delete queries for 'artist' type
 * Don't unset object properties during tag chane comparison
+* Error with database properties that allow null values
 * webplayer
   * Not escaping bad characters correctly
 * CLI
@@ -47,6 +48,7 @@ Pre-translating files before loading media templates should speed those pages up
   * Album and AlbumDisk parameter not included for `release_type`, `release_status`, `barcode` and `catalog_number` searches
 * SubSonic
   * OpenSubsonic extention (`openSubsonicExtensions`) incorrect case
+  * Catch empty LocalPlay controller when disabled
 
 ## Ampache 7.2.0
 
