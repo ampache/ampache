@@ -848,6 +848,9 @@ class Search extends playlist_object
         $this->_add_type_text('genre', $t_genre, $t_genre);
         $this->_add_type_text('song_genre', T_('Song Genre'), $t_genre);
         $this->_add_type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
+        $this->_add_type_numeric('genre_count_song', T_('Song Count'), 'numeric', $t_genre);
+        $this->_add_type_numeric('genre_count_album', T_('Album Count'), 'numeric', $t_genre);
+        $this->_add_type_numeric('genre_count_artist', T_('Artist Count'), 'numeric', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($this->user);
@@ -943,6 +946,9 @@ class Search extends playlist_object
         $this->_add_type_text('genre', $t_genre, $t_genre);
         $this->_add_type_text('song_genre', T_('Song Genre'), $t_genre);
         $this->_add_type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
+        $this->_add_type_numeric('genre_count_song', T_('Song Count'), 'numeric', $t_genre);
+        $this->_add_type_numeric('genre_count_album', T_('Album Count'), 'numeric', $t_genre);
+        $this->_add_type_numeric('genre_count_artist', T_('Artist Count'), 'numeric', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($this->user);
@@ -1714,6 +1720,9 @@ class Search extends playlist_object
                     case 'song_tag':
                         $name = 'song_genre';
                         break;
+                    case 'genre_count':
+                        $name = 'genre_count_album';
+                        break;
                     case 'no_tag':
                         $name = 'no_genre';
                         break;
@@ -1750,6 +1759,9 @@ class Search extends playlist_object
                         break;
                     case 'song_tag':
                         $name = 'song_genre';
+                        break;
+                    case 'genre_count':
+                        $name = 'genre_count_artist';
                         break;
                     case 'no_tag':
                         $name = 'no_genre';
