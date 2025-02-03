@@ -728,13 +728,15 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $sql       = "SELECT `tag`.`id`, `tag`.`name`, 0 AS `count` FROM `tag` WHERE `tag`.`is_hidden` = 1 ";
         } else {
             $is_hidden = 0;
-            $type_sql  = (empty($type))
-                ? ""
-                : "AND `tag`.`" . scrub_in($type) . "` != 0";
+            $tag_type  = scrub_in($type);
+            $type_sql  = match ($type) {
+                'album', 'song', 'video', 'artist' => "AND `tag`.`$tag_type` != 0",
+                default => "",
+            };
 
             $sql = (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
-                ? sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name`, `tag`.`" . scrub_in($type) . "` AS `count` FROM `tag` WHERE `tag`.`is_hidden` = 0 %s AND %s ', $type_sql, Catalog::get_user_filter('tag', Core::get_global('user')->id))
-                : sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name`, `tag`.`" . scrub_in($type) . "` AS `count` FROM `tag` WHERE `tag`.`is_hidden` = 0 %s ', $type_sql);
+                ? sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name`, `tag`.`%s` AS `count` FROM `tag` WHERE `tag`.`is_hidden` = 0 %s AND %s ', $tag_type, $type_sql, Catalog::get_user_filter('tag', Core::get_global('user')->id))
+                : sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name`, `tag`.`$s` AS `count` FROM `tag` WHERE `tag`.`is_hidden` = 0 %s ', $tag_type, $type_sql);
 
             $sql .= "GROUP BY `tag`.`id`, `tag`.`name` ";
         }
