@@ -85,7 +85,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public ?string $release_status;
 
-    public int $addition_time;
+    public ?int $addition_time = null;
 
     public int $artist_count;
 
