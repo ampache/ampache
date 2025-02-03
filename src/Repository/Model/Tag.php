@@ -736,7 +736,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
             $sql = (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
                 ? sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name`, `tag`.`%s` AS `count` FROM `tag` WHERE `tag`.`is_hidden` = 0 %s AND %s ', $tag_type, $type_sql, Catalog::get_user_filter('tag', Core::get_global('user')->id))
-                : sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name`, `tag`.`$s` AS `count` FROM `tag` WHERE `tag`.`is_hidden` = 0 %s ', $tag_type, $type_sql);
+                : sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name`, `tag`.`%s` AS `count` FROM `tag` WHERE `tag`.`is_hidden` = 0 %s ', $tag_type, $type_sql);
 
             $sql .= "GROUP BY `tag`.`id`, `tag`.`name` ";
         }
