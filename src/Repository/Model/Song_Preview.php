@@ -71,8 +71,6 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public $f_name;
 
-    public $f_name_full;
-
     public $f_link;
 
     public $f_album_link;
@@ -263,7 +261,6 @@ class Song_Preview extends database_object implements Media, playable_item
         }
 
         // Format the title
-        $this->f_name_full  = $this->title;
         $this->f_name       = $this->title;
         $this->f_album_link = "<a href=\"" . AmpConfig::get_web_path() . "/albums.php?action=show_missing&mbid=" . $this->album_mbid . "&;artist=" . $this->artist . "\" title=\"" . $this->f_album . "\">" . $this->f_album . "</a>";
         $this->get_f_link();
