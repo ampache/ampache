@@ -216,9 +216,6 @@ class Song extends database_object implements
     /** @var null|string $f_year_link */
     public $f_year_link;
 
-    /** @var null|string $f_tags */
-    public $f_tags;
-
     /** @var null|string $f_size */
     public $f_size;
 
@@ -227,9 +224,6 @@ class Song extends database_object implements
 
     /** @var int $count */
     public $count;
-
-    /** @var null|string $f_publisher */
-    public $f_publisher;
 
     /** @var null|string $f_composer */
     public $f_composer;
@@ -1619,9 +1613,7 @@ class Song extends database_object implements
             $this->fill_ext_info();
 
             // Get the top tags
-            $this->tags        = Tag::get_top_tags('song', $this->id);
-            $this->f_tags      = Tag::get_display($this->tags, true, 'song');
-            $this->f_publisher = $this->label ?? null;
+            $this->tags = Tag::get_top_tags('song', $this->id);
         }
 
         if (!isset($this->artists)) {
@@ -1753,6 +1745,14 @@ class Song extends database_object implements
         }
 
         return $this->link;
+    }
+
+    /**
+     * Get item f_tags.
+     */
+    public function get_f_tags(): string
+    {
+        return Tag::get_display($this->tags, true, 'song');
     }
 
     /**

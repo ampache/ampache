@@ -89,9 +89,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /** @var array $tags */
     public $tags;
 
-    /** @var null|string $f_tags */
-    public $f_tags;
-
     /** @var array $labels */
     public $labels;
 
@@ -306,7 +303,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
             $this->f_time = ltrim($hours . ':' . $min . ':' . $sec, '0:');
             $this->tags   = Tag::get_top_tags('artist', $this->id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'artist');
 
             if (AmpConfig::get('label')) {
                 $this->labels   = $this->getLabelRepository()->getByArtist($this->id);
@@ -461,6 +457,14 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         }
 
         return $this->link;
+    }
+
+    /**
+     * Get item f_tags.
+     */
+    public function get_f_tags(): string
+    {
+        return Tag::get_display($this->tags, true, 'artist');
     }
 
     /**

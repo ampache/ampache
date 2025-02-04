@@ -92,7 +92,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
 <td class="<?php echo $cel_counter; ?>"><?php echo $libitem->total_count; ?></td>
 <?php } ?>
 <?php if (!$hide_genres) { ?>
-<td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags; ?></td>
+<td class="<?php echo $cel_tags; ?>"><?php echo $libitem->get_f_tags(); ?></td>
 <?php } ?>
 <?php if ($show_ratings) { ?>
         <td class="cel_ratings">

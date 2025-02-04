@@ -138,9 +138,6 @@ class Video extends database_object implements
     /** @var null|string $f_frame_rate */
     public $f_frame_rate;
 
-    /** @var null|string $f_tags */
-    public $f_tags;
-
     /** @var null|string $f_length */
     public $f_length;
 
@@ -251,7 +248,6 @@ class Video extends database_object implements
         if ($details) {
             // Get the top tags
             $this->tags   = Tag::get_top_tags('video', $this->id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'video');
         }
 
         $this->f_length = floor($this->time / 60) . ' ' . T_('minutes');
@@ -314,6 +310,14 @@ class Video extends database_object implements
         }
 
         return $this->link;
+    }
+
+    /**
+     * Get item f_tags.
+     */
+    public function get_f_tags(): string
+    {
+        return Tag::get_display($this->tags, true, 'video');
     }
 
     /**
