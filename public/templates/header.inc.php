@@ -135,7 +135,7 @@ if ($is_session) {
 } elseif (AmpConfig::get('show_header_login')) { ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/login.php?force_display=1" class="nohtml"><?php echo T_('Login'); ?></a>
-                        <?php if (AmpConfig::get('allow_public_registration') && Mailer::is_mail_enabled()) { ?>
+                        <?php if (AmpConfig::get('allow_public_registration') && (Mailer::is_mail_enabled() || AmpConfig::get('user_no_email_confirm', false))) { ?>
                                 / <a href="<?php echo $web_path; ?>/register.php" class="nohtml"><?php echo T_('Register'); ?></a>
                         <?php } ?>
                         </span>
