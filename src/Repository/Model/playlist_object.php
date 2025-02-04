@@ -207,11 +207,13 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function get_fullname(): ?string
     {
-        $show_fullname = AmpConfig::get('show_playlist_username');
-        $my_playlist   = (Core::get_global('user') instanceof User && ($this->user == Core::get_global('user')->id));
-        $this->f_name  = ($my_playlist || !$show_fullname)
-            ? $this->name
-            : $this->name . " (" . $this->username . ")";
+        if ($this->f_name === null) {
+            $show_fullname = AmpConfig::get('show_playlist_username');
+            $my_playlist   = (Core::get_global('user') instanceof User && ($this->user == Core::get_global('user')->id));
+            $this->f_name  = ($my_playlist || !$show_fullname)
+                ? $this->name
+                : $this->name . " (" . $this->username . ")";
+        }
 
         return $this->f_name;
     }

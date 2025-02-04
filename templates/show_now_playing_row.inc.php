@@ -82,10 +82,10 @@ if ($np_user->f_avatar_medium) {
         <?php echo $media->f_year_link; ?>
     </div>
     <?php
-        if (!empty($media->f_tags)) { ?>
+        if (!empty($media->tags)) { ?>
             <div id="np_song_tags_<?php echo $media->id; ?>" class="np_cell cel_left">
                 <label><?php echo $t_genres; ?></label>
-                <?php echo $media->f_tags; ?>
+                <?php echo $media->get_f_tags(); ?>
             </div>
         <?php } ?>
 </div>

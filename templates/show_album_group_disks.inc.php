@@ -49,9 +49,11 @@ use Ampache\Repository\Model\Userflag;
 
 $web_path = AmpConfig::get_web_path();
 // Title for this album
-$f_album_name = (string)$album->get_artist_fullname();
-$f_name       = (string)$album->get_fullname(false, true);
-$title        = ($album->album_artist > 0)
+$f_album_name     = (string)$album->get_artist_fullname();
+$f_name           = (string)$album->get_fullname(false, true);
+$url_f_name       = rawurlencode($f_name);
+$url_f_album_name = rawurlencode($f_album_name);
+$title            = ($album->album_artist > 0)
     ? scrub_out($f_name) . '&nbsp;-&nbsp;' . ((string)$album->get_f_parent_link())
     : scrub_out($f_name);
 
@@ -84,28 +86,28 @@ Ui::show_box_top($title, 'info-box'); ?>
 <div class="item_right_info">
     <div class="external_links">
 <?php if (AmpConfig::get('external_links_google')) {
-    echo "<a href=\"https://www.google.com/search?q=%22" . rawurlencode($f_album_name) . "%22+%22" . rawurlencode($f_name) . "%22\" target=\"_blank\">" . Ui::get_icon('google', T_('Search on Google ...')) . "</a>";
+    echo "<a href=\"https://www.google.com/search?q=%22" . $url_f_album_name . "%22+%22" . $url_f_name . "%22\" target=\"_blank\">" . Ui::get_icon('google', T_('Search on Google ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_duckduckgo')) {
-    echo "<a href=\"https://www.duckduckgo.com/?q=" . rawurlencode($f_album_name) . "+" . rawurlencode($f_name) . "\" target=\"_blank\">" . Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
+    echo "<a href=\"https://www.duckduckgo.com/?q=" . $url_f_album_name . "+" . $url_f_name . "\" target=\"_blank\">" . Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_wikipedia')) {
-    echo "<a href=\"https://en.wikipedia.org/wiki/Special:Search?search=%22" . rawurlencode($f_name) . "%22&go=Go\" target=\"_blank\">" . Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')) . "</a>";
+    echo "<a href=\"https://en.wikipedia.org/wiki/Special:Search?search=%22" . $url_f_name . "%22&go=Go\" target=\"_blank\">" . Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_lastfm')) {
-    echo "<a href=\"https://www.last.fm/search?q=%22" . rawurlencode($f_album_name) . "%22+%22" . rawurlencode($f_name) . "%22&type=album\" target=\"_blank\">" . Ui::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
+    echo "<a href=\"https://www.last.fm/search?q=%22" . $url_f_album_name . "%22+%22" . $url_f_name . "%22&type=album\" target=\"_blank\">" . Ui::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_bandcamp')) {
-    echo "<a href=\"https://bandcamp.com/search?q=" . rawurlencode($f_album_name) . "+" . rawurlencode($f_name) . "&item_type=a\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
+    echo "<a href=\"https://bandcamp.com/search?q=" . $url_f_album_name . "+" . $url_f_name . "&item_type=a\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_discogs')) {
-    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode(($f_album_name == 'Various Artists') ? 'Various' : $f_album_name) . "+" . rawurlencode($f_name) . "&type=master\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
+    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode(($f_album_name == 'Various Artists') ? 'Various' : $f_album_name) . "+" . $url_f_name . "&type=master\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_musicbrainz')) {
     if ($album->mbid) {
         echo "<a href=\"https://musicbrainz.org/release/" . $album->mbid . "\" target=\"_blank\">" . Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
     } else {
-        echo "<a href=\"https://musicbrainz.org/search?query=%22" . rawurlencode($f_name) . "%22&type=release\" target=\"_blank\">" . Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
+        echo "<a href=\"https://musicbrainz.org/search?query=%22" . $url_f_name . "%22&type=release\" target=\"_blank\">" . Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
     }
 } ?>
     </div>

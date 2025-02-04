@@ -36,7 +36,6 @@ class LocalPlay
 {
     /* Base Variables */
     public string $type;
-    public ?string $f_name        = null;
     public ?string $f_description = null;
     public ?string $f_version     = null;
 
@@ -74,7 +73,6 @@ class LocalPlay
     public function format(): void
     {
         if ($this->_player instanceof localplay_controller) {
-            $this->f_name        = ucfirst($this->type);
             $this->f_description = $this->_player->get_description();
             $this->f_version     = $this->_player->get_version();
         }

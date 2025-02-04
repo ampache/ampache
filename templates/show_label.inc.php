@@ -48,8 +48,9 @@ $argument        = false;
 if (array_key_exists('argument', $_REQUEST)) {
     $argument = (string)scrub_in((string)$_REQUEST['argument']);
 }
-$f_name   = (string)$label->get_fullname();
-$web_path = AmpConfig::get_web_path();
+$f_name     = (string)$label->get_fullname();
+$url_f_name = rawurlencode($f_name);
+$web_path   = AmpConfig::get_web_path();
 Ui::show_box_top($f_name, 'info-box');
 if ($label->website) {
     echo "<a href=\"" . scrub_out($label->website) . "\">" . scrub_out($label->website) . "</a><br />";
@@ -57,22 +58,22 @@ if ($label->website) {
 <div class="item_right_info">
     <div class="external_links">
 <?php if (AmpConfig::get('external_links_google')) {
-    echo "<a href=\"https://www.google.com/search?q=%22" . rawurlencode($f_name) . "%22\" target=\"_blank\">" . Ui::get_icon('google', T_('Search on Google ...')) . "</a>";
+    echo "<a href=\"https://www.google.com/search?q=%22" . $url_f_name . "%22\" target=\"_blank\">" . Ui::get_icon('google', T_('Search on Google ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_duckduckgo')) {
-    echo "<a href=\"https://www.duckduckgo.com/?q=" . rawurlencode($f_name) . "\" target=\"_blank\">" . Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
+    echo "<a href=\"https://www.duckduckgo.com/?q=" . $url_f_name . "\" target=\"_blank\">" . Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_wikipedia')) {
-    echo "<a href=\"https://en.wikipedia.org/wiki/Special:Search?search=%22" . rawurlencode($f_name) . "%22&go=Go\" target=\"_blank\">" . Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')) . "</a>";
+    echo "<a href=\"https://en.wikipedia.org/wiki/Special:Search?search=%22" . $url_f_name . "%22&go=Go\" target=\"_blank\">" . Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_lastfm')) {
-    echo "<a href=\"https://www.last.fm/search?q=%22" . rawurlencode($f_name) . "%22&type=label\" target=\"_blank\">" . Ui::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
+    echo "<a href=\"https://www.last.fm/search?q=%22" . $url_f_name . "%22&type=label\" target=\"_blank\">" . Ui::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_bandcamp')) {
-    echo "<a href=\"https://bandcamp.com/search?q=" . rawurlencode($f_name) . "&item_type=b\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
+    echo "<a href=\"https://bandcamp.com/search?q=" . $url_f_name . "&item_type=b\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_discogs')) {
-    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode($f_name) . "&type=label\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
+    echo "<a href=\"https://www.discogs.com/search/?q=" . $url_f_name . "&type=label\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
 } ?>
     </div>
     <div id="artist_biography">

@@ -502,6 +502,7 @@ class Daap_Api
         }
         $tlv_out = '';
         foreach ($songs as $song) {
+            /** @var Song $song */
             $song->format();
             $output = self::tlv('dmap.itemkind', 2);
             $output .= self::tlv('dmap.itemid', $song->id);
@@ -509,7 +510,7 @@ class Daap_Api
             foreach ($meta as $tag) {
                 switch ($tag) {
                     case 'dmap.itemname':
-                        $output .= self::tlv($tag, $song->f_name);
+                        $output .= self::tlv($tag, $song->get_fullname());
                         break;
                     case 'dmap.containeritemid':
                         /* case 'dmap.persistentid': */ $output .= self::tlv($tag, $song->id);

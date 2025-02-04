@@ -105,9 +105,6 @@ class Video extends database_object implements
     /** @var array $tags */
     public $tags;
 
-    /** @var null|string $f_name */
-    public $f_name;
-
     /** @var null|string $f_full_title */
     public $f_full_title;
 
@@ -140,9 +137,6 @@ class Video extends database_object implements
 
     /** @var null|string $f_frame_rate */
     public $f_frame_rate;
-
-    /** @var null|string $f_tags */
-    public $f_tags;
 
     /** @var null|string $f_length */
     public $f_length;
@@ -253,8 +247,7 @@ class Video extends database_object implements
 
         if ($details) {
             // Get the top tags
-            $this->tags   = Tag::get_top_tags('video', $this->id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'video');
+            $this->get_tags();
         }
 
         $this->f_length = floor($this->time / 60) . ' ' . T_('minutes');
@@ -302,11 +295,7 @@ class Video extends database_object implements
      */
     public function get_fullname(): ?string
     {
-        if ($this->f_name === null) {
-            $this->f_name = $this->title;
-        }
-
-        return $this->f_name;
+        return $this->title;
     }
 
     /**
@@ -321,6 +310,27 @@ class Video extends database_object implements
         }
 
         return $this->link;
+    }
+
+    /**
+     * Get item tags.
+     * @return array<array{user: int, id: int, name: string}>
+     */
+    public function get_tags(): array
+    {
+        if ($this->tags === null) {
+            $this->tags = Tag::get_top_tags('video', $this->id);
+        }
+
+        return $this->tags;
+    }
+
+    /**
+     * Get item f_tags.
+     */
+    public function get_f_tags(): string
+    {
+        return Tag::get_display($this->get_tags(), true, 'video');
     }
 
     /**

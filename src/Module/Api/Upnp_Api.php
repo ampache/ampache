@@ -1500,7 +1500,7 @@ class Upnp_Api
             'parentID' => $parent,
             'restricted' => 'false',
             'childCount' => 1,
-            'dc:title' => self::_replaceSpecialSymbols($tag->f_name),
+            'dc:title' => self::_replaceSpecialSymbols(scrub_out($tag->name)),
             //'upnp:class' => 'object.container.person.musicArtist',
             'upnp:class' => 'object.container',
         ];
@@ -1593,7 +1593,7 @@ class Upnp_Api
             'id' => 'amp://music/songs/' . $song->id,
             'parentID' => $parent,
             'restricted' => 'false', // XXX
-            'dc:title' => self::_replaceSpecialSymbols($song->f_name),
+            'dc:title' => self::_replaceSpecialSymbols($song->get_fullname()),
             'dc:date' => $song->getAdditionTime()->format(DATE_ATOM),
             'dc:creator' => self::_replaceSpecialSymbols($song->f_artist),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
@@ -1640,7 +1640,7 @@ class Upnp_Api
     }
 
     /**
-     * @param $video
+     * @param Video $video
      * @param string $parent
      * @return array
      */
@@ -1656,7 +1656,7 @@ class Upnp_Api
             'id' => $parent . '/' . $video->id,
             'parentID' => $parent,
             'restricted' => '1',
-            'dc:title' => self::_replaceSpecialSymbols($video->f_name),
+            'dc:title' => self::_replaceSpecialSymbols($video->get_fullname()),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI' => $art_url,
             'upnp:genre' => Tag::get_display($video->tags, false, 'video'),

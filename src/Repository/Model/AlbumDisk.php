@@ -113,9 +113,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     /** @var null|string $f_link */
     public $f_link;
 
-    /** @var null|string $f_tags */
-    public $f_tags;
-
     /** @var null|string $f_year */
     public $f_year;
 
@@ -293,12 +290,9 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         $this->album_artists  = $this->album->get_artists();
 
         if ($details) {
-            $this->tags   = $this->album->tags;
-            $this->f_tags = $this->album->f_tags;
+            $this->get_tags();
         }
 
-        $this->tags   = Tag::get_top_tags('album', $this->album_id);
-        $this->f_tags = Tag::get_display($this->tags, true, 'album_disk');
         // set link and f_link
         $this->get_artist_fullname();
         $this->get_f_link();
@@ -415,13 +409,34 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     }
 
     /**
+     * Get item tags.
+     * @return array<array{user: int, id: int, name: string}>
+     */
+    public function get_tags(): array
+    {
+        if ($this->tags === null) {
+            $this->tags = Tag::get_top_tags('album', $this->album_id);
+        }
+
+        return $this->tags;
+    }
+
+    /**
+     * Get item f_tags.
+     */
+    public function get_f_tags(): string
+    {
+        return Tag::get_display($this->get_tags(), true, 'album_disk');
+    }
+
+    /**
      * Get item f_link.
      */
     public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
+            return "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
         }
 
         return $this->f_link;

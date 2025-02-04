@@ -54,8 +54,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     public int $video = 0;
 
-    public string $f_name;
-
     /**
      * constructor
      * This takes a tag id and returns all of the relevant information
@@ -75,9 +73,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        // the ui is sometimes looking for a formatted name...
-        $this->f_name = scrub_out($this->name);
     }
 
     public function getId(): int
@@ -572,6 +567,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $type
      * @param int $object_id
      * @param int $limit
+     * @return array<array{user: int, id: int, name: string}>
      */
     public static function get_top_tags($type, $object_id, $limit = 10): array
     {
@@ -727,16 +723,20 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $is_hidden = 1;
             $sql       = "SELECT `tag`.`id`, `tag`.`name`, 0 AS `count` FROM `tag` WHERE `tag`.`is_hidden` = 1 ";
         } else {
-            $is_hidden = 0;
-            $type_sql  = (empty($type))
-                ? ""
-                : "AND `tag_map`.`object_type` = '" . scrub_in($type) . "'";
+            $is_hidden   = 0;
+            $type_select = (empty($type))
+                ? ', (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count`'
+                : sprintf(', `tag`.`%s` AS `count`', scrub_in($type));
+            $type_where = match ($type) {
+                'album', 'song', 'video', 'artist' => "AND `tag`.`" . scrub_in($type) . "` != 0",
+                default => "",
+            };
 
             $sql = (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
-                ? sprintf('SELECT `tag_map`.`tag_id` AS `id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE %s AND `tag`.`id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql, Catalog::get_user_filter('tag_map', Core::get_global('user')->id))
-                : sprintf('SELECT `tag_map`.`tag_id` AS `id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE `tag`.`id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql);
+                ? sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name` %s FROM `tag` WHERE `tag`.`is_hidden` = 0 %s AND %s ', $type_select, $type_where, Catalog::get_user_filter('tag', Core::get_global('user')->id))
+                : sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name` %s FROM `tag` WHERE `tag`.`is_hidden` = 0 %s ', $type_select, $type_where);
 
-            $sql .= "GROUP BY `tag_map`.`tag_id`, `tag`.`name` ";
+            $sql .= "GROUP BY `tag`.`id`, `tag`.`name` ";
         }
 
         $order = "`" . $order . "`";
