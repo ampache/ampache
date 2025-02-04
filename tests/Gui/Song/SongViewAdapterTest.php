@@ -357,7 +357,10 @@ class SongViewAdapterTest extends MockeryTestCase
     {
         $value = 'some-tags';
 
-        $this->song->f_tags = $value;
+        $this->song->shouldReceive('get_f_tags')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
 
         $this->assertSame(
             $value,

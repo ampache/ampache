@@ -364,7 +364,7 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         }
 
         $songprops[T_('Composer')]      = scrub_out($this->song->composer);
-        $songprops[T_('Genres')]        = $this->song->f_tags;
+        $songprops[T_('Genres')]        = $this->song->get_f_tags();
         $songprops[T_('Track')]         = $this->song->track;
         $songprops[T_('Disk')]          = $this->song->disk;
         $songprops[T_('Disk Subtitle')] = $this->song->disksubtitle ?? '';
@@ -533,7 +533,7 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
 
     public function getGenre(): string
     {
-        return (string)$this->song->f_tags;
+        return (string)$this->song->get_f_tags();
     }
 
     public function getPlayDuration(): string

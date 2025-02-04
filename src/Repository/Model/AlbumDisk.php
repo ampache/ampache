@@ -113,9 +113,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     /** @var null|string $f_link */
     public $f_link;
 
-    /** @var null|string $f_tags */
-    public $f_tags;
-
     /** @var null|string $f_year */
     public $f_year;
 
@@ -294,7 +291,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
         if ($details) {
             $this->tags   = Tag::get_top_tags('album', $this->album_id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'album_disk');
         }
 
         // set link and f_link
@@ -410,6 +406,14 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         }
 
         return $this->link;
+    }
+
+    /**
+     * Get item f_tags.
+     */
+    public function get_f_tags(): string
+    {
+        return Tag::get_display($this->tags, true, 'album_disk');
     }
 
     /**

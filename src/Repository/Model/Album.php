@@ -128,9 +128,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /** @var null|string $f_link */
     public $f_link;
 
-    /** @var null|string $f_tags */
-    public $f_tags;
-
     /** @var null|string $f_year */
     public $f_year;
 
@@ -511,8 +508,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
                 $this->$key = $value;
             }
 
-            $this->tags   = Tag::get_top_tags('album', $this->id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'album');
+            $this->tags = Tag::get_top_tags('album', $this->id);
         }
 
         // set link and f_link
@@ -641,6 +637,14 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         }
 
         return $this->f_link;
+    }
+
+    /**
+     * Get item f_tags.
+     */
+    public function get_f_tags(): string
+    {
+        return Tag::get_display($this->tags, true, 'album');
     }
 
     /**
