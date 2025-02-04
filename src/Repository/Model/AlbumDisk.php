@@ -293,12 +293,10 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         $this->album_artists  = $this->album->get_artists();
 
         if ($details) {
-            $this->tags   = $this->album->tags;
-            $this->f_tags = $this->album->f_tags;
+            $this->tags   = Tag::get_top_tags('album', $this->album_id);
+            $this->f_tags = Tag::get_display($this->tags, true, 'album_disk');
         }
 
-        $this->tags   = Tag::get_top_tags('album', $this->album_id);
-        $this->f_tags = Tag::get_display($this->tags, true, 'album_disk');
         // set link and f_link
         $this->get_artist_fullname();
         $this->get_f_link();
