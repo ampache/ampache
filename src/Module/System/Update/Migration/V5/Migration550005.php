@@ -37,7 +37,6 @@ final class Migration550005 extends AbstractMigration
     {
         // delete bad maps if they exist
         $tables = [
-            'album_disk',
             'album',
             'live_stream',
             'podcast_episode',
