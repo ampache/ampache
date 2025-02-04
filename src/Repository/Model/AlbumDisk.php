@@ -421,7 +421,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
+            return "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
         }
 
         return $this->f_link;

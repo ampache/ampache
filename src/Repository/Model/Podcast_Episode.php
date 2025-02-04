@@ -299,7 +299,7 @@ class Podcast_Episode extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->link_formatted === null) {
-            $this->link_formatted = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+            return '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
         }
 
         return $this->link_formatted;
