@@ -62,14 +62,8 @@ class Broadcast extends database_object implements library_item
     /** @var array $tags */
     public $tags;
 
-    /** @var null|string $f_name */
-    public $f_name;
-
     /** @var null|string $f_link */
     public $f_link;
-
-    /** @var null|string $f_tags */
-    public $f_tags;
 
     /**
      * Constructor
@@ -188,8 +182,7 @@ class Broadcast extends database_object implements library_item
     {
         $this->get_f_link();
         if ($details) {
-            $this->tags   = Tag::get_top_tags('broadcast', $this->id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'broadcast');
+            $this->get_tags();
         }
     }
 
@@ -206,11 +199,7 @@ class Broadcast extends database_object implements library_item
      */
     public function get_fullname(): ?string
     {
-        if ($this->f_name === null) {
-            $this->f_name = $this->name;
-        }
-
-        return $this->f_name;
+        return $this->name;
     }
 
     /**
@@ -228,13 +217,34 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
+     * Get item tags.
+     * @return array<array{user: int, id: int, name: string}>
+     */
+    public function get_tags(): array
+    {
+        if ($this->tags === null) {
+            $this->tags = Tag::get_top_tags('broadcast', $this->id);
+        }
+
+        return $this->tags;
+    }
+
+    /**
+     * Get item f_tags.
+     */
+    public function get_f_tags(): string
+    {
+        return Tag::get_display($this->get_tags(), true, 'broadcast');
+    }
+
+    /**
      * Get item f_link.
      */
     public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
+            return '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
         }
 
         return $this->f_link;

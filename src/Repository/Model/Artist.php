@@ -89,9 +89,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /** @var array $tags */
     public $tags;
 
-    /** @var null|string $f_tags */
-    public $f_tags;
-
     /** @var array $labels */
     public $labels;
 
@@ -305,8 +302,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
             $hours = floor($this->time / 3600);
 
             $this->f_time = ltrim($hours . ':' . $min . ':' . $sec, '0:');
-            $this->tags   = Tag::get_top_tags('artist', $this->id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'artist');
+            $this->get_tags();
 
             if (AmpConfig::get('label')) {
                 $this->labels   = $this->getLabelRepository()->getByArtist($this->id);
@@ -464,13 +460,34 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     }
 
     /**
+     * Get item tags.
+     * @return array<array{user: int, id: int, name: string}>
+     */
+    public function get_tags(): array
+    {
+        if ($this->tags === null) {
+            $this->tags = Tag::get_top_tags('artist', $this->id);
+        }
+
+        return $this->tags;
+    }
+
+    /**
+     * Get item f_tags.
+     */
+    public function get_f_tags(): string
+    {
+        return Tag::get_display($this->get_tags(), true, 'artist');
+    }
+
+    /**
      * Get item f_link.
      */
     public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
+            return "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
         }
 
         return $this->f_link;

@@ -460,7 +460,7 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['artist']              = $song->get_artist_fullname();
         $meta['albumartist']         = $song->f_albumartist_full;
         $meta['composer']            = $song->composer;
-        $meta['label']               = $song->f_publisher;
+        $meta['label']               = $song->label ?? null;
         $meta['tracknumber']         = $song->f_track;
         $meta['discnumber']          = $song->disk;
         $meta['musicbrainz_trackid'] = $song->mbid;
@@ -533,7 +533,7 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['artist']        = $song->get_artist_fullname();
         $meta['band']          = $song->f_albumartist_full;
         $meta['composer']      = $song->composer;
-        $meta['publisher']     = $song->f_publisher;
+        $meta['publisher']     = $song->label ?? null;
         $meta['track_number']  = $song->f_track;
         $meta['part_of_a_set'] = $song->disk;
         if (isset($song->mbid)) {

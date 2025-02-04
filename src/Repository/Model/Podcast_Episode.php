@@ -103,8 +103,6 @@ class Podcast_Episode extends database_object implements
 
     public string $mime;
 
-    public ?string $f_name = null;
-
     public string $f_time;
 
     public string $f_time_h;
@@ -271,11 +269,7 @@ class Podcast_Episode extends database_object implements
      */
     public function get_fullname(): ?string
     {
-        if ($this->f_name === null) {
-            $this->f_name = $this->title;
-        }
-
-        return $this->f_name;
+        return $this->title;
     }
 
     /**
@@ -299,7 +293,7 @@ class Podcast_Episode extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->link_formatted === null) {
-            $this->link_formatted = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+            return '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
         }
 
         return $this->link_formatted;

@@ -12,6 +12,11 @@ Pre-translating files before loading media templates should speed those pages up
 * Added option to show separate Artist column for playlist media
 * Pre-translate common strings on repeated tasks before loading media row templates
 * Clean empty albums after each verify chunk
+* Search
+  * Add `genre_count_song`, `genre_count_album` and `genre_count_artist` to Song search
+  * Add `genre_count_song`, `genre_count_album` and `genre_count_artist` to Album search
+  * Add `genre_count_song`, `genre_count_album` and `genre_count_artist` to AlbumDisk search
+  * Add `genre_count_song`, `genre_count_album` and `genre_count_artist` to Artist search
 * Database 721001
   * Add user preference to show/hide the Artist column on playlist media
 
@@ -26,6 +31,7 @@ Pre-translating files before loading media templates should speed those pages up
 ### Removed
 
 * Don't check file modification time on verify. Just use the database `last_update` value
+* Remove some useless or low use properties on classes and replace with functions
 
 ### Fixed
 

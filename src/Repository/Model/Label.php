@@ -63,9 +63,6 @@ class Label extends database_object implements library_item
 
     public bool $active;
 
-    /** @var null|string $f_name */
-    public $f_name;
-
     public ?string $link = null;
 
     /** @var null|string $f_link */
@@ -162,11 +159,7 @@ class Label extends database_object implements library_item
      */
     public function get_fullname(): ?string
     {
-        if ($this->f_name === null) {
-            $this->f_name = $this->name;
-        }
-
-        return $this->f_name;
+        return $this->name;
     }
 
     /**
@@ -190,7 +183,7 @@ class Label extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
+            return "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
         }
 
         return $this->f_link;
@@ -213,7 +206,7 @@ class Label extends database_object implements library_item
             'label' => [
                 'important' => true,
                 'label' => T_('Label'),
-                'value' => $this->f_name
+                'value' => $this->get_fullname()
             ]
         ];
     }

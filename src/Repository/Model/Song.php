@@ -169,9 +169,6 @@ class Song extends database_object implements
     /** @var array $tags */
     public $tags;
 
-    /** @var null|string $f_name */
-    public $f_name;
-
     /** @var null|string $f_artist */
     public $f_artist;
 
@@ -201,9 +198,6 @@ class Song extends database_object implements
     /** @var null|string $f_bitrate */
     public $f_bitrate;
 
-    /** @var null|string $f_name_full */
-    public $f_name_full;
-
     /** @var null|string $f_link */
     public $f_link;
 
@@ -222,9 +216,6 @@ class Song extends database_object implements
     /** @var null|string $f_year_link */
     public $f_year_link;
 
-    /** @var null|string $f_tags */
-    public $f_tags;
-
     /** @var null|string $f_size */
     public $f_size;
 
@@ -233,9 +224,6 @@ class Song extends database_object implements
 
     /** @var int $count */
     public $count;
-
-    /** @var null|string $f_publisher */
-    public $f_publisher;
 
     /** @var null|string $f_composer */
     public $f_composer;
@@ -1625,9 +1613,7 @@ class Song extends database_object implements
             $this->fill_ext_info();
 
             // Get the top tags
-            $this->tags        = Tag::get_top_tags('song', $this->id);
-            $this->f_tags      = Tag::get_display($this->tags, true, 'song');
-            $this->f_publisher = $this->label ?? null;
+            $this->get_tags();
         }
 
         if (!isset($this->artists)) {
@@ -1649,9 +1635,6 @@ class Song extends database_object implements
 
         // Format the album_artist name
         $this->f_albumartist_full = $this->get_album_artist_fullname();
-
-        // Format the title
-        $this->f_name_full = $this->get_fullname();
 
         // Create Links for the different objects
         $this->get_f_link();
@@ -1747,11 +1730,7 @@ class Song extends database_object implements
      */
     public function get_fullname(): ?string
     {
-        if ($this->f_name === null) {
-            $this->f_name = $this->title;
-        }
-
-        return $this->f_name;
+        return $this->title;
     }
 
     /**
@@ -1769,13 +1748,34 @@ class Song extends database_object implements
     }
 
     /**
+     * Get item tags.
+     * @return array<array{user: int, id: int, name: string}>
+     */
+    public function get_tags(): array
+    {
+        if ($this->tags === null) {
+            $this->tags = Tag::get_top_tags('song', $this->id);
+        }
+
+        return $this->tags;
+    }
+
+    /**
+     * Get item f_tags.
+     */
+    public function get_f_tags(): string
+    {
+        return Tag::get_display($this->get_tags(), true, 'song');
+    }
+
+    /**
      * Get item f_link.
      */
     public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            $this->f_link = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->get_artist_fullname()) . " - " . scrub_out($this->get_fullname()) . "\"> " . scrub_out($this->get_fullname()) . "</a>";
+            return "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->get_artist_fullname()) . " - " . scrub_out($this->get_fullname()) . "\"> " . scrub_out($this->get_fullname()) . "</a>";
         }
 
         return $this->f_link;

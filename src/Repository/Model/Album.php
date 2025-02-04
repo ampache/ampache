@@ -128,9 +128,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /** @var null|string $f_link */
     public $f_link;
 
-    /** @var null|string $f_tags */
-    public $f_tags;
-
     /** @var null|string $f_year */
     public $f_year;
 
@@ -511,8 +508,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
                 $this->$key = $value;
             }
 
-            $this->tags   = Tag::get_top_tags('album', $this->id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'album');
+            $this->get_tags();
         }
 
         // set link and f_link
@@ -637,10 +633,31 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
+            return "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
         }
 
         return $this->f_link;
+    }
+
+    /**
+     * Get item tags.
+     * @return array<array{user: int, id: int, name: string}>
+     */
+    public function get_tags(): array
+    {
+        if ($this->tags === null) {
+            $this->tags = Tag::get_top_tags('album', $this->id);
+        }
+
+        return $this->tags;
+    }
+
+    /**
+     * Get item f_tags.
+     */
+    public function get_f_tags(): string
+    {
+        return Tag::get_display($this->get_tags(), true, 'album');
     }
 
     /**

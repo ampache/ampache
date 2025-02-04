@@ -1342,7 +1342,7 @@ class Xml_Data
 
             $playlist_track++;
 
-            $string .= "<song id=\"" . $song->id . "\">\n\t<name><![CDATA[" . $song->f_name . "]]></name>\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n";
+            $string .= "<song id=\"" . $song->id . "\">\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n";
             foreach ($song_artists as $this_artist) {
                 $string .= "\t<artist id=\"" . $this_artist['id'] . "\"><name><![CDATA[" . $this_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $this_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $this_artist['basename'] . "]]></basename>\n</artist>\n";
             }
@@ -1442,7 +1442,7 @@ class Xml_Data
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
 
-            $string .= "<song id=\"" . $song->id . "\">\n\t<name><![CDATA[" . $song->f_name . "]]></name>\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n" .
+            $string .= "<song id=\"" . $song->id . "\">\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n" .
                 "\t<artist id=\"" . $song->artist . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_artist['basename'] . "]]></basename>\n</artist>\n" .
                 "\t<album id=\"" . $song->album . "\"><name><![CDATA[" . $song_album['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_album['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_album['basename'] . "]]></basename>\n</album>\n" .
                 "\t<genre id=\"" . $tag->id . "\"><name><![CDATA[" . $tag->name . "]]></name></genre>\n";

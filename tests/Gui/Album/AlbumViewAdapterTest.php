@@ -333,7 +333,10 @@ class AlbumViewAdapterTest extends MockeryTestCase
     {
         $value = 'some-tags';
 
-        $this->album->f_tags = $value;
+        $this->album->shouldReceive('get_f_tags')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
 
         $this->assertSame(
             $value,
