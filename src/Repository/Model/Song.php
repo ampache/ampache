@@ -201,9 +201,6 @@ class Song extends database_object implements
     /** @var null|string $f_bitrate */
     public $f_bitrate;
 
-    /** @var null|string $f_name_full */
-    public $f_name_full;
-
     /** @var null|string $f_link */
     public $f_link;
 
@@ -1649,9 +1646,6 @@ class Song extends database_object implements
 
         // Format the album_artist name
         $this->f_albumartist_full = $this->get_album_artist_fullname();
-
-        // Format the title
-        $this->f_name_full = $this->get_fullname();
 
         // Create Links for the different objects
         $this->get_f_link();
