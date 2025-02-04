@@ -57,9 +57,6 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
 
     public ?string $link = null;
 
-    /** @var null|string $f_name */
-    public $f_name;
-
     /** @var null|string $f_link */
     public $f_link;
 
@@ -126,11 +123,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      */
     public function get_fullname(): ?string
     {
-        if ($this->f_name === null) {
-            $this->f_name = $this->name;
-        }
-
-        return $this->f_name;
+        return $this->name;
     }
 
     /**

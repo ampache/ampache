@@ -63,9 +63,6 @@ class Label extends database_object implements library_item
 
     public bool $active;
 
-    /** @var null|string $f_name */
-    public $f_name;
-
     public ?string $link = null;
 
     /** @var null|string $f_link */
@@ -162,11 +159,7 @@ class Label extends database_object implements library_item
      */
     public function get_fullname(): ?string
     {
-        if ($this->f_name === null) {
-            $this->f_name = $this->name;
-        }
-
-        return $this->f_name;
+        return $this->name;
     }
 
     /**
@@ -213,7 +206,7 @@ class Label extends database_object implements library_item
             'label' => [
                 'important' => true,
                 'label' => T_('Label'),
-                'value' => $this->f_name
+                'value' => $this->get_fullname()
             ]
         ];
     }

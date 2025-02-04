@@ -103,8 +103,6 @@ class Podcast_Episode extends database_object implements
 
     public string $mime;
 
-    public ?string $f_name = null;
-
     public string $f_time;
 
     public string $f_time_h;
@@ -271,11 +269,7 @@ class Podcast_Episode extends database_object implements
      */
     public function get_fullname(): ?string
     {
-        if ($this->f_name === null) {
-            $this->f_name = $this->title;
-        }
-
-        return $this->f_name;
+        return $this->title;
     }
 
     /**

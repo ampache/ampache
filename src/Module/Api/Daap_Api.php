@@ -509,7 +509,7 @@ class Daap_Api
             foreach ($meta as $tag) {
                 switch ($tag) {
                     case 'dmap.itemname':
-                        $output .= self::tlv($tag, $song->f_name);
+                        $output .= self::tlv($tag, $song->get_fullname());
                         break;
                     case 'dmap.containeritemid':
                         /* case 'dmap.persistentid': */ $output .= self::tlv($tag, $song->id);
