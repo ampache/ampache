@@ -641,6 +641,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Get item tags.
+     * @return array<array{user: int, id: int, name: string}>
      */
     public function get_tags(): array
     {

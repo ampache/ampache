@@ -410,6 +410,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     /**
      * Get item tags.
+     * @return array<array{user: int, id: int, name: string}>
      */
     public function get_tags(): array
     {

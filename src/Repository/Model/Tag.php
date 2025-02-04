@@ -567,6 +567,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $type
      * @param int $object_id
      * @param int $limit
+     * @return array<array{user: int, id: int, name: string}>
      */
     public static function get_top_tags($type, $object_id, $limit = 10): array
     {
