@@ -508,7 +508,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
                 $this->$key = $value;
             }
 
-            $this->tags = Tag::get_top_tags('album', $this->id);
+            $this->get_tags();
         }
 
         // set link and f_link
@@ -640,11 +640,23 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
+     * Get item tags.
+     */
+    public function get_tags(): array
+    {
+        if ($this->tags === null) {
+            $this->tags = Tag::get_top_tags('album', $this->id);
+        }
+
+        return $this->tags;
+    }
+
+    /**
      * Get item f_tags.
      */
     public function get_f_tags(): string
     {
-        return Tag::get_display($this->tags, true, 'album');
+        return Tag::get_display($this->get_tags(), true, 'album');
     }
 
     /**

@@ -247,7 +247,7 @@ class Video extends database_object implements
 
         if ($details) {
             // Get the top tags
-            $this->tags   = Tag::get_top_tags('video', $this->id);
+            $this->get_tags();
         }
 
         $this->f_length = floor($this->time / 60) . ' ' . T_('minutes');
@@ -313,11 +313,23 @@ class Video extends database_object implements
     }
 
     /**
+     * Get item tags.
+     */
+    public function get_tags(): array
+    {
+        if ($this->tags === null) {
+            $this->tags = Tag::get_top_tags('video', $this->id);
+        }
+
+        return $this->tags;
+    }
+
+    /**
      * Get item f_tags.
      */
     public function get_f_tags(): string
     {
-        return Tag::get_display($this->tags, true, 'video');
+        return Tag::get_display($this->get_tags(), true, 'video');
     }
 
     /**
