@@ -88,9 +88,7 @@ abstract class playlist_object extends database_object implements library_item
     public function format(?bool $details = true): void
     {
         // format shared lists using the username
-        $this->f_name = (Core::get_global('user') instanceof User && ($this->user == Core::get_global('user')->id))
-            ? scrub_out($this->name)
-            : scrub_out($this->name . " (" . $this->username . ")");
+        $this->get_fullname();
         $this->get_f_type();
         $this->get_f_link();
         $this->f_date = ($this->date !== 0)

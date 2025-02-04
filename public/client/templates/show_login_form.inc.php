@@ -95,7 +95,7 @@ $_SESSION['login'] = true; ?>
                 </div>
                 <div class="loginmessage"><?php echo AmpConfig::get('login_message'); ?></div>
                 <div class="loginoptions">
-                <?php if (AmpConfig::get('allow_public_registration')) { ?>
+                <?php if (AmpConfig::get('allow_public_registration') && (Mailer::is_mail_enabled() || AmpConfig::get('user_no_email_confirm', false))) { ?>
                             <a class="button nohtml" id="registerbutton" href="<?php echo $web_path; ?>/register.php"><?php echo T_('Register'); ?></a>
                 <?php } ?>
                 <?php if (Mailer::is_mail_enabled()) { ?>
