@@ -502,6 +502,7 @@ class Daap_Api
         }
         $tlv_out = '';
         foreach ($songs as $song) {
+            /** @var Song $song */
             $song->format();
             $output = self::tlv('dmap.itemkind', 2);
             $output .= self::tlv('dmap.itemid', $song->id);

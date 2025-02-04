@@ -182,7 +182,7 @@ class Broadcast extends database_object implements library_item
     {
         $this->get_f_link();
         if ($details) {
-            $this->tags = Tag::get_top_tags('broadcast', $this->id);
+            $this->get_tags();
         }
     }
 
@@ -217,11 +217,23 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
+     * Get item tags.
+     */
+    public function get_tags(): array
+    {
+        if ($this->tags === null) {
+            $this->tags = Tag::get_top_tags('broadcast', $this->id);
+        }
+
+        return $this->tags;
+    }
+
+    /**
      * Get item f_tags.
      */
     public function get_f_tags(): string
     {
-        return Tag::get_display($this->tags, true, 'broadcast');
+        return Tag::get_display($this->get_tags(), true, 'broadcast');
     }
 
     /**

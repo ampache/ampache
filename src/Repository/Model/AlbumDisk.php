@@ -290,7 +290,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         $this->album_artists  = $this->album->get_artists();
 
         if ($details) {
-            $this->tags   = Tag::get_top_tags('album', $this->album_id);
+            $this->get_tags();
         }
 
         // set link and f_link
@@ -409,11 +409,23 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     }
 
     /**
+     * Get item tags.
+     */
+    public function get_tags(): array
+    {
+        if ($this->tags === null) {
+            $this->tags = Tag::get_top_tags('album', $this->album_id);
+        }
+
+        return $this->tags;
+    }
+
+    /**
      * Get item f_tags.
      */
     public function get_f_tags(): string
     {
-        return Tag::get_display($this->tags, true, 'album_disk');
+        return Tag::get_display($this->get_tags(), true, 'album_disk');
     }
 
     /**

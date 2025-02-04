@@ -1613,7 +1613,7 @@ class Song extends database_object implements
             $this->fill_ext_info();
 
             // Get the top tags
-            $this->tags = Tag::get_top_tags('song', $this->id);
+            $this->get_tags();
         }
 
         if (!isset($this->artists)) {
@@ -1748,11 +1748,23 @@ class Song extends database_object implements
     }
 
     /**
+     * Get item tags.
+     */
+    public function get_tags(): array
+    {
+        if ($this->tags === null) {
+            $this->tags = Tag::get_top_tags('song', $this->id);
+        }
+
+        return $this->tags;
+    }
+
+    /**
      * Get item f_tags.
      */
     public function get_f_tags(): string
     {
-        return Tag::get_display($this->tags, true, 'song');
+        return Tag::get_display($this->get_tags(), true, 'song');
     }
 
     /**
