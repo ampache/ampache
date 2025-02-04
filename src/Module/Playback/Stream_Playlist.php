@@ -375,7 +375,7 @@ class Stream_Playlist
                     break;
                 case LibraryItemEnum::PODCAST_EPISODE:
                     /** @var Podcast_Episode $object */
-                    $url['title']     = $object->f_name;
+                    $url['title']     = $object->title;
                     $url['author']    = $object->getPodcastName();
                     $url['info_url']  = $object->get_f_link();
                     $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));

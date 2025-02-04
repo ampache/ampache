@@ -162,9 +162,6 @@ abstract class Catalog extends database_object
     /** @var string $key */
     public $key;
 
-    /** @var null|string $f_name */
-    public $f_name;
-
     /** @var null|string $link */
     public $link;
 
@@ -434,11 +431,7 @@ abstract class Catalog extends database_object
      */
     public function get_fullname(): ?string
     {
-        if ($this->f_name === null) {
-            $this->f_name = $this->name;
-        }
-
-        return $this->f_name;
+        return $this->name;
     }
 
     /**

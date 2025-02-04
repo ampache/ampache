@@ -169,9 +169,6 @@ class Song extends database_object implements
     /** @var array $tags */
     public $tags;
 
-    /** @var null|string $f_name */
-    public $f_name;
-
     /** @var null|string $f_artist */
     public $f_artist;
 
@@ -1741,11 +1738,7 @@ class Song extends database_object implements
      */
     public function get_fullname(): ?string
     {
-        if ($this->f_name === null) {
-            $this->f_name = $this->title;
-        }
-
-        return $this->f_name;
+        return $this->title;
     }
 
     /**

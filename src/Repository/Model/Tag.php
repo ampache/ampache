@@ -54,8 +54,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     public int $video = 0;
 
-    public string $f_name;
-
     /**
      * constructor
      * This takes a tag id and returns all of the relevant information
@@ -75,9 +73,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-
-        // the ui is sometimes looking for a formatted name...
-        $this->f_name = scrub_out($this->name);
     }
 
     public function getId(): int

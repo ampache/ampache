@@ -138,7 +138,7 @@ class ShowSongActionTest extends MockeryTestCase
         $content = 'some-content';
 
         $song->id     = $song_id;
-        $song->f_name = $title;
+        $song->get_fullname() = $title;
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
