@@ -37,10 +37,11 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), scrub_out($catalog->nam
             <td><input type="text" name="name" value="<?php echo scrub_out($catalog->name); ?>" autofocus></input></td>
             <td style="vertical-align:top; font-family: monospace;" rowspan="5">
                 <strong><?php echo T_('Auto-inserted Fields'); ?></strong><br />
+                <span class="format-specifier">%A</span> = <?php echo T_('Album'); ?><br />
+                <span class="format-specifier">%B</span> = <?php echo T_('Album Artist'); ?><br />
                 <span class="format-specifier">%a</span> = <?php echo T_('Song Artist'); ?><br />
                 <span class="format-specifier">%t</span> = <?php echo T_('Song Title'); ?><br />
                 <span class="format-specifier">%T</span> = <?php echo T_('Track (0 padded)'); ?><br />
-                <span class="format-specifier">%A</span> = <?php echo T_('Album'); ?><br />
                 <span class="format-specifier">%d</span> = <?php echo T_('Disk'); ?><br />
                 <span class="format-specifier">%g</span> = <?php echo T_('Genre'); ?><br />
                 <span class="format-specifier">%y</span> = <?php echo T_('Year'); ?><br />
