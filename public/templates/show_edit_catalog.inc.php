@@ -40,6 +40,7 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), scrub_out($catalog->nam
                 <span class="format-specifier">%A</span> = <?php echo T_('Album'); ?><br />
                 <span class="format-specifier">%B</span> = <?php echo T_('Album Artist'); ?><br />
                 <span class="format-specifier">%a</span> = <?php echo T_('Song Artist'); ?><br />
+                <span class="format-specifier">%m</span> = <?php echo T_('Artist'); ?><br />
                 <span class="format-specifier">%t</span> = <?php echo T_('Song Title'); ?><br />
                 <span class="format-specifier">%T</span> = <?php echo T_('Track (0 padded)'); ?><br />
                 <span class="format-specifier">%d</span> = <?php echo T_('Disk'); ?><br />

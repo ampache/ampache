@@ -1875,7 +1875,12 @@ final class VaInfo implements VaInfoInterface
             foreach ($matches as $key => $value) {
                 $new_key = self::translate_pattern_code($elements['0'][$key]);
                 if (!empty($new_key)) {
-                    $results[$new_key] = $value;
+                    if (($new_key == 'multi_artist')) {
+                        $results['artist']      = $value;
+                        $results['albumartist'] = $value;
+                    } else {
+                        $results[$new_key] = $value;
+                    }
                 }
             }
 
@@ -2009,6 +2014,7 @@ final class VaInfo implements VaInfoInterface
             '%d' => 'disk',
             '%g' => 'genre',
             '%l' => 'label',
+            '%m' => 'multi_artist',
             '%o' => 'zz_other',
             '%R' => 'release_status',
             '%r' => 'release_type',
