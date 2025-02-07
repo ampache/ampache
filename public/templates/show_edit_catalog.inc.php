@@ -37,27 +37,22 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), scrub_out($catalog->nam
             <td><input type="text" name="name" value="<?php echo scrub_out($catalog->name); ?>" autofocus></input></td>
             <td style="vertical-align:top; font-family: monospace;" rowspan="5">
                 <strong><?php echo T_('Auto-inserted Fields'); ?></strong><br />
-                <span class="format-specifier">%A</span> = <?php echo T_('Album'); ?><br />
-                <span class="format-specifier">%a</span> = <?php echo T_('Album Artist'); ?><br />
-                <span class="format-specifier">%c</span> = <?php echo T_('Comment'); ?><br />
-                <span class="format-specifier">%C</span> = <?php echo T_('Catalog Number'); ?><br />
+                <span class="format-specifier">%a</span> = <?php echo T_('Song Artist'); ?><br />
+                <span class="format-specifier">%t</span> = <?php echo T_('Song Title'); ?><br />
                 <span class="format-specifier">%T</span> = <?php echo T_('Track (0 padded)'); ?><br />
+                <span class="format-specifier">%A</span> = <?php echo T_('Album'); ?><br />
                 <span class="format-specifier">%d</span> = <?php echo T_('Disk'); ?><br />
                 <span class="format-specifier">%g</span> = <?php echo T_('Genre'); ?><br />
-                <span class="format-specifier">%t</span> = <?php echo T_('Song Title'); ?><br />
                 <span class="format-specifier">%y</span> = <?php echo T_('Year'); ?><br />
                 <span class="format-specifier">%Y</span> = <?php echo T_('Original Year'); ?><br />
+                <span class="format-specifier">%c</span> = <?php echo T_('Comment'); ?><br />
+                <span class="format-specifier">%l</span> = <?php echo T_('Label'); ?><br />
                 <span class="format-specifier">%r</span> = <?php echo T_('Release Type'); ?><br />
                 <span class="format-specifier">%R</span> = <?php echo T_('Release Status'); ?><br />
                 <span class="format-specifier">%s</span> = <?php echo T_('Release Comment'); ?><br />
+                <span class="format-specifier">%C</span> = <?php echo T_('Catalog Number'); ?><br />
                 <span class="format-specifier">%b</span> = <?php echo T_('Barcode'); ?><br />
-                <?php if (AmpConfig::get('allow_video')) { ?>
-                    <strong><?php echo T_('TV Shows'); ?></strong><br />
-                    <span class="format-specifier">%S</span> = <?php echo T_('TV Show'); ?><br />
-                    <span class="format-specifier">%n</span> = <?php echo T_('Season'); ?><br />
-                    <span class="format-specifier">%e</span> = <?php echo T_('Episode'); ?><br />
-                    <span class="format-specifier">%t</span> = <?php echo T_('Title'); ?><br />
-                <?php } ?>
+                <span class="format-specifier">%o</span> = <?php echo T_('Ignore'); ?><br />
             </td>
         </tr>
         <tr>
