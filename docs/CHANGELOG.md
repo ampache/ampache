@@ -12,6 +12,9 @@ Pre-translating files before loading media templates should speed those pages up
 * Added option to show separate Artist column for playlist media
 * Pre-translate common strings on repeated tasks before loading media row templates
 * Clean empty albums after each verify chunk
+* New catalog Auto-insert Fields
+  * `%B` Album Artist
+  * `%m` Song Artist **AND** Album Artist
 * Search
   * Add `genre_count_song`, `genre_count_album` and `genre_count_artist` to Song search
   * Add `genre_count_song`, `genre_count_album` and `genre_count_artist` to Album search
@@ -32,6 +35,7 @@ Pre-translating files before loading media templates should speed those pages up
 
 * Don't check file modification time on verify. Just use the database `last_update` value
 * Remove some useless or low use properties on classes and replace with functions
+* Video catalog auto-insert fields `%S`, `%n` and `%e`
 
 ### Fixed
 
@@ -46,12 +50,14 @@ Pre-translating files before loading media templates should speed those pages up
 * Speed up `catalog_map` delete queries for 'artist' type
 * Don't unset object properties during tag chane comparison
 * Error with database properties that allow null values
+* Require `mail` config or `user_no_email_confirm` to allow registration
 * webplayer
   * Not escaping bad characters correctly
 * CLI
   * Hide invalid default command values. (e.g. Verbose and Version are not required)
 * Search
   * Album and AlbumDisk parameter not included for `release_type`, `release_status`, `barcode` and `catalog_number` searches
+  * Song searches for favorites (e.g. `my_flagged_song`) sql error
 * SubSonic
   * OpenSubsonic extention (`openSubsonicExtensions`) incorrect case
   * Catch empty LocalPlay controller when disabled
