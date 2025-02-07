@@ -2000,22 +2000,23 @@ final class VaInfo implements VaInfoInterface
     private static function translate_pattern_code(string $code): ?string
     {
         $code_array = [
-            '%a' => 'artist',
             '%A' => 'album',
+            '%a' => 'artist', // Song Artist
+            '%B' => 'albumartist',
             '%b' => 'barcode',
-            '%c' => 'comment',
             '%C' => 'catalog_number',
+            '%c' => 'comment',
             '%d' => 'disk',
             '%g' => 'genre',
             '%l' => 'label',
+            '%o' => 'zz_other',
+            '%R' => 'release_status',
+            '%r' => 'release_type',
+            '%s' => 'version', // Release Comment
             '%t' => 'title',
             '%T' => 'track',
-            '%r' => 'release_type',
-            '%R' => 'release_status',
-            '%s' => 'subtitle',
-            '%y' => 'year',
             '%Y' => 'original_year',
-            '%o' => 'zz_other',
+            '%y' => 'year',
         ];
 
         if (isset($code_array[$code])) {
