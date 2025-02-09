@@ -507,8 +507,8 @@ class Json5_Data
                 ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false)
                 : [];
 
-            $objArray['time']          = (int) $album->total_duration;
-            $objArray['year']          = (int) $year;
+            $objArray['time']          = (int)$album->time;
+            $objArray['year']          = (int)$year;
             $objArray['tracks']        = $songs;
             $objArray['songcount']     = (int) $album->song_count;
             $objArray['diskcount']     = (int) $album->disk_count;

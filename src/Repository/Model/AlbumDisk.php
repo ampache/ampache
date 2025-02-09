@@ -113,12 +113,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     /** @var null|string $f_link */
     public $f_link;
 
-    /** @var null|string $f_release_type */
-    public $f_release_type;
-
-    /** @var int $total_duration */
-    public $total_duration;
-
     /** @var int $catalog_id */
     public $catalog_id;
 
@@ -159,8 +153,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             $this->$key = $value;
         }
 
-        // Little bit of formatting here
-        $this->total_duration = (int)$this->time;
         // set the album variables just in case
         $this->name              = $this->album->name;
         $this->prefix            = $this->album->prefix;
@@ -280,7 +272,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             $this->album = new Album($this->album_id);
         }
 
-        $this->f_release_type = $this->album->f_release_type;
         $this->album_artists  = $this->album->get_artists();
 
         if ($details) {

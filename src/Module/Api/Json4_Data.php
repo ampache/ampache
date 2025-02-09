@@ -407,7 +407,7 @@ class Json4_Data
                 $songs = $album->song_count;
             }
 
-            $objArray['time']          = (int) $album->total_duration;
+            $objArray['time']          = (int)$album->time;
             $objArray['year']          = (int) $album->year;
             $objArray['tracks']        = $songs;
             $objArray['songcount']     = (int) $album->song_count;

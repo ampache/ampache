@@ -415,7 +415,7 @@ class Subsonic_Xml_Data
         }
         $xalbum->addAttribute('songCount', (string) $album->song_count);
         $xalbum->addAttribute('created', date("c", (int)$album->addition_time));
-        $xalbum->addAttribute('duration', (string) $album->total_duration);
+        $xalbum->addAttribute('duration', (string) $album->time);
         $xalbum->addAttribute('playCount', (string)$album->total_count);
         if ($album->album_artist) {
             $xalbum->addAttribute('artistId', (string)self::_getArtistId($album->album_artist));
