@@ -79,7 +79,7 @@ if ($np_user->f_avatar_medium) {
     </div>
     <div class="np_cell cel_left">
         <label><?php echo $t_year; ?></label>
-        <?php echo $media->f_year_link; ?>
+        <?php echo "<a href=\"" . $web_path . "/search.php?type=album&action=search&limit=0&rule_1=year&rule_1_operator=2&rule_1_input=" . $media->year . "\">" . $media->year . "</a>"; ?>
     </div>
     <?php
         if (!empty($media->tags)) { ?>

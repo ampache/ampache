@@ -113,9 +113,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     /** @var null|string $f_link */
     public $f_link;
 
-    /** @var null|string $f_year */
-    public $f_year;
-
     /** @var null|string $f_release_type */
     public $f_release_type;
 
@@ -124,9 +121,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     /** @var int $catalog_id */
     public $catalog_id;
-
-    /** @var null|string $f_year_link */
-    public $f_year_link;
 
     private ?bool $has_art = null;
 
@@ -297,14 +291,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         $this->get_artist_fullname();
         $this->get_f_link();
         $this->get_f_parent_link();
-
-        if (!$this->year) {
-            $this->f_year = $this->album->f_year;
-        } else {
-            $web_path          = AmpConfig::get_web_path();
-            $year              = $this->year;
-            $this->f_year_link = sprintf('<a href="%s/search.php?type=album_disk&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=', $web_path) . $year . "\">" . $year . "</a>";
-        }
     }
 
     /**

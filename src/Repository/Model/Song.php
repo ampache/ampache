@@ -213,9 +213,6 @@ class Song extends database_object implements
     /** @var null|string $f_albumartist_link */
     public $f_albumartist_link;
 
-    /** @var null|string $f_year_link */
-    public $f_year_link;
-
     /** @var null|string $f_size */
     public $f_size;
 
@@ -1663,9 +1660,6 @@ class Song extends database_object implements
         $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . $web_path . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
 
         $this->f_composer  = $this->composer;
-
-        $year              = $this->year;
-        $this->f_year_link = "<a href=\"" . $web_path . "/search.php?type=album&action=search&limit=0&rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
     }
 
     /**
