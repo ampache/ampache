@@ -424,7 +424,12 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      */
     public function get_f_parent_link(): ?string
     {
-        return $this->get_f_artist_link();
+        // don't do anything if it's formatted
+        if ($this->f_artist_link === null) {
+            $this->f_artist_link = $this->album->get_f_parent_link();
+        }
+
+        return $this->f_artist_link;
     }
 
     /**
@@ -433,19 +438,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     public function getYear(): string
     {
         return (string)($this->year ?: '');
-    }
-
-    /**
-     * Get item f_artist_link.
-     */
-    public function get_f_artist_link(): ?string
-    {
-        // don't do anything if it's formatted
-        if ($this->f_artist_link === null) {
-            $this->f_artist_link = $this->album->get_f_artist_link();
-        }
-
-        return $this->f_artist_link;
     }
 
     /**

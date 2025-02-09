@@ -29,7 +29,7 @@ use Ampache\Repository\Model\Song_Preview;
 
 ?>
 <td class="cel_song"><?php echo $libitem->title; ?></td>
-<td class="cel_artist"><?php echo $libitem->f_artist_link; ?></td>
+<td class="cel_artist"><?php echo $libitem->get_f_parent_link(); ?></td>
 <td class="cel_album"><?php echo $libitem->f_album_link; ?></td>
 <td class="cel_track"><?php echo $libitem->track; ?></td>
 <td class="cel_disk"><?php echo $libitem->disk; ?></td>

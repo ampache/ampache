@@ -1780,26 +1780,6 @@ class Song extends database_object implements
      */
     public function get_f_parent_link(): ?string
     {
-        return $this->get_f_artist_link();
-    }
-
-    /**
-     * Get item album_artists array
-     */
-    public function get_artists(): array
-    {
-        if (!isset($this->artists)) {
-            $this->artists = self::get_parent_array($this->id);
-        }
-
-        return $this->artists;
-    }
-
-    /**
-     * Get item f_artist_link.
-     */
-    public function get_f_artist_link(): ?string
-    {
         // don't do anything if it's formatted
         if ($this->f_artist_link === null) {
             $this->f_artist_link = '';
@@ -1819,6 +1799,18 @@ class Song extends database_object implements
         }
 
         return $this->f_artist_link;
+    }
+
+    /**
+     * Get item album_artists array
+     */
+    public function get_artists(): array
+    {
+        if (!isset($this->artists)) {
+            $this->artists = self::get_parent_array($this->id);
+        }
+
+        return $this->artists;
     }
 
     /**
