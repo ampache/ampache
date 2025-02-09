@@ -98,9 +98,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /** @var int[] $song_artists */
     public ?array $song_artists = null;
 
-    /** @var int $total_duration */
-    public $total_duration;
-
     /** @var int $catalog_id */
     public $catalog_id;
 
@@ -127,9 +124,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /** @var null|string $f_link */
     public $f_link;
-
-    /** @var null|string $f_release_type */
-    public $f_release_type;
 
     /** @var int $song_id */
     public $song_id;
@@ -174,8 +168,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         }
 
         // Little bit of formatting here
-        $this->total_duration    = (int)$this->time;
-
         if ($this->album_artist === null && $this->song_artist_count > 1) {
             $this->album_artist  = 0;
             $this->artist_prefix = '';
@@ -492,7 +484,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             return;
         }
 
-        $this->f_release_type = ucwords((string)$this->release_type);
         $this->get_artists();
 
         if ($details) {

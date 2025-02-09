@@ -73,8 +73,6 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 
     private ?string $link = null;
 
-    private ?string $f_description = null;
-
     private ?string $f_link = null;
 
     private ?bool $has_art = null;
@@ -248,11 +246,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      */
     public function get_description(): string
     {
-        if ($this->f_description === null) {
-            $this->f_description = scrub_out($this->description ?? '');
-        }
-
-        return $this->f_description;
+        return scrub_out($this->description ?? '');
     }
 
     /**
