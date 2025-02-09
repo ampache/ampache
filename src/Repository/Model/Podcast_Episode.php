@@ -657,7 +657,9 @@ class Podcast_Episode extends database_object implements
      */
     public function getFileName(): string
     {
-        return sprintf('%s - %s.%s', $this->getPodcastName(), $this->get_fullname(), $this->type);
+        return (isset($this->type))
+            ? sprintf('%s - %s.%s', $this->getPodcastName(), $this->get_fullname(), $this->type)
+            : '';
     }
 
     public function getMediaType(): LibraryItemEnum
