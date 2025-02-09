@@ -28,7 +28,7 @@ use Ampache\Repository\Model\Wanted;
 /** @var Wanted $libitem */
 ?>
 <td class="cel_album"><?php echo $libitem->f_link; ?></td>
-<td class="cel_artist"><?php echo $libitem->f_artist_link; ?></td>
+<td class="cel_artist"><?php echo $libitem->get_f_parent_link(); ?></td>
 <td class="cel_year"><?php echo $libitem->year; ?></td>
 <td class="cel_user"><?php echo $libitem->f_user; ?></td>
 <td class="cel_action">

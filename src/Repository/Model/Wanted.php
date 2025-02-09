@@ -67,9 +67,6 @@ class Wanted extends database_object
     /** @var null|string $f_link */
     public $f_link;
 
-    /** @var null|string $f_artist_link */
-    public $f_artist_link;
-
     /** @var null|string $f_user */
     public $f_user;
 
@@ -219,11 +216,8 @@ class Wanted extends database_object
                                 $wanted->link .= "&artist_mbid=" . $lookupId;
                             }
 
-                            $wanted->f_user        = Core::get_global('user')?->get_fullname() ?? '';
-                            $wanted->f_link        = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
-                            $wanted->f_artist_link = ($artist !== null)
-                                ? $artist->get_f_link()
-                                : $wartist['link'] ?? '';
+                            $wanted->f_user = Core::get_global('user')?->get_fullname() ?? '';
+                            $wanted->f_link = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
 
                             if (
                                 $user instanceof User &&
@@ -437,16 +431,6 @@ class Wanted extends database_object
      */
     public function format(): void
     {
-        if ($this->artist) {
-            $artist              = new Artist($this->artist);
-            $this->f_artist_link = $artist->get_f_link();
-        } elseif ($this->artist_mbid !== null) {
-            $wartist             = self::getMissingArtistRetriever()->retrieve($this->artist_mbid);
-            $this->f_artist_link = $wartist['link'] ?? '';
-        } else {
-            $this->f_artist_link = '';
-        }
-
         $this->f_link = sprintf(
             '<a href="%s/albums.php?action=show_missing&mbid=%s&artist=%s&artist_mbid=%s" title="%s">%s</a>',
             AmpConfig::get_web_path(),
@@ -460,6 +444,24 @@ class Wanted extends database_object
         if ($this->user !== null) {
             $user         = new User($this->user);
             $this->f_user = $user->get_fullname();
+        }
+    }
+
+    /**
+     * Return a formatted link to the parent object (if appliccable)
+     */
+    public function get_f_parent_link(): ?string
+    {
+        if ($this->artist) {
+            $artist = new Artist($this->artist);
+
+            return $artist->get_f_link();
+        } elseif ($this->artist_mbid !== null) {
+            $wartist = self::getMissingArtistRetriever()->retrieve($this->artist_mbid);
+
+            return $wartist['link'] ?? '';
+        } else {
+            return '';
         }
     }
 
