@@ -4,6 +4,10 @@
 
 This update has a lot of updates for verification and tag updates.
 
+The biggest update though is the performance increase!
+
+Many formatting and simple properties have been removed speeding up object actions.
+
 Pre-translating files before loading media templates should speed those pages up a bit too.
 
 ### Added
@@ -12,6 +16,7 @@ Pre-translating files before loading media templates should speed those pages up
 * Added option to show separate Artist column for playlist media
 * Pre-translate common strings on repeated tasks before loading media row templates
 * Clean empty albums after each verify chunk
+* Add `memory_get_peak_usage` to query stat output
 * New catalog Auto-insert Fields
   * `%B` Album Artist
   * `%m` Song Artist **AND** Album Artist
@@ -34,7 +39,7 @@ Pre-translating files before loading media templates should speed those pages up
 ### Removed
 
 * Don't check file modification time on verify. Just use the database `last_update` value
-* Remove some useless or low use properties on classes and replace with functions
+* Remove useless and low use properties on classes and replace with functions or direct calls
 * Video catalog auto-insert fields `%S`, `%n` and `%e`
 
 ### Fixed
@@ -48,9 +53,10 @@ Pre-translating files before loading media templates should speed those pages up
 * Update parent tag lists when change occured on verify
 * Don't put string tags in the int list for comparison
 * Speed up `catalog_map` delete queries for 'artist' type
-* Don't unset object properties during tag chane comparison
+* Don't unset object properties during tag change comparison
 * Error with database properties that allow null values
 * Require `mail` config or `user_no_email_confirm` to allow registration
+* PodcastEpisode loading errors for new files that aren't downloaded yet
 * webplayer
   * Not escaping bad characters correctly
 * CLI
