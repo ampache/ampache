@@ -169,25 +169,10 @@ class Song extends database_object implements
     /** @var array $tags */
     public $tags;
 
-    /** @var null|string $f_artist */
-    public $f_artist;
-
-    /** @var null|string $f_album */
-    public $f_album;
-
     private ?string $artist_full_name = null;
 
     /** @var int|null $albumartist */
     public $albumartist;
-
-    /** @var null|string $f_albumartist_full */
-    public $f_albumartist_full;
-
-    /** @var null|string $f_album_full */
-    public $f_album_full;
-
-    /** @var null|string $f_time */
-    public $f_time;
 
     /** @var null|string $f_track */
     public $f_track;
@@ -213,17 +198,14 @@ class Song extends database_object implements
     /** @var null|string $f_size */
     public $f_size;
 
-    /** @var null|string $f_lyrics */
-    public $f_lyrics;
-
     /** @var int $count */
     public $count;
 
-    /** @var null|string $f_composer */
-    public $f_composer;
-
     /** @var int $tag_id */
     public $tag_id;
+
+    /** @var null|string $f_album_full */
+    private $f_album_full;
 
     private ?bool $has_art = null;
 
@@ -1620,16 +1602,6 @@ class Song extends database_object implements
 
         $this->albumartist = $this->getAlbumRepository()->getAlbumArtistId($this->album);
 
-        // Format the album name
-        $this->f_album_full = $this->get_album_fullname();
-        $this->f_album      = $this->f_album_full;
-
-        // Format the artist name
-        $this->f_artist = $this->get_artist_fullname();
-
-        // Format the album_artist name
-        $this->f_albumartist_full = $this->get_album_artist_fullname();
-
         // Create Links for the different objects
         $this->get_f_link();
         $this->get_f_parent_link();
@@ -1639,16 +1611,8 @@ class Song extends database_object implements
         // Format the Bitrate
         $this->f_bitrate = (int)($this->bitrate / 1024) . "-" . strtoupper((string)$this->mode);
 
-        // Format the track (there isn't really anything to do here)
-        $this->f_track = (string)$this->track;
-
         // Format the size
         $this->f_size = Ui::format_bytes($this->size);
-
-        $web_path       = AmpConfig::get_web_path();
-        $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . $web_path . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
-
-        $this->f_composer  = $this->composer;
     }
 
     /**
@@ -1690,7 +1654,7 @@ class Song extends database_object implements
             'artist' => [
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => $this->f_artist,
+                'value' => $this->get_artist_fullname(),
             ],
             'title' => [
                 'important' => true,
@@ -2196,8 +2160,8 @@ class Song extends database_object implements
 
             $run = str_replace("%f", $this->file ?? '%f', (string) $action['run']);
             $run = str_replace("%c", $codec, $run);
-            $run = str_replace("%a", $this->f_artist ?? '%a', $run);
-            $run = str_replace("%A", $this->f_album ?? '%A', $run);
+            $run = str_replace("%a", (empty($this->get_artist_fullname())) ? '%a' : $this->get_artist_fullname(), $run);
+            $run = str_replace("%A", (empty($this->get_album_fullname())) ? '%A' : $this->get_album_fullname(), $run);
             $run = str_replace("%t", $this->get_fullname() ?? '%t', $run);
 
             debug_event(self::class, "Running custom play action: " . $run, 3);

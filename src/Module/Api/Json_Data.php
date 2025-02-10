@@ -836,7 +836,7 @@ class Json_Data
             if ($album->get_artist_fullname() != "") {
                 $objArray['artist'] = [
                     "id" => (string)$album->album_artist,
-                    "name" => $album->f_artist_name,
+                    "name" => $album->get_artist_fullname(),
                     "prefix" => $album->artist_prefix,
                     "basename" => $album->artist_name
                 ];
@@ -863,7 +863,7 @@ class Json_Data
             $objArray['songcount']     = (int)$album->song_count;
             $objArray['diskcount']     = (int)$album->disk_count;
             $objArray['type']          = $album->release_type;
-            $objArray['genre']         = self::genre_array($album->tags);
+            $objArray['genre']         = self::genre_array($album->get_tags());
             $objArray['art']           = $art_url;
             $objArray['has_art']       = $album->has_art();
             $objArray['flag']          = (bool)$flag->get_flag($user->getId());

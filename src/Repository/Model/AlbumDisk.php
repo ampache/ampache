@@ -95,18 +95,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public ?array $album_artists = null;
 
-    /** @var array $tags */
-    public $tags;
-
-    /** @var null|string $f_artist_name */
-    public $f_artist_name;
-
-    /** @var null|string $f_artist_link */
-    public $f_artist_link;
-
-    /** @var null|string $f_artist */
-    public $f_artist;
-
     /** @var null|string $f_name // Prefix + Name, generated */
     public $f_name;
 
@@ -115,6 +103,15 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     /** @var int $catalog_id */
     public $catalog_id;
+
+    /** @var array $tags */
+    private $tags;
+
+    /** @var null|string $f_artist_name */
+    private $f_artist_name;
+
+    /** @var null|string $f_artist_link */
+    private $f_artist_link;
 
     private ?bool $has_art = null;
 

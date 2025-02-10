@@ -537,7 +537,7 @@ class Xml_Data
                         if ($album->get_artist_fullname() != "") {
                             $album_artist = [
                                 "id" => $album->album_artist,
-                                "name" => $album->f_artist_name,
+                                "name" => $album->get_artist_fullname(),
                                 "prefix" => $album->artist_prefix,
                                 "basename" => $album->artist_name
                             ];
@@ -654,7 +654,7 @@ class Xml_Data
                         if ($album->get_artist_fullname() != "") {
                             $album_artist = [
                                 "id" => $album->album_artist,
-                                "name" => $album->f_artist_name,
+                                "name" => $album->get_artist_fullname(),
                                 "prefix" => $album->artist_prefix,
                                 "basename" => $album->artist_name
                             ];
@@ -1020,7 +1020,7 @@ class Xml_Data
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $album->id . '&object_type=album';
-            $string .= "\t<time>" . $album->time . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<diskcount>" . $album->disk_count . "</diskcount>\n\t<type>" . $album->release_type . "</type>\n" . self::genre_string($album->tags) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($album->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n</album>\n";
+            $string .= "\t<time>" . $album->time . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<diskcount>" . $album->disk_count . "</diskcount>\n\t<type>" . $album->release_type . "</type>\n" . self::genre_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($album->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n</album>\n";
         } // end foreach
 
         return self::output_xml($string, $full_xml);

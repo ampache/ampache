@@ -107,18 +107,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /** @var string $artist_name */
     public $artist_name;
 
-    /** @var array $tags */
-    public $tags;
-
-    /** @var null|string $f_artist_name */
-    public $f_artist_name;
-
-    /** @var null|string $f_artist_link */
-    public $f_artist_link;
-
-    /** @var null|string $f_artist */
-    public $f_artist;
-
     /** @var null|string $f_name // Prefix + Name, generated */
     public $f_name;
 
@@ -138,6 +126,15 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /** @var array $_songs */
     public $_songs = [];
+
+    /** @var array $tags */
+    private $tags;
+
+    /** @var null|string $f_artist_name */
+    private $f_artist_name;
+
+    /** @var null|string $f_artist_link */
+    private $f_artist_link;
 
     private ?bool $has_art = null;
 

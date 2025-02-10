@@ -253,7 +253,7 @@ final class SongTagWriter implements SongTagWriterInterface
                 'data' => $image,
                 'mime' => $art->raw_mime,
                 'picturetypeid' => 3,
-                'description' => $song->f_album,
+                'description' => $song->get_album_fullname(),
                 'encodingid' => 0
             ];
             if ($file_has_pics) {
@@ -397,7 +397,7 @@ final class SongTagWriter implements SongTagWriterInterface
                 $new_pic = [
                     'data' => $image,
                     'picturetypeid' => 3,
-                    'description' => $song->f_album,
+                    'description' => $song->get_album_fullname(),
                     'mime' => $art->raw_mime,
                     'encodingid' => 0
                 ];
@@ -456,12 +456,12 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['date']                = $song->year;
         $meta['title']               = $song->title;
         $meta['comment']             = $song->comment;
-        $meta['album']               = $song->f_album_full;
+        $meta['album']               = $song->get_album_fullname();
         $meta['artist']              = $song->get_artist_fullname();
-        $meta['albumartist']         = $song->f_albumartist_full;
+        $meta['albumartist']         = $song->get_album_artist_fullname();
         $meta['composer']            = $song->composer;
         $meta['label']               = $song->label ?? null;
-        $meta['tracknumber']         = $song->f_track;
+        $meta['tracknumber']         = $song->track;
         $meta['discnumber']          = $song->disk;
         $meta['musicbrainz_trackid'] = $song->mbid;
         $meta['musicbrainz_albumid'] = $song->album_mbid;
@@ -531,10 +531,10 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['comment']       = $song->comment;
         $meta['album']         = $song->get_album_fullname();
         $meta['artist']        = $song->get_artist_fullname();
-        $meta['band']          = $song->f_albumartist_full;
+        $meta['band']          = $song->get_album_artist_fullname();
         $meta['composer']      = $song->composer;
         $meta['publisher']     = $song->label ?? null;
-        $meta['track_number']  = $song->f_track;
+        $meta['track_number']  = $song->track;
         $meta['part_of_a_set'] = $song->disk;
         if (isset($song->mbid)) {
             $meta['unique_file_identifier'] = [

@@ -4294,8 +4294,7 @@ abstract class Catalog extends database_object
         }
 
         // Create the filename that this file should have
-        $album = self::sort_clean_name($song->get_album_fullname(), '%A', $windowsCompat);
-        //$artist = self::sort_clean_name($song->get_artist_fullname(), '%a', $windowsCompat);
+        $album_name = self::sort_clean_name($song->get_album_fullname(), '%A', $windowsCompat);
         $track = self::sort_clean_name($song->track, '%T', $windowsCompat);
         if ((int) $track < 10) {
             $track = '0' . $track;
@@ -4306,26 +4305,28 @@ abstract class Catalog extends database_object
         $comment = self::sort_clean_name($song->comment, '%c', $windowsCompat);
 
         // Do the various check
-        $album_object = new Album($song->album);
-        $album_object->format();
+        $album = new Album($song->album);
+        $album->format();
 
-        $artist = (empty($album_object->f_artist_name))
+        $song_artist_name  = self::sort_clean_name($song->get_artist_fullname(), '%a', $windowsCompat);
+        $album_artist_name = (empty($album->get_artist_fullname()))
             ? $various_artist
-            : self::sort_clean_name($album_object->f_artist_name, '%a', $windowsCompat);
+            : self::sort_clean_name($album->get_artist_fullname(), '%a', $windowsCompat);
         $disk           = self::sort_clean_name($song->disk, '%d');
-        $catalog_number = self::sort_clean_name($album_object->catalog_number, '%C');
-        $barcode        = self::sort_clean_name($album_object->barcode, '%b');
-        $original_year  = self::sort_clean_name($album_object->original_year, '%Y');
-        $release_type   = self::sort_clean_name($album_object->release_type, '%r');
-        $release_status = self::sort_clean_name($album_object->release_status, '%R');
-        $version        = self::sort_clean_name($album_object->version, '%s');
-        $genre          = ($album_object->tags === [])
+        $catalog_number = self::sort_clean_name($album->catalog_number, '%C');
+        $barcode        = self::sort_clean_name($album->barcode, '%b');
+        $original_year  = self::sort_clean_name($album->original_year, '%Y');
+        $release_type   = self::sort_clean_name($album->release_type, '%r');
+        $release_status = self::sort_clean_name($album->release_status, '%R');
+        $version        = self::sort_clean_name($album->version, '%s');
+        $genre          = ($album->get_tags() === [])
             ? '%b'
-            : Tag::get_display($album_object->tags);
+            : Tag::get_display($album->get_tags());
 
         // Replace everything we can find
         $replace_array = [
             '%a',
+            '%B',
             '%A',
             '%t',
             '%T',
@@ -4341,8 +4342,9 @@ abstract class Catalog extends database_object
             '%b',
         ];
         $content_array = [
-            $artist,
-            $album,
+            $song_artist_name,
+            $album_artist_name,
+            $album_name,
             $title,
             $track,
             $year,
