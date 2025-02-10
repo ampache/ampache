@@ -42,7 +42,6 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Recommendation;
-use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
@@ -189,9 +188,9 @@ class Song extends database_object implements
 
     private ?string $artist_full_name = null;
 
-    private ?string $f_albumartist_link;
+    private ?string $f_albumartist_link = null;
 
-    private ?string $f_album_full;
+    private ?string $f_album_full = null;
 
     private ?bool $has_art = null;
 
