@@ -454,7 +454,7 @@ class AmpacheHttpq extends localplay_controller
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
                     $song->format();
-                    $data['name'] = $song->get_fullname() . ' - ' . $song->f_album . ' - ' . $song->f_artist;
+                    $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname() . ' - ' . $song->get_artist_fullname();
                     $data['link'] = $song->get_f_link();
                     break;
                 case 'demo_id':
@@ -485,7 +485,7 @@ class AmpacheHttpq extends localplay_controller
                             switch ($row['type']) {
                                 case 'song':
                                     /** @var Song $media */
-                                    $data['name'] = $media->get_fullname() . ' - ' . $media->f_album . ' - ' . $media->f_artist;
+                                    $data['name'] = $media->get_fullname() . ' - ' . $media->get_album_fullname() . ' - ' . $media->get_artist_fullname();
                                     $data['link'] = $media->get_f_link();
                                     break;
                                 case 'live_stream':

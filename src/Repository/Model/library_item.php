@@ -51,6 +51,11 @@ interface library_item extends playable_item
     public function get_description(): string;
 
     /**
+     * format time to Hours:Minutes:Seconds.
+     */
+    public function get_f_time(): string;
+
+    /**
      * display_art
      * @param int $thumb
      * @param bool $force

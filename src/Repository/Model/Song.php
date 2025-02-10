@@ -42,7 +42,6 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Recommendation;
-use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
@@ -153,8 +152,10 @@ class Song extends database_object implements
     /** @var string $catalog_number */
     public $catalog_number;
 
+    /** @var int[] $artists */
     public array $artists;
 
+    /** @var int[] $albumartists */
     public array $albumartists;
 
     /** @var string $artist_mbid */
@@ -169,34 +170,8 @@ class Song extends database_object implements
     /** @var array $tags */
     public $tags;
 
-    /** @var null|string $f_artist */
-    public $f_artist;
-
-    /** @var null|string $f_album */
-    public $f_album;
-
-    private ?string $artist_full_name = null;
-
     /** @var int|null $albumartist */
     public $albumartist;
-
-    /** @var null|string $f_albumartist_full */
-    public $f_albumartist_full;
-
-    /** @var null|string $f_album_full */
-    public $f_album_full;
-
-    /** @var null|string $f_time */
-    public $f_time;
-
-    /** @var null|string $f_time_h */
-    public $f_time_h;
-
-    /** @var null|string $f_track */
-    public $f_track;
-
-    /** @var null|string $f_bitrate */
-    public $f_bitrate;
 
     /** @var null|string $f_link */
     public $f_link;
@@ -210,26 +185,11 @@ class Song extends database_object implements
     /** @var null|string $f_artist_link */
     public $f_artist_link;
 
-    /** @var null|string $f_albumartist_link */
-    public $f_albumartist_link;
+    private ?string $artist_full_name = null;
 
-    /** @var null|string $f_year_link */
-    public $f_year_link;
+    private ?string $f_albumartist_link = null;
 
-    /** @var null|string $f_size */
-    public $f_size;
-
-    /** @var null|string $f_lyrics */
-    public $f_lyrics;
-
-    /** @var int $count */
-    public $count;
-
-    /** @var null|string $f_composer */
-    public $f_composer;
-
-    /** @var int $tag_id */
-    public $tag_id;
+    private ?string $f_album_full = null;
 
     private ?bool $has_art = null;
 
@@ -539,12 +499,11 @@ class Song extends database_object implements
 
         $artists = [];
         $albums  = [];
-        $tags    = [];
 
         // Song data cache
         $sql = (AmpConfig::get('catalog_disable'))
-            ? "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `tag_map`.`tag_id` FROM `song` LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`id` IN $idlist AND `catalog`.`enabled` = '1' "
-            : "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `tag_map`.`tag_id` FROM `song` LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' WHERE `song`.`id` IN $idlist";
+            ? "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`id` IN $idlist AND `catalog`.`enabled` = '1' "
+            : "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip` FROM `song` WHERE `song`.`id` IN $idlist";
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -564,16 +523,11 @@ class Song extends database_object implements
 
             $albums[] = (int) $row['album'];
 
-            if ($row['tag_id']) {
-                $tags[$row['tag_id']] = $row['tag_id'];
-                unset($row['tag_id']);
-            }
             parent::add_to_cache('song', $row['id'], $row);
         }
 
         Artist::build_cache($artists);
         Album::build_cache($albums);
-        Tag::build_cache($tags);
         Tag::build_map_cache('song', $song_ids);
         Art::build_cache($albums);
 
@@ -1031,7 +985,6 @@ class Song extends database_object implements
             'mbid',
             'mime',
             'played',
-            'tag_id',
             'total_count',
             'total_skip',
             'type',
@@ -1625,47 +1578,6 @@ class Song extends database_object implements
         }
 
         $this->albumartist = $this->getAlbumRepository()->getAlbumArtistId($this->album);
-
-        // Format the album name
-        $this->f_album_full = $this->get_album_fullname();
-        $this->f_album      = $this->f_album_full;
-
-        // Format the artist name
-        $this->f_artist = $this->get_artist_fullname();
-
-        // Format the album_artist name
-        $this->f_albumartist_full = $this->get_album_artist_fullname();
-
-        // Create Links for the different objects
-        $this->get_f_link();
-        $this->get_f_parent_link();
-        $this->get_f_albumartist_link();
-        $this->get_f_album_link();
-
-        // Format the Bitrate
-        $this->f_bitrate = (int)($this->bitrate / 1024) . "-" . strtoupper((string)$this->mode);
-
-        // Format the Time
-        $min            = floor($this->time / 60);
-        $sec            = sprintf("%02d", ($this->time % 60));
-        $this->f_time   = $min . ":" . $sec;
-        $hour           = sprintf("%02d", floor($min / 60));
-        $min_h          = sprintf("%02d", ($min % 60));
-        $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
-
-        // Format the track (there isn't really anything to do here)
-        $this->f_track = (string)$this->track;
-
-        // Format the size
-        $this->f_size = Ui::format_bytes($this->size);
-
-        $web_path       = AmpConfig::get_web_path();
-        $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . $web_path . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
-
-        $this->f_composer  = $this->composer;
-
-        $year              = $this->year;
-        $this->f_year_link = "<a href=\"" . $web_path . "/search.php?type=album&action=search&limit=0&rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
     }
 
     /**
@@ -1707,7 +1619,7 @@ class Song extends database_object implements
             'artist' => [
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => $this->f_artist,
+                'value' => $this->get_artist_fullname(),
             ],
             'title' => [
                 'important' => true,
@@ -1775,7 +1687,7 @@ class Song extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            return "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->get_artist_fullname()) . " - " . scrub_out($this->get_fullname()) . "\"> " . scrub_out($this->get_fullname()) . "</a>";
+            $this->f_link = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->get_artist_fullname()) . " - " . scrub_out($this->get_fullname()) . "\"> " . scrub_out($this->get_fullname()) . "</a>";
         }
 
         return $this->f_link;
@@ -1785,26 +1697,6 @@ class Song extends database_object implements
      * Return a formatted link to the parent object (if appliccable)
      */
     public function get_f_parent_link(): ?string
-    {
-        return $this->get_f_artist_link();
-    }
-
-    /**
-     * Get item album_artists array
-     */
-    public function get_artists(): array
-    {
-        if (!isset($this->artists)) {
-            $this->artists = self::get_parent_array($this->id);
-        }
-
-        return $this->artists;
-    }
-
-    /**
-     * Get item f_artist_link.
-     */
-    public function get_f_artist_link(): ?string
     {
         // don't do anything if it's formatted
         if ($this->f_artist_link === null) {
@@ -1825,6 +1717,35 @@ class Song extends database_object implements
         }
 
         return $this->f_artist_link;
+    }
+
+    /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(?bool $hours = false): string
+    {
+        $min = floor($this->time / 60);
+        $sec = sprintf("%02d", ($this->time % 60));
+        if (!$hours) {
+            return $min . ":" . $sec;
+        }
+
+        $hour  = sprintf("%02d", floor($min / 60));
+        $min_h = sprintf("%02d", ($min % 60));
+
+        return $hour . ":" . $min_h . ":" . $sec;
+    }
+
+    /**
+     * Get item album_artists array
+     */
+    public function get_artists(): array
+    {
+        if (!isset($this->artists)) {
+            $this->artists = self::get_parent_array($this->id);
+        }
+
+        return $this->artists;
     }
 
     /**
@@ -2204,8 +2125,8 @@ class Song extends database_object implements
 
             $run = str_replace("%f", $this->file ?? '%f', (string) $action['run']);
             $run = str_replace("%c", $codec, $run);
-            $run = str_replace("%a", $this->f_artist ?? '%a', $run);
-            $run = str_replace("%A", $this->f_album ?? '%A', $run);
+            $run = str_replace("%a", (empty($this->get_artist_fullname())) ? '%a' : $this->get_artist_fullname(), $run);
+            $run = str_replace("%A", (empty($this->get_album_fullname())) ? '%A' : $this->get_album_fullname(), $run);
             $run = str_replace("%t", $this->get_fullname() ?? '%t', $run);
 
             debug_event(self::class, "Running custom play action: " . $run, 3);

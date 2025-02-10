@@ -40,7 +40,7 @@ class LocalPlay
     public ?string $f_version     = null;
 
     /* Built Variables */
-    private ?localplay_controller $_player;
+    private ?localplay_controller $_player = null;
 
     /**
      * Constructor

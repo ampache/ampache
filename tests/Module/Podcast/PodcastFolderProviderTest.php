@@ -111,7 +111,7 @@ class PodcastFolderProviderTest extends TestCase
         $catalog = $this->createMock(Catalog::class);
 
         static::expectException(PodcastFolderException::class);
-        static::expectExceptionMessage(sprintf('Cannot create folder: %s/%s', $catalogPath, $podcastTitle));
+        static::expectExceptionMessage(sprintf('Cannot create folder: %s%s%s', $catalogPath, DIRECTORY_SEPARATOR, $podcastTitle));
 
         $this->catalogLoader->expects(static::once())
             ->method('getById')
@@ -163,7 +163,7 @@ class PodcastFolderProviderTest extends TestCase
             ->willReturn($catalogId);
 
         static::assertSame(
-            sprintf('%s/%s', $this->rootFolder->url(), $podcastTitle),
+            sprintf('%s%s%s', $this->rootFolder->url(), DIRECTORY_SEPARATOR, $podcastTitle),
             $this->subject->getBaseFolder($podcast)
         );
     }
@@ -198,7 +198,7 @@ class PodcastFolderProviderTest extends TestCase
             ->willReturn($catalogId);
 
         static::assertSame(
-            sprintf('%s/%s', $this->rootFolder->url(), $podcastTitle),
+            sprintf('%s%s%s', $this->rootFolder->url(), DIRECTORY_SEPARATOR, $podcastTitle),
             $this->subject->getBaseFolder($podcast)
         );
     }

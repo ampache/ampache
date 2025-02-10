@@ -9136,11 +9136,6 @@ parameters:
 			path: src/Repository/Model/Artist.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$labels type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
@@ -9866,11 +9861,6 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$f_name has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:_get_ext_info\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -9971,16 +9961,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$albumartists type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$artists type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -10037,11 +10017,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$f_album_link has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$f_artist has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
 

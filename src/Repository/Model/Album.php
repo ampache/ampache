@@ -92,14 +92,8 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     public ?string $link = null;
 
-    /** @var int[] $album_artists */
-    public ?array $album_artists = null;
-
     /** @var int[] $song_artists */
     public ?array $song_artists = null;
-
-    /** @var int $total_duration */
-    public $total_duration;
 
     /** @var int $catalog_id */
     public $catalog_id;
@@ -110,32 +104,11 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /** @var string $artist_name */
     public $artist_name;
 
-    /** @var array $tags */
-    public $tags;
-
-    /** @var null|string $f_artist_name */
-    public $f_artist_name;
-
-    /** @var null|string $f_artist_link */
-    public $f_artist_link;
-
-    /** @var null|string $f_artist */
-    public $f_artist;
-
     /** @var null|string $f_name // Prefix + Name, generated */
     public $f_name;
 
     /** @var null|string $f_link */
     public $f_link;
-
-    /** @var null|string $f_year */
-    public $f_year;
-
-    /** @var null|string $f_year_link */
-    public $f_year_link;
-
-    /** @var null|string $f_release_type */
-    public $f_release_type;
 
     /** @var int $song_id */
     public $song_id;
@@ -150,6 +123,18 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /** @var array $_songs */
     public $_songs = [];
+
+    /** @var int[] $album_artists */
+    private ?array $album_artists = null;
+
+    /** @var array $tags */
+    private $tags;
+
+    /** @var null|string $f_artist_name */
+    private $f_artist_name;
+
+    /** @var null|string $f_artist_link */
+    private $f_artist_link;
 
     private ?bool $has_art = null;
 
@@ -180,8 +165,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         }
 
         // Little bit of formatting here
-        $this->total_duration    = (int)$this->time;
-
         if ($this->album_artist === null && $this->song_artist_count > 1) {
             $this->album_artist  = 0;
             $this->artist_prefix = '';
@@ -498,7 +481,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             return;
         }
 
-        $this->f_release_type = ucwords((string)$this->release_type);
         $this->get_artists();
 
         if ($details) {
@@ -515,14 +497,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $this->get_f_link();
         $this->get_artist_fullname();
         $this->get_f_parent_link();
-
-        if ($this->year === 0) {
-            $this->f_year = "N/A";
-        } else {
-            $web_path          = AmpConfig::get_web_path();
-            $year              = $this->year;
-            $this->f_year_link = sprintf('<a href="%s/search.php?type=album&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=', $web_path) . $year . "\">" . $year . "</a>";
-        }
     }
 
     /**
@@ -633,7 +607,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            return "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
         }
 
         return $this->f_link;
@@ -665,7 +639,43 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      */
     public function get_f_parent_link(): ?string
     {
-        return $this->get_f_artist_link();
+        // don't do anything if it's formatted
+        if ($this->f_artist_link === null) {
+            if ($this->album_artist === 0) {
+                $this->f_artist_link = sprintf('<span title="%d ', $this->artist_count) . T_('Artists') . "\">" . T_('Various') . "</span>";
+            } elseif ($this->album_artist !== null) {
+                $this->f_artist_link = '';
+                $web_path            = AmpConfig::get_web_path();
+                if (!$this->album_artists) {
+                    $this->get_artists();
+                }
+
+                if ($this->album_artists !== null) {
+                    foreach ($this->album_artists as $artist_id) {
+                        $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
+                        if (!empty($artist_fullname)) {
+                            $this->f_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
+                        }
+                    }
+
+                    $this->f_artist_link = rtrim($this->f_artist_link, ",&nbsp");
+                } else {
+                    $this->f_artist_link = '';
+                }
+            } else {
+                $this->f_artist_link = '';
+            }
+        }
+
+        return $this->f_artist_link;
+    }
+
+    /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(): string
+    {
+        return '';
     }
 
     /**
@@ -707,42 +717,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     public function getYear(): string
     {
         return (string)($this->year ?: '');
-    }
-
-    /**
-     * Get item f_artist_link.
-     */
-    public function get_f_artist_link(): ?string
-    {
-        // don't do anything if it's formatted
-        if ($this->f_artist_link === null) {
-            if ($this->album_artist === 0) {
-                $this->f_artist_link = sprintf('<span title="%d ', $this->artist_count) . T_('Artists') . "\">" . T_('Various') . "</span>";
-            } elseif ($this->album_artist !== null) {
-                $this->f_artist_link = '';
-                $web_path            = AmpConfig::get_web_path();
-                if (!$this->album_artists) {
-                    $this->get_artists();
-                }
-
-                if ($this->album_artists !== null) {
-                    foreach ($this->album_artists as $artist_id) {
-                        $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
-                        if (!empty($artist_fullname)) {
-                            $this->f_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
-                        }
-                    }
-
-                    $this->f_artist_link = rtrim($this->f_artist_link, ",&nbsp");
-                } else {
-                    $this->f_artist_link = '';
-                }
-            } else {
-                $this->f_artist_link = '';
-            }
-        }
-
-        return $this->f_artist_link;
     }
 
     /**

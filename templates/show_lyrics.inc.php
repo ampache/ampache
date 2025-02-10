@@ -36,7 +36,7 @@ Ui::show_box_top("Song Lyrics", 'box box_lyrics_song');
 
 // Prepare the variables
 $title  = scrub_out($song->title);
-$album  = scrub_out($song->f_album_full);
+$album  = scrub_out($song->get_album_fullname());
 $artist = scrub_out($song->get_artist_fullname()); ?>
 <?php
 if ($album != T_('Unknown (Orphaned)')) {

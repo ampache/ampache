@@ -248,12 +248,12 @@ class SongViewAdapterTest extends MockeryTestCase
 
     public function testGetTrackNumberReturnsTrack(): void
     {
-        $trackNumber = '666';
+        $trackNumber = 666;
 
-        $this->song->f_track = $trackNumber;
+        $this->song->track = $trackNumber;
 
         $this->assertSame(
-            $trackNumber,
+            (string)$trackNumber,
             $this->subject->getTrackNumber()
         );
     }
@@ -370,9 +370,15 @@ class SongViewAdapterTest extends MockeryTestCase
 
     public function testPlayDurationReturnsValue(): void
     {
-        $value = 'some-duration';
+        $value = '4:24';
+        $time  = 264;
 
-        $this->song->f_time = $value;
+        $this->song->time = $time;
+
+        $this->song->shouldReceive('get_f_time')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
 
         $this->assertSame(
             $value,

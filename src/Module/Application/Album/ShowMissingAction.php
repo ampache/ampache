@@ -92,7 +92,7 @@ final class ShowMissingAction implements ApplicationActionInterface
                 '%s&nbsp;(%d)&nbsp;-&nbsp;%s',
                 scrub_out($walbum->name),
                 $walbum->year,
-                $walbum->f_artist_link
+                $walbum->get_f_parent_link()
             ),
             'info-box missing'
         );

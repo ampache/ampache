@@ -221,16 +221,6 @@ class Search extends playlist_object
         }
     }
 
-    public function getId(): int
-    {
-        return (int)($this->id ?? 0);
-    }
-
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
-    }
-
     /**
      * _set_basetypes
      *

@@ -118,7 +118,7 @@ $songprops[T_('Publication Date')] = $episode->getPubDate()->format(DATE_ATOM);
 $songprops[T_('Status')]           = $episode->getState()->toDescription();
 $songprops[T_('Website')]          = $episode->getWebsite();
 if ($episode->time > 0) {
-    $songprops[T_('Length')] = $episode->f_time;
+    $songprops[T_('Length')] = $episode->get_f_time();
 }
 
 if (!empty($episode->file)) {

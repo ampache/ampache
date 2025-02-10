@@ -24,16 +24,18 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\database_object;
+use Ampache\Module\Util\Ui;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\database_object;
 
-if (AmpConfig::get('show_footer_statistics')) { ?>
-    <br />
-    <span class="query-count">
-    <?php echo T_('Queries: '); ?><?php echo Dba::$stats['query']; ?>
-    | <?php echo T_('Cache Hits: '); ?><?php echo database_object::$cache_hit;
+if (AmpConfig::get('show_footer_statistics')) {
     $load_time_end = microtime(true);
-    $load_time     = number_format(($load_time_end - AmpConfig::get('load_time_begin')), 4); ?>
-    | <?php echo T_('Load Time: '); ?><?php echo $load_time; ?>
-    </span>
+    $load_time     = number_format(($load_time_end - AmpConfig::get('load_time_begin')), 4);
+    echo '<br />' .
+        '<span class="query-count">' .
+        T_('Queries: ') . Dba::$stats['query'] . ' | ' .
+        T_('Cache Hits: ') . database_object::$cache_hit . ' | ' .
+        T_('Load Time: ') . $load_time . ' | ' .
+        Ui::format_bytes(memory_get_peak_usage(true)) .
+        '</span>'; ?>
 <?php } ?>

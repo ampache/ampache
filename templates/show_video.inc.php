@@ -121,7 +121,7 @@ $gart = Art::display('video', $video->id, $fullname, 7); ?>
     </dd>
 <?php
 $videoprops[T_('Title')]  = scrub_out($fullname);
-$videoprops[T_('Length')] = scrub_out($video->f_time);
+$videoprops[T_('Length')] = scrub_out($video->get_f_time());
 if (get_class($video) != Video::class) {
     require Ui::find_template('show_partial_' . $video->getMediaType()->value . '.inc.php');
 }

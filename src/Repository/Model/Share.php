@@ -77,8 +77,6 @@ class Share extends database_object
 
     public ?string $description = null;
 
-    public $f_name;
-
     /** @var Song|Artist|Album|playlist_object|null $object */
     private $object;
 

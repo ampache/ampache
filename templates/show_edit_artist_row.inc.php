@@ -74,7 +74,7 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
             <?php if (AmpConfig::get('label')) { ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Labels'); ?></td>
-                <td><input type="text" name="edit_labels" id="edit_labels" value="<?php echo Label::get_display($libitem->labels); ?>" /></td>
+                <td><input type="text" name="edit_labels" id="edit_labels" value="<?php echo Label::get_display($libitem->get_labels()); ?>" /></td>
             </tr>
             <?php } ?>
             <tr>

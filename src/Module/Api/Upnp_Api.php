@@ -1595,17 +1595,17 @@ class Upnp_Api
             'restricted' => 'false', // XXX
             'dc:title' => self::_replaceSpecialSymbols($song->get_fullname()),
             'dc:date' => $song->getAdditionTime()->format(DATE_ATOM),
-            'dc:creator' => self::_replaceSpecialSymbols($song->f_artist),
+            'dc:creator' => self::_replaceSpecialSymbols($song->get_artist_fullname()),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI' => $art_url,
-            'upnp:artist' => self::_replaceSpecialSymbols($song->f_artist),
-            'upnp:album' => self::_replaceSpecialSymbols($song->f_album),
+            'upnp:artist' => self::_replaceSpecialSymbols($song->get_artist_fullname()),
+            'upnp:album' => self::_replaceSpecialSymbols($song->get_album_fullname()),
             'upnp:genre' => Tag::get_display($song->tags, false, 'song'),
             'upnp:originalTrackNumber' => $song->track,
             'res' => $song->play_url('', 'api', true), // For upnp, use local
             'protocolInfo' => $arrFileType['mime'],
             'size' => $song->size,
-            'duration' => $song->f_time_h . '.0',
+            'duration' => $song->get_f_time(true) . '.0',
             'bitrate' => $song->bitrate,
             'sampleFrequency' => $song->rate,
             'nrAudioChannels' => '2', // Just say its stereo as we don't have the real info
@@ -1659,12 +1659,12 @@ class Upnp_Api
             'dc:title' => self::_replaceSpecialSymbols($video->get_fullname()),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI' => $art_url,
-            'upnp:genre' => Tag::get_display($video->tags, false, 'video'),
+            'upnp:genre' => Tag::get_display($video->get_tags(), false, 'video'),
 
             'res' => $video->play_url('', 'api'),
             'protocolInfo' => $arrFileType['mime'],
             'size' => $video->size,
-            'duration' => $video->f_time_h . '.0',
+            'duration' => $video->get_f_time(true) . '.0',
         ];
     }
 
@@ -1711,7 +1711,7 @@ class Upnp_Api
             $ret['res']          = $episode->play_url('', 'api');
             $ret['protocolInfo'] = $arrFileType['mime'];
             $ret['size']         = $episode->size;
-            $ret['duration']     = $episode->f_time_h . '.0';
+            $ret['duration']     = $episode->get_f_time(true) . '.0';
         }
 
         return $ret;

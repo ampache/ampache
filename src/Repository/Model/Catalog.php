@@ -455,7 +455,7 @@ abstract class Catalog extends database_object
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            return '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+            $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
         }
 
         return $this->f_link;
@@ -966,9 +966,6 @@ abstract class Catalog extends database_object
      */
     public function format(): void
     {
-        $this->get_fullname();
-        $this->get_link();
-        $this->get_f_link();
         $this->f_update = ($this->last_update !== 0)
             ? get_datetime((int)$this->last_update)
             : T_('Never');
@@ -2620,6 +2617,7 @@ abstract class Catalog extends database_object
         }
 
         $new_song->tags = $tag_array;
+        $song->tags     = [];
         $tags           = Tag::get_object_tags('song', $song->id);
         if ($tags) {
             foreach ($tags as $tag) {
@@ -3029,13 +3027,14 @@ abstract class Catalog extends database_object
         $new_video->frame_rate    = $results['frame_rate'];
         $new_video->video_bitrate = self::check_int($results['video_bitrate'], 4294967294, 0);
         $tags                     = Tag::get_object_tags('video', $video->id);
+        $video_tags               = [];
         if ($tags) {
             foreach ($tags as $tag) {
-                $video->tags[] = $tag['name'];
+                $video_tags[] = $tag['name'];
             }
         }
 
-        $new_video->tags = $results['genre'];
+        $new_video_tags = $results['genre'];
 
         $info = Video::compare_video_information($video, $new_video);
         if ($info['change']) {
@@ -3043,8 +3042,8 @@ abstract class Catalog extends database_object
 
             Video::update_video($video->id, $new_video);
 
-            if ($video->tags != $new_video->tags) {
-                Tag::update_tag_list(implode(',', $new_video->tags), 'video', $video->id, true);
+            if ($video_tags != $new_video_tags) {
+                Tag::update_tag_list(implode(',', $new_video_tags), 'video', $video->id, true);
             }
 
             Video::update_video_counts($video->id);
@@ -4294,9 +4293,8 @@ abstract class Catalog extends database_object
         }
 
         // Create the filename that this file should have
-        $album = self::sort_clean_name($song->get_album_fullname(), '%A', $windowsCompat);
-        //$artist = self::sort_clean_name($song->get_artist_fullname(), '%a', $windowsCompat);
-        $track = self::sort_clean_name($song->track, '%T', $windowsCompat);
+        $album_name = self::sort_clean_name($song->get_album_fullname(), '%A', $windowsCompat);
+        $track      = self::sort_clean_name($song->track, '%T', $windowsCompat);
         if ((int) $track < 10) {
             $track = '0' . $track;
         }
@@ -4306,26 +4304,28 @@ abstract class Catalog extends database_object
         $comment = self::sort_clean_name($song->comment, '%c', $windowsCompat);
 
         // Do the various check
-        $album_object = new Album($song->album);
-        $album_object->format();
+        $album = new Album($song->album);
+        $album->format();
 
-        $artist = (empty($album_object->f_artist_name))
+        $song_artist_name  = self::sort_clean_name($song->get_artist_fullname(), '%a', $windowsCompat);
+        $album_artist_name = (empty($album->get_artist_fullname()))
             ? $various_artist
-            : self::sort_clean_name($album_object->f_artist_name, '%a', $windowsCompat);
+            : self::sort_clean_name($album->get_artist_fullname(), '%a', $windowsCompat);
         $disk           = self::sort_clean_name($song->disk, '%d');
-        $catalog_number = self::sort_clean_name($album_object->catalog_number, '%C');
-        $barcode        = self::sort_clean_name($album_object->barcode, '%b');
-        $original_year  = self::sort_clean_name($album_object->original_year, '%Y');
-        $release_type   = self::sort_clean_name($album_object->release_type, '%r');
-        $release_status = self::sort_clean_name($album_object->release_status, '%R');
-        $version        = self::sort_clean_name($album_object->version, '%s');
-        $genre          = ($album_object->tags === [])
+        $catalog_number = self::sort_clean_name($album->catalog_number, '%C');
+        $barcode        = self::sort_clean_name($album->barcode, '%b');
+        $original_year  = self::sort_clean_name($album->original_year, '%Y');
+        $release_type   = self::sort_clean_name($album->release_type, '%r');
+        $release_status = self::sort_clean_name($album->release_status, '%R');
+        $version        = self::sort_clean_name($album->version, '%s');
+        $genre          = ($album->get_tags() === [])
             ? '%b'
-            : Tag::get_display($album_object->tags);
+            : Tag::get_display($album->get_tags());
 
         // Replace everything we can find
         $replace_array = [
             '%a',
+            '%B',
             '%A',
             '%t',
             '%T',
@@ -4341,8 +4341,9 @@ abstract class Catalog extends database_object
             '%b',
         ];
         $content_array = [
-            $artist,
-            $album,
+            $song_artist_name,
+            $album_artist_name,
+            $album_name,
             $title,
             $track,
             $year,

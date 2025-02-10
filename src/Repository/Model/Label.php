@@ -183,7 +183,7 @@ class Label extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            return "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
         }
 
         return $this->f_link;
@@ -195,6 +195,14 @@ class Label extends database_object implements library_item
     public function get_f_parent_link(): ?string
     {
         return null;
+    }
+
+    /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(): string
+    {
+        return '';
     }
 
     /**
