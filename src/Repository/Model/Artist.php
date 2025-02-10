@@ -89,9 +89,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /** @var null|string $f_link */
     public $f_link;
 
-    /** @var null|string $f_time */
-    public $f_time;
-
     /** @var bool $_fake */
     public $_fake = false; // Set if construct_from_array used
 
@@ -484,7 +481,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            return "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
         }
 
         return $this->f_link;
