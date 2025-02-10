@@ -248,12 +248,12 @@ class SongViewAdapterTest extends MockeryTestCase
 
     public function testGetTrackNumberReturnsTrack(): void
     {
-        $trackNumber = '666';
+        $trackNumber = 666;
 
-        $this->song->f_track = $trackNumber;
+        $this->song->track = $trackNumber;
 
         $this->assertSame(
-            $trackNumber,
+            (string)$trackNumber,
             $this->subject->getTrackNumber()
         );
     }

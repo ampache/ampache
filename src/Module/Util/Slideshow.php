@@ -64,7 +64,7 @@ final class Slideshow implements SlideshowInterface
         $images = [];
 
         foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::SLIDESHOW, $user) as $plugin) {
-            $images += $plugin->_plugin->get_photos($song->f_artist);
+            $images += $plugin->_plugin->get_photos($song->get_artist_fullname());
         }
 
         return $images;

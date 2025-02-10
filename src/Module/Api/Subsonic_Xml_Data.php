@@ -429,8 +429,8 @@ class Subsonic_Xml_Data
         if ($year > 0) {
             $xalbum->addAttribute('year', (string)$year);
         }
-        if (count($album->tags) > 0) {
-            $tag_values = array_values($album->tags);
+        if (count($album->get_tags()) > 0) {
+            $tag_values = array_values($album->get_tags());
             $tag        = array_shift($tag_values);
             $xalbum->addAttribute('genre', (string)$tag['name']);
         }
