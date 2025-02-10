@@ -95,25 +95,10 @@ class User extends database_object
     /** @var Tmp_Playlist|null $playlist */
     public $playlist;
 
-    /** @var null|string $f_create_date */
-    public $f_create_date;
-
     /** @var null|string $link */
     public $link;
 
     private ?string $f_link = null;
-
-    /** @var null|string $f_usage */
-    public $f_usage;
-
-    /** @var null|string $f_avatar */
-    public $f_avatar;
-
-    /** @var null|string $f_avatar_mini */
-    public $f_avatar_mini;
-
-    /** @var null|string $f_avatar_medium */
-    public $f_avatar_medium;
 
     /** @var array $catalogs */
     public $catalogs;
@@ -1002,47 +987,6 @@ class User extends database_object
      */
     public function format(?bool $details = true): void
     {
-        if ($this->isNew()) {
-            return;
-        }
-
-        /* If they have a create date */
-        $this->f_create_date = ($this->create_date)
-            ? get_datetime((int)$this->create_date)
-            : T_('Unknown');
-
-        if ($details) {
-            $user_data = self::get_user_data($this->id, 'play_size');
-            if (!isset($user_data['play_size'])) {
-                $total = self::get_play_size($this->id);
-                // set the value for next time
-                self::set_user_data($this->id, 'play_size', $total);
-                $user_data['play_size'] = $total;
-            }
-
-            $this->f_usage = Ui::format_bytes($user_data['play_size'], 2, 2);
-
-            $recent_user_ip = $this->getIpHistoryRepository()->getRecentIpForUser($this);
-            // Get Users Last ip
-            if ($recent_user_ip !== null) {
-                $this->ip_history = ($recent_user_ip !== '' && filter_var($recent_user_ip, FILTER_VALIDATE_IP)) ? $recent_user_ip : T_('Invalid');
-            } else {
-                $this->ip_history = T_('Not Enough Data');
-            }
-        }
-
-        $avatar = $this->get_avatar();
-        if (!empty($avatar['url'])) {
-            $this->f_avatar = '<img src="' . $avatar['url'] . '" title="' . $avatar['title'] . '"' . ' width="256px" height="auto" />';
-        }
-
-        if (!empty($avatar['url_mini'])) {
-            $this->f_avatar_mini = '<img src="' . $avatar['url_mini'] . '" title="' . $avatar['title'] . '" style="width: 32px; height: 32px;" />';
-        }
-
-        if (!empty($avatar['url_medium'])) {
-            $this->f_avatar_medium = '<img src="' . $avatar['url_medium'] . '" title="' . $avatar['title'] . '" style="width: 64px; height: 64px;" />';
-        }
     }
 
     /**
@@ -1273,6 +1217,35 @@ class User extends database_object
     }
 
     /**
+     * Get item f_usage.
+     */
+    public function get_f_usage(): string
+    {
+        $user_data = self::get_user_data($this->id, 'play_size');
+        if (!isset($user_data['play_size'])) {
+            $total = self::get_play_size($this->id);
+            // set the value for next time
+            self::set_user_data($this->id, 'play_size', $total);
+            $user_data['play_size'] = $total;
+        }
+
+        return Ui::format_bytes($user_data['play_size'], 2, 2);
+    }
+
+    /**
+     * Get item ip_history.
+     */
+    public function get_ip_history(): string
+    {
+        $recent_user_ip = $this->getIpHistoryRepository()->getRecentIpForUser($this);
+        if ($recent_user_ip !== null) {
+            return ($recent_user_ip !== '' && filter_var($recent_user_ip, FILTER_VALIDATE_IP)) ? $recent_user_ip : T_('Invalid');
+        }
+
+        return T_('Not Enough Data');
+    }
+
+    /**
      * Get item name based on whether they allow public fullname access.
      * @param int $user_id
      */
@@ -1381,6 +1354,37 @@ class User extends database_object
     {
         $art = new Art($this->id, 'user');
         $art->reset();
+    }
+
+    /**
+     * Get the user avatar img links
+     */
+    public function get_f_avatar(string $avatar_type): string
+    {
+        $avatar = $this->get_avatar();
+
+        if (
+            $avatar_type == 'f_avatar' &&
+            !empty($avatar['url'])
+        ) {
+            return '<img src="' . $avatar['url'] . '" title="' . $avatar['title'] . '"' . ' width="256px" height="auto" />';
+        }
+
+        if (
+            $avatar_type == 'f_avatar_mini' &&
+            !empty($avatar['url_mini'])
+        ) {
+            return '<img src="' . $avatar['url_mini'] . '" title="' . $avatar['title'] . '" style="width: 32px; height: 32px;" />';
+        }
+
+        if (
+            $avatar_type == 'f_avatar_medium' &&
+            !empty($avatar['url_medium'])
+        ) {
+            return '<img src="' . $avatar['url_medium'] . '" title="' . $avatar['title'] . '" style="width: 64px; height: 64px;" />';
+        }
+
+        return '';
     }
 
     public function deleteStreamToken(): void
