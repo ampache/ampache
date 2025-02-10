@@ -92,9 +92,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     public ?string $link = null;
 
-    /** @var int[] $album_artists */
-    public ?array $album_artists = null;
-
     /** @var int[] $song_artists */
     public ?array $song_artists = null;
 
@@ -126,6 +123,9 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /** @var array $_songs */
     public $_songs = [];
+
+    /** @var int[] $album_artists */
+    private ?array $album_artists = null;
 
     /** @var array $tags */
     private $tags;

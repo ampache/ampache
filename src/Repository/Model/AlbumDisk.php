@@ -93,8 +93,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public ?string $link = null;
 
-    public ?array $album_artists = null;
-
     /** @var null|string $f_name // Prefix + Name, generated */
     public $f_name;
 
@@ -103,6 +101,8 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     /** @var int $catalog_id */
     public $catalog_id;
+
+    private ?array $album_artists = null;
 
     /** @var array $tags */
     private $tags;
@@ -269,8 +269,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             $this->album = new Album($this->album_id);
         }
 
-        $this->album_artists  = $this->album->get_artists();
-
         if ($details) {
             $this->get_tags();
         }
@@ -435,6 +433,35 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     public function get_f_time(): string
     {
         return '';
+    }
+
+    /**
+     * Get item album_artists array
+     * @return int[]
+     */
+    public function get_artists(): array
+    {
+        if (!$this->album_artist) {
+            return [];
+        }
+
+        if (
+            $this->album_artists === null ||
+            $this->album_artists === []
+        ) {
+            $this->album_artists = $this->album->get_artists();
+        }
+
+        return $this->album_artists;
+    }
+
+    /**
+     * Get item song_artists array
+     * @return int[]
+     */
+    public function get_song_artists(): array
+    {
+        return $this->album->get_song_artists();
     }
 
     /**

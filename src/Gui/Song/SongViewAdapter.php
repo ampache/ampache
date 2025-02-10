@@ -437,7 +437,7 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
             $data                      = pathinfo($this->song->file);
             $songprops[T_('Path')]     = scrub_out((string)($data['dirname'] ?? ''));
             $songprops[T_('Filename')] = scrub_out($data['filename'] . "." . ($data['extension'] ?? ''));
-            $songprops[T_('Size')]     = Ui::format_bytes($this->song->f_size);
+            $songprops[T_('Size')]     = Ui::format_bytes($this->song->size);
         }
 
         if ($this->song->update_time !== 0) {

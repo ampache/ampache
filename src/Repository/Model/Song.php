@@ -169,8 +169,6 @@ class Song extends database_object implements
     /** @var array $tags */
     public $tags;
 
-    private ?string $artist_full_name = null;
-
     /** @var int|null $albumartist */
     public $albumartist;
 
@@ -189,11 +187,11 @@ class Song extends database_object implements
     /** @var int $count */
     public $count;
 
-    /** @var null|string $f_albumartist_link */
-    private $f_albumartist_link;
+    private ?string $artist_full_name = null;
 
-    /** @var null|string $f_album_full */
-    private $f_album_full;
+    private ?string $f_albumartist_link;
+
+    private ?string $f_album_full;
 
     private ?bool $has_art = null;
 
