@@ -37,5 +37,5 @@ if (AmpConfig::get('show_footer_statistics')) {
         T_('Cache Hits: ') . database_object::$cache_hit . ' | ' .
         T_('Load Time: ') . $load_time . ' | ' .
         Ui::format_bytes(memory_get_peak_usage(true)) .
-        '</span>';
-} ?>
+        '</span>'; ?>
+<?php } ?>
