@@ -63,9 +63,8 @@ $client->format();
 Ui::show_box_top(scrub_out($client->get_fullname())); ?>
 <?php if ($client->id > 0) { ?>
 <div class="user_avatar">
-<?php if ($client->f_avatar) {
-    echo $client->f_avatar . "<br /><br />";
-}
+    <?php echo $client->get_f_avatar('f_avatar');
+    echo "<br /><br />";
     if (AmpConfig::get('sociable')) {
         echo $userFollowStateRenderer->render(
             $client,
@@ -113,7 +112,7 @@ Ui::show_box_top(scrub_out($client->get_fullname())); ?>
     <dd><?php echo $last_seen; ?></dd>
     <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
     <dt><?php echo T_('Activity'); ?></dt>
-    <dd><?php echo $client->f_usage; ?>
+    <dd><?php echo $client->get_f_usage(); ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <a href="<?php echo $web_path; ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?></a>
         <?php } ?>
