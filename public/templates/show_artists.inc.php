@@ -103,7 +103,7 @@ $directplay_limit                     = AmpConfig::get('direct_play_limit');
 
 /* Foreach through every artist that has been passed to us */
 foreach ($object_ids as $artist_id) {
-    $libitem = new Artist($artist_id, $_SESSION['catalog'] ?? 0);
+    $libitem = new Artist($artist_id);
     if ($libitem->isNew()) {
         continue;
     }

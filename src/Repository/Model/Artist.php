@@ -77,9 +77,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     public ?string $link = null;
 
-    /** @var int $catalog_id */
-    public $catalog_id;
-
     /** @var int $albums */
     public $albums;
 
@@ -104,11 +101,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * Artist class, for modifying an artist
      * Takes the ID of the artist and pulls the info from the db
      * @param int|null $artist_id
-     * @param int $catalog_init
      */
     public function __construct(
-        $artist_id = 0,
-        $catalog_init = 0
+        $artist_id = 0
     ) {
         if (!$artist_id) {
             return;
@@ -123,9 +118,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
             $this->$key = $value;
         }
 
-        $this->time             = (int)$this->time;
-        $this->catalog_id       = (int)$catalog_init;
-        $this->get_fullname();
+        $this->time = (int)$this->time;
     }
 
     public function getId(): int
@@ -445,9 +438,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         // don't do anything if it's formatted
         if ($this->link === null) {
             $web_path   = AmpConfig::get_web_path();
-            $this->link = ($this->catalog_id > 0)
-                ? $web_path . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id
-                : $web_path . '/artists.php?action=show&artist=' . $this->id;
+            $this->link = $web_path . '/artists.php?action=show&artist=' . $this->id;
         }
 
         return $this->link;
@@ -561,7 +552,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      */
     public function getCatalogId(): int
     {
-        return $this->catalog_id;
+        return 0;
     }
 
     /**
