@@ -80,14 +80,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /** @var int $catalog_id */
     public $catalog_id;
 
-    /** @var int $songs */
-    public $songs;
-
     /** @var int $albums */
     public $albums;
-
-    /** @var array $tags */
-    public $tags;
 
     /** @var null|string $f_name */
     public $f_name; // Prefix + Name, generated
@@ -100,6 +94,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /** @var bool $_fake */
     public $_fake = false; // Set if construct_from_array used
+
+    /** @var array $tags */
+    private $tags = null;
 
     private ?bool $has_art = null;
 
@@ -278,21 +275,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      */
     public function format($details = true, $limit_threshold = ''): void
     {
-        if ($this->isNew()) {
-            return;
-        }
-
-        $this->songs  = $this->song_count ?? 0;
-        $this->albums = (AmpConfig::get('album_group'))
-            ? $this->album_count
-            : $this->album_disk_count;
-
-        // set link and f_link
-        $this->get_f_link();
-
-        if ($details) {
-            $this->get_tags();
-        }
     }
 
     /**
@@ -357,6 +339,16 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         $hours = floor($this->time / 3600);
 
         return ltrim($hours . ':' . $min . ':' . $sec, '0:');
+    }
+
+    /**
+     * Get album count for album or album_disk based on config
+     */
+    public function get_album_count(): int
+    {
+        return (AmpConfig::get('album_group'))
+            ? $this->album_count
+            : $this->album_disk_count;
     }
 
     /**

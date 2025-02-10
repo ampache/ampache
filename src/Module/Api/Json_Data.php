@@ -755,7 +755,7 @@ class Json_Data
                 "albumcount" => $artist->album_count,
                 "songs" => $songs,
                 "songcount" => $artist->song_count,
-                "genre" => self::genre_array($artist->tags),
+                "genre" => self::genre_array($artist->get_tags()),
                 "art" => $art_url,
                 "has_art" => $artist->has_art(),
                 "flag" => (bool)$flag->get_flag($user->getId()),

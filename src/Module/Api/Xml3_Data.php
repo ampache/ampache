@@ -320,7 +320,7 @@ class Xml3_Data
 
             $rating      = new Rating($artist_id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
-            $tag_string  = self::tags_string($artist->tags);
+            $tag_string  = self::tags_string($artist->get_tags());
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $artist_id . '&object_type=artist';
@@ -329,9 +329,7 @@ class Xml3_Data
             if (in_array("albums", $include)) {
                 $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), $include, $user, false);
             } else {
-                $albums = (AmpConfig::get('album_group'))
-                    ? $artist->album_count
-                    : $artist->album_disk_count;
+                $albums = $artist->album_count;
             }
             if (in_array("songs", $include)) {
                 $songs = self::songs(self::getSongRepository()->getByArtist($artist_id), $user, '', false);
