@@ -4295,7 +4295,7 @@ abstract class Catalog extends database_object
 
         // Create the filename that this file should have
         $album_name = self::sort_clean_name($song->get_album_fullname(), '%A', $windowsCompat);
-        $track = self::sort_clean_name($song->track, '%T', $windowsCompat);
+        $track      = self::sort_clean_name($song->track, '%T', $windowsCompat);
         if ((int) $track < 10) {
             $track = '0' . $track;
         }
