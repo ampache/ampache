@@ -174,9 +174,6 @@ class Song extends database_object implements
     /** @var int|null $albumartist */
     public $albumartist;
 
-    /** @var null|string $f_bitrate */
-    public $f_bitrate;
-
     /** @var null|string $f_link */
     public $f_link;
 
@@ -189,17 +186,14 @@ class Song extends database_object implements
     /** @var null|string $f_artist_link */
     public $f_artist_link;
 
-    /** @var null|string $f_albumartist_link */
-    public $f_albumartist_link;
-
-    /** @var null|string $f_size */
-    public $f_size;
-
     /** @var int $count */
     public $count;
 
     /** @var int $tag_id */
     public $tag_id;
+
+    /** @var null|string $f_albumartist_link */
+    private $f_albumartist_link;
 
     /** @var null|string $f_album_full */
     private $f_album_full;
@@ -1598,18 +1592,6 @@ class Song extends database_object implements
         }
 
         $this->albumartist = $this->getAlbumRepository()->getAlbumArtistId($this->album);
-
-        // Create Links for the different objects
-        $this->get_f_link();
-        $this->get_f_parent_link();
-        $this->get_f_albumartist_link();
-        $this->get_f_album_link();
-
-        // Format the Bitrate
-        $this->f_bitrate = (int)($this->bitrate / 1024) . "-" . strtoupper((string)$this->mode);
-
-        // Format the size
-        $this->f_size = Ui::format_bytes($this->size);
     }
 
     /**
