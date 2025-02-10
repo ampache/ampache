@@ -1659,7 +1659,7 @@ class Upnp_Api
             'dc:title' => self::_replaceSpecialSymbols($video->get_fullname()),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI' => $art_url,
-            'upnp:genre' => Tag::get_display($video->tags, false, 'video'),
+            'upnp:genre' => Tag::get_display($video->get_tags(), false, 'video'),
 
             'res' => $video->play_url('', 'api'),
             'protocolInfo' => $arrFileType['mime'],

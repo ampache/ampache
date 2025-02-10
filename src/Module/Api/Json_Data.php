@@ -1567,7 +1567,7 @@ class Json_Data
                 "mime" => $video->mime,
                 "resolution" => $video->f_resolution,
                 "size" => (int)$video->size,
-                "genre" => self::genre_array($video->tags),
+                "genre" => self::genre_array($video->get_tags()),
                 "time" => (int)$video->time,
                 "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,

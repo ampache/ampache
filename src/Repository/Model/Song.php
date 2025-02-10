@@ -174,9 +174,6 @@ class Song extends database_object implements
     /** @var int|null $albumartist */
     public $albumartist;
 
-    /** @var null|string $f_track */
-    public $f_track;
-
     /** @var null|string $f_bitrate */
     public $f_bitrate;
 
