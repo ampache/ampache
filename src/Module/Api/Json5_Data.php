@@ -427,7 +427,7 @@ class Json5_Data
                 "albumcount" => $artist->album_count,
                 "songs" => $songs,
                 "songcount" => $artist->song_count,
-                "genre" => self::genre_array($artist->tags),
+                "genre" => self::genre_array($artist->get_tags()),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,

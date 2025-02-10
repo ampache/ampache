@@ -945,7 +945,7 @@ class Xml_Data
             $rating      = new Rating($artist_id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($artist_id, 'artist');
-            $tag_string  = self::genre_string($artist->tags);
+            $tag_string  = self::genre_string($artist->get_tags());
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $artist_id . '&object_type=artist';
