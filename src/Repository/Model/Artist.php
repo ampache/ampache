@@ -89,12 +89,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /** @var array $tags */
     public $tags;
 
-    /** @var array $labels */
-    public $labels;
-
-    /** @var null|string $f_labels */
-    public $f_labels;
-
     /** @var null|string $f_name */
     public $f_name; // Prefix + Name, generated
 
@@ -297,17 +291,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         $this->get_f_link();
 
         if ($details) {
-            $min   = sprintf("%02d", (floor($this->time / 60) % 60));
-            $sec   = sprintf("%02d", ($this->time % 60));
-            $hours = floor($this->time / 3600);
-
-            $this->f_time = ltrim($hours . ':' . $min . ':' . $sec, '0:');
             $this->get_tags();
-
-            if (AmpConfig::get('label')) {
-                $this->labels   = $this->getLabelRepository()->getByArtist($this->id);
-                $this->f_labels = Label::get_display($this->labels, true);
-            }
         }
     }
 
@@ -352,6 +336,27 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
                 'value' => $this->get_fullname(),
             ],
         ];
+    }
+
+    /**
+     * Get item Label associations.
+     * @return string[]
+     */
+    public function get_labels(): array
+    {
+        return $this->getLabelRepository()->getByArtist($this->id);
+    }
+
+    /**
+     * format time to Hours:Minutes:Seconds.
+     */
+    public function get_f_time(): string
+    {
+        $min   = sprintf("%02d", (floor($this->time / 60) % 60));
+        $sec   = sprintf("%02d", ($this->time % 60));
+        $hours = floor($this->time / 3600);
+
+        return ltrim($hours . ':' . $min . ':' . $sec, '0:');
     }
 
     /**

@@ -105,8 +105,6 @@ class Podcast_Episode extends database_object implements
 
     public string $f_time;
 
-    public string $f_time_h;
-
     private ?string $link = null;
 
     private ?string $link_formatted = null;
@@ -189,13 +187,6 @@ class Podcast_Episode extends database_object implements
             $this->enabled = true;
         }
 
-        // Format the Time
-        $min            = floor($this->time / 60);
-        $sec            = sprintf("%02d", ($this->time % 60));
-        $this->f_time   = $min . ":" . $sec;
-        $hour           = sprintf("%02d", floor($min / 60));
-        $min_h          = sprintf("%02d", ($min % 60));
-        $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
     }
 
     public function getCategory(): string
@@ -305,6 +296,23 @@ class Podcast_Episode extends database_object implements
     public function get_f_parent_link(): ?string
     {
         return $this->getPodcastLink();
+    }
+
+    /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(?bool $hours = false): string
+    {
+        $min = floor($this->time / 60);
+        $sec = sprintf("%02d", ($this->time % 60));
+        if (!$hours) {
+            return $min . ":" . $sec;
+        }
+
+        $hour           = sprintf("%02d", floor($min / 60));
+        $min_h          = sprintf("%02d", ($min % 60));
+
+        return $hour . ":" . $min_h . ":" . $sec;
     }
 
     public function getPodcastName(): string

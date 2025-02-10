@@ -465,6 +465,14 @@ class Wanted extends database_object
         }
     }
 
+    /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(): string
+    {
+        return '';
+    }
+
     public function getMusicBrainzId(): ?string
     {
         return $this->mbid;

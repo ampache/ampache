@@ -433,6 +433,14 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     }
 
     /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(): string
+    {
+        return '';
+    }
+
+    /**
      * getYear
      */
     public function getYear(): string

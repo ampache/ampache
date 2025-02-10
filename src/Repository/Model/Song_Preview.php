@@ -315,6 +315,14 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(): string
+    {
+        return '';
+    }
+
+    /**
      * get_parent
      * Return parent `object_type`, `object_id`; null otherwise.
      */

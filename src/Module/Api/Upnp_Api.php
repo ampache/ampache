@@ -1605,7 +1605,7 @@ class Upnp_Api
             'res' => $song->play_url('', 'api', true), // For upnp, use local
             'protocolInfo' => $arrFileType['mime'],
             'size' => $song->size,
-            'duration' => $song->f_time_h . '.0',
+            'duration' => $song->get_f_time(true) . '.0',
             'bitrate' => $song->bitrate,
             'sampleFrequency' => $song->rate,
             'nrAudioChannels' => '2', // Just say its stereo as we don't have the real info
@@ -1664,7 +1664,7 @@ class Upnp_Api
             'res' => $video->play_url('', 'api'),
             'protocolInfo' => $arrFileType['mime'],
             'size' => $video->size,
-            'duration' => $video->f_time_h . '.0',
+            'duration' => $video->get_f_time(true) . '.0',
         ];
     }
 
@@ -1711,7 +1711,7 @@ class Upnp_Api
             $ret['res']          = $episode->play_url('', 'api');
             $ret['protocolInfo'] = $arrFileType['mime'];
             $ret['size']         = $episode->size;
-            $ret['duration']     = $episode->f_time_h . '.0';
+            $ret['duration']     = $episode->get_f_time(true) . '.0';
         }
 
         return $ret;

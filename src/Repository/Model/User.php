@@ -95,9 +95,6 @@ class User extends database_object
     /** @var Tmp_Playlist|null $playlist */
     public $playlist;
 
-    /** @var null|string $f_name */
-    public $f_name;
-
     /** @var null|string $f_last_seen */
     public $f_last_seen;
 
@@ -1248,13 +1245,9 @@ class User extends database_object
      */
     public function get_fullname(): ?string
     {
-        if ($this->f_name === null) {
-            $this->f_name = ($this->fullname_public)
-                ? $this->fullname
-                : $this->username;
-        }
-
-        return $this->f_name;
+        return ($this->fullname_public)
+            ? $this->fullname
+            : $this->username;
     }
 
     /**

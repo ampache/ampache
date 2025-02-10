@@ -189,9 +189,6 @@ class Song extends database_object implements
     /** @var null|string $f_time */
     public $f_time;
 
-    /** @var null|string $f_time_h */
-    public $f_time_h;
-
     /** @var null|string $f_track */
     public $f_track;
 
@@ -1642,14 +1639,6 @@ class Song extends database_object implements
         // Format the Bitrate
         $this->f_bitrate = (int)($this->bitrate / 1024) . "-" . strtoupper((string)$this->mode);
 
-        // Format the Time
-        $min            = floor($this->time / 60);
-        $sec            = sprintf("%02d", ($this->time % 60));
-        $this->f_time   = $min . ":" . $sec;
-        $hour           = sprintf("%02d", floor($min / 60));
-        $min_h          = sprintf("%02d", ($min % 60));
-        $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
-
         // Format the track (there isn't really anything to do here)
         $this->f_track = (string)$this->track;
 
@@ -1799,6 +1788,23 @@ class Song extends database_object implements
         }
 
         return $this->f_artist_link;
+    }
+
+    /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(?bool $hours = false): string
+    {
+        $min = floor($this->time / 60);
+        $sec = sprintf("%02d", ($this->time % 60));
+        if (!$hours) {
+            return $min . ":" . $sec;
+        }
+
+        $hour  = sprintf("%02d", floor($min / 60));
+        $min_h = sprintf("%02d", ($min % 60));
+
+        return $hour . ":" . $min_h . ":" . $sec;
     }
 
     /**

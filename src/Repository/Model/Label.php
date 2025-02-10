@@ -198,6 +198,14 @@ class Label extends database_object implements library_item
     }
 
     /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(): string
+    {
+        return '';
+    }
+
+    /**
      * Get item keywords for metadata searches.
      */
     public function get_keywords(): array

@@ -158,6 +158,14 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     }
 
     /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(): string
+    {
+        return '';
+    }
+
+    /**
      * get_f_artist_link
      */
     public function get_f_artist_link(): ?string
