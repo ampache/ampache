@@ -455,7 +455,7 @@ abstract class Catalog extends database_object
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            return '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+            $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
         }
 
         return $this->f_link;
@@ -966,9 +966,6 @@ abstract class Catalog extends database_object
      */
     public function format(): void
     {
-        $this->get_fullname();
-        $this->get_link();
-        $this->get_f_link();
         $this->f_update = ($this->last_update !== 0)
             ? get_datetime((int)$this->last_update)
             : T_('Never');

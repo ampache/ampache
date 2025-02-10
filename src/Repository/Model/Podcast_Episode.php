@@ -103,8 +103,6 @@ class Podcast_Episode extends database_object implements
 
     public string $mime;
 
-    public string $f_time;
-
     private ?string $link = null;
 
     private ?string $link_formatted = null;

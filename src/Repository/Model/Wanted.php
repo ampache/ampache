@@ -431,20 +431,31 @@ class Wanted extends database_object
      */
     public function format(): void
     {
-        $this->f_link = sprintf(
-            '<a href="%s/albums.php?action=show_missing&mbid=%s&artist=%s&artist_mbid=%s" title="%s">%s</a>',
-            AmpConfig::get_web_path(),
-            $this->mbid,
-            $this->artist,
-            $this->artist_mbid,
-            $this->name,
-            scrub_out($this->name)
-        );
-
         if ($this->user !== null) {
             $user         = new User($this->user);
             $this->f_user = $user->get_fullname();
         }
+    }
+
+    /**
+     * Get item f_link.
+     */
+    public function get_f_link(): string
+    {
+        // don't do anything if it's formatted
+        if ($this->f_link === null) {
+            $this->f_link = sprintf(
+                '<a href="%s/albums.php?action=show_missing&mbid=%s&artist=%s&artist_mbid=%s" title="%s">%s</a>',
+                AmpConfig::get_web_path(),
+                $this->mbid,
+                $this->artist,
+                $this->artist_mbid,
+                $this->name,
+                scrub_out($this->name)
+            );
+        }
+
+        return $this->f_link;
     }
 
     /**

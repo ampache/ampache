@@ -102,9 +102,6 @@ class Video extends database_object implements
     /** @var string $type */
     public $type;
 
-    /** @var null|string $f_time */
-    public $f_time;
-
     /** @var null|string $f_size */
     public $f_size;
 
