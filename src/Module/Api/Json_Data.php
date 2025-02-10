@@ -1341,7 +1341,7 @@ class Json_Data
                 "filelength" => $episode->f_time_h,
                 "filesize" => $episode->getSizeFormatted(),
                 "filename" => $episode->getFileName(),
-                "mime" => $episode->mime,
+                "mime" => (isset($episode->mime)) ? $episode->mime : '',
                 "time" => (int)$episode->time,
                 "size" => (int)$episode->size,
                 "bitrate" => $episode->bitrate,

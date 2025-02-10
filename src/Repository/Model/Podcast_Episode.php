@@ -590,7 +590,7 @@ class Podcast_Episode extends database_object implements
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
     {
-        if ($this->isNew()) {
+        if ($this->isNew() || !isset($this->type)) {
             return '';
         }
         if (!$uid) {
