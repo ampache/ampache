@@ -1337,7 +1337,7 @@ class Json_Data
                 "website" => $episode->getWebsite(),
                 "pubdate" => $episode->getPubDate()->format(DATE_ATOM),
                 "state" => $episode->getState()->toDescription(),
-                "filelength" => $episode->f_time_h,
+                "filelength" => $episode->get_f_time(true),
                 "filesize" => $episode->getSizeFormatted(),
                 "filename" => $episode->getFileName(),
                 "mime" => (isset($episode->mime)) ? $episode->mime : '',

@@ -9136,11 +9136,6 @@ parameters:
 			path: src/Repository/Model/Artist.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$labels type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
@@ -9862,11 +9857,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Share\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Share.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Share\\:\\:\\$f_name has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Share.php
 

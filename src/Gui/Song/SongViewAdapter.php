@@ -370,7 +370,7 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Disk Subtitle')] = $this->song->disksubtitle ?? '';
         $songprops[T_('Year')]          = $this->song->year;
         $songprops[T_('Original Year')] = $this->song->get_album_original_year($this->song->album);
-        $songprops[T_('Length')]        = scrub_out($this->song->f_time);
+        $songprops[T_('Length')]        = scrub_out($this->song->get_f_time());
         $songprops[T_('Links')]         = "";
         if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_GOOGLE)) {
             $songprops[T_('Links')] .= "<a href=\"https://www.google.com/search?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->get_fullname()) . "%22\" target=\"_blank\">" . Ui::get_icon('google', T_('Search on Google ...')) . "</a>";
@@ -538,7 +538,7 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
 
     public function getPlayDuration(): string
     {
-        return (string)$this->song->f_time;
+        return (string)$this->song->get_f_time();
     }
 
     public function getLicenseLink(): string

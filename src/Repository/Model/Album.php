@@ -674,6 +674,14 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(): string
+    {
+        return '';
+    }
+
+    /**
      * Get item album_artists array
      * @return int[]
      */
