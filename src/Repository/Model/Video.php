@@ -102,12 +102,6 @@ class Video extends database_object implements
     /** @var string $type */
     public $type;
 
-    /** @var array $tags */
-    public $tags;
-
-    /** @var null|string $f_full_title */
-    public $f_full_title;
-
     /** @var null|string $f_time */
     public $f_time;
 
@@ -135,11 +129,11 @@ class Video extends database_object implements
     /** @var null|string $f_frame_rate */
     public $f_frame_rate;
 
-    /** @var null|string $f_length */
-    public $f_length;
-
     /** @var null|string $f_release_date */
     public $f_release_date;
+
+    /** @var array $tags */
+    private $tags;
 
     private ?bool $has_art = null;
 
@@ -239,7 +233,6 @@ class Video extends database_object implements
             $this->get_tags();
         }
 
-        $this->f_length = floor($this->time / 60) . ' ' . T_('minutes');
         if ($this->release_date) {
             $this->f_release_date = get_datetime((int) $this->release_date, 'short', 'none');
         }

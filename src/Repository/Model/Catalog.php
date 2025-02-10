@@ -2620,6 +2620,7 @@ abstract class Catalog extends database_object
         }
 
         $new_song->tags = $tag_array;
+        $song->tags     = [];
         $tags           = Tag::get_object_tags('song', $song->id);
         if ($tags) {
             foreach ($tags as $tag) {
@@ -3029,13 +3030,14 @@ abstract class Catalog extends database_object
         $new_video->frame_rate    = $results['frame_rate'];
         $new_video->video_bitrate = self::check_int($results['video_bitrate'], 4294967294, 0);
         $tags                     = Tag::get_object_tags('video', $video->id);
+        $video_tags               = [];
         if ($tags) {
             foreach ($tags as $tag) {
-                $video->tags[] = $tag['name'];
+                $video_tags[] = $tag['name'];
             }
         }
 
-        $new_video->tags = $results['genre'];
+        $new_video_tags = $results['genre'];
 
         $info = Video::compare_video_information($video, $new_video);
         if ($info['change']) {
@@ -3043,8 +3045,8 @@ abstract class Catalog extends database_object
 
             Video::update_video($video->id, $new_video);
 
-            if ($video->tags != $new_video->tags) {
-                Tag::update_tag_list(implode(',', $new_video->tags), 'video', $video->id, true);
+            if ($video_tags != $new_video_tags) {
+                Tag::update_tag_list(implode(',', $new_video_tags), 'video', $video->id, true);
             }
 
             Video::update_video_counts($video->id);

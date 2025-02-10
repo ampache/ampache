@@ -892,7 +892,7 @@ class Json4_Data
                 "mime" => $video->mime,
                 "resolution" => $video->f_resolution,
                 "size" => (int)$video->size,
-                "tag" => self::tags_array($video->tags),
+                "tag" => self::tags_array($video->get_tags()),
                 "time" => (int)$video->time,
                 "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,

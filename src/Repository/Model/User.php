@@ -95,9 +95,6 @@ class User extends database_object
     /** @var Tmp_Playlist|null $playlist */
     public $playlist;
 
-    /** @var null|string $f_last_seen */
-    public $f_last_seen;
-
     /** @var null|string $f_create_date */
     public $f_create_date;
 
@@ -1008,11 +1005,6 @@ class User extends database_object
         if ($this->isNew()) {
             return;
         }
-
-        /* If they have a last seen date */
-        $this->f_last_seen = ($this->last_seen === 0)
-            ? T_('Never')
-            : get_datetime((int)$this->last_seen);
 
         /* If they have a create date */
         $this->f_create_date = ($this->create_date)
