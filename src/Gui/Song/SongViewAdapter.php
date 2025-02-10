@@ -412,7 +412,7 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
 
         $songprops[T_('Catalog Number')] = scrub_out($this->song->get_album_catalog_number($this->song->album));
         $songprops[T_('Barcode')]        = scrub_out($this->song->get_album_barcode($this->song->album));
-        $songprops[T_('Bitrate')]        = scrub_out($this->song->f_bitrate);
+        $songprops[T_('Bitrate')]        = scrub_out((int)($this->song->bitrate / 1024) . "-" . strtoupper((string)$this->song->mode));
         $songprops[T_('Channels')]       = $this->song->channels;
         $songprops[T_('Song MBID')]      = scrub_out($this->song->mbid);
         $songprops[T_('Album MBID')]     = scrub_out($this->song->album_mbid);
@@ -437,7 +437,7 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
             $data                      = pathinfo($this->song->file);
             $songprops[T_('Path')]     = scrub_out((string)($data['dirname'] ?? ''));
             $songprops[T_('Filename')] = scrub_out($data['filename'] . "." . ($data['extension'] ?? ''));
-            $songprops[T_('Size')]     = $this->song->f_size;
+            $songprops[T_('Size')]     = Ui::format_bytes($this->song->f_size);
         }
 
         if ($this->song->update_time !== 0) {
