@@ -96,7 +96,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
         <?php } ?>
     </span>
 </td>
-<td class="<?php echo $cel_time; ?>"><?php echo $libitem->f_time ?? ''; ?></td>
+<td class="<?php echo $cel_time; ?>"><?php echo $libitem->get_f_time(); ?></td>
 <?php if ($show_ratings) { ?>
     <td class="cel_ratings">
         <?php if (AmpConfig::get('ratings')) { ?>

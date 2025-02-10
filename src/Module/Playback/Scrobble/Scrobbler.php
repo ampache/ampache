@@ -43,7 +43,7 @@ class Scrobbler
     /** @var array<int, array{artist: string, album: string, title: string, track: int, length: int, time: int}> $queued_tracks */
     public array $queued_tracks;
 
-    private ?string $secret;
+    private ?string $secret = null;
 
     /**
      * Constructor

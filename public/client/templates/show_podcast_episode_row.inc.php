@@ -86,7 +86,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
 <?php if (!$is_table) { ?>
 <td class="cel_podcast"><?php echo $libitem->getPodcastLink(); ?></td>
 <?php } ?>
-<td class="<?php echo $cel_time; ?>"><?php echo $libitem->f_time; ?></td>
+<td class="<?php echo $cel_time; ?>"><?php echo $libitem->get_f_time(); ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
     <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>
     <?php } ?>

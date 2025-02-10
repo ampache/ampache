@@ -65,8 +65,6 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public string $type;
 
-    public $f_artist;
-
     public $f_artist_link;
 
     public $f_link;
@@ -248,11 +246,9 @@ class Song_Preview extends database_object implements Media, playable_item
     public function format(?bool $details = true): void
     {
         unset($details); // dead code but called from other format calls
-        // Format the artist name
-        $this->f_artist = $this->get_artist_fullname();
 
         if ($this->artist) {
-            $this->f_artist_link = "<a href=\"" . AmpConfig::get_web_path('/client') . "/artists.php?action=show&artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist) . "\"> " . scrub_out($this->f_artist) . "</a>";
+            $this->f_artist_link = "<a href=\"" . AmpConfig::get_web_path('/client') . "/artists.php?action=show&artist=" . $this->artist . "\" title=\"" . scrub_out($this->get_artist_fullname()) . "\"> " . scrub_out($this->get_artist_fullname()) . "</a>";
         } else {
             $wartist             = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
             $this->f_artist_link = $wartist['link'] ?? '';
@@ -294,7 +290,7 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            return "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->title) . "</a>";
+            $this->f_link = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->get_artist_fullname()) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->title) . "</a>";
         }
 
         return $this->f_link;
@@ -305,7 +301,21 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public function get_f_parent_link(): ?string
     {
-        return null;
+        if ($this->artist) {
+            return "<a href=\"" . AmpConfig::get_web_path() . "/artists.php?action=show&artist=" . $this->artist . "\" title=\"" . scrub_out($this->get_artist_fullname()) . "\"> " . scrub_out($this->get_artist_fullname()) . "</a>";
+        } else {
+            $wartist = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
+
+            return $wartist['link'] ?? '';
+        }
+    }
+
+    /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(): string
+    {
+        return '';
     }
 
     /**

@@ -81,6 +81,16 @@ abstract class playlist_object extends database_object implements library_item
      */
     abstract public function get_items(): array;
 
+    public function getId(): int
+    {
+        return (int)($this->id ?? 0);
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * format
      * This takes the current playlist object and gussies it up a little bit so it is presentable to the users
@@ -257,6 +267,14 @@ abstract class playlist_object extends database_object implements library_item
     public function get_f_parent_link(): ?string
     {
         return null;
+    }
+
+    /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(): string
+    {
+        return '';
     }
 
     /**

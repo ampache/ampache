@@ -516,13 +516,13 @@ class Daap_Api
                         /* case 'dmap.persistentid': */ $output .= self::tlv($tag, $song->id);
                         break;
                     case 'daap.songalbum':
-                        $output .= self::tlv($tag, $song->f_album);
+                        $output .= self::tlv($tag, $song->get_album_fullname());
                         break;
                     case 'daap.songartist':
-                        $output .= self::tlv($tag, $song->f_artist);
+                        $output .= self::tlv($tag, $song->get_artist_fullname());
                         break;
                     case 'daap.songcomposer':
-                        $output .= self::tlv($tag, $song->f_composer);
+                        $output .= self::tlv($tag, $song->composer);
                         break;
                     case 'daap.songbitrate':
                         $output .= self::tlv($tag, (int)($song->bitrate / 1024));

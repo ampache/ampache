@@ -415,7 +415,7 @@ class Subsonic_Xml_Data
         }
         $xalbum->addAttribute('songCount', (string) $album->song_count);
         $xalbum->addAttribute('created', date("c", (int)$album->addition_time));
-        $xalbum->addAttribute('duration', (string) $album->total_duration);
+        $xalbum->addAttribute('duration', (string) $album->time);
         $xalbum->addAttribute('playCount', (string)$album->total_count);
         if ($album->album_artist) {
             $xalbum->addAttribute('artistId', (string)self::_getArtistId($album->album_artist));
@@ -429,8 +429,8 @@ class Subsonic_Xml_Data
         if ($year > 0) {
             $xalbum->addAttribute('year', (string)$year);
         }
-        if (count($album->tags) > 0) {
-            $tag_values = array_values($album->tags);
+        if (count($album->get_tags()) > 0) {
+            $tag_values = array_values($album->get_tags());
             $tag        = array_shift($tag_values);
             $xalbum->addAttribute('genre', (string)$tag['name']);
         }

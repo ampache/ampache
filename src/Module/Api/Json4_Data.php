@@ -333,7 +333,7 @@ class Json4_Data
                 "albumcount" => $artist->album_count,
                 "songs" => $songs,
                 "songcount" => $artist->song_count,
-                "tag" => self::tags_array($artist->tags),
+                "tag" => self::tags_array($artist->get_tags()),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
@@ -396,7 +396,7 @@ class Json4_Data
             if ($album->get_artist_fullname() != "") {
                 $objArray['artist'] = [
                     "id" => (string)$album->album_artist,
-                    "name" => $album->f_artist_name
+                    "name" => $album->get_artist_fullname()
                 ];
             }
 
@@ -407,13 +407,13 @@ class Json4_Data
                 $songs = $album->song_count;
             }
 
-            $objArray['time']          = (int) $album->total_duration;
+            $objArray['time']          = (int)$album->time;
             $objArray['year']          = (int) $album->year;
             $objArray['tracks']        = $songs;
             $objArray['songcount']     = (int) $album->song_count;
             $objArray['type']          = $album->release_type;
             $objArray['disk']          = (int) $album->disk_count;
-            $objArray['tag']           = self::tags_array($album->tags);
+            $objArray['tag']           = self::tags_array($album->get_tags());
             $objArray['art']           = $art_url;
             $objArray['flag']          = (!$flag->get_flag($user->getId()) ? 0 : 1);
             $objArray['preciserating'] = $user_rating;
@@ -718,9 +718,9 @@ class Json4_Data
                 "website" => $episode->getWebsite(),
                 "pubdate" => $episode->getPubDate()->format(DATE_ATOM),
                 "state" => $episode->getState()->toDescription(),
-                "filelength" => $episode->f_time_h,
+                "filelength" => $episode->get_f_time(true),
                 "filesize" => $episode->getSizeFormatted(),
-                "mime" => $episode->mime,
+                "mime" => (isset($episode->mime)) ? $episode->mime : '',
                 "filename" => $episode->getFileName(),
                 "public_url" => $episode->get_link(),
                 "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
@@ -892,7 +892,7 @@ class Json4_Data
                 "mime" => $video->mime,
                 "resolution" => $video->f_resolution,
                 "size" => (int)$video->size,
-                "tag" => self::tags_array($video->tags),
+                "tag" => self::tags_array($video->get_tags()),
                 "time" => (int)$video->time,
                 "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,

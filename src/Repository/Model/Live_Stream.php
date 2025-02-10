@@ -143,7 +143,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            return "<a href=\"" . $this->get_link() . "\">" . scrub_out($this->get_fullname()) . "</a>";
+            $this->f_link = "<a href=\"" . $this->get_link() . "\">" . scrub_out($this->get_fullname()) . "</a>";
         }
 
         return $this->f_link;
@@ -155,6 +155,14 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     public function get_f_parent_link(): ?string
     {
         return null;
+    }
+
+    /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(): string
+    {
+        return '';
     }
 
     /**

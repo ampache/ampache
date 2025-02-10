@@ -177,10 +177,10 @@ class AlbumArtExporterTest extends MockeryTestCase
 
         $albumId   = 666;
         $songId    = 42;
-        $file_name = $fs_root->url() . '/some-file';
+        $file_name = $fs_root->url() . DIRECTORY_SEPARATOR . 'some-file.png';
         $raw_mime  = 'image/png';
         $raw_art   = 'some-raw-bytes';
-        $fileName  = 'some-full-name';
+        $fileName  = 'some-file.png';
 
         $album->id = $albumId;
 

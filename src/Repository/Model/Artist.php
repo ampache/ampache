@@ -77,23 +77,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     public ?string $link = null;
 
-    /** @var int $catalog_id */
-    public $catalog_id;
-
-    /** @var int $songs */
-    public $songs;
-
     /** @var int $albums */
     public $albums;
-
-    /** @var array $tags */
-    public $tags;
-
-    /** @var array $labels */
-    public $labels;
-
-    /** @var null|string $f_labels */
-    public $f_labels;
 
     /** @var null|string $f_name */
     public $f_name; // Prefix + Name, generated
@@ -101,11 +86,11 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /** @var null|string $f_link */
     public $f_link;
 
-    /** @var null|string $f_time */
-    public $f_time;
-
     /** @var bool $_fake */
     public $_fake = false; // Set if construct_from_array used
+
+    /** @var array $tags */
+    private $tags = null;
 
     private ?bool $has_art = null;
 
@@ -116,11 +101,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * Artist class, for modifying an artist
      * Takes the ID of the artist and pulls the info from the db
      * @param int|null $artist_id
-     * @param int $catalog_init
      */
     public function __construct(
-        $artist_id = 0,
-        $catalog_init = 0
+        $artist_id = 0
     ) {
         if (!$artist_id) {
             return;
@@ -135,9 +118,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
             $this->$key = $value;
         }
 
-        $this->time             = (int)$this->time;
-        $this->catalog_id       = (int)$catalog_init;
-        $this->get_fullname();
+        $this->time = (int)$this->time;
     }
 
     public function getId(): int
@@ -284,31 +265,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      */
     public function format($details = true, $limit_threshold = ''): void
     {
-        if ($this->isNew()) {
-            return;
-        }
-
-        $this->songs  = $this->song_count ?? 0;
-        $this->albums = (AmpConfig::get('album_group'))
-            ? $this->album_count
-            : $this->album_disk_count;
-
-        // set link and f_link
-        $this->get_f_link();
-
-        if ($details) {
-            $min   = sprintf("%02d", (floor($this->time / 60) % 60));
-            $sec   = sprintf("%02d", ($this->time % 60));
-            $hours = floor($this->time / 3600);
-
-            $this->f_time = ltrim($hours . ':' . $min . ':' . $sec, '0:');
-            $this->get_tags();
-
-            if (AmpConfig::get('label')) {
-                $this->labels   = $this->getLabelRepository()->getByArtist($this->id);
-                $this->f_labels = Label::get_display($this->labels, true);
-            }
-        }
     }
 
     /**
@@ -352,6 +308,37 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
                 'value' => $this->get_fullname(),
             ],
         ];
+    }
+
+    /**
+     * Get item Label associations.
+     * @return string[]
+     */
+    public function get_labels(): array
+    {
+        return $this->getLabelRepository()->getByArtist($this->id);
+    }
+
+    /**
+     * format time to Hours:Minutes:Seconds.
+     */
+    public function get_f_time(): string
+    {
+        $min   = sprintf("%02d", (floor($this->time / 60) % 60));
+        $sec   = sprintf("%02d", ($this->time % 60));
+        $hours = floor($this->time / 3600);
+
+        return ltrim($hours . ':' . $min . ':' . $sec, '0:');
+    }
+
+    /**
+     * Get album count for album or album_disk based on config
+     */
+    public function get_album_count(): int
+    {
+        return (AmpConfig::get('album_group'))
+            ? $this->album_count
+            : $this->album_disk_count;
     }
 
     /**
@@ -451,9 +438,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         // don't do anything if it's formatted
         if ($this->link === null) {
             $web_path   = AmpConfig::get_web_path('/client');
-            $this->link = ($this->catalog_id > 0)
-                ? $web_path . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id
-                : $web_path . '/artists.php?action=show&artist=' . $this->id;
+            $this->link = $web_path . '/artists.php?action=show&artist=' . $this->id;
         }
 
         return $this->link;
@@ -487,7 +472,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            return "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
         }
 
         return $this->f_link;
@@ -567,7 +552,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      */
     public function getCatalogId(): int
     {
-        return $this->catalog_id;
+        return 0;
     }
 
     /**

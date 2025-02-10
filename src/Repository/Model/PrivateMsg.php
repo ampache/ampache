@@ -37,9 +37,9 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     private int $id = 0;
 
-    private ?string $subject;
+    private ?string $subject = null;
 
-    private ?string $message;
+    private ?string $message = null;
 
     private int $from_user;
 
@@ -47,7 +47,7 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     private bool $is_read;
 
-    private ?int $creation_date;
+    private ?int $creation_date = null;
 
     /**
      * @param int|null $pm_id

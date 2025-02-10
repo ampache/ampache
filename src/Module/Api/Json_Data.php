@@ -755,7 +755,7 @@ class Json_Data
                 "albumcount" => $artist->album_count,
                 "songs" => $songs,
                 "songcount" => $artist->song_count,
-                "genre" => self::genre_array($artist->tags),
+                "genre" => self::genre_array($artist->get_tags()),
                 "art" => $art_url,
                 "has_art" => $artist->has_art(),
                 "flag" => (bool)$flag->get_flag($user->getId()),
@@ -836,7 +836,7 @@ class Json_Data
             if ($album->get_artist_fullname() != "") {
                 $objArray['artist'] = [
                     "id" => (string)$album->album_artist,
-                    "name" => $album->f_artist_name,
+                    "name" => $album->get_artist_fullname(),
                     "prefix" => $album->artist_prefix,
                     "basename" => $album->artist_name
                 ];
@@ -857,13 +857,13 @@ class Json_Data
                 ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false)
                 : [];
 
-            $objArray['time']          = (int)$album->total_duration;
+            $objArray['time']          = (int)$album->time;
             $objArray['year']          = (int)$year;
             $objArray['tracks']        = $songs;
             $objArray['songcount']     = (int)$album->song_count;
             $objArray['diskcount']     = (int)$album->disk_count;
             $objArray['type']          = $album->release_type;
-            $objArray['genre']         = self::genre_array($album->tags);
+            $objArray['genre']         = self::genre_array($album->get_tags());
             $objArray['art']           = $art_url;
             $objArray['has_art']       = $album->has_art();
             $objArray['flag']          = (bool)$flag->get_flag($user->getId());
@@ -1337,10 +1337,10 @@ class Json_Data
                 "website" => $episode->getWebsite(),
                 "pubdate" => $episode->getPubDate()->format(DATE_ATOM),
                 "state" => $episode->getState()->toDescription(),
-                "filelength" => $episode->f_time_h,
+                "filelength" => $episode->get_f_time(true),
                 "filesize" => $episode->getSizeFormatted(),
                 "filename" => $episode->getFileName(),
-                "mime" => $episode->mime,
+                "mime" => (isset($episode->mime)) ? $episode->mime : '',
                 "time" => (int)$episode->time,
                 "size" => (int)$episode->size,
                 "bitrate" => $episode->bitrate,
@@ -1567,7 +1567,7 @@ class Json_Data
                 "mime" => $video->mime,
                 "resolution" => $video->f_resolution,
                 "size" => (int)$video->size,
-                "genre" => self::genre_array($video->tags),
+                "genre" => self::genre_array($video->get_tags()),
                 "time" => (int)$video->time,
                 "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,

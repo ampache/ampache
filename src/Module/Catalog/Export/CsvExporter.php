@@ -88,11 +88,11 @@ final class CsvExporter implements CatalogExporterInterface
                     $song->title,
                     $song->get_artist_fullname(),
                     $song->get_album_fullname(),
-                    $song->f_time,
-                    $song->f_track,
+                    $song->get_f_time(),
+                    (string)$song->track,
                     $song->year,
                     get_datetime($song->getAdditionTime()),
-                    $song->f_bitrate,
+                    (int)($song->bitrate / 1024) . "-" . strtoupper((string)$song->mode),
                     $song->played,
                     $song->file
                 ]
