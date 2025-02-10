@@ -109,14 +109,14 @@ class AlbumArtExporterTest extends MockeryTestCase
 
         $albumId  = 666;
         $songId   = 42;
-        $file     = $fs_root->url() . DIRECTORY_SEPARATOR . 'some-file';
-        $raw_mime = DIRECTORY_SEPARATOR . 'some-raw-mime.png';
+        $file     = $fs_root->url() . '/some-file';
+        $raw_mime = '/some-raw-mime.png';
 
         $album->id = $albumId;
 
         $this->expectException(AlbumArtExportException::class);
         $this->expectExceptionMessage(
-            'Unable to open `vfs:' . DIRECTORY_SEPARATOR . 'folder.` for writing',
+            'Unable to open `vfs:/folder.some-raw-mime.png` for writing',
         );
 
         $catalog->shouldReceive('get_album_ids')
