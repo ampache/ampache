@@ -47,6 +47,7 @@ $access50 = ($access75 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEn
 $browse   = new Browse();
 $browse->set_type($object_type);
 $browse->set_use_filters(false);
+$browse->set_skip_catalog_check(true);
 $web_path = AmpConfig::get_web_path();
 Ui::show_box_top((string)$podcast->get_fullname(), 'info-box'); ?>
 <div class="item_right_info">

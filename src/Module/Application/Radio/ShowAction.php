@@ -34,6 +34,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -73,9 +74,11 @@ final class ShowAction implements ApplicationActionInterface
         }
         $this->ui->showHeader();
 
+        $user       =  $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
+        $catalogs   = User::get_user_catalogs($user->id);
         $radio_id = (int)$this->requestParser->getFromRequest('radio');
         $radio    = $this->modelFactory->createLiveStream($radio_id);
-        if ($radio->isNew()) {
+        if ($radio->isNew() || !in_array($radio->catalog, $catalogs)) {
             $this->logger->warning(
                 'Requested a live_stream that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
