@@ -35,6 +35,7 @@ Pre-translating files before loading media templates should speed those pages up
 * Clean up empty albums during migration
 * Rework catalog_map insert and remove during file updates
 * Only collect garbage maps for the catalog media type used
+* Make sure mail server or `user_no_email_confirm` is set to show registration pages
 
 ### Removed
 
@@ -57,6 +58,7 @@ Pre-translating files before loading media templates should speed those pages up
 * Error with database properties that allow null values
 * Require `mail` config or `user_no_email_confirm` to allow registration
 * PodcastEpisode loading errors for new files that aren't downloaded yet
+* NPM copyfile commands missing prettyPhoto files
 * webplayer
   * Not escaping bad characters correctly
 * CLI
