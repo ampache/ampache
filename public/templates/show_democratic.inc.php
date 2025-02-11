@@ -43,7 +43,7 @@ Ui::show_box_top($string, 'info-box'); ?>
 <ul>
 <?php if ($democratic->is_enabled()) { ?>
 <li>
-    <?php echo T_('Cooldown'); ?>:<?php echo $democratic->f_cooldown; ?>
+    <?php echo T_('Cooldown'); ?>:<?php echo $democratic->cooldown . ' ' . T_('minutes'); ?>
 </li>
 <?php } ?>
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) { ?>
