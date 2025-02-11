@@ -392,9 +392,13 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 $object_type = $_REQUEST['object_type'];
                 $threshold   = $_REQUEST['threshold'];
                 ob_start();
-                $object_ids = ($action === 'dashboard_random')
-                    ? $this->albumRepository->getRandom($user->id, $limit)
-                    : [];
+                $object_ids = [];
+                if ($action === 'dashboard_random') {
+                    $object_ids = (AmpConfig::get('album_group'))
+                        ? $this->albumRepository->getRandom($user->id, $limit)
+                        : $this->albumRepository->getRandomAlbumDisk($user->id, $limit);
+                }
+
                 if ($object_ids !== []) {
                     $browse = new Browse();
                     $browse->set_type($object_type);
