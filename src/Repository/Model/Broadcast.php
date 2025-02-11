@@ -62,8 +62,7 @@ class Broadcast extends database_object implements library_item
     /** @var array $tags */
     public $tags;
 
-    /** @var null|string $f_link */
-    private $f_link;
+    private ?string $f_link = null;
 
     /**
      * Constructor

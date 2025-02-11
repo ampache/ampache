@@ -73,7 +73,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public $f_track;
 
-    private $f_link;
+    private ?string $f_link = null;
 
     /**
      * Constructor

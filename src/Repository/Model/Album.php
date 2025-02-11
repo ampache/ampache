@@ -124,17 +124,14 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /** @var array $tags */
     private $tags;
 
-    /** @var null|string $f_artist_name */
-    private $f_artist_name;
+    private ?string $f_artist_name = null;
 
-    /** @var null|string $f_artist_link */
-    private $f_artist_link;
+    private ?string $f_artist_link = null;
 
-    /** @var null|string $f_link */
-    private $f_link;
+    private ?string $f_link = null;
 
-    /** @var null|string $f_name // Prefix + Name, generated */
-    private $f_name;
+    // Prefix + Name, generated
+    private ?string $f_name = null;
 
     private ?bool $has_art = null;
 

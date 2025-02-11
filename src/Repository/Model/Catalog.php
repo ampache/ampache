@@ -165,9 +165,6 @@ abstract class Catalog extends database_object
     /** @var null|string $link */
     public $link;
 
-    /** @var null|string $f_link */
-    public $f_link;
-
     /** @var null|string $f_update */
     public $f_update;
 
@@ -188,6 +185,8 @@ abstract class Catalog extends database_object
      * @var null|string $f_info
      */
     public $f_info;
+
+    private ?string $f_link = null;
 
     /**
      * This is a private var that's used during catalog builds

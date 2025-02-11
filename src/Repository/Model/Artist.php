@@ -86,11 +86,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /** @var array $tags */
     private $tags = null;
 
-    /** @var null|string $f_link */
-    private $f_link;
+    private ?string $f_link = null;
 
-    /** @var null|string $f_name */
-    private $f_name; // Prefix + Name, generated
+    private ?string $f_name; // Prefix + Name, generated
 
     private ?bool $has_art = null;
 
