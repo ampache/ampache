@@ -166,9 +166,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         $this->addition_time     = $this->album->addition_time;
         $this->artist_count      = $this->album->artist_count;
         $this->song_artist_count = $this->album->song_artist_count;
-
-        // finally; set up your formatted name
-        $this->f_name = $this->get_fullname();
     }
 
     public function getId(): int
@@ -268,15 +265,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         if (!isset($this->album)) {
             $this->album = new Album($this->album_id);
         }
-
-        if ($details) {
-            $this->get_tags();
-        }
-
-        // set link and f_link
-        $this->get_artist_fullname();
-        $this->get_f_link();
-        $this->get_f_parent_link();
     }
 
     /**

@@ -489,14 +489,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             foreach ($data as $key => $value) {
                 $this->$key = $value;
             }
-
-            $this->get_tags();
         }
-
-        // set link and f_link
-        $this->get_f_link();
-        $this->get_artist_fullname();
-        $this->get_f_parent_link();
     }
 
     /**
