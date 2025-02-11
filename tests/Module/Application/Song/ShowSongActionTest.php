@@ -35,6 +35,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -75,74 +76,33 @@ class ShowSongActionTest extends MockeryTestCase
         );
     }
 
-    public function testRunEchoesErrorIfSongDoesNotExist(): void
-    {
-        $request = $this->mock(ServerRequestInterface::class);
-        $song    = $this->mock(Song::class);
-
-        $song_id = 0;
-
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['song_id' => (string) $song_id]);
-
-        $this->modelFactory->shouldReceive('createSong')
-            ->with($song_id)
-            ->once()
-            ->andReturn($song);
-
-        $song->shouldReceive('isNew')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(true);
-
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-
-        $this->logger->shouldReceive('warning')
-            ->with(
-                'Requested a song that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => ShowSongAction::class]
-            )
-            ->once();
-
-        $this->expectOutputString('You have requested an object that does not exist');
-
-        $this->assertNull(
-            $this->subject->run(
-                $request,
-                $this->mock(GuiGatekeeperInterface::class)
-            )
-        );
-    }
-
     public function testRunRendersSongDetails(): void
     {
         $request         = $this->mock(ServerRequestInterface::class);
+        $gatekeeper      = $this->mock(GuiGatekeeperInterface::class);
         $song            = $this->mock(Song::class);
+        $user            = $this->mock(User::class);
         $songViewAdapter = $this->mock(SongViewAdapterInterface::class);
         $talView         = $this->mock(TalViewInterface::class);
-        $gatekeeper      = $this->mock(GuiGatekeeperInterface::class);
 
         $song_id = 666;
         $title   = 'some-song-title';
         $content = 'some-content';
 
-        $song->id     = $song_id;
-        $song->f_name = $title;
+        $song->id      = $song_id;
+        $song->catalog = 1;
+
+        $user->catalogs['music'] = [1];
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
+
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
+
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
             ->once()

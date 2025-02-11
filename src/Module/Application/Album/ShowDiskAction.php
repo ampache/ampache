@@ -74,7 +74,7 @@ final class ShowDiskAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $user        =  $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
-        $catalogs    = User::get_user_catalogs($user->id);
+        $catalogs    = (isset($user->catalogs['music'])) ? $user->catalogs['music'] : User::get_user_catalogs($user->id);
         $albumDiskId = (int) ($request->getQueryParams()['album_disk'] ?? 0);
         $albumDisk   = $this->modelFactory->createAlbumDisk($albumDiskId);
 
@@ -94,7 +94,7 @@ final class ShowDiskAction implements ApplicationActionInterface
                         $gatekeeper,
                         $albumDisk
                     ),
-                    'user' => $gatekeeper->getUser()
+                    'user' => $user
                 ]
             );
         }
