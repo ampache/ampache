@@ -80,9 +80,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /** @var int $albums */
     public $albums;
 
-    /** @var null|string $f_name */
-    public $f_name; // Prefix + Name, generated
-
     /** @var bool $_fake */
     public $_fake = false; // Set if construct_from_array used
 
@@ -91,6 +88,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /** @var null|string $f_link */
     private $f_link;
+
+    /** @var null|string $f_name */
+    private $f_name; // Prefix + Name, generated
 
     private ?bool $has_art = null;
 

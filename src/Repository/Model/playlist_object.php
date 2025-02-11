@@ -63,9 +63,9 @@ abstract class playlist_object extends database_object implements library_item
 
     public ?string $f_last_update = null;
 
-    public ?string $f_name = null;
-
     private ?string $f_link = null;
+
+    private ?string $f_name = null;
 
     private ?string $f_type = null;
 
