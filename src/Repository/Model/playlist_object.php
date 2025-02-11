@@ -63,11 +63,11 @@ abstract class playlist_object extends database_object implements library_item
 
     public ?string $f_last_update = null;
 
-    public ?string $f_link = null;
-
-    public ?string $f_type = null;
-
     public ?string $f_name = null;
+
+    private ?string $f_link = null;
+
+    private ?string $f_type = null;
 
     private ?bool $has_art = null;
 
@@ -97,10 +97,6 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function format(?bool $details = true): void
     {
-        // format shared lists using the username
-        $this->get_fullname();
-        $this->get_f_type();
-        $this->get_f_link();
         $this->f_date = ($this->date !== 0)
             ? get_datetime((int)$this->date)
             : T_('Unknown');

@@ -70,7 +70,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
         <?php } ?>
     </span>
 </td>
-<td class="cel_siteurl"><?php echo $libitem->f_site_url_link; ?></td>
+<td class="cel_siteurl"><?php echo "<a target=\"_blank\" href=\"" . $libitem->site_url . "\">" . $libitem->site_url . "</a>"; ?></td>
 <td class="cel_codec"><?php echo $libitem->codec; ?></td>
 <?php if ($show_ratings) { ?>
     <td class="cel_ratings">

@@ -987,6 +987,7 @@ class User extends database_object
      */
     public function format(?bool $details = true): void
     {
+        unset($details);
     }
 
     /**
