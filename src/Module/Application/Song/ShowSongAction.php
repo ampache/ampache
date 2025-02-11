@@ -27,11 +27,14 @@ namespace Ampache\Module\Application\Song;
 
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
+use Ampache\Module\Api\Authentication\Gatekeeper;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -57,11 +60,11 @@ final class ShowSongAction implements ApplicationActionInterface
         TalFactoryInterface $talFactory,
         LoggerInterface $logger
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
-        $this->guiFactory   = $guiFactory;
-        $this->talFactory   = $talFactory;
-        $this->logger       = $logger;
+        $this->ui             = $ui;
+        $this->modelFactory   = $modelFactory;
+        $this->guiFactory     = $guiFactory;
+        $this->talFactory     = $talFactory;
+        $this->logger         = $logger;
     }
 
     public function run(
@@ -70,9 +73,11 @@ final class ShowSongAction implements ApplicationActionInterface
     ): ?ResponseInterface {
         $this->ui->showHeader();
 
-        $song = $this->modelFactory->createSong((int)($request->getQueryParams()['song_id'] ?? 0));
+        $user     =  $gatekeeper->getUser();
+        $catalogs = User::get_user_catalogs($user->id);
+        $song     = $this->modelFactory->createSong((int)($request->getQueryParams()['song_id'] ?? 0));
 
-        if ($song->isNew()) {
+        if ($song->isNew() || !in_array($song->catalog, $catalogs)) {
             $this->logger->warning(
                 'Requested a song that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
