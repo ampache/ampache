@@ -93,12 +93,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public ?string $link = null;
 
-    /** @var null|string $f_name // Prefix + Name, generated */
-    public $f_name;
-
-    /** @var null|string $f_link */
-    public $f_link;
-
     /** @var int $catalog_id */
     public $catalog_id;
 
@@ -107,11 +101,14 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     /** @var array $tags */
     private $tags;
 
-    /** @var null|string $f_artist_name */
-    private $f_artist_name;
+    private ?string $f_artist_name = null;
 
-    /** @var null|string $f_artist_link */
-    private $f_artist_link;
+    private ?string $f_artist_link = null;
+
+    private ?string $f_link = null;
+
+    // Prefix + Name, generated
+    private ?string $f_name = null;
 
     private ?bool $has_art = null;
 
@@ -166,9 +163,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         $this->addition_time     = $this->album->addition_time;
         $this->artist_count      = $this->album->artist_count;
         $this->song_artist_count = $this->album->song_artist_count;
-
-        // finally; set up your formatted name
-        $this->f_name = $this->get_fullname();
     }
 
     public function getId(): int
@@ -268,15 +262,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         if (!isset($this->album)) {
             $this->album = new Album($this->album_id);
         }
-
-        if ($details) {
-            $this->get_tags();
-        }
-
-        // set link and f_link
-        $this->get_artist_fullname();
-        $this->get_f_link();
-        $this->get_f_parent_link();
     }
 
     /**

@@ -84,8 +84,8 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
     <?php } ?>
     </span>
 </td>
-<td class="cel_release_date"><?php echo $libitem->f_release_date; ?></td>
-<td class="cel_codec"><?php echo $libitem->f_codec; ?></td>
+<td class="cel_release_date"><?php echo ($libitem->release_date) ? get_datetime((int) $libitem->release_date, 'short', 'none') : ''; ?></td>
+<td class="cel_codec"><?php echo $libitem->video_codec . ' / ' . $libitem->audio_codec; ?></td>
 <td class="cel_resolution"><?php echo $libitem->f_resolution; ?></td>
 <td class="cel_length"><?php echo floor($libitem->time / 60) . ' ' . T_('minutes'); ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>

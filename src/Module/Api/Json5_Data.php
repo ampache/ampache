@@ -328,7 +328,7 @@ class Json5_Data
             $JSON[] = [
                 "id" => (string)$label_id,
                 "name" => $label->get_fullname(),
-                "artists" => $label->artist_count,
+                "artists" => $label->get_artist_count(),
                 "summary" => $label->summary,
                 "external_link" => $label->get_link(),
                 "address" => $label->address,

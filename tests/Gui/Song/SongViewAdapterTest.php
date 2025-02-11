@@ -292,9 +292,7 @@ class SongViewAdapterTest extends MockeryTestCase
 
     public function testGetArtistLinkReturnsValue(): void
     {
-        $value = 'some-artist-link';
-
-        $this->song->f_artist_link = $value;
+        $value = '';
 
         $this->song->shouldReceive('get_f_parent_link')
             ->withNoArgs()
@@ -309,9 +307,7 @@ class SongViewAdapterTest extends MockeryTestCase
 
     public function testGetAlbumLinkReturnsValue(): void
     {
-        $value = 'some-album-link';
-
-        $this->song->f_album_link = $value;
+        $value = '';
 
         $this->song->shouldReceive('get_f_album_link')
             ->withNoArgs()
@@ -326,9 +322,7 @@ class SongViewAdapterTest extends MockeryTestCase
 
     public function testGetAlbumDiskLinkReturnsValue(): void
     {
-        $value = 'some-album-link';
-
-        $this->song->f_album_disk_link = $value;
+        $value = '';
 
         $this->song->shouldReceive('get_f_album_disk_link')
             ->withNoArgs()

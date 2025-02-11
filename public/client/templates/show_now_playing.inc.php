@@ -65,12 +65,11 @@ if (count($results)) {
         if (!is_object($media)) {
             continue;
         }
+
         if (!$np_user->fullname) {
             $np_user->fullname = "Ampache User";
         }
-        if (!$np_user->f_avatar_medium) {
-            $np_user->f_avatar_medium = '<img src="' . AmpConfig::get_web_path('/client') . '/images/blankuser.png' . '" title="User Avatar" style="width: 64px; height: 64px;" />';
-        }
+
         echo "<div class=\"np_row\">";
         if (get_class($media) == Song::class) {
             require Ui::find_template('show_now_playing_row.inc.php');

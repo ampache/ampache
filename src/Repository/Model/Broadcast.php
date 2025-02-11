@@ -62,8 +62,7 @@ class Broadcast extends database_object implements library_item
     /** @var array $tags */
     public $tags;
 
-    /** @var null|string $f_link */
-    public $f_link;
+    private ?string $f_link = null;
 
     /**
      * Constructor
@@ -180,10 +179,7 @@ class Broadcast extends database_object implements library_item
      */
     public function format($details = true): void
     {
-        $this->get_f_link();
-        if ($details) {
-            $this->get_tags();
-        }
+        unset($details);
     }
 
     /**

@@ -40,9 +40,9 @@ if ($catalog->enabled) {
 $button_flip_state_id = 'button_flip_state_' . $catalog->id; ?>
 <td class="cel_catalog"><?php echo $catalog->get_f_link(); ?></td>
 <td class="cel_info"><?php echo scrub_out($catalog->f_info); ?></td>
-<td class="cel_lastverify"><?php echo scrub_out($catalog->f_update); ?></td>
-<td class="cel_lastadd"><?php echo scrub_out($catalog->f_add); ?></td>
-<td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean); ?></td>
+<td class="cel_lastverify"><?php echo scrub_out($catalog->get_f_update()); ?></td>
+<td class="cel_lastadd"><?php echo scrub_out($catalog->get_f_add()); ?></td>
+<td class="cel_lastclean"><?php echo scrub_out($catalog->get_f_clean()); ?></td>
 <td class="cel_action cel_action_text">
 <?php if (!$catalog->isReady()) { ?>
     <a href="<?php echo $admin_path; ?>/catalog.php?action=add_to_catalog&catalogs[]=<?php echo $catalog->id; ?>"><b><?php echo T_('Make it ready ..'); ?></b></a><br />

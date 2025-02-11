@@ -276,7 +276,7 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function getLastUpdate(): string
     {
-        return $this->playlist->f_last_update ?? '';
+        return $this->playlist->get_f_last_update();
     }
 
     public function getType(): string

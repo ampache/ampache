@@ -112,6 +112,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      */
     public function format(?bool $details = true): void
     {
+        unset($details);
     }
 
     /**

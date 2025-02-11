@@ -155,10 +155,7 @@ switch ($user_access) {
             <td>
             </td>
             <td>
-                <?php
-                if ($client->f_avatar) {
-                    echo $client->f_avatar;
-                } ?>
+                <?php echo $client->get_f_avatar('f_avatar'); ?>
                 <a href="<?php echo $admin_path; ?>/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
             </td>

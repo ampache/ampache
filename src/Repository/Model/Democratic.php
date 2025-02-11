@@ -54,12 +54,6 @@ class Democratic extends Tmp_Playlist
 
     public int $base_playlist = 0;
 
-    public string $f_cooldown;
-
-    public string $f_primary;
-
-    public string $f_level;
-
     public ?int $tmp_playlist;
 
     public $object_ids = [];
@@ -148,9 +142,6 @@ class Democratic extends Tmp_Playlist
      */
     public function format(): void
     {
-        $this->f_cooldown = $this->cooldown . ' ' . T_('minutes');
-        $this->f_primary  = ($this->primary) ? T_('Primary') : '';
-        $this->f_level    = $this->getAccessLevel()->toDescription();
     }
 
     public function getAccessLevel(): AccessLevelEnum
