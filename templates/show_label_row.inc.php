@@ -41,7 +41,7 @@ $web_path = AmpConfig::get_web_path(); ?>
 </td>
 <td class="cel_label"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_category"><?php echo $libitem->category; ?></td>
-<td class="cel_artists"><?php echo $libitem->artist_count; ?></td>
+<td class="cel_artists"><?php echo $libitem->get_artist_count(); ?></td>
 <td class="cel_country"><?php echo $libitem->country; ?></td>
 <?php if ($libitem->active) {
     echo "<td class=\"cel_active\">" . T_('Active') . "</td>";

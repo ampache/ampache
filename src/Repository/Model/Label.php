@@ -65,14 +65,12 @@ class Label extends database_object implements library_item
 
     public ?string $link = null;
 
-    /** @var null|string $f_link */
-    public $f_link;
-
     /** @var array $artists */
     public $artists = [];
 
-    /** @var int $artist_count */
-    public $artist_count;
+    private ?int $artist_count = null;
+
+    private ?string $f_link = null;
 
     /**
      * __construct
@@ -123,8 +121,6 @@ class Label extends database_object implements library_item
     public function format(?bool $details = true): void
     {
         unset($details);
-        $this->get_f_link();
-        $this->get_artist_count();
     }
 
     public function get_childrens(): array

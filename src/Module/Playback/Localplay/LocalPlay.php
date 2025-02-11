@@ -36,8 +36,6 @@ class LocalPlay
 {
     /* Base Variables */
     public string $type;
-    public ?string $f_description = null;
-    public ?string $f_version     = null;
 
     /* Built Variables */
     private ?localplay_controller $_player = null;
@@ -72,10 +70,6 @@ class LocalPlay
      */
     public function format(): void
     {
-        if ($this->_player instanceof localplay_controller) {
-            $this->f_description = $this->_player->get_description();
-            $this->f_version     = $this->_player->get_version();
-        }
     }
 
     /**
@@ -631,6 +625,28 @@ class LocalPlay
     public function get_instance_fields(): array
     {
         return $this->_player?->instance_fields() ?? [];
+    }
+    /**
+     * get_f_description
+     */
+    public function get_f_description(): string
+    {
+        if ($this->_player instanceof localplay_controller) {
+            return $this->_player->get_description();
+        }
+
+        return '';
+    }
+    /**
+     * get_f_version
+     */
+    public function get_f_version(): string
+    {
+        if ($this->_player instanceof localplay_controller) {
+            return $this->_player->get_version();
+        }
+
+        return '';
     }
 
     /**

@@ -54,7 +54,7 @@ Art::display('live_stream', $radio->id, (string)$radio->get_fullname(), $thumb);
     </dd>
 <?php $itemprops[T_('Name')] = (string)$radio->get_fullname();
 $itemprops[T_('Website')]    = scrub_out($radio->site_url);
-$itemprops[T_('Stream')]     = $radio->f_url_link;
+$itemprops[T_('Stream')]     = "<a target=\"_blank\" href=\"" . $radio->url . "\">" . $radio->url . "</a>";
 $itemprops[T_('Codec')]      = scrub_out($radio->codec);
 
 foreach ($itemprops as $key => $value) {

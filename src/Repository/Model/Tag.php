@@ -994,7 +994,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public function format(?bool $details = true): void
     {
-        unset($details); //dead code but called from other format calls
+        unset($details);
     }
 
     /**
