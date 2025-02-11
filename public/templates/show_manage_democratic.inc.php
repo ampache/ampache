@@ -55,9 +55,9 @@ Ui::show_box_top(T_('Manage')); ?>
     <tr>
         <td><?php echo scrub_out($democratic->name); ?></td>
         <td><?php echo $playlist->get_f_link(); ?></td>
-        <td><?php echo $democratic->f_cooldown; ?></td>
-        <td><?php echo $democratic->f_level; ?></td>
-        <td><?php echo $democratic->f_primary; ?></td>
+        <td><?php echo $democratic->cooldown . ' ' . T_('minutes'); ?></td>
+        <td><?php echo $democratic->getAccessLevel()->toDescription(); ?></td>
+        <td><?php echo ($democratic->primary) ? T_('Primary') : ''; ?></td>
         <td><?php echo $democratic->count_items(); ?></td>
         <td>
         <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'cell_tower', T_('Play'), 'play_democratic'); ?>
