@@ -125,13 +125,13 @@ $videoprops[T_('Length')] = scrub_out($video->get_f_time());
 if (get_class($video) != Video::class) {
     require Ui::find_template('show_partial_' . $video->getMediaType()->value . '.inc.php');
 }
-$videoprops[T_('Release Date')]  = scrub_out($video->f_release_date);
-$videoprops[T_('Codec')]         = scrub_out($video->f_codec);
+$videoprops[T_('Release Date')]  = scrub_out(($video->release_date) ? get_datetime((int) $video->release_date, 'short', 'none') : '');
+$videoprops[T_('Codec')]         = scrub_out($video->video_codec . ' / ' . $video->audio_codec);
 $videoprops[T_('Resolution')]    = scrub_out($video->f_resolution);
 $videoprops[T_('Display')]       = scrub_out($video->f_display);
-$videoprops[T_('Audio Bitrate')] = scrub_out($video->f_bitrate);
-$videoprops[T_('Video Bitrate')] = scrub_out($video->f_video_bitrate);
-$videoprops[T_('Frame Rate')]    = scrub_out($video->f_frame_rate);
+$videoprops[T_('Audio Bitrate')] = scrub_out((int) ($video->bitrate / 1024) . "-" . strtoupper((string) $video->mode));
+$videoprops[T_('Video Bitrate')] = scrub_out((string)($video->video_bitrate / 1024));
+$videoprops[T_('Frame Rate')]    = scrub_out(($video->frame_rate) ? $video->frame_rate . ' fps' : '');
 $videoprops[T_('Channels')]      = scrub_out((string)$video->channels);
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
     $data                       = pathinfo($video->file);
@@ -139,7 +139,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
     $videoprops[T_('Filename')] = (isset($data['extension']))
         ? scrub_out($data['filename'] . "." . $data['extension'])
         : '';
-    $videoprops[T_('Size')]     = $video->f_size;
+    $videoprops[T_('Size')]     = Ui::format_bytes($video->size);
 }
 if ($video->update_time) {
     $videoprops[T_('Last Updated')] = get_datetime((int) $video->update_time);

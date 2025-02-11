@@ -36,7 +36,7 @@ use Ampache\Repository\Model\Video;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Release Date'); ?></td>
-                <td><input type="text" name="release_date" value="<?php echo $libitem->f_release_date; ?>" /></td>
+                <td><input type="text" name="release_date" value="<?php echo ($libitem->release_date) ? get_datetime((int) $libitem->release_date, 'short', 'none') : ''; ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres'); ?></td>
