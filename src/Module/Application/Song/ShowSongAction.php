@@ -73,7 +73,7 @@ final class ShowSongAction implements ApplicationActionInterface
     ): ?ResponseInterface {
         $this->ui->showHeader();
 
-        $user     =  $gatekeeper->getUser();
+        $user     =  $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs = User::get_user_catalogs($user->id);
         $song     = $this->modelFactory->createSong((int)($request->getQueryParams()['song_id'] ?? 0));
 

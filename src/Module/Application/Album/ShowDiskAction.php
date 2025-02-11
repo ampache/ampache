@@ -36,6 +36,7 @@ use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -72,11 +73,12 @@ final class ShowDiskAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
+        $user        =  $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
+        $catalogs    = User::get_user_catalogs($user->id);
         $albumDiskId = (int) ($request->getQueryParams()['album_disk'] ?? 0);
+        $albumDisk   = $this->modelFactory->createAlbumDisk($albumDiskId);
 
-        $albumDisk = $this->modelFactory->createAlbumDisk($albumDiskId);
-
-        if ($albumDisk->isNew()) {
+        if ($albumDisk->isNew() || !in_array($albumDisk->catalog, $catalogs)) {
             $this->logger->warning(
                 'Requested an album_disk that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
