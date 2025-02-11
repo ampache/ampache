@@ -30,6 +30,7 @@ use Ampache\Gui\Song\SongViewAdapterInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Gui\TalViewInterface;
 use Ampache\MockeryTestCase;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -72,6 +73,66 @@ class ShowSongActionTest extends MockeryTestCase
             $this->guiFactory,
             $this->talFactory,
             $this->logger
+        );
+    }
+
+    public function testRunEchoesErrorIfSongDoesNotExist(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $song       = $this->mock(Song::class);
+        $user       = $this->mock(User::class);
+
+        $song_id       = 0;
+        $song->catalog = 1;
+
+        $user->catalogs['music'] = [1];
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['song_id' => (string) $song_id]);
+
+        $this->modelFactory->shouldReceive('createSong')
+            ->with($song_id)
+            ->once()
+            ->andReturn($song);
+
+        $song->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(true);
+
+        $this->ui->shouldReceive('showQueryStats')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showFooter')
+            ->withNoArgs()
+            ->once();
+
+        $this->logger->shouldReceive('warning')
+            ->with(
+                'Requested a song that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => ShowSongAction::class]
+            )
+            ->once();
+
+        $this->expectOutputString('You have requested an object that does not exist');
+
+        $this->assertNull(
+            $this->subject->run(
+                $request,
+                $gatekeeper
+            )
         );
     }
 
