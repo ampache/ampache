@@ -110,8 +110,7 @@ class Video extends database_object implements
     /** @var array $tags */
     private $tags;
 
-    /** @var null|string $f_link */
-    private ?string $f_link;
+    private ?string $f_link = null;
 
     private ?bool $has_art = null;
 
