@@ -44,7 +44,7 @@ if (count($results)) {
     $user     = (!empty(Core::get_global('user')))
         ? Core::get_global('user')
         : new User(-1);
-    $catalogs = array_merge($user->get_catalogs('music'), $user->get_catalogs('video'));
+    $catalogs = User::get_user_catalogs($user->id);
     $rss_link = (AmpConfig::get('use_rss')) ? '&nbsp' . Ui::getRssLink(RssFeedTypeEnum::NOW_PLAYING) : '';
     $refresh  = "&nbsp" . Ajax::button('?page=index&action=refresh_now_playing', 'refresh', T_('Refresh'), 'refresh_now_playing', 'box_np');
     Ui::show_box_top(T_('Now Playing') . $rss_link . $refresh, 'box_np');
