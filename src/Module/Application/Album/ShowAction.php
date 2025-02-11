@@ -36,6 +36,7 @@ use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -72,11 +73,12 @@ final class ShowAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
-        $albumId = (int) ($request->getQueryParams()['album'] ?? 0);
+        $user     =  $gatekeeper->getUser();
+        $catalogs = User::get_user_catalogs($user->id);
+        $albumId  = (int) ($request->getQueryParams()['album'] ?? 0);
+        $album    = $this->modelFactory->createAlbum($albumId);
 
-        $album = $this->modelFactory->createAlbum($albumId);
-
-        if ($album->isNew()) {
+        if ($album->isNew() || !in_array($album->catalog, $catalogs)) {
             $this->logger->warning(
                 'Requested an album that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
