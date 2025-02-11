@@ -622,7 +622,7 @@ final class PlayAction implements ApplicationActionInterface
         if ($mediaCatalogId) {
             /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted
-            $catalogs = User::get_user_catalogs($user->id);
+            $catalogs = (isset($user->catalogs['music'])) ? $user->catalogs['music'] : User::get_user_catalogs($user->id);
             if (!in_array($mediaCatalogId, $catalogs) && ($mediaOwnerId === null || $mediaOwnerId !== $user->id)) {
                 $this->logger->warning(
                     "Error: You are not allowed to play $media->file",

@@ -47,7 +47,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 
     private ?string $feed = null;
 
-    private int $catalog = 0;
+    public int $catalog = 0;
 
     private ?string $title = null;
 

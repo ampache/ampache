@@ -74,7 +74,7 @@ final class ShowAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $user     =  $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
-        $catalogs = User::get_user_catalogs($user->id);
+        $catalogs = (isset($user->catalogs['music'])) ? $user->catalogs['music'] : User::get_user_catalogs($user->id);
         $albumId  = (int) ($request->getQueryParams()['album'] ?? 0);
         $album    = $this->modelFactory->createAlbum($albumId);
 
@@ -95,7 +95,7 @@ final class ShowAction implements ApplicationActionInterface
                         $gatekeeper,
                         $album
                     ),
-                    'user' => $gatekeeper->getUser()
+                    'user' => $user
                 ]
             );
         } else {
@@ -109,7 +109,7 @@ final class ShowAction implements ApplicationActionInterface
                         $gatekeeper,
                         $album
                     ),
-                    'user' => $gatekeeper->getUser()
+                    'user' => $user
                 ]
             );
         }
@@ -139,6 +139,6 @@ final class ShowAction implements ApplicationActionInterface
             return false;
         }
 
-        return $album->get_user_owner() === $gatekeeper->getUserId();
+        return $album->get_user_owner() === ($gatekeeper->getUserId());
     }
 }

@@ -27,14 +27,12 @@ namespace Ampache\Module\Application\Song;
 
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
-use Ampache\Module\Api\Authentication\Gatekeeper;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -74,7 +72,7 @@ final class ShowSongAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $user     =  $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
-        $catalogs = User::get_user_catalogs($user->id);
+        $catalogs = (isset($user->catalogs['music'])) ? $user->catalogs['music'] : User::get_user_catalogs($user->id);
         $song     = $this->modelFactory->createSong((int)($request->getQueryParams()['song_id'] ?? 0));
 
         if ($song->isNew() || !in_array($song->catalog, $catalogs)) {

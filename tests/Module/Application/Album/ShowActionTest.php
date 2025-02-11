@@ -77,8 +77,17 @@ class ShowActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
 
-        $albumId = 42;
+        $albumId        = 42;
+        $album->catalog = 1;
+
+        $user->catalogs['music'] = [1];
+
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
 
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
@@ -128,7 +137,10 @@ class ShowActionTest extends MockeryTestCase
 
         $isEditAble = true;
 
-        $albumId = 42;
+        $albumId        = 42;
+        $album->catalog = 1;
+
+        $user->catalogs['music'] = [1];
 
         $this->privilegeChecker->shouldReceive('check')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
@@ -362,14 +374,22 @@ class ShowActionTest extends MockeryTestCase
         string $templateName
     ): void {
         $request = $this->mock(ServerRequestInterface::class);
-        $user    = $this->createMock(User::class);
+        $user    = $this->mock(User::class);
 
-        $albumId = 42;
+        $albumId        = 42;
+        $album->catalog = 1;
+
+        $user->catalogs['music'] = [1];
 
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
             ->once()
             ->andReturn(['album' => (string) $albumId]);
+
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
 
         $this->modelFactory->shouldReceive('createAlbum')
             ->with($albumId)
@@ -383,11 +403,6 @@ class ShowActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturnFalse();
-
-        $gatekeeper->shouldReceive('getUser')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($user);
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
