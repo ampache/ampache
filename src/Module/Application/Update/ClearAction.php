@@ -67,7 +67,7 @@ final class ClearAction implements ApplicationActionInterface
             ->createResponse(StatusCode::FOUND)
             ->withHeader(
                 'Location',
-                $this->configContainer->getWebPath('/client')
+                $this->configContainer->getWebPath()
             );
     }
 }
