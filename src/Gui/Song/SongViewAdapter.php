@@ -454,7 +454,7 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_LYRICS)) {
-            $songprops[T_('Lyrics')] = "<a title=\"" . scrub_out($this->song->title) . "\" href=\"" . $this->configContainer->getWebPath() . "/song.php?action=show_lyrics&song_id=" . $this->song->getId() . "\">" . T_('Show Lyrics') . "</a>";
+            $songprops[T_('Lyrics')] = "<a title=\"" . scrub_out($this->song->title) . "\" href=\"" . $this->configContainer->getWebPath('/client') . "/song.php?action=show_lyrics&song_id=" . $this->song->getId() . "\">" . T_('Show Lyrics') . "</a>";
         }
 
         $license = $this->song->getLicense();

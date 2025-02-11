@@ -633,7 +633,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
                 $this->f_artist_link = sprintf('<span title="%d ', $this->artist_count) . T_('Artists') . "\">" . T_('Various') . "</span>";
             } elseif ($this->album_artist !== null) {
                 $this->f_artist_link = '';
-                $web_path            = AmpConfig::get_web_path();
+                $web_path            = AmpConfig::get_web_path('/client');
                 if (!$this->album_artists) {
                     $this->get_artists();
                 }

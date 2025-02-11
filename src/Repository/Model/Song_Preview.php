@@ -302,7 +302,7 @@ class Song_Preview extends database_object implements Media, playable_item
     public function get_f_parent_link(): ?string
     {
         if ($this->artist) {
-            return "<a href=\"" . AmpConfig::get_web_path() . "/artists.php?action=show&artist=" . $this->artist . "\" title=\"" . scrub_out($this->get_artist_fullname()) . "\"> " . scrub_out($this->get_artist_fullname()) . "</a>";
+            return "<a href=\"" . AmpConfig::get_web_path('/client') . "/artists.php?action=show&artist=" . $this->artist . "\" title=\"" . scrub_out($this->get_artist_fullname()) . "\"> " . scrub_out($this->get_artist_fullname()) . "</a>";
         } else {
             $wartist = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
 
