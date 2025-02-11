@@ -173,9 +173,6 @@ class Song extends database_object implements
     /** @var int|null $albumartist */
     public $albumartist;
 
-    /** @var null|string $f_link */
-    public $f_link;
-
     /** @var null|string $f_album_link */
     public $f_album_link;
 
@@ -190,6 +187,9 @@ class Song extends database_object implements
     private ?string $f_albumartist_link = null;
 
     private ?string $f_album_full = null;
+
+    /** @var null|string $f_link */
+    private $f_link;
 
     private ?bool $has_art = null;
 

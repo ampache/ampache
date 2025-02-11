@@ -107,9 +107,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /** @var null|string $f_name // Prefix + Name, generated */
     public $f_name;
 
-    /** @var null|string $f_link */
-    public $f_link;
-
     /** @var int $song_id */
     public $song_id;
 
@@ -135,6 +132,9 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /** @var null|string $f_artist_link */
     private $f_artist_link;
+
+    /** @var null|string $f_link */
+    private $f_link;
 
     private ?bool $has_art = null;
 
@@ -481,8 +481,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             return;
         }
 
-        $this->get_artists();
-
         if ($details) {
             /* Pull the advanced information */
             $data = $this->_get_extra_info();
@@ -688,7 +686,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $this->album_artists = self::get_parent_array($this->id, $this->album_artist);
         }
 
-        return $this->album_artists ?? [];
+        return $this->album_artists;
     }
 
     /**

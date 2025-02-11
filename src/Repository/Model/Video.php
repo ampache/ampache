@@ -105,9 +105,6 @@ class Video extends database_object implements
     /** @var null|string $f_size */
     public $f_size;
 
-    /** @var null|string $f_link */
-    public $f_link;
-
     /** @var null|string $f_codec */
     public $f_codec;
 
@@ -131,6 +128,9 @@ class Video extends database_object implements
 
     /** @var array $tags */
     private $tags;
+
+    /** @var null|string $f_link */
+    private $f_link;
 
     private ?bool $has_art = null;
 

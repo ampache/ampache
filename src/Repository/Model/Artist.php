@@ -83,14 +83,14 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /** @var null|string $f_name */
     public $f_name; // Prefix + Name, generated
 
-    /** @var null|string $f_link */
-    public $f_link;
-
     /** @var bool $_fake */
     public $_fake = false; // Set if construct_from_array used
 
     /** @var array $tags */
     private $tags = null;
+
+    /** @var null|string $f_link */
+    private $f_link;
 
     private ?bool $has_art = null;
 
@@ -265,6 +265,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      */
     public function format($details = true, $limit_threshold = ''): void
     {
+        unset($details);
     }
 
     /**

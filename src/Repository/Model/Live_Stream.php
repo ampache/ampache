@@ -58,13 +58,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     public ?string $link = null;
 
     /** @var null|string $f_link */
-    public $f_link;
-
-    /** @var null|string $f_url_link */
-    public $f_url_link;
-
-    /** @var null|string $f_site_url_link */
-    public $f_site_url_link;
+    private $f_link;
 
     /**
      * Constructor
@@ -101,9 +95,6 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     public function format(?bool $details = true): void
     {
         unset($details);
-        $this->get_f_link();
-        $this->f_url_link      = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
-        $this->f_site_url_link = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->site_url . "</a>";
     }
 
     /**

@@ -64,14 +64,14 @@ class Wanted extends database_object
     /** @var null|string $link */
     public $link;
 
-    /** @var null|string $f_link */
-    public $f_link;
-
     /** @var null|string $f_user */
     public $f_user;
 
     /** @var Song_Preview[] $songs */
     public $songs;
+
+    /** @var null|string $f_link */
+    private $f_link;
 
     /**
      * Constructor
