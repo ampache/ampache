@@ -59,9 +59,7 @@ abstract class playlist_object extends database_object implements library_item
 
     public ?int $last_update = 0;
 
-    public ?string $f_date = null;
-
-    public ?string $f_last_update = null;
+    private ?string $f_last_update = null;
 
     private ?string $f_link = null;
 
@@ -97,12 +95,7 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function format(?bool $details = true): void
     {
-        $this->f_date = ($this->date !== 0)
-            ? get_datetime((int)$this->date)
-            : T_('Unknown');
-        $this->f_last_update = ($this->last_update)
-            ? get_datetime((int)$this->last_update)
-            : T_('Unknown');
+        unset($details);
     }
 
     /**
@@ -284,6 +277,21 @@ abstract class playlist_object extends database_object implements library_item
         }
 
         return $this->f_type;
+    }
+
+    /**
+     * Get item update date of the playlist
+     */
+    public function get_f_last_update(): string
+    {
+        // don't do anything if it's formatted
+        if ($this->f_last_update === null) {
+            $this->f_last_update = ($this->last_update)
+                ? get_datetime((int)$this->last_update)
+                : T_('Unknown');
+        }
+
+        return $this->f_last_update;
     }
 
     /**

@@ -68,10 +68,10 @@ class Wanted extends database_object
     public $f_user;
 
     /** @var Song_Preview[] $songs */
-    public $songs;
+    public array $songs;
 
     /** @var null|string $f_link */
-    private $f_link;
+    private ?string $f_link = null;
 
     /**
      * Constructor

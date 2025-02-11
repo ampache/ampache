@@ -57,8 +57,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
 
     public ?string $link = null;
 
-    /** @var null|string $f_link */
-    private $f_link;
+    private ?string $f_link = null;
 
     /**
      * Constructor

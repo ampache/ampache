@@ -68,11 +68,9 @@ class Label extends database_object implements library_item
     /** @var array $artists */
     public $artists = [];
 
-    /** @var null|int $artist_count */
-    private $artist_count = null;
+    private ?int $artist_count = null;
 
-    /** @var null|string $f_link */
-    private $f_link;
+    private ?string $f_link = null;
 
     /**
      * __construct
