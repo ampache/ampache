@@ -47,17 +47,17 @@ final readonly class CatalogDetails implements CatalogDetailsInterface
 
     public function getLastUpdateDate(): string
     {
-        return scrub_out($this->catalog->f_update);
+        return scrub_out($this->catalog->get_f_update());
     }
 
     public function getLastAddDate(): string
     {
-        return scrub_out($this->catalog->f_add);
+        return scrub_out($this->catalog->get_f_add());
     }
 
     public function getLastCleanDate(): string
     {
-        return scrub_out($this->catalog->f_clean);
+        return scrub_out($this->catalog->get_f_clean());
     }
 
     public function getCatalogStats(): CatalogStatsInterface

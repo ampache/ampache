@@ -35,7 +35,6 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
@@ -102,29 +101,11 @@ class Video extends database_object implements
     /** @var string $type */
     public $type;
 
-    /** @var null|string $f_size */
-    public $f_size;
-
-    /** @var null|string $f_codec */
-    public $f_codec;
-
     /** @var null|string $f_resolution */
     public $f_resolution;
 
     /** @var null|string $f_display */
     public $f_display;
-
-    /** @var null|string $f_bitrate */
-    public $f_bitrate;
-
-    /** @var null|string $f_video_bitrate */
-    public $f_video_bitrate;
-
-    /** @var null|string $f_frame_rate */
-    public $f_frame_rate;
-
-    /** @var null|string $f_release_date */
-    public $f_release_date;
 
     /** @var array $tags */
     private $tags;
@@ -155,7 +136,7 @@ class Video extends database_object implements
             $this->$key = $value;
         }
 
-        $this->type        = strtolower(pathinfo($this->file, PATHINFO_EXTENSION));
+        $this->type = strtolower(pathinfo($this->file, PATHINFO_EXTENSION));
     }
 
     public function getId(): int
@@ -205,33 +186,13 @@ class Video extends database_object implements
      */
     public function format(?bool $details = true): void
     {
-        $this->get_f_link();
-        $this->f_codec = $this->video_codec . ' / ' . $this->audio_codec;
+        unset($details);
         if ($this->resolution_x || $this->resolution_y) {
             $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
         }
 
         if ($this->display_x || $this->display_y) {
             $this->f_display = $this->display_x . 'x' . $this->display_y;
-        }
-
-        // Format the Bitrate
-        $this->f_bitrate       = (int) ($this->bitrate / 1024) . "-" . strtoupper((string) $this->mode);
-        $this->f_video_bitrate = (string) (int) ($this->video_bitrate / 1024);
-        if ($this->frame_rate) {
-            $this->f_frame_rate = $this->frame_rate . ' fps';
-        }
-
-        // Format the size
-        $this->f_size = Ui::format_bytes($this->size);
-
-        if ($details) {
-            // Get the top tags
-            $this->get_tags();
-        }
-
-        if ($this->release_date) {
-            $this->f_release_date = get_datetime((int) $this->release_date, 'short', 'none');
         }
     }
 

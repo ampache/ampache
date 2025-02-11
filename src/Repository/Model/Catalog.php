@@ -165,15 +165,6 @@ abstract class Catalog extends database_object
     /** @var null|string $link */
     public $link;
 
-    /** @var null|string $f_update */
-    public $f_update;
-
-    /** @var null|string $f_add */
-    public $f_add;
-
-    /** @var null|string $f_clean */
-    public $f_clean;
-
     /**
      * alias for catalog paths, urls, etc etc
      * @var null|string $f_full_info
@@ -458,6 +449,36 @@ abstract class Catalog extends database_object
         }
 
         return $this->f_link;
+    }
+
+    /**
+     * Get item f_update.
+     */
+    public function get_f_update(): string
+    {
+        return ($this->last_update !== 0)
+            ? get_datetime((int)$this->last_update)
+            : T_('Never');
+    }
+
+    /**
+     * Get item f_add.
+     */
+    public function get_f_add(): string
+    {
+        return ($this->last_add !== 0)
+            ? get_datetime((int)$this->last_add)
+            : T_('Never');
+    }
+
+    /**
+     * Get item f_clean.
+     */
+    public function get_f_clean(): string
+    {
+        return ($this->last_clean)
+            ? get_datetime((int)$this->last_clean)
+            : T_('Never');
     }
 
     /**
@@ -965,15 +986,6 @@ abstract class Catalog extends database_object
      */
     public function format(): void
     {
-        $this->f_update = ($this->last_update !== 0)
-            ? get_datetime((int)$this->last_update)
-            : T_('Never');
-        $this->f_add = ($this->last_add !== 0)
-            ? get_datetime((int)$this->last_add)
-            : T_('Never');
-        $this->f_clean = ($this->last_clean)
-            ? get_datetime((int)$this->last_clean)
-            : T_('Never');
     }
 
     /**
