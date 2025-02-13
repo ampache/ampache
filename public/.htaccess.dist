@@ -6,5 +6,5 @@
     RewriteCond %{QUERY_STRING} "(media_)?artist=[0-9]*%" [NC,OR]
     RewriteCond %{QUERY_STRING} "podcast(_episode)?=[0-9]*%" [NC,OR]
     RewriteCond %{QUERY_STRING} "label=[0-9]*%" [NC]
-    RewriteRule (.*) - [R=400,L,E=BLOCKED_REASON:request]
+    RewriteRule (.*) - [R=400,L]
 </IfModule>
