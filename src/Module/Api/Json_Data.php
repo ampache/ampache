@@ -187,9 +187,9 @@ class Json_Data
      * genre_array
      *
      * This returns the formatted 'genre' array for a JSON document
-     * @param array $tags
+     * @param array<array{user: int, id: int, name: string}> $tags
      */
-    private static function genre_array($tags): array
+    private static function genre_array(array $tags): array
     {
         $JSON = [];
 
@@ -1463,7 +1463,7 @@ class Json_Data
             $objArray['disksubtitle']          = $song->disksubtitle;
             $objArray['track']                 = (int)$song->track;
             $objArray['filename']              = $song->file;
-            $objArray['genre']                 = self::genre_array($song->tags);
+            $objArray['genre']                 = self::genre_array($song->get_tags());
             $objArray['playlisttrack']         = $playlist_track;
             $objArray['time']                  = (int)$song->time;
             $objArray['year']                  = (int)$song->year;
@@ -1644,7 +1644,7 @@ class Json_Data
                     "prefix" => $song_album['prefix'],
                     "basename" => $song_album['basename']
                 ],
-                "genre" => self::genre_array($song->tags),
+                "genre" => self::genre_array($song->get_tags()),
                 "track" => (int)$song->track,
                 "time" => (int)$song->time,
                 "format" => $songType,
