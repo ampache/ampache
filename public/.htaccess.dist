@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    RewriteCond %{QUERY_STRING} "(_)?id=(smart_)?[0-9]*%" [NC,OR]
+    RewriteRule (.*) - [R=400,L,E=BLOCKED_REASON:request]
+</IfModule>
