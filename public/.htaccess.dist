@@ -2,6 +2,6 @@
     RewriteEngine On
 
     RewriteCond %{QUERY_STRING} "(_)?id=(smart_)?[0-9]*%" [NC,OR]
-    RewriteCond %{QUERY_STRING} "artist[0-9]*%" [NC]
+    RewriteCond %{QUERY_STRING} "artist=[0-9]*%" [NC]
     RewriteRule (.*) - [R=400,L,E=BLOCKED_REASON:request]
 </IfModule>
