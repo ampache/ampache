@@ -14,9 +14,11 @@
     #RewriteRule (.*) - [F,L]
 
     RewriteCond %{QUERY_STRING} "(_)?id=(smart_)?[0-9]*%" [NC,OR]
+    RewriteCond %{QUERY_STRING} "(u|o)id=[0-9]*%" [NC,OR]
     RewriteCond %{QUERY_STRING} "album(_disk)?=[0-9]*%" [NC,OR]
     RewriteCond %{QUERY_STRING} "(media_)?artist=[0-9]*%" [NC,OR]
     RewriteCond %{QUERY_STRING} "podcast(_episode)?=[0-9]*%" [NC,OR]
-    RewriteCond %{QUERY_STRING} "label=[0-9]*%" [NC]
+    RewriteCond %{QUERY_STRING} "label=[0-9]*%" [NC,OR]
+    RewriteCond %{QUERY_STRING} "bitrate=[0-9]*%" [NC]
     RewriteRule (.*) - [R=400,L]
 </IfModule>
