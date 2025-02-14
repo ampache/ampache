@@ -12,7 +12,7 @@ Pre-translating files before loading media templates should speed those pages up
 
 ### Added
 
-* Translations 2025-01-28
+* Translations 2025-02-14
 * Added option to show separate Artist column for playlist media
 * Pre-translate common strings on repeated tasks before loading media row templates
 * Clean empty albums after each verify chunk
