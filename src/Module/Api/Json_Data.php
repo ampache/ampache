@@ -578,7 +578,7 @@ class Json_Data
                     'id' => (string)$license_id,
                     'name' => $license->getName(),
                     'description' => $license->getDescription(),
-                    'external_link' => $license->getLinkFormatted()
+                    'external_link' => $license->getExternalLink()
                 ];
             }
         } // end foreach
@@ -1422,7 +1422,7 @@ class Json_Data
             }
             $license     = $song->getLicense();
             if ($license !== null) {
-                $licenseLink = $license->getLinkFormatted();
+                $licenseLink = $license->getExternalLink();
             } else {
                 $licenseLink = '';
             }

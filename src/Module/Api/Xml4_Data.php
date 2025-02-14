@@ -385,7 +385,7 @@ class Xml4_Data
         foreach ($licenses as $license_id) {
             $license = $licenseRepository->findById($license_id);
             if ($license !== null) {
-                $string .= "<license id=\"$license_id\">\n\t<name><![CDATA[" . $license->getName() . "]]></name>\n\t<description><![CDATA[" . $license->getDescription() . "]]></description>\n\t<external_link><![CDATA[" . $license->getLinkFormatted() . "]]></external_link>\n</license>\n";
+                $string .= "<license id=\"$license_id\">\n\t<name><![CDATA[" . $license->getName() . "]]></name>\n\t<description><![CDATA[" . $license->getDescription() . "]]></description>\n\t<external_link><![CDATA[" . $license->getExternalLink() . "]]></external_link>\n</license>\n";
             }
         } // end foreach
 
@@ -732,7 +732,7 @@ class Xml4_Data
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $license     = $song->getLicense();
             if ($license !== null) {
-                $licenseLink = $license->getLinkFormatted();
+                $licenseLink = $license->getExternalLink();
             } else {
                 $licenseLink = '';
             }

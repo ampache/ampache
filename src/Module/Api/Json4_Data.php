@@ -234,7 +234,7 @@ class Json4_Data
                     'id' => (string)$license_id,
                     'name' => $license->getName(),
                     'description' => $license->getDescription(),
-                    'external_link' => $license->getLinkFormatted()
+                    'external_link' => $license->getExternalLink()
                 ];
             }
         }
@@ -781,7 +781,7 @@ class Json4_Data
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $license     = $song->getLicense();
             if ($license !== null) {
-                $licenseLink = $license->getLinkFormatted();
+                $licenseLink = $license->getExternalLink();
             } else {
                 $licenseLink = '';
             }
