@@ -83,8 +83,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /** @var bool $_fake */
     public $_fake = false; // Set if construct_from_array used
 
-    /** @var array $tags */
-    private $tags = null;
+    /** @var array<array{user: int, id: int, name: string}> $tags */
+    private ?array $tags = null;
 
     private ?string $f_link = null;
 

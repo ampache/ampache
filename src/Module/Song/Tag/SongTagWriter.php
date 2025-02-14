@@ -468,10 +468,8 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['license']             = $song->license;
         $meta['genre']               = [];
 
-        if (!empty($song->tags)) {
-            foreach ($song->tags as $tag) {
-                $meta['genre'][] = $tag['name'];
-            }
+        foreach ($song->get_tags() as $tag) {
+            $meta['genre'][] = $tag['name'];
         }
         $meta['genre'] = implode(', ', $meta['genre']);
 
@@ -562,10 +560,8 @@ final class SongTagWriter implements SongTagWriterInterface
 
         $meta['genre'] = [];
 
-        if (!empty($song->tags)) {
-            foreach ($song->tags as $tag) {
-                $meta['genre'][] = $tag['name'];
-            }
+        foreach ($song->get_tags() as $tag) {
+            $meta['genre'][] = $tag['name'];
         }
         $meta['genre'] = implode(', ', $meta['genre']);
 

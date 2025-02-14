@@ -1,0 +1,25 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    #RewriteCond %{HTTP_USER_AGENT} (Agent\ GPT|AgentGPT|AIBot|AI2Bot|AISearchBot|AlexaTM|Alpha\ AI|AlphaAI|Amazon\ Bedrock|Amazon\ Lex|Amazonbot)             [NC,OR]
+    #RewriteCond %{HTTP_USER_AGENT} (Amelia|anthropic-ai|AnyPicker|Applebot|AutoGPT|AwarioRssBot|AwarioSmartBot|Brave\ Leo\ AI|Bytespider|CatBoost)            [NC,OR]
+    #RewriteCond %{HTTP_USER_AGENT} (CC-Crawler|CCBot|ChatGPT|Chinchilla|Claude-Web|ClaudeBot|cohere-ai|cohere-training-data-crawler|Common\ Crawl)            [NC,OR]
+    #RewriteCond %{HTTP_USER_AGENT} (commoncrawl|Crawlspace|crew\ AI|crewAI|DALL-E|DataForSeoBot|DeepMind|DeepSeek|DepolarizingGPT|DialoGPT|Diffbot|Googlebot) [NC,OR]
+    #RewriteCond %{HTTP_USER_AGENT} (DuckAssistBot|FacebookBot|Firecrawl|Flyriver|FriendlyCrawler|Gemini|Gemma|GenAI|Google\ Bard\ AI|Google-CloudVertexBot)   [NC,OR]
+    #RewriteCond %{HTTP_USER_AGENT} (Google-Extended|GoogleOther|GPT-2|GPT-3|GPT-4|GPTBot|GPTZero|Grok|Hugging\ Face|iaskspider|ICC-Crawler|ImagesiftBot)      [NC,OR]
+    #RewriteCond %{HTTP_USER_AGENT} (img2dataset|IntelliSeek\.ai|ISSCyberRiskCrawler|Kangaroo|LeftWingGPT|LLaMA|magpie-crawler|Meltwater|Meta\ AI|Meta\ Llama) [NC,OR]
+    #RewriteCond %{HTTP_USER_AGENT} (Meta\.AI|Meta-AI|Meta-ExternalAgent|Meta-ExternalFetcher|MetaAI|Mistral|OAI-SearchBot|OAI\ SearchBot|omgili|Open\ AI)     [NC,OR]
+    #RewriteCond %{HTTP_USER_AGENT} (OpenAI|PanguBot|peer39_crawler|PerplexityBot|PetalBot|RightWingGPT|Scrapy|SearchGPT|SemrushBot|Sidetrade|Stability)       [NC,OR]
+    #RewriteCond %{HTTP_USER_AGENT} (The\ Knowledge\ AI|Timpibot|VelenPublicWebCrawler|WebChatGPT|Webzio|Whisper|x\.AI|xAI|YouBot|Zero\ GTP)                   [NC]
+    #RewriteRule (.*) - [F,L]
+
+    RewriteCond %{QUERY_STRING} "(_)?id=(smart_)?[0-9]*%" [NC,OR]
+    RewriteCond %{QUERY_STRING} "(u|o)id=[0-9]*%" [NC,OR]
+    RewriteCond %{QUERY_STRING} "album(_disk)?=[0-9]*%" [NC,OR]
+    RewriteCond %{QUERY_STRING} "(media_)?artist=[0-9]*%" [NC,OR]
+    RewriteCond %{QUERY_STRING} "podcast(_episode)?=[0-9]*%" [NC,OR]
+    RewriteCond %{QUERY_STRING} "label=[0-9]*%" [NC,OR]
+    RewriteCond %{QUERY_STRING} "bitrate=[0-9]*%" [NC,OR]
+    RewriteCond %{QUERY_STRING} "(random_|object_)?type=[a-z|_]+%" [NC]
+    RewriteRule (.*) - [R=400,L]
+</IfModule>

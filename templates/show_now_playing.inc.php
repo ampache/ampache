@@ -30,6 +30,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Media;
@@ -40,6 +41,10 @@ use Ampache\Repository\Model\Video;
 /** @var list<array{media: Media, client: User, agent: string,}> $results */
 
 if (count($results)) {
+    $user     = (!empty(Core::get_global('user')))
+        ? Core::get_global('user')
+        : new User(-1);
+    $catalogs = User::get_user_catalogs($user->id);
     $rss_link = (AmpConfig::get('use_rss')) ? '&nbsp' . Ui::getRssLink(RssFeedTypeEnum::NOW_PLAYING) : '';
     $refresh  = "&nbsp" . Ajax::button('?page=index&action=refresh_now_playing', 'refresh', T_('Refresh'), 'refresh_now_playing', 'box_np');
     Ui::show_box_top(T_('Now Playing') . $rss_link . $refresh, 'box_np');
@@ -56,20 +61,19 @@ if (count($results)) {
     $t_similar_songs   = T_('Similar Songs');
 
     foreach ($results as $item) {
-        $media   = $item['media'];
-        $np_user = $item['client'];
-        $np_user->format();
-        $agent = $item['agent'];
-
-        /* If we've gotten a non-song object just skip this row */
-        if (!is_object($media)) {
+        /** @var Song|Video $media */
+        $media = $item['media'];
+        if (!is_object($media) || !in_array($media->catalog, $catalogs)) {
             continue;
         }
 
+        $np_user = $item['client'];
+        $np_user->format();
         if (!$np_user->fullname) {
             $np_user->fullname = "Ampache User";
         }
 
+        $agent = $item['agent'];
         echo "<div class=\"np_row\">";
         if (get_class($media) == Song::class) {
             require Ui::find_template('show_now_playing_row.inc.php');

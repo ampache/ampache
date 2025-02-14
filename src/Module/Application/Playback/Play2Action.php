@@ -644,7 +644,8 @@ final class Play2Action implements ApplicationActionInterface
         if ($mediaCatalogId) {
             /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted
-            if (!Catalog::has_access($mediaCatalogId, $user->id) && ($mediaOwnerId && (int)$mediaOwnerId !== $user->id)) {
+            $catalogs = (isset($user->catalogs['music'])) ? $user->catalogs['music'] : User::get_user_catalogs($user->id);
+            if (!in_array($mediaCatalogId, $catalogs) && ($mediaOwnerId === null || (int)$mediaOwnerId !== $user->id)) {
                 $this->logger->warning(
                     "Error: You are not allowed to play $media->file",
                     [LegacyLogger::CONTEXT_TYPE => self::class]
