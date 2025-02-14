@@ -880,7 +880,7 @@ class Json5_Data
                 "filelength" => $episode->get_f_time(true),
                 "filesize" => $episode->getSizeFormatted(),
                 "filename" => $episode->getFileName(),
-                "mime" => (isset($episode->mime)) ? $episode->mime : '',
+                "mime" => $episode->mime,
                 "time" => (int)$episode->time,
                 "size" => (int)$episode->size,
                 "public_url" => $episode->get_link(),

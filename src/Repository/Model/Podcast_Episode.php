@@ -101,7 +101,7 @@ class Podcast_Episode extends database_object implements
 
     public string $type;
 
-    public string $mime;
+    public ?string $mime = null;
 
     private ?string $link = null;
 
