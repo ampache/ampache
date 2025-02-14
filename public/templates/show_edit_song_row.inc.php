@@ -62,10 +62,10 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                         </div>
                     </td>
                 </tr>
-                    <?php if (count($libitem->artists) > 1) { ?>
+                    <?php if (count($libitem->get_artists()) > 1) { ?>
                         <tr>
                             <td class="edit_dialog_content_header"><?php echo T_('Additional Artists'); ?></td>
-                            <td><?php echo Artist::get_display(array_diff($libitem->artists, [$libitem->artist])); ?></td>
+                            <td><?php echo Artist::get_display(array_diff($libitem->get_artists(), [$libitem->artist])); ?></td>
                         </tr>
                     <?php } ?>
                 <tr>
