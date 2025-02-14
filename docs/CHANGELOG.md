@@ -17,6 +17,7 @@ Pre-translating files before loading media templates should speed those pages up
 * Pre-translate common strings on repeated tasks before loading media row templates
 * Clean empty albums after each verify chunk
 * Add `memory_get_peak_usage` to query stat output
+* Add `.htaccess.dist` to the web root. (Block obviously bad parameters)
 * New catalog Auto-insert Fields
   * `%B` Album Artist
   * `%m` Song Artist **AND** Album Artist
@@ -36,6 +37,9 @@ Pre-translating files before loading media templates should speed those pages up
 * Rework catalog_map insert and remove during file updates
 * Only collect garbage maps for the catalog media type used
 * Make sure mail server or `user_no_email_confirm` is set to show registration pages
+* Don't show now playing when it's not in a catalog you can play
+* Block access to media outside your catalog access if you have a direct link
+* Don't check Album song catalog when you've already checked the Album
 
 ### Removed
 
@@ -69,6 +73,8 @@ Pre-translating files before loading media templates should speed those pages up
 * SubSonic
   * OpenSubsonic extention (`openSubsonicExtensions`) incorrect case
   * Catch empty LocalPlay controller when disabled
+* Plugins
+  * HomeDashboard would not correctly get random AlbumDisk objects
 
 ## Ampache 7.2.0
 

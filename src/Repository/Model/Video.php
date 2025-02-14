@@ -107,8 +107,8 @@ class Video extends database_object implements
     /** @var null|string $f_display */
     public $f_display;
 
-    /** @var array $tags */
-    private $tags;
+    /** @var array<array{user: int, id: int, name: string}> $tags */
+    private ?array $tags = null;
 
     private ?string $f_link = null;
 

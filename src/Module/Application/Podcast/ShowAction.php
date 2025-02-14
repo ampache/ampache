@@ -31,6 +31,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -71,9 +72,11 @@ final class ShowAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
+        $user      =  $gatekeeper->getUser() ?? new User(-1);
+        $catalogs  = (isset($user->catalogs['podcast'])) ? $user->catalogs['podcast'] : User::get_user_catalogs($user->id);
         $podcastId = (int) ($request->getQueryParams()['podcast'] ?? 0);
         $podcast   = $this->podcastRepository->findById($podcastId);
-        if ($podcast === null) {
+        if ($podcast === null || !in_array($podcast->getCatalogId(), $catalogs)) {
             $this->logger->warning(
                 'Requested a podcast that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -86,7 +89,7 @@ final class ShowAction implements ApplicationActionInterface
                     'podcast' => $podcast,
                     'object_ids' => $podcast->getEpisodeIds(),
                     'object_type' => 'podcast_episode',
-                    'current_user' => $gatekeeper->getUser(),
+                    'current_user' => $user,
                 ]
             );
         }

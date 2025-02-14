@@ -772,11 +772,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * This returns a csv formatted version of the tags that we are given
      * it also takes a type so that it knows how to return it, this is used
      * by the formatting functions of the different objects
-     * @param array $tags
+     * @param array<array{user: int, id: int, name: string}> $tags
      * @param bool $link
      * @param string $filter_type
      */
-    public static function get_display($tags, $link = false, $filter_type = ''): string
+    public static function get_display(array $tags, $link = false, $filter_type = ''): string
     {
         //debug_event(self::class, 'Get display tags called...', 5);
         if (!is_array($tags)) {

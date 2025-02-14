@@ -807,7 +807,7 @@ class Json4_Data
             $ourSong['disk']                  = $song->disk;
             $ourSong['track']                 = $song->track;
             $ourSong['filename']              = $song->file;
-            $ourSong['tag']                   = self::tags_array($song->tags);
+            $ourSong['tag']                   = self::tags_array($song->get_tags());
             $ourSong['playlisttrack']         = $playlist_track;
             $ourSong['time']                  = (int) $song->time;
             $ourSong['year']                  = (int) $song->year;
@@ -838,7 +838,7 @@ class Json4_Data
             $ourSong['replaygain_album_peak'] = $song->replaygain_album_peak;
             $ourSong['replaygain_track_gain'] = $song->replaygain_track_gain;
             $ourSong['replaygain_track_peak'] = $song->replaygain_track_peak;
-            $ourSong['genre']                 = self::tags_array($song->tags, true);
+            $ourSong['genre']                 = self::tags_array($song->get_tags(), true);
 
             /** @var Metadata $metadata */
             foreach ($song->getMetadata() as $metadata) {
@@ -943,7 +943,7 @@ class Json4_Data
                 "title" => $song->title,
                 "artist" => ["id" => (string)$song->artist, "name" => $song->get_artist_fullname()],
                 "album" => ["id" => (string)$song->album, "name" => $song->get_album_fullname()],
-                "tag" => self::tags_array($song->tags),
+                "tag" => self::tags_array($song->get_tags()),
                 "track" => (int)$song->track,
                 "time" => (int)$song->time,
                 "mime" => $songMime,
@@ -954,7 +954,7 @@ class Json4_Data
                 "rating" => $user_rating,
                 "averagerating" => ($rating->get_average_rating() ?? null),
                 "vote" => $democratic->get_vote($row_id),
-                "genre" => self::tags_array($song->tags, true)
+                "genre" => self::tags_array($song->get_tags(), true)
             ];
         } // end foreach
 

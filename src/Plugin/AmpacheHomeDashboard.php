@@ -168,13 +168,17 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
 
         $threshold   = AmpConfig::get('stats_threshold', 7);
         $limit       = $this->maxitems;
-        $object_type = (AmpConfig::get('album_group'))
+        $album_group = (AmpConfig::get('album_group'));
+        $object_type = ($album_group)
             ? 'album'
             : 'album_disk';
 
-        $object_ids = ($this->random)
-            ? $this->getAlbumRepository()->getRandom($this->user->getId(), $limit)
-            : [];
+        $object_ids = [];
+        if ($this->random) {
+            $object_ids = ($album_group)
+                ? $this->getAlbumRepository()->getRandom($this->user->getId(), $limit)
+                : $this->getAlbumRepository()->getRandomAlbumDisk($this->user->getId(), $limit);
+        }
         if ($object_ids !== []) {
             Ui::show_box_top(T_('Random') . "&nbsp" . Ajax::button('?page=index&action=dashboard_random&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'random', 'dashboard_random'), 'random');
             echo '<div id="dashboard_random">';

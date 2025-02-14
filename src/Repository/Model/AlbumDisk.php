@@ -98,8 +98,8 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     private ?array $album_artists = null;
 
-    /** @var array $tags */
-    private $tags;
+    /** @var array<array{user: int, id: int, name: string}> $tags */
+    private ?array $tags = null;
 
     private ?string $f_artist_name = null;
 

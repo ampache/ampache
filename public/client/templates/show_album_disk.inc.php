@@ -276,6 +276,7 @@ if (AmpConfig::get('sociable') && !empty($owner_id)) {
     $browse = new Browse();
 $browse->set_type('song');
 $browse->set_simple_browse(true);
+$browse->set_skip_catalog_check(true);
 $browse->set_sort('track', 'ASC');
 $browse->set_filter('album_disk', $albumDisk->id);
 $browse->get_objects();

@@ -107,6 +107,7 @@ class Query
         'select' => [],
         'show_header' => true,
         'simple' => false,
+        'skip_catalog_check' => false, // when you've already checked the parent object catalog is usable
         'song_artist' => null, // Used by $browse->set_type() to filter artists to song artist only
         'sort' => [
             'name' => null,
@@ -837,6 +838,25 @@ class Query
     }
 
     /**
+     * set_skip_catalog_check
+     * This allows you to bypass catalog state checks when you have already checked the parent
+     * This will speed up getting sub-items when you are sure it's been checked
+     * @param bool $value
+     */
+    public function set_skip_catalog_check($value): void
+    {
+        $this->_state['skip_catalog_check'] = make_bool($value);
+    }
+
+    /**
+     * is_skip_catalog_check
+     */
+    public function is_skip_catalog_check(): bool
+    {
+        return make_bool($this->_state['skip_catalog_check']);
+    }
+
+    /**
      * set_static_content
      * This sets true/false if the content of this browse
      * should be static, if they are then content filtering/altering
@@ -1004,14 +1024,14 @@ class Query
             $sql .= $this->_sql_filter($key, $value);
         }
 
-        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
+        if (!$this->is_skip_catalog_check() && AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
             // Add catalog enabled filter. ($this->_sql_filter( will add ' AND ' to the end of filters)
             $sql .= ($sql == "WHERE")
                 ? ' ' . Catalog::get_enable_filter($type, '`' . $type . '`.`id`') . ' AND '
                 : Catalog::get_enable_filter($type, '`' . $type . '`.`id`') . ' AND ';
         }
 
-        if (AmpConfig::get('catalog_filter')) {
+        if (!$this->is_skip_catalog_check() && AmpConfig::get('catalog_filter')) {
             // Add catalog user filter
             switch ($type) {
                 case 'album_disk':

@@ -86,9 +86,17 @@ class ShowActionTest extends TestCase
 
     public function testRunShowErrorIfPodcastDoesNotExist(): void
     {
+        $user = $this->createMock(User::class);
+
+        $user->catalogs['podcast'] = [1];
+
         $this->request->expects(static::once())
             ->method('getQueryParams')
             ->willReturn([]);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('getUser')
+            ->willReturn($user);
 
         $this->podcastRepository->expects(static::once())
             ->method('findById')
@@ -126,6 +134,8 @@ class ShowActionTest extends TestCase
         $podcast = $this->createMock(Podcast::class);
         $user    = $this->createMock(User::class);
 
+        $user->catalogs['podcast'] = [1];
+
         $this->gatekeeper->expects(static::once())
             ->method('getUser')
             ->willReturn($user);
@@ -140,6 +150,10 @@ class ShowActionTest extends TestCase
             ->method('findById')
             ->with(0)
             ->willReturn($podcast);
+
+        $podcast->expects(static::once())
+            ->method('getCatalogId')
+            ->willReturn(1);
 
         $podcast->expects(static::once())
             ->method('getEpisodeIds')

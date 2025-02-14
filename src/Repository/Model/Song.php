@@ -167,8 +167,8 @@ class Song extends database_object implements
     /** @var string $album_mbid */
     public $album_mbid;
 
-    /** @var array $tags */
-    public $tags;
+    /** @var array<array{user: int, id: int, name: string}> $tags */
+    public ?array $tags = null;
 
     /** @var int|null $albumartist */
     public $albumartist;

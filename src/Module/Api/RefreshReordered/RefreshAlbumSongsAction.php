@@ -57,6 +57,7 @@ final class RefreshAlbumSongsAction implements ApplicationActionInterface
         $browse->set_show_header(true);
         $browse->set_type('song');
         $browse->set_simple_browse(true);
+        $browse->set_skip_catalog_check(true);
         $browse->set_sort('track', 'ASC');
         $browse->set_filter('album', $object_id);
         $browse->get_objects();

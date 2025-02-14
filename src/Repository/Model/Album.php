@@ -121,8 +121,8 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /** @var int[] $album_artists */
     private ?array $album_artists = null;
 
-    /** @var array $tags */
-    private $tags;
+    /** @var array<array{user: int, id: int, name: string}> $tags */
+    private ?array $tags = null;
 
     private ?string $f_artist_name = null;
 

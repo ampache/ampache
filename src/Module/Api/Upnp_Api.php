@@ -1600,7 +1600,7 @@ class Upnp_Api
             'upnp:albumArtURI' => $art_url,
             'upnp:artist' => self::_replaceSpecialSymbols($song->get_artist_fullname()),
             'upnp:album' => self::_replaceSpecialSymbols($song->get_album_fullname()),
-            'upnp:genre' => Tag::get_display($song->tags, false, 'song'),
+            'upnp:genre' => Tag::get_display($song->get_tags(), false, 'song'),
             'upnp:originalTrackNumber' => $song->track,
             'res' => $song->play_url('', 'api', true), // For upnp, use local
             'protocolInfo' => $arrFileType['mime'],
