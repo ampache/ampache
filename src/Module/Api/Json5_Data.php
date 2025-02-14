@@ -942,7 +942,7 @@ class Json5_Data
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $license     = $song->getLicense();
-            $licenseLink = $license?->getExternalLink();
+            $licenseLink = $license?->getExternalLink() ?: null;
 
             $playlist_track++;
 

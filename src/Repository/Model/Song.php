@@ -146,8 +146,7 @@ class Song extends database_object implements
     /** @var string $type */
     public $type;
 
-    /** @var string $mime */
-    public $mime;
+    public ?string $mime = null;
 
     /** @var string $catalog_number */
     public $catalog_number;
@@ -158,14 +157,11 @@ class Song extends database_object implements
     /** @var int[] $albumartists */
     public array $albumartists;
 
-    /** @var string $artist_mbid */
-    public $artist_mbid;
+    public ?string $artist_mbid = null;
 
-    /** @var string $albumartist_mbid */
-    public $albumartist_mbid;
+    public ?string $albumartist_mbid = null;
 
-    /** @var string $album_mbid */
-    public $album_mbid;
+    public ?string $album_mbid = null;
 
     /** @var array<array{user: int, id: int, name: string}> $tags */
     public ?array $tags = null;
