@@ -720,7 +720,7 @@ class Json4_Data
                 "state" => $episode->getState()->toDescription(),
                 "filelength" => $episode->get_f_time(true),
                 "filesize" => $episode->getSizeFormatted(),
-                "mime" => (isset($episode->mime)) ? $episode->mime : '',
+                "mime" => $episode->mime,
                 "filename" => $episode->getFileName(),
                 "public_url" => $episode->get_link(),
                 "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
