@@ -141,6 +141,10 @@ class Song extends database_object implements
 
     public ?string $disksubtitle = null;
 
+    /**
+     * Generated data from other areas
+     */
+
     public ?string $link = null;
 
     /** @var string $type */
@@ -150,9 +154,6 @@ class Song extends database_object implements
 
     /** @var string $catalog_number */
     public $catalog_number;
-
-    /** @var int[] $artists */
-    public array $artists;
 
     /** @var int[] $albumartists */
     public ?array $albumartists = null;
@@ -167,6 +168,9 @@ class Song extends database_object implements
     public ?array $tags = null;
 
     public ?int $albumartist = null;
+
+    /** @var int[] $artists */
+    private ?array $artists = null;
 
     private ?string $f_album_link = null;
 
@@ -185,11 +189,6 @@ class Song extends database_object implements
     private ?bool $has_art = null;
 
     private ?License $licenseObj = null;
-
-    /* Setting Variables */
-
-    /** @var bool $_fake */
-    public $_fake = false; // If this is a 'construct_from_array' object
 
     /**
      * Constructor
@@ -1636,10 +1635,6 @@ class Song extends database_object implements
             // Get the top tags
             $this->get_tags();
         }
-
-        if (!isset($this->artists)) {
-            $this->get_artists();
-        }
     }
 
     /**
@@ -1762,13 +1757,10 @@ class Song extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->f_artist_link === null) {
-            $this->f_artist_link = '';
-            $web_path            = AmpConfig::get_web_path();
-            if (!isset($this->artists)) {
-                $this->get_artists();
-            }
+            $web_path = AmpConfig::get_web_path();
 
-            foreach ($this->artists as $artist_id) {
+            $this->f_artist_link = '';
+            foreach ($this->get_artists() as $artist_id) {
                 $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
                 if (!empty($artist_fullname)) {
                     $this->f_artist_link .= "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
@@ -1803,7 +1795,7 @@ class Song extends database_object implements
      */
     public function get_artists(): array
     {
-        if (!isset($this->artists)) {
+        if ($this->artists === null) {
             $this->artists = self::get_parent_array($this->id);
         }
 
