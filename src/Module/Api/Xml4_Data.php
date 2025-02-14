@@ -731,11 +731,7 @@ class Xml4_Data
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $license     = $song->getLicense();
-            if ($license !== null) {
-                $licenseLink = $license->getExternalLink();
-            } else {
-                $licenseLink = '';
-            }
+            $licenseLink = (string)($license?->getExternalLink());
 
             $playlist_track++;
 

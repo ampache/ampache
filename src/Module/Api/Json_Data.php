@@ -1421,11 +1421,7 @@ class Json_Data
                 $song_artists[] = Artist::get_name_array_by_id($artist_id);
             }
             $license     = $song->getLicense();
-            if ($license !== null) {
-                $licenseLink = $license->getExternalLink();
-            } else {
-                $licenseLink = '';
-            }
+            $licenseLink = $license?->getExternalLink();
 
             $playlist_track++;
 
