@@ -534,7 +534,7 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['publisher']     = $song->label ?? null;
         $meta['track_number']  = $song->track;
         $meta['part_of_a_set'] = $song->disk;
-        if (isset($song->mbid)) {
+        if (!empty($song->mbid)) {
             $meta['unique_file_identifier'] = [
                 'data' => $song->mbid,
                 'ownerid' => "http://musicbrainz.org"
