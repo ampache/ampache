@@ -626,6 +626,7 @@ class LocalPlay
     {
         return $this->_player?->instance_fields() ?? [];
     }
+
     /**
      * get_f_description
      */
@@ -637,6 +638,7 @@ class LocalPlay
 
         return '';
     }
+
     /**
      * get_f_version
      */
