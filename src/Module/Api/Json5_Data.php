@@ -293,7 +293,7 @@ class Json5_Data
                     'id' => (string) $license->getId(),
                     'name' => $license->getName(),
                     'description' => $license->getDescription(),
-                    'external_link' => $license->getLinkFormatted()
+                    'external_link' => $license->getExternalLink()
                 ];
             }
         } // end foreach
@@ -880,7 +880,7 @@ class Json5_Data
                 "filelength" => $episode->get_f_time(true),
                 "filesize" => $episode->getSizeFormatted(),
                 "filename" => $episode->getFileName(),
-                "mime" => (isset($episode->mime)) ? $episode->mime : '',
+                "mime" => $episode->mime,
                 "time" => (int)$episode->time,
                 "size" => (int)$episode->size,
                 "public_url" => $episode->get_link(),
@@ -942,11 +942,7 @@ class Json5_Data
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $license     = $song->getLicense();
-            if ($license !== null) {
-                $licenseLink = $license->getLinkFormatted();
-            } else {
-                $licenseLink = '';
-            }
+            $licenseLink = $license?->getExternalLink() ?: null;
 
             $playlist_track++;
 
@@ -980,9 +976,9 @@ class Json5_Data
             $objArray['url']                   = $play_url;
             $objArray['size']                  = (int)$song->size;
             $objArray['mbid']                  = $song->mbid;
-            $objArray['album_mbid']            = $song->album_mbid;
-            $objArray['artist_mbid']           = $song->artist_mbid;
-            $objArray['albumartist_mbid']      = $song->albumartist_mbid;
+            $objArray['album_mbid']            = $song->get_album_mbid();
+            $objArray['artist_mbid']           = $song->get_artist_mbid();
+            $objArray['albumartist_mbid']      = $song->get_album_mbid();
             $objArray['art']                   = $art_url;
             $objArray['flag']                  = (!$flag->get_flag($user->getId()) ? 0 : 1);
             $objArray['preciserating']         = $user_rating;

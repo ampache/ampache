@@ -104,19 +104,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /** @var string $artist_name */
     public $artist_name;
 
-    /** @var int $song_id */
-    public $song_id;
-
-    /** @var int $artist_id */
-    public $artist_id;
-
     // cached information
-
-    /** @var bool $_fake */
-    public $_fake;
-
-    /** @var array $_songs */
-    public $_songs = [];
 
     /** @var int[] $album_artists */
     private ?array $album_artists = null;

@@ -141,37 +141,36 @@ class Song extends database_object implements
 
     public ?string $disksubtitle = null;
 
+    /**
+     * Generated data from other areas
+     */
+
     public ?string $link = null;
 
     /** @var string $type */
     public $type;
 
-    /** @var string $mime */
-    public $mime;
+    public ?string $mime = null;
 
     /** @var string $catalog_number */
     public $catalog_number;
 
-    /** @var int[] $artists */
-    public array $artists;
-
     /** @var int[] $albumartists */
-    public array $albumartists;
+    public ?array $albumartists = null;
 
-    /** @var string $artist_mbid */
-    public $artist_mbid;
+    public ?string $album_mbid = null;
 
-    /** @var string $albumartist_mbid */
-    public $albumartist_mbid;
+    public ?string $artist_mbid = null;
 
-    /** @var string $album_mbid */
-    public $album_mbid;
+    public ?string $albumartist_mbid = null;
 
     /** @var array<array{user: int, id: int, name: string}> $tags */
     public ?array $tags = null;
 
-    /** @var int|null $albumartist */
-    public $albumartist;
+    public ?int $albumartist = null;
+
+    /** @var int[] $artists */
+    private ?array $artists = null;
 
     private ?string $f_album_link = null;
 
@@ -190,11 +189,6 @@ class Song extends database_object implements
     private ?bool $has_art = null;
 
     private ?License $licenseObj = null;
-
-    /* Setting Variables */
-
-    /** @var bool $_fake */
-    public $_fake = false; // If this is a 'construct_from_array' object
 
     /**
      * Constructor
@@ -882,15 +876,92 @@ class Song extends database_object implements
             return Artist::get_fullname_by_id($album_artist_id);
         }
 
+        return Artist::get_fullname_by_id($this->get_album_artist());
+    }
+
+    /**
+     * get_album_mbid
+     * gets the albumartist id for the song's album
+     */
+    public function get_album_mbid(): ?string
+    {
+        if ($this->album_mbid === null) {
+            $db_results = Dba::read(
+                'SELECT `mbid` FROM `album` WHERE `id` = ? LIMIT 1;',
+                [$this->album]
+            );
+            if ($row = Dba::fetch_assoc($db_results)) {
+                $this->album_mbid = $row['mbid'];
+            }
+        }
+
+        return $this->album_mbid;
+    }
+
+    /**
+     * get_artist_mbid
+     * gets the albumartist id for the song's album
+     */
+    public function get_artist_mbid(): ?string
+    {
+        if ($this->artist_mbid === null) {
+            $db_results = Dba::read(
+                'SELECT `mbid` FROM `artist` WHERE `id` = ? LIMIT 1;',
+                [$this->artist]
+            );
+            if ($row = Dba::fetch_assoc($db_results)) {
+                $this->artist_mbid = $row['mbid'];
+            }
+        }
+
+        return $this->artist_mbid;
+    }
+
+    /**
+     * get_albumartist_mbid
+     * gets the albumartist id for the song's album
+     */
+    public function get_albumartist_mbid(): ?string
+    {
+        if ($this->albumartist_mbid === null) {
+            $db_results = Dba::read(
+                'SELECT `mbid` FROM `artist` WHERE `id` = ? LIMIT 1;',
+                [$this->get_album_artist()]
+            );
+            if ($row = Dba::fetch_assoc($db_results)) {
+                $this->albumartist_mbid = $row['mbid'];
+            }
+        }
+
+        return $this->albumartist_mbid;
+    }
+
+    /**
+     * get_album_artist
+     * gets the albumartist id for the song's album
+     */
+    public function get_album_artist(): ?int
+    {
         if ($this->albumartist === null) {
             $this->albumartist = $this->getAlbumRepository()->getAlbumArtistId($this->album);
         }
 
-        if (!$this->albumartist) {
-            return '';
+        return $this->albumartist;
+    }
+
+
+    /**
+     * get_album_artists
+     * gets the albumartist id for the song's album
+     * @return int[]
+     */
+    public function get_album_artists(): array
+    {
+        if ($this->albumartists === null) {
+            $this->albumartists = self::get_parent_array($this->album, 'album');
         }
 
-        return Artist::get_fullname_by_id($this->albumartist);
+        return $this->albumartists;
     }
 
     /**
@@ -1564,16 +1635,6 @@ class Song extends database_object implements
             // Get the top tags
             $this->get_tags();
         }
-
-        if (!isset($this->artists)) {
-            $this->get_artists();
-        }
-
-        if (!isset($this->albumartists)) {
-            $this->albumartists = self::get_parent_array($this->album, 'album');
-        }
-
-        $this->albumartist = $this->getAlbumRepository()->getAlbumArtistId($this->album);
     }
 
     /**
@@ -1696,13 +1757,10 @@ class Song extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->f_artist_link === null) {
-            $this->f_artist_link = '';
-            $web_path            = AmpConfig::get_web_path('/client');
-            if (!isset($this->artists)) {
-                $this->get_artists();
-            }
+            $web_path = AmpConfig::get_web_path('/client');
 
-            foreach ($this->artists as $artist_id) {
+            $this->f_artist_link = '';
+            foreach ($this->get_artists() as $artist_id) {
                 $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
                 if (!empty($artist_fullname)) {
                     $this->f_artist_link .= "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
@@ -1737,7 +1795,7 @@ class Song extends database_object implements
      */
     public function get_artists(): array
     {
-        if (!isset($this->artists)) {
+        if ($this->artists === null) {
             $this->artists = self::get_parent_array($this->id);
         }
 
@@ -1751,13 +1809,10 @@ class Song extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->f_albumartist_link === null) {
-            $this->f_albumartist_link = '';
-            $web_path                 = AmpConfig::get_web_path('/client');
-            if (!isset($this->albumartists)) {
-                $this->albumartists = self::get_parent_array($this->album, 'album');
-            }
+            $web_path = AmpConfig::get_web_path('/client');
 
-            foreach ($this->albumartists as $artist_id) {
+            $this->f_albumartist_link = '';
+            foreach ($this->get_album_artists() as $artist_id) {
                 $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
                 if (!empty($artist_fullname)) {
                     $this->f_albumartist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";

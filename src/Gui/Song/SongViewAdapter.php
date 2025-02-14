@@ -415,8 +415,8 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Bitrate')]        = scrub_out((int)($this->song->bitrate / 1024) . "-" . strtoupper((string)$this->song->mode));
         $songprops[T_('Channels')]       = $this->song->channels;
         $songprops[T_('Song MBID')]      = scrub_out($this->song->mbid);
-        $songprops[T_('Album MBID')]     = scrub_out($this->song->album_mbid);
-        $songprops[T_('Artist MBID')]    = scrub_out($this->song->artist_mbid);
+        $songprops[T_('Album MBID')]     = scrub_out($this->song->get_album_mbid());
+        $songprops[T_('Artist MBID')]    = scrub_out($this->song->get_artist_mbid());
         if ($this->song->replaygain_track_gain !== null) {
             $songprops[T_('ReplayGain Track Gain')] = $this->song->replaygain_track_gain;
         }

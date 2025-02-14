@@ -12,7 +12,7 @@ Pre-translating files before loading media templates should speed those pages up
 
 ### Added
 
-* Translations 2025-01-28
+* Translations 2025-02-14
 * Added option to show separate Artist column for playlist media
 * Pre-translate common strings on repeated tasks before loading media row templates
 * Clean empty albums after each verify chunk
@@ -63,8 +63,10 @@ Pre-translating files before loading media templates should speed those pages up
 * Require `mail` config or `user_no_email_confirm` to allow registration
 * PodcastEpisode loading errors for new files that aren't downloaded yet
 * NPM copyfile commands missing prettyPhoto files
+* External auth avatar update when enabled was not checking for blankuser.png urls
 * webplayer
   * Not escaping bad characters correctly
+  * Not blocking playback for media when catalog disabled or hidden from user with direct link
 * CLI
   * Hide invalid default command values. (e.g. Verbose and Version are not required)
 * Search
