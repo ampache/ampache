@@ -19,6 +19,7 @@
     RewriteCond %{QUERY_STRING} "(media_)?artist=[0-9]*%" [NC,OR]
     RewriteCond %{QUERY_STRING} "podcast(_episode)?=[0-9]*%" [NC,OR]
     RewriteCond %{QUERY_STRING} "label=[0-9]*%" [NC,OR]
-    RewriteCond %{QUERY_STRING} "bitrate=[0-9]*%" [NC]
+    RewriteCond %{QUERY_STRING} "bitrate=[0-9]*%" [NC,OR]
+    RewriteCond %{QUERY_STRING} "(random_|object_)?type=[a-z|_]+%" [NC]
     RewriteRule (.*) - [R=400,L]
 </IfModule>
