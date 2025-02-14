@@ -976,9 +976,9 @@ class Json5_Data
             $objArray['url']                   = $play_url;
             $objArray['size']                  = (int)$song->size;
             $objArray['mbid']                  = $song->mbid;
-            $objArray['album_mbid']            = $song->album_mbid;
-            $objArray['artist_mbid']           = $song->artist_mbid;
-            $objArray['albumartist_mbid']      = $song->albumartist_mbid;
+            $objArray['album_mbid']            = $song->get_album_mbid();
+            $objArray['artist_mbid']           = $song->get_artist_mbid();
+            $objArray['albumartist_mbid']      = $song->get_album_mbid();
             $objArray['art']                   = $art_url;
             $objArray['flag']                  = (!$flag->get_flag($user->getId()) ? 0 : 1);
             $objArray['preciserating']         = $user_rating;
