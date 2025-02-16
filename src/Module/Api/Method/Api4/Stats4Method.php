@@ -58,7 +58,7 @@ final class Stats4Method
      * user_id  = (integer) //optional
      * username = (string)  //optional
      * offset   = (integer) //optional
-     * limit    = (integer) //optional
+     * limit    = (integer) Default: 10 (popular_threshold) //optional
      */
     public static function stats(array $input, User $user): bool
     {
