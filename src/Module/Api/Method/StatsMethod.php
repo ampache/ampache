@@ -62,7 +62,7 @@ final class StatsMethod
      * user_id  = (integer) //optional
      * username = (string)  //optional
      * offset   = (integer) //optional
-     * limit    = (integer) //optional
+     * limit    = (integer) Default: 10 (popular_threshold) //optional
      */
     public static function stats(array $input, User $user): bool
     {
@@ -72,7 +72,7 @@ final class StatsMethod
         $type   = (string) $input['type'];
         $offset = (int) ($input['offset'] ?? 0);
         $limit  = (int) ($input['limit'] ?? 0);
-        if ($limit < 1) {
+        if ($limit === 0) {
             $limit = (int)AmpConfig::get('popular_threshold', 10);
         }
         // do you allow video?
