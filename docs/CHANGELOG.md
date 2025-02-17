@@ -40,6 +40,7 @@ Pre-translating files before loading media templates should speed those pages up
 * Don't show now playing when it's not in a catalog you can play
 * Block access to media outside your catalog access if you have a direct link
 * Don't check Album song catalog when you've already checked the Album
+* Don't execute format the object for row display pages
 
 ### Removed
 
@@ -64,6 +65,7 @@ Pre-translating files before loading media templates should speed those pages up
 * PodcastEpisode loading errors for new files that aren't downloaded yet
 * NPM copyfile commands missing prettyPhoto files
 * External auth avatar update when enabled was not checking for blankuser.png urls
+* Don't cache `song_data` table from single column requests
 * webplayer
   * Not escaping bad characters correctly
   * Not blocking playback for media when catalog disabled or hidden from user with direct link
