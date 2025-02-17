@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 7.2.1
+## Ampache 7.3.0
 
 This update has a lot of updates for verification and tag updates.
 
