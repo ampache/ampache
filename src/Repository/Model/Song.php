@@ -152,9 +152,6 @@ class Song extends database_object implements
 
     public ?string $mime = null;
 
-    /** @var string $catalog_number */
-    public $catalog_number;
-
     /** @var int[] $albumartists */
     public ?array $albumartists = null;
 
