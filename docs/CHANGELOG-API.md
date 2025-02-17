@@ -1,5 +1,12 @@
 # API CHANGELOG
 
+## API 6.6.7
+
+### Changed
+
+* ALL
+  * stats: Allow `limit` -1 for no limit. (0 falls back to `popular_threshold` value)
+
 ## API 6.6.6
 
 Merge update from Ampache7.
