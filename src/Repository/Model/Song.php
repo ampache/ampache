@@ -633,22 +633,22 @@ class Song extends database_object implements
      */
     public function _get_ext_info($select = ''): array
     {
-        $song_id = $this->id;
-        $columns = (empty($select)) ? '*' : Dba::escape($select);
-
-        if (parent::is_cached('song_data', $song_id)) {
-            return parent::get_from_cache('song_data', $song_id);
+        if (parent::is_cached('song_data', $this->id)) {
+            return parent::get_from_cache('song_data', $this->id);
         }
 
+        $columns    = (empty($select)) ? '*' : Dba::escape($select);
         $sql        = sprintf('SELECT %s FROM `song_data` WHERE `song_id` = ?', $columns);
-        $db_results = Dba::read($sql, [$song_id]);
+        $db_results = Dba::read($sql, [$this->id]);
         if (!$db_results) {
             return [];
         }
 
         $results = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('song_data', $song_id, $results);
+        if (empty($select)) {
+            parent::add_to_cache('song_data', $this->id, $results);
+        }
 
         return $results;
     }
