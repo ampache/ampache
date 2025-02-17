@@ -762,6 +762,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Get item children.
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_childrens(): array
     {
@@ -771,6 +772,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: string, object_id: int}>
      */
     public function get_children($name): array
     {
@@ -780,7 +782,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = [
                 'object_type' => 'song',
-                'object_id' => $row['id']
+                'object_id' => (int)$row['id']
             ];
         }
 

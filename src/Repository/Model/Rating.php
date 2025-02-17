@@ -132,7 +132,7 @@ class Rating extends database_object
      * This attempts to get everything we'll need for this page load in a
      * single query, saving on connection overhead
      * @param string $type
-     * @param array $ids
+     * @param int[] $ids
      * @param int $user_id
      */
     public static function build_cache($type, $ids, $user_id = null): bool

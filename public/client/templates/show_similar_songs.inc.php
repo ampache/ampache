@@ -37,7 +37,7 @@ use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 
 /** @var Ampache\Repository\Model\Artist $artist */
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */
+/** @var int[] $object_ids */
 /** @var array $hide_columns */
 /** @var string $argument_param */
 

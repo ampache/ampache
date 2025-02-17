@@ -38,7 +38,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */
+/** @var int[] $object_ids */
 /** @var string $limit_threshold */
 /** @var bool $group_release */
 

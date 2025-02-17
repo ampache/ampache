@@ -409,7 +409,6 @@ class Democratic extends Tmp_Playlist
         $time = time();
         $sql  = "INSERT INTO user_vote (`user`, `object_id`, `date`, `sid`) VALUES (?, ?, ?, ?)";
         Dba::write($sql, [Core::get_global('user')?->getId(), $results['id'], $time, session_id()]);
-
     }
 
     /**

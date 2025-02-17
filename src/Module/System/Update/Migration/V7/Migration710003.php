@@ -73,6 +73,5 @@ final class Migration710003 extends AbstractMigration
 
         Dba::write("ALTER TABLE `playlist_data` DROP KEY `playlist_object_type_IDX`;", [], true);
         $this->updateDatabase("CREATE INDEX `playlist_object_type_IDX` USING BTREE ON `playlist_data` (`playlist`, `object_type`);");
-
     }
 }

@@ -149,15 +149,6 @@ class Video extends database_object implements
     }
 
     /**
-     * Create a video strongly typed object from its id.
-     * @param int $video_id
-     */
-    public static function create_from_id($video_id): Video
-    {
-        return new Video($video_id);
-    }
-
-    /**
      * build_cache
      * Build a cache based on the array of ids passed, saves lots of little queries
      * @param int[] $ids
@@ -1078,22 +1069,20 @@ class Video extends database_object implements
      * @param string|int $value
      * @param int $video_id
      */
-    private static function _update_item($field, $value, $video_id, AccessLevelEnum $level): bool
+    private static function _update_item($field, $value, $video_id, AccessLevelEnum $level): void
     {
         /* Check them Rights! */
         if (!Access::check(AccessTypeEnum::INTERFACE, $level)) {
-            return false;
+            return;
         }
 
         /* Can't update to blank */
         if (trim((string) $value) === '') {
-            return false;
+            return;
         }
 
         $sql = sprintf('UPDATE `video` SET `%s` = ? WHERE `id` = ?', $field);
         Dba::write($sql, [$value, $video_id]);
-
-        return true;
     }
 
     /**

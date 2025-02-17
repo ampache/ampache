@@ -375,7 +375,6 @@ if (AmpConfig::get('song_page_title') && $isShare === false) {
         $("#jquery_jplayer_1 video").resizable();
 
         $("#jquery_jplayer_1").draggable();
-
     });
 </script>
 <?php // Load Aurora.js scripts

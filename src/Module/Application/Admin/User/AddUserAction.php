@@ -91,12 +91,12 @@ final class AddUserAction extends AbstractUserAction
             : '';
         $access               = AccessLevelEnum::tryFrom((int) ($body['access'] ?? 0)) ?? AccessLevelEnum::USER;
         $catalog_filter_group = (int) scrub_in(htmlspecialchars($body['catalog_filter_group'] ?? '', ENT_NOQUOTES));
-        $pass1                = Core::get_post('password_1');
-        $pass2                = Core::get_post('password_2');
+        $passOne              = Core::get_post('password_1');
+        $passTwo              = Core::get_post('password_2');
         $state                = (string) scrub_in(htmlspecialchars($body['state'] ?? '', ENT_NOQUOTES));
         $city                 = (string) scrub_in(Core::get_get('city'));
 
-        if ($pass1 !== $pass2 || !strlen($pass1)) {
+        if ($passOne !== $passTwo || !strlen($passOne)) {
             AmpError::add('password', T_("Your Passwords don't match"));
         }
 
@@ -119,7 +119,7 @@ final class AddUserAction extends AbstractUserAction
 
         /* Attempt to create the user if there wasn't a validation error */
         if (!AmpError::occurred()) {
-            $user_id = User::create($username, $fullname, $email, $website, $pass1, $access, $catalog_filter_group, $state, $city);
+            $user_id = User::create($username, $fullname, $email, $website, $passOne, $access, $catalog_filter_group, $state, $city);
             if ($user_id < 1) {
                 AmpError::add('general', T_("The new User was not created"));
             }

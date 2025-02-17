@@ -58,7 +58,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $video = Video::create_from_id(
+        $video = new Video(
             (int)filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS)
         );
         if (!Catalog::can_remove($video)) {

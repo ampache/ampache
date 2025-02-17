@@ -47,7 +47,7 @@ use Ampache\Repository\Model\Userflag;
 
 /** @var Artist $artist */
 /** @var array $multi_object_ids */
-/** @var array $object_ids */
+/** @var int[] $object_ids */
 /** @var string $object_type */
 /** @var GuiGatekeeperInterface $gatekeeper */
 
