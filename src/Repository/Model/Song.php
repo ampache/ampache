@@ -2129,6 +2129,10 @@ class Song extends database_object implements
      */
     public function get_lyrics(): array
     {
+        if ($this->lyrics === null) {
+            $this->fill_ext_info('lyrics');
+        }
+
         if ($this->lyrics) {
             return ['text' => $this->lyrics];
         }
