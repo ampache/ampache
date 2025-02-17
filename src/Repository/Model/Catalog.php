@@ -2544,17 +2544,15 @@ abstract class Catalog extends database_object
         }
 
         $new_song->track    = self::check_track((string)$results['track']);
-        $new_song->mbid     = $results['mb_trackid'];
-        $new_song->composer = self::check_length($results['composer']);
+        $new_song->mbid     = (!empty($results['mb_trackid'])) ? $results['mb_trackid'] : null;
+        $new_song->composer = (!empty($results['composer'])) ? self::check_length($results['composer']) : null;
         $new_song->mime     = $results['mime'];
 
         // info for the song_data table. used in Song::update_song
         $new_song->comment = $results['comment'];
-        $new_song->lyrics  = str_replace(
-            ["\r\n", "\r", "\n"],
-            '<br />',
-            strip_tags((string) $results['lyrics'])
-        );
+        $new_song->lyrics  = (!empty($results['lyrics']))
+            ? str_replace(["\r\n", "\r", "\n"], '<br />', strip_tags((string) $results['lyrics']))
+            : null;
         if (isset($results['license'])) {
             $licenseRepository = self::getLicenseRepository();
             $licenseName       = (string) $results['license'];
@@ -2582,7 +2580,7 @@ abstract class Catalog extends database_object
             }
         }
 
-        $new_song->language              = self::check_length($results['language'], 128);
+        $new_song->language              = (!empty($results['mb_trackid'])) ? self::check_length($results['language'], 128) : null;
         $new_song->replaygain_track_gain = (is_null($results['replaygain_track_gain'])) ? null : (float) $results['replaygain_track_gain'];
         $new_song->replaygain_track_peak = (is_null($results['replaygain_track_peak'])) ? null : (float) $results['replaygain_track_peak'];
         $new_song->replaygain_album_gain = (is_null($results['replaygain_album_gain'])) ? null : (float) $results['replaygain_album_gain'];
