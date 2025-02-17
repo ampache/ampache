@@ -1413,7 +1413,7 @@ class Search extends playlist_object
      */
     public function format(?bool $details = true): void
     {
-        parent::format($details);
+        unset($details);
     }
 
     /**
