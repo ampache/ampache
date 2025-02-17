@@ -1202,7 +1202,6 @@ class Subsonic_Xml_Data
             return;
         }
 
-        $song->fill_ext_info('lyrics');
         $lyrics = $song->get_lyrics();
 
         if (!empty($lyrics) && $lyrics['text']) {

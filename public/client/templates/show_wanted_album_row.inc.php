@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Wanted;
 <td class="cel_album"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_artist"><?php echo $libitem->get_f_parent_link(); ?></td>
 <td class="cel_year"><?php echo $libitem->year; ?></td>
-<td class="cel_user"><?php echo $libitem->f_user; ?></td>
+<td class="cel_user"><?php echo $libitem->get_f_user(); ?></td>
 <td class="cel_action">
     <div id="wanted_action_<?php echo $libitem->mbid; ?>">
     <?php echo $libitem->show_action_buttons(); ?>

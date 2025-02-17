@@ -118,9 +118,8 @@ class Label extends database_object implements library_item
     /**
      * format
      */
-    public function format(?bool $details = true): void
+    public function format(): void
     {
-        unset($details);
     }
 
     public function get_childrens(): array

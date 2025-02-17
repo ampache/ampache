@@ -125,7 +125,7 @@ foreach ($object_ids as $album_disk_id) {
     if ($libitem->isNew()) {
         continue;
     }
-    $libitem->format(true, $limit_threshold);
+
     if ($directplay_limit > 0) {
         $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
     } ?>

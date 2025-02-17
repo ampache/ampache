@@ -80,7 +80,6 @@ foreach ($object_ids as $playlist_id) {
     if ($libitem->isNew() || (!$libitem->has_collaborate() && $libitem->type === 'private')) {
         continue;
     }
-    $libitem->format();
 
     // Don't show empty playlist if not admin or the owner
     if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) || $libitem->get_user_owner() == $user_id || $libitem->get_media_count() > 0) { ?>

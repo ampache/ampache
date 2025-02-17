@@ -110,8 +110,7 @@ foreach ($object_ids as $podcastId) {
     $libitem = $podcastRepository->findById($podcastId);
     if ($libitem === null) {
         continue;
-    }
-    $libitem->format(); ?>
+    } ?>
         <tr id="podcast_<?php echo $libitem->getId(); ?>">
             <?php require Ui::find_template('show_podcast_row.inc.php'); ?>
         </tr>

@@ -152,9 +152,6 @@ class Song extends database_object implements
 
     public ?string $mime = null;
 
-    /** @var string $catalog_number */
-    public $catalog_number;
-
     /** @var int[] $albumartists */
     public ?array $albumartists = null;
 
@@ -636,22 +633,22 @@ class Song extends database_object implements
      */
     public function _get_ext_info($select = ''): array
     {
-        $song_id = $this->id;
-        $columns = (empty($select)) ? '*' : Dba::escape($select);
-
-        if (parent::is_cached('song_data', $song_id)) {
-            return parent::get_from_cache('song_data', $song_id);
+        if (parent::is_cached('song_data', $this->id)) {
+            return parent::get_from_cache('song_data', $this->id);
         }
 
+        $columns    = (empty($select)) ? '*' : Dba::escape($select);
         $sql        = sprintf('SELECT %s FROM `song_data` WHERE `song_id` = ?', $columns);
-        $db_results = Dba::read($sql, [$song_id]);
+        $db_results = Dba::read($sql, [$this->id]);
         if (!$db_results) {
             return [];
         }
 
         $results = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('song_data', $song_id, $results);
+        if (empty($select)) {
+            parent::add_to_cache('song_data', $this->id, $results);
+        }
 
         return $results;
     }
@@ -1623,18 +1620,13 @@ class Song extends database_object implements
      * and does a ton of formatting on it creating f_??? variables on the current
      * object
      */
-    public function format(?bool $details = true): void
+    public function format(): void
     {
         if ($this->isNew()) {
             return;
         }
 
-        if ($details) {
-            $this->fill_ext_info();
-
-            // Get the top tags
-            $this->get_tags();
-        }
+        $this->fill_ext_info();
     }
 
     /**
@@ -2132,6 +2124,10 @@ class Song extends database_object implements
      */
     public function get_lyrics(): array
     {
+        if ($this->lyrics === null) {
+            $this->fill_ext_info('lyrics');
+        }
+
         if ($this->lyrics) {
             return ['text' => $this->lyrics];
         }

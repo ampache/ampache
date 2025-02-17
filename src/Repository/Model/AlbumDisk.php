@@ -249,11 +249,8 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      * This is the format function for this object. It sets cleaned up
      * album information with the base required
      * f_link, f_name
-     *
-     * @param bool $details
-     * @param string $limit_threshold
      */
-    public function format($details = true, $limit_threshold = ''): void
+    public function format(): void
     {
         if ($this->isNew()) {
             return;

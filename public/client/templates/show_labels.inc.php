@@ -76,8 +76,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) |
             $libitem = $labelRepository->findById($label_id);
             if ($libitem === null) {
                 continue;
-            }
-            $libitem->format(); ?>
+            } ?>
         <tr id="label_<?php echo $libitem->id; ?>">
                 <?php require Ui::find_template('show_label_row.inc.php'); ?>
         </tr>

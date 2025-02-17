@@ -41,7 +41,7 @@ final class InitializationHandlerGlobals implements InitializationHandlerInterfa
 
     public function init(): void
     {
-        Core::get_global('user')?->format(false);
+        Core::get_global('user')?->format();
 
         if (session_id()) {
             Session::extend(session_id());

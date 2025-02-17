@@ -183,9 +183,8 @@ class Video extends database_object implements
      * format
      * This formats a video object so that it is human readable
      */
-    public function format(?bool $details = true): void
+    public function format(): void
     {
-        unset($details);
         if ($this->resolution_x || $this->resolution_y) {
             $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
         }

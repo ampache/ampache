@@ -1409,11 +1409,9 @@ class Search extends playlist_object
 
     /**
      * format
-     * Gussy up the data
      */
-    public function format(?bool $details = true): void
+    public function format(): void
     {
-        parent::format($details);
     }
 
     /**

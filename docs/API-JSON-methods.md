@@ -1511,10 +1511,10 @@ This returns the artists for a label
 
 This gets the latest posted shouts
 
-| Input      | Type    | Description                         | Optional |
-|------------|---------|-------------------------------------|---------:|
-| 'username' | string  | Get latest shouts for this username |      YES |
-| 'limit'    | integer | Maximum number of results to return |      YES |
+| Input      | Type    | Description                                                                  | Optional |
+|------------|---------|------------------------------------------------------------------------------|---------:|
+| 'username' | string  | Get latest shouts for this username                                          |      YES |
+| 'limit'    | integer | Maximum number of results (Use `popular_threshold` when missing; default 10) |      YES |
 
 * return array
 
@@ -2906,6 +2906,7 @@ Delete an existing song. (if you are allowed to)
 
 Get some items based on some simple search types and filters. (Random by default)
 This method **HAD** partial backwards compatibility with older api versions but it has now been removed
+Pass -1 limit to get all results. (0 will fall back to the `popular_threshold` value)
 
 | Input      | Type    | Description                                                                  | Optional |
 |------------|---------|------------------------------------------------------------------------------|---------:|
@@ -2914,7 +2915,7 @@ This method **HAD** partial backwards compatibility with older api versions but 
 | 'user_id'  | integer |                                                                              |      YES |
 | 'username' | string  |                                                                              |      YES |
 | 'offset'   | integer | Return results starting from this index position                             |      YES |
-| 'limit'    | integer | Maximum number of results to return                                          |      YES |
+| 'limit'    | integer | Maximum number of results (Use `popular_threshold` when missing; default 10) |      YES |
 
 * return array
 

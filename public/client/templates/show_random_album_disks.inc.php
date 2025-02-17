@@ -43,7 +43,6 @@ $button   = Ajax::button('?page=index&action=random_albums', 'refresh', T_('Refr
 if (!empty($albumDisks)) {
     foreach ($albumDisks as $album_disk_id) {
         $albumDisk = new AlbumDisk($album_disk_id);
-        $albumDisk->format();
         $show_play = true; ?>
     <div class="random_album">
         <div id="album_<?php echo $album_disk_id; ?>" class="art_album libitem_menu">

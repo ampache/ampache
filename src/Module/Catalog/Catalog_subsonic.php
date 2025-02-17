@@ -535,14 +535,10 @@ class Catalog_subsonic extends Catalog
 
     /**
      * format
-     *
-     * This makes the object human-readable.
      */
     public function format(): void
     {
-        parent::format();
-        $this->f_info      = $this->uri;
-        $this->f_full_info = $this->uri;
+        $this->f_info = $this->uri;
     }
 
     /**
