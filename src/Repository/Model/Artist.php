@@ -80,9 +80,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /** @var int $albums */
     public $albums;
 
-    /** @var bool $_fake */
-    public $_fake = false; // Set if construct_from_array used
-
     /** @var array<array{user: int, id: int, name: string}> $tags */
     private ?array $tags = null;
 
@@ -141,9 +138,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         foreach ($data as $key => $value) {
             $artist->$key = $value;
         }
-
-        // Ack that this is not a real object from the DB
-        $artist->_fake = true;
 
         return $artist;
     }
@@ -257,13 +251,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * information and formats the relevant values
      * so they can be displayed in a table for example
      * it changes the title into a full link.
-     *
-     * @param bool $details
-     * @param string $limit_threshold
      */
-    public function format($details = true, $limit_threshold = ''): void
+    public function format(): void
     {
-        unset($details);
     }
 
     /**

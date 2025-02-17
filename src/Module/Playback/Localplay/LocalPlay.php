@@ -66,7 +66,6 @@ class LocalPlay
 
     /**
      * format
-     * This makes the Localplay/plugin information human readable
      */
     public function format(): void
     {
@@ -626,6 +625,7 @@ class LocalPlay
     {
         return $this->_player?->instance_fields() ?? [];
     }
+
     /**
      * get_f_description
      */
@@ -637,6 +637,7 @@ class LocalPlay
 
         return '';
     }
+
     /**
      * get_f_version
      */

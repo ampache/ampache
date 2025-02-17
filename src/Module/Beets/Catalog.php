@@ -410,12 +410,9 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * format
-     *
-     * This makes the object human-readable.
      */
     public function format(): void
     {
-        parent::format();
     }
 
     /**

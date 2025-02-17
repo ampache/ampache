@@ -226,12 +226,9 @@ class Playlist extends playlist_object
 
     /**
      * format
-     * This takes the current playlist object and gussies it up a little
-     * bit so it is presentable to the users
      */
-    public function format(?bool $details = true): void
+    public function format(): void
     {
-        parent::format($details);
     }
 
     /**

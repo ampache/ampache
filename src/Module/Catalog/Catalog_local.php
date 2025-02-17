@@ -310,9 +310,7 @@ class Catalog_local extends Catalog
             }
         } // end while reading directory
 
-        if ($counter % 1000 == 0) {
-            debug_event('local.catalog', "Finished reading $path, closing handle", 5);
-        }
+        debug_event('local.catalog', "Finished reading $path, closing handle", 5);
 
         // This should only happen on the last run
         if ($path == $this->path) {
@@ -1078,14 +1076,10 @@ class Catalog_local extends Catalog
 
     /**
      * format
-     *
-     * This makes the object human-readable.
      */
     public function format(): void
     {
-        parent::format();
-        $this->f_info      = $this->path;
-        $this->f_full_info = $this->path;
+        $this->f_info = $this->path;
     }
 
     /**

@@ -138,6 +138,7 @@ class License extends BaseModel
     {
         return $this->order;
     }
+
     /**
      * Persists the object
      */

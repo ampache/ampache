@@ -234,7 +234,7 @@ class Json4_Data
                     'id' => (string)$license_id,
                     'name' => $license->getName(),
                     'description' => $license->getDescription(),
-                    'external_link' => $license->getLinkFormatted()
+                    'external_link' => $license->getExternalLink()
                 ];
             }
         }
@@ -720,7 +720,7 @@ class Json4_Data
                 "state" => $episode->getState()->toDescription(),
                 "filelength" => $episode->get_f_time(true),
                 "filesize" => $episode->getSizeFormatted(),
-                "mime" => (isset($episode->mime)) ? $episode->mime : '',
+                "mime" => $episode->mime,
                 "filename" => $episode->getFileName(),
                 "public_url" => $episode->get_link(),
                 "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
@@ -780,11 +780,7 @@ class Json4_Data
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $license     = $song->getLicense();
-            if ($license !== null) {
-                $licenseLink = $license->getLinkFormatted();
-            } else {
-                $licenseLink = '';
-            }
+            $licenseLink = $license?->getExternalLink() ?: null;
 
             $playlist_track++;
 
@@ -818,9 +814,9 @@ class Json4_Data
             $ourSong['url']                   = $play_url;
             $ourSong['size']                  = (int)$song->size;
             $ourSong['mbid']                  = $song->mbid;
-            $ourSong['album_mbid']            = $song->album_mbid;
-            $ourSong['artist_mbid']           = $song->artist_mbid;
-            $ourSong['albumartist_mbid']      = $song->albumartist_mbid;
+            $ourSong['album_mbid']            = $song->get_album_mbid();
+            $ourSong['artist_mbid']           = $song->get_artist_mbid();
+            $ourSong['albumartist_mbid']      = $song->get_album_mbid();
             $ourSong['art']                   = $art_url;
             $ourSong['flag']                  = (!$flag->get_flag($user->getId()) ? 0 : 1);
             $ourSong['preciserating']         = $user_rating;

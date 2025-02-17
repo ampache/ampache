@@ -578,7 +578,7 @@ class Json_Data
                     'id' => (string)$license_id,
                     'name' => $license->getName(),
                     'description' => $license->getDescription(),
-                    'external_link' => $license->getLinkFormatted()
+                    'external_link' => $license->getExternalLink()
                 ];
             }
         } // end foreach
@@ -1340,7 +1340,7 @@ class Json_Data
                 "filelength" => $episode->get_f_time(true),
                 "filesize" => $episode->getSizeFormatted(),
                 "filename" => $episode->getFileName(),
-                "mime" => (isset($episode->mime)) ? $episode->mime : '',
+                "mime" => $episode->mime,
                 "time" => (int)$episode->time,
                 "size" => (int)$episode->size,
                 "bitrate" => $episode->bitrate,
@@ -1421,11 +1421,7 @@ class Json_Data
                 $song_artists[] = Artist::get_name_array_by_id($artist_id);
             }
             $license     = $song->getLicense();
-            if ($license !== null) {
-                $licenseLink = $license->getLinkFormatted();
-            } else {
-                $licenseLink = '';
-            }
+            $licenseLink = $license?->getExternalLink() ?: null;
 
             $playlist_track++;
 

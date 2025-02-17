@@ -175,11 +175,10 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
-     * @param bool|null $details
+     * format
      */
-    public function format($details = true): void
+    public function format(): void
     {
-        unset($details);
     }
 
     /**
@@ -240,7 +239,7 @@ class Broadcast extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            return '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
+            $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
         }
 
         return $this->f_link;

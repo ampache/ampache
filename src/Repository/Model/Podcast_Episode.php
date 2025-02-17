@@ -101,7 +101,7 @@ class Podcast_Episode extends database_object implements
 
     public string $type;
 
-    public string $mime;
+    public ?string $mime = null;
 
     private ?string $link = null;
 
@@ -168,7 +168,7 @@ class Podcast_Episode extends database_object implements
      * format
      * this function takes the object and formats some values
      */
-    public function format(?bool $details = true): void
+    public function format(): void
     {
         if ($this->isNew()) {
             return;

@@ -627,19 +627,13 @@ class Catalog_Seafile extends Catalog
 
     /**
      * format
-     *
-     * This makes the object human-readable.
      */
     public function format(): void
     {
-        parent::format();
-
         if ($this->seafile != null) {
-            $this->f_info      = $this->seafile->get_format_string();
-            $this->f_full_info = $this->seafile->get_format_string();
+            $this->f_info = $this->seafile->get_format_string();
         } else {
-            $this->f_info      = "Seafile Catalog";
-            $this->f_full_info = "Seafile Catalog";
+            $this->f_info = "Seafile Catalog";
         }
     }
 

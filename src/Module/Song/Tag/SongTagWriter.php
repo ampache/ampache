@@ -464,7 +464,7 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['tracknumber']         = $song->track;
         $meta['discnumber']          = $song->disk;
         $meta['musicbrainz_trackid'] = $song->mbid;
-        $meta['musicbrainz_albumid'] = $song->album_mbid;
+        $meta['musicbrainz_albumid'] = $song->get_album_mbid();
         $meta['license']             = $song->license;
         $meta['genre']               = [];
 
@@ -476,7 +476,7 @@ final class SongTagWriter implements SongTagWriterInterface
         $album = new Album($song->album);
         $album->format();
 
-        $meta['musicbrainz_albumartistid']  = $song->albumartist_mbid;
+        $meta['musicbrainz_albumartistid']  = $song->get_album_mbid();
         $meta['musicbrainz_releasegroupid'] = $album->mbid_group;
 
         if (isset($album->release_type)) {
@@ -534,7 +534,7 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['publisher']     = $song->label ?? null;
         $meta['track_number']  = $song->track;
         $meta['part_of_a_set'] = $song->disk;
-        if (isset($song->mbid)) {
+        if (!empty($song->mbid)) {
             $meta['unique_file_identifier'] = [
                 'data' => $song->mbid,
                 'ownerid' => "http://musicbrainz.org"
@@ -570,23 +570,23 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['original_year'] = $album->original_year; //TORY
 
         $meta['text'] = [];
-        if ($song->album_mbid) {
+        if ($song->get_album_mbid()) {
             $meta['text'][] = [
-                'data' => $song->album_mbid,
+                'data' => $song->get_album_mbid(),
                 'description' => 'MusicBrainz Album Id',
                 'encodingid' => 0
             ];
         }
-        if ($song->albumartist_mbid) {
+        if ($song->get_album_mbid()) {
             $meta['text'][] = [
-                'data' => $song->albumartist_mbid,
+                'data' => $song->get_album_mbid(),
                 'description' => 'MusicBrainz Album Artist Id',
                 'encodingid' => 0
             ];
         }
-        if ($song->albumartist_mbid) {
+        if ($song->get_album_mbid()) {
             $meta['text'][] = [
-                'data' => $song->albumartist_mbid,
+                'data' => $song->get_album_mbid(),
                 'description' => 'MusicBrainz Album Artist Id',
                 'encodingid' => 0
             ];

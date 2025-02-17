@@ -704,14 +704,10 @@ class Catalog_dropbox extends Catalog
 
     /**
      * format
-     *
-     * This makes the object human-readable.
      */
     public function format(): void
     {
-        parent::format();
-        $this->f_info      = $this->apikey;
-        $this->f_full_info = $this->apikey;
+        $this->f_info = $this->apikey;
     }
 
     /**

@@ -39,7 +39,7 @@ interface playable_item
      *
      * Creates member variables for output
      */
-    public function format(?bool $details = true): void;
+    public function format(): void;
 
     /**
      * get_fullname

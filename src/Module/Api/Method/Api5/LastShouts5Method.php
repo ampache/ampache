@@ -47,7 +47,7 @@ final class LastShouts5Method
      * This get the latest posted shouts
      *
      * username = (string) $username //optional
-     * limit = (integer) $limit //optional
+     * limit = (integer) $limit Default: 10 (popular_threshold) //optional
      */
     public static function last_shouts(array $input, User $user): bool
     {

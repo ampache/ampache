@@ -77,7 +77,7 @@ echo '<div>' . $np_user->get_f_avatar('f_avatar_medium') . '</div>'; ?>
         <?php echo "<a href=\"" . $web_path . "/search.php?type=album&action=search&limit=0&rule_1=year&rule_1_operator=2&rule_1_input=" . $media->year . "\">" . $media->year . "</a>"; ?>
     </div>
     <?php
-        if (!empty($media->tags)) { ?>
+        if (!empty($media->get_tags())) { ?>
             <div id="np_song_tags_<?php echo $media->id; ?>" class="np_cell cel_left">
                 <label><?php echo $t_genres; ?></label>
                 <?php echo $media->get_f_tags(); ?>
