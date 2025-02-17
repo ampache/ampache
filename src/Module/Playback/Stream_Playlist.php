@@ -760,7 +760,7 @@ class Stream_Playlist
     {
         $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
         $localplay->connect();
-        $append = $_REQUEST['append'] ?? false;
+        $append = (bool)($_REQUEST['append'] ?? 0);
         if (!$append) {
             $localplay->delete_all();
         }

@@ -71,7 +71,7 @@ final class PodcastEpisodeAction implements ApplicationActionInterface
         $browse->set_update_session(true);
 
         if (array_key_exists('catalog', $_SESSION)) {
-            $browse->set_filter('catalog', $_SESSION['catalog']);
+            $browse->set_filter('catalog', (int)$_SESSION['catalog']);
         }
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
             $browse->set_filter('catalog_enabled', '1');
