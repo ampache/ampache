@@ -413,7 +413,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     public function format(): void
     {
-        parent::format();
     }
 
     /**

@@ -64,6 +64,7 @@ final class ShowCustomizeCatalogAction implements ApplicationActionInterface
         if ($catalog === null) {
             return null;
         }
+
         $catalog->format();
 
         $this->ui->show(

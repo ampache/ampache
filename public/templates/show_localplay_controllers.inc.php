@@ -47,7 +47,7 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
             if (!$localplay->player_loaded()) {
                 continue;
             }
-            $localplay->format();
+
             if (LocalPlay::is_enabled($controller)) {
                 $action     = 'confirm_uninstall_localplay';
                 $action_txt = T_('Disable');

@@ -71,8 +71,7 @@ if ($browse->is_show_header()) {
             $libitem = new Video($video_id);
             if ($libitem->isNew()) {
                 continue;
-            }
-            $libitem->format(); ?>
+            } ?>
         <tr id="video_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_video_row.inc.php'); ?>
         </tr>
