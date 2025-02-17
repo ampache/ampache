@@ -273,13 +273,13 @@ class Share extends database_object
             return false;
         }
 
-        if ($action == 'download' && (!AmpConfig::get('download') || !$this->allow_download)) {
+        if (in_array($action, ['download', 'all']) && (!AmpConfig::get('download') || !$this->allow_download)) {
             debug_event(self::class, 'Access Denied: download unauthorized.', 3);
 
             return false;
         }
 
-        if ($action == 'stream' && !$this->allow_stream) {
+        if (in_array($action, ['stream', 'all']) && !$this->allow_stream) {
             debug_event(self::class, 'Access Denied: stream unauthorized.', 3);
 
             return false;
