@@ -173,9 +173,9 @@ class easy_captcha
     // new captcha tracking/storage id
 
     /**
-     * @return string
+     * new_id
      */
-    public function new_id()
+    public function new_id(): string
     {
         return "ec." . time() . "." . md5((string)bin2hex(random_bytes(20)) . self::CAPTCHA_SALT . rand(0, 1 << 30));
     }
