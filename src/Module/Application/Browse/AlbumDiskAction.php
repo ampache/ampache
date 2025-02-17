@@ -89,7 +89,7 @@ final class AlbumDiskAction implements ApplicationActionInterface
                 $browse->set_sort('name_' . $year_sort, 'ASC');
         }
         if (array_key_exists('catalog', $_SESSION)) {
-            $browse->set_filter('catalog', $_SESSION['catalog']);
+            $browse->set_filter('catalog', (int)$_SESSION['catalog']);
         }
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
             $browse->set_filter('catalog_enabled', '1');
