@@ -1079,9 +1079,7 @@ class Catalog_local extends Catalog
      */
     public function format(): void
     {
-        parent::format();
-        $this->f_info      = $this->path;
-        $this->f_full_info = $this->path;
+        $this->f_info = $this->path;
     }
 
     /**

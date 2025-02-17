@@ -78,8 +78,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) 
             $libitem = new Live_Stream($radio_id);
             if ($libitem->isNew()) {
                 continue;
-            }
-            $libitem->format(); ?>
+            } ?>
         <tr id="live_stream_<?php echo $libitem->id; ?>">
                 <?php require Ui::find_template('show_live_stream_row.inc.php'); ?>
         </tr>

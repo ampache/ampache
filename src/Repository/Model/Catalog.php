@@ -167,12 +167,6 @@ abstract class Catalog extends database_object
 
     /**
      * alias for catalog paths, urls, etc etc
-     * @var null|string $f_full_info
-     */
-    public $f_full_info;
-
-    /**
-     * alias for catalog paths, urls, etc etc
      * @var null|string $f_info
      */
     public $f_info;
@@ -267,9 +261,15 @@ abstract class Catalog extends database_object
     abstract public function catalog_fields(): array;
 
     /**
+     * get_rel_path
      * @param string $file_path
      */
     abstract public function get_rel_path($file_path): string;
+
+    /**
+     * format
+     */
+    abstract public function format(): void;
 
     /**
      * @param Song|Podcast_Episode|Video $media
@@ -977,15 +977,6 @@ abstract class Catalog extends database_object
         $sql = sprintf('UPDATE `catalog` SET `%s` = ? WHERE `id` = ?', $field);
 
         return (Dba::write($sql, [$value, $catalog_id]) !== false);
-    }
-
-    /**
-     * format
-     *
-     * This makes the object human-readable.
-     */
-    public function format(): void
-    {
     }
 
     /**

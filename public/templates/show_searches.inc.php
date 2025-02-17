@@ -71,8 +71,7 @@ use Ampache\Repository\Model\User;
     $libitem = new Search($playlist_id, 'song');
     if ($libitem->isNew() || (!$libitem->has_access() && $libitem->type === 'private')) {
         continue;
-    }
-    $libitem->format(); ?>
+    } ?>
         <tr id="smartplaylist_row_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_search_row.inc.php'); ?>
         </tr>

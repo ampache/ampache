@@ -103,6 +103,20 @@ class Wanted extends database_object
         return $this->getId() === 0;
     }
 
+    public function get_f_user(): string
+    {
+        if ($this->f_user !== null) {
+            return $this->f_user;
+        }
+
+        if ($this->user !== null) {
+            $user         = new User($this->user);
+            $this->f_user = $user->get_fullname();
+        }
+
+        return $this?->f_user ?? '';
+    }
+
     /**
      * get_missing_albums
      * Get list of library's missing albums from MusicBrainz
@@ -186,7 +200,6 @@ class Wanted extends database_object
                         $wanted = $wantedRepository->findByMusicBrainzId($group->id);
                         if ($wanted !== null) {
                             debug_event(self::class, 'get_missing_albums album: ' . $wanted->mbid, 3);
-                            $wanted->format();
                         } else {
                             $wanted       = $wantedRepository->prototype();
                             $wanted->mbid = $group->id;
@@ -427,14 +440,10 @@ class Wanted extends database_object
     }
 
     /**
-     * Format data.
+     * format
      */
     public function format(): void
     {
-        if ($this->user !== null) {
-            $user         = new User($this->user);
-            $this->f_user = $user->get_fullname();
-        }
     }
 
     /**

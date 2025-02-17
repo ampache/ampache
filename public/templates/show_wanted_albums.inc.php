@@ -50,8 +50,7 @@ $wantedRepository = $dic->get(WantedRepositoryInterface::class);
             $libitem = $wantedRepository->findById($wanted_id);
             if ($libitem === null) {
                 continue;
-            }
-            $libitem->format(); ?>
+            } ?>
         <tr id="walbum_<?php echo $libitem->getMusicBrainzId(); ?>">
             <?php require Ui::find_template('show_wanted_album_row.inc.php'); ?>
         </tr>

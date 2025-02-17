@@ -42,7 +42,7 @@ final readonly class CatalogDetails implements CatalogDetailsInterface
 
     public function getFullInfo(): string
     {
-        return scrub_out($this->catalog->f_full_info);
+        return scrub_out($this->catalog->f_info);
     }
 
     public function getLastUpdateDate(): string

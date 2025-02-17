@@ -84,7 +84,6 @@ final class ShowMissingAction implements ApplicationActionInterface
             }
         }
         $walbum->load_all();
-        $walbum->format();
 
         // Title for this album
         $this->ui->showBoxTop(

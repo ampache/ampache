@@ -107,8 +107,6 @@ if ($browse->is_show_header()) {
                     $object['object_id'],
                 );
                 if ($libitem !== null) {
-                    $libitem->format();
-
                     $object_type    = $libtype?->value;
                     $playlist_track = (int)($object['track'] ?? $count); ?>
                     <tr id="track_<?php echo($object['track_id'] ?? $count); ?>">
