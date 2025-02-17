@@ -184,7 +184,6 @@ class Podcast_Episode extends database_object implements
             $this->mime    = Song::type_to_mime($this->type);
             $this->enabled = true;
         }
-
     }
 
     public function getCategory(): string

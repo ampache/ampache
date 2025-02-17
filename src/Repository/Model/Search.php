@@ -1525,9 +1525,8 @@ class Search extends playlist_object
      *
      * Returns a randomly sorted array (with an optional limit) of the items
      * output by our search (part of the playlist interface)
-     * @param string|null $limit
      */
-    public function get_random_items($limit = ''): array
+    public function get_random_items(?string $limit = ''): array
     {
         $results = [];
         $sqltbl  = $this->to_sql();

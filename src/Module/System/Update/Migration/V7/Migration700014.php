@@ -40,6 +40,5 @@ final class Migration700014 extends AbstractMigration
             $this->updateDatabase('ALTER TABLE `user_preference` ADD COLUMN `name` varchar(128) DEFAULT NULL AFTER `preference`;');
         }
         $this->updateDatabase('UPDATE `user_preference`, (SELECT `preference`.`name`, `preference`.`id` FROM `preference`) AS `preference` SET `user_preference`.`name` = `preference`.`name` WHERE `preference`.`id` = `user_preference`.`preference`;');
-
     }
 }

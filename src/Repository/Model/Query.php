@@ -1337,7 +1337,7 @@ class Query
      * sort method and then re-sorts them This is internally
      * called by the set_sort() function
      */
-    private function _resort_objects(): bool
+    private function _resort_objects(): void
     {
         // There are two ways to do this.. the easy way...
         // and the vollmer way, hopefully we don't have to
@@ -1351,7 +1351,7 @@ class Query
 
             // If there's nothing there don't do anything
             if ($object_ids === [] || !is_array($object_ids)) {
-                return false;
+                return;
             }
 
             $type      = $this->get_type();
@@ -1392,8 +1392,6 @@ class Query
         }
 
         $this->save_objects($results);
-
-        return true;
     }
 
     /**

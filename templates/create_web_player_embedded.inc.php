@@ -42,12 +42,9 @@ function PlayerFrame()
 <?php
 if (array_key_exists('append', $_REQUEST)) { ?>
         appendmedia = true;
-<?php } else {
-    if (array_key_exists('playnext', $_REQUEST)) { ?>
+<?php } elseif (array_key_exists('playnext', $_REQUEST)) { ?>
         playnext = true;
-<?php
-    }
-} ?>
+<?php } ?>
     }
 
 <?php if (AmpConfig::get('webplayer_confirmclose')) { ?>
