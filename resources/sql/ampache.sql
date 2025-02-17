@@ -14,13 +14,13 @@
 -- You should have received a copy of the GNU Affero General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.9
--- Generation Time: Jan 20, 2025 at 01:05 AM
+-- Generation Time: Feb 17, 2025 at 11:19 PM
 -- Server version: 11.4.4-MariaDB-3
--- PHP Version: 8.3.15
+-- PHP Version: 8.3.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -876,7 +876,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
   UNIQUE KEY `preference_UN` (`name`),
   KEY `category` (`category`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=230 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=231 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `preference`
@@ -1049,7 +1049,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (226, 'browse_playlist_grid_view', '0', 'Force Grid View on Playlist browse', 25, 'boolean', 'interface', 'cookies'),
 (227, 'browse_video_grid_view', '0', 'Force Grid View on Video browse', 25, 'boolean', 'interface', 'cookies'),
 (228, 'browse_podcast_grid_view', '0', 'Force Grid View on Podcast browse', 25, 'boolean', 'interface', 'cookies'),
-(229, 'browse_podcast_episode_grid_view', '0', 'Force Grid View on Podcast Episode browse', 25, 'boolean', 'interface', 'cookies');
+(229, 'browse_podcast_episode_grid_view', '0', 'Force Grid View on Podcast Episode browse', 25, 'boolean', 'interface', 'cookies'),
+(230, 'show_playlist_media_parent', '0', 'Show Artist column on playlist media rows', 25, 'boolean', 'playlist', NULL);
 
 -- --------------------------------------------------------
 
@@ -1463,7 +1464,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '720001'),
+('db_version', '721001'),
 ('Plugin_Last.FM', '000005'),
 ('Plugin_Home Dashboard', '2');
 
@@ -1793,7 +1794,8 @@ INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
 (-1, 226, 'browse_playlist_grid_view', '0'),
 (-1, 227, 'browse_video_grid_view', '0'),
 (-1, 228, 'browse_podcast_grid_view', '0'),
-(-1, 229, 'browse_podcast_episode_grid_view', '0');
+(-1, 229, 'browse_podcast_episode_grid_view', '0'),
+(-1, 230, 'show_playlist_media_parent', '0');
 
 -- --------------------------------------------------------
 
