@@ -243,10 +243,8 @@ class Song_Preview extends database_object implements Media, playable_item
      * and does a ton of formatting on it creating f_??? variables on the current
      * object
      */
-    public function format(?bool $details = true): void
+    public function format(): void
     {
-        unset($details); // dead code but called from other format calls
-
         if ($this->artist) {
             $this->f_artist_link = "<a href=\"" . AmpConfig::get_web_path() . "/artists.php?action=show&artist=" . $this->artist . "\" title=\"" . scrub_out($this->get_artist_fullname()) . "\"> " . scrub_out($this->get_artist_fullname()) . "</a>";
         } else {

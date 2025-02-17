@@ -91,11 +91,9 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * format
-     * This takes the current playlist object and gussies it up a little bit so it is presentable to the users
      */
-    public function format(?bool $details = true): void
+    public function format(): void
     {
-        unset($details);
     }
 
     /**

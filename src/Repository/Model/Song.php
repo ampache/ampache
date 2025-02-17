@@ -1620,18 +1620,13 @@ class Song extends database_object implements
      * and does a ton of formatting on it creating f_??? variables on the current
      * object
      */
-    public function format(?bool $details = true): void
+    public function format(): void
     {
         if ($this->isNew()) {
             return;
         }
 
-        if ($details) {
-            $this->fill_ext_info();
-
-            // Get the top tags
-            $this->get_tags();
-        }
+        $this->fill_ext_info();
     }
 
     /**
