@@ -43,6 +43,7 @@ Pre-translating files before loading media templates should speed those pages up
 * Don't check Album song catalog when you've already checked the Album
 * Don't execute format the object for row display pages
 * Don't show share URL if it's expired
+* Easy Captcha id generation using random string instead of `SERVER_NAME`
 
 ### Removed
 
@@ -58,7 +59,7 @@ Pre-translating files before loading media templates should speed those pages up
 * Building Song cache didn't include `album_disk` column
 * Don't check tag case changes for genres
 * Remove hidden tags from the `tag_map` table and do not delete them from the `tag` table
-* Update parent tag lists when change occured on verify
+* Update parent tag lists when change occurred on verify
 * Don't put string tags in the int list for comparison
 * Speed up `catalog_map` delete queries for 'artist' type
 * Don't unset object properties during tag change comparison
