@@ -41,9 +41,14 @@ class Playlist extends playlist_object
 
     public ?string $collaborate = '';
 
-    /* Generated Elements */
-    public $genre;
-
+    /**
+     * @var array<int, array{
+     *  object_type: LibraryItemEnum,
+     *  object_id: int,
+     *  track: int,
+     *  track_id: int
+     * }>
+     */
     public $items = [];
 
     /**
@@ -317,10 +322,9 @@ class Playlist extends playlist_object
     /**
      * get_random_items
      * This is the same as before but we randomize the buggers!
-     * @param string|null $limit
      * @return list<array{object_type: LibraryItemEnum, object_id: int, track: int, track_id: int}>
      */
-    public function get_random_items($limit = ''): array
+    public function get_random_items(?string $limit = ''): array
     {
         $results = [];
         $user    = Core::get_global('user');

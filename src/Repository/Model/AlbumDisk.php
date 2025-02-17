@@ -483,6 +483,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     /**
      * Get item children.
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_childrens(): array
     {

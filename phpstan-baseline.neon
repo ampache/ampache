@@ -8976,16 +8976,6 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
@@ -9002,11 +8992,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
 
@@ -9506,16 +9491,6 @@ parameters:
 			path: src/Repository/Model/Playlist.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:\\$genre has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:\\$items has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
 			message: "#^Cannot access property \\$max_ampache on class\\-string\\|object\\.$#"
 			count: 1
 			path: src/Repository/Model/Plugin.php
@@ -9709,11 +9684,6 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_songs\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Random.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Rating.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:_add_type_select\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
@@ -9982,11 +9952,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$f_artist_link has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$f_track has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
 

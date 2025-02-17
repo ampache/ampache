@@ -159,9 +159,6 @@ abstract class Catalog extends database_object
 
     public ?string $gather_types = '';
 
-    /** @var string $key */
-    public $key;
-
     public ?string $link = null;
 
     public ?string $f_info = null;
@@ -1464,7 +1461,7 @@ abstract class Catalog extends database_object
 
             $video_ids = $catalog->get_video_ids($type);
             foreach ($video_ids as $video_id) {
-                $results[] = Video::create_from_id($video_id);
+                $results[] = new Video($video_id);
             }
         }
 
@@ -1944,7 +1941,7 @@ abstract class Catalog extends database_object
     {
         // Should be more generic !
         if ($type == 'video') {
-            $libitem = Video::create_from_id($object_id);
+            $libitem = new Video($object_id);
         } else {
             $className = ObjectTypeToClassNameMapper::map($type);
             /** @var library_item $libitem */

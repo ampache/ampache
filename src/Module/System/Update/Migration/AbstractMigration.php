@@ -88,7 +88,6 @@ abstract class AbstractMigration implements MigrationInterface
             true
         );
         $this->connection->query($sql, $params);
-
     }
 
     /**

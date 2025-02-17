@@ -43,7 +43,7 @@ $button   = Ajax::button('?page=index&action=random_videos', 'refresh', T_('Refr
 <?php
 if (!empty($videos)) {
     foreach ($videos as $video_id) {
-        $video = Video::create_from_id($video_id); ?>
+        $video = new Video($video_id); ?>
     <div class="random_video">
         <div id="video_<?php echo $video_id; ?>" class="art_album libitem_menu">
             <?php $art_showed = false;

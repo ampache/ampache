@@ -69,23 +69,19 @@ $current_ip   = (!filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP))
                     <option value="rpc"><?php echo $apirpc; ?></option>
                     <option selected="selected" value="stream"><?php echo $apirpc . ' + ' . $streamaccess; ?></option>
                     <option value="all"><?php echo $apirpc . ' + ' . $all; ?></option>
-        <?php } else {
-            if ($add_type == AccessListTypeEnum::ADD_TYPE_LOCAL) { ?>
+        <?php } elseif ($add_type == AccessListTypeEnum::ADD_TYPE_LOCAL) { ?>
                 <input type="hidden" name="type" value="network" />
                 <select name="addtype">
                     <option value="network"><?php echo $localnetwork; ?></option>
                     <option value="stream"><?php echo $localnetwork . ' + ' . $streamaccess; ?></option>
                     <option selected="selected" value="all"><?php echo $localnetwork . ' + ' . $all; ?></option>
-        <?php
-            } else { ?>
+        <?php } else { ?>
                 <select name="type">
                     <option selected="selected" value="stream"><?php echo $streamaccess; ?></option>
                     <option value="interface"><?php echo T_('Web Interface'); ?></option>
                     <option value="network"><?php echo $localnetwork; ?></option>
                     <option value="rpc"><?php echo $apirpc; ?></option>
-        <?php
-            }
-        } ?>
+        <?php } ?>
                 </select>
             </td>
         </tr>

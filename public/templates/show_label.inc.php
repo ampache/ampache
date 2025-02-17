@@ -35,7 +35,7 @@ use Ampache\Repository\Model\Label;
 use Ampache\Module\Util\Ui;
 
 /** @var Label $label */
-/** @var array $object_ids */
+/** @var int[] $object_ids */
 /** @var string $object_type */
 /** @var bool $isLabelEditable */
 
