@@ -1284,6 +1284,9 @@ class Preference extends database_object
                 case 'browse_podcast_episode_grid_view':
                     Dba::write($pref_sql, [229, 'browse_podcast_episode_grid_view', '0', T_('Force Grid View on Podcast Episode browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
                     break;
+                case 'show_playlist_media_parent':
+                    Dba::write($pref_sql, [230, 'show_playlist_media_parent', '0', T_('Show Artist column on playlist media rows'), AccessLevelEnum::USER->value, 'boolean', 'playlist', null]);
+                    break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
             }
