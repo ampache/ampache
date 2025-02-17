@@ -18,6 +18,7 @@ Pre-translating files before loading media templates should speed those pages up
 * Clean empty albums after each verify chunk
 * Add `memory_get_peak_usage` to query stat output
 * Add `.htaccess.dist` to the web root. (Block obviously bad parameters)
+* HTML link on Share list
 * New catalog Auto-insert Fields
   * `%B` Album Artist
   * `%m` Song Artist **AND** Album Artist
@@ -41,6 +42,7 @@ Pre-translating files before loading media templates should speed those pages up
 * Block access to media outside your catalog access if you have a direct link
 * Don't check Album song catalog when you've already checked the Album
 * Don't execute format the object for row display pages
+* Don't show share URL if it's expired
 
 ### Removed
 
@@ -66,6 +68,8 @@ Pre-translating files before loading media templates should speed those pages up
 * NPM copyfile commands missing prettyPhoto files
 * External auth avatar update when enabled was not checking for blankuser.png urls
 * Don't cache `song_data` table from single column requests
+* Don't insert empty strings for null data in `song_data`
+* `SERVER_NAME` may not be set for Captcha
 * webplayer
   * Not escaping bad characters correctly
   * Not blocking playback for media when catalog disabled or hidden from user with direct link
