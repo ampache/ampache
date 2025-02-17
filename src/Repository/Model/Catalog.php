@@ -162,14 +162,9 @@ abstract class Catalog extends database_object
     /** @var string $key */
     public $key;
 
-    /** @var null|string $link */
-    public $link;
+    public ?string $link = null;
 
-    /**
-     * alias for catalog paths, urls, etc etc
-     * @var null|string $f_info
-     */
-    public $f_info;
+    public ?string $f_info = null;
 
     private ?string $f_link = null;
 
