@@ -33,7 +33,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Util\Ui;
 
-/** @var array $object_ids */
+/** @var int[] $object_ids */
 /** @var array $missing_objects */
 /** @var string $limit_threshold */
 

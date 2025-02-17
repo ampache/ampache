@@ -101,8 +101,8 @@ final class AddUserAction implements ApplicationActionInterface
         $fullname = (string) scrub_in(Core::get_post('fullname'));
         $username = trim(scrub_in(Core::get_post('username')));
         $email    = (string) scrub_in(Core::get_post('email'));
-        $pass1    = Core::get_post('password_1');
-        $pass2    = Core::get_post('password_2');
+        $passOne  = Core::get_post('password_1');
+        $passTwo  = Core::get_post('password_2');
         $website  = (string) scrub_in(Core::get_post('website'));
         $state    = (string) scrub_in(Core::get_post('state'));
         $city     = (string) scrub_in(Core::get_post('city'));
@@ -151,11 +151,11 @@ final class AddUserAction implements ApplicationActionInterface
             AmpError::add('city', T_("Please fill in your city"));
         }
 
-        if (!$pass1) {
+        if (!$passOne) {
             AmpError::add('password', T_('You must enter a password'));
         }
 
-        if ($pass1 != $pass2) {
+        if ($passOne != $passTwo) {
             AmpError::add('password', T_('Passwords do not match'));
         }
 
@@ -185,7 +185,7 @@ final class AddUserAction implements ApplicationActionInterface
             $fullname,
             $email,
             $website,
-            $pass1,
+            $passOne,
             $access,
             0,
             $state,

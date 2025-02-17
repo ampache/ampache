@@ -505,10 +505,7 @@ var AudioHandler = (function() {
         clearInterval(timer);
         timer = setInterval(onFirstBPM,timeToNextBeat);
 
-
         //set timer for new beat rate
-
-
     }
 
     function onFirstBPM(){

@@ -45,6 +45,5 @@ final class Migration700021 extends AbstractMigration
         }
 
         $this->updateDatabase("UPDATE `license` SET `order` = `id` WHERE `order` IS NULL;");
-
     }
 }
