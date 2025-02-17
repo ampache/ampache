@@ -74,7 +74,9 @@ class Podcast_Episode extends database_object implements
     public ?string $waveform;
 
     public $type;
-    public $mime;
+
+    public ?string $mime = null;
+
     public $f_name;
     public $f_time;
     public $f_time_h;
