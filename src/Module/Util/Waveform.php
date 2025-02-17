@@ -78,10 +78,10 @@ class Waveform
         $waveform = null;
 
         if ($media->isNew() === false) {
-            $media->format();
             if (AmpConfig::get('album_art_store_disk')) {
                 $waveform = self::get_from_file($media->id, $object_type);
             } else {
+                $media->format();
                 $waveform = $media->waveform;
             }
             if (empty($waveform)) {

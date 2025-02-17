@@ -704,8 +704,6 @@ class Catalog_dropbox extends Catalog
 
     /**
      * format
-     *
-     * This makes the object human-readable.
      */
     public function format(): void
     {

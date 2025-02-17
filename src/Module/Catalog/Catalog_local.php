@@ -1076,8 +1076,6 @@ class Catalog_local extends Catalog
 
     /**
      * format
-     *
-     * This makes the object human-readable.
      */
     public function format(): void
     {
