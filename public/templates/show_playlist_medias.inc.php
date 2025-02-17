@@ -36,7 +36,7 @@ $libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
 
 /** @var Browse $browse */
 /** @var Playlist $playlist */
-/** @var list<array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
+/** @var list<array{object_type: LibraryItemEnum|string, object_id: int, track_id: int, track: int}> $object_ids */
 /** @var bool $argument */
 
 // playlists and searches come from the same 'playlist_media' browse but you can't reorder a search
@@ -97,15 +97,17 @@ if ($browse->is_show_header()) {
             <tbody id="sortableplaylist_<?php echo $playlist_id; ?>">
             <?php foreach ($object_ids as $object) {
                 if (!is_array($object)) {
-                    $object = (array) $object;
+                    continue;
                 }
-
+                $libtype = (is_string($object['object_type']))
+                    ? LibraryItemEnum::tryFrom($object['object_type'])
+                    : $object['object_type'];
                 $libitem = $libraryItemLoader->load(
-                    $object['object_type'],
+                    $libtype,
                     $object['object_id'],
                 );
                 if ($libitem !== null) {
-                    $object_type    = $object['object_type']->value;
+                    $object_type    = $libtype?->value;
                     $playlist_track = (int)($object['track']); ?>
                     <tr id="track_<?php echo($object['track_id']); ?>">
                         <?php require Ui::find_template('show_playlist_media_row.inc.php'); ?>
