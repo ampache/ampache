@@ -177,7 +177,7 @@ class easy_captcha
      */
     public function new_id()
     {
-        return "ec." . time() . "." . md5($_SERVER["SERVER_NAME"] . self::CAPTCHA_SALT . rand(0, 1 << 30));
+        return "ec." . time() . "." . md5(($_SERVER["SERVER_NAME"] ?? (string)bin2hex(random_bytes(20))) . self::CAPTCHA_SALT . rand(0, 1 << 30));
     }
 
     // check backends for correctness of solution
