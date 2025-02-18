@@ -87,7 +87,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
 
         if (!InterfaceImplementationChecker::is_library_item($object_type) && !in_array($object_type, ['share', 'tag', 'tag_hidden'])) {
             $this->logger->warning(
-                sprintf('Type `%d` is not based on an item library.', $object_type),
+                sprintf('Type `%s` is not based on an item library.', $object_type),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
