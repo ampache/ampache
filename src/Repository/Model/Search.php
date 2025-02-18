@@ -1228,7 +1228,8 @@ class Search extends playlist_object
     public static function get_searches($user_id = null): array
     {
         if ($user_id === null) {
-            $user_id = (int)(Core::get_global('user')?->id);
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
         }
 
         $key = 'searches';
