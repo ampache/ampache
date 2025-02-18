@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 6.6.6
+## Ampache 6.6.7
 
 ### Added
 
@@ -9,6 +9,9 @@
 ### Fixed
 
 * PodcastEpisode loading errors for new files that aren't downloaded yet
+* Search
+  * Album and AlbumDisk parameter not included for `release_type`, `release_status`, `barcode` and `catalog_number` searches
+  * Song searches for favorites (e.g. `my_flagged_song`) sql error
 * webplayer
   * Not escaping bad characters correctly
 
