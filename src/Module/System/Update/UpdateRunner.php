@@ -86,6 +86,16 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+
+        if ($currentVersion >= 721001) {
+            // Migration\V7\Migration721001
+            if (
+                !Preference::delete('show_playlist_media_parent')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
         if ($currentVersion >= 720001) {
             // Migration\V7\Migration720001
             if (
