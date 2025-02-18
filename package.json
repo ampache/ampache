@@ -15,7 +15,6 @@
     "jquery.qrcode": "^1.0.3",
     "js-cookie": "^2.2.1",
     "jscroll": "^2.4.1",
-    "prettyphoto": "github:lachlan-00/prettyphoto",
     "tag-it": "^2.0.0",
     "wunderbaum": "0.8.2"
   },
