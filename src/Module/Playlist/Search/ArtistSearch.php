@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Search;
 
 final class ArtistSearch implements SearchInterface
 {
-    private $subType; // artist, album_artist, song_artist
+    private string $subType; // artist, album_artist, song_artist
 
     /**
      * constructor
@@ -49,24 +49,24 @@ final class ArtistSearch implements SearchInterface
     public function getSql(
         Search $search
     ): array {
-        $search_user_id     = $search->search_user->id ?? -1;
+        $search_user_id     = $search->search_user->getId();
         $sql_logic_operator = $search->logic_operator;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
         $album_artist       = ($this->subType == 'album_artist');
         $song_artist        = ($this->subType == 'song_artist');
 
-        $where      = array();
-        $table      = array();
-        $join       = array();
-        $group      = array();
-        $having     = array();
-        $parameters = array();
+        $where      = [];
+        $table      = [];
+        $join       = [];
+        $group      = [];
+        $having     = [];
+        $parameters = [];
         $showAlbum  = AmpConfig::get('album_group');
 
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
-            $operator = array();
+            $operator = [];
             if ($type === null) {
                 continue;
             }
@@ -86,7 +86,7 @@ final class ArtistSearch implements SearchInterface
                     } else {
                         $where[] = "(`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?)";
                     }
-                    $parameters = array_merge($parameters, array($input, $input));
+                    $parameters = array_merge($parameters, [$input, $input]);
                     break;
                 case 'placeformed':
                 case 'summary':
@@ -119,6 +119,20 @@ final class ArtistSearch implements SearchInterface
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
+                case 'genre_count_album':
+                    $where[]       = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`album` $operator_sql ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
+                    $parameters[]  = $input;
+                    $join['album'] = true;
+                    break;
+                case 'genre_count_artist':
+                    $where[]        = "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`artist` $operator_sql ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
+                    $parameters[]   = $input;
+                    break;
+                case 'genre_count_song':
+                    $where[]      = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`song` $operator_sql ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
+                    $parameters[] = $input;
+                    $join['song'] = true;
+                    break;
                 case 'no_genre':
                     $where[] = "`artist`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
                     break;
@@ -128,15 +142,15 @@ final class ArtistSearch implements SearchInterface
                     } else {
                         $where[] = "(`artist`.`id` IN (SELECT `artist_map`.`artist_id` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `playlist`.`name` $operator_sql ?) OR `artist`.`id` IN (SELECT `artist_map`.`artist_id` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`album` AND `artist_map`.`object_type` = 'album' WHERE `playlist`.`name` $operator_sql ?))";
                     }
-                    $parameters = array_merge($parameters, array($input, $input));
+                    $parameters = array_merge($parameters, [$input, $input]);
                     break;
                 case 'playlist':
                     $where[]    = "(`artist`.`id` $operator_sql IN (SELECT `artist_map`.`artist_id` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?) OR `artist`.`id` $operator_sql IN (SELECT `artist_map`.`artist_id` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?))";
-                    $parameters = array_merge($parameters, array($input, $input));
+                    $parameters = array_merge($parameters, [$input, $input]);
                     break;
                 case 'rating':
                     // average ratings only
-                    $where[]          = "`average_rating`.`avg` $operator_sql ?";
+                    $where[]          = "IFNULL(`average_rating`.`avg`, 0) $operator_sql ?";
                     $parameters[]     = $input;
                     $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='artist' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `artist`.`id` ";
                     break;
@@ -146,7 +160,7 @@ final class ArtistSearch implements SearchInterface
                     } else {
                         $where[] = "(`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?) AND `favorite_artist_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_artist_" . $search_user_id . "`.`object_type` = 'artist'";
                     }
-                    $parameters = array_merge($parameters, array($input, $input));
+                    $parameters = array_merge($parameters, [$input, $input]);
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
                         $table['favorite'] = '';
@@ -189,15 +203,8 @@ final class ArtistSearch implements SearchInterface
                         $input        = 1;
                         $operator_sql = '>=';
                     }
-                    if (($input == 0 && $operator_sql != '>') || ($input == 1 && $operator_sql == '<')) {
-                        $where[] = "`rating_" . $my_type . "_" . $search_user_id . "`.`rating` IS NULL";
-                    } elseif (in_array($operator_sql, array('<>', '<', '<=', '!='))) {
-                        $where[]      = "(`rating_" . $my_type . "_" . $search_user_id . "`.`rating` $operator_sql ? OR `rating_" . $my_type . "_" . $search_user_id . "`.`rating` IS NULL)";
-                        $parameters[] = $input;
-                    } else {
-                        $where[]      = "`rating_" . $my_type . "_" . $search_user_id . "`.`rating` $operator_sql ?";
-                        $parameters[] = $input;
-                    }
+                    $where[]      = "IFNULL(`rating_" . $my_type . "_" . $search_user_id . "`.`rating`, 0) $operator_sql ?";
+                    $parameters[] = $input;
                     // rating once per user
                     if (!array_key_exists('rating', $table)) {
                         $table['rating'] = '';
@@ -223,7 +230,7 @@ final class ArtistSearch implements SearchInterface
                     }
                     if (($input == 0 && $operator_sql != '>') || ($input == 1 && $operator_sql == '<')) {
                         $where[] = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `artist_map`.`artist_id` FROM `$looking` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `$looking`.`id` WHERE `artist_map`.`object_type` = '$looking' AND `id` NOT IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search_user_id . " AND `object_type`='$looking')))";
-                    } elseif (in_array($operator_sql, array('<>', '<', '<=', '!='))) {
+                    } elseif (in_array($operator_sql, ['<>', '<', '<=', '!='])) {
                         $where[]      = "(`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `artist_map`.`artist_id` FROM `$looking` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `$looking`.`id` WHERE `artist_map`.`object_type` = '$looking' AND `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search_user_id . " AND `object_type`='$looking' AND `rating` $operator_sql ?))) OR `artist`.`id` NOT IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search_user_id . " AND `object_type`='$looking'))))";
                         $parameters[] = $input;
                     } else {
@@ -302,6 +309,49 @@ final class ArtistSearch implements SearchInterface
                     $where[]      = "`artist`.`total_count` $operator_sql ?";
                     $parameters[] = $input;
                     break;
+                case 'skipped_times':
+                    $where[]      = "(`artist`.`total_skip` $operator_sql ?)";
+                    $parameters[] = $input;
+                    break;
+                case 'played_or_skipped_times':
+                    $where[]      = "((`artist`.`total_count` + `artist`.`total_skip`) $operator_sql ?)";
+                    $parameters[] = $input;
+                    break;
+                case 'myplayed_times':
+                    $my_type = 'artist';
+                    if (!array_key_exists('myplayed', $table)) {
+                        $table['myplayed'] = '';
+                    }
+                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, COUNT(`object_id`) AS `total` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_" . $my_type . "_" . $search_user_id . "` ON `artist`.`id` = `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_type` = '$my_type'"
+                        : "";
+                    $where[]      = "`myplayed_" . $my_type . "_" . $search_user_id . "`.`total` $operator_sql ?";
+                    $parameters[] = $input;
+                    break;
+                case 'myskipped_times':
+                    $my_type = 'artist';
+                    if (!array_key_exists('last_skip', $table)) {
+                        $table['last_skip'] = '';
+                    }
+                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, COUNT(`object_id`) AS `total` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'"
+                        : "";
+                    $where[]      = "`last_skip_" . $my_type . "_" . $search_user_id . "`.`total` $operator_sql ?";
+                    $parameters[] = $input;
+                    $join['song'] = true;
+                    break;
+                case 'myplayed_or_skipped_times':
+                    $my_type = 'artist';
+                    if (!array_key_exists('myplayed_or_skip', $table)) {
+                        $table['myplayed_or_skip'] = '';
+                    }
+                    $table['myplayed_or_skip'] .= (!strpos((string) $table['myplayed_or_skip'], "myplayed_or_skip_" . $my_type . "_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, COUNT(`object_id`) AS `total` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'"
+                        : "";
+                    $where[]      = "`myplayed_or_skip_" . $my_type . "_" . $search_user_id . "`.`total` $operator_sql ?";
+                    $parameters[] = $input;
+                    $join['song'] = true;
+                    break;
                 case 'song_count':
                     $where[]      = "`artist`.`song_count` $operator_sql ?";
                     $parameters[] = $input;
@@ -317,7 +367,7 @@ final class ArtistSearch implements SearchInterface
                     } else {
                         $where[] = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?) AND `artist_map`.`artist_id` IS NOT NULL";
                     }
-                    $parameters    = array_merge($parameters, array($input, $input));
+                    $parameters    = array_merge($parameters, [$input, $input]);
                     $join['album'] = true;
                     break;
                 case 'song':
@@ -326,7 +376,7 @@ final class ArtistSearch implements SearchInterface
                     } else {
                         $where[] = "`song`.`title` $operator_sql ?";
                     }
-                    $parameters   = array_merge($parameters, array($input));
+                    $parameters   = array_merge($parameters, [$input]);
                     $join['song'] = true;
                     break;
                 case 'other_user':
@@ -365,11 +415,11 @@ final class ArtistSearch implements SearchInterface
                     break;
                 case 'mbid':
                     if (!$input || $input == '%%' || $input == '%') {
-                        if (in_array($operator_sql, array('=', 'LIKE', 'SOUNDS LIKE'))) {
+                        if (in_array($operator_sql, ['=', 'LIKE', 'SOUNDS LIKE'])) {
                             $where[] = "`artist`.`mbid` IS NULL";
                             break;
                         }
-                        if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
+                        if (in_array($operator_sql, ['!=', 'NOT LIKE', 'NOT SOUNDS LIKE'])) {
                             $where[] = "`artist`.`mbid` IS NOT NULL";
                             break;
                         }
@@ -383,11 +433,11 @@ final class ArtistSearch implements SearchInterface
                     break;
                 case 'mbid_album':
                     if (!$input || $input == '%%' || $input == '%') {
-                        if (in_array($operator_sql, array('=', 'LIKE', 'SOUNDS LIKE'))) {
+                        if (in_array($operator_sql, ['=', 'LIKE', 'SOUNDS LIKE'])) {
                             $where[] = "`album`.`mbid` IS NULL";
                             break;
                         }
-                        if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
+                        if (in_array($operator_sql, ['!=', 'NOT LIKE', 'NOT SOUNDS LIKE'])) {
                             $where[] = "`album`.`mbid` IS NOT NULL";
                             break;
                         }
@@ -402,11 +452,11 @@ final class ArtistSearch implements SearchInterface
                     break;
                 case 'mbid_song':
                     if (!$input || $input == '%%' || $input == '%') {
-                        if (in_array($operator_sql, array('=', 'LIKE', 'SOUNDS LIKE'))) {
+                        if (in_array($operator_sql, ['=', 'LIKE', 'SOUNDS LIKE'])) {
                             $where[] = "`song`.`mbid` IS NULL";
                             break;
                         }
-                        if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
+                        if (in_array($operator_sql, ['!=', 'NOT LIKE', 'NOT SOUNDS LIKE'])) {
                             $where[] = "`song`.`mbid` IS NOT NULL";
                             break;
                         }
@@ -428,6 +478,9 @@ final class ArtistSearch implements SearchInterface
                     $where[]                     = "((`dupe_album_search1`.`dupe_album_id1` IS NOT NULL OR `dupe_album_search2`.`dupe_album_id2` IS NOT NULL))";
                     $table['dupe_album_search1'] = "LEFT JOIN (SELECT `album_artist`, MIN(`id`) AS `dupe_album_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`year`, `album`.`release_type`, `album`.`release_status` HAVING `Counting` > 1) AS `dupe_album_search1` ON `artist`.`id` = `dupe_album_search1`.`album_artist`";
                     $table['dupe_album_search2'] = "LEFT JOIN (SELECT `album_artist`, MAX(`id`) AS `dupe_album_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`year`, `album`.`release_type`, `album`.`release_status` HAVING `Counting` > 1) AS `dupe_album_search2` ON `artist`.`id` = `dupe_album_search2`.`album_artist`";
+                    break;
+                default:
+                    debug_event(self::class, 'ERROR! rule not found: ' . $rule[0], 3);
                     break;
             } // switch on ruletype artist
         } // foreach rule
@@ -457,9 +510,13 @@ final class ArtistSearch implements SearchInterface
         }
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = ($search_user_id > 0)
+                    ? "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
+                    : "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = ($search_user_id > 0)
+                    ? "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
+                    : "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         if (array_key_exists('count', $join)) {
@@ -489,7 +546,7 @@ final class ArtistSearch implements SearchInterface
         $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
 
-        return array(
+        return [
             'base' => "SELECT DISTINCT(`artist`.`id`), `artist`.`name` FROM `artist`",
             'join' => $join,
             'where' => $where,
@@ -498,7 +555,7 @@ final class ArtistSearch implements SearchInterface
             'table_sql' => $table_sql,
             'group_sql' => $group_sql,
             'having_sql' => $having_sql,
-            'parameters' => $parameters
-        );
+            'parameters' => $parameters,
+        ];
     }
 }

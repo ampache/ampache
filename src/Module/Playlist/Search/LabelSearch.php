@@ -38,19 +38,19 @@ final class LabelSearch implements SearchInterface
     public function getSql(
         Search $search
     ): array {
-        $search_user_id     = $search->search_user->id ?? -1;
+        $search_user_id     = $search->search_user->getId();
         $sql_logic_operator = $search->logic_operator;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 
-        $where      = array();
-        $table      = array();
-        $join       = array();
-        $parameters = array();
+        $where      = [];
+        $table      = [];
+        $join       = [];
+        $parameters = [];
 
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
-            $operator = array();
+            $operator = [];
             if ($type === null) {
                 continue;
             }
@@ -79,6 +79,9 @@ final class LabelSearch implements SearchInterface
                         $where[] = "`label`.`category` $operator_sql ?";
                     }
                     $parameters[] = $input;
+                    break;
+                default:
+                    debug_event(self::class, 'ERROR! rule not found: ' . $rule[0], 3);
                     break;
             } // switch on ruletype
         } // foreach rule
@@ -113,7 +116,7 @@ final class LabelSearch implements SearchInterface
         }
         $table_sql = implode(' ', $table);
 
-        return array(
+        return [
             'base' => 'SELECT DISTINCT(`label`.`id`), `label`.`name` FROM `label`',
             'join' => $join,
             'where' => $where,
@@ -122,7 +125,7 @@ final class LabelSearch implements SearchInterface
             'table_sql' => $table_sql,
             'group_sql' => '',
             'having_sql' => '',
-            'parameters' => $parameters
-        );
+            'parameters' => $parameters,
+        ];
     }
 }

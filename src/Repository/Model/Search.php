@@ -34,6 +34,7 @@ use Ampache\Module\Playlist\Search\LabelSearch;
 use Ampache\Module\Playlist\Search\PlaylistSearch;
 use Ampache\Module\Playlist\Search\PodcastEpisodeSearch;
 use Ampache\Module\Playlist\Search\PodcastSearch;
+use Ampache\Module\Playlist\Search\SearchInterface;
 use Ampache\Module\Playlist\Search\SongSearch;
 use Ampache\Module\Playlist\Search\TagSearch;
 use Ampache\Module\Playlist\Search\UserSearch;
@@ -52,17 +53,17 @@ class Search extends playlist_object
     protected const DB_TABLENAME = 'search';
 
     public const VALID_TYPES = [
-        'song',
-        'album',
-        'album_disk',
-        'song_artist',
         'album_artist',
+        'album_disk',
+        'album',
         'artist',
         'genre',
         'label',
         'playlist',
-        'podcast',
         'podcast_episode',
+        'podcast',
+        'song_artist',
+        'song',
         'tag',
         'user',
         'video',
@@ -78,19 +79,20 @@ class Search extends playlist_object
 
     public int $limit = 0;
 
-    public $objectType; // the type of object you want to return (self::VALID_TYPES)
+    public string $objectType; // the type of object you want to return (self::VALID_TYPES)
 
-    public $search_user; // user running the search
+    public User $search_user; // user running the search
 
     public $types = []; // rules that are available to the objectType (title, year, rating, etc)
 
     public $basetypes = []; // rule operator subtypes (numeric, text, boolean, etc)
 
-    private $searchType;
+    private SearchInterface $searchType;
 
-    private $stars; // generate sql for the object type (Ampache\Module\Playlist\Search\*)
+    /** @var string[] $stars */
+    private array $stars; // generate sql for the object type (Ampache\Module\Playlist\Search\*)
 
-    private $order_by;
+    private string $order_by;
 
     /**
      * constructor
@@ -103,10 +105,9 @@ class Search extends playlist_object
         $object_type = 'song',
         ?User $user = null
     ) {
-        $this->search_user = $user;
-        if (!$this->search_user instanceof User) {
-            $this->search_user = User::get_from_global() ?? new User(-1);
-        }
+        $this->search_user = ($user instanceof User)
+            ? $user
+            : User::get_from_global() ?? new User(-1);
 
         $this->objectType = (in_array(strtolower($object_type), self::VALID_TYPES))
             ? strtolower($object_type)
@@ -244,7 +245,7 @@ class Search extends playlist_object
         $this->basetypes['numeric'][] = [
             'name' => 'lte',
             'description' => T_('is less than or equal to'),
-            'sql' => '<='
+            'sql' => '<=',
         ];
 
         $this->basetypes['numeric'][] = [
@@ -634,6 +635,8 @@ class Search extends playlist_object
     {
         $this->_add_type_text('anywhere', T_('Any searchable text'));
 
+        $this->_add_type_boolean('none', T_('None'), 'is_true');
+
         $t_song_data = T_('Song Data');
         $this->_add_type_text('title', T_('Title'), $t_song_data);
         $this->_add_type_text('album', T_('Album'), $t_song_data);
@@ -681,6 +684,12 @@ class Search extends playlist_object
         $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         $this->_add_type_boolean('myplayedalbum', T_('Played by Me (Album)'), 'boolean', $t_play_data);
         $this->_add_type_boolean('myplayedartist', T_('Played by Me (Artist)'), 'boolean', $t_play_data);
+        /* HINT: Number of times object has been played */
+        $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been skipped */
+        $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been played OR skipped */
+        $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
         $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
@@ -688,6 +697,9 @@ class Search extends playlist_object
         $this->_add_type_text('album_genre', T_('Album Genre'), $t_genre);
         $this->_add_type_text('artist_genre', T_('Artist Genre'), $t_genre);
         $this->_add_type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
+        $this->_add_type_numeric('genre_count_song', T_('Song Count'), 'numeric', $t_genre);
+        $this->_add_type_numeric('genre_count_album', T_('Album Count'), 'numeric', $t_genre);
+        $this->_add_type_numeric('genre_count_artist', T_('Artist Count'), 'numeric', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($this->user);
@@ -730,6 +742,7 @@ class Search extends playlist_object
                 $this->getLicenseRepository()->getList()
             );
             $this->_add_type_select('license', T_('Music License'), 'boolean_numeric', $licenses, $t_file_data);
+            $this->_add_type_boolean('no_license', T_('No Music License'), 'is_true', $t_file_data);
         }
 
         $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
@@ -812,17 +825,30 @@ class Search extends playlist_object
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
         $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been skipped */
+        $this->_add_type_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been played OR skipped */
+        $this->_add_type_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
         $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
         $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
         $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
         $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
         $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
+        /* HINT: Number of times object has been played */
+        $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been skipped */
+        $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been played OR skipped */
+        $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
         $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
         $this->_add_type_text('genre', $t_genre, $t_genre);
         $this->_add_type_text('song_genre', T_('Song Genre'), $t_genre);
         $this->_add_type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
+        $this->_add_type_numeric('genre_count_song', T_('Song Count'), 'numeric', $t_genre);
+        $this->_add_type_numeric('genre_count_album', T_('Album Count'), 'numeric', $t_genre);
+        $this->_add_type_numeric('genre_count_artist', T_('Artist Count'), 'numeric', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($this->user);
@@ -879,6 +905,7 @@ class Search extends playlist_object
         $this->_add_type_text('version', T_('Release Comment'), $t_album_data);
         $this->_add_type_text('barcode', T_('Barcode'), $t_album_data);
         $this->_add_type_text('catalog_number', T_('Catalog Number'), $t_album_data);
+        $this->_add_type_numeric('disk_count', T_('Disk Count'), 'numeric', $t_album_data);
         $this->_add_type_numeric('song_count', T_('Song Count'), 'numeric', $t_album_data);
 
         $t_ratings = T_('Ratings');
@@ -895,18 +922,31 @@ class Search extends playlist_object
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
         $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been skipped */
+        $this->_add_type_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been played OR skipped */
+        $this->_add_type_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
         $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
         $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
         $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
         $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
         $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         $this->_add_type_boolean('myplayedartist', T_('Played by Me (Artist)'), 'boolean', $t_play_data);
+        /* HINT: Number of times object has been played */
+        $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been skipped */
+        $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been played OR skipped */
+        $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
         $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
         $this->_add_type_text('genre', $t_genre, $t_genre);
         $this->_add_type_text('song_genre', T_('Song Genre'), $t_genre);
         $this->_add_type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
+        $this->_add_type_numeric('genre_count_song', T_('Song Count'), 'numeric', $t_genre);
+        $this->_add_type_numeric('genre_count_album', T_('Album Count'), 'numeric', $t_genre);
+        $this->_add_type_numeric('genre_count_artist', T_('Artist Count'), 'numeric', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($this->user);
@@ -971,7 +1011,7 @@ class Search extends playlist_object
         $this->_add_type_text('title', T_('Name'), $t_playlist);
         $playlist_types = [
             0 => T_('public'),
-            1 => T_('private')
+            1 => T_('private'),
         ];
         $this->_add_type_select('type', T_('Type'), 'boolean_numeric', $playlist_types, $t_playlist);
         $users = $this->getUserRepository()->getValidArray();
@@ -994,7 +1034,7 @@ class Search extends playlist_object
         $episode_states = [
             0 => T_('skipped'),
             1 => T_('pending'),
-            2 => T_('completed')
+            2 => T_('completed'),
         ];
         $this->_add_type_select('state', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
@@ -1011,6 +1051,12 @@ class Search extends playlist_object
         $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
         $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
         $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
+        /* HINT: Number of times object has been played */
+        $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been skipped */
+        $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been played OR skipped */
+        $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
         $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_file_data = T_('File Data');
@@ -1032,7 +1078,7 @@ class Search extends playlist_object
         $episode_states = [
             0 => T_('skipped'),
             1 => T_('pending'),
-            2 => T_('completed')
+            2 => T_('completed'),
         ];
         $this->_add_type_select('state', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
@@ -1049,6 +1095,12 @@ class Search extends playlist_object
         $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
         $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
         $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
+        /* HINT: Number of times object has been played */
+        $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been skipped */
+        $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been played OR skipped */
+        $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
         $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_file_data = T_('File Data');
@@ -1087,6 +1139,12 @@ class Search extends playlist_object
     private function _set_types_tag(): void
     {
         $this->_add_type_text('title', T_('Genre'));
+        $this->_add_type_numeric('album_count', T_('Album Count'), 'numeric');
+        $this->_add_type_numeric('artist_count', T_('Album Count'), 'numeric');
+        $this->_add_type_numeric('song_count', T_('Song Count'), 'numeric');
+        if (AmpConfig::get('video')) {
+            $this->_add_type_numeric('video_count', T_('Video Count'), 'numeric');
+        }
     }
 
     /**
@@ -1108,16 +1166,11 @@ class Search extends playlist_object
         }
 
         // Figure out if they want an AND based search or an OR based search
-        $operator = $data['operator'] ?? '';
-        switch (strtolower($operator)) {
-            case 'or':
-                $request['operator'] = 'OR';
-                break;
-            case 'and':
-            default:
-                $request['operator'] = 'AND';
-                break;
-        }
+        $operator            = $data['operator'] ?? '';
+        $request['operator'] = match (strtolower((string) $operator)) {
+            'or' => 'OR',
+            default => 'AND',
+        };
         if (array_key_exists('limit', $data)) {
             $request['limit'] = $data['limit'];
         }
@@ -1134,16 +1187,16 @@ class Search extends playlist_object
         $search_type = strtolower($data['type'] ?? '');
         //Search::VALID_TYPES = array('song', 'album', 'album_disk', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video')
         switch ($search_type) {
-            case 'song':
-            case 'album':
-            case 'album_disk':
-            case 'song_artist':
             case 'album_artist':
+            case 'album_disk':
+            case 'album':
             case 'artist':
             case 'label':
             case 'playlist':
-            case 'podcast':
             case 'podcast_episode':
+            case 'podcast':
+            case 'song_artist':
+            case 'song':
             case 'tag':  // for Genres
             case 'user':
             case 'video':
@@ -1170,8 +1223,7 @@ class Search extends playlist_object
     public static function get_searches($user_id = null): array
     {
         if ($user_id === null) {
-            $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
+            $user_id = (int)(Core::get_global('user')?->id);
         }
 
         $key = 'searches';
@@ -1209,9 +1261,8 @@ class Search extends playlist_object
      */
     public static function get_search_array($user_id = null): array
     {
-        if ($user_id === 0) {
-            $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
+        if ($user_id === null) {
+            $user_id = (int)(Core::get_global('user')?->id);
         }
 
         $key = 'searcharray';
@@ -1302,7 +1353,7 @@ class Search extends playlist_object
 
         return [
             'sql' => $sql,
-            'parameters' => $search_info['parameters']
+            'parameters' => $search_info['parameters'],
         ];
     }
 
@@ -1346,7 +1397,7 @@ class Search extends playlist_object
 
         return [
             'results' => $results,
-            'count' => $num_rows
+            'count' => $num_rows,
         ];
     }
 
@@ -1366,7 +1417,6 @@ class Search extends playlist_object
 
     /**
      * format
-     * Gussy up the data
      *
      * @param bool $details
      */
@@ -1463,7 +1513,7 @@ class Search extends playlist_object
 
         return [
             'sql' => $sql,
-            'parameters' => $sqltbl['parameters']
+            'parameters' => $sqltbl['parameters'],
         ];
     }
 
@@ -1486,9 +1536,8 @@ class Search extends playlist_object
      *
      * Returns a randomly sorted array (with an optional limit) of the items
      * output by our search (part of the playlist interface)
-     * @param string|null $limit
      */
-    public function get_random_items($limit = ''): array
+    public function get_random_items(?string $limit = ''): array
     {
         $results = [];
         $sqltbl  = $this->to_sql();
@@ -1627,6 +1676,9 @@ class Search extends playlist_object
                     case 'song_genre':
                         $name = 'genre';
                         break;
+                    case 'genre_count':
+                        $name = 'genre_count_song';
+                        break;
                     case 'album_tag':
                         $name = 'album_genre';
                         break;
@@ -1666,6 +1718,9 @@ class Search extends playlist_object
                     case 'song_tag':
                         $name = 'song_genre';
                         break;
+                    case 'genre_count':
+                        $name = 'genre_count_album';
+                        break;
                     case 'no_tag':
                         $name = 'no_genre';
                         break;
@@ -1702,6 +1757,9 @@ class Search extends playlist_object
                         break;
                     case 'song_tag':
                         $name = 'song_genre';
+                        break;
+                    case 'genre_count':
+                        $name = 'genre_count_artist';
                         break;
                     case 'no_tag':
                         $name = 'no_genre';
@@ -1913,7 +1971,7 @@ class Search extends playlist_object
      */
     public function update(array $data = null): int
     {
-        if ($data && is_array($data)) {
+        if ($data !== null) {
             $this->name   = $data['name'] ?? $this->name;
             $this->type   = $data['pl_type'] ?? $this->type;
             $this->user   = $data['pl_user'] ?? $this->user;
