@@ -5,13 +5,27 @@
 ### Added
 
 * Database downgrades up to Ampache 7.3.0
+* Search
+  * Debug warnings on searches with no rules
+  * Add `waveform` to song search. (Must not enable `album_art_store_disk` to return data)
+  * Add `album_count`, `artist_count`, `song_count` and `video_count` to Genre search
+  * Add `disk_count` to Album & AlbumDisk search types
+  * Add `no_license` to Song search
+  * Add `skipped_times` and `played_or_skipped_times` to Album, AlbumDisk and Artist searches
+  * Add `myplayed_times` to Album, AlbumDisk, Artist, PodcastEpisode, Podcast and Song searches
+  * Add `myskipped_times` to Album, AlbumDisk, Artist, PodcastEpisode, Podcast and Song searches
+  * Add `myplayed_or_skipped_times` to Album, AlbumDisk, Artist, PodcastEpisode, Podcast and Song searches
+  * Add `none` to Song search (Empty rule/no filter)
+  * Add `genre_count_song`, `genre_count_album` and `genre_count_artist` to Song search
+  * Add `genre_count_song`, `genre_count_album` and `genre_count_artist` to Album search
+  * Add `genre_count_song`, `genre_count_album` and `genre_count_artist` to AlbumDisk search
+  * Add `genre_count_song`, `genre_count_album` and `genre_count_artist` to Artist search
 
 ### Fixed
 
 * PodcastEpisode loading errors for new files that aren't downloaded yet
 * Search
   * Album and AlbumDisk parameter not included for `release_type`, `release_status`, `barcode` and `catalog_number` searches
-  * Song searches for favorites (e.g. `my_flagged_song`) sql error
 * webplayer
   * Not escaping bad characters correctly
 
