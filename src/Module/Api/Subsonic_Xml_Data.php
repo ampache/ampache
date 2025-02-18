@@ -1410,7 +1410,7 @@ class Subsonic_Xml_Data
             $xepisode->addAttribute('streamId', $sub_id);
             $xepisode->addAttribute('size', (string)$episode->size);
             $xepisode->addAttribute('suffix', (string)$episode->type);
-            $xepisode->addAttribute('contentType', (string)($episode->mime));
+            $xepisode->addAttribute('contentType', (string)$episode->mime);
             // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
             $path = basename($episode->file);
             $xepisode->addAttribute('path', (string)$path);
