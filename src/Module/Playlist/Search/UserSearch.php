@@ -39,14 +39,14 @@ final class UserSearch implements SearchInterface
     ): array {
         $sql_logic_operator = $search->logic_operator;
 
-        $where      = array();
-        $table      = array();
-        $join       = array();
-        $parameters = array();
+        $where      = [];
+        $table      = [];
+        $join       = [];
+        $parameters = [];
 
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
-            $operator = array();
+            $operator = [];
             if ($type === null) {
                 continue;
             }
@@ -68,13 +68,16 @@ final class UserSearch implements SearchInterface
                     }
                     $parameters[] = $input;
                     break;
+                default:
+                    debug_event(self::class, 'ERROR! rule not found: ' . $rule[0], 3);
+                    break;
             } // switch on ruletype
         } // foreach rule
 
         $where_sql = implode(" $sql_logic_operator ", $where);
         ksort($table);
 
-        return array(
+        return [
             'base' => 'SELECT DISTINCT(`user`.`id`), `user`.`username` FROM `user`',
             'join' => $join,
             'where' => $where,
@@ -83,7 +86,7 @@ final class UserSearch implements SearchInterface
             'table_sql' => '',
             'group_sql' => '',
             'having_sql' => '',
-            'parameters' => $parameters
-        );
+            'parameters' => $parameters,
+        ];
     }
 }

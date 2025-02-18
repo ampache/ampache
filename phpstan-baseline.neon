@@ -8031,17 +8031,7 @@ parameters:
 			path: src/Module/Playback/WebPlayer.php
 
 		-
-			message: "#^Call to function array_key_exists\\(\\) with 'count' and array\\{album_map\\?\\: true, image\\?\\: true, song\\: bool, catalog\\: bool, catalog_map\\: mixed\\} will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/AlbumDiskSearch.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\AlbumDiskSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/AlbumDiskSearch.php
-
-		-
-			message: "#^Ternary operator condition is always true\\.$#"
 			count: 1
 			path: src/Module/Playlist/Search/AlbumDiskSearch.php
 
@@ -8056,22 +8046,12 @@ parameters:
 			path: src/Module/Playlist/Search/AlbumSearch.php
 
 		-
-			message: "#^Ternary operator condition is always true\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/AlbumSearch.php
-
-		-
 			message: "#^Call to function array_key_exists\\(\\) with 'count' and array\\{album\\?\\: true, catalog\\: bool, image\\?\\: true, song\\?\\: true, catalog_map\\: mixed\\} will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Playlist/Search/ArtistSearch.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\ArtistSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/ArtistSearch.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Playlist\\\\Search\\\\ArtistSearch\\:\\:\\$subType has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playlist/Search/ArtistSearch.php
 
@@ -12901,11 +12881,6 @@ parameters:
 			path: src/Repository/Model/Podcast_Episode.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$mime has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$type has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
@@ -13146,32 +13121,7 @@ parameters:
 			path: src/Repository/Model/Search.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$objectType has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$order_by has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$rules has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$searchType has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$search_user has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$stars has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
