@@ -4,6 +4,18 @@
 
 ### Added
 
+* Database downgrades up to Ampache 7.3.0
+
+### Fixed
+
+* PodcastEpisode loading errors for new files that aren't downloaded yet
+* webplayer
+  * Not escaping bad characters correctly
+
+## Ampache 6.6.6
+
+### Added
+
 * Database downgrades up to Ampache 7.2.0
 
 ### Fixed
