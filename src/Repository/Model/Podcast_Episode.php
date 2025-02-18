@@ -74,7 +74,9 @@ class Podcast_Episode extends database_object implements
     public ?string $waveform;
 
     public $type;
-    public $mime;
+
+    public ?string $mime = null;
+
     public $f_name;
     public $f_time;
     public $f_time_h;
@@ -590,7 +592,7 @@ class Podcast_Episode extends database_object implements
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
     {
-        if ($this->isNew()) {
+        if ($this->isNew() || !isset($this->type)) {
             return '';
         }
         if (!$uid) {
@@ -658,7 +660,9 @@ class Podcast_Episode extends database_object implements
      */
     public function getFileName(): string
     {
-        return sprintf('%s - %s.%s', $this->getPodcastName(), $this->get_fullname(), $this->type);
+        return (isset($this->type))
+            ? sprintf('%s - %s.%s', $this->getPodcastName(), $this->get_fullname(), $this->type)
+            : '';
     }
 
     /**

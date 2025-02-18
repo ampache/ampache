@@ -39,14 +39,14 @@ final class TagSearch implements SearchInterface
     ): array {
         $sql_logic_operator = $search->logic_operator;
 
-        $where      = array();
-        $table      = array();
-        $join       = array();
-        $parameters = array();
+        $where      = [];
+        $table      = [];
+        $join       = [];
+        $parameters = [];
 
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
-            $operator = array();
+            $operator = [];
             if ($type === null) {
                 continue;
             }
@@ -76,12 +76,31 @@ final class TagSearch implements SearchInterface
                     }
                     $parameters[] = $input;
                     break;
+                case 'artist_count':
+                    $where[]      = "`tag`.`artist` $operator_sql ?";
+                    $parameters[] = $input;
+                    break;
+                case 'album_count':
+                    $where[]      = "`tag`.`album` $operator_sql ?";
+                    $parameters[] = $input;
+                    break;
+                case 'song_count':
+                    $where[]      = "`tag`.`song` $operator_sql ?";
+                    $parameters[] = $input;
+                    break;
+                case 'video_count':
+                    $where[]      = "`tag`.`video` $operator_sql ?";
+                    $parameters[] = $input;
+                    break;
+                default:
+                    debug_event(self::class, 'ERROR! rule not found: ' . $rule[0], 3);
+                    break;
             } // switch on ruletype
         } // foreach rule
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
-        return array(
+        return [
             'base' => 'SELECT DISTINCT(`tag`.`id`) FROM `tag`',
             'join' => $join,
             'where' => $where,
@@ -90,7 +109,7 @@ final class TagSearch implements SearchInterface
             'table_sql' => '',
             'group_sql' => '',
             'having_sql' => '',
-            'parameters' => $parameters
-        );
+            'parameters' => $parameters,
+        ];
     }
 }
