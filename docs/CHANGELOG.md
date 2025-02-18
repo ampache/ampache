@@ -26,6 +26,8 @@
 * PodcastEpisode loading errors for new files that aren't downloaded yet
 * Search
   * Album and AlbumDisk parameter not included for `release_type`, `release_status`, `barcode` and `catalog_number` searches
+  * Average `rating` searches for null values
+  * Ratings for AlbumDisk objects not searched
 * webplayer
   * Not escaping bad characters correctly
 
