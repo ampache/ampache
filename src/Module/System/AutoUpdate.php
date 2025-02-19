@@ -447,12 +447,12 @@ class AutoUpdate
         );
 
         $cmdNpm = sprintf(
-            '%s install',
+            '%s install --loglevel info 2>&1',
             $config->getNpmBinaryPath()
         );
 
         $cmdNpmBuild = sprintf(
-            '%s run build',
+            '%s run build --loglevel info 2>&1',
             $config->getNpmBinaryPath()
         );
 
@@ -464,9 +464,9 @@ class AutoUpdate
 
         ob_flush();
         chdir(__DIR__ . '/../../../');
-        exec($cmdComposer);
-        exec($cmdNpm);
-        exec($cmdNpmBuild);
+        echo(exec($cmdComposer) . '<br />');
+        echo(exec('export PATH=$PATH:./node_modules/.bin/ &&' . $cmdNpm) . '<br />');
+        echo(exec('export PATH=$PATH:./node_modules/.bin/ &&' . $cmdNpmBuild) . '<br />');
         if (!$api) {
             echo T_('Done') . '<br />';
         }
