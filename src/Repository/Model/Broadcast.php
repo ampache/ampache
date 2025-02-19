@@ -402,7 +402,7 @@ class Broadcast extends database_object implements library_item
         $link = "<div class=\"broadcast-action\">";
         $link .= Ajax::button(
             '?page=player&action=unbroadcast&broadcast_id=' . $broadcast_id,
-            'broadcast',
+            'cell_tower',
             T_('Unbroadcast'),
             'broadcast_action'
         );
