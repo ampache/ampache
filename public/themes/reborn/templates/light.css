@@ -94,6 +94,7 @@ input[type=submit]:focus:active {
 .sharedialogstyle.ui-dialog .ui-dialog-content,
 .playlistdialogstyle.ui-widget-content a,
 .editdialogstyle.ui-dialog.ui-widget-content a,
+.broadcastsdialogstyle.ui-dialog .ui-dialog-content,
 .broadcastsdialogstyle.ui-widget-content a,
 .sharedialogstyle.ui-widget-content a {
     background-color: #f8f8f8;
