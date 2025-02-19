@@ -447,12 +447,12 @@ class AutoUpdate
         );
 
         $cmdNpm = sprintf(
-            '%s install --loglevel info 2>&1',
+            '%s install',
             $config->getNpmBinaryPath()
         );
 
         $cmdNpmBuild = sprintf(
-            '%s run build --loglevel info 2>&1',
+            '%s run build',
             $config->getNpmBinaryPath()
         );
 
@@ -462,11 +462,17 @@ class AutoUpdate
             echo T_('Updating npm build with `' . $cmdNpmBuild . '` ...') . '<br />';
         }
 
+        // set NPM paths to allow AutoUpdate to work with the webserver
+        if ((strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')) {
+            $cmdNpm      = 'export PATH=$PATH:./node_modules/.bin/ &&' . $cmdNpm . ' --loglevel info 2>&1';
+            $cmdNpmBuild = 'export PATH=$PATH:./node_modules/.bin/ &&' . $cmdNpmBuild . ' --loglevel info 2>&1';
+        }
+
         ob_flush();
         chdir(__DIR__ . '/../../../');
         echo(exec($cmdComposer) . '<br />');
-        echo(exec('export PATH=$PATH:./node_modules/.bin/ &&' . $cmdNpm) . '<br />');
-        echo(exec('export PATH=$PATH:./node_modules/.bin/ &&' . $cmdNpmBuild) . '<br />');
+        echo(exec($cmdNpm) . '<br />');
+        echo(exec($cmdNpmBuild) . '<br />');
         if (!$api) {
             echo T_('Done') . '<br />';
         }
