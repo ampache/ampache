@@ -34,8 +34,7 @@ if ($iframed || $isShare) { ?>
 <?php } else { ?>
     <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black.css', true); ?>" type="text/css">
 <?php } ?>
-<?php if (!$iframed) {
-    require_once Ui::find_template('stylesheets.inc.php'); ?>
+<?php if (!$iframed) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jquery-editdialog.css', true); ?>" type="text/css" media="screen">
     <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen">
     <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
@@ -50,7 +49,7 @@ if ($iframed || $isShare) { ?>
             // Stub
         }
     </script>
-    <?php
+    <?php  require_once Ui::find_template('stylesheets.inc.php');
 } ?>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/UberViz/style.css" type="text/css">
 <?php if (AmpConfig::get('webplayer_aurora')) { ?>
