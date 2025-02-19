@@ -545,25 +545,25 @@ if ($isVideo === false) {
                                 <a href="javascript:ShowEqualizer();"><?php echo Ui::get_material_symbol('equalizer', addslashes(T_('Equalizer'))); ?></a>
                             </div>
                         <?php } ?>
-                    <?php } ?>
-                    <?php if (AmpConfig::get('broadcast') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
-                        <div id="broadcast" class="broadcast action_button">
-                            <?php if (AmpConfig::get('broadcast_by_default')) {
-                                $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')?->getId() ?? 0);
-                                if (count($broadcasts) < 1) {
-                                    $broadcast_id = Broadcast::create(addslashes(T_('My Broadcast')));
-                                } else {
-                                    $broadcast_id = $broadcasts[0];
-                                }
+                        <?php if (AmpConfig::get('broadcast') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+                            <div id="broadcast" class="broadcast action_button">
+                                <?php if (AmpConfig::get('broadcast_by_default')) {
+                                    $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')?->getId() ?? 0);
+                                    if (count($broadcasts) < 1) {
+                                        $broadcast_id = Broadcast::create(addslashes(T_('My Broadcast')));
+                                    } else {
+                                        $broadcast_id = $broadcasts[0];
+                                    }
 
-                                $broadcast = new Broadcast((int) $broadcast_id);
-                                $key       = Broadcast::generate_key();
-                                $broadcast->update_state(true, $key);
-                                echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
-                            } else {
-                                echo Broadcast::get_broadcast_link();
-                            } ?>
-                        </div>
+                                    $broadcast = new Broadcast((int) $broadcast_id);
+                                    $key       = Broadcast::generate_key();
+                                    $broadcast->update_state(true, $key);
+                                    echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
+                                } else {
+                                    echo Broadcast::get_broadcast_link();
+                                } ?>
+                            </div>
+                        <?php } ?>
                     <?php } ?>
                 </div>
             <?php } ?>
