@@ -478,5 +478,7 @@ class AutoUpdate
         }
 
         ob_flush();
+
+        sleep(5);
     }
 }
