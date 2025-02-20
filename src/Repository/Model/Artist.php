@@ -598,11 +598,14 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      */
     public static function check($name, $mbid = '', $readonly = false): ?int
     {
-        $full_name = $name;
-        $trimmed   = Catalog::trim_prefix(trim((string)$name));
-        $name      = $trimmed['string'];
-        $prefix    = $trimmed['prefix'];
-        $trimmed   = Catalog::trim_featuring($name);
+        $split_artist = AmpConfig::get('split_artist_regex', false);
+        $full_name    = ($split_artist && preg_match('/[^ ]' . $split_artist . '[^ ]/', $name))
+            ? explode($split_artist, $name)[0]
+            : $name;
+        $trimmed = Catalog::trim_prefix(trim((string)$name));
+        $name    = $trimmed['string'];
+        $prefix  = $trimmed['prefix'];
+        $trimmed = Catalog::trim_featuring($name);
         if ($name !== $trimmed[0]) {
             debug_event(self::class, "check artist: cut {" . $name . "} to {" . $trimmed[0] . "}", 4);
         }
@@ -808,6 +811,10 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      */
     public static function update_name_from_mbid(string $new_name, string $mbid): array
     {
+        $split_artist = AmpConfig::get('split_artist_regex', false);
+        $new_name     = ($split_artist && preg_match('/[^ ]' . $split_artist . '[^ ]/', $new_name))
+            ? explode($split_artist, $new_name)[0]
+            : $new_name;
         $trimmed = Catalog::trim_prefix(trim((string)$new_name));
         $name    = $trimmed['string'];
         $prefix  = $trimmed['prefix'];
