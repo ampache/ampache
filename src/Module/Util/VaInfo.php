@@ -1441,6 +1441,7 @@ final class VaInfo implements VaInfoInterface
                     case 'artists':
                         $parsed['artists'] = $this->parseArtists($id3v2['comments']['text'][$txxx['description']]);
                         break;
+                    case 'albumartist':
                     case 'album artist':
                         $parsed['albumartist'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
@@ -1635,6 +1636,9 @@ final class VaInfo implements VaInfoInterface
                 case 'isrc':
                     $parsed['isrc'] = $data[0];
                     break;
+                case '©art':
+                    $parsed['artist'] = $data[0];
+                    break;
                 case 'album_artist':
                     $parsed['albumartist'] = $data[0];
                     break;
@@ -1750,6 +1754,9 @@ final class VaInfo implements VaInfoInterface
                 switch (strtolower($this->trimAscii($wmaTag['name']))) {
                     case 'wm/artists':
                         $parsed['artists'] = $this->parseArtists($value);
+                        break;
+                    case 'author':
+                        $parsed['artist'] = $value;
                         break;
                     case 'wm/albumartist':
                         $parsed['albumartist'] = $value;
@@ -1966,7 +1973,7 @@ final class VaInfo implements VaInfoInterface
             $result = explode(';', str_replace("\x00", ';', $data));
         }
 
-        return $result;
+        return $result ?? [];
     }
 
     /**
