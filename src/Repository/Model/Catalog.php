@@ -2550,9 +2550,7 @@ abstract class Catalog extends database_object
 
         // info for the song_data table. used in Song::update_song
         $new_song->comment = $results['comment'];
-        $new_song->lyrics  = (!empty($results['lyrics']))
-            ? nl2br(strip_tags($results['lyrics']))
-            : null;
+        $new_song->lyrics  = $results['lyrics'];
         if (isset($results['license'])) {
             $licenseRepository = self::getLicenseRepository();
             $licenseName       = (string) $results['license'];
