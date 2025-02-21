@@ -649,7 +649,7 @@ final class VaInfo implements VaInfoInterface
 
             $info['language'] = (!$info['language'] && array_key_exists('language', $tags)) ? trim((string)$tags['language']) : $info['language'];
             $info['comment']  = (!$info['comment'] && array_key_exists('comment', $tags)) ? trim((string)$tags['comment']) : $info['comment'];
-            $info['lyrics']   = (!$info['lyrics'] && array_key_exists('lyrics', $tags) && is_string($tags['lyrics'])) ? str_replace(["\r\n", "\r", "\n"], '<br />', strip_tags($tags['lyrics'])) : $info['lyrics'];
+            $info['lyrics']   = (!$info['lyrics'] && array_key_exists('lyrics', $tags) && is_string($tags['lyrics'])) ? nl2br(strip_tags($tags['lyrics'])) : $info['lyrics'];
 
             // extended checks to make sure "0" makes it through, which would otherwise eval to false
             $info['replaygain_track_gain'] = (!$info['replaygain_track_gain'] && array_key_exists('replaygain_track_gain', $tags) && !is_null($tags['replaygain_track_gain'])) ? (float) $tags['replaygain_track_gain'] : $info['replaygain_track_gain'];
