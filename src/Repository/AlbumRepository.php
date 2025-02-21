@@ -221,6 +221,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      */
     public function collectGarbage(): void
     {
+        debug_event(self::class, 'collectGarbage', 5);
         // delete old mappings or bad ones
         $this->connection->query('DELETE FROM `album_map` WHERE `object_type` = \'album\' AND `album_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL)');
         $this->connection->query('DELETE FROM `album_map` WHERE `object_id` NOT IN (SELECT `id` FROM `artist`)');

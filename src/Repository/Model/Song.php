@@ -441,6 +441,7 @@ class Song extends database_object implements
      */
     public static function garbage_collection(): void
     {
+        debug_event(self::class, 'collectGarbage', 5);
         // delete files matching catalog_ignore_pattern
         $ignore_pattern = AmpConfig::get('catalog_ignore_pattern');
         if ($ignore_pattern) {

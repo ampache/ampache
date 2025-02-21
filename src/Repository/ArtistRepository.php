@@ -81,6 +81,7 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
      */
     public function collectGarbage(): void
     {
+        debug_event(self::class, 'collectGarbage', 5);
         $this->connection->query('DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = \'album\' AND `artist_map`.`object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);');
         $this->connection->query('DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = \'album\' AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `album`);');
         $this->connection->query('DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = \'song\' AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `song`);');
