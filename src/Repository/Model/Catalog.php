@@ -2423,15 +2423,6 @@ abstract class Catalog extends database_object
         }
 
         if ($type !== 'song') {
-            // check counts
-            if ($album || $maps) {
-                Album::update_table_counts();
-            }
-
-            if ($artist || $maps) {
-                Artist::update_table_counts();
-            }
-
             // collect the garbage too
             if ($album || $artist || $maps) {
                 self::getArtistRepository()->collectGarbage();
