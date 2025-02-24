@@ -1129,6 +1129,9 @@ function canEditArtist(
     }
 
     global $dic;
+    if (!$dic) {
+        return false;
+    }
 
     return $dic->get(PrivilegeCheckerInterface::class)->check(
         AccessTypeEnum::INTERFACE,
