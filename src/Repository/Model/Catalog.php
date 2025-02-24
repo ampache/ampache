@@ -3994,7 +3994,8 @@ abstract class Catalog extends database_object
                 // Intentional break fall-through
             case 'add_to_catalog':
             case 'import_to_catalog':
-                $catalog_media_types = [];
+                $options['gather_art'] = true;
+                $catalog_media_types   = [];
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
