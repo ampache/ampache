@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 78
+config_version = 79
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -388,6 +388,12 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; speed things up by checking modification date using filemtime() before loading
 ; DEFAULT: "false"
 ;catalog_verify_by_time = "true"
+
+; Catalog verify by album groups
+; Ampache will verify songs individually by default. If you enable this setting
+; We will update each album instead of just hte individual songs.
+; DEFAULT: "false"
+;catalog_verify_by_album = "true"
 
 ;#########################################################
 ; Program Settings                                       #
