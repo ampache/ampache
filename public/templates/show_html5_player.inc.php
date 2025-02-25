@@ -517,24 +517,24 @@ if ($isVideo === false) {
             <?php if ($isShare === false && !$environment->isMobile()) { ?>
                 <div class="player_actions">
                     <?php if ($iframed && ($isRadio === false && $isRandom === false && $isDemocratic === false)) { ?>
-                        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                             <div class="action_button">
+                        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                                 <a href="javascript:SaveToExistingPlaylist(event);">
                                     <?php echo Ui::get_material_symbol('playlist_add', addslashes(T_('Add All to playlist'))); ?>
                                 </a>
+                        <?php } ?>
                             </div>
-                        <?php } ?>
-                        <?php if ($canSlideshow) { ?>
-                        <div id="slideshow" class="slideshow action_button">
-                            <a href="javascript:SwapSlideshow();"><?php echo Ui::get_material_symbol('slideshow', addslashes(T_('Slideshow'))); ?></a>
-                        </div>
-                        <?php } ?>
-                        <div id="expandplaylistbtn" class="action_button">
-                            <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_material_symbol('expand_all', addslashes(T_('Expand/Collapse playlist'))); ?></a>
-                        </div>
                         <div id="playlistloopbtn" class="action_button">
                             <a href="javascript:TogglePlaylistLoop();"><?php echo Ui::get_material_symbol('laps', addslashes(T_('Loop Playlist'))); ?></a>
                         </div>
+                        <div id="expandplaylistbtn" class="action_button">
+                            <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_material_symbol('expand_all', addslashes(T_('Expand/Collapse playlist'))); ?></a>
+                        </div>
+                        <?php if ($canSlideshow) { ?>
+                            <div id="slideshow" class="slideshow action_button">
+                                <a href="javascript:SwapSlideshow();"><?php echo Ui::get_material_symbol('slideshow', addslashes(T_('Slideshow'))); ?></a>
+                            </div>
+                        <?php } ?>
                         <?php if (AmpConfig::get('broadcast') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                             <div id="broadcast" class="broadcast action_button">
                                 <?php if (AmpConfig::get('broadcast_by_default')) {
