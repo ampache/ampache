@@ -708,7 +708,7 @@ class Catalog_local extends Catalog
                 continue;
             }
 
-            if (self::update_single_item($tableName, $row['id'], true)['change']) {
+            if (self::update_single_item($tableName, $row['id'], true, true)['change']) {
                 $changed++;
             }
         }

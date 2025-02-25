@@ -2303,8 +2303,9 @@ abstract class Catalog extends database_object
      * @param string $type
      * @param int $object_id
      * @param bool $api
+     * @param bool $multi_object
      */
-    public static function update_single_item($type, $object_id, $api = false): array
+    public static function update_single_item($type, $object_id, $api = false, $multi_object = false): array
     {
         // Because single items are large numbers of things too
         set_time_limit(0);
@@ -2429,14 +2430,17 @@ abstract class Catalog extends database_object
         }
 
         if ($type !== 'song') {
-            // collect the garbage too
             if ($album || $artist || $maps) {
+                // make sure all the counts are up to date for each artist after changes
                 foreach ($artists as $artistId) {
                     Artist::update_artist_count($artistId);
                 }
 
-                self::getArtistRepository()->collectGarbage();
-                self::getAlbumRepository()->collectGarbage();
+                // collect the garbage if you're not doing it as part of a big update
+                if (!$multi_object) {
+                    self::getArtistRepository()->collectGarbage();
+                    self::getAlbumRepository()->collectGarbage();
+                }
             }
         }
 
@@ -3441,7 +3445,7 @@ abstract class Catalog extends database_object
             $sql        = "SELECT `id` FROM `song` WHERE `album` in (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` FROM `album`));";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {
-                self::update_single_item('song', $row['id'], true);
+                self::update_single_item('song', $row['id'], true, true);
             }
         }
     }
