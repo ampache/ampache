@@ -2384,6 +2384,8 @@ abstract class Catalog extends database_object
 
         $albumRepository = self::getAlbumRepository();
 
+        $artists = [];
+
         // Update the tags for parent items (Songs -> Albums -> Artist)
         if ($libitem instanceof Album) {
             $genres = self::getSongTags('album', $libitem->id);
@@ -2391,7 +2393,6 @@ abstract class Catalog extends database_object
                 Tag::update_tag_list(implode(',', $genres), 'album', $libitem->id, true) ||
                 $artist || $album || $tags || $maps
             ) {
-                $artists = [];
                 // update the album artists
                 foreach ($albumRepository->getArtistMap($libitem, 'album') as $albumArtist_id) {
                     $artists[] = $albumArtist_id;
@@ -2411,6 +2412,7 @@ abstract class Catalog extends database_object
 
         // artist
         if ($libitem instanceof Artist) {
+            $artists[] = $libitem->id;
             // make sure albums are updated before the artist (include if you're just a song artist too)
             foreach (self::getAlbumRepository()->getAlbumByArtist($object_id) as $album_id) {
                 $album_tags = self::getSongTags('album', $album_id);
@@ -2427,6 +2429,9 @@ abstract class Catalog extends database_object
             if ($album || $artist || $maps) {
                 self::getArtistRepository()->collectGarbage();
                 self::getAlbumRepository()->collectGarbage();
+                foreach ($artists as $artistId) {
+                    Artist::update_artist_count($artistId);
+                }
             }
         }
 
