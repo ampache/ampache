@@ -10,6 +10,7 @@ use Ampache\Module\Playback\WebPlayer;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Preference;
 
 // TODO remove me
 global $dic;
@@ -33,6 +34,7 @@ $embed        = $embed ?? false;
 $loop         = ($isRandom || $isDemocratic);
 $jp_volume    = (float)AmpConfig::get('jp_volume', 0.80);
 $removeCount  = (int)AmpConfig::get('webplayer_removeplayed', 0);
+$canSlideshow = Preference::exists('flickr_api_key');
 $removePlayed = ($removeCount > 0);
 if ($removePlayed && $removeCount === 999) {
     $removeCount = 0;
@@ -522,29 +524,17 @@ if ($isVideo === false) {
                                 </a>
                             </div>
                         <?php } ?>
+                        <?php if ($canSlideshow) { ?>
                         <div id="slideshow" class="slideshow action_button">
                             <a href="javascript:SwapSlideshow();"><?php echo Ui::get_material_symbol('slideshow', addslashes(T_('Slideshow'))); ?></a>
                         </div>
+                        <?php } ?>
                         <div id="expandplaylistbtn" class="action_button">
                             <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_material_symbol('expand_all', addslashes(T_('Expand/Collapse playlist'))); ?></a>
                         </div>
                         <div id="playlistloopbtn" class="action_button">
                             <a href="javascript:TogglePlaylistLoop();"><?php echo Ui::get_material_symbol('laps', addslashes(T_('Loop Playlist'))); ?></a>
                         </div>
-                        <?php if (AmpConfig::get('webplayer_html5')) { ?>
-                            <div class="action_button">
-                                <a href="javascript:ShowVisualizer();"><?php echo Ui::get_material_symbol('bubble_chart', addslashes(T_('Visualizer'))); ?></a>
-                            </div>
-                            <div id="replaygainbtn" class="action_button">
-                                <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_material_symbol('graphic_eq', addslashes(T_('ReplayGain'))); ?></a>
-                            </div>
-                            <div id="vizfullbtn" class="action_button" style="visibility: hidden">
-                                <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_material_symbol('fullscreen', addslashes(T_('Visualizer full-screen'))); ?></a>
-                            </div>
-                            <div id="equalizerbtn" class="action_button" style="visibility: hidden">
-                                <a href="javascript:ShowEqualizer();"><?php echo Ui::get_material_symbol('equalizer', addslashes(T_('Equalizer'))); ?></a>
-                            </div>
-                        <?php } ?>
                         <?php if (AmpConfig::get('broadcast') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                             <div id="broadcast" class="broadcast action_button">
                                 <?php if (AmpConfig::get('broadcast_by_default')) {
@@ -562,6 +552,20 @@ if ($isVideo === false) {
                                 } else {
                                     echo Broadcast::get_broadcast_link();
                                 } ?>
+                            </div>
+                        <?php } ?>
+                        <?php if (AmpConfig::get('webplayer_html5')) { ?>
+                            <div class="action_button">
+                                <a href="javascript:ShowVisualizer();"><?php echo Ui::get_material_symbol('bubble_chart', addslashes(T_('Visualizer'))); ?></a>
+                            </div>
+                            <div id="replaygainbtn" class="action_button">
+                                <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_material_symbol('graphic_eq', addslashes(T_('ReplayGain'))); ?></a>
+                            </div>
+                            <div id="vizfullbtn" class="action_button" style="visibility: hidden">
+                                <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_material_symbol('fullscreen', addslashes(T_('Visualizer full-screen'))); ?></a>
+                            </div>
+                            <div id="equalizerbtn" class="action_button" style="visibility: hidden">
+                                <a href="javascript:ShowEqualizer();"><?php echo Ui::get_material_symbol('equalizer', addslashes(T_('Equalizer'))); ?></a>
                             </div>
                         <?php } ?>
                     <?php } ?>
