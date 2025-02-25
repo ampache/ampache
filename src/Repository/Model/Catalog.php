@@ -2427,11 +2427,12 @@ abstract class Catalog extends database_object
         if ($type !== 'song') {
             // collect the garbage too
             if ($album || $artist || $maps) {
-                self::getArtistRepository()->collectGarbage();
-                self::getAlbumRepository()->collectGarbage();
                 foreach ($artists as $artistId) {
                     Artist::update_artist_count($artistId);
                 }
+
+                self::getArtistRepository()->collectGarbage();
+                self::getAlbumRepository()->collectGarbage();
             }
         }
 
