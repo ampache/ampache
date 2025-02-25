@@ -4,8 +4,9 @@
 
 ### Added
 
-* Config version 78
+* Config version 79
   * Add `split_artist_regex` split the Artist and Album Artist tags on regex and use the first result
+  * Add `catalog_verify_by_album` to allow grouping updates instead of just updating individual files
 
 ### Changed
 
@@ -14,6 +15,8 @@
 * Move prettyphoto into lib/modules. (Dead project marked as Malware by NPM)
 * After updating Album and Artist object tags only update conts for affected Artists
 * Restore gather art on website Add actions
+* Don't collect garbage continually when doing a large verify action
+* Update individual counts for Artists after changes
 * webplayer
   * Rearrange the buttons to make them aling better with different config
   * Only show the slideshow button if you have a slideshow plugin enabled. (flickr)

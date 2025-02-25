@@ -1297,7 +1297,7 @@ abstract class Catalog extends database_object
     public static function count_table(string $table, ?int $catalog_id = 0, ?int $update_time = 0): int
     {
         $sql       = ($table === 'album')
-            ? sprintf('SELECT COUNT(DISTINCT `album`.`id`) FROM `%s` LEFT JOIN `song` ON `song`.`album` = `album`.`id` ', $table)
+            ? 'SELECT COUNT(DISTINCT `album`.`id`) FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` '
             : sprintf('SELECT COUNT(`id`) FROM `%s` ', $table);
         $params    = [];
         $where_sql = 'WHERE';
