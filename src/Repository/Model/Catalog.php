@@ -1297,7 +1297,7 @@ abstract class Catalog extends database_object
     public static function count_table(string $table, ?int $catalog_id = 0, ?int $update_time = 0): int
     {
         $sql       = ($table === 'album')
-            ? sprintf('SELECT COUNT(`album`.`id`) FROM `%s` LEFT JOIN `song` ON `song`.`album` = `album`.`id` ', $table)
+            ? sprintf('SELECT COUNT(DISTINCT `album`.`id`) FROM `%s` LEFT JOIN `song` ON `song`.`album` = `album`.`id` ', $table)
             : sprintf('SELECT COUNT(`id`) FROM `%s` ', $table);
         $params    = [];
         $where_sql = 'WHERE';
@@ -1309,7 +1309,7 @@ abstract class Catalog extends database_object
 
         if ($update_time > 0) {
             $sql .= ($table === 'album')
-                ? $where_sql . " `song`.`update_time` <= ? GROUP BY `album`.`id` "
+                ? $where_sql . " `song`.`update_time` <= ? "
                 : $where_sql . " `update_time` <= ? ";
             $params[] = $update_time;
         }
