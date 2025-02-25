@@ -1,5 +1,36 @@
 # CHANGELOG
 
+## Ampache 7.3.1
+
+### Added
+
+* Config version 78
+  * Add `split_artist_regex` split the Artist and Album Artist tags on regex and use the first result
+
+### Changed
+
+* Update `public/.htaccess.dist`
+* Only audit NPM production modules
+* Move prettyphoto into lib/modules. (Dead project marked as Malware by NPM)
+* After updating Album and Artist object tags only update conts for affected Artists
+* Restore gather art on website Add actions
+* webplayer
+  * Rearrange the buttons to make them aling better with different config
+  * Only show the slideshow button if you have a slideshow plugin enabled. (flickr)
+
+### Fixed
+
+* Song caching columns that don't match properties in the class
+* NPM install from the web updater on Linux
+* Lyrics would be chopped up if you repeatedly updated them; do it one way and once only
+* CSS in some areas for the light theme
+* `slideshow_time` being converted to bool
+* Don't show slideshow button if you don't have a flickr enabled
+* Not able to edit Broadcast or select genre correctly
+* Missing artist tag options for Quicktime and ASF tags
+* Genre select SQL full group by on empty `object_type`
+* Counts for `album_disk_count` not being updated well
+
 ## Ampache 7.3.0
 
 This update has a lot of updates for verification and tag updates.
