@@ -601,25 +601,25 @@ class Catalog_local extends Catalog
         $this->count = 0;
         $chunk_size  = 10000;
 
-        $catalog_media_type = $this->gather_types;
-        $verify_by_album    = AmpConfig::get('catalog_verify_by_album', false);
-        $update_time        = ($catalog_media_type !== 'podcast' && AmpConfig::get('catalog_verify_by_time', false))
+        $gather_type     = $this->gather_types;
+        $verify_by_album = AmpConfig::get('catalog_verify_by_album', false);
+        $update_time     = ($gather_type !== 'podcast' && AmpConfig::get('catalog_verify_by_time', false))
             ? $this->last_update
             : 0;
-        if (!$verify_by_album && $catalog_media_type == 'music') {
+        if (!$verify_by_album && $gather_type == 'music') {
             Song::clear_cache();
             $media_type = 'song';
             $total      = self::count_table($media_type, $this->catalog_id, $update_time);
-        } elseif ($verify_by_album && $catalog_media_type == 'music') {
+        } elseif ($verify_by_album && $gather_type == 'music') {
             $chunk_size = 1000;
             Album::clear_cache();
             $media_type = 'album';
             $total      = self::count_table($media_type, $this->catalog_id, $update_time);
-        } elseif ($catalog_media_type == 'podcast') {
+        } elseif ($gather_type == 'podcast') {
             Podcast_Episode::clear_cache();
             $media_type = 'podcast_episode';
             $total      = self::count_table($media_type, $this->catalog_id, $update_time);
-        } elseif ($catalog_media_type == 'video') {
+        } elseif ($gather_type == 'video') {
             Video::clear_cache();
             $media_type = 'video';
             $total      = self::count_table($media_type, $this->catalog_id, $update_time);
@@ -642,7 +642,7 @@ class Catalog_local extends Catalog
                 Catalog::clean_empty_albums();
             }
         }
-        if ($catalog_media_type == 'music') {
+        if ($gather_type == 'music') {
             Album::update_table_counts();
             Artist::update_table_counts();
 
@@ -678,6 +678,8 @@ class Catalog_local extends Catalog
                 ? "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? AND (`$tableName`.`update_time` IS NULL OR `$tableName`.`update_time` < `catalog`.`last_update`) ORDER BY `$tableName`.`file` DESC LIMIT $count, $chunk_size"
                 : "SELECT `$tableName`.`id`, `$tableName`.`file` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? ORDER BY `$tableName`.`file` LIMIT $count, $chunk_size",
         };
+
+        //debug_event(self::class, '_verify_chunk (' . $chunk . ') ' . $sql. ' ' . print_r($params, true), 5);
         $db_results = Dba::read($sql, [$this->catalog_id]);
         $className  = ObjectTypeToClassNameMapper::map($tableName);
 
@@ -735,11 +737,11 @@ class Catalog_local extends Catalog
         }
         $this->count = 0;
 
-        $catalog_media_type = $this->gather_types;
-        $media_type         = 'song';
-        if ($catalog_media_type == 'podcast') {
+        $gather_type = $this->gather_types;
+        $media_type  = 'song';
+        if ($gather_type == 'podcast') {
             $media_type = 'podcast_episode';
-        } elseif ($catalog_media_type == 'video') {
+        } elseif ($gather_type == 'video') {
             $media_type = 'video';
         }
         $total = self::count_table($media_type, $this->catalog_id);
@@ -1162,11 +1164,11 @@ class Catalog_local extends Catalog
         $missing     = [];
         $this->count = 0;
 
-        $catalog_media_type = $this->gather_types;
-        $media_type         = 'song';
-        if ($catalog_media_type == 'podcast') {
+        $gather_type = $this->gather_types;
+        $media_type  = 'song';
+        if ($gather_type == 'podcast') {
             $media_type = 'podcast_episode';
-        } elseif ($catalog_media_type == 'video') {
+        } elseif ($gather_type == 'video') {
             $media_type = 'video';
         }
         $total = self::count_table($media_type, $this->catalog_id);
