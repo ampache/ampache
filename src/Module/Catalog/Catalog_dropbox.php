@@ -760,11 +760,15 @@ class Catalog_dropbox extends Catalog
      * @return bool
      * @throws DropboxClientException
      */
-    public function gather_art($songs = null, $videos = null): bool
+    public function gather_art($songs = null, $videos = null, ?Interactor $interactor = null): bool
     {
         // Make sure they've actually got methods
         $art_order = AmpConfig::get('art_order');
         if (!count($art_order)) {
+            $interactor?->info(
+                'art_order not set, Catalog::gather_art aborting',
+                true
+            );
             debug_event('dropbox.catalog', 'art_order not set, Catalog::gather_art aborting', 3);
 
             return true;

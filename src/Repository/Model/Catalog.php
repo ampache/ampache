@@ -2042,13 +2042,17 @@ abstract class Catalog extends database_object
      * @param int[]|null $songs
      * @param int[]|null $videos
      */
-    public function gather_art($songs = null, $videos = null): bool
+    public function gather_art($songs = null, $videos = null, ?Interactor $interactor = null): bool
     {
         // Make sure they've actually got methods
         $art_order       = AmpConfig::get('art_order');
         $gather_song_art = AmpConfig::get('gather_song_art', false);
         $db_art_first    = ($art_order[0] == 'db');
         if (count($art_order) === 0) {
+            $interactor?->info(
+                'art_order not set, self::gather_art aborting',
+                true
+            );
             debug_event(self::class, 'art_order not set, self::gather_art aborting', 3);
 
             return false;
@@ -2090,8 +2094,12 @@ abstract class Catalog extends database_object
             }
         }
 
-        $searches['video'] = $this->get_video_ids();
+        $searches['video'] = $videos ?? $this->get_video_ids();
 
+        $interactor?->info(
+            'gather_art found ' . count($searches) . ' items missing art',
+            true
+        );
         debug_event(self::class, 'gather_art found ' . count($searches) . ' items missing art', 4);
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
