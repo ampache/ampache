@@ -665,10 +665,8 @@ class Catalog_local extends Catalog
      */
     private function _verify_chunk($tableName, $chunk, $chunk_size): int
     {
-        $count   = $chunk * $chunk_size;
-        $changed = 0;
-
-        $verify_by_time = (in_array($tableName, ['album', 'song', 'video']) && AmpConfig::get('catalog_verify_by_time', false));
+        $verify_by_time = in_array($tableName, ['album', 'song', 'video']) && AmpConfig::get('catalog_verify_by_time', false);
+        $count          = $chunk * $chunk_size;
         $sql            = match ($tableName) {
             'album' => ($verify_by_time)
                 ? "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? AND song.update_time < " . $this->last_update . " GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT $count, $chunk_size"
@@ -680,18 +678,19 @@ class Catalog_local extends Catalog
         };
 
         //debug_event(self::class, '_verify_chunk (' . $chunk . ') ' . $sql. ' ' . print_r($params, true), 5);
-        $db_results = Dba::read($sql, [$this->catalog_id]);
-        $className  = ObjectTypeToClassNameMapper::map($tableName);
-
-        if (AmpConfig::get('memory_cache') && $tableName !== 'podcast_episode') {
-            $media_ids = [];
+        if (in_array($tableName, ['album', 'song', 'video']) && AmpConfig::get('memory_cache', false)) {
+            $media_ids  = [];
+            $db_results = Dba::read($sql, [$this->catalog_id]);
+            $className  = ObjectTypeToClassNameMapper::map($tableName);
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $media_ids[] = $row['id'];
             }
             /** @var Song|Album|Video $className */
             $className::build_cache($media_ids);
-            $db_results = Dba::read($sql, [$this->catalog_id]);
         }
+
+        $changed    = 0;
+        $db_results = Dba::read($sql, [$this->catalog_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $count++;
             if (Ui::check_ticker()) {
