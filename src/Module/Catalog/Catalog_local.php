@@ -659,13 +659,13 @@ class Catalog_local extends Catalog
      * _verify_chunk
      * This verifies a chunk of the catalog, done to save
      * memory
-     * @param string $tableName
+     * @param string $tableName ('album', 'podcast_episode', 'song', 'video')
      * @param int $chunk
      * @param int $chunk_size
      */
     private function _verify_chunk($tableName, $chunk, $chunk_size): int
     {
-        $verify_by_time = in_array($tableName, ['album', 'song', 'video']) && AmpConfig::get('catalog_verify_by_time', false);
+        $verify_by_time = $tableName !== 'podcast_episode' && AmpConfig::get('catalog_verify_by_time', false);
         $count          = $chunk * $chunk_size;
         $sql            = match ($tableName) {
             'album' => ($verify_by_time)
@@ -678,7 +678,7 @@ class Catalog_local extends Catalog
         };
 
         //debug_event(self::class, '_verify_chunk (' . $chunk . ') ' . $sql. ' ' . print_r($params, true), 5);
-        if (in_array($tableName, ['album', 'song', 'video']) && AmpConfig::get('memory_cache', false)) {
+        if ($tableName !== 'podcast_episode' && AmpConfig::get('memory_cache', false)) {
             $media_ids  = [];
             $db_results = Dba::read($sql, [$this->catalog_id]);
             $className  = ObjectTypeToClassNameMapper::map($tableName);
