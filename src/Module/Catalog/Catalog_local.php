@@ -629,9 +629,16 @@ class Catalog_local extends Catalog
         $count  = 1;
         $chunks = 1;
         $chunk  = 0;
+        // how many loops through the catalog
         if ($total > $chunk_size) {
             $chunks = (int)floor($total / $chunk_size);
         }
+
+        // only do the requested size
+        if ($limit > 0 && $total < $chunk_size) {
+            $chunk_size = $total;
+        }
+
         debug_event('local.catalog', 'found ' . $total . " " . $media_type . " files to update. (last_update: " . $this->last_update . ")", 5);
         while ($chunk <= $chunks) {
             debug_event('local.catalog', "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks", 5);
@@ -650,7 +657,8 @@ class Catalog_local extends Catalog
             $this->getAlbumRepository()->collectGarbage();
         }
         debug_event('local.catalog', "Verify finished, $this->count updated in " . $this->name, 5);
-        if ($limit === 0) {
+        // No limit set OR we set a limit and we didn't find anything so update the last_update time
+        if ($limit === 0 || ($update_time > 0 && $total === 0)) {
             $this->update_last_update($date);
         }
 
