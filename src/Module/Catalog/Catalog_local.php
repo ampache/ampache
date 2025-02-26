@@ -713,8 +713,8 @@ class Catalog_local extends Catalog
 
         // only do the requested size
         if ($limit > 0 && $total < $chunk_size) {
-            $chunk  = 1;
-            $chunks = 1;
+            $chunk      = 1;
+            $chunks     = 1;
             $chunk_size = $total;
         }
 
