@@ -23,6 +23,7 @@
 
 namespace Ampache\Module\Catalog;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Playback\Stream;
@@ -592,8 +593,12 @@ class Catalog_local extends Catalog
     /**
      * verify_catalog_proc
      */
-    public function verify_catalog_proc(int $limit = 0): int
+    public function verify_catalog_proc(int $limit = 0, ?Interactor $interactor = null): int
     {
+        $interactor?->info(
+            'Verify starting on ' . $this->name,
+            true
+        );
         debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
@@ -641,8 +646,16 @@ class Catalog_local extends Catalog
             $chunk_size = $total;
         }
 
+        $interactor?->info(
+            'found ' . $total . " " . $media_type . " files to update. (last_update: " . $this->last_update . ")",
+            true
+        );
         debug_event('local.catalog', 'found ' . $total . " " . $media_type . " files to update. (last_update: " . $this->last_update . ")", 5);
         while ($chunk <= $chunks) {
+            $interactor?->info(
+                "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks",
+                true
+            );
             debug_event('local.catalog', "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks", 5);
             $this->count += $this->_verify_chunk($media_type, ($chunks - $chunk), $chunk_size);
             $chunk++;
@@ -651,14 +664,20 @@ class Catalog_local extends Catalog
                 Catalog::clean_empty_albums();
             }
         }
-        if ($gather_type == 'music') {
+
+        $interactor?->info(
+            "Verify finished, $this->count updated in " . $this->name,
+            true
+        );
+        debug_event('local.catalog', "Verify finished, $this->count updated in " . $this->name, 5);
+        if ($interactor == null && $gather_type == 'music') {
             Album::update_table_counts();
             Artist::update_table_counts();
 
             $this->getArtistRepository()->collectGarbage();
             $this->getAlbumRepository()->collectGarbage();
         }
-        debug_event('local.catalog', "Verify finished, $this->count updated in " . $this->name, 5);
+
         // No limit set OR we set a limit and we didn't find anything so update the last_update time
         if ($limit === 0 || ($update_time > 0 && $total === 0)) {
             $this->update_last_update($date);

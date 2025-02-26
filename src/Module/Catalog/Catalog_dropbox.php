@@ -23,6 +23,7 @@
 
 namespace Ampache\Module\Catalog;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UtilityFactoryInterface;
@@ -538,7 +539,7 @@ class Catalog_dropbox extends Catalog
      * @return int
      * @throws ReflectionException
      */
-    public function verify_catalog_proc(int $limit = 0): int
+    public function verify_catalog_proc(int $limit = 0, ?Interactor $interactor = null): int
     {
         set_time_limit(0);
 

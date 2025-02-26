@@ -191,7 +191,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         T_('Start verifying media related to Catalog entries'),
                         true
                     );
-                    $changed += $catalog->verify_catalog_proc($limit);
+                    $changed += $catalog->verify_catalog_proc($limit, $interactor);
 
                     $buffer = ob_get_contents();
 

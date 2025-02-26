@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Beets;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Module\System\AmpError;
@@ -215,7 +216,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * verify_catalog_proc
      */
-    public function verify_catalog_proc(int $limit = 0): int
+    public function verify_catalog_proc(int $limit = 0, ?Interactor $interactor = null): int
     {
         debug_event(self::class, 'Verify: Starting on ' . $this->name, 5);
         set_time_limit(0);

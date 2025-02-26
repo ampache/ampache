@@ -23,6 +23,7 @@
 
 namespace Ampache\Module\Catalog;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
@@ -325,7 +326,7 @@ class Catalog_subsonic extends Catalog
     /**
      * verify_catalog_proc
      */
-    public function verify_catalog_proc(int $limit = 0): int
+    public function verify_catalog_proc(int $limit = 0, ?Interactor $interactor = null): int
     {
         return 0;
     }

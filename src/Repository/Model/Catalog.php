@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -231,7 +232,7 @@ abstract class Catalog extends database_object
     /**
      * verify_catalog_proc
      */
-    abstract public function verify_catalog_proc(int $limit = 0): int;
+    abstract public function verify_catalog_proc(int $limit = 0, ?Interactor $interactor = null): int;
 
     /**
      * clean_catalog_proc
