@@ -322,11 +322,15 @@ class Catalog_local extends Catalog
 
             /* Create the new path */
             $full_file = $path . $slash_type . $file;
-            if ($this->add_file($full_file, $options, $counter)) {
+            if ($this->add_file($full_file, $options, $counter, $interactor)) {
                 $songsadded++;
             }
         } // end while reading directory
 
+        $interactor?->info(
+            "Finished reading $path, closing handle",
+            true
+        );
         debug_event('local.catalog', "Finished reading $path, closing handle", 5);
 
         // This should only happen on the last run
@@ -349,7 +353,7 @@ class Catalog_local extends Catalog
      * @return bool
      * @throws Exception
      */
-    public function add_file($full_file, $options, $counter = 0): bool
+    public function add_file($full_file, $options, $counter = 0, ?Interactor $interactor = null): bool
     {
         // Ensure that we've got our cache
         $this->_create_filecache();
@@ -363,6 +367,10 @@ class Catalog_local extends Catalog
 
         if (AmpConfig::get('no_symlinks')) {
             if (is_link($full_file)) {
+                $interactor?->info(
+                    "Skipping symbolic link $full_file",
+                    true
+                );
                 debug_event('local.catalog', "Skipping symbolic link $full_file", 5);
 
                 return false;
@@ -381,6 +389,10 @@ class Catalog_local extends Catalog
 
             /* Change the dir so is_dir works correctly */
             if (!chdir($full_file)) {
+                $interactor?->info(
+                    "Unable to chdir to $full_file",
+                    true
+                );
                 debug_event('local.catalog', "Unable to chdir to $full_file", 2);
                 /* HINT: directory (file path) */
                 AmpError::add('catalog_add', sprintf(T_('Unable to change to directory: %s'), $full_file));
@@ -406,6 +418,10 @@ class Catalog_local extends Catalog
             $file_size = Core::get_filesize($full_file);
 
             if ($file_size === 0) {
+                $interactor?->info(
+                    "Unable to get filesize for $full_file",
+                    true
+                );
                 debug_event('local.catalog', "Unable to get filesize for $full_file", 2);
                 /* HINT: FullFile */
                 AmpError::add('catalog_add', sprintf(T_('Unable to get the filesize for "%s"'), $full_file));
@@ -413,8 +429,12 @@ class Catalog_local extends Catalog
                 return false;
             } // file_size check
 
+            // not readable, warn user
             if (!Core::is_readable($full_file)) {
-                // not readable, warn user
+                $interactor?->info(
+                    "$full_file is not readable by Ampache",
+                    true
+                );
                 debug_event('local.catalog', "$full_file is not readable by Ampache", 2);
                 /* HINT: filename (file path) */
                 AmpError::add('catalog_add', sprintf(T_("The file couldn't be read. Does it exist? %s"), $full_file));
@@ -438,6 +458,10 @@ class Catalog_local extends Catalog
                         $convok = (strcmp($enc_full_file, $full_file) == 0);
                     }
                     if (!$convok) {
+                        $interactor?->info(
+                            $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file,
+                            true
+                        );
                         debug_event('local.catalog', $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, 1);
                         /* HINT: FullFile */
                         AmpError::add('catalog_add', sprintf(T_('"%s" does not match site charset'), $full_file));
@@ -455,21 +479,41 @@ class Catalog_local extends Catalog
 
             if ($is_playlist) {
                 // if it's a playlist
+                $interactor?->info(
+                    'Found playlist file to import: ' . $full_file,
+                    true
+                );
                 debug_event('local.catalog', 'Found playlist file to import: ' . $full_file, 5);
                 $this->_playlists[] = $full_file;
             } else {
                 if (count($this->get_gather_types('music')) > 0) {
                     if ($is_audio_file && $this->_insert_local_song($full_file, $options)) {
+                        $interactor?->info(
+                            'Imported song file: ' . $full_file,
+                            true
+                        );
                         debug_event('local.catalog', 'Imported song file: ' . $full_file, 5);
                     } else {
+                        $interactor?->info(
+                            'Skipped song file: ' . $full_file,
+                            true
+                        );
                         debug_event('local.catalog', 'Skipped song file: ' . $full_file, 5);
 
                         return false;
                     }
                 } elseif (count($this->get_gather_types('video')) > 0) {
                     if ($is_video_file && $this->_insert_local_video($full_file, $options)) {
+                        $interactor?->info(
+                            'Imported video file: ' . $full_file,
+                            true
+                        );
                         debug_event('local.catalog', 'Imported video file: ' . $full_file, 5);
                     } else {
+                        $interactor?->info(
+                            'Skipped video file: ' . $full_file,
+                            true
+                        );
                         debug_event('local.catalog', 'Skipped video file: ' . $full_file, 5);
 
                         return false;
