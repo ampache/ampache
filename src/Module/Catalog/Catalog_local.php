@@ -311,10 +311,6 @@ class Catalog_local extends Catalog
                     "Reading $file inside $path",
                     true
                 );
-                $interactor?->info(
-                    "Memory usage: " . (string) Ui::format_bytes(memory_get_usage(true)),
-                    true
-                );
                 debug_event('local.catalog', "Reading $file inside $path", 5);
                 debug_event('local.catalog', "Memory usage: " . (string) Ui::format_bytes(memory_get_usage(true)), 5);
             }
