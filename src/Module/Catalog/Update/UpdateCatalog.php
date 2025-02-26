@@ -215,7 +215,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     T_('Start searching new media art'),
                     true
                 );
-                $catalog->gather_art($interactor);
+                $catalog->gather_art(null, null, $interactor);
 
                 $buffer = ob_get_contents();
 

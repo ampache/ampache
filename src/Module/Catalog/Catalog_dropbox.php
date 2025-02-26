@@ -539,7 +539,7 @@ class Catalog_dropbox extends Catalog
      * @return int
      * @throws ReflectionException
      */
-    public function verify_catalog_proc(int $limit = 0, ?Interactor $interactor = null): int
+    public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
     {
         set_time_limit(0);
 

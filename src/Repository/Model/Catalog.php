@@ -232,7 +232,7 @@ abstract class Catalog extends database_object
     /**
      * verify_catalog_proc
      */
-    abstract public function verify_catalog_proc(int $limit = 0, ?Interactor $interactor = null): int;
+    abstract public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int;
 
     /**
      * clean_catalog_proc

@@ -661,7 +661,7 @@ class Catalog_local extends Catalog
     /**
      * verify_catalog_proc
      */
-    public function verify_catalog_proc(int $limit = 0, ?Interactor $interactor = null): int
+    public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
     {
         $interactor?->info(
             'Verify starting on ' . $this->name,
