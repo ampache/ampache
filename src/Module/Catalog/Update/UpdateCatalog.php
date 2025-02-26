@@ -145,7 +145,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         T_('Start cleaning orphaned media entries'),
                         true
                     );
-                    $changed += $catalog->clean_catalog();
+                    $changed += $catalog->clean_catalog($interactor);
 
                     $buffer = ob_get_contents();
 
@@ -168,7 +168,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         T_('Start adding new media'),
                         true
                     );
-                    $changed += $catalog->add_to_catalog($options);
+                    $changed += $catalog->add_to_catalog($options, $interactor);
 
                     $buffer = ob_get_contents();
 

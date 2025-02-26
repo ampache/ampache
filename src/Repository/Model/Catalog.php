@@ -227,7 +227,7 @@ abstract class Catalog extends database_object
     /**
      * @param array $options
      */
-    abstract public function add_to_catalog($options = null): int;
+    abstract public function add_to_catalog($options = null, ?Interactor $interactor = null): int;
 
     /**
      * verify_catalog_proc
@@ -237,7 +237,7 @@ abstract class Catalog extends database_object
     /**
      * clean_catalog_proc
      */
-    abstract public function clean_catalog_proc(): int;
+    abstract public function clean_catalog_proc(?Interactor $interactor = null): int;
 
     abstract public function check_catalog_proc(): array;
 
@@ -3495,11 +3495,15 @@ abstract class Catalog extends database_object
      *
      * Cleans the catalog of files that no longer exist.
      */
-    public function clean_catalog(): int
+    public function clean_catalog(?Interactor $interactor = null): int
     {
         // We don't want to run out of time
         set_time_limit(0);
 
+        $interactor?->info(
+            'Starting clean on ' . $this->name,
+            true
+        );
         debug_event(self::class, 'Starting clean on ' . $this->name, 5);
 
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
@@ -3508,12 +3512,16 @@ abstract class Catalog extends database_object
             flush();
         }
 
-        $dead_total = $this->clean_catalog_proc();
+        $dead_total = $this->clean_catalog_proc($interactor);
         if ($dead_total > 0) {
             self::clean_empty_albums();
             self::clean_duplicate_artists();
         }
 
+        $interactor?->info(
+            'clean finished, ' . $dead_total . ' removed from ' . $this->name,
+            true
+        );
         debug_event(self::class, 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 4);
 
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {

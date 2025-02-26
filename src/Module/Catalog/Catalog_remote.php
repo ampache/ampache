@@ -211,7 +211,7 @@ class Catalog_remote extends Catalog
      * @return int
      * @throws Exception
      */
-    public function add_to_catalog($options = null): int
+    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Remote Update'));
@@ -416,7 +416,7 @@ class Catalog_remote extends Catalog
      *
      * Removes remote songs that no longer exist.
      */
-    public function clean_catalog_proc(): int
+    public function clean_catalog_proc(?Interactor $interactor = null): int
     {
         $remote_handle = $this->connect();
         if (!$remote_handle) {

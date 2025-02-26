@@ -140,7 +140,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Adds new songs to the catalog
      * @param array $options
      */
-    public function add_to_catalog($options = null): int
+    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             require Ui::find_template('show_adds_catalog.inc.php');
@@ -256,7 +256,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * This way is a little fishy, but if we start beets for every single file, it may take horribly long.
      * So first we get the difference between our and the beets database and then clean up the rest.
      */
-    public function clean_catalog_proc(): int
+    public function clean_catalog_proc(?Interactor $interactor = null): int
     {
         /** @var Handler $parser */
         $parser      = $this->getParser();

@@ -206,7 +206,7 @@ class Catalog_subsonic extends Catalog
      * existing catalog
      * @param array $options
      */
-    public function add_to_catalog($options = null): int
+    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -361,7 +361,7 @@ class Catalog_subsonic extends Catalog
      *
      * Removes subsonic songs that no longer exist.
      */
-    public function clean_catalog_proc(): int
+    public function clean_catalog_proc(?Interactor $interactor = null): int
     {
         $subsonic = $this->createClient();
 

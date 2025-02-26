@@ -275,7 +275,7 @@ class Catalog_Seafile extends Catalog
      * existing catalog
      * @param array $options
      */
-    public function add_to_catalog($options = null): int
+    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -533,7 +533,7 @@ class Catalog_Seafile extends Catalog
      *
      * Removes songs that no longer exist.
      */
-    public function clean_catalog_proc(): int
+    public function clean_catalog_proc(?Interactor $interactor = null): int
     {
         $dead = 0;
 

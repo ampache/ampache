@@ -253,7 +253,7 @@ class Catalog_local extends Catalog
      * @param array $options
      * @param int $counter
      */
-    public function add_files($path, $options, $counter = 0): int
+    public function add_files($path, $options, $counter = 0, ?Interactor $interactor = null): int
     {
         // See if we want a non-root path for the add
         if (isset($options['subdirectory'])) {
@@ -275,6 +275,10 @@ class Catalog_local extends Catalog
         $handle = opendir($path);
 
         if (!is_resource($handle)) {
+            $interactor?->info(
+                "Unable to open $path",
+                true
+            );
             debug_event('local.catalog', "Unable to open $path", 3);
             /* HINT: directory (file path) */
             AmpError::add('catalog_add', sprintf(T_('Unable to open: %s'), $path));
@@ -284,6 +288,10 @@ class Catalog_local extends Catalog
 
         /* Change the dir so is_dir works correctly */
         if (!chdir($path)) {
+            $interactor?->info(
+                "Unable to chdir to $path",
+                true
+            );
             debug_event('local.catalog', "Unable to chdir to $path", 2);
             /* HINT: directory (file path) */
             AmpError::add('catalog_add', sprintf(T_('Unable to change to directory: %s'), $path));
@@ -299,6 +307,14 @@ class Catalog_local extends Catalog
             }
             // reduce the crazy log info
             if ($counter % 1000 == 0) {
+                $interactor?->info(
+                    "Reading $file inside $path",
+                    true
+                );
+                $interactor?->info(
+                    "Memory usage: " . (string) Ui::format_bytes(memory_get_usage(true)),
+                    true
+                );
                 debug_event('local.catalog', "Reading $file inside $path", 5);
                 debug_event('local.catalog', "Memory usage: " . (string) Ui::format_bytes(memory_get_usage(true)), 5);
             }
@@ -485,7 +501,7 @@ class Catalog_local extends Catalog
      * existing catalog
      * @param array $options
      */
-    public function add_to_catalog($options = null): int
+    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
     {
         if (empty($options)) {
             $options = [
@@ -525,10 +541,14 @@ class Catalog_local extends Catalog
             $this->count += $this->getPodcastSyncer()->syncForCatalogs([$this]);
         } else {
             /* Get the songs and then insert them into the db */
-            $this->count += $this->add_files($this->path, $options);
+            $this->count += $this->add_files($this->path, $options, 0, $interactor);
             if ($options['parse_playlist'] && count($this->_playlists)) {
                 // Foreach Playlists we found
                 foreach ($this->_playlists as $full_file) {
+                    $interactor?->info(
+                        'Processing playlist: ' . $full_file,
+                        true
+                    );
                     debug_event('local.catalog', 'Processing playlist: ' . $full_file, 5);
                     $result = PlaylistImporter::import_playlist($full_file, -1, 'public');
                     if ($result !== null) {
@@ -550,6 +570,10 @@ class Catalog_local extends Catalog
             }
             // only gather art if you've added new stuff
             if (($this->count) > 0 && $options['gather_art']) {
+                $interactor?->info(
+                    'gather_art after adding',
+                    true
+                );
                 debug_event(self::class, 'gather_art after adding', 4);
                 $catalog_id = $this->catalog_id;
                 if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
@@ -578,6 +602,10 @@ class Catalog_local extends Catalog
             $rate = T_('N/A');
         }
 
+        $interactor?->info(
+            T_('Catalog Updated') . "\n" . sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate),
+            true
+        );
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top();
             Ui::update_text(
@@ -755,10 +783,14 @@ class Catalog_local extends Catalog
      *
      * Removes local songs that no longer exist.
      */
-    public function clean_catalog_proc(): int
+    public function clean_catalog_proc(?Interactor $interactor = null): int
     {
+        // First sanity check; no point in proceeding with an unreadable catalog root.
         if (!Core::is_readable($this->path)) {
-            // First sanity check; no point in proceeding with an unreadable catalog root.
+            $interactor?->info(
+                'Catalog path:' . $this->path . ' unreadable, clean failed',
+                true
+            );
             debug_event('local.catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
             AmpError::add('general', T_('Catalog root unreadable, stopping clean'));
             echo AmpError::display('general');
@@ -786,17 +818,29 @@ class Catalog_local extends Catalog
             $chunks = floor($total / 10000) + 1;
         }
         while ($chunk < $chunks) {
+            $interactor?->info(
+                "catalog " . $this->name . " Starting clean " . $media_type . " on chunk $count/$chunks",
+                true
+            );
             debug_event('local.catalog', "catalog " . $this->name . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
             $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
             $chunk++;
             $count++;
         }
+        $interactor?->info(
+            "Clean finished, $total files checked in " . $this->name,
+            true
+        );
         debug_event('local.catalog', "Clean finished, $total files checked in " . $this->name, 5);
 
         $dead_count = count($dead);
         // Check for unmounted path
         if (!file_exists($this->path)) {
             if ($dead_count >= $total) {
+                $interactor?->info(
+                    'All files would be removed. Doing nothing.',
+                    true
+                );
                 debug_event('local.catalog', 'All files would be removed. Doing nothing.', 1);
                 AmpError::add('general', T_('All files would be removed. Doing nothing'));
 
