@@ -1296,9 +1296,9 @@ abstract class Catalog extends database_object
      */
     public static function count_table(string $table, ?int $catalog_id = 0, ?int $update_time = 0, ?int $limit = 0): int
     {
-        $sql       = ($table === 'album')
-            ? 'SELECT COUNT(DISTINCT `album`.`id`) FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` '
-            : sprintf('SELECT COUNT(`id`) FROM `%s` ', $table);
+        $sql = ($table === 'album')
+            ? 'SELECT COUNT(DISTINCT `id`) FROM (SELECT `album`.`id` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` '
+            : sprintf('SELECT COUNT(DISTINCT `id`) FROM (SELECT `id` FROM `%s` ', $table);
         $params    = [];
         $where_sql = 'WHERE';
         if ($catalog_id > 0) {
@@ -1314,11 +1314,10 @@ abstract class Catalog extends database_object
             $params[] = $update_time;
         }
 
-        if ($limit > 0) {
-            $sql .= 'LIMIT ' . $limit;
-        }
+        $sql .= ($limit > 0)
+            ? 'LIMIT ' . (int)$limit . ') AS `table_count`;'
+            : ') AS `table_count`;';
 
-        $sql = rtrim($sql, ';');
         //debug_event(self::class, 'count_table ' . $sql . ' ' . print_r($params, true), 5);
         $db_results = Dba::read($sql, $params);
         $row        = Dba::fetch_row($db_results);
