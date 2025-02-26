@@ -444,7 +444,7 @@ class Catalog_Seafile extends Catalog
      * @return int
      * @throws ReflectionException
      */
-    public function verify_catalog_proc(): int
+    public function verify_catalog_proc(int $limit = 0): int
     {
         set_time_limit(0);
 

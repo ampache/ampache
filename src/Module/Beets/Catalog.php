@@ -215,7 +215,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * verify_catalog_proc
      */
-    public function verify_catalog_proc(): int
+    public function verify_catalog_proc(int $limit = 0): int
     {
         debug_event(self::class, 'Verify: Starting on ' . $this->name, 5);
         set_time_limit(0);

@@ -592,7 +592,7 @@ class Catalog_local extends Catalog
     /**
      * verify_catalog_proc
      */
-    public function verify_catalog_proc(): int
+    public function verify_catalog_proc(int $limit = 0): int
     {
         debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
@@ -609,20 +609,20 @@ class Catalog_local extends Catalog
         if (!$verify_by_album && $gather_type == 'music') {
             Song::clear_cache();
             $media_type = 'song';
-            $total      = self::count_table($media_type, $this->catalog_id, $update_time);
+            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
         } elseif ($verify_by_album && $gather_type == 'music') {
             $chunk_size = 1000;
             Album::clear_cache();
             $media_type = 'album';
-            $total      = self::count_table($media_type, $this->catalog_id, $update_time);
+            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
         } elseif ($gather_type == 'podcast') {
             Podcast_Episode::clear_cache();
             $media_type = 'podcast_episode';
-            $total      = self::count_table($media_type, $this->catalog_id, $update_time);
+            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
         } elseif ($gather_type == 'video') {
             Video::clear_cache();
             $media_type = 'video';
-            $total      = self::count_table($media_type, $this->catalog_id, $update_time);
+            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
         } else {
             return $this->count;
         }
@@ -650,7 +650,9 @@ class Catalog_local extends Catalog
             $this->getAlbumRepository()->collectGarbage();
         }
         debug_event('local.catalog', "Verify finished, $this->count updated in " . $this->name, 5);
-        $this->update_last_update($date);
+        if ($limit === 0) {
+            $this->update_last_update($date);
+        }
 
         return $this->count;
     }

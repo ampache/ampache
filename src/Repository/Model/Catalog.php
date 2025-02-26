@@ -231,7 +231,7 @@ abstract class Catalog extends database_object
     /**
      * verify_catalog_proc
      */
-    abstract public function verify_catalog_proc(): int;
+    abstract public function verify_catalog_proc(int $limit = 0): int;
 
     /**
      * clean_catalog_proc
@@ -1294,7 +1294,7 @@ abstract class Catalog extends database_object
      *
      * Count and/or Update a table count when adding/removing from the server
      */
-    public static function count_table(string $table, ?int $catalog_id = 0, ?int $update_time = 0): int
+    public static function count_table(string $table, ?int $catalog_id = 0, ?int $update_time = 0, ?int $limit = 0): int
     {
         $sql       = ($table === 'album')
             ? 'SELECT COUNT(DISTINCT `album`.`id`) FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` '
@@ -1312,6 +1312,10 @@ abstract class Catalog extends database_object
                 ? $where_sql . " `song`.`update_time` <= ? "
                 : $where_sql . " `update_time` <= ? ";
             $params[] = $update_time;
+        }
+
+        if ($limit > 0) {
+            $sql .= 'LIMIT ' . $limit;
         }
 
         $sql = rtrim($sql, ';');

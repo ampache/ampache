@@ -325,7 +325,7 @@ class Catalog_subsonic extends Catalog
     /**
      * verify_catalog_proc
      */
-    public function verify_catalog_proc(): int
+    public function verify_catalog_proc(int $limit = 0): int
     {
         return 0;
     }

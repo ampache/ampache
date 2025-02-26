@@ -56,8 +56,9 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         bool $updateInfo,
         bool $optimizeDatabase,
         bool $collectGarbage,
+        string $catalogType,
         ?string $catalogName,
-        string $catalogType
+        ?int $limit
     ): void {
         $start_time = time();
         if ($deactivateMemoryLimit === true) {
@@ -190,7 +191,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         T_('Start verifying media related to Catalog entries'),
                         true
                     );
-                    $changed += $catalog->verify_catalog_proc();
+                    $changed += $catalog->verify_catalog_proc($limit);
 
                     $buffer = ob_get_contents();
 
