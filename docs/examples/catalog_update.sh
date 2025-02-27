@@ -58,3 +58,6 @@ php bin/cli run:cacheProcess
 
 ### Update table mapping, counts and delete garbage data
 php bin/cli run:updateCatalog -t
+
+### Alternativey you can run them all from one command
+#php bin/cli run:updateCatalog -caget
