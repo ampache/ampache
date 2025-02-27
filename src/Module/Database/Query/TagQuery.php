@@ -57,6 +57,10 @@ final class TagQuery implements QueryInterface
         'user_flag_rating',
         'user_flag',
         'userflag',
+        'artist',
+        'album',
+        'song',
+        'video',
     ];
 
     protected string $select = "`tag`.`id`";
@@ -177,6 +181,12 @@ final class TagQuery implements QueryInterface
             case 'name':
             case 'title':
                 $sql = "`tag`.`name`";
+                break;
+            case 'artist':
+            case 'album':
+            case 'song':
+            case 'video':
+                $sql = "`tag`.`$field`";
                 break;
             case 'rating':
                 $sql = "`rating`.`rating` $order, `rating`.`date`";
