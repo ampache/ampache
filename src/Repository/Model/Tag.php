@@ -567,7 +567,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $type
      * @param int $object_id
      * @param int $limit
-     * @return array<array{user: int, id: int, name: string}>
+     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
      */
     public static function get_top_tags($type, $object_id, $limit = 10): array
     {
@@ -578,12 +578,12 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $object_id = (int)($object_id);
 
         $limit = (int)($limit);
-        $sql   = 'SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? LIMIT ' . $limit;
+        $sql   = 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? LIMIT ' . $limit;
 
         $db_results = Dba::read($sql, [$type, $object_id]);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = ['user' => $row['user'], 'id' => $row['tag_id'], 'name' => $row['name']];
+            $results[] = ['id' => $row['id'], 'name' => $row['name'], 'is_hidden' => $row['is_hidden'], 'count' => $row['count']];
         }
 
         return $results;
@@ -709,6 +709,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $type
      * @param int $limit
      * @param string $order
+     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
      */
     public static function get_tags($type = '', $limit = 0, $order = 'count'): array
     {
@@ -774,7 +775,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * This returns a csv formatted version of the tags that we are given
      * it also takes a type so that it knows how to return it, this is used
      * by the formatting functions of the different objects
-     * @param array<array{user: int, id: int, name: string}> $tags
+     * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
      * @param bool $link
      * @param string $filter_type
      */

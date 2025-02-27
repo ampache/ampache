@@ -161,7 +161,7 @@ class Song extends database_object implements
 
     public ?string $albumartist_mbid = null;
 
-    /** @var array<array{user: int, id: int, name: string}> $tags */
+    /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
     public ?array $tags = null;
 
     public ?int $albumartist = null;
@@ -1711,7 +1711,7 @@ class Song extends database_object implements
 
     /**
      * Get item tags.
-     * @return array<array{user: int, id: int, name: string}>
+     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
      */
     public function get_tags(): array
     {
