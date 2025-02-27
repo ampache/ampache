@@ -578,7 +578,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $object_id = (int)($object_id);
 
         $limit = (int)($limit);
-        $sql   = 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? LIMIT ' . $limit;
+        $sql   = (in_array($type, ['artist', 'album', 'song', 'video'])
+            ? 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`' . $type . '` AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? LIMIT ' . $limit;
+            : 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? LIMIT ' . $limit;
 
         $db_results = Dba::read($sql, [$type, $object_id]);
         $results    = [];
