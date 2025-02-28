@@ -744,10 +744,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 : "GROUP BY `tag`.`id`, `tag`.`name`, `count` ";
         }
 
-        $order = "`" . $order . "`";
-        if ($order == 'count') {
-            $order .= " DESC";
-        }
+        $order = ($order == 'count')
+            ? "`" . $order . "` DESC"
+            : "`" . $order . "`";
 
         $sql .= "ORDER BY " . $order;
 
