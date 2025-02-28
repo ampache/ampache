@@ -367,7 +367,8 @@ final class DefaultAction implements ApplicationActionInterface
                 );
         } // auth success
 
-        $this->ui->show('show_login_form.inc.php');
+
+        header("Location: " . $this->configContainer->getWebPath() . '/login.php');
 
         return null;
     }
