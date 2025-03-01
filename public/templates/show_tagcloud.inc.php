@@ -55,7 +55,7 @@ $ui->show(
         <li>
             <?php if ($countOrder === 'name') { ?>
                 <a href="<?php echo $webPath; ?>/browse.php?action=tag&type=<?php echo $browse->get_type(); ?>&sort=count">
-                    <?php echo Ui::get_material_symbol('add', T_('# Items')); ?>
+                    <?php echo Ui::get_material_symbol('sort', T_('# Items')); ?>
                     <?php echo T_('# Items'); ?>
                 </a>
             <?php } else { ?>
