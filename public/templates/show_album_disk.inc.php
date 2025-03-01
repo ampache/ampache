@@ -140,7 +140,7 @@ if (AmpConfig::get('sociable') && !empty($owner_id)) {
 } ?>
 
 <div id="information_actions">
-    <h3><?php echo T_('Actions'); ?>:</h3>
+    <h3><?php echo T_('Actions'); ?></h3>
     <ul>
         <?php if ($show_direct_play) {
             $play     = T_('Play');
