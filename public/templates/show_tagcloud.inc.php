@@ -23,6 +23,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -40,11 +41,30 @@ $ui = $dic->get(UiInterface::class);
 /** @var Browse $browse */
 /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $object_ids */
 /** @var string $browse_type */
+/** @var string $countOrder */
+
+$webPath = AmpConfig::get_web_path();
 
 $ui->show(
     'show_form_genre.inc.php',
     ['type' => $browse_type]
 ); ?>
+<div id="information_actions">
+    <h3><?php echo T_('Order'); ?></h3>
+    <ul>
+        <li>
+            <?php if ($countOrder === 'name') { ?>
+                <a href="<?php echo $webPath; ?>/browse.php?action=tag&type=<?php echo $browse->get_type(); ?>&sort=count">
+                    <?php echo Ui::get_material_symbol('add', T_('# Items')); ?>
+                    <?php echo T_('# Items'); ?>
+                </a>
+            <?php } else { ?>
+                <a href="<?php echo $webPath; ?>/browse.php?action=tag&type=<?php echo $browse->get_type(); ?>">
+                    <?php echo Ui::get_material_symbol('sort_by_alpha', T_('Name')); ?>
+                    <?php echo T_('Name'); ?>
+                </a>
+            <?php } ?>
+</div>
 <?php Ajax::start_container('tag_filter'); ?>
 <div class="tag_container">
     <div class="tag_button">

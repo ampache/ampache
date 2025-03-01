@@ -67,6 +67,7 @@ final class TagAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         // FIXME: This whole thing is ugly, even though it works.
+        $countOrder   = $this->requestParser->getFromRequest('sort') ?: 'name';
         $request_type = $this->requestParser->getFromRequest('type');
         $browse_type  = (Browse::is_valid_type($request_type))
             ? $request_type
@@ -76,8 +77,8 @@ final class TagAction implements ApplicationActionInterface
         }
 
         $object_ids = ($browse_type == 'album_disk')
-            ? Tag::get_tags('album', 0, 'name')
-            : Tag::get_tags($browse_type, 0, 'name');
+            ? Tag::get_tags('album', 0, $countOrder)
+            : Tag::get_tags($browse_type, 0, $countOrder);
 
         $keys = array_keys($object_ids);
         Tag::build_cache($keys);
