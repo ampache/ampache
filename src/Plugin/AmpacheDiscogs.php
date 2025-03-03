@@ -175,7 +175,7 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
      */
     protected function search_album($artist, $album, $type = 'master')
     {
-        $query = "database/search?type=' . $type . '&release_title=" . rawurlencode((string) $album) . "&artist=" . rawurlencode((string) $artist) . "&per_page=10";
+        $query = "database/search?type=" . $type . "&release_title=" . rawurlencode((string) $album) . "&artist=" . rawurlencode((string) $artist) . "&per_page=10";
 
         return $this->query_discogs($query);
     }
