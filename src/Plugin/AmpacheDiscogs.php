@@ -173,9 +173,9 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
      * @param $album
      * @return mixed
      */
-    protected function search_album($artist, $album)
+    protected function search_album($artist, $album, $type = 'master')
     {
-        $query = "database/search?type=master&release_title=" . rawurlencode((string) $album) . "&artist=" . rawurlencode((string) $artist) . "&per_page=10";
+        $query = "database/search?type=' . $type . '&release_title=" . rawurlencode((string) $album) . "&artist=" . rawurlencode((string) $artist) . "&per_page=10";
 
         return $this->query_discogs($query);
     }
@@ -208,16 +208,21 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
 
         $results = [];
         try {
-            if (in_array('artist', $gather_types)) {
-                $artists = $this->search_artist($media_info['title']);
+            if (in_array('artist', $media_info) && !in_array('album', $media_info)) {
+                $artists = $this->search_artist($media_info['artist']);
                 if (count($artists['results']) > 0) {
                     $artist = $this->get_artist($artists['results'][0]['id']);
                     if (count($artist['images']) > 0) {
                         $results['art'] = $artist['images'][0]['uri'];
                     }
                 }
-            } elseif (in_array('album', $gather_types)) {
-                $albums = $this->search_album($media_info['artist'], $media_info['title']);
+            }
+            if (in_array('albumartist', $media_info) && in_array('album', $media_info)) {
+                $albums = $this->search_album($media_info['albumartist'], $media_info['album']);
+                if (empty($albums['results'])) {
+                    $albums = $this->search_album($media_info['albumartist'], $media_info['album'], 'release');
+                }
+
                 if (!empty($albums['results'])) {
                     $album = $this->get_album($albums['results'][0]['id']);
                     if (count($album['images']) > 0) {
