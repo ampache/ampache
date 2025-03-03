@@ -4469,9 +4469,9 @@ abstract class Catalog extends database_object
             }
 
             if ($object_type === 'album') {
+                self::clean_empty_albums(false);
                 Album::update_album_count($new_object_id);
                 Album::update_album_count($old_object_id);
-                self::clean_empty_albums(false);
                 self::update_map($catalog_id, 'album', $new_object_id);
                 self::update_map($catalog_id, 'album_disk', $new_object_id);
                 self::garbage_collect_mapping(['album', 'album_disk']);
