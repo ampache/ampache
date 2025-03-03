@@ -864,8 +864,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
                 if (
                     !$found &&
-                    $overwrite &&
-                    $ctv['user'] == 0
+                    $overwrite
                 ) {
                     debug_event(self::class, 'update_tag_list ' . $object_type . ' delete {' . $ctag->name . '}', 5);
                     $ctag->remove_map($object_type, $object_id, false);
