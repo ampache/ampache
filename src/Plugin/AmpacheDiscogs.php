@@ -208,16 +208,19 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
 
         $results = [];
         try {
-            if (in_array('artist', $media_info) && !in_array('album', $media_info)) {
+            if (!empty($media_info['artist']) && !in_array('album', $media_info)) {
                 $artists = $this->search_artist($media_info['artist']);
-                if (count($artists['results']) > 0) {
+                if (isset($artists['results']) && count($artists['results']) > 0) {
                     $artist = $this->get_artist($artists['results'][0]['id']);
-                    if (count($artist['images']) > 0) {
+                    if (isset($artist['images']) && count($artist['images']) > 0) {
                         $results['art'] = $artist['images'][0]['uri'];
+                    }
+                    if (!empty($artist['cover_image'])) {
+                        $results['art'] = $artist['cover_image'];
                     }
                 }
             }
-            if (in_array('albumartist', $media_info) && in_array('album', $media_info)) {
+            if (!empty($media_info['albumartist']) && !empty($media_info['album'])) {
                 $albums = $this->search_album($media_info['albumartist'], $media_info['album']);
                 if (empty($albums['results'])) {
                     $albums = $this->search_album($media_info['albumartist'], $media_info['album'], 'release');
@@ -225,8 +228,26 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
 
                 if (!empty($albums['results'])) {
                     $album = $this->get_album($albums['results'][0]['id']);
-                    if (count($album['images']) > 0) {
+                    if (empty($album['results'])) {
+                        $album = $albums['results'][0];
+                    }
+                    if (isset($album['images']) && count($album['images']) > 0) {
                         $results['art'] = $album['images'][0]['uri'];
+                    }
+                    if (!empty($album['cover_image'])) {
+                        $results['art'] = $album['cover_image'];
+                    }
+
+                    $genres = [];
+                    if (!empty($album['genre'])) {
+                        $genres = array_merge($genres, $album['genre']);
+                    }
+                    if (!empty($album['style'])) {
+                        $genres = array_merge($genres, $album['style']);
+                    }
+
+                    if (!empty($genres)) {
+                        $results['genre'] = $genres;
                     }
                 }
             }
