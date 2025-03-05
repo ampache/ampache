@@ -128,7 +128,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
         </li>
     <?php } ?>
         <li>
-        <?php echo Ajax::button_with_text('?page=random&action=send_playlist&random_type=playlist&random_id=' . $playlist->id, 'shuffle', T_('Random Play'), 'play_random_' . $playlist->id); ?>
+        <?php echo Ajax::button_with_text('?page=random&action=send_playlist&random_type=playlist&random_id=' . $playlist->id, 'autorenew', T_('Random Play'), 'play_random_' . $playlist->id); ?>
         </li>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=playlist&id=' . $playlist->id, 'new_window', T_('Add All to Temporary Playlist'), 'play_playlist'); ?>
