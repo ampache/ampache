@@ -2204,6 +2204,14 @@ abstract class Catalog extends database_object
 
                             $overwrites = false;
                             break;
+                        case 'album':
+                            foreach ($object_list as $artist_id) {
+                                $album = new Album($artist_id);
+                                $plugin->_plugin->get_external_metadata($album, 'album');
+                            }
+
+                            $overwrites = false;
+                            break;
                         default:
                     }
                 }

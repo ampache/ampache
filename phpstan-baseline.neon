@@ -2226,6 +2226,11 @@ parameters:
 			path: src/Module/Api/Method/GetBookmarkMethod.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\GetExternalMetadataMethod\\:\\:get_external_metadata\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/GetExternalMetadataMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\GetIndexesMethod\\:\\:get_indexes\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/GetIndexesMethod.php
@@ -8561,16 +8566,6 @@ parameters:
 			path: src/Plugin/AmpacheDiscogs.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:search_album\\(\\) has parameter \\$album with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:search_album\\(\\) has parameter \\$artist with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:search_artist\\(\\) has parameter \\$artist with no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheDiscogs.php
@@ -9997,11 +9992,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Offset 'user' does not exist on array\\{id\\: int, name\\: string, is_hidden\\: int, count\\: int\\}\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
 
