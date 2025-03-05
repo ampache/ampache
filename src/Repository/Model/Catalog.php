@@ -2411,25 +2411,19 @@ abstract class Catalog extends database_object
 
         $artists = [];
 
-        // Update the tags for parent items (Songs -> Albums -> Artist)
         if ($libitem instanceof Album) {
-            $genres = self::getSongTags('album', $libitem->id);
             if (
-                Tag::update_tag_list(implode(',', $genres), 'album', $libitem->id, true) ||
                 $artist || $album || $tags || $maps
             ) {
                 // update the album artists
                 foreach ($albumRepository->getArtistMap($libitem, 'album') as $albumArtist_id) {
                     $artists[] = $albumArtist_id;
-                    $genres    = self::getSongTags('artist', $albumArtist_id);
-                    Tag::update_tag_list(implode(',', $genres), 'artist', $albumArtist_id, true);
                 }
 
                 // update the song artists too
                 foreach ($albumRepository->getArtistMap($libitem, 'song') as $songArtist_id) {
                     if (!in_array($songArtist_id, $artists)) {
-                        $genres = self::getSongTags('artist', $songArtist_id);
-                        Tag::update_tag_list(implode(',', $genres), 'artist', $songArtist_id, true);
+                        $artists[] = $songArtist_id;
                     }
                 }
             }
@@ -2438,15 +2432,6 @@ abstract class Catalog extends database_object
         // artist
         if ($libitem instanceof Artist) {
             $artists[] = $libitem->id;
-            // make sure albums are updated before the artist (include if you're just a song artist too)
-            foreach (self::getAlbumRepository()->getAlbumByArtist($object_id) as $album_id) {
-                $album_tags = self::getSongTags('album', $album_id);
-                Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, true);
-            }
-
-            // refresh the artist tags after everything else
-            $genres = self::getSongTags('artist', $libitem->id);
-            Tag::update_tag_list(implode(',', $genres), 'artist', $libitem->id, true);
         }
 
         if ($type !== 'song') {
