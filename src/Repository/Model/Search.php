@@ -641,6 +641,7 @@ class Search extends playlist_object
         $this->_add_type_text('label', T_('Label'), $t_song_data);
         $this->_add_type_text('comment', T_('Comment'), $t_song_data);
         $this->_add_type_text('lyrics', T_('Lyrics'), $t_song_data);
+        $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_song_data);
 
         $t_ratings = T_('Ratings');
         if (AmpConfig::get('ratings')) {
@@ -802,6 +803,7 @@ class Search extends playlist_object
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_artist_data);
         $this->_add_type_numeric('album_count', T_('Album Count'), 'numeric', $t_artist_data);
         $this->_add_type_numeric('song_count', T_('Song Count'), 'numeric', $t_artist_data);
+        $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_artist_data);
 
         $t_ratings = T_('Ratings');
         if (AmpConfig::get('ratings')) {
@@ -899,6 +901,7 @@ class Search extends playlist_object
         $this->_add_type_text('catalog_number', T_('Catalog Number'), $t_album_data);
         $this->_add_type_numeric('disk_count', T_('Disk Count'), 'numeric', $t_album_data);
         $this->_add_type_numeric('song_count', T_('Song Count'), 'numeric', $t_album_data);
+        $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_album_data);
 
         $t_ratings = T_('Ratings');
         if (AmpConfig::get('ratings')) {
@@ -1008,6 +1011,7 @@ class Search extends playlist_object
         $this->_add_type_select('type', T_('Type'), 'boolean_numeric', $playlist_types, $t_playlist);
         $users = $this->getUserRepository()->getValidArray();
         $this->_add_type_select('owner', T_('Owner'), 'user_numeric', $users, $t_playlist);
+        $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_playlist);
     }
 
     /**
@@ -1020,6 +1024,7 @@ class Search extends playlist_object
         $t_podcasts = T_('Podcast');
         $this->_add_type_text('title', T_('Name'), $t_podcasts);
         $this->_add_type_numeric('episode_count', T_('Episode Count'), 'numeric', $t_podcasts);
+        $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_podcasts);
 
         $t_podcast_episodes = T_('Podcast Episodes');
         $this->_add_type_text('podcast_episode', T_('Podcast Episode'), $t_podcast_episodes);
@@ -1074,6 +1079,7 @@ class Search extends playlist_object
         ];
         $this->_add_type_select('state', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
+        $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_podcast_episodes);
 
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
@@ -1111,6 +1117,7 @@ class Search extends playlist_object
         $t_label = T_('Label');
         $this->_add_type_text('title', T_('Name'), $t_label);
         $this->_add_type_text('category', T_('Category'), $t_label);
+        $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_label);
     }
 
     /**
