@@ -135,7 +135,10 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
             return [];
         }
 
-        if (!$mbid = $media_info['mb_trackid']) {
+        if (
+            !isset($media_info['mb_trackid']) ||
+            !$mbid = $media_info['mb_trackid']
+        ) {
             return [];
         }
 

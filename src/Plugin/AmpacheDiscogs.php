@@ -32,7 +32,7 @@ use Ampache\Repository\Model\User;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
+class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface, PluginGetMetadataInterface
 {
     public string $name        = 'Discogs';
 
@@ -169,8 +169,9 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
     }
 
     /**
-     * @param $artist
-     * @param $album
+     * @param string $artist
+     * @param string $album
+     * @param string $type
      * @return mixed
      */
     protected function search_album($artist, $album, $type = 'master')
@@ -227,8 +228,19 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
                 }
 
                 if (!empty($albums['results'])) {
-                    $album = $this->get_album($albums['results'][0]['id']);
-                    if (empty($album['results'])) {
+                    // get the album that matches $artist - $album
+                    foreach ($albums['results'] as $albumSearch) {
+                        if ($media_info['albumartist'] . ' - ' . $media_info['album'] === $albumSearch['title']) {
+                            $album = $albumSearch;
+                            break;
+                        }
+                    }
+                    // look up the master based on the ID
+                    if (!isset($album['id'])) {
+                        $album = $this->get_album($albums['results'][0]['id']);
+                    }
+                    // fallback to the initial search if we don't have a master
+                    if (!isset($album['id'])) {
                         $album = $albums['results'][0];
                     }
                     if (isset($album['images']) && count($album['images']) > 0) {
@@ -239,15 +251,17 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
                     }
 
                     $genres = [];
-                    if (!empty($album['genre'])) {
-                        $genres = array_merge($genres, $album['genre']);
+                    foreach ($albums['results'] as $release) {
+                        if (!empty($release['genre'])) {
+                            $genres = array_merge($genres, $release['genre']);
+                        }
                     }
-                    if (!empty($album['style'])) {
-                        $genres = array_merge($genres, $album['style']);
+                    if (!empty($release['style'])) {
+                        $genres = array_merge($genres, $release['style']);
                     }
 
                     if (!empty($genres)) {
-                        $results['genre'] = $genres;
+                        $results['genre'] = array_unique($genres);
                     }
                 }
             }

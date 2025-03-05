@@ -38,7 +38,7 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterface
+class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterface, PluginGetMetadataInterface
 {
     public string $name        = 'TheAudioDb';
 
