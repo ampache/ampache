@@ -61,6 +61,8 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
 
     private $gridview;
 
+    private $compact;
+
     private int $order = 0;
 
     /**
@@ -145,7 +147,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                 : '<div class="catalogfav">';
             echo $divString;
             Ui::show_box_top(T_('Highlight'));
-            if ($this->compact ?? true) {
+            if ($this->compact) {
                 $showAlbum    = AmpConfig::get('album_group');
                 $show_ratings = User::is_registered() && (AmpConfig::get('ratings')); ?>
                 <table class="tabledata striped-rows">
@@ -331,6 +333,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
         }
 
         $this->gridview = ($data['catalogfav_gridview'] == '1');
+        $this->compact  = ($data['catalogfav_compact'] == '1');
         $this->order    = (int)($data['catalogfav_order'] ?? 0);
 
         return true;
