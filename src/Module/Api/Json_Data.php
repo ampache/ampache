@@ -673,6 +673,14 @@ class Json_Data
         $JSON = [];
         foreach ($objects as $tag_id) {
             $tag    = new Tag($tag_id);
+            $merged = $tag->get_merged_tags();
+            $merge  = [];
+            foreach ($merged as $mergedTag) {
+                $merge[] = [
+                    'id' => $mergedTag['id'],
+                    'name' => $mergedTag['name'],
+                ];
+            }
             $JSON[] = [
                 "id" => (string)$tag_id,
                 "name" => $tag->name,
@@ -682,6 +690,8 @@ class Json_Data
                 "videos" => $tag->video,
                 "playlists" => 0,
                 "live_streams" => 0,
+                "is_hidden" => (bool)$tag->is_hidden,
+                "merge" => $merge,
             ];
         } // end foreach
 

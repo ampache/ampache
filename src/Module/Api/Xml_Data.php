@@ -909,7 +909,17 @@ class Xml_Data
 
         foreach ($objects as $tag_id) {
             $tag = new Tag($tag_id);
-            $string .= "<genre id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<live_streams>0</live_streams>\n</genre>\n";
+            $merged = $tag->get_merged_tags();
+            $merge  = '';
+            foreach ($merged as $mergedTag) {
+                $merge .= "<merge id=\"" . $mergedTag['id'] . "\"><![CDATA[" . $mergedTag['name'] . "]]></merge>";
+            }
+            $string .= "<genre id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<live_streams>0</live_streams><is_hidden>" . $tag->is_hidden . "</is_hidden>";
+
+            $string .= (empty($merge))
+                ? '<merge/>'
+                : $merge;
+            $string .= "\n</genre>\n";
         } // end foreach
 
         return self::output_xml($string);
