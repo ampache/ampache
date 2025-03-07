@@ -45,7 +45,7 @@ use Ampache\Repository\Model\Tag;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Persistent'); ?></td>
-                <td><input type="checkbox" name="merge_persist" value="1" /></td>
+                <td><input type="checkbox" checked="checked" name="merge_persist" value="1" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Keep Existing'); ?></td>
