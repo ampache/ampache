@@ -285,6 +285,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
             $tag_names   = (is_array($filter_list)) ? array_unique($filter_list) : [];
 
+            // remove merges that don't exist before adding new ones
+            $this->remove_merges();
+
+            // apply the new merge list
             foreach ($tag_names as $tag) {
                 $merge_to = self::construct_from_name($tag);
                 if ($merge_to->id == 0) {
@@ -333,16 +337,17 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * get_merged_tags
      * Get merged tags to this tag.
+     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
      */
     public function get_merged_tags(): array
     {
-        $sql = "SELECT `tag`.`id`, `tag`.`name`FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name` ";
+        $sql = "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, 0 AS `count` FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name`;";
 
         $db_results = Dba::read($sql, [$this->id]);
 
         $results = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = ['id' => $row['id'], 'name' => $row['name']];
+            $results[$row['id']] = ['id' => $row['id'], 'name' => $row['name'], 'is_hidden' => $row['is_hidden'], 'count' => $row['count']];
         }
 
         return $results;
