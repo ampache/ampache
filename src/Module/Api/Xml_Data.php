@@ -908,7 +908,7 @@ class Xml_Data
         $string = "<total_count>" . Catalog::get_update_info('tag', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
         foreach ($objects as $tag_id) {
-            $tag = new Tag($tag_id);
+            $tag    = new Tag($tag_id);
             $merged = $tag->get_merged_tags();
             $merge  = '';
             foreach ($merged as $mergedTag) {
