@@ -47,12 +47,9 @@ use Ampache\Repository\Model\Tag;
                 <td class="edit_dialog_content_header"><?php echo T_('Persistent'); ?></td>
                 <td><input type="checkbox" checked="checked" name="merge_persist" value="1" /></td>
             </tr>
-            <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Keep Existing'); ?></td>
-                <td><input type="checkbox" name="keep_existing" value="1" /></td>
-            </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
         <input type="hidden" name="type" value="tag_row" />
+        <input type="hidden" name="keep_existing" value="0" />
     </form>
 </div>
