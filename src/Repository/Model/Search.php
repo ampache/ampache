@@ -728,7 +728,6 @@ class Search extends playlist_object
             '1280',
         ];
         $this->_add_type_select('bitrate', T_('Bitrate'), 'numeric', $bitrate_array, $t_file_data);
-        $this->_add_type_date('added', T_('Added'), $t_file_data);
         $this->_add_type_date('updated', T_('Updated'), $t_file_data);
         if (AmpConfig::get('licensing')) {
             $licenses = iterator_to_array(
@@ -958,6 +957,8 @@ class Search extends playlist_object
 
         $t_file_data = T_('File Data');
         $this->_add_type_text('file', T_('Filename'), $t_file_data);
+        $this->_add_type_date('added', T_('Added'), $t_file_data);
+        $this->_add_type_date('updated', T_('Updated'), $t_file_data);
         $this->_add_type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
         $this->_add_type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $this->_add_type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);

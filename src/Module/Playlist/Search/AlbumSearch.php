@@ -240,6 +240,18 @@ final class AlbumSearch implements SearchInterface
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
+                case 'added':
+                    $input        = strtotime((string) $input);
+                    $where[]      = "`song`.`addition_time` $operator_sql ?";
+                    $parameters[] = $input;
+                    $join['song'] = true;
+                    break;
+                case 'updated':
+                    $input        = strtotime((string) $input);
+                    $where[]      = "`song`.`update_time` $operator_sql ?";
+                    $parameters[] = $input;
+                    $join['song'] = true;
+                    break;
                 case 'played_times':
                     $where[]      = "`album`.`total_count` $operator_sql ?";
                     $parameters[] = $input;
