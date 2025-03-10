@@ -190,21 +190,21 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                         break;
                     case 'album':
                             /**
-                             * https://musicbrainz.org/ws/2/release-group/299f707e-ddf1-4edc-8a76-b0e85a31095b?inc=genres+releases&fmt=json
+                             * https://musicbrainz.org/ws/2/release-group/299f707e-ddf1-4edc-8a76-b0e85a31095b?inc=tags+releases&fmt=json
                              * @var object{
                              *     releases: object,
                              *     secondary-type-ids: array,
                              *     primary-type-id: string,
                              *     disambiguation: string,
                              *     secondary-types: array,
-                             *     genres: object,
+                             *     tags: object,
                              *     first-release-date: string,
                              *     title: string,
                              *     id: string,
                              *     primary-type: string
                              * } $results
                              */
-                            $results = $mbrainz->lookup('release-group', $mbid, ['genres', 'releases']);
+                            $results = $mbrainz->lookup('release-group', $mbid, ['tags', 'releases']);
                         break;
                     case 'artist':
                         /**
