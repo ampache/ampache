@@ -7,6 +7,8 @@
 * API6
   * get_external_metadata: Get metadata from external plugins. (Useful for scripting)
 
+### Changed
+
 * ALL
   * stats: Allow `limit` -1 for no limit. (0 falls back to `popular_threshold` value)
 
