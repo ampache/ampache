@@ -338,7 +338,9 @@ class Xml_Data
 
             // If it's an array, run again
             if (is_array($value)) {
-                $value = self::keyed_array($value, true);
+                $value = (isset($value[0]))
+                    ? self::keyed_array($value, true, $key)
+                    : self::keyed_array($value, true);
                 $string .= ($object) ? "<$object>\n$value\n</$object>\n" : "<$key$attribute>\n$value\n</$key>\n";
             } else {
                 $string .= ($object) ? "\t<$object index=\"" . $key . "\"><![CDATA[" . $value . "]]></$object>\n" : "\t<$key$attribute><![CDATA[" . $value . "]]></$key>\n";
