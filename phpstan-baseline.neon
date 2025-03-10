@@ -8657,12 +8657,7 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @var for variable \\$results has no value type specified in iterable type array\\.$#"
-			count: 8
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^PHPDoc tag @var for variable \\$track has no value type specified in iterable type array\\.$#"
-			count: 2
+			count: 12
 			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
@@ -9977,11 +9972,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_merged_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
 

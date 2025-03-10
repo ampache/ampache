@@ -61,7 +61,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
 
     private $gridview;
 
-    private $compact;
+    private bool $compact = false;
 
     private int $order = 0;
 
@@ -149,7 +149,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
             Ui::show_box_top(T_('Highlight'));
             if ($this->compact) {
                 $showAlbum    = AmpConfig::get('album_group');
-                $show_ratings = User::is_registered() && (AmpConfig::get('ratings')); ?>
+                $show_ratings = User::is_registered(); ?>
                 <table class="tabledata striped-rows">
                 <thead>
                 <tr class="th-top">
@@ -206,7 +206,6 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                             <td class="cel_year"><?php echo $item->year; ?></td>
                         <?php if ($show_ratings) { ?>
                             <td class="cel_ratings">
-                                <?php if (AmpConfig::get('ratings')) { ?>
                                     <div class="rating">
                 <span class="cel_rating" id="rating_<?php echo $item->getId(); ?>_song">
                     <?php echo Rating::show($item->getId(), 'song'); ?>
@@ -215,7 +214,6 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                     <?php echo Userflag::show($item->getId(), 'song'); ?>
                 </span>
                                     </div>
-                                <?php } ?>
                             </td>
                         <?php } ?>
                         <td class="cel_action">

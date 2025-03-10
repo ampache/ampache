@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Exception;
 use MusicBrainz\Filters\ArtistFilter;
@@ -169,7 +170,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                     case 'label':
                         /**
                          * https://musicbrainz.org/ws/2/label/b66d15cc-b372-4dc1-8cbd-efdeb02e23e7?fmt=json
-                         * @var object{
+                         * @var array{
                          *     id: string,
                          *     type: string,
                          *     disambiguation: string,
@@ -189,7 +190,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                     case 'album':
                         /**
                          * https://musicbrainz.org/ws/2/release-group/299f707e-ddf1-4edc-8a76-b0e85a31095b?inc=tags+releases&fmt=json
-                         * @var object{
+                         * @var array{
                          *     releases: object,
                          *     secondary-type-ids: array,
                          *     primary-type-id: string,
@@ -207,7 +208,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                     case 'artist':
                         /**
                          * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
-                         * @var object{
+                         * @var array{
                          *     sort-name: string,
                          *     id: string,
                          *     area: object,
@@ -243,7 +244,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                     case 'label':
                         /**
                          * https://musicbrainz.org/ws/2/label?query=Arrow%20land&fmt=json
-                         * @var object{
+                         * @var array{
                          *     created: string,
                          *     count: int,
                          *     offset: int,
@@ -251,16 +252,16 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                          * } $results
                          */
                         $args    = ['name' => $fullname];
-                        $results = $mbrainz->search(new LabelFilter($args), 1);
-                        if (!empty($results->{'labels'})) {
-                            $results = $results->{'labels'}[0];
+                        $results = (array)$mbrainz->search(new LabelFilter($args), 1);
+                        if (!empty($results['labels'])) {
+                            $results = $results['labels'][0];
                         }
 
                         break;
                     case 'album':
                         /**
                          * https://musicbrainz.org/ws/2/release-group?query=release:The%20Shape%20AND%20artist:Code%2064&fmt=json
-                         * @var object{
+                         * @var array{
                          *     created: string,
                          *     count: int,
                          *     offset: int,
@@ -271,16 +272,16 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                             'release' => $fullname,
                             'artist' => $parent_name,
                         ];
-                        $results = $mbrainz->search(new ReleaseGroupFilter($args), 1);
-                        if (!empty($results->{'release-groups'})) {
-                            $results = $results->{'release-groups'}[0];
+                        $results = (array)$mbrainz->search(new ReleaseGroupFilter($args), 1);
+                        if (!empty($results['release-groups'])) {
+                            $results = $results['release-groups'][0];
                         }
 
                         break;
                     case 'artist':
                         /**
                          * https://musicbrainz.org/ws/2/artist?query=name:Code%2064&fmt=json
-                         * @var object{
+                         * @var array{
                          *     created: string,
                          *     count: int,
                          *     offset: int,
@@ -288,36 +289,35 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                          * } $results
                          */
                         $args    = ['name' => $fullname];
-                        $results = $mbrainz->search(new ArtistFilter($args), 1);
-                        if (!empty($results->{'artists'})) {
-                            $results = $results->{'artists'}[0];
+                        $results = (array)$mbrainz->search(new ArtistFilter($args), 1);
+                        if (!empty($results['artists'])) {
+                            $results = $results['artists'][0];
                         }
 
                         break;
                     case 'track':
                         /**
                          * https://musicbrainz.org/ws/2/recording/140e8071-d7bb-4e05-9547-bfeea33916d0?inc=artists+releases&fmt=json
-                         * @var object{
+                         * @var array{
                          *     disambiguation: string,
-                         *     artist-credit: object,
+                         *     artist-credit: array,
                          *     title: string,
                          *     first-release-date: string,
                          *     id: string,
                          *     video: bool,
-                         *     releases: object,
+                         *     releases: array,
                          *     length: int,
-                         * } $track
+                         * } $results
                          */
-                        $results = $mbrainz->lookup('recording', $mbid, ['artists', 'releases']);
+                        $results = (array)$mbrainz->lookup('recording', $mbid, ['artists', 'releases']);
 
-                        if (isset($track->{'artist-credit'}) && count($track->{'artist-credit'}) > 0) {
-                            $artist                 = $track->{'artist-credit'}[0];
+                        if (count($results['artist-credit']) > 0) {
+                            $artist                 = $results['artist-credit'][0];
                             $artist                 = $artist->artist;
                             $results['mb_artistid'] = $artist->id;
                             $results['artist']      = $artist->name;
-                            $results['title']       = $track->{'title'};
-                            if (count($track->{'releases'}) == 1) {
-                                $release          = $track->{'releases'}[0];
+                            if (count($results['releases']) == 1) {
+                                $release          = $results['releases'][0];
                                 $results['album'] = $release->title;
                             }
                         }
@@ -339,7 +339,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
     /**
      * get_external_metadata
      * Update an object (label or artist for now) using musicbrainz
-     * @param Label|Album|Artist $object
+     * @param Label|Album|Artist|Song $object
      */
     public function get_external_metadata($object, string $object_type): bool
     {
@@ -352,22 +352,22 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         }
 
         $media_info = [];
-        if ($object_type === 'song') {
-            $media_info['mb_trackid'] = $object?->mbid;
+        if ($object_type === 'song' && $object instanceof Song) {
+            $media_info['mb_trackid'] = $object->mbid;
             $media_info['song']       = $object->get_fullname();
             $media_info['artist']     = $object->get_artist_fullname();
             $results                  = self::get_metadata(['music'], $media_info);
-        } elseif ($object_type === 'album') {
-            $media_info['mb_albumid_group'] = $object?->mbid_group;
+        } elseif ($object_type === 'album' && $object instanceof Album) {
+            $media_info['mb_albumid_group'] = $object->mbid_group ?? null;
             $media_info['album']            = $object->get_fullname();
             $media_info['albumartist']      = $object->get_artist_fullname();
             $results                        = self::get_metadata(['music'], $media_info);
-        } elseif ($object_type === 'artist') {
-            $media_info['mb_artistid'] = $object?->mbid;
+        } elseif ($object_type === 'artist' && $object instanceof Artist) {
+            $media_info['mb_artistid'] = $object->mbid;
             $media_info['artist']      = $object->get_fullname();
             $results                   = self::get_metadata(['music'], $media_info);
-        } elseif ($object_type === 'label') {
-            $media_info['mb_labelid'] = $object?->mbid;
+        } elseif ($object_type === 'label' && $object instanceof Label) {
+            $media_info['mb_labelid'] = $object->mbid;
             $media_info['label']      = $object->get_fullname();
             $results                  = self::get_metadata(['music'], $media_info);
         } else {
@@ -438,7 +438,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
             try {
                 /**
                  * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
-                 * @var object{
+                 * @var array{
                  *     sort-name: string,
                  *     id: string,
                  *     area: object,
@@ -459,18 +459,18 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                  *     country: string
                  * } $results
                  */
-                $results = $mbrainz->lookup('artist', $mbid);
+                $results = (array)$mbrainz->lookup('artist', $mbid);
             } catch (Exception $error) {
                 debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
 
-                return $data;
+                return [];
             }
         }
 
-        if (!empty($results) && isset($results->{'name'}) && isset($results->{'id'})) {
+        if (!empty($results)) {
             $data = [
-                'name' => $results->{'name'},
-                'mbid' => $results->{'id'}
+                'name' => $results['name'],
+                'mbid' => $results['id']
             ];
         }
 
