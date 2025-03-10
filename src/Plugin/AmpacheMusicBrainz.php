@@ -27,6 +27,7 @@ namespace Ampache\Plugin;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\VaInfo;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Plugin;
@@ -35,6 +36,7 @@ use Ampache\Repository\Model\User;
 use Exception;
 use MusicBrainz\Filters\ArtistFilter;
 use MusicBrainz\Filters\LabelFilter;
+use MusicBrainz\Filters\ReleaseGroupFilter;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 
@@ -135,77 +137,75 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
             return [];
         }
 
-        if (
-            !isset($media_info['mb_trackid']) ||
-            !$mbid = $media_info['mb_trackid']
-        ) {
+        if (isset($media_info['mb_trackid'])) {
+            $object_type = 'track';
+            $mbid        = $media_info['mb_trackid'];
+            $fullname    = $media_info['song'];
+            $parent_name = $media_info['artist'];
+        } elseif (isset($media_info['mb_albumid_group'])) {
+            $object_type = 'album';
+            $mbid        = $media_info['mb_albumid_group'];
+            $fullname    = $media_info['album'];
+            $parent_name = $media_info['albumartist'];
+        } elseif (isset($media_info['mb_artistid'])) {
+            $object_type = 'artist';
+            $mbid        = $media_info['mb_artistid'];
+            $fullname    = $media_info['artist'];
+            $parent_name = '';
+        } elseif (isset($media_info['mb_labelid'])) {
+            $object_type = 'label';
+            $mbid        = $media_info['mb_labelid'];
+            $fullname    = $media_info['label'];
+            $parent_name = '';
+        } else {
             return [];
         }
 
-        $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
-        $includes = [
-            'artists',
-            'releases',
-        ];
-        try {
-            /**
-             * https://musicbrainz.org/ws/2/recording/140e8071-d7bb-4e05-9547-bfeea33916d0?inc=artists+releases&fmt=json
-             * @var object{
-             *     id: string,
-             *     artist-credit: array,
-             *     length: int,
-             *     disambiguation: string,
-             *     video: bool,
-             *     releases: array,
-             *     first-release-date: string,
-             *     title: string,
-             * } $track
-             */
-            $track = $mbrainz->lookup('recording', $mbid, $includes);
-        } catch (Exception $exception) {
-            debug_event('MusicBrainz.plugin', 'Lookup error ' . $exception, 3);
-
-            return [];
-        }
-
-        $results = [];
-
-        if (isset($track->{'artist-credit'}) && count($track->{'artist-credit'}) > 0) {
-            $artist                 = $track->{'artist-credit'}[0];
-            $artist                 = $artist->artist;
-            $results['mb_artistid'] = $artist->id;
-            $results['artist']      = $artist->name;
-            $results['title']       = $track->{'title'};
-            if (count($track->{'releases'}) == 1) {
-                $release          = $track->{'releases'}[0];
-                $results['album'] = $release->title;
-            }
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_external_metadata
-     * Update an object (label or artist for now) using musicbrainz
-     * @param Label|Artist $object
-     */
-    public function get_external_metadata($object, string $object_type): bool
-    {
-        $valid_types = ['label', 'artist'];
-        // Artist metadata only for now
-        if (!in_array($object_type, $valid_types)) {
-            debug_event('MusicBrainz.plugin', 'get_external_metadata only supports Labels and Artists', 5);
-
-            return false;
-        }
+        $results  = [];
 
         $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
         $results = [];
-        if ($object->mbid !== null && VaInfo::is_mbid($object->mbid)) {
+        if (VaInfo::is_mbid($mbid)) {
             try {
                 switch ($object_type) {
                     case 'label':
+                        /**
+                         * https://musicbrainz.org/ws/2/label/b66d15cc-b372-4dc1-8cbd-efdeb02e23e7?fmt=json
+                         * @var object{
+                         *     id: string,
+                         *     type: string,
+                         *     disambiguation: string,
+                         *     sort-name: string,
+                         *     name: string,
+                         *     area: object,
+                         *     label-code: ?string,
+                         *     life-span: object,
+                         *     country: string,
+                         *     isnis: array,
+                         *     type-id: string,
+                         *     ipis: array
+                         * } $results
+                         */
+                        $results = $mbrainz->lookup($object_type, $mbid);
+                        break;
+                    case 'album':
+                            /**
+                             * https://musicbrainz.org/ws/2/release-group/299f707e-ddf1-4edc-8a76-b0e85a31095b?inc=genres+releases&fmt=json
+                             * @var object{
+                             *     releases: object,
+                             *     secondary-type-ids: array,
+                             *     primary-type-id: string,
+                             *     disambiguation: string,
+                             *     secondary-types: array,
+                             *     genres: object,
+                             *     first-release-date: string,
+                             *     title: string,
+                             *     id: string,
+                             *     primary-type: string
+                             * } $results
+                             */
+                            $results = $mbrainz->lookup('release-group', $mbid, ['genres', 'releases']);
+                        break;
                     case 'artist':
                         /**
                          * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
@@ -230,58 +230,150 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                          *     country: string
                          * } $results
                          */
-                        $results = $mbrainz->lookup($object_type, $object->mbid);
+                        $results = $mbrainz->lookup($object_type, $mbid);
                         break;
                     default:
                 }
             } catch (Exception $error) {
                 debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
 
-                return false;
+                return [];
             }
         } else {
             try {
-                $args = [$object_type => $object->get_fullname()];
                 switch ($object_type) {
                     case 'label':
                         /**
-                         * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
+                         * https://musicbrainz.org/ws/2/label?query=Arrow%20land&fmt=json
                          * @var object{
                          *     created: string,
                          *     count: int,
                          *     offset: int,
-                         *     labels: array,
+                         *     labels: object,
                          * } $results
                          */
+                        $args    = ['name' => $fullname];
                         $results = $mbrainz->search(new LabelFilter($args), 1);
                         if (!empty($results->{'labels'})) {
                             $results = $results->{'labels'}[0];
                         }
 
                         break;
-                    case 'artist':
+                    case 'album':
                         /**
-                         * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
+                         * https://musicbrainz.org/ws/2/release-group?query=release:The%20Shape%20AND%20artist:Code%2064&fmt=json
                          * @var object{
                          *     created: string,
                          *     count: int,
                          *     offset: int,
-                         *     artists: array,
+                         *     release-groups: object,
                          * } $results
                          */
+                        $args    = [
+                            'release' => $fullname,
+                            'artist' => $parent_name,
+                        ];
+                        $results = $mbrainz->search(new ReleaseGroupFilter($args), 1);
+                        if (!empty($results->{'release-groups'})) {
+                            $results = $results->{'release-groups'}[0];
+                        }
+
+                        break;
+                    case 'artist':
+                        /**
+                         * https://musicbrainz.org/ws/2/artist?query=name:Code%2064&fmt=json
+                         * @var object{
+                         *     created: string,
+                         *     count: int,
+                         *     offset: int,
+                         *     artists: object,
+                         * } $results
+                         */
+                        $args    = ['name' => $fullname];
                         $results = $mbrainz->search(new ArtistFilter($args), 1);
                         if (!empty($results->{'artists'})) {
                             $results = $results->{'artists'}[0];
                         }
 
                         break;
+                        case 'track':
+                            /**
+                             * https://musicbrainz.org/ws/2/recording/140e8071-d7bb-4e05-9547-bfeea33916d0?inc=artists+releases&fmt=json
+                             * @var object{
+                             *     disambiguation: string,
+                             *     artist-credit: object,
+                             *     title: string,
+                             *     first-release-date: string,
+                             *     id: string,
+                             *     video: bool,
+                             *     releases: object,
+                             *     length: int,
+                             * } $track
+                             */
+                            $results = $mbrainz->lookup('recording', $mbid, ['artists', 'releases']);
+
+                            if (isset($track->{'artist-credit'}) && count($track->{'artist-credit'}) > 0) {
+                                $artist                 = $track->{'artist-credit'}[0];
+                                $artist                 = $artist->artist;
+                                $results['mb_artistid'] = $artist->id;
+                                $results['artist']      = $artist->name;
+                                $results['title']       = $track->{'title'};
+                                if (count($track->{'releases'}) == 1) {
+                                    $release          = $track->{'releases'}[0];
+                                    $results['album'] = $release->title;
+                                }
+                            }
+
+                            break;
                     default:
+                        return [];
                 }
             } catch (Exception $error) {
                 debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
 
-                return false;
+                return [];
             }
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_external_metadata
+     * Update an object (label or artist for now) using musicbrainz
+     * @param Label|Album|Artist $object
+     */
+    public function get_external_metadata($object, string $object_type): bool
+    {
+        $valid_types = ['label', 'artist'];
+        // Artist and label metadata only for now
+        if (!in_array($object_type, $valid_types)) {
+            debug_event('MusicBrainz.plugin', 'get_external_metadata only supports Labels and Artists', 5);
+
+            return false;
+        }
+
+        $media_info = [];
+        if ($object_type === 'song') {
+            $media_info['mb_trackid'] = $object?->mbid;
+            $media_info['song']       = $object->get_fullname();
+            $media_info['artist']     = $object->get_artist_fullname();
+            $results                  = self::get_metadata(['music'], $media_info);
+        } elseif ($object_type === 'album') {
+            $media_info['mb_albumid_group'] = $object?->mbid_group;
+            $media_info['album']            = $object->get_fullname();
+            $media_info['albumartist']      = $object->get_artist_fullname();
+            $results                        = self::get_metadata(['music'], $media_info);
+        } elseif ($object_type === 'artist') {
+            $media_info['mb_artistid'] = $object?->mbid;
+            $media_info['artist']      = $object->get_fullname();
+            $results                   = self::get_metadata(['music'], $media_info);
+        } elseif ($object_type === 'label') {
+            $media_info['mb_labelid'] = $object?->mbid;
+            $media_info['label']      = $object->get_fullname();
+            $results                  = self::get_metadata(['music'], $media_info);
+        } else {
+            $results = [];
         }
 
         if (!empty($results)) {
