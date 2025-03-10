@@ -102,9 +102,6 @@ final class GetExternalMetadataMethod
         ];
         $plugin_names = Plugin::get_plugins(PluginTypeEnum::METADATA_RETRIEVER);
         foreach ($plugin_names as $tag_source) {
-            if ($tag_source == 'musicbrainz') {
-                continue;
-            }
             $plugin            = new Plugin($tag_source);
             $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
             if ($installed_version > 0) {
