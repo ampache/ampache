@@ -187,22 +187,22 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                         $results = $mbrainz->lookup($object_type, $mbid);
                         break;
                     case 'album':
-                            /**
-                             * https://musicbrainz.org/ws/2/release-group/299f707e-ddf1-4edc-8a76-b0e85a31095b?inc=tags+releases&fmt=json
-                             * @var object{
-                             *     releases: object,
-                             *     secondary-type-ids: array,
-                             *     primary-type-id: string,
-                             *     disambiguation: string,
-                             *     secondary-types: array,
-                             *     tags: object,
-                             *     first-release-date: string,
-                             *     title: string,
-                             *     id: string,
-                             *     primary-type: string
-                             * } $results
-                             */
-                            $results = $mbrainz->lookup('release-group', $mbid, ['tags', 'releases']);
+                        /**
+                         * https://musicbrainz.org/ws/2/release-group/299f707e-ddf1-4edc-8a76-b0e85a31095b?inc=tags+releases&fmt=json
+                         * @var object{
+                         *     releases: object,
+                         *     secondary-type-ids: array,
+                         *     primary-type-id: string,
+                         *     disambiguation: string,
+                         *     secondary-types: array,
+                         *     tags: object,
+                         *     first-release-date: string,
+                         *     title: string,
+                         *     id: string,
+                         *     primary-type: string
+                         * } $results
+                         */
+                        $results = $mbrainz->lookup('release-group', $mbid, ['tags', 'releases']);
                         break;
                     case 'artist':
                         /**
@@ -294,35 +294,35 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                         }
 
                         break;
-                        case 'track':
-                            /**
-                             * https://musicbrainz.org/ws/2/recording/140e8071-d7bb-4e05-9547-bfeea33916d0?inc=artists+releases&fmt=json
-                             * @var object{
-                             *     disambiguation: string,
-                             *     artist-credit: object,
-                             *     title: string,
-                             *     first-release-date: string,
-                             *     id: string,
-                             *     video: bool,
-                             *     releases: object,
-                             *     length: int,
-                             * } $track
-                             */
-                            $results = $mbrainz->lookup('recording', $mbid, ['artists', 'releases']);
+                    case 'track':
+                        /**
+                         * https://musicbrainz.org/ws/2/recording/140e8071-d7bb-4e05-9547-bfeea33916d0?inc=artists+releases&fmt=json
+                         * @var object{
+                         *     disambiguation: string,
+                         *     artist-credit: object,
+                         *     title: string,
+                         *     first-release-date: string,
+                         *     id: string,
+                         *     video: bool,
+                         *     releases: object,
+                         *     length: int,
+                         * } $track
+                         */
+                        $results = $mbrainz->lookup('recording', $mbid, ['artists', 'releases']);
 
-                            if (isset($track->{'artist-credit'}) && count($track->{'artist-credit'}) > 0) {
-                                $artist                 = $track->{'artist-credit'}[0];
-                                $artist                 = $artist->artist;
-                                $results['mb_artistid'] = $artist->id;
-                                $results['artist']      = $artist->name;
-                                $results['title']       = $track->{'title'};
-                                if (count($track->{'releases'}) == 1) {
-                                    $release          = $track->{'releases'}[0];
-                                    $results['album'] = $release->title;
-                                }
+                        if (isset($track->{'artist-credit'}) && count($track->{'artist-credit'}) > 0) {
+                            $artist                 = $track->{'artist-credit'}[0];
+                            $artist                 = $artist->artist;
+                            $results['mb_artistid'] = $artist->id;
+                            $results['artist']      = $artist->name;
+                            $results['title']       = $track->{'title'};
+                            if (count($track->{'releases'}) == 1) {
+                                $release          = $track->{'releases'}[0];
+                                $results['album'] = $release->title;
                             }
+                        }
 
-                            break;
+                        break;
                     default:
                         return [];
                 }
