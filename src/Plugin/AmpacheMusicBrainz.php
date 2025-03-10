@@ -141,22 +141,22 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         if (isset($media_info['mb_trackid'])) {
             $object_type = 'track';
             $mbid        = $media_info['mb_trackid'];
-            $fullname    = $media_info['song'];
+            $fullname    = $media_info['song'] ?? $media_info['title'];
             $parent_name = $media_info['artist'];
         } elseif (isset($media_info['mb_albumid_group'])) {
             $object_type = 'album';
             $mbid        = $media_info['mb_albumid_group'];
-            $fullname    = $media_info['album'];
+            $fullname    = $media_info['album'] ?? $media_info['title'];
             $parent_name = $media_info['albumartist'];
         } elseif (isset($media_info['mb_artistid'])) {
             $object_type = 'artist';
             $mbid        = $media_info['mb_artistid'];
-            $fullname    = $media_info['artist'];
+            $fullname    = $media_info['artist'] ?? $media_info['title'];
             $parent_name = '';
         } elseif (isset($media_info['mb_labelid'])) {
             $object_type = 'label';
             $mbid        = $media_info['mb_labelid'];
-            $fullname    = $media_info['label'];
+            $fullname    = $media_info['label'] ?? $media_info['title'];
             $parent_name = '';
         } else {
             return [];
