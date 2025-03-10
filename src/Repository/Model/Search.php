@@ -728,6 +728,7 @@ class Search extends playlist_object
             '1280',
         ];
         $this->_add_type_select('bitrate', T_('Bitrate'), 'numeric', $bitrate_array, $t_file_data);
+        $this->_add_type_date('added', T_('Added'), $t_file_data);
         $this->_add_type_date('updated', T_('Updated'), $t_file_data);
         if (AmpConfig::get('licensing')) {
             $licenses = iterator_to_array(

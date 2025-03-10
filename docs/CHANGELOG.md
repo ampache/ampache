@@ -4,12 +4,28 @@
 
 ### Added
 
+* Add item count to the Genre browse pages
+* Allow sorting the Genre browse page by item count
+* Allow editing links tags for hidden genres
+* Show merged tags for genres if they are set
+* Add Random play to Playlist and Smartlist object rows (Updated column CSS for these types)
+* Add example catalog update file example `catalog_update.sh`
+* Browse
+  * Add `artist`, `album`, `song` and `video` counts to the Genre browse
+  * Add `id` to the Album, AlbumDisk, Artist, Label, Playlist, Podcast, PodcastEpisode, Song and Video browse types
 * Config version 79
   * Add `split_artist_regex` split the Artist and Album Artist tags on regex and use the first result
   * Add `catalog_verify_by_album` to allow grouping updates instead of just updating individual files
+* CLI
+  * Print messages in the CLI for actions again
+  * UpdateCatalog: add new option limit. (-l|--limit) Only verify small chunk of files
+* Plugin
+  * Catalog Favorites: Add `catalogfav_compact` to show an alternative list of compact favorite items
+  * Discogs: Get genre data from the Discogs API
 
 ### Changed
 
+* Random Play icon has been changed to stop clashing with the shuffle icon
 * Update `public/.htaccess.dist`
 * Only audit NPM production modules
 * Move prettyphoto into lib/modules. (Dead project marked as Malware by NPM)
@@ -17,6 +33,7 @@
 * Restore gather art on website Add actions
 * Don't collect garbage continually when doing a large verify action
 * Update individual counts for Artists after changes
+* Search with simple album name for external links
 * webplayer
   * Rearrange the buttons to make them aling better with different config
   * Only show the slideshow button if you have a slideshow plugin enabled. (flickr)
@@ -33,6 +50,9 @@
 * Missing artist tag options for Quicktime and ASF tags
 * Genre select SQL full group by on empty `object_type`
 * Counts for `album_disk_count` not being updated well
+* Count AlbumDisk counts correctly
+* Plugin
+  * Discogs: Fix up searching for releases without a master release
 
 ## Ampache 7.3.0
 

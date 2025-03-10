@@ -391,7 +391,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 
 ; Catalog verify by album groups
 ; Ampache will verify songs individually by default. If you enable this setting
-; We will update each album instead of just hte individual songs.
+; We will update each album instead of just the individual songs.
 ; DEFAULT: "false"
 ;catalog_verify_by_album = "true"
 
