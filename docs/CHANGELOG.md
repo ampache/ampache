@@ -11,6 +11,7 @@
 * Add Random play to Playlist and Smartlist object rows (Updated column CSS for these types)
 * Add example catalog update file example `catalog_update.sh`
 * Browse
+  * Add `added` and `updated` searches to Album and AlbumDisk searches
   * Add `artist`, `album`, `song` and `video` counts to the Genre browse
   * Add `id` to the Album, AlbumDisk, Artist, Label, Playlist, Podcast, PodcastEpisode, Song and Video browse types
 * Config version 79
@@ -22,6 +23,7 @@
 * Plugin
   * Catalog Favorites: Add `catalogfav_compact` to show an alternative list of compact favorite items
   * Discogs: Get genre data from the Discogs API
+  * Musicbrainz: Add Album and Song object types to `get_metadata`
 
 ### Changed
 

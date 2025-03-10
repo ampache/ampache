@@ -6,6 +6,7 @@
 
 * API6
   * get_external_metadata: Get metadata from external plugins. (Useful for scripting)
+  * Add `is_hidden` status and `merge` genres into genre data objects
 
 ### Changed
 
@@ -15,7 +16,7 @@
 ### Fixed
 
 * XML
-  * Index keyed_array data on int[] arrays
+  * Index keyed_array data on int indexed arrays
 
 ## API 6.6.6
 
