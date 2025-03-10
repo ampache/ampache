@@ -180,7 +180,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                          *     label-code: ?string,
                          *     life-span: object,
                          *     country: string,
-                         *     isnis: array,
+                         *     isnis: object,
                          *     type-id: string,
                          *     ipis: array
                          * } $results
@@ -189,35 +189,36 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                         break;
                     case 'album':
                         /**
-                         * https://musicbrainz.org/ws/2/release-group/299f707e-ddf1-4edc-8a76-b0e85a31095b?inc=tags+releases&fmt=json
+                         * https://musicbrainz.org/ws/2/release-group/299f707e-ddf1-4edc-8a76-b0e85a31095b?inc=releases+tags&fmt=json
                          * @var array{
                          *     releases: object,
-                         *     secondary-type-ids: array,
+                         *     secondary-type-ids: object,
                          *     primary-type-id: string,
                          *     disambiguation: string,
-                         *     secondary-types: array,
-                         *     tags: object,
+                         *     secondary-types: object,
+                         *     tags: ?array,
                          *     first-release-date: string,
                          *     title: string,
                          *     id: string,
                          *     primary-type: string
                          * } $results
                          */
-                        $results = $mbrainz->lookup('release-group', $mbid, ['tags', 'releases']);
+                        $results = $mbrainz->lookup('release-group', $mbid, ['releases', 'tags']);
                         break;
                     case 'artist':
                         /**
-                         * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
+                         * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups+tags&fmt=json
                          * @var array{
                          *     sort-name: string,
                          *     id: string,
                          *     area: object,
                          *     disambiguation: string,
-                         *     isnis: array,
+                         *     isnis: object,
                          *     begin-area: ?string,
+                         *     tags: ?array,
                          *     name: string,
-                         *     ipis: array,
-                         *     release-groups: array,
+                         *     ipis: object,
+                         *     release-groups: object,
                          *     end-area: ?string,
                          *     type: string,
                          *     end_area: ?string,
@@ -229,7 +230,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                          *     country: string
                          * } $results
                          */
-                        $results = $mbrainz->lookup($object_type, $mbid);
+                        $results = $mbrainz->lookup($object_type, $mbid, ['release-groups', 'tags']);
                         break;
                     default:
                 }
@@ -299,17 +300,18 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                         /**
                          * https://musicbrainz.org/ws/2/recording/140e8071-d7bb-4e05-9547-bfeea33916d0?inc=artists+releases&fmt=json
                          * @var array{
-                         *     disambiguation: string,
+                         *     disambiguation: ?string,
                          *     artist-credit: ?array,
-                         *     title: string,
-                         *     first-release-date: string,
-                         *     id: string,
-                         *     video: bool,
+                         *     title: ?string,
+                         *     first-release-date: ?string,
+                         *     tags: ?array,
+                         *     id: ?string,
+                         *     video: ?bool,
                          *     releases: ?array,
-                         *     length: int,
+                         *     length: ?int,
                          * } $results
                          */
-                        $results = (array)$mbrainz->lookup('recording', $mbid, ['artists', 'releases']);
+                        $results = (array)$mbrainz->lookup('recording', $mbid, ['artists', 'releases', 'tags']);
 
                         if (isset($results['artist-credit']) && count($results['artist-credit']) > 0) {
                             $artist                 = $results['artist-credit'][0];
@@ -330,6 +332,17 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                 debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
 
                 return [];
+            }
+        }
+
+        if (isset($results['tags'])) {
+            $genres = [];
+            foreach ($results['tags'] as $tag) {
+                $genres[] = $tag;
+            }
+
+            if (!empty($genres)) {
+                $results['genre'] = array_unique($genres);
             }
         }
 
@@ -411,7 +424,6 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                     }
 
                     break;
-                default:
             }
 
             if (!empty($data)) {
@@ -443,11 +455,12 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                  *     id: string,
                  *     area: object,
                  *     disambiguation: string,
-                 *     isnis: array,
+                 *     isnis: object,
                  *     begin-area: ?string,
                  *     name: string,
-                 *     ipis: array,
-                 *     release-groups: array,
+                 *     ipis: object,
+                 *     tags: ?array,
+                 *     release-groups: ?array,
                  *     end-area: ?string,
                  *     type: string,
                  *     end_area: ?string,
@@ -459,7 +472,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                  *     country: string
                  * } $results
                  */
-                $results = (array)$mbrainz->lookup('artist', $mbid);
+                $results = (array)$mbrainz->lookup('artist', $mbid, ['tags']);
             } catch (Exception $error) {
                 debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
 

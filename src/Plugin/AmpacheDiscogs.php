@@ -222,13 +222,40 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                 }
             }
             if (!empty($media_info['albumartist']) && !empty($media_info['album'])) {
+                /**
+                 * https://api.discogs.com/database/search?type=master&release_title=Ghosts&artist=Ladytron&per_page=10&key=key@secret=secret
+                 */
                 $albums = $this->search_album($media_info['albumartist'], $media_info['album']);
                 if (empty($albums['results'])) {
                     $albums = $this->search_album($media_info['albumartist'], $media_info['album'], 'release');
                 }
 
+                // get the album that matches $artist - $album
                 if (!empty($albums['results'])) {
-                    // get the album that matches $artist - $album
+                    /**
+                     * @var array{
+                     *     country: string,
+                     *     year: string,
+                     *     format: string[],
+                     *     label: string[],
+                     *     type: string,
+                     *     genre: string[],
+                     *     style: string[],
+                     *     id: ?int,
+                     *     barcode: string[],
+                     *     master_id: int,
+                     *     master_url: string,
+                     *     uri: string,
+                     *     catno: string,
+                     *     title: string,
+                     *     thumb: string,
+                     *     cover_image: string,
+                     *     resource_url: string,
+                     *     community: object,
+                     *     format_quantity: ?int,
+                     *     formats: ?object,
+                     * } $albumSearch
+                     */
                     foreach ($albums['results'] as $albumSearch) {
                         if ($media_info['albumartist'] . ' - ' . $media_info['album'] === $albumSearch['title']) {
                             $album = $albumSearch;
@@ -237,6 +264,28 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                     }
                     // look up the master based on the ID
                     if (!isset($album['id'])) {
+                        /**
+                         * @var array{
+                         *     id: ?int,
+                         *     main_release: int,
+                         *     most_recent_release: int,
+                         *     uri: string,
+                         *     versions_uri: string,
+                         *     main_release_uri: string,
+                         *     most_recent_release_uri: string,
+                         *     num_for_sale: int,
+                         *     lowest_price: int,
+                         *     images: object,
+                         *     genres: string[],
+                         *     styles: string[],
+                         *     year: int,
+                         *     tracklist: object,
+                         *     artists: object,
+                         *     title: string,
+                         *     data-quality: string,
+                         *     videos: object,
+                         * } $album
+                         */
                         $album = $this->get_album($albums['results'][0]['id']);
                     }
                     // fallback to the initial search if we don't have a master
