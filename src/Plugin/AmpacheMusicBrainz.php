@@ -300,23 +300,23 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                          * https://musicbrainz.org/ws/2/recording/140e8071-d7bb-4e05-9547-bfeea33916d0?inc=artists+releases&fmt=json
                          * @var array{
                          *     disambiguation: string,
-                         *     artist-credit: array,
+                         *     artist-credit: ?array,
                          *     title: string,
                          *     first-release-date: string,
                          *     id: string,
                          *     video: bool,
-                         *     releases: array,
+                         *     releases: ?array,
                          *     length: int,
                          * } $results
                          */
                         $results = (array)$mbrainz->lookup('recording', $mbid, ['artists', 'releases']);
 
-                        if (count($results['artist-credit']) > 0) {
+                        if (isset($results['artist-credit']) && count($results['artist-credit']) > 0) {
                             $artist                 = $results['artist-credit'][0];
                             $artist                 = $artist->artist;
                             $results['mb_artistid'] = $artist->id;
                             $results['artist']      = $artist->name;
-                            if (count($results['releases']) == 1) {
+                            if (isset($results['releases']) && count($results['releases']) == 1) {
                                 $release          = $results['releases'][0];
                                 $results['album'] = $release->title;
                             }
