@@ -2906,7 +2906,7 @@ abstract class Catalog extends database_object
             Art::duplicate('artist', $song->artist, $new_song->artist);
         }
 
-        if ($song->albumartist > 0 && $new_song->albumartist && $song->albumartist != $new_song->albumartist && !Art::has_db($new_song->albumartist, 'artist')) {
+        if ($song->albumartist > 0 && $new_song->albumartist && $song->albumartist != $new_song->albumartist && $song->artist != $song->albumartist) {
             Art::duplicate('artist', $song->albumartist, $new_song->albumartist);
         }
 
