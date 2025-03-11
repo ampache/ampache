@@ -2993,12 +2993,20 @@ abstract class Catalog extends database_object
         }
 
         $info['maps'] = $map_change;
+        if ($map_change) {
+            $info['change'] = true;
+        }
 
         if (
-            $info['change'] ||
-            $info['maps']
+            $map_change ||
+            (
+                $info['change'] && (
+                    array_key_exists('album', $info['element']) ||
+                    array_key_exists('artist', $info['element']) ||
+                    array_key_exists('tags', $info['element'])
+                )
+            )
         ) {
-            $info['change'] = true;
             self::updateAlbumTags($song->album);
             self::updateArtistTags($song->album, $song->id);
         }

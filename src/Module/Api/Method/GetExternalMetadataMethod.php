@@ -45,7 +45,7 @@ final class GetExternalMetadataMethod
 
     /**
      * get_external_metadata
-     * MINIMUM_API_VERSION=6.3.0
+     * MINIMUM_API_VERSION=6.6.7
      *
      * Return External plugin metadata searching by object id and type
      *
