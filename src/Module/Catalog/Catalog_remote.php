@@ -550,13 +550,12 @@ class Catalog_remote extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      * @param string $song_url
-     * @return int|bool
      */
-    public function check_remote_song($song_url)
+    public function check_remote_song($song_url): ?int
     {
         $url = preg_replace('/ssid=.*&/', '', $song_url);
         if (!$url) {
-            return false;
+            return null;
         }
         $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
         $db_results = Dba::read($sql, [$url]);
@@ -565,7 +564,7 @@ class Catalog_remote extends Catalog
             return (int)$results['id'];
         }
 
-        return false;
+        return null;
     }
 
     /**

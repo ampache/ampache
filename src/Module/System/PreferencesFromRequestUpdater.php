@@ -93,7 +93,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                     $value = filter_var(urldecode($value), FILTER_VALIDATE_URL) ?: null;
                     break;
                 case 'transcode_bitrate':
-                    $value = (string) Stream::validate_bitrate($value);
+                    $value = (string) Stream::validate_bitrate((int)$value);
                     break;
                 case 'custom_timezone':
                     $listIdentifiers = DateTimeZone::listIdentifiers() ?: [];

@@ -132,10 +132,9 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
     }
 
     /**
-     * @param $query
      * @return mixed
      */
-    protected function query_discogs($query)
+    protected function query_discogs(string $query)
     {
         $url = 'https://api.discogs.com/' . $query;
         $url .= (str_contains((string) $query, '?')) ? '&' : '?';
@@ -147,7 +146,7 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
     }
 
     /**
-     * @param $artist
+     * @param string $artist
      * @return mixed
      */
     protected function search_artist($artist)
@@ -158,10 +157,9 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
     }
 
     /**
-     * @param int $object_id
      * @return mixed
      */
-    protected function get_artist($object_id)
+    protected function get_artist(int $object_id)
     {
         $query = "artists/" . $object_id;
 
@@ -182,10 +180,9 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
     }
 
     /**
-     * @param int $object_id
      * @return mixed
      */
-    protected function get_album($object_id, $release_type = 'masters')
+    protected function get_album(int $object_id, string $release_type = 'masters')
     {
         $query = $release_type . '/' . $object_id;
 
@@ -212,7 +209,7 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
             if (!empty($media_info['artist']) && !in_array('album', $media_info)) {
                 $artists = $this->search_artist($media_info['artist']);
                 if (isset($artists['results']) && count($artists['results']) > 0) {
-                    $artist = $this->get_artist($artists['results'][0]['id']);
+                    $artist = $this->get_artist((int)$artists['results'][0]['id']);
                     if (isset($artist['images']) && count($artist['images']) > 0) {
                         $results['art'] = $artist['images'][0]['uri'];
                     }
@@ -287,8 +284,8 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                          * } $album
                          */
                         $album = (($albums['results'][0]['master_id'] ?? 0) > 0)
-                            ? $this->get_album($albums['results'][0]['master_id'])
-                            : $this->get_album($albums['results'][0]['id'], 'releases');
+                            ? $this->get_album((int)$albums['results'][0]['master_id'])
+                            : $this->get_album((int)$albums['results'][0]['id'], 'releases');
                     }
                     // fallback to the initial search if we don't have a master
                     if (!isset($album['id'])) {

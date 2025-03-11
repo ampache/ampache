@@ -380,10 +380,9 @@ final class VaInfo implements VaInfoInterface
     /**
      * write_id3
      * This function runs the various steps to gathering the metadata
-     * @param $tagData
      * @throws Exception
      */
-    public function write_id3($tagData): void
+    public function write_id3(array $tagData): void
     {
         $TaggingFormat = 'UTF-8';
         $tagWriter     = new getid3_writetags();
@@ -936,10 +935,8 @@ final class VaInfo implements VaInfoInterface
      *
      * Gather and return the general information about a file
      * (vbr/cbr, sample rate, channels, etc.)
-     * @param $tags
-     * @return array
      */
-    private function _parse_general($tags): array
+    private function _parse_general(array $tags): array
     {
         //$this->logger->debug('_parse_general: ' . print_r($tags, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
         $parsed          = [];

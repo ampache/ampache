@@ -50,10 +50,9 @@ interface VaInfoInterface
     /**
      * write_id3
      * This function runs the various steps to gathering the metadata
-     * @param $tagData
      * @throws \Exception
      */
-    public function write_id3($tagData): void;
+    public function write_id3(array $tagData): void;
 
     /**
      * prepare_metadata_for_writing
