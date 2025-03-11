@@ -185,9 +185,9 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
      * @param int $object_id
      * @return mixed
      */
-    protected function get_album($object_id)
+    protected function get_album($object_id, $release_type = 'masters')
     {
-        $query = "masters/" . $object_id;
+        $query = $release_type . '/' . $object_id;
 
         return $this->query_discogs($query);
     }
@@ -262,7 +262,7 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                             break;
                         }
                     }
-                    // look up the master based on the ID
+                    // look up the master release if we have one or the first release
                     if (!isset($album['id'])) {
                         /**
                          * @var array{
@@ -286,7 +286,9 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                          *     videos: object,
                          * } $album
                          */
-                        $album = $this->get_album($albums['results'][0]['id']);
+                        $album = (($albums['results'][0]['master_id'] ?? 0) > 0)
+                            ? $this->get_album($albums['results'][0]['master_id'])
+                            : $this->get_album($albums['results'][0]['id'], 'releases');
                     }
                     // fallback to the initial search if we don't have a master
                     if (!isset($album['id'])) {
