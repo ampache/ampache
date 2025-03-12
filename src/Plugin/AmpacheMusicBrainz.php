@@ -335,14 +335,14 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
             }
         }
 
-        if (isset($results['tags'])) {
+        if (isset($results->{'tags'})) {
             $genres = [];
-            foreach ($results['tags'] as $tag) {
-                $genres[] = $tag;
+            foreach ($results->{'tags'} as $tag) {
+                $genres[] = $tag->name;
             }
 
             if (!empty($genres)) {
-                $results['genre'] = array_unique($genres);
+                $results->{'genre'} = array_unique($genres);
             }
         }
 
