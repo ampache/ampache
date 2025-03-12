@@ -394,26 +394,26 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                 case 'label':
                     /** @var Label $object */
                     $data = [
-                        'name' => $results['name'] ?? $object->get_fullname(),
-                        'mbid' => $results['id'] ?? $object->mbid,
-                        'category' => $results['type'] ?? $object->category,
-                        'summary' => $results['disambiguation'] ?? $object->summary,
+                        'name' => $results->{'name'} ?? $object->get_fullname(),
+                        'mbid' => $results->{'id'} ?? $object->mbid,
+                        'category' => $results->{'type'} ?? $object->category,
+                        'summary' => $results->{'disambiguation'} ?? $object->summary,
                         'address' => $object->address,
-                        'country' => $results['country'] ?? $object->country,
+                        'country' => $results->{'country'} ?? $object->country,
                         'email' => $object->email,
                         'website' => $object->website,
-                        'active' => ($results['life-span']['ended'] == 1) ? 0 : 1
+                        'active' => ($results->{'life-span'}->{'ended'} == 1) ? 0 : 1
                     ];
                     break;
                 case 'artist':
                     /** @var Artist $object */
-                    $placeFormed = $results['begin-area']['name'] ?? $results['area']['name'] ?? $object->placeformed;
+                    $placeFormed = $results->{'begin-area'}->{'name'} ?? $results->{'area'}->{'name'} ?? $object->placeformed;
                     $data        = [
-                        'name' => $results['name'] ?? $object->get_fullname(),
-                        'mbid' => $results['id'] ?? $object->mbid,
+                        'name' => $results->{'name'} ?? $object->get_fullname(),
+                        'mbid' => $results->{'id'} ?? $object->mbid,
                         'summary' => $object->summary,
                         'placeformed' => $placeFormed,
-                        'yearformed' => explode('-', ($results['life-span']['begin'] ?? ''))[0] ?? $object->yearformed
+                        'yearformed' => explode('-', ($results->{'life-span'}->{'begin'} ?? ''))[0] ?? $object->yearformed
                     ];
 
                     // when you come in with an mbid you might want to keep the name updated
