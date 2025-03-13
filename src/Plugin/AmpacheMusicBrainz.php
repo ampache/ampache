@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
@@ -164,7 +163,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
 
         $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
         $results = [];
-        if (VaInfo::is_mbid($mbid)) {
+        if (MusicBrainz::isMBID($mbid)) {
             try {
                 switch ($object_type) {
                     case 'label':
@@ -417,7 +416,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                     ];
 
                     // when you come in with an mbid you might want to keep the name updated
-                    if ($this->overwrite_name && $object->mbid !== null && VaInfo::is_mbid($object->mbid) && $data['name'] !== $object->get_fullname()) {
+                    if ($this->overwrite_name && $object->mbid !== null && MusicBrainz::isMBID($object->mbid) && $data['name'] !== $object->get_fullname()) {
                         $name_check     = Artist::update_name_from_mbid($data['name'], $object->mbid);
                         $object->prefix = $name_check['prefix'];
                         $object->name   = $name_check['name'];
@@ -446,7 +445,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
         $results = [];
         $data    = [];
-        if (VaInfo::is_mbid($mbid)) {
+        if (MusicBrainz::isMBID($mbid)) {
             try {
                 /**
                  * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
