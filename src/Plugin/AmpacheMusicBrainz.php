@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
