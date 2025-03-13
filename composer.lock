@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5c91c2c07768d3f9a71878db174a2c16",
+    "content-hash": "016bb4f41570a4f1a62107d8989368d1",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -1401,6 +1401,67 @@
             "time": "2023-03-02T04:58:28+00:00"
         },
         {
+            "name": "lachlan-00/musicbrainz",
+            "version": "0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lachlan-00/MusicBrainz.git",
+                "reference": "fe689dc40a3ebd43189b6ce40829f35c7f8c3534"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lachlan-00/MusicBrainz/zipball/fe689dc40a3ebd43189b6ce40829f35c7f8c3534",
+                "reference": "fe689dc40a3ebd43189b6ce40829f35c7f8c3534",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.49",
+                "guzzle/guzzle": "^3.8",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^11",
+                "rector/rector": "^1",
+                "rmccue/requests": "^2.0"
+            },
+            "suggest": {
+                "ext-curl": "*",
+                "guzzle/guzzle": "Allows you to use the GuzzleHttpAdapter. You must install one of the supported adapters.",
+                "rmccue/requests": "Allows you to use the RequestsHttpAdapter. You must install one of the supported adapters."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "MusicBrainz": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lachlan de Waard",
+                    "email": "lachlan.00@gmail.com",
+                    "homepage": "https://github.com/lachlan-00",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP library for accessing the MusicBrainz API",
+            "homepage": "https://github.com/lachlan-00/MusicBrainz",
+            "keywords": [
+                "api",
+                "library",
+                "musicbrainz",
+                "php"
+            ],
+            "support": {
+                "source": "https://github.com/lachlan-00/MusicBrainz/tree/0.3.0"
+            },
+            "time": "2025-03-13T00:45:39+00:00"
+        },
+        {
             "name": "laravel/serializable-closure",
             "version": "v1.3.7",
             "source": {
@@ -1634,75 +1695,6 @@
                 }
             ],
             "time": "2024-12-08T08:18:47+00:00"
-        },
-        {
-            "name": "mikealmond/musicbrainz",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mikealmond/MusicBrainz.git",
-                "reference": "98d1aa1c57dbb609d71db9d3d1487a5729f149de"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mikealmond/MusicBrainz/zipball/98d1aa1c57dbb609d71db9d3d1487a5729f149de",
-                "reference": "98d1aa1c57dbb609d71db9d3d1487a5729f149de",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.8"
-            },
-            "require-dev": {
-                "guzzle/guzzle": "~3.8.0",
-                "phpunit/phpunit": "3.7.*"
-            },
-            "suggest": {
-                "guzzle/guzzle": "Allows you to use the GuzzleHttpAdapter. You must install one of the supported adapters.",
-                "rmccue/requests": "Allows you to use the RequestsHttpAdapter. You must install one of the supported adapters."
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.2.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "MusicBrainz": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Mike Almond",
-                    "email": "mike.almond@gmail.com",
-                    "homepage": "http://mikealmond.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A PHP library for accessing the MusicBrainz API",
-            "homepage": "https://github.com/mikealmond/musicbrainz",
-            "keywords": [
-                "api",
-                "library",
-                "musicbrainz",
-                "php"
-            ],
-            "support": {
-                "issues": "https://github.com/mikealmond/MusicBrainz/issues",
-                "source": "https://github.com/mikealmond/MusicBrainz/tree/master"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/mikealmond",
-                    "type": "github"
-                }
-            ],
-            "time": "2020-02-14T19:39:17+00:00"
         },
         {
             "name": "nabil1337/case-helper",
@@ -8619,8 +8611,7 @@
     "stability-flags": {
         "ampache/ampacheapi-php": 20,
         "james-heinrich/getid3": 20,
-        "krixon/xbmc-php-rpc": 20,
-        "mikealmond/musicbrainz": 20
+        "krixon/xbmc-php-rpc": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
@@ -8640,7 +8631,7 @@
         "ext-xml": "*",
         "ext-zip": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "ext-curl": "1.0",
         "ext-date": "1.0",
@@ -8661,5 +8652,5 @@
         "ext-xmlreader": "1.0",
         "lib-libxml": "2.7.0"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.6.0"
 }
