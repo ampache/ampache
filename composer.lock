@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b8397caa00be001440f2bb4d04ddaf22",
+    "content-hash": "be34064dfebc7cc4450c540efe5f80e4",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -1402,16 +1402,16 @@
         },
         {
             "name": "lachlan-00/musicbrainz",
-            "version": "0.3.1",
+            "version": "0.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lachlan-00/MusicBrainz.git",
-                "reference": "dd55f6240bbeb9800261742dec73eebbe6554164"
+                "reference": "594e9bbf11b3038488c8dccace2afbe2ae453493"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lachlan-00/MusicBrainz/zipball/dd55f6240bbeb9800261742dec73eebbe6554164",
-                "reference": "dd55f6240bbeb9800261742dec73eebbe6554164",
+                "url": "https://api.github.com/repos/lachlan-00/MusicBrainz/zipball/594e9bbf11b3038488c8dccace2afbe2ae453493",
+                "reference": "594e9bbf11b3038488c8dccace2afbe2ae453493",
                 "shasum": ""
             },
             "require": {
@@ -1457,9 +1457,9 @@
                 "php"
             ],
             "support": {
-                "source": "https://github.com/lachlan-00/MusicBrainz/tree/0.3.1"
+                "source": "https://github.com/lachlan-00/MusicBrainz/tree/0.3.2"
             },
-            "time": "2025-03-13T00:55:20+00:00"
+            "time": "2025-03-13T01:49:57+00:00"
         },
         {
             "name": "laravel/serializable-closure",
