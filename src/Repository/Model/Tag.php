@@ -744,11 +744,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
             $sql = (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
                 ? sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name`, `tag`.`is_hidden`%s FROM `tag` WHERE %s%sAND %s ', $type_select, $hidden_where, $type_where, Catalog::get_user_filter('tag', Core::get_global('user')->id))
-                : sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name`%s FROM `tag` WHERE %s%s', $type_select, $hidden_where, $type_where);
+                : sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name`, `tag`.`is_hidden`%s FROM `tag` WHERE %s%s', $type_select, $hidden_where, $type_where);
 
-            $sql .= (empty($type))
-                ? "GROUP BY `tag`.`id`, `tag`.`name`, `tag`.`artist`, `tag`.`album`, `tag`.`song` "
-                : "GROUP BY `tag`.`id`, `tag`.`name`, `count` ";
+            $sql .= (empty($type) || $type == 'all_hidden')
+                ? "GROUP BY `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`artist`, `tag`.`album`, `tag`.`song` "
+                : "GROUP BY `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `count` ";
         }
 
         $order = ($order == 'count')
