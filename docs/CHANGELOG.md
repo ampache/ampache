@@ -28,6 +28,7 @@
 ### Changed
 
 * Random Play icon has been changed to stop clashing with the shuffle icon
+* Update vite from v5 to v6
 * Update `public/.htaccess.dist`
 * Only audit NPM production modules
 * Move prettyphoto into lib/modules. (Dead project marked as Malware by NPM)
@@ -36,6 +37,8 @@
 * Don't collect garbage continually when doing a large verify action
 * Update individual counts for Artists after changes
 * Search with simple album name for external links
+* Change MusicBrainz library to [lachlan-00/MusicBrainz](https://github.com/lachlan-00/MusicBrainz)
+* Use MusicBrainz library for MBID validity checks
 * webplayer
   * Rearrange the buttons to make them aling better with different config
   * Only show the slideshow button if you have a slideshow plugin enabled. (flickr)
@@ -53,6 +56,10 @@
 * Genre select SQL full group by on empty `object_type`
 * Counts for `album_disk_count` not being updated well
 * Count AlbumDisk counts correctly
+* Show tags with no object counts in the hidden tab. (They will never appear on the object pages)
+* Always update `album_map` and `artist_map` rows just in case they were missed
+* Don't update item and parent genres if there wasn't an item or parent change
+* Duplicate stat migrations for same `song_artist` & `album_artist`
 * Plugin
   * Discogs: Fix up searching for releases without a master release
 
