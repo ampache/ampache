@@ -704,7 +704,7 @@ class Catalog_local extends Catalog
         $chunk  = 0;
         // how many loops through the catalog
         if ($total > $chunk_size) {
-            $chunks = (int)floor($total / $chunk_size);
+            $chunks = (int)ceil($total / $chunk_size);
         }
 
         // only do the requested size
