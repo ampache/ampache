@@ -2742,6 +2742,7 @@ abstract class Catalog extends database_object
                 $songArtist_id = Artist::check_mbid($song_artist_mbid);
                 if ($songArtist_id > 0 && !in_array($songArtist_id, $songArtist_array)) {
                     $songArtist_array[] = $songArtist_id;
+                    Artist::add_artist_map($songArtist_id, 'song', $song->id);
                 }
             }
         }
@@ -2752,6 +2753,7 @@ abstract class Catalog extends database_object
                 $songArtist_id = (int)Artist::check($artist_name);
                 if ($songArtist_id > 0 && !in_array($songArtist_id, $songArtist_array)) {
                     $songArtist_array[] = $songArtist_id;
+                    Artist::add_artist_map($songArtist_id, 'song', $song->id);
                 }
             }
         }
@@ -2785,6 +2787,7 @@ abstract class Catalog extends database_object
                 $albumArtist_id = Artist::check_mbid($album_artist_mbid);
                 if ($albumArtist_id > 0 && !in_array($albumArtist_id, $albumArtist_array)) {
                     $albumArtist_array[] = $albumArtist_id;
+                    Artist::add_artist_map($albumArtist_id, 'album', $new_song->album);
                 }
             }
         }
