@@ -855,7 +855,7 @@ class Catalog_local extends Catalog
         $chunks = 1;
         $chunk  = 0;
         if ($total > 10000) {
-            $chunks = floor($total / 10000) + 1;
+            $chunks = (int)ceil($total / 10000);
         }
         while ($chunk < $chunks) {
             $interactor?->info(
@@ -1289,7 +1289,7 @@ class Catalog_local extends Catalog
         if ($total == 0) {
             return $missing;
         }
-        $chunks = (int)floor($total / 10000) + 1;
+        $chunks = (int)ceil($total / 10000);
         foreach (range(1, $chunks) as $chunk) {
             debug_event('local.catalog', "catalog " . $this->name . " Starting check " . $media_type . " on chunk $chunk/$chunks", 5);
             $missing = array_merge($missing, $this->_check_chunk($media_type, (int)$chunk, 10000));
