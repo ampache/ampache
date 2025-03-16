@@ -65,14 +65,20 @@ final class LicenseRepository extends BaseRepository implements LicenseRepositor
     public function find(string $searchValue): ?int
     {
         // lookup the license by name
-        $result = $this->connection->fetchOne('SELECT `id` FROM `license` WHERE `name` = ? LIMIT 1');
+        $result = $this->connection->fetchOne(
+            'SELECT `id` FROM `license` WHERE `name` = ? LIMIT 1',
+            [$searchValue]
+        );
 
         if ($result !== false) {
             return (int) $result;
         }
 
         // lookup the license by external_link
-        $result = $this->connection->fetchOne('SELECT `id` FROM `license` WHERE `external_link` = ? LIMIT 1');
+        $result = $this->connection->fetchOne(
+            'SELECT `id` FROM `license` WHERE `external_link` = ? LIMIT 1',
+            [$searchValue]
+        );
 
         if ($result !== false) {
             return (int) $result;
