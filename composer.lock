@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "be34064dfebc7cc4450c540efe5f80e4",
+    "content-hash": "36c9e832c4e4c5153c67b152946fd537",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -1402,7 +1402,7 @@
         },
         {
             "name": "lachlan-00/musicbrainz",
-            "version": "0.3.2",
+            "version": "dev-release",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lachlan-00/MusicBrainz.git",
@@ -1457,7 +1457,7 @@
                 "php"
             ],
             "support": {
-                "source": "https://github.com/lachlan-00/MusicBrainz/tree/0.3.2"
+                "source": "https://github.com/lachlan-00/MusicBrainz/tree/release"
             },
             "time": "2025-03-13T01:49:57+00:00"
         },
@@ -8611,7 +8611,8 @@
     "stability-flags": {
         "ampache/ampacheapi-php": 20,
         "james-heinrich/getid3": 20,
-        "krixon/xbmc-php-rpc": 20
+        "krixon/xbmc-php-rpc": 20,
+        "lachlan-00/musicbrainz": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

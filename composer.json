@@ -63,7 +63,7 @@
         "jwilsson/spotify-web-api-php": "^6",
         "krixon/xbmc-php-rpc": "dev-master",
         "kunalvarma05/dropbox-php-sdk": "^0.4",
-        "lachlan-00/musicbrainz": "0.3.2",
+        "lachlan-00/musicbrainz": "dev-release",
         "nyholm/psr7": "^1.3",
         "nyholm/psr7-server": "^1.0",
         "php-curl-class/php-curl-class": "^9.18",
