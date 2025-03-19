@@ -3001,6 +3001,7 @@ abstract class Catalog extends database_object
         }
 
         if (
+            self::updateAlbumTags($song->album) ||
             $map_change ||
             (
                 $info['change'] && (
@@ -3010,7 +3011,6 @@ abstract class Catalog extends database_object
                 )
             )
         ) {
-            self::updateAlbumTags($song->album);
             self::updateArtistTags($song->album, $song->id);
         }
 
@@ -3913,10 +3913,11 @@ abstract class Catalog extends database_object
     /**
      * Updates album tags from given song's album id
      */
-    protected static function updateAlbumTags(int $album_id): void
+    protected static function updateAlbumTags(int $album_id): bool
     {
         $tags = self::getSongTags('album', $album_id);
-        Tag::update_tag_list(implode(',', $tags), 'album', $album_id, true);
+
+        return Tag::update_tag_list(implode(',', $tags), 'album', $album_id, true);
     }
 
     /**
