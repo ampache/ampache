@@ -285,6 +285,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
             $tag_names   = (is_array($filter_list)) ? array_unique($filter_list) : [];
 
+            // remove merges that don't exist before adding new ones
+            $this->remove_merges();
+
+            // apply the new merge list
             foreach ($tag_names as $tag) {
                 $merge_to = self::construct_from_name($tag);
                 if ($merge_to->id == 0) {
@@ -333,16 +337,17 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * get_merged_tags
      * Get merged tags to this tag.
+     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
      */
     public function get_merged_tags(): array
     {
-        $sql = "SELECT `tag`.`id`, `tag`.`name`FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name` ";
+        $sql = "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, 0 AS `count` FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name`;";
 
         $db_results = Dba::read($sql, [$this->id]);
 
         $results = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = ['id' => $row['id'], 'name' => $row['name']];
+            $results[$row['id']] = ['id' => $row['id'], 'name' => $row['name'], 'is_hidden' => $row['is_hidden'], 'count' => $row['count']];
         }
 
         return $results;
@@ -567,7 +572,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $type
      * @param int $object_id
      * @param int $limit
-     * @return array<array{user: int, id: int, name: string}>
+     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
      */
     public static function get_top_tags($type, $object_id, $limit = 10): array
     {
@@ -575,15 +580,18 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             return [];
         }
 
-        $object_id = (int)($object_id);
-
-        $limit = (int)($limit);
-        $sql   = 'SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? LIMIT ' . $limit;
+        $object_id  = (int)($object_id);
+        $limit_text = ($limit == 0)
+            ? ''
+            : 'LIMIT ' . $limit;
+        $sql   = (in_array($type, ['artist', 'album', 'song', 'video']))
+            ? 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`' . $type . '` AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `' . $type . '` DESC ' . $limit_text
+            : 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `count` DESC ' . $limit_text;
 
         $db_results = Dba::read($sql, [$type, $object_id]);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = ['user' => $row['user'], 'id' => $row['tag_id'], 'name' => $row['name']];
+            $results[] = ['id' => $row['id'], 'name' => $row['name'], 'is_hidden' => $row['is_hidden'], 'count' => $row['count']];
         }
 
         return $results;
@@ -709,6 +717,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $type
      * @param int $limit
      * @param string $order
+     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
      */
     public static function get_tags($type = '', $limit = 0, $order = 'count'): array
     {
@@ -720,29 +729,32 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $results = [];
         if ($type == 'tag_hidden') {
-            $is_hidden = 1;
-            $sql       = "SELECT `tag`.`id`, `tag`.`name`, 0 AS `count` FROM `tag` WHERE `tag`.`is_hidden` = 1 ";
+            $sql       = "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, 0 AS `count` FROM `tag` WHERE (`tag`.`is_hidden` = 1 OR (`tag`.`album` = 0 AND `tag`.`artist` = 0 AND `tag`.`song` = 0 AND `tag`.`video` = 0 )) ";
         } else {
-            $is_hidden   = 0;
-            $type_select = (empty($type))
+            $type_select = (empty($type) || $type == 'all_hidden')
                 ? ', (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count`'
                 : sprintf(', `tag`.`%s` AS `count`', scrub_in($type));
             $type_where = match ($type) {
-                'album', 'song', 'video', 'artist' => "AND `tag`.`" . scrub_in($type) . "` != 0",
-                default => "",
+                'album', 'song', 'video', 'artist' => " AND `tag`.`" . scrub_in($type) . "` != 0 ",
+                default => " ",
             };
 
+            $hidden_where = ($type == 'all_hidden')
+                ? '`tag`.`is_hidden` IN (0,1)'
+                : '`tag`.`is_hidden` = 0';
+
             $sql = (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
-                ? sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name` %s FROM `tag` WHERE `tag`.`is_hidden` = 0 %s AND %s ', $type_select, $type_where, Catalog::get_user_filter('tag', Core::get_global('user')->id))
-                : sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name` %s FROM `tag` WHERE `tag`.`is_hidden` = 0 %s ', $type_select, $type_where);
+                ? sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name`, `tag`.`is_hidden`%s FROM `tag` WHERE %s%sAND %s ', $type_select, $hidden_where, $type_where, Catalog::get_user_filter('tag', Core::get_global('user')->id))
+                : sprintf('SELECT `tag`.`id` AS `id`, `tag`.`name`, `tag`.`is_hidden`%s FROM `tag` WHERE %s%s', $type_select, $hidden_where, $type_where);
 
-            $sql .= "GROUP BY `tag`.`id`, `tag`.`name` ";
+            $sql .= (empty($type) || $type == 'all_hidden')
+                ? "GROUP BY `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`artist`, `tag`.`album`, `tag`.`song` "
+                : "GROUP BY `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `count` ";
         }
 
-        $order = "`" . $order . "`";
-        if ($order == 'count') {
-            $order .= " DESC";
-        }
+        $order = ($order == 'count')
+            ? "`" . $order . "` DESC"
+            : "`" . $order . "`";
 
         $sql .= "ORDER BY " . $order;
 
@@ -757,7 +769,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $results[$row['id']] = [
                 'id' => $row['id'],
                 'name' => $row['name'],
-                'is_hidden' => $is_hidden,
+                'is_hidden' => $row['is_hidden'],
                 'count' => $row['count'] ?? 0
             ];
         }
@@ -772,7 +784,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * This returns a csv formatted version of the tags that we are given
      * it also takes a type so that it knows how to return it, this is used
      * by the formatting functions of the different objects
-     * @param array<array{user: int, id: int, name: string}> $tags
+     * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
      * @param bool $link
      * @param string $filter_type
      */
@@ -827,7 +839,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $editedTags  = (is_array($filter_list)) ? array_unique($filter_list) : [];
 
         $change       = false;
-        $current_tags = self::get_top_tags($object_type, $object_id, 50);
+        $current_tags = self::get_top_tags($object_type, $object_id, 0);
         foreach ($current_tags as $ctv) {
             $found = false;
             if ($ctv['id'] != '') {
@@ -860,8 +872,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
                 if (
                     !$found &&
-                    $overwrite &&
-                    $ctv['user'] == 0
+                    $overwrite
                 ) {
                     debug_event(self::class, 'update_tag_list ' . $object_type . ' delete {' . $ctag->name . '}', 5);
                     $ctag->remove_map($object_type, $object_id, false);

@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 77
+config_version = 79
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -299,6 +299,13 @@ deferred_ext_metadata = "true"
 ; DEFAULT: "[/]{2}|[/\\|,;]" (Split on "//", "_", "/", "\", "|", "," and ";")
 additional_genre_delimiters = "[/]{2}|[_/\\|,;]"
 
+; Split Artist and Album Artist tags by regex; keeping the first result.
+; Some clients add a \\ to their tags to support multiple artists. Ampache assumes that these tags are a single name.
+; The string must not have spaces around the delimiter to allow for bands who use \\ in their name.
+; NOTE: This is usually a single string tag so it's not enabled by default. The final regex is '/[^ ]\\\\[^ ]/'
+; DEFAULT: "\\\\"
+;split_artist_regex = "\\\\"
+
 ; Enable importing custom metadata from files.
 ; This will need a bit of time during the import. So you may want to disable this
 ; if you have troubles with huge databases.
@@ -381,6 +388,12 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; speed things up by checking modification date using filemtime() before loading
 ; DEFAULT: "false"
 ;catalog_verify_by_time = "true"
+
+; Catalog verify by album groups
+; Ampache will verify songs individually by default. If you enable this setting
+; We will update each album instead of just the individual songs.
+; DEFAULT: "false"
+;catalog_verify_by_album = "true"
 
 ;#########################################################
 ; Program Settings                                       #

@@ -23,6 +23,7 @@
 
 namespace Ampache\Module\Catalog;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UtilityFactoryInterface;
@@ -257,7 +258,7 @@ class Catalog_dropbox extends Catalog
      * existing catalog
      * @param array $options
      */
-    public function add_to_catalog($options = null): int
+    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -538,7 +539,7 @@ class Catalog_dropbox extends Catalog
      * @return int
      * @throws ReflectionException
      */
-    public function verify_catalog_proc(): int
+    public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
     {
         set_time_limit(0);
 
@@ -604,7 +605,7 @@ class Catalog_dropbox extends Catalog
      *
      * Removes songs that no longer exist.
      */
-    public function clean_catalog_proc(): int
+    public function clean_catalog_proc(?Interactor $interactor = null): int
     {
         $dead    = 0;
         $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
@@ -759,11 +760,15 @@ class Catalog_dropbox extends Catalog
      * @return bool
      * @throws DropboxClientException
      */
-    public function gather_art($songs = null, $videos = null): bool
+    public function gather_art($songs = null, $videos = null, ?Interactor $interactor = null): bool
     {
         // Make sure they've actually got methods
         $art_order = AmpConfig::get('art_order');
         if (!count($art_order)) {
+            $interactor?->info(
+                'art_order not set, Catalog::gather_art aborting',
+                true
+            );
             debug_event('dropbox.catalog', 'art_order not set, Catalog::gather_art aborting', 3);
 
             return true;

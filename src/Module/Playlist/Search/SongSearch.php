@@ -168,6 +168,10 @@ final class SongSearch implements SearchInterface
                     $table['album']        = "LEFT JOIN `album` ON `song`.`album` = `album`.`id`";
                     $table['album_artist'] = "LEFT JOIN `artist` AS `album_artist` ON `album`.`album_artist` = `album_artist`.`id`";
                     break;
+                case 'id':
+                    $where[]      = "`song`.`id` $operator_sql ?";
+                    $parameters[] = $input;
+                    break;
                 case 'time':
                     $input        = ((int)$input) * 60;
                     $where[]      = "`song`.`time` $operator_sql ?";

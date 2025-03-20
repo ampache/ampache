@@ -10,6 +10,7 @@ use Ampache\Module\Playback\WebPlayer;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Preference;
 
 // TODO remove me
 global $dic;
@@ -33,6 +34,7 @@ $embed        = $embed ?? false;
 $loop         = ($isRandom || $isDemocratic);
 $jp_volume    = (float)AmpConfig::get('jp_volume', 0.80);
 $removeCount  = (int)AmpConfig::get('webplayer_removeplayed', 0);
+$canSlideshow = Preference::exists('flickr_api_key');
 $removePlayed = ($removeCount > 0);
 if ($removePlayed && $removeCount === 999) {
     $removeCount = 0;
@@ -514,42 +516,44 @@ if ($isVideo === false) {
             </div>
             <?php if ($isShare === false && !$environment->isMobile()) { ?>
                 <div class="player_actions">
-                    <?php if (AmpConfig::get('broadcast') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
-                        <div id="broadcast" class="broadcast action_button">
-                            <?php if (AmpConfig::get('broadcast_by_default')) {
-                                $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')?->getId() ?? 0);
-                                if (count($broadcasts) < 1) {
-                                    $broadcast_id = Broadcast::create(addslashes(T_('My Broadcast')));
-                                } else {
-                                    $broadcast_id = $broadcasts[0];
-                                }
-
-                                $broadcast = new Broadcast((int) $broadcast_id);
-                                $key       = Broadcast::generate_key();
-                                $broadcast->update_state(true, $key);
-                                echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
-                            } else {
-                                echo Broadcast::get_broadcast_link();
-                            } ?>
-                        </div>
-                    <?php } ?>
                     <?php if ($iframed && ($isRadio === false && $isRandom === false && $isDemocratic === false)) { ?>
-                        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                             <div class="action_button">
+                        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                                 <a href="javascript:SaveToExistingPlaylist(event);">
                                     <?php echo Ui::get_material_symbol('playlist_add', addslashes(T_('Add All to playlist'))); ?>
                                 </a>
-                            </div>
                         <?php } ?>
-                        <div id="slideshow" class="slideshow action_button">
-                            <a href="javascript:SwapSlideshow();"><?php echo Ui::get_material_symbol('slideshow', addslashes(T_('Slideshow'))); ?></a>
+                            </div>
+                        <div id="playlistloopbtn" class="action_button">
+                            <a href="javascript:TogglePlaylistLoop();"><?php echo Ui::get_material_symbol('laps', addslashes(T_('Loop Playlist'))); ?></a>
                         </div>
                         <div id="expandplaylistbtn" class="action_button">
                             <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_material_symbol('expand_all', addslashes(T_('Expand/Collapse playlist'))); ?></a>
                         </div>
-                        <div id="playlistloopbtn" class="action_button">
-                            <a href="javascript:TogglePlaylistLoop();"><?php echo Ui::get_material_symbol('laps', addslashes(T_('Loop Playlist'))); ?></a>
-                        </div>
+                        <?php if ($canSlideshow) { ?>
+                            <div id="slideshow" class="slideshow action_button">
+                                <a href="javascript:SwapSlideshow();"><?php echo Ui::get_material_symbol('slideshow', addslashes(T_('Slideshow'))); ?></a>
+                            </div>
+                        <?php } ?>
+                        <?php if (AmpConfig::get('broadcast') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+                            <div id="broadcast" class="broadcast action_button">
+                                <?php if (AmpConfig::get('broadcast_by_default')) {
+                                    $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')?->getId() ?? 0);
+                                    if (count($broadcasts) < 1) {
+                                        $broadcast_id = Broadcast::create(addslashes(T_('My Broadcast')));
+                                    } else {
+                                        $broadcast_id = $broadcasts[0];
+                                    }
+
+                                    $broadcast = new Broadcast((int) $broadcast_id);
+                                    $key       = Broadcast::generate_key();
+                                    $broadcast->update_state(1, $key);
+                                    echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
+                                } else {
+                                    echo Broadcast::get_broadcast_link();
+                                } ?>
+                            </div>
+                        <?php } ?>
                         <?php if (AmpConfig::get('webplayer_html5')) { ?>
                             <div class="action_button">
                                 <a href="javascript:ShowVisualizer();"><?php echo Ui::get_material_symbol('bubble_chart', addslashes(T_('Visualizer'))); ?></a>

@@ -2,10 +2,21 @@
 
 ## API 6.6.7
 
+### Added
+
+* API6
+  * get_external_metadata: Get metadata from external plugins. (Useful for scripting)
+  * Add `is_hidden` status and `merge` genres into genre data objects
+
 ### Changed
 
 * ALL
   * stats: Allow `limit` -1 for no limit. (0 falls back to `popular_threshold` value)
+
+### Fixed
+
+* XML
+  * Index keyed_array data on int indexed arrays
 
 ## API 6.6.6
 

@@ -179,11 +179,11 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
                         }
 
                         if ($item[0] instanceof Playlist) {
-                            echo Ajax::button('?page=random&action=send_playlist&random_type=playlist&random_id=' . $item[0]->id, 'shuffle', T_('Random Play'), 'play_random_' . $item[0]->id);
+                            echo Ajax::button('?page=random&action=send_playlist&random_type=playlist&random_id=' . $item[0]->id, 'autorenew', T_('Random Play'), 'play_random_' . $item[0]->id);
                         }
 
                         if ($item[0] instanceof Search) {
-                            echo Ajax::button('?page=random&action=send_playlist&random_type=search&random_id=' . $item[0]->id, 'shuffle', T_('Random Play'), 'play_random_' . $item[0]->id);
+                            echo Ajax::button('?page=random&action=send_playlist&random_type=search&random_id=' . $item[0]->id, 'autorenew', T_('Random Play'), 'play_random_' . $item[0]->id);
                         }
 
                         echo Ajax::button('?action=basket&type=' . $item[1] . '&id=' . $item[0]->id, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $item[0]->id);

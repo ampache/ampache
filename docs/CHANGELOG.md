@@ -1,5 +1,75 @@
 # CHANGELOG
 
+## Ampache 7.3.1
+
+### Added
+
+* Add item count to the Genre browse pages
+* Allow sorting the Genre browse page by item count
+* Allow editing links tags for hidden genres
+* Show merged tags for genres if they are set
+* Add Random play to Playlist and Smartlist object rows (Updated column CSS for these types)
+* Add example catalog update file example `catalog_update.sh`
+* Browse
+  * Add `added` and `updated` searches to Album and AlbumDisk searches
+  * Add `artist`, `album`, `song` and `video` counts to the Genre browse
+  * Add `id` to the Album, AlbumDisk, Artist, Label, Playlist, Podcast, PodcastEpisode, Song and Video browse types
+* Config version 79
+  * Add `split_artist_regex` split the Artist and Album Artist tags on regex and use the first result
+  * Add `catalog_verify_by_album` to allow grouping updates instead of just updating individual files
+* CLI
+  * Print messages in the CLI for actions again
+  * UpdateCatalog: add new option limit. (-l|--limit) Only verify small chunk of files
+* Plugin
+  * Catalog Favorites: Add `catalogfav_compact` to show an alternative list of compact favorite items
+  * Discogs: Get genre data from the Discogs API
+  * Musicbrainz: Add Album and Song object types to `get_metadata`
+
+### Changed
+
+* Random Play icon has been changed to stop clashing with the shuffle icon
+* Update vite from v5 to v6
+* Update `public/.htaccess.dist`
+* Only audit NPM production modules
+* Move prettyphoto into lib/modules. (Dead project marked as Malware by NPM)
+* After updating Album and Artist object tags only update conts for affected Artists
+* Restore gather art on website Add actions
+* Don't collect garbage continually when doing a large verify action
+* Update individual counts for Artists after changes
+* Search with simple album name for external links
+* Change MusicBrainz library to [lachlan-00/MusicBrainz](https://github.com/lachlan-00/MusicBrainz)
+* Use MusicBrainz library for MBID validity checks
+* Show **ALL** Genres in the edit list for objects
+* Set a CSS max-width (25%) for the now playing column with Song details
+* Jplayer
+  * Repeat the current song if you press previous and there isn't a loop situation
+* webplayer
+  * Rearrange the buttons to make them aling better with different config
+  * Only show the slideshow button if you have a slideshow plugin enabled. (flickr)
+
+### Fixed
+
+* Song caching columns that don't match properties in the class
+* NPM install from the web updater on Linux
+* Lyrics would be chopped up if you repeatedly updated them; do it one way and once only
+* CSS in some areas for the light theme
+* `slideshow_time` being converted to bool
+* Don't show slideshow button if you don't have a flickr enabled
+* Not able to edit Broadcast or select genre correctly
+* Missing artist tag options for Quicktime and ASF tags
+* Genre select SQL full group by on empty `object_type`
+* Counts for `album_disk_count` not being updated well
+* Count AlbumDisk counts correctly
+* Show tags with no object counts in the hidden tab. (They will never appear on the object pages)
+* Always update `album_map` and `artist_map` rows just in case they were missed
+* Don't update item and parent genres if there wasn't an item or parent change
+* Duplicate stat migrations for same `song_artist` & `album_artist`
+* Unable to update Tag lists when you had lots of tags (Over 40) linked to an object
+* Show newest AlbumDisk was not joining correctly
+* SQL error looking up License name
+* Plugin
+  * Discogs: Fix up searching for releases without a master release
+
 ## Ampache 7.3.0
 
 This update has a lot of updates for verification and tag updates.

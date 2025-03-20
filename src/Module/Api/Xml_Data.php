@@ -294,7 +294,9 @@ class Xml_Data
 
             // If it's an array, run again
             if (is_array($value)) {
-                $value = self::keyed_array($value, true);
+                $value = (isset($value[0]))
+                    ? self::keyed_array($value, true, $key)
+                    : self::keyed_array($value, true);
                 $string .= ($object) ? "<$object>\n$value\n</$object>\n" : "<$key$attribute>\n$value\n</$key>\n";
             } else {
                 $string .= ($object) ? "\t<$object index=\"" . $key . "\"><![CDATA[" . $value . "]]></$object>\n" : "\t<$key$attribute><![CDATA[" . $value . "]]></$key>\n";
@@ -906,8 +908,18 @@ class Xml_Data
         $string = "<total_count>" . Catalog::get_update_info('tag', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
         foreach ($objects as $tag_id) {
-            $tag = new Tag($tag_id);
-            $string .= "<genre id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<live_streams>0</live_streams>\n</genre>\n";
+            $tag    = new Tag($tag_id);
+            $merged = $tag->get_merged_tags();
+            $merge  = '';
+            foreach ($merged as $mergedTag) {
+                $merge .= "<merge id=\"" . $mergedTag['id'] . "\"><![CDATA[" . $mergedTag['name'] . "]]></merge>";
+            }
+            $string .= "<genre id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<live_streams>0</live_streams><is_hidden>" . $tag->is_hidden . "</is_hidden>";
+
+            $string .= (empty($merge))
+                ? '<merge/>'
+                : $merge;
+            $string .= "\n</genre>\n";
         } // end foreach
 
         return self::output_xml($string);

@@ -49,6 +49,8 @@ interface PlaylistViewAdapterInterface
 
     public function getRandomToTemporaryPlaylistButton(): string;
 
+    public function getRandomPlayPlaylistButton(): string;
+
     public function canShare(): bool;
 
     public function getShareUi(): string;

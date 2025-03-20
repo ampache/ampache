@@ -69,7 +69,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                 $broadcast = new Broadcast((int) $broadcast_id);
                 if ($broadcast->isNew() === false) {
                     $key = Broadcast::generate_key();
-                    $broadcast->update_state(true, $key);
+                    $broadcast->update_state(1, $key);
                     $results['broadcast'] = Broadcast::get_unbroadcast_link((int) $broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
                 }
 
@@ -78,7 +78,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                 $broadcast_id = Core::get_get('broadcast_id');
                 $broadcast    = new Broadcast((int) $broadcast_id);
                 if ($broadcast->isNew() === false) {
-                    $broadcast->update_state(false);
+                    $broadcast->update_state(0);
                     $results['broadcast'] = Broadcast::get_broadcast_link() . '<script>stopBroadcast();</script>';
                 }
         } // switch on action;

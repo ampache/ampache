@@ -842,6 +842,7 @@ class Ui implements UiInterface
             case 'browser_notify':
             case 'catalog_check_duplicate':
             case 'catalogfav_gridview':
+            case 'catalogfav_compact':
             case 'condPL':
             case 'cron_cache':
             case 'custom_logo_user':

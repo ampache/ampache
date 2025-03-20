@@ -87,6 +87,7 @@ final class AlbumSearch implements SearchInterface
                     $parameters[] = $input;
                     break;
                 case 'catalog':
+                case 'id':
                 case 'year':
                 case 'version':
                     $where[]      = "`album`.`" . $rule[0] . "` $operator_sql ?";
@@ -236,6 +237,18 @@ final class AlbumSearch implements SearchInterface
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'"
                         : "";
                     $where[]      = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - (? * 86400))";
+                    $parameters[] = $input;
+                    $join['song'] = true;
+                    break;
+                case 'added':
+                    $input        = strtotime((string) $input);
+                    $where[]      = "`song`.`addition_time` $operator_sql ?";
+                    $parameters[] = $input;
+                    $join['song'] = true;
+                    break;
+                case 'updated':
+                    $input        = strtotime((string) $input);
+                    $where[]      = "`song`.`update_time` $operator_sql ?";
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;

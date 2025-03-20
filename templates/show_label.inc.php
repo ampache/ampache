@@ -90,7 +90,7 @@ if (AmpConfig::get('external_links_discogs')) {
 </div>
 
 <div id="information_actions">
-    <h3><?php echo T_('Actions'); ?>:</h3>
+    <h3><?php echo T_('Actions'); ?></h3>
     <ul>
         <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>

@@ -131,7 +131,7 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres'); ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display(Tag::get_top_tags('album', $libitem->id, 20)); ?>" /></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display(Tag::get_top_tags('album', $libitem->id, 0)); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>

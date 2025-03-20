@@ -221,6 +221,7 @@ class Preference extends database_object
         'bitly_username',
         'catalogfav_gridview',
         'catalogfav_max_items',
+        'catalogfav_compact',
         'catalogfav_order',
         'discogs_api_key',
         'discogs_secret_api_key',
@@ -587,7 +588,6 @@ class Preference extends database_object
      */
     public static function get($pref_name, $user_id): array
     {
-        $user_id    = Dba::escape($user_id);
         $user_limit = ($user_id != -1) ? "AND `preference`.`category` != 'system'" : "";
 
         $sql = sprintf('SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`, `preference`.`type`, `preference`.`category`, `preference`.`subcategory`, `user_preference`.`value` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` WHERE `preference`.`name` = ? AND `user_preference`.`user` = ? AND `preference`.`category` != \'internal\' %s ORDER BY `preference`.`subcategory`, `preference`.`description`', $user_limit);
@@ -1356,6 +1356,7 @@ class Preference extends database_object
             'catalog_check_duplicate' => T_('Check library item at import time and disable duplicates'),
             'catalogfav_gridview' => T_('Catalog favorites grid view display'),
             'catalogfav_max_items' => T_('Catalog favorites max items'),
+            'catalogfav_compact' => T_('Catalog favorites media row display'),
             'catalogfav_order' => T_('Plugin CSS order'),
             'cron_cache' => T_('Cache computed SQL data (eg. media hits stats) using a cron'),
             'custom_blankalbum' => T_('Custom blank album default image'),
@@ -1944,6 +1945,7 @@ class Preference extends database_object
             'catalog_filter',
             'catalog_verify_by_time',
             'catalogfav_gridview',
+            'catalogfav_compact',
             'composer_no_dev',
             'condPL',
             'cookie_disclaimer',

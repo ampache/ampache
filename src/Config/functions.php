@@ -572,6 +572,10 @@ function debug_event($type, $message, $level, $username = ''): bool
     }
 
     global $dic;
+    if (!$dic) {
+        return false;
+    }
+
     $logger = $dic->get(LoggerInterface::class);
 
     // If the message is multiple lines, make multiple log lines
@@ -1125,6 +1129,9 @@ function canEditArtist(
     }
 
     global $dic;
+    if (!$dic) {
+        return false;
+    }
 
     return $dic->get(PrivilegeCheckerInterface::class)->check(
         AccessTypeEnum::INTERFACE,
