@@ -997,7 +997,7 @@ class Stats
             $sql_type  = "`album`.`id`";
         } elseif ($type === 'album_disk') {
             $base_type = 'album';
-            $sql       = "SELECT DISTINCT(`album_disk`.`id`) AS `id`, MIN(`album`.`addition_time`) AS `real_atime` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` ";
+            $sql       = "SELECT DISTINCT(`album_disk`.`id`) AS `id`, `album`.`addition_time` AS `real_atime` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` ";
             $sql_type  = "`album_disk`.`id`";
         } elseif ($type === 'video') {
             $base_type = 'video';
@@ -1040,7 +1040,7 @@ class Stats
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id > 0) {
             $sql .= "AND " . $sql_type . " NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ") ";
         }
-        if ($type === 'song' || $type == 'album' || $base_type === 'video') {
+        if ($type === 'song' || $type == 'album' || $type == 'album_disk' || $base_type === 'video') {
             $sql .= "GROUP BY $sql_type, `real_atime` ORDER BY `real_atime` DESC ";
         } else {
             $sql .= "GROUP BY $sql_type ORDER BY `real_atime` DESC ";
