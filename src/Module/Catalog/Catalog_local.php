@@ -23,6 +23,7 @@
 
 namespace Ampache\Module\Catalog;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Playback\Stream;
@@ -252,7 +253,7 @@ class Catalog_local extends Catalog
      * @param array $options
      * @param int $counter
      */
-    public function add_files($path, $options, $counter = 0): int
+    public function add_files($path, $options, $counter = 0, ?Interactor $interactor = null): int
     {
         // See if we want a non-root path for the add
         if (isset($options['subdirectory'])) {
@@ -274,6 +275,10 @@ class Catalog_local extends Catalog
         $handle = opendir($path);
 
         if (!is_resource($handle)) {
+            $interactor?->info(
+                "Unable to open $path",
+                true
+            );
             debug_event('local.catalog', "Unable to open $path", 3);
             /* HINT: directory (file path) */
             AmpError::add('catalog_add', sprintf(T_('Unable to open: %s'), $path));
@@ -283,6 +288,10 @@ class Catalog_local extends Catalog
 
         /* Change the dir so is_dir works correctly */
         if (!chdir($path)) {
+            $interactor?->info(
+                "Unable to chdir to $path",
+                true
+            );
             debug_event('local.catalog', "Unable to chdir to $path", 2);
             /* HINT: directory (file path) */
             AmpError::add('catalog_add', sprintf(T_('Unable to change to directory: %s'), $path));
@@ -298,6 +307,10 @@ class Catalog_local extends Catalog
             }
             // reduce the crazy log info
             if ($counter % 1000 == 0) {
+                $interactor?->info(
+                    "Reading $file inside $path",
+                    true
+                );
                 debug_event('local.catalog', "Reading $file inside $path", 5);
                 debug_event('local.catalog', "Memory usage: " . (string) Ui::format_bytes(memory_get_usage(true)), 5);
             }
@@ -305,11 +318,15 @@ class Catalog_local extends Catalog
 
             /* Create the new path */
             $full_file = $path . $slash_type . $file;
-            if ($this->add_file($full_file, $options, $counter)) {
+            if ($this->add_file($full_file, $options, $counter, $interactor)) {
                 $songsadded++;
             }
         } // end while reading directory
 
+        $interactor?->info(
+            "Finished reading $path, closing handle",
+            true
+        );
         debug_event('local.catalog', "Finished reading $path, closing handle", 5);
 
         // This should only happen on the last run
@@ -332,7 +349,7 @@ class Catalog_local extends Catalog
      * @return bool
      * @throws Exception
      */
-    public function add_file($full_file, $options, $counter = 0): bool
+    public function add_file($full_file, $options, $counter = 0, ?Interactor $interactor = null): bool
     {
         // Ensure that we've got our cache
         $this->_create_filecache();
@@ -346,6 +363,10 @@ class Catalog_local extends Catalog
 
         if (AmpConfig::get('no_symlinks')) {
             if (is_link($full_file)) {
+                $interactor?->info(
+                    "Skipping symbolic link $full_file",
+                    true
+                );
                 debug_event('local.catalog', "Skipping symbolic link $full_file", 5);
 
                 return false;
@@ -364,6 +385,10 @@ class Catalog_local extends Catalog
 
             /* Change the dir so is_dir works correctly */
             if (!chdir($full_file)) {
+                $interactor?->info(
+                    "Unable to chdir to $full_file",
+                    true
+                );
                 debug_event('local.catalog', "Unable to chdir to $full_file", 2);
                 /* HINT: directory (file path) */
                 AmpError::add('catalog_add', sprintf(T_('Unable to change to directory: %s'), $full_file));
@@ -389,6 +414,10 @@ class Catalog_local extends Catalog
             $file_size = Core::get_filesize($full_file);
 
             if ($file_size === 0) {
+                $interactor?->info(
+                    "Unable to get filesize for $full_file",
+                    true
+                );
                 debug_event('local.catalog', "Unable to get filesize for $full_file", 2);
                 /* HINT: FullFile */
                 AmpError::add('catalog_add', sprintf(T_('Unable to get the filesize for "%s"'), $full_file));
@@ -396,8 +425,12 @@ class Catalog_local extends Catalog
                 return false;
             } // file_size check
 
+            // not readable, warn user
             if (!Core::is_readable($full_file)) {
-                // not readable, warn user
+                $interactor?->info(
+                    "$full_file is not readable by Ampache",
+                    true
+                );
                 debug_event('local.catalog', "$full_file is not readable by Ampache", 2);
                 /* HINT: filename (file path) */
                 AmpError::add('catalog_add', sprintf(T_("The file couldn't be read. Does it exist? %s"), $full_file));
@@ -421,6 +454,10 @@ class Catalog_local extends Catalog
                         $convok = (strcmp($enc_full_file, $full_file) == 0);
                     }
                     if (!$convok) {
+                        $interactor?->info(
+                            $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file,
+                            true
+                        );
                         debug_event('local.catalog', $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, 1);
                         /* HINT: FullFile */
                         AmpError::add('catalog_add', sprintf(T_('"%s" does not match site charset'), $full_file));
@@ -438,21 +475,41 @@ class Catalog_local extends Catalog
 
             if ($is_playlist) {
                 // if it's a playlist
+                $interactor?->info(
+                    'Found playlist file to import: ' . $full_file,
+                    true
+                );
                 debug_event('local.catalog', 'Found playlist file to import: ' . $full_file, 5);
                 $this->_playlists[] = $full_file;
             } else {
                 if (count($this->get_gather_types('music')) > 0) {
                     if ($is_audio_file && $this->_insert_local_song($full_file, $options)) {
+                        $interactor?->info(
+                            'Imported song file: ' . $full_file,
+                            true
+                        );
                         debug_event('local.catalog', 'Imported song file: ' . $full_file, 5);
                     } else {
+                        $interactor?->info(
+                            'Skipped song file: ' . $full_file,
+                            true
+                        );
                         debug_event('local.catalog', 'Skipped song file: ' . $full_file, 5);
 
                         return false;
                     }
                 } elseif (count($this->get_gather_types('video')) > 0) {
                     if ($is_video_file && $this->_insert_local_video($full_file, $options)) {
+                        $interactor?->info(
+                            'Imported video file: ' . $full_file,
+                            true
+                        );
                         debug_event('local.catalog', 'Imported video file: ' . $full_file, 5);
                     } else {
+                        $interactor?->info(
+                            'Skipped video file: ' . $full_file,
+                            true
+                        );
                         debug_event('local.catalog', 'Skipped video file: ' . $full_file, 5);
 
                         return false;
@@ -484,7 +541,7 @@ class Catalog_local extends Catalog
      * existing catalog
      * @param array $options
      */
-    public function add_to_catalog($options = null): int
+    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
     {
         if (empty($options)) {
             $options = [
@@ -524,10 +581,14 @@ class Catalog_local extends Catalog
             $this->count += $this->getPodcastSyncer()->syncForCatalogs([$this]);
         } else {
             /* Get the songs and then insert them into the db */
-            $this->count += $this->add_files($this->path, $options);
+            $this->count += $this->add_files($this->path, $options, 0, $interactor);
             if ($options['parse_playlist'] && count($this->_playlists)) {
                 // Foreach Playlists we found
                 foreach ($this->_playlists as $full_file) {
+                    $interactor?->info(
+                        'Processing playlist: ' . $full_file,
+                        true
+                    );
                     debug_event('local.catalog', 'Processing playlist: ' . $full_file, 5);
                     $result = PlaylistImporter::import_playlist($full_file, -1, 'public');
                     if ($result !== null) {
@@ -549,6 +610,10 @@ class Catalog_local extends Catalog
             }
             // only gather art if you've added new stuff
             if (($this->count) > 0 && $options['gather_art']) {
+                $interactor?->info(
+                    'gather_art after adding',
+                    true
+                );
                 debug_event(self::class, 'gather_art after adding', 4);
                 $catalog_id = $this->catalog_id;
                 if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
@@ -577,6 +642,10 @@ class Catalog_local extends Catalog
             $rate = T_('N/A');
         }
 
+        $interactor?->info(
+            T_('Catalog Updated') . "\n" . sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate),
+            true
+        );
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top();
             Ui::update_text(
@@ -592,58 +661,95 @@ class Catalog_local extends Catalog
     /**
      * verify_catalog_proc
      */
-    public function verify_catalog_proc(): int
+    public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
     {
+        $interactor?->info(
+            'Verify starting on ' . $this->name,
+            true
+        );
         debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
         $date        = time();
         $this->count = 0;
+        $chunk_size  = 10000;
 
-        $catalog_media_type = $this->gather_types;
-        $update_time        = ($catalog_media_type !== 'podcast' && AmpConfig::get('catalog_verify_by_time', false))
+        $gather_type     = $this->gather_types;
+        $verify_by_album = AmpConfig::get('catalog_verify_by_album', false);
+        $update_time     = ($gather_type !== 'podcast' && AmpConfig::get('catalog_verify_by_time', false))
             ? $this->last_update
             : 0;
-        if ($catalog_media_type == 'music') {
+        if (!$verify_by_album && $gather_type == 'music') {
             Song::clear_cache();
             $media_type = 'song';
-            $total      = self::count_table($media_type, $this->catalog_id, $update_time);
-        } elseif ($catalog_media_type == 'podcast') {
+            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
+        } elseif ($verify_by_album && $gather_type == 'music') {
+            $chunk_size = 1000;
+            Album::clear_cache();
+            $media_type = 'album';
+            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
+        } elseif ($gather_type == 'podcast') {
             Podcast_Episode::clear_cache();
             $media_type = 'podcast_episode';
-            $total      = self::count_table($media_type, $this->catalog_id, $update_time);
-        } elseif ($catalog_media_type == 'video') {
+            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
+        } elseif ($gather_type == 'video') {
             Video::clear_cache();
             $media_type = 'video';
-            $total      = self::count_table($media_type, $this->catalog_id, $update_time);
+            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
         } else {
             return $this->count;
         }
         $count  = 1;
         $chunks = 1;
         $chunk  = 0;
-        if ($total > 10000) {
-            $chunks = (int)floor($total / 10000);
+        // how many loops through the catalog
+        if ($total > $chunk_size) {
+            $chunks = (int)ceil($total / $chunk_size);
         }
+
+        // only do the requested size
+        if ($limit > 0 && $total < $chunk_size) {
+            $chunk      = 1;
+            $chunks     = 1;
+            $chunk_size = $total;
+        }
+
+        $interactor?->info(
+            'found ' . $total . " " . $media_type . " files to update. (last_update: " . $this->last_update . ")",
+            true
+        );
         debug_event('local.catalog', 'found ' . $total . " " . $media_type . " files to update. (last_update: " . $this->last_update . ")", 5);
         while ($chunk <= $chunks) {
+            $interactor?->info(
+                "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks",
+                true
+            );
             debug_event('local.catalog', "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks", 5);
-            $this->count += $this->_verify_chunk($media_type, ($chunks - $chunk), 10000);
+            $this->count += $this->_verify_chunk($media_type, ($chunks - $chunk), $chunk_size);
             $chunk++;
             $count++;
             if ($media_type === 'song') {
                 Catalog::clean_empty_albums();
             }
         }
-        if ($media_type === 'song') {
+
+        $interactor?->info(
+            "Verify finished, $this->count updated in " . $this->name,
+            true
+        );
+        debug_event('local.catalog', "Verify finished, $this->count updated in " . $this->name, 5);
+        if ($interactor == null && $gather_type == 'music') {
             Album::update_table_counts();
             Artist::update_table_counts();
 
             $this->getArtistRepository()->collectGarbage();
             $this->getAlbumRepository()->collectGarbage();
         }
-        debug_event('local.catalog', "Verify finished, $this->count updated in " . $this->name, 5);
-        $this->update_last_update($date);
+
+        // No limit set OR we set a limit and we didn't find anything so update the last_update time
+        if ($limit === 0 || ($update_time > 0 && $total === 0)) {
+            $this->update_last_update($date);
+        }
 
         return $this->count;
     }
@@ -652,35 +758,38 @@ class Catalog_local extends Catalog
      * _verify_chunk
      * This verifies a chunk of the catalog, done to save
      * memory
-     * @param string $tableName
+     * @param string $tableName ('album', 'podcast_episode', 'song', 'video')
      * @param int $chunk
      * @param int $chunk_size
      */
     private function _verify_chunk($tableName, $chunk, $chunk_size): int
     {
-        $count   = $chunk * $chunk_size;
-        $changed = 0;
-
-        $verify_by_time = (in_array($tableName, ['song', 'video']) && AmpConfig::get('catalog_verify_by_time', false));
+        $verify_by_time = $tableName !== 'podcast_episode' && AmpConfig::get('catalog_verify_by_time', false);
+        $count          = $chunk * $chunk_size;
         $sql            = match ($tableName) {
-            'album' => "SELECT `song`.`album` AS `id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = " . ((int)$this->catalog_id) . ") GROUP BY `song`.`album` ORDER BY `min_update_time` DESC LIMIT $count, $chunk_size",
-            'podcast_episode' => "SELECT `podcast_episode`.`id`, `podcast_episode`.`file` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = " . ((int)$this->catalog_id) . " AND `podcast_episode`.`file` IS NOT NULL ORDER BY `podcast_episode`.`podcast`, `podcast_episode`.`pubdate` DESC LIMIT $count, $chunk_size",
+            'album' => ($verify_by_time)
+                ? "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? AND song.update_time < " . $this->last_update . " GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT $count, $chunk_size"
+                : "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC $count, $chunk_size",
+            'podcast_episode' => "SELECT `podcast_episode`.`id`, `podcast_episode`.`file` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = ? AND `podcast_episode`.`file` IS NOT NULL ORDER BY `podcast_episode`.`podcast`, `podcast_episode`.`pubdate` DESC LIMIT $count, $chunk_size",
             default => ($verify_by_time)
-                ? "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . ((int)$this->catalog_id) . " AND (`$tableName`.`update_time` IS NULL OR `$tableName`.`update_time` < `catalog`.`last_update`) ORDER BY `$tableName`.`file` DESC LIMIT $count, $chunk_size"
-                : "SELECT `$tableName`.`id`, `$tableName`.`file` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . ((int)$this->catalog_id) . " ORDER BY `$tableName`.`file` LIMIT $count, $chunk_size",
+                ? "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? AND (`$tableName`.`update_time` IS NULL OR `$tableName`.`update_time` < `catalog`.`last_update`) ORDER BY `$tableName`.`file` DESC LIMIT $count, $chunk_size"
+                : "SELECT `$tableName`.`id`, `$tableName`.`file` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? ORDER BY `$tableName`.`file` LIMIT $count, $chunk_size",
         };
-        $db_results = Dba::read($sql, [$this->catalog_id]);
-        $className  = ObjectTypeToClassNameMapper::map($tableName);
 
-        if (AmpConfig::get('memory_cache') && $tableName !== 'podcast_episode') {
-            $media_ids = [];
+        //debug_event(self::class, '_verify_chunk (' . $chunk . ') ' . $sql. ' ' . print_r($params, true), 5);
+        if ($tableName !== 'podcast_episode' && AmpConfig::get('memory_cache', false)) {
+            $media_ids  = [];
+            $db_results = Dba::read($sql, [$this->catalog_id]);
+            $className  = ObjectTypeToClassNameMapper::map($tableName);
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $media_ids[] = $row['id'];
             }
             /** @var Song|Album|Video $className */
             $className::build_cache($media_ids);
-            $db_results = Dba::read($sql);
         }
+
+        $changed    = 0;
+        $db_results = Dba::read($sql, [$this->catalog_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $count++;
             if (Ui::check_ticker()) {
@@ -689,14 +798,17 @@ class Catalog_local extends Catalog
                 Ui::update_text('verify_dir_' . $this->catalog_id, scrub_out($file));
             }
 
-            if (!Core::is_readable(Core::conv_lc_file((string)$row['file']))) {
+            if (
+                $tableName !== 'album' &&
+                !Core::is_readable(Core::conv_lc_file((string)$row['file']))
+            ) {
                 /* HINT: filename (file path) */
                 AmpError::add('general', sprintf(T_("The file couldn't be read. Does it exist? %s"), $row['file']));
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
                 continue;
             }
 
-            if (self::update_single_item($tableName, $row['id'], true)['change']) {
+            if (self::update_single_item($tableName, $row['id'], true, true)['change']) {
                 $changed++;
             }
         }
@@ -711,10 +823,14 @@ class Catalog_local extends Catalog
      *
      * Removes local songs that no longer exist.
      */
-    public function clean_catalog_proc(): int
+    public function clean_catalog_proc(?Interactor $interactor = null): int
     {
+        // First sanity check; no point in proceeding with an unreadable catalog root.
         if (!Core::is_readable($this->path)) {
-            // First sanity check; no point in proceeding with an unreadable catalog root.
+            $interactor?->info(
+                'Catalog path:' . $this->path . ' unreadable, clean failed',
+                true
+            );
             debug_event('local.catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
             AmpError::add('general', T_('Catalog root unreadable, stopping clean'));
             echo AmpError::display('general');
@@ -723,11 +839,11 @@ class Catalog_local extends Catalog
         }
         $this->count = 0;
 
-        $catalog_media_type = $this->gather_types;
-        $media_type         = 'song';
-        if ($catalog_media_type == 'podcast') {
+        $gather_type = $this->gather_types;
+        $media_type  = 'song';
+        if ($gather_type == 'podcast') {
             $media_type = 'podcast_episode';
-        } elseif ($catalog_media_type == 'video') {
+        } elseif ($gather_type == 'video') {
             $media_type = 'video';
         }
         $total = self::count_table($media_type, $this->catalog_id);
@@ -739,20 +855,32 @@ class Catalog_local extends Catalog
         $chunks = 1;
         $chunk  = 0;
         if ($total > 10000) {
-            $chunks = floor($total / 10000) + 1;
+            $chunks = (int)ceil($total / 10000);
         }
         while ($chunk < $chunks) {
+            $interactor?->info(
+                "catalog " . $this->name . " Starting clean " . $media_type . " on chunk $count/$chunks",
+                true
+            );
             debug_event('local.catalog', "catalog " . $this->name . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
             $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
             $chunk++;
             $count++;
         }
+        $interactor?->info(
+            "Clean finished, $total files checked in " . $this->name,
+            true
+        );
         debug_event('local.catalog', "Clean finished, $total files checked in " . $this->name, 5);
 
         $dead_count = count($dead);
         // Check for unmounted path
         if (!file_exists($this->path)) {
             if ($dead_count >= $total) {
+                $interactor?->info(
+                    'All files would be removed. Doing nothing.',
+                    true
+                );
                 debug_event('local.catalog', 'All files would be removed. Doing nothing.', 1);
                 AmpError::add('general', T_('All files would be removed. Doing nothing'));
 
@@ -1150,18 +1278,18 @@ class Catalog_local extends Catalog
         $missing     = [];
         $this->count = 0;
 
-        $catalog_media_type = $this->gather_types;
-        $media_type         = 'song';
-        if ($catalog_media_type == 'podcast') {
+        $gather_type = $this->gather_types;
+        $media_type  = 'song';
+        if ($gather_type == 'podcast') {
             $media_type = 'podcast_episode';
-        } elseif ($catalog_media_type == 'video') {
+        } elseif ($gather_type == 'video') {
             $media_type = 'video';
         }
         $total = self::count_table($media_type, $this->catalog_id);
         if ($total == 0) {
             return $missing;
         }
-        $chunks = (int)floor($total / 10000) + 1;
+        $chunks = (int)ceil($total / 10000);
         foreach (range(1, $chunks) as $chunk) {
             debug_event('local.catalog', "catalog " . $this->name . " Starting check " . $media_type . " on chunk $chunk/$chunks", 5);
             $missing = array_merge($missing, $this->_check_chunk($media_type, (int)$chunk, 10000));

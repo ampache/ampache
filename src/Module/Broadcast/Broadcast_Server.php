@@ -271,7 +271,7 @@ class Broadcast_Server implements MessageComponentInterface
         $broadcast = $this->broadcasters[$conn->resourceId];
         $clients   = $this->getListeners($broadcast);
         $this->broadcastMessage($clients, self::BROADCAST_ENDED);
-        $broadcast->update_state(false);
+        $broadcast->update_state(0);
 
         unset($this->listeners[$broadcast->id]);
         unset($this->broadcasters[$conn->resourceId]);

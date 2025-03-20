@@ -98,7 +98,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     private ?array $album_artists = null;
 
-    /** @var array<array{user: int, id: int, name: string}> $tags */
+    /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
     private ?string $f_artist_name = null;
@@ -364,7 +364,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     /**
      * Get item tags.
-     * @return array<array{user: int, id: int, name: string}>
+     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
      */
     public function get_tags(): array
     {

@@ -41,7 +41,7 @@ use Ampache\Repository\Model\Tag;
             <tr><td>&nbsp;</td></tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Re-tag'); ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" /></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->get_merged_tags()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Persistent'); ?></td>

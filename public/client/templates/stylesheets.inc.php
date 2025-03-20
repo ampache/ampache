@@ -36,7 +36,7 @@ if (!is_array($theme_css_base)) {
 }
 ?>
 
-<link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/prettyphoto/css/prettyPhoto.min.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/prettyphoto/css/prettyPhoto.min.css" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-ui.custom.css" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-editdialog.css" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen">

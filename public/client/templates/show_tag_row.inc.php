@@ -22,7 +22,27 @@
  */
 
 /** @var Tag $libitem */
+/** @var Browse $browse */
 
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Tag;
 
-echo $libitem->name;
+switch ($browse->get_type()) {
+    case 'artist':
+        $count = $libitem->artist;
+        break;
+    case 'album':
+        $count = $libitem->album;
+        break;
+    case 'song':
+        $count = $libitem->song;
+        break;
+    case 'video':
+        $count = $libitem->video;
+        break;
+    default:
+        $count = $libitem->artist + $libitem->album + $libitem->song + $libitem->video;
+        break;
+}
+
+echo $libitem->name . ' (' . $count . ')';

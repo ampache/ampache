@@ -12,9 +12,10 @@
     </td>
     <td class="${CLASS_COVER}" tal:condition="IS_SHOW_ART" tal:content="structure PLAYLIST/getArt">COVER</td>
     <td class="cel_playlist" tal:content="structure PLAYLIST/getPlaylistLink">PLAYLIST</td>
-    <td class="cel_add">
+    <td class="cel_add_list">
         <span class="cel_item_add">
             <tal:block tal:condition="IS_SHOW_PLAYLIST_ADD">
+                <tal:block tal:replace="structure PLAYLIST/getRandomPlayPlaylistButton">RANDOM PLAY</tal:block>
                 <tal:block tal:replace="structure PLAYLIST/getAddToTemporaryPlaylistButton">ADD TO TEMPORARY PLAYLIST</tal:block>
                 <tal:block tal:replace="structure PLAYLIST/getRandomToTemporaryPlaylistButton">RANDOM TO TEMPORARY PLAYLIST</tal:block>
                 <a

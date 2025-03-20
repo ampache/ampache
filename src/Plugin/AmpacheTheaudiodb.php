@@ -27,7 +27,6 @@ namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
@@ -36,9 +35,10 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Exception;
+use MusicBrainz\MusicBrainz;
 use WpOrg\Requests\Requests;
 
-class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterface
+class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterface, PluginGetMetadataInterface
 {
     public string $name        = 'TheAudioDb';
 
@@ -228,7 +228,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
         try {
             if (in_array($object_type, $valid_types)) {
                 $release = null;
-                if ($object->mbid !== null && VaInfo::is_mbid($object->mbid)) {
+                if ($object->mbid !== null && MusicBrainz::isMBID($object->mbid)) {
                     $artist  = $this->get_artist($object->mbid);
                     $release = $artist->artists[0] ?? $release;
                 } else {
@@ -265,7 +265,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                     if (
                         $this->overwrite_name &&
                         $object->mbid !== null &&
-                        VaInfo::is_mbid($object->mbid) &&
+                        MusicBrainz::isMBID($object->mbid) &&
                         strtolower($data['name'] ?? '') !== strtolower((string)$object->get_fullname())
                     ) {
                         $name_check     = Artist::update_name_from_mbid($data['name'], $object->mbid);

@@ -133,6 +133,10 @@ class AmpConfig
 
         // @todo refactor
         global $dic;
+        if (!$dic) {
+            return ;
+        }
+
         $dic->get(ConfigContainerInterface::class)->updateConfig($array);
     }
 

@@ -94,6 +94,7 @@ input[type=submit]:focus:active {
 .sharedialogstyle.ui-dialog .ui-dialog-content,
 .playlistdialogstyle.ui-widget-content a,
 .editdialogstyle.ui-dialog.ui-widget-content a,
+.broadcastsdialogstyle.ui-dialog .ui-dialog-content,
 .broadcastsdialogstyle.ui-widget-content a,
 .sharedialogstyle.ui-widget-content a {
     background-color: #f8f8f8;
@@ -549,7 +550,6 @@ div.jp-audio,
 div.jp-audio-stream,
 div.jp-video {
     color: #000;
-    border: 1px solid #f8f8f8;
 }
 
 div.jp-video div.jp-interface {

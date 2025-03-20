@@ -34,7 +34,7 @@ Ui::show_box_top($pvmsg->getSubjectFormatted(), 'info-box'); ?>
     <?php echo T_('Sent by') . ' ' . $pvmsg->getSenderUserLink() . ' at ' . $pvmsg->getCreationDateFormatted(); ?>
 </div>
 <div id="information_actions">
-    <h3><?php echo T_('Actions'); ?>:</h3>
+    <h3><?php echo T_('Actions'); ?></h3>
 
     <ul>
         <li>

@@ -23,6 +23,7 @@
 
 namespace Ampache\Module\Catalog;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
@@ -205,7 +206,7 @@ class Catalog_subsonic extends Catalog
      * existing catalog
      * @param array $options
      */
-    public function add_to_catalog($options = null): int
+    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -325,7 +326,7 @@ class Catalog_subsonic extends Catalog
     /**
      * verify_catalog_proc
      */
-    public function verify_catalog_proc(): int
+    public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
     {
         return 0;
     }
@@ -360,7 +361,7 @@ class Catalog_subsonic extends Catalog
      *
      * Removes subsonic songs that no longer exist.
      */
-    public function clean_catalog_proc(): int
+    public function clean_catalog_proc(?Interactor $interactor = null): int
     {
         $subsonic = $this->createClient();
 

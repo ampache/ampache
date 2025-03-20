@@ -48,7 +48,7 @@ class Broadcast extends database_object implements library_item
 
     public int $song;
 
-    public bool $started;
+    public int $started = 0;
 
     public int $listeners;
 
@@ -59,7 +59,7 @@ class Broadcast extends database_object implements library_item
     /** @var int $song_position */
     public $song_position;
 
-    /** @var array<array{user: int, id: int, name: string}> $tags */
+    /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
     private ?string $f_link = null;
@@ -92,10 +92,9 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Update broadcast state.
-     * @param bool $started
      * @param string $key
      */
-    public function update_state($started, $key = ''): void
+    public function update_state(int $started, $key = ''): void
     {
         $sql = "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?";
         Dba::write($sql, [$started, $key, $this->id]);
@@ -105,9 +104,8 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Update broadcast listeners.
-     * @param int $listeners
      */
-    public function update_listeners($listeners): void
+    public function update_listeners(int $listeners): void
     {
         $sql = "UPDATE `broadcast` SET `listeners` = ? WHERE `id` = ?";
         Dba::write($sql, [$listeners, $this->id]);
@@ -165,7 +163,7 @@ class Broadcast extends database_object implements library_item
 
         $name        = $data['title'] ?? $this->name;
         $description = $data['description'] ?? '';
-        $private     = !empty($data['private']);
+        $private     = (!empty($data['private'] && (int)$data['private'] === 1)) ? 1 : 0;
 
         $sql    = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? WHERE `id` = ?";
         $params = [$name, $description, $private, $this->id];
@@ -213,7 +211,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get item tags.
-     * @return array<array{user: int, id: int, name: string}>
+     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
      */
     public function get_tags(): array
     {
@@ -402,7 +400,7 @@ class Broadcast extends database_object implements library_item
         $link = "<div class=\"broadcast-action\">";
         $link .= Ajax::button(
             '?page=player&action=unbroadcast&broadcast_id=' . $broadcast_id,
-            'broadcast',
+            'cell_tower',
             T_('Unbroadcast'),
             'broadcast_action'
         );

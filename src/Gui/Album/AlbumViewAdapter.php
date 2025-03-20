@@ -293,7 +293,7 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getGenre(): string
     {
-        return (string)$this->album->get_f_tags();
+        return $this->album->get_f_tags();
     }
 
     public function getSongCount(): int

@@ -30,6 +30,7 @@ use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\LibraryItemLoader;
@@ -64,6 +65,7 @@ final class ObjectTypeToClassNameMapper
         ObjectTypeEnum::ART->value => Art::class,
         ObjectTypeEnum::ARTIST->value => Artist::class,
         ObjectTypeEnum::BOOKMARK->value => Bookmark::class,
+        ObjectTypeEnum::BROADCAST->value => Broadcast::class,
         ObjectTypeEnum::GENRE->value => Tag::class,
         ObjectTypeEnum::LABEL->value => Label::class,
         ObjectTypeEnum::LIVE_STREAM->value => Live_Stream::class,

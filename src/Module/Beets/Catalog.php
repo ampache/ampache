@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Beets;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Module\System\AmpError;
@@ -139,7 +140,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Adds new songs to the catalog
      * @param array $options
      */
-    public function add_to_catalog($options = null): int
+    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             require Ui::find_template('show_adds_catalog.inc.php');
@@ -215,7 +216,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * verify_catalog_proc
      */
-    public function verify_catalog_proc(): int
+    public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
     {
         debug_event(self::class, 'Verify: Starting on ' . $this->name, 5);
         set_time_limit(0);
@@ -255,7 +256,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * This way is a little fishy, but if we start beets for every single file, it may take horribly long.
      * So first we get the difference between our and the beets database and then clean up the rest.
      */
-    public function clean_catalog_proc(): int
+    public function clean_catalog_proc(?Interactor $interactor = null): int
     {
         /** @var Handler $parser */
         $parser      = $this->getParser();

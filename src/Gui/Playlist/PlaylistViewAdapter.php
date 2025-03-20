@@ -148,6 +148,18 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         );
     }
 
+    public function getRandomPlayPlaylistButton(): string
+    {
+        $playlistId = $this->playlist->getId();
+
+        return Ajax::button(
+            '?page=random&action=send_playlist&random_type=playlist&random_id=' . $playlistId,
+            'autorenew',
+            T_('Random Play'),
+            'play_random_' . $playlistId
+        );
+    }
+
     public function canShare(): bool
     {
         return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&

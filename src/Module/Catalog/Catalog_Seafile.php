@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Catalog;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Catalog;
@@ -274,7 +275,7 @@ class Catalog_Seafile extends Catalog
      * existing catalog
      * @param array $options
      */
-    public function add_to_catalog($options = null): int
+    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -444,7 +445,7 @@ class Catalog_Seafile extends Catalog
      * @return int
      * @throws ReflectionException
      */
-    public function verify_catalog_proc(): int
+    public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
     {
         set_time_limit(0);
 
@@ -532,7 +533,7 @@ class Catalog_Seafile extends Catalog
      *
      * Removes songs that no longer exist.
      */
-    public function clean_catalog_proc(): int
+    public function clean_catalog_proc(?Interactor $interactor = null): int
     {
         $dead = 0;
 

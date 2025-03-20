@@ -1,6 +1,7 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # BOTS
     #RewriteCond %{HTTP_USER_AGENT} (Agent\ GPT|AgentGPT|AIBot|AI2Bot|AISearchBot|AlexaTM|Alpha\ AI|AlphaAI|Amazon\ Bedrock|Amazon\ Lex|Amazonbot)             [NC,OR]
     #RewriteCond %{HTTP_USER_AGENT} (Amelia|anthropic-ai|AnyPicker|Applebot|AutoGPT|AwarioRssBot|AwarioSmartBot|Brave\ Leo\ AI|Bytespider|CatBoost)            [NC,OR]
     #RewriteCond %{HTTP_USER_AGENT} (CC-Crawler|CCBot|ChatGPT|Chinchilla|Claude-Web|ClaudeBot|cohere-ai|cohere-training-data-crawler|Common\ Crawl)            [NC,OR]
@@ -13,6 +14,13 @@
     #RewriteCond %{HTTP_USER_AGENT} (The\ Knowledge\ AI|Timpibot|VelenPublicWebCrawler|WebChatGPT|Webzio|Whisper|x\.AI|xAI|YouBot|Zero\ GTP)                   [NC]
     #RewriteRule (.*) - [F,L]
 
+    # SQL INJECTION
+    #RewriteCond %{QUERY_STRING} "%3Cscript%3Ealert%28" [NC,OR]
+    #RewriteCond %{QUERY_STRING} "%20UNION%20ALL%20SELECT%20" [NC,OR]
+    #RewriteCond %{QUERY_STRING} "%20FROM%20information_schema.tables%20" [NC]
+    #RewriteRule (.*) - [F,L]
+
+    RewriteCond %{QUERY_STRING} !^operation=get_node&id=%23$ [NC]
     RewriteCond %{QUERY_STRING} "(_)?id=(smart_)?[0-9]*%" [NC,OR]
     RewriteCond %{QUERY_STRING} "(u|o)id=[0-9]*%" [NC,OR]
     RewriteCond %{QUERY_STRING} "album(_disk)?=[0-9]*%" [NC,OR]

@@ -38,8 +38,18 @@ use Ampache\Repository\Model\Tag;
                 <td class="edit_dialog_content_header"><?php echo T_('Hidden'); ?></td>
                 <td><input type="checkbox" <?php echo $string = ((int)$libitem->is_hidden == 1) ? 'checked="checked"' : ''; ?> name="is_hidden" value="1" /></td>
             </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Re-tag'); ?></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->get_merged_tags()); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Persistent'); ?></td>
+                <td><input type="checkbox" checked="checked" name="merge_persist" value="1" /></td>
+            </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
         <input type="hidden" name="type" value="tag_row" />
+        <input type="hidden" name="keep_existing" value="0" />
     </form>
 </div>

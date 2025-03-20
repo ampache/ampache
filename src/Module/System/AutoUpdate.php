@@ -462,15 +462,23 @@ class AutoUpdate
             echo T_('Updating npm build with `' . $cmdNpmBuild . '` ...') . '<br />';
         }
 
+        // set NPM paths to allow AutoUpdate to work with the webserver
+        if ((strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')) {
+            $cmdNpm      = 'export PATH=$PATH:./node_modules/.bin/ &&' . $cmdNpm . ' --loglevel info 2>&1';
+            $cmdNpmBuild = 'export PATH=$PATH:./node_modules/.bin/ &&' . $cmdNpmBuild . ' --loglevel info 2>&1';
+        }
+
         ob_flush();
         chdir(__DIR__ . '/../../../');
-        exec($cmdComposer);
-        exec($cmdNpm);
-        exec($cmdNpmBuild);
+        echo(exec($cmdComposer) . '<br />');
+        echo(exec($cmdNpm) . '<br />');
+        echo(exec($cmdNpmBuild) . '<br />');
         if (!$api) {
             echo T_('Done') . '<br />';
         }
 
         ob_flush();
+
+        sleep(5);
     }
 }

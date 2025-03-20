@@ -68,6 +68,7 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | rule_1                   | Title                                   | Operator Type     |                              Valid Types                              |
 |--------------------------|-----------------------------------------|-------------------|:---------------------------------------------------------------------:|
 | anywhere                 | Any searchable text                     | text              |                                 song                                  |
+| none                     | Empty / No rule search                  | is_true           |                                 song                                  |
 | title                    | Title / Name                            | text              | song, album, artist, playlist, label, podcast, podcast_episode, genre |
 | name                     | (*Alias of title)                       |                   |                                                                       |
 | song                     | Song Title                              | text              |                          song, album, artist                          |
@@ -107,7 +108,11 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | favorite_album           | Favorites (Album)                       | text              |                                 song                                  |
 | favorite_artist          | Favorites (Artist)                      | text              |                                 song                                  |
 | played_times             | # Played                                | numeric           |             song, album, artist, podcast, podcast_episode             |
-| skipped_times            | # Skipped                               | numeric           |                    song, podcast, podcast_episode                     |
+| skipped_times            | # Skipped                               | numeric           |             song, album, artist, podcast, podcast_episode             |
+| played_or_skipped_times  | # Skipped                               | numeric           |             song, album, artist, podcast, podcast_episode             |
+| myplayed_times           | # Played by Me                          | numeric           |             song, album, artist, podcast, podcast_episode             |
+| myskipped_times          | # Skipped by Me                         | numeric           |             song, album, artist, podcast, podcast_episode             |
+| myplayed_or_skipped_times| # Played or Skipped by Me               | numeric           |             song, album, artist, podcast, podcast_episode             |
 | play_skip_ratio          | Played/Skipped ratio                    | numeric           |                    song, podcast, podcast_episode                     |
 | last_play                | My Last Play                            | days              |             song, album, artist, podcast, podcast_episode             |
 | last_play_or_skip        | My Last Play OR skip                    | days              |             song, album, artist, podcast, podcast_episode             |
@@ -129,6 +134,9 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | artist_tag               | (*Alias of artist_genre)                |                   |                                                                       |
 | no_genre                 | No Genre                                | is_true           |                          song, album, artist                          |
 | no_tag                   | (*Alias of no_genre)                    |                   |                                                                       |
+| genre_count_song         | Genres with a count of Songs            | numeric           |                          song, album, artist                          |
+| genre_count_album        | Genres with a count of Albums           | numeric           |                          song, album, artist                          |
+| genre_count_artist       | Genres with a count of Artists          | numeric           |                          song, album, artist                          |
 | other_user               | Another User                            | user_numeric      |                          song, album, artist                          |
 | other_user_album         | Another User (Album)                    | user_numeric      |                                 song                                  |
 | other_user_artist        | Another User (Artist)                   | user_numeric      |                                 song                                  |
@@ -164,6 +172,7 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | possible_duplicate_album | Possible Duplicate Albums               | is_true           |                          song, album, artist                          |
 | username                 | Username                                | text              |                                 user                                  |
 | category                 | Category                                | text              |                             label, genre                              |
+| waveform                 | Song has a saved waveform               | boolean           |                                 song                                  |
 
 ### Available operator values
 
