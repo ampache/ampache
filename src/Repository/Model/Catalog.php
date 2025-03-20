@@ -2432,7 +2432,7 @@ abstract class Catalog extends database_object
         // artist
         if ($libitem instanceof Artist) {
             $artists[] = $libitem->id;
-            $tags = self::getSongTags('artist', $libitem->id);
+            $tags      = self::getSongTags('artist', $libitem->id);
             Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
         }
 
