@@ -1030,10 +1030,13 @@ class Stats
             $sql_type = "`song`.`" . $type . "`";
         }
 
+        $join_type = ($type === 'album_disk')
+            ? "`album_disk`.`album_id`"
+            : $sql_type;
         // join valid catalogs or a specific one
         $sql .= ((int)$catalog_id > 0)
-            ? "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $sql_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` = '" . $catalog_id . "' "
-            : "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $sql_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user?->getId(), true)) . ") ";
+            ? "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $join_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` = '" . $catalog_id . "' "
+            : "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $join_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user?->getId(), true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
         $user_id       = (int)(Core::get_global('user')?->getId());
