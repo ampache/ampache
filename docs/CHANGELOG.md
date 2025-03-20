@@ -39,6 +39,10 @@
 * Search with simple album name for external links
 * Change MusicBrainz library to [lachlan-00/MusicBrainz](https://github.com/lachlan-00/MusicBrainz)
 * Use MusicBrainz library for MBID validity checks
+* Show **ALL** Genres in the edit list for objects
+* Set a CSS max-width (25%) for the now playing column with Song details
+* Jplayer
+  * Repeat the current song if you press previous and there isn't a loop situation
 * webplayer
   * Rearrange the buttons to make them aling better with different config
   * Only show the slideshow button if you have a slideshow plugin enabled. (flickr)
@@ -60,6 +64,9 @@
 * Always update `album_map` and `artist_map` rows just in case they were missed
 * Don't update item and parent genres if there wasn't an item or parent change
 * Duplicate stat migrations for same `song_artist` & `album_artist`
+* Unable to update Tag lists when you had lots of tags (Over 40) linked to an object
+* Show newest AlbumDisk was not joining correctly
+* SQL error looking up License name
 * Plugin
   * Discogs: Fix up searching for releases without a master release
 
