@@ -839,7 +839,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $editedTags  = (is_array($filter_list)) ? array_unique($filter_list) : [];
 
         $change       = false;
-        $current_tags = self::get_top_tags($object_type, $object_id, 50);
+        $current_tags = self::get_top_tags($object_type, $object_id, 0);
         foreach ($current_tags as $ctv) {
             $found = false;
             if ($ctv['id'] != '') {
