@@ -385,7 +385,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
             $results = (array)$results;
             if (isset($artist)) {
                 $results['mb_artistid'] = $artist['id'];
-                $results['artist'] = $artist['name'];
+                $results['artist']      = $artist['name'];
             }
 
             if (isset($release)) {
