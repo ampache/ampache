@@ -365,22 +365,34 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
             debug_event('MusicBrainz.plugin', 'Error getting genres ' . $error->getMessage(), 3);
         }
 
-        if (isset($brainzData['artist-credit']) && count($brainzData['artist-credit']) > 0) {
-            $artist = $brainzData['artist-credit'][0];
-            $artist = (is_array($artist))
-                ? $artist['artist']
-                : (array)$artist->{'artist'};
+        if (
+            isset($brainzData['artist-credit']) ||
+            isset($brainzData['releases'])
+        ) {
+            // pull first artist-credit
+            if (isset($brainzData['artist-credit']) && count($brainzData['artist-credit']) > 0) {
+                $artist = $brainzData['artist-credit'][0];
+                $artist = (is_array($artist))
+                    ? $artist['artist']
+                    : (array)$artist->{'artist'};
+            }
+
+            // pull first release
             if (isset($brainzData['releases']) && count($brainzData['releases']) == 1) {
                 $release = $brainzData['releases'][0];
             }
+
             $results = (array)$results;
+            if (isset($artist)) {
+                $results['mb_artistid'] = $artist['id'];
+                $results['artist'] = $artist['name'];
+            }
+
             if (isset($release)) {
                 $results['album'] = is_array($release)
                     ? $release['title']
                     : $release->title;
             }
-            $results['mb_artistid'] = $artist['id'];
-            $results['artist']      = $artist['name'];
         } else {
             $results = (array)$results;
         }
