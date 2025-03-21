@@ -57,7 +57,7 @@ final class MissingArtistFinder implements MissingArtistFinderInterface
                     'name' => $result->name,
                 ];
             },
-            $this->musicBrainz->search($filter)
+            (array)$this->musicBrainz->search($filter)
         );
     }
 }

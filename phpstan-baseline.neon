@@ -4061,11 +4061,6 @@ parameters:
 			path: src/Module/Application/Admin/Catalog/AbstractCatalogAction.php
 
 		-
-			message: "#^Comparison operation \"\\=\\=\" between \\(array\\<int, string\\>\\|string\\) and int\\|string results in an error\\.$#"
-			count: 1
-			path: src/Module/Application/Image/AbstractShowAction.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Module/Application/Installation/DefaultAction.php
@@ -4249,16 +4244,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:\\$logger is never read, only written\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/MetaTagCollectorModule.php
-
-		-
-			message: "#^Cannot access property \\$asin on array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/MusicbrainzCollectorModule.php
-
-		-
-			message: "#^Cannot access property \\$relations on array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/MusicbrainzCollectorModule.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MusicbrainzCollectorModule\\:\\:collect\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
@@ -8623,11 +8608,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:get_metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^PHPDoc tag @var for variable \\$results has no value type specified in iterable type array\\.$#"
-			count: 8
 			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
