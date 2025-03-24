@@ -1221,12 +1221,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "4d633c6ea003be877affa9fe55b24915c2437501"
+                "reference": "9f83bdd8c772283a46b8e2664bf2a862a2ced0e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/4d633c6ea003be877affa9fe55b24915c2437501",
-                "reference": "4d633c6ea003be877affa9fe55b24915c2437501",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/9f83bdd8c772283a46b8e2664bf2a862a2ced0e8",
+                "reference": "9f83bdd8c772283a46b8e2664bf2a862a2ced0e8",
                 "shasum": ""
             },
             "require": {
@@ -1281,7 +1281,7 @@
                 "issues": "https://github.com/JamesHeinrich/getID3/issues",
                 "source": "https://github.com/JamesHeinrich/getID3/tree/master"
             },
-            "time": "2025-02-13T13:11:49+00:00"
+            "time": "2025-03-23T12:31:40+00:00"
         },
         {
             "name": "jwilsson/spotify-web-api-php",
@@ -1407,12 +1407,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/lachlan-00/MusicBrainz.git",
-                "reference": "b634f6a3933813edb335babb6204970c940ef8b8"
+                "reference": "bee9c8f4ced056caa436c359caaf1914c3fac9b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lachlan-00/MusicBrainz/zipball/b634f6a3933813edb335babb6204970c940ef8b8",
-                "reference": "b634f6a3933813edb335babb6204970c940ef8b8",
+                "url": "https://api.github.com/repos/lachlan-00/MusicBrainz/zipball/bee9c8f4ced056caa436c359caaf1914c3fac9b9",
+                "reference": "bee9c8f4ced056caa436c359caaf1914c3fac9b9",
                 "shasum": ""
             },
             "require": {
@@ -1461,7 +1461,7 @@
             "support": {
                 "source": "https://github.com/lachlan-00/MusicBrainz/tree/release"
             },
-            "time": "2025-03-20T10:12:15+00:00"
+            "time": "2025-03-24T05:11:48+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -5605,16 +5605,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.21",
+            "version": "1.12.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "14276fdef70575106a3392a4ed553c06a984df28"
+                "reference": "29201e7a743a6ab36f91394eab51889a82631428"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/14276fdef70575106a3392a4ed553c06a984df28",
-                "reference": "14276fdef70575106a3392a4ed553c06a984df28",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/29201e7a743a6ab36f91394eab51889a82631428",
+                "reference": "29201e7a743a6ab36f91394eab51889a82631428",
                 "shasum": ""
             },
             "require": {
@@ -5659,7 +5659,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-09T09:24:50+00:00"
+            "time": "2025-03-23T14:57:32+00:00"
         },
         {
             "name": "phpstan/phpstan-mockery",
@@ -6036,16 +6036,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "11.5.14",
+            "version": "11.5.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "9d6046153c2893b521784069e6b5249ce7d2acae"
+                "reference": "4b6a4ee654e5e0c5e1f17e2f83c0f4c91dee1f9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/9d6046153c2893b521784069e6b5249ce7d2acae",
-                "reference": "9d6046153c2893b521784069e6b5249ce7d2acae",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4b6a4ee654e5e0c5e1f17e2f83c0f4c91dee1f9c",
+                "reference": "4b6a4ee654e5e0c5e1f17e2f83c0f4c91dee1f9c",
                 "shasum": ""
             },
             "require": {
@@ -6117,7 +6117,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.14"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.15"
             },
             "funding": [
                 {
@@ -6133,7 +6133,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-03-19T13:45:48+00:00"
+            "time": "2025-03-23T16:02:11+00:00"
         },
         {
             "name": "psr/event-dispatcher",
