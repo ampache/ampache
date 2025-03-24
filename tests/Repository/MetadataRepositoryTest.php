@@ -348,7 +348,7 @@ class MetadataRepositoryTest extends TestCase
         $metadata->expects(static::exactly(2))
             ->method('getType')
             ->willReturn($type);
-        $metadata->expects(static::exactly(2))
+        $metadata->expects(static::once())
             ->method('isNew')
             ->willReturn(false);
         $metadata->expects(static::once())
