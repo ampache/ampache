@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## Ampache 7.3.1
+## Ampache 7.4.0
+
+The code has had a lot of updates dealing with verifications.
+
+It is recommended that you take out MusicBrainz from your config `metadata_order` to speed it up even more.
 
 ### Added
 
@@ -17,6 +21,7 @@
 * Config version 79
   * Add `split_artist_regex` split the Artist and Album Artist tags on regex and use the first result
   * Add `catalog_verify_by_album` to allow grouping updates instead of just updating individual files
+  * Remove plugins from default `metadata_order` (MusicBrainz enforces a 1 second sleep for each call)
 * CLI
   * Print messages in the CLI for actions again
   * UpdateCatalog: add new option limit. (-l|--limit) Only verify small chunk of files
