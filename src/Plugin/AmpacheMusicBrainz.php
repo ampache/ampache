@@ -352,16 +352,16 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                 /** @var Tag $tag */
                 $genres[] = $tag->name;
             }
-        } catch (Exception $error) {
-            debug_event('MusicBrainz.plugin', 'Error getting tags ' . $error->getMessage(), 3);
+        } catch (Exception) {
+            // no tags found;
         }
         try {
             foreach ($brainz->getObjects($brainzData, 'genre') as $genre) {
                 /** @var Genre $genre */
                 $genres[] = $genre->getName();
             }
-        } catch (Exception $error) {
-            debug_event('MusicBrainz.plugin', 'Error getting genres ' . $error->getMessage(), 3);
+        } catch (Exception) {
+            // no genres found;
         }
 
         if (
