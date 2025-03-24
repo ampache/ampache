@@ -39,6 +39,7 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
         $tal->set('ITEMS', $this->getItems());
         $tal->set('LINK', AmpConfig::get_web_path());
         $tal->set('PUBDATE', $this->getPubDate());
+        $tal->set('IMAGE', $this->getImage());
     }
 
     /**
@@ -59,6 +60,14 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
      * this is a little specific as it uses the 'newest' expire we can find
      */
     protected function getPubDate(): ?int
+    {
+        return null;
+    }
+
+    /**
+     * Feed image link
+     */
+    protected function getImage(): ?string
     {
         return null;
     }
