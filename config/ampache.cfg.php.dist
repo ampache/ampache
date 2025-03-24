@@ -278,7 +278,7 @@ getid3_tag_order = "vorbiscomment,id3v2,id3v1,quicktime,matroska,ape,asf,avi,mpe
 ; POSSIBLE VALUES (builtins): filename and getID3
 ; POSSIBLE VALUES (plugins): MusicBrainz,TheAudioDb, plus any others you've installed.
 ; DEFAULT: getID3 filename
-metadata_order = "getID3,MusicBrainz,TheAudioDb,filename"
+metadata_order = "getID3,filename"
 
 ; This determines the order in which metadata sources are used (and in the
 ; case of plugins, checked) for video files
