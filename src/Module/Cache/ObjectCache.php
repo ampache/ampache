@@ -27,6 +27,7 @@ namespace Ampache\Module\Cache;
 
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Preference;
 
 final class ObjectCache implements ObjectCacheInterface
 {
@@ -37,9 +38,10 @@ final class ObjectCache implements ObjectCacheInterface
             'download',
             'skip',
         ];
-        $thresholds  = [0, 7, 10];
-        $sql         = "SELECT DISTINCT(`user_preference`.`value`) FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` WHERE `preference`.`name` IN ('stats_threshold', 'popular_threshold')";
-        $db_results  = Dba::read($sql);
+        $admin_thresh = (int)Preference::get('stats_threshold', -1);
+        $thresholds   = [0, 7, 10, $admin_thresh];
+        $sql          = "SELECT DISTINCT(`user_preference`.`value`) FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` WHERE `preference`.`name` IN ('stats_threshold', 'popular_threshold')";
+        $db_results   = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             // get individual user thresholds if not the default
             $thresholds[] = (int)$row['value'];
