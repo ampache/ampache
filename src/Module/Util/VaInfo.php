@@ -675,7 +675,10 @@ final class VaInfo implements VaInfoInterface
             if (self::getConfigContainer()->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) && is_array($tags)) {
                 // Add rest of the tags without typecast to the array
                 foreach ($tags as $tag => $value) {
-                    if (!array_key_exists($tag, $info) && !is_array($value)) {
+                    if (
+                        !array_key_exists($tag, $info) &&
+                        is_scalar($value)
+                    ) {
                         $info[$tag] = trim((string)$value);
                     }
                 }
