@@ -5,7 +5,11 @@
         <link tal:content="LINK">LINK</link>
         <description tal:content="TITLE">TITLE</description>
         <pubDate tal:condition="PUBDATE | false" tal:content="PUBDATE">PUBDATE</pubDate>
-        <image tal:condition="IMAGE | false" tal:content="IMAGE">IMAGE</image>
+        <image tal:condition="IMAGE | false">
+            <url tal:content="IMAGE">IMAGE</url>
+            <link tal:content="LINK">LINK</link>
+            <title tal:content="TITLE">TITLE</title>
+        </image>
         <item tal:repeat="item ITEMS">
             <title tal:content="item/title">TITLE</title>
             <guid tal:content="item/guid" isPermaLink="false">media-guid</guid>
