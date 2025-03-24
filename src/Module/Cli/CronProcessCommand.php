@@ -110,7 +110,7 @@ final class CronProcessCommand extends Command
         $start_time = time();
         debug_event(self::class, 'started cron process', 3);
         $interactor->info(
-            T_('Cron process finished'),
+            T_('Ampache Cron'),
             true
         );
 
