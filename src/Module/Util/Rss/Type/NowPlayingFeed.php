@@ -61,8 +61,13 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
         // Little redundant, should be fixed by an improvement in the get_now_playing stuff
         $data    = Stream::get_now_playing();
         $element = array_shift($data);
+
         /** @var Song|Video $media */
-        $media   = $element['media'];
+        $media   = $element['media'] ?? null;
+        if (!$media) {
+            return null;
+        }
+
         $type    = ($media instanceof Video)
             ? 'video'
             : 'song';
