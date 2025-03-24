@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\MetadataField;
 use Generator;
@@ -166,11 +167,21 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
      * Saves the item
      *
      * @return null|int The id of the item if the item was new
+     * @throws DatabaseException
      */
     public function persist(Metadata $metadata): ?int
     {
-        $result = null;
+        // check that metadata value exists
+        if (
+            $metadata->getObjectId() === 0 ||
+            $metadata->getFieldId() === 0 ||
+            empty($metadata->getData()) ||
+            empty($metadata->getType())
+        ) {
+            return null;
+        }
 
+        $result = null;
         if ($metadata->isNew()) {
             $this->connection->query(
                 'INSERT INTO `metadata` (`object_id`, `field`, `data`, `type`) VALUES (?, ?, ?, ?)',
