@@ -189,7 +189,6 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                         $results = $brainz->getObject($lookup, $object_type);
                         break;
                     case 'track':
-                        echo "track\n";
                         $lookup = $brainz->lookup('recording', $mbid, ['artists', 'releases', 'genres', 'tags']);
                         /**
                          * https://musicbrainz.org/ws/2/recording/140e8071-d7bb-4e05-9547-bfeea33916d0?inc=artists+releases&fmt=json
