@@ -198,7 +198,10 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 if (!array_key_exists('Cache-Control', $reqheaders) || (array_key_exists('Cache-Control', $reqheaders) && $reqheaders['Cache-Control'] != 'no-cache')) {
                     $cetag = str_replace('"', '', $reqheaders['If-None-Match']);
                     // Same image than the cached one? Use the cache.
-                    if ($cetag == $etag) {
+                    if (
+                        !is_array($cetag) &&
+                        $cetag == $etag
+                    ) {
                         return $response->withStatus(304);
                     }
                 }
