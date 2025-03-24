@@ -289,16 +289,16 @@ class MetadataRepositoryTest extends TestCase
         $data       = 'some-data';
         $type       = 'some-type';
 
-        $metadata->expects(static::once())
+        $metadata->expects(static::exactly(2))
             ->method('getObjectId')
             ->willReturn($objectId);
-        $metadata->expects(static::once())
+        $metadata->expects(static::exactly(2))
             ->method('getFieldId')
             ->willReturn($fieldId);
-        $metadata->expects(static::once())
+        $metadata->expects(static::exactly(2))
             ->method('getData')
             ->willReturn($data);
-        $metadata->expects(static::once())
+        $metadata->expects(static::exactly(2))
             ->method('getType')
             ->willReturn($type);
         $metadata->expects(static::once())
@@ -336,19 +336,19 @@ class MetadataRepositoryTest extends TestCase
         $data       = 'some-data';
         $type       = 'some-type';
 
-        $metadata->expects(static::once())
+        $metadata->expects(static::exactly(2))
             ->method('getObjectId')
             ->willReturn($objectId);
-        $metadata->expects(static::once())
+        $metadata->expects(static::exactly(2))
             ->method('getFieldId')
             ->willReturn($fieldId);
-        $metadata->expects(static::once())
+        $metadata->expects(static::exactly(2))
             ->method('getData')
             ->willReturn($data);
-        $metadata->expects(static::once())
+        $metadata->expects(static::exactly(2))
             ->method('getType')
             ->willReturn($type);
-        $metadata->expects(static::once())
+        $metadata->expects(static::exactly(2))
             ->method('isNew')
             ->willReturn(false);
         $metadata->expects(static::once())
