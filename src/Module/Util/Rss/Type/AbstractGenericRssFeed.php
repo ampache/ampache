@@ -38,9 +38,9 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
         $tal->set('TITLE', AmpConfig::get('site_title') . ' - ' . $this->getTitle());
         $tal->set('ITEMS', $this->getItems());
         $tal->set('LINK', AmpConfig::get_web_path());
-        $tal->set('PUBDATE', ($this->getPubDate())
-            ? date('r', (int)$this->getPubDate())
-            : null
+        $tal->set(
+            'PUBDATE',
+            ($this->getPubDate()) ? date('r', (int)$this->getPubDate()) : null
         );
         $tal->set('IMAGE', $this->getImage());
     }
