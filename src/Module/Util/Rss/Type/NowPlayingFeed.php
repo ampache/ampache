@@ -27,6 +27,7 @@ namespace Ampache\Module\Util\Rss\Type;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
+use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
@@ -50,6 +51,28 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
         $element = array_shift($data);
 
         return $element['expire'] ?? null;
+    }
+
+    /**
+     * Feed image link
+     */
+    protected function getImage(): ?string
+    {
+        // Little redundant, should be fixed by an improvement in the get_now_playing stuff
+        $data    = Stream::get_now_playing();
+        $element = array_shift($data);
+
+        /** @var Song|Video $media */
+        $media   = $element['media'] ?? null;
+        if (!$media) {
+            return null;
+        }
+
+        $type    = ($media instanceof Video)
+            ? 'video'
+            : 'song';
+
+        return (string)Art::url($media->getId(), $type, null, 2) ?? null;
     }
 
     protected function getItems(): Generator
