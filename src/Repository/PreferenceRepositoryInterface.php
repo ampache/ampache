@@ -48,5 +48,8 @@ interface PreferenceRepositoryInterface
      *  subcategory: string
      * }>
      */
-    public function getAll(?User $user = null): array;
+    public function getAll(
+        ?User $user = null,
+        ?bool $api = false
+    ): array;
 }

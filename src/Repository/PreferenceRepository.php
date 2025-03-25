@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Api\Api;
+use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\User;
 
@@ -33,6 +35,20 @@ use Ampache\Repository\Model\User;
  */
 final class PreferenceRepository implements PreferenceRepositoryInterface
 {
+    /** @var string[] $HIDE_ARRAY */
+    private const HIDE_ARRAY = [
+        'disabled_custom_metadata_fields',
+        'jp_volume',
+        'lastfm_grant_link',
+        'librefm_grant_link',
+        'personalfav_playlist',
+        'personalfav_smartlist',
+        'play_type',
+        'playlist_method',
+        'theme_color',
+        'theme_name',
+    ];
+
     /**
      * Returns a nice flat dict of all the possible preferences
      *
@@ -49,14 +65,19 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
      *  subcategory: string
      * }>
      */
-    public function getAll(?User $user = null): array
-    {
-        $userLimit = '';
-        $userId    = User::INTERNAL_SYSTEM_USER_ID;
-
+    public function getAll(
+        ?User $user = null,
+        ?bool $api = false
+    ): array {
         if ($user !== null) {
-            $userLimit = 'AND `preference`.`category` != \'system\'';
-            $userId    = $user->getId();
+            $userLimit   = 'AND `preference`.`category` != \'system\'';
+            $userId      = $user->getId();
+            $accessLevel = $user->access;
+        } else {
+            $user        = new User(User::INTERNAL_SYSTEM_USER_ID);
+            $userLimit   = '';
+            $userId      = User::INTERNAL_SYSTEM_USER_ID;
+            $accessLevel = 0;
         }
 
         $sql = <<<SQL
@@ -92,7 +113,12 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
         $results = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = [
+            if ($api && in_array($row['name'], self::HIDE_ARRAY)) {
+                // don't show these to API users as they are not useful
+                continue;
+            }
+
+            $data = [
                 'id' => (int) $row['id'],
                 'name' => $row['name'],
                 'level' => (int) $row['level'],
@@ -102,6 +128,84 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
                 'category' => $row['category'],
                 'subcategory' => $row['subcategory']
             ];
+            if ($api) {
+                $data['has_access'] = (((int)$row['level']) <= $accessLevel);
+            }
+            if ($row['type'] == 'special') {
+                switch ($row['name']) {
+                    case 'upload_catalog':
+                        $data['values'] = $user->get_catalogs('music');
+                        break;
+                    case 'playlist_type':
+                        $data['values'] = [
+                            'simple_m3u',
+                            'pls',
+                            'asx',
+                            'ram',
+                            'xspf',
+                            'm3u'
+                        ];
+                        break;
+                    case 'lang':
+                        $data['values'] = array_keys(get_languages());
+                        break;
+                    case 'localplay_controller':
+                        $data['values'] = array_keys(LocalPlayTypeEnum::TYPE_MAPPING);
+                        break;
+                    case 'api_force_version':
+                        $data['values'] = Api::API_VERSIONS;
+                        break;
+                    case 'ratingmatch_stars':
+                        $data['values'] = [
+                            '0',
+                            '1',
+                            '2',
+                            '3',
+                            '4',
+                            '5',
+                        ];
+                        break;
+                    case 'localplay_level':
+                    case 'upload_access_level':
+                        $data['values'] = [
+                            '0',
+                            '5',
+                            '25',
+                            '50',
+                            '75',
+                            '100',
+                        ];
+                        break;
+                    case 'webplayer_removeplayed':
+                        $data['values'] = [
+                            '0',
+                            '1',
+                            '2',
+                            '3',
+                            '5',
+                            '10',
+                            '999',
+                        ];
+                        break;
+                    case 'transcode':
+                        $data['values'] = [
+                            'never',
+                            'default',
+                            'always',
+                        ];
+                        break;
+                    case 'album_sort':
+                        $data['values'] = [
+                            'default',
+                            'year_asc',
+                            'year_desc',
+                            'name_asc',
+                            'name_desc',
+                        ];
+                        break;
+                }
+            }
+            $results[] = $data;
         }
 
         return $results;

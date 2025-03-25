@@ -51,7 +51,7 @@ final class SystemPreferencesMethod
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $results = ['preference' => self::getPreferenceRepository()->getAll()];
+        $results = ['preference' => self::getPreferenceRepository()->getAll(null, true)];
 
         switch ($input['api_format']) {
             case 'json':
