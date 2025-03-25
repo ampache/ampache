@@ -52,7 +52,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     public function getTitle(): string
     {
-        return sprintf('%s Podcast', $this->playable->get_fullname());
+        return $this->playable->get_fullname();
     }
 
     /**
