@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Api\Api;
-use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
