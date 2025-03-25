@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\Api\Api;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -64,7 +63,9 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
      *  level: int,
      *  type: string,
      *  category: string,
-     *  subcategory: string
+     *  subcategory: string,
+     *  has_access?: bool,
+     *  values?: string[],
      * }>
      */
     public function getAll(
