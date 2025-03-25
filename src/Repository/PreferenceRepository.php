@@ -28,6 +28,7 @@ namespace Ampache\Repository;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
 /**
@@ -78,7 +79,7 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
             $user        = new User(User::INTERNAL_SYSTEM_USER_ID);
             $userLimit   = '';
             $userId      = User::INTERNAL_SYSTEM_USER_ID;
-            $accessLevel = 0;
+            $accessLevel = 100;
         }
 
         $sql = <<<SQL
@@ -119,7 +120,7 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
                 continue;
             }
 
-            $data = [
+            $result = [
                 'id' => (int) $row['id'],
                 'name' => $row['name'],
                 'level' => (int) $row['level'],
@@ -130,83 +131,15 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
                 'subcategory' => $row['subcategory']
             ];
             if ($api) {
-                $data['has_access'] = (((int)$row['level']) <= $accessLevel);
+                $result['has_access'] = (((int)$row['level']) <= $accessLevel);
             }
             if ($row['type'] == 'special') {
-                switch ($row['name']) {
-                    case 'upload_catalog':
-                        $data['values'] = $user->get_catalogs('music');
-                        break;
-                    case 'playlist_type':
-                        $data['values'] = [
-                            'simple_m3u',
-                            'pls',
-                            'asx',
-                            'ram',
-                            'xspf',
-                            'm3u'
-                        ];
-                        break;
-                    case 'lang':
-                        $data['values'] = array_keys(get_languages());
-                        break;
-                    case 'localplay_controller':
-                        $data['values'] = array_keys(LocalPlayTypeEnum::TYPE_MAPPING);
-                        break;
-                    case 'api_force_version':
-                        $data['values'] = Api::API_VERSIONS;
-                        break;
-                    case 'ratingmatch_stars':
-                        $data['values'] = [
-                            '0',
-                            '1',
-                            '2',
-                            '3',
-                            '4',
-                            '5',
-                        ];
-                        break;
-                    case 'localplay_level':
-                    case 'upload_access_level':
-                        $data['values'] = [
-                            '0',
-                            '5',
-                            '25',
-                            '50',
-                            '75',
-                            '100',
-                        ];
-                        break;
-                    case 'webplayer_removeplayed':
-                        $data['values'] = [
-                            '0',
-                            '1',
-                            '2',
-                            '3',
-                            '5',
-                            '10',
-                            '999',
-                        ];
-                        break;
-                    case 'transcode':
-                        $data['values'] = [
-                            'never',
-                            'default',
-                            'always',
-                        ];
-                        break;
-                    case 'album_sort':
-                        $data['values'] = [
-                            'default',
-                            'year_asc',
-                            'year_desc',
-                            'name_asc',
-                            'name_desc',
-                        ];
-                        break;
+                $values = Preference::get_special_values($row['name'], $user);
+                if ($values) {
+                    $result['values'] = $values;
                 }
             }
-            $results[] = $data;
+            $results[] = $result;
         }
 
         return $results;

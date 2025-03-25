@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Api\Api;
+use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use SimpleXMLElement;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -578,6 +580,77 @@ class Preference extends database_object
         }
 
         return $results;
+    }
+    /**
+     * get_special_values
+     * This returns an array of the values for special preferences which are not kept in the database
+     */
+    public static function get_special_values(string $name, User $user): ?array
+    {
+        switch ($name) {
+            case 'upload_catalog':
+                return $user->get_catalogs('music');
+            case 'playlist_type':
+                return [
+                    'simple_m3u',
+                    'pls',
+                    'asx',
+                    'ram',
+                    'xspf',
+                    'm3u'
+                ];
+            case 'lang':
+                return array_keys(get_languages());
+            case 'localplay_controller':
+                return array_keys(LocalPlayTypeEnum::TYPE_MAPPING);
+            case 'api_force_version':
+                return Api::API_VERSIONS;
+            case 'ratingmatch_stars':
+                return [
+                    '0',
+                    '1',
+                    '2',
+                    '3',
+                    '4',
+                    '5',
+                ];
+            case 'localplay_level':
+            case 'upload_access_level':
+                return [
+                    '0',
+                    '5',
+                    '25',
+                    '50',
+                    '75',
+                    '100',
+                ];
+            case 'webplayer_removeplayed':
+                return [
+                    '0',
+                    '1',
+                    '2',
+                    '3',
+                    '5',
+                    '10',
+                    '999',
+                ];
+            case 'transcode':
+                return [
+                    'never',
+                    'default',
+                    'always',
+                ];
+            case 'album_sort':
+                return [
+                    'default',
+                    'year_asc',
+                    'year_desc',
+                    'name_asc',
+                    'name_desc',
+                ];
+        }
+
+        return null;
     }
 
     /**
