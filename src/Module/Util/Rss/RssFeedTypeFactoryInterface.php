@@ -60,4 +60,9 @@ interface RssFeedTypeFactoryInterface
      * Creates a feed for recent shouts
      */
     public function createLatestShoutFeed(): FeedTypeInterface;
+
+    /**
+     * Creates a feed for recent songs
+     */
+    public function createLatestSongFeed(?User $user): FeedTypeInterface;
 }

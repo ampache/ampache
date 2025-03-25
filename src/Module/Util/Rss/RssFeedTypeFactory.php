@@ -113,4 +113,15 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
             $this->dic->get(ShoutObjectLoaderInterface::class),
         );
     }
+
+    /**
+     * Creates a feed for recent songs
+     */
+    public function createLatestSongFeed(
+        ?User $user
+    ): FeedTypeInterface {
+        return new LatestSongFeed(
+            $user,
+        );
+    }
 }

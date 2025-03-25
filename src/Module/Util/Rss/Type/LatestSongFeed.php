@@ -27,11 +27,11 @@ namespace Ampache\Module\Util\Rss\Type;
 
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Generator;
 
-final readonly class LatestArtistFeed extends AbstractGenericRssFeed
+final readonly class LatestSongFeed extends AbstractGenericRssFeed
 {
     public function __construct(
         private ?User $user,
@@ -40,25 +40,25 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
 
     protected function getTitle(): string
     {
-        return T_('Newest Artists');
+        return T_('Newest Songs');
     }
 
     protected function getItems(): Generator
     {
-        $ids = Stats::get_newest('artist', 10, 0, 0, $this->user);
+        $ids = Stats::get_newest('song', 10, 0, 0, $this->user);
 
-        foreach ($ids as $artistid) {
-            $artist = new Artist($artistid);
-            $artist->format();
+        foreach ($ids as $songid) {
+            $song = new Song($songid);
+            $song->format();
 
             yield [
-                'title' => (string) $artist->get_fullname(),
-                'link' => $artist->get_link(),
-                'description' => (string) $artist->summary,
+                'title' => (string) $song->get_fullname(),
+                'link' => $song->get_link(),
+                'description' => $song->get_fullname() . ' - ' . $song->get_artist_fullname(),
                 'comments' => '',
                 'pubDate' => '',
-                'guid' => 'artist-' . $artist->id,
-                'image' => (string)Art::url($artist->id, 'artist', null, 2),
+                'guid' => 'song-' . $song->id,
+                'image' => (string)Art::url($song->id, 'song', null, 2),
             ];
         }
     }

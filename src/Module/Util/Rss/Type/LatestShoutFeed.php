@@ -41,7 +41,7 @@ final readonly class LatestShoutFeed extends AbstractGenericRssFeed
 
     protected function getTitle(): string
     {
-        return T_('Recent Shouts');
+        return T_('Newest Shouts');
     }
 
     protected function getItems(): Generator
