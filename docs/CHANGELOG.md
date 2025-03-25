@@ -22,6 +22,8 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
   * Add `split_artist_regex` split the Artist and Album Artist tags on regex and use the first result
   * Add `catalog_verify_by_album` to allow grouping updates instead of just updating individual files
   * Remove plugins from default `metadata_order` (MusicBrainz enforces a 1 second sleep for each call)
+* Database 740001
+  * Fix boolean preferences with an incorrect type
 * CLI
   * Print messages in the CLI for actions again
   * UpdateCatalog: add new option limit. (-l|--limit) Only verify small chunk of files
@@ -72,6 +74,8 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * Unable to update Tag lists when you had lots of tags (Over 40) linked to an object
 * Show newest AlbumDisk was not joining correctly
 * SQL error looking up License name
+* Fix up RSS to generate valid feeds again
+* Only insert additional metadata for scalar values
 * Plugin
   * Discogs: Fix up searching for releases without a master release
 

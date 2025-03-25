@@ -196,7 +196,7 @@ class Subsonic_Api
     }
 
     /**
-     * @param $password
+     * @param string $password
      */
     public static function _decryptPassword($password): string
     {
@@ -2707,7 +2707,9 @@ class Subsonic_Api
             $email = urldecode($email);
         }
 
-        if ($user->access >= AccessLevelEnum::ADMIN->value) {
+        if (
+            (!$username || !$password) ||
+            $user->access >= AccessLevelEnum::ADMIN->value) {
             $access = AccessLevelEnum::USER;
             if ($coverArtRole) {
                 $access = AccessLevelEnum::MANAGER;

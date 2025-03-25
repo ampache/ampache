@@ -414,7 +414,7 @@ final class SongTagWriter implements SongTagWriterInterface
 
     /**
      * @param int|string $description
-     * @param $ndata
+     * @param array $ndata
      * @return int|null
      */
     private function search_txxx($description, $ndata): ?int

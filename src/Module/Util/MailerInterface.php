@@ -74,7 +74,7 @@ interface MailerInterface
     public function send($phpmailer = null): bool;
 
     /**
-     * @param $group_name
+     * @param string $group_name
      * @return bool
      * @throws Exception
      */
