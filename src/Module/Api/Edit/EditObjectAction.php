@@ -35,7 +35,6 @@ use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Tag;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\LabelRepositoryInterface;
