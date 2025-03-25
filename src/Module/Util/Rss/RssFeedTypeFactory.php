@@ -30,6 +30,7 @@ use Ampache\Module\Util\Rss\Type\FeedTypeInterface;
 use Ampache\Module\Util\Rss\Type\LatestAlbumFeed;
 use Ampache\Module\Util\Rss\Type\LatestArtistFeed;
 use Ampache\Module\Util\Rss\Type\LatestShoutFeed;
+use Ampache\Module\Util\Rss\Type\LatestSongFeed;
 use Ampache\Module\Util\Rss\Type\LibraryItemFeed;
 use Ampache\Module\Util\Rss\Type\NowPlayingFeed;
 use Ampache\Module\Util\Rss\Type\RecentlyPlayedFeed;
