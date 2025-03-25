@@ -2027,7 +2027,7 @@ abstract class Catalog extends database_object
         }
 
         if (Ui::check_ticker() && !$api) {
-            Ui::update_text('read_art_' . $object_id, $libitem->get_fullname());
+            Ui::update_text('read_art_' . $object_id, (string)$libitem->get_fullname());
         }
 
         return $inserted;

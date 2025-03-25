@@ -2836,11 +2836,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_decryptPassword\\(\\) has parameter \\$password with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_hasNestedArray\\(\\) has parameter \\$properties with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
@@ -6076,7 +6071,7 @@ parameters:
 			path: src/Module/Song/Tag/SongTagWriter.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:search_txxx\\(\\) has parameter \\$ndata with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:search_txxx\\(\\) has parameter \\$ndata with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Song/Tag/SongTagWriter.php
 
@@ -7426,11 +7421,6 @@ parameters:
 			path: src/Module/Util/Horde_Browser.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\MailerInterface\\:\\:send_to_group\\(\\) has parameter \\$group_name with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/MailerInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\MemoryObject\\:\\:__construct\\(\\) has parameter \\$data with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/MemoryObject.php
@@ -8037,11 +8027,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:showPreferenceBox\\(\\) has parameter \\$preferences with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:update_text\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Ui.php
 
@@ -9437,6 +9422,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:get_categories\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Preference.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:get_special_values\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Preference.php
 
