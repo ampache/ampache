@@ -176,10 +176,10 @@ final class EditObjectAction extends AbstractEditAction
     /**
      * clean_to_existing
      * Clean label list to existing label list only
-     * @param list<string>|string $labels
-     * @return list<string>|string
+     * @param string[]|string $labels
+     * @return string[]|string
      */
-    private function clean_to_existing($labels)
+    private function clean_to_existing($labels): array|string
     {
         $array = (is_array($labels)) ? $labels : preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels);
         $ret   = [];

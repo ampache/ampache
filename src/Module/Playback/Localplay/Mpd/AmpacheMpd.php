@@ -242,8 +242,6 @@ class AmpacheMpd extends localplay_controller
 
     /**
      * add_url
-     * This is the new hotness
-     * @param Stream_Url $url
      */
     public function add_url(Stream_Url $url): bool
     {

@@ -238,7 +238,6 @@ class AmpacheHttpq extends localplay_controller
 
     /**
      * add_url
-     * This is the new hotness
      */
     public function add_url(Stream_Url $url): bool
     {

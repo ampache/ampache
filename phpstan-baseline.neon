@@ -2816,11 +2816,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_albumList\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_apiOutput\\(\\) has parameter \\$alwaysArray with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
@@ -5526,11 +5521,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:CallAsyncURL\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:CallAsyncURL\\(\\) has parameter \\$url with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
@@ -5541,7 +5531,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:GetPlaylistItems\\(\\) has no return type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:GetPlaylistItems\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
@@ -5552,16 +5542,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:PlaylistRemove\\(\\) has parameter \\$track with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:ReadIndState\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:SetIntState\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
@@ -5711,7 +5691,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:get_tracks\\(\\) has no return type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:get_tracks\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
@@ -7392,11 +7372,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_graph\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_user_bandwidth\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
 

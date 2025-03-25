@@ -1053,7 +1053,7 @@ class Subsonic_Api
         $response = Subsonic_Xml_Data::addSubsonicResponse($elementName);
         if ($type) {
             $albums = self::_albumList($input, $user, (string)$type);
-            if ($albums === false) {
+            if ($albums === null) {
                 $response     = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, $elementName);
             } else {
                 switch ($elementName) {

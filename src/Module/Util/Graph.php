@@ -677,7 +677,7 @@ class Graph
         $zoom = 'day',
         $width = 0,
         $height = 0
-    ) {
+    ): void {
         $MyData = new Data();
         $this->get_user_all_pts('get_user_bandwidth_pts', $MyData, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
 
