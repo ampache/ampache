@@ -6611,11 +6611,6 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:generate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:hash\\(\\) has parameter \\$text with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha.php
@@ -7351,11 +7346,6 @@ parameters:
 			path: src/Module/Util/Graph.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:get_catalog_all_pts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:get_catalog_files_pts\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
@@ -7367,11 +7357,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:get_geolocation_pts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:get_user_all_pts\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
 
@@ -7416,11 +7401,6 @@ parameters:
 			path: src/Module/Util/Graph.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_user_hits\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
 			message: "#^Parameter \\#2 \\$Format of method CpChart\\\\Data\\:\\:setXAxisDisplay\\(\\) expects array\\|null, string given\\.$#"
 			count: 4
 			path: src/Module/Util/Graph.php
@@ -7434,26 +7414,6 @@ parameters:
 			message: "#^Parameter \\#3 \\$Format of method CpChart\\\\Data\\:\\:setAxisDisplay\\(\\) expects array\\|null, string given\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:setBrowser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Horde_Browser.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:setFeature\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Horde_Browser.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:setPlatform\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Horde_Browser.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:setQuirk\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Horde_Browser.php
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:\\$_accept is never read, only written\\.$#"
@@ -8272,11 +8232,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:clean_tag_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:get_mbid_array\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 

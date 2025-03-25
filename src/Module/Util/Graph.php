@@ -237,7 +237,7 @@ class Graph
         $start_date = null,
         $end_date = null,
         $zoom = 'day'
-    ) {
+    ): void {
         $userRepository = $this->getUserRepository();
 
         $values = $this->get_all_pts($fct, $MyData, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
@@ -286,7 +286,7 @@ class Graph
         $start_date = null,
         $end_date = null,
         $zoom = 'day'
-    ) {
+    ): void {
         $values = $this->get_all_pts($fct, $MyData, $catalog_id, $object_type, $object_id, $start_date, $end_date, $zoom, false);
 
         // Only display other users if the graph is not for a specific catalog
@@ -639,7 +639,7 @@ class Graph
         $zoom = 'day',
         $width = 0,
         $height = 0
-    ) {
+    ): void {
         $MyData = new Data();
         $this->get_user_all_pts(
             'get_user_hits_pts',

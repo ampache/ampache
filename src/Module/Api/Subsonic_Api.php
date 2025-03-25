@@ -3066,9 +3066,9 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      * @param string $type
-     * @return array|false
+     * @return int[]|null
      */
-    private static function _albumList($input, $user, $type)
+    private static function _albumList($input, $user, $type): ?array
     {
         $size          = (int)($input['size'] ?? 10);
         $offset        = (int)($input['offset'] ?? 0);
@@ -3083,7 +3083,7 @@ class Subsonic_Api
             $catalogs   = [];
             $catalogs[] = $musicFolderId;
         }
-        $albums = false;
+        $albums = null;
         switch ($type) {
             case 'random':
                 $albums = self::getAlbumRepository()->getRandom(
