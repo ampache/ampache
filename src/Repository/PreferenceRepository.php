@@ -49,6 +49,7 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
         'playlist_method',
         'theme_color',
         'theme_name',
+        'upload_catalog',
     ];
 
     /**
