@@ -105,7 +105,7 @@ final class EditObjectAction extends AbstractEditAction
         if (
             $libitem->get_user_owner() === $userId &&
             AmpConfig::get('upload_allow_edit') &&
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            !$gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         ) {
             // TODO: improve this uniqueness check
             if (isset($_POST['user'])) {
