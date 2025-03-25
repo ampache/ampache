@@ -38,6 +38,7 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
     /** @var string[] $HIDE_ARRAY */
     private const HIDE_ARRAY = [
         'disabled_custom_metadata_fields',
+        'geolocation',
         'jp_volume',
         'lastfm_grant_link',
         'librefm_grant_link',
