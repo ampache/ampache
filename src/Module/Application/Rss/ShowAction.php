@@ -95,7 +95,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 RssFeedTypeEnum::LATEST_ALBUM => $this->rssFeedTypeFactory->createLatestAlbumFeed($user),
                 RssFeedTypeEnum::LATEST_ARTIST => $this->rssFeedTypeFactory->createLatestArtistFeed($user),
                 RssFeedTypeEnum::LATEST_SHOUT => $this->rssFeedTypeFactory->createLatestShoutFeed(),
-                RssFeedTypeEnum::LATEST_SONG => $this->rssFeedTypeFactory->createLatestSongFeed(),
+                RssFeedTypeEnum::LATEST_SONG => $this->rssFeedTypeFactory->createLatestSongFeed($user),
             };
         }
 
