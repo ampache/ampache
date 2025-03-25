@@ -38,6 +38,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\UserRepositoryInterface;
 use PhpTal\PHPTAL;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -79,7 +80,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $item = $this->libraryItemLoader->load(
                 LibraryItemEnum::from($queryParams['object_type'] ?? ''),
                 (int) ($queryParams['object_id'] ?? 0),
-                [Album::class, Artist::class, Podcast::class]
+                [Album::class, Artist::class, Podcast::class, Song::class]
             );
 
             if ($item === null) {
