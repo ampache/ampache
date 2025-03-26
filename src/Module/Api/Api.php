@@ -326,7 +326,23 @@ class Api
     public static function server_details($token = ''): array
     {
         // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
-        $sql        = 'SELECT `catalog`.`update`, `catalog`.`add`, `catalog`.`clean`, `maxid`.`max_song`, `maxid`.`max_album`, `maxid`.`max_artist`, `maxid`.`max_video`, `maxid`.`max_podcast`, `maxid`.`max_podcast_episode` FROM (SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`) AS `catalog` LEFT JOIN (SELECT (SELECT MAX(`id`) FROM `song`) AS `max_song`, (SELECT MAX(`id`) FROM `album`) AS `max_album`, (SELECT MAX(`id`) FROM `artist`) AS `max_artist`, (SELECT MAX(`id`) FROM `video`) AS `max_video`, (SELECT MAX(`id`) FROM `podcast`) AS `max_podcast`, (SELECT MAX(`id`) FROM `podcast_episode`) AS `max_podcast_episode`) AS `maxid` ON 1=1;';
+        $sql = <<<SQL
+            SELECT `catalog`.`update`, `catalog`.`add`, `catalog`.`clean`, `maxid`.`max_song`, `maxid`.`max_album`, `maxid`.`max_artist`, `maxid`.`max_video`, `maxid`.`max_podcast`, `maxid`.`max_podcast_episode`
+            FROM (
+               SELECT MAX(`last_update`) AS `update`,
+                      MAX(`last_add`) AS `add`,
+                      MAX(`last_clean`) AS `clean`
+               FROM `catalog`
+            ) AS `catalog`
+            LEFT JOIN (
+                SELECT (SELECT MAX(`id`) FROM `song`) AS `max_song`,
+                       (SELECT MAX(`id`) FROM `album`) AS `max_album`,
+                       (SELECT MAX(`id`) FROM `artist`) AS `max_artist`,
+                       (SELECT MAX(`id`) FROM `video`) AS `max_video`,
+                       (SELECT MAX(`id`) FROM `podcast`) AS `max_podcast`,
+                       (SELECT MAX(`id`) FROM `podcast_episode`) AS `max_podcast_episode`
+            ) AS `maxid` ON 1=1;
+            SQL;
         $db_results = Dba::read($sql);
         $details    = Dba::fetch_assoc($db_results);
 
