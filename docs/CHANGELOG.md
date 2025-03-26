@@ -14,6 +14,8 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * Show merged tags for genres if they are set
 * Add Random play to Playlist and Smartlist object rows (Updated column CSS for these types)
 * Add example catalog update file example `catalog_update.sh`
+* Add RSS feed to get latest songs `rss.php?type=latest_song`
+* Add song as a possible library item for RSS
 * Browse
   * Add `added` and `updated` searches to Album and AlbumDisk searches
   * Add `artist`, `album`, `song` and `video` counts to the Genre browse
@@ -48,6 +50,7 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * Use MusicBrainz library for MBID validity checks
 * Show **ALL** Genres in the edit list for objects
 * Set a CSS max-width (25%) for the now playing column with Song details
+* Don't add `Podcast` to the RSS titles for library item feeds
 * Jplayer
   * Repeat the current song if you press previous and there isn't a loop situation
 * webplayer
