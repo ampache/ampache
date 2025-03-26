@@ -400,6 +400,13 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
             $results['genre'] = array_unique($genres);
         }
 
+        // unset the MusicBrainz object
+        foreach ($results as $key => $value) {
+            if ($value instanceof MusicBrainz) {
+                unset($results[$key]);
+            }
+        }
+
         return $results;
     }
 
