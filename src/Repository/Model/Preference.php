@@ -604,7 +604,13 @@ class Preference extends database_object
             case 'localplay_controller':
                 return array_keys(LocalPlayTypeEnum::TYPE_MAPPING);
             case 'api_force_version':
-                return Api::API_VERSIONS;
+                return [
+                    0,
+                    3,
+                    4,
+                    5,
+                    6
+                ];
             case 'ratingmatch_stars':
                 return [
                     '0',
