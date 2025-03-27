@@ -216,7 +216,12 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                     case 'label':
                         $args   = ['name' => $fullname];
                         $filter = MusicBrainz::newFilter('label', $args);
-                        $search = $brainz->search($filter, 1, null, false);
+                        $search = $brainz->search(
+                            $filter,
+                            1,
+                            null,
+                            false
+                        );
                         /**
                          * https://musicbrainz.org/ws/2/label?query=Arrow%20land&fmt=json
                          * @var \MusicBrainz\Entities\Label[] $results
@@ -541,7 +546,11 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
             try {
                 $brainz = MusicBrainz::newMusicBrainz('request');
                 $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
-                $lookup = $brainz->lookup('artist', $mbid, ['tags']);
+                $lookup = $brainz->lookup(
+                    'artist',
+                    $mbid,
+                    ['genres', 'tags']
+                );
                 /**
                  * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
                  * @var \MusicBrainz\Entities\Artist $results
