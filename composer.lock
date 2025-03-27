@@ -1407,12 +1407,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/lachlan-00/MusicBrainz.git",
-                "reference": "bee9c8f4ced056caa436c359caaf1914c3fac9b9"
+                "reference": "09c6731caefb721f453b360c570bca9c5d6d9f58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lachlan-00/MusicBrainz/zipball/bee9c8f4ced056caa436c359caaf1914c3fac9b9",
-                "reference": "bee9c8f4ced056caa436c359caaf1914c3fac9b9",
+                "url": "https://api.github.com/repos/lachlan-00/MusicBrainz/zipball/09c6731caefb721f453b360c570bca9c5d6d9f58",
+                "reference": "09c6731caefb721f453b360c570bca9c5d6d9f58",
                 "shasum": ""
             },
             "require": {
@@ -1461,7 +1461,7 @@
             "support": {
                 "source": "https://github.com/lachlan-00/MusicBrainz/tree/release"
             },
-            "time": "2025-03-24T05:11:48+00:00"
+            "time": "2025-03-27T01:16:47+00:00"
         },
         {
             "name": "laravel/serializable-closure",
