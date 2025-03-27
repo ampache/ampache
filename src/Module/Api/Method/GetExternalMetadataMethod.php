@@ -31,6 +31,7 @@ use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -49,7 +50,7 @@ final class GetExternalMetadataMethod
      *
      * Return External plugin metadata searching by object id and type
      *
-     * type   = (string) 'song', 'artist', 'album'
+     * type   = (string) 'song', 'artist', 'album', 'label'
      * filter = (integer) album id, artist id or song id
      */
     public static function get_external_metadata(array $input, User $user): bool
@@ -60,7 +61,7 @@ final class GetExternalMetadataMethod
         $type      = (string) $input['type'];
         $object_id = (int) $input['filter'];
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'album', 'artist'])) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'label'])) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -87,6 +88,13 @@ final class GetExternalMetadataMethod
                 $data    = [
                     'artist' => $libitem->get_fullname(),
                     'mb_artistid' => $libitem->mbid,
+                ];
+                break;
+            case 'label':
+                $libitem = new Label($object_id);
+                $data    = [
+                    'label' => $libitem->get_fullname(),
+                    'mb_labelid' => $libitem->mbid,
                 ];
         }
         if (!isset($data) || !isset($libitem) || $libitem->isNew()) {
