@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Wanted;
 
 use MusicBrainz\Exception;
-use MusicBrainz\Filters\ArtistFilter;
 use MusicBrainz\MusicBrainz;
 
 final class MissingArtistFinder implements MissingArtistFinderInterface
@@ -41,23 +40,30 @@ final class MissingArtistFinder implements MissingArtistFinderInterface
 
     /**
      * @return array<array<string, string>>
-     *
-     * @throws Exception
      */
     public function find(string $artistName): array
     {
-        $filter = new ArtistFilter(
-            ['artist' => $artistName]
-        );
+        try {
+            $this->musicBrainz->setFilterByString(
+                'artist',
+                ['artist' => $artistName]
+            );
+            $filter = $this->musicBrainz->getFilter();
+            if ($filter === null) {
+                return [];
+            }
 
-        return array_map(
-            static function ($result): array {
-                return [
-                    'mbid' => $result->id,
-                    'name' => $result->name,
-                ];
-            },
-            (array)$this->musicBrainz->search($filter)
-        );
+            return array_map(
+                static function ($result): array {
+                    return [
+                        'mbid' => $result->id,
+                        'name' => $result->name,
+                    ];
+                },
+                (array)$this->musicBrainz->search($filter)
+            );
+        } catch (Exception) {
+            return [];
+        }
     }
 }

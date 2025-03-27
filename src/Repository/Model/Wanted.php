@@ -37,7 +37,6 @@ use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
-use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\MusicBrainz;
 
 class Wanted extends database_object
@@ -128,7 +127,6 @@ class Wanted extends database_object
     public static function get_missing_albums($artist, $mbid = ''): array
     {
         $lookupId = $artist->mbid ?? $mbid;
-        $brainz   = new MusicBrainz(new RequestsHttpAdapter());
         $includes = ['release-groups'];
         $types    = AmpConfig::get('wanted_types', []);
         if (is_string($types)) {
@@ -140,6 +138,7 @@ class Wanted extends database_object
         }
 
         try {
+            $brainz = MusicBrainz::newMusicBrainz('request');
             $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
             /**
              * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
@@ -329,10 +328,10 @@ class Wanted extends database_object
      */
     public function load_all(): void
     {
-        $brainz     = new MusicBrainz(new RequestsHttpAdapter());
         $this->songs = [];
 
         try {
+            $brainz = MusicBrainz::newMusicBrainz('request');
             $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
             $user            = Core::get_global('user');
             $preview_plugins = Plugin::get_plugins(PluginTypeEnum::SONG_PREVIEW_PROVIDER);
