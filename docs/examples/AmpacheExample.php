@@ -95,6 +95,7 @@ class AmpacheExample extends AmpachePlugin
      *  get_avatar_url(User $user)
      *  get_lyrics(Song $song)
      *  get_location_name(float $latitude float $longitude)
+     *  get_external_metadata(library_item $object, string $object_type): bool
      *  get_metadata(array $gather_types, array $media_info) Array of object types and array of info for that object
      *  get_photos(string $search_name)
      *  get_song_preview(string $track_mbid, string $artist_name, string $title)

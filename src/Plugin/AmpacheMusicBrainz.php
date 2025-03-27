@@ -29,6 +29,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
@@ -413,9 +414,8 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
     /**
      * get_external_metadata
      * Update an object (label or artist for now) using musicbrainz
-     * @param Label|Album|Artist|Song $object
      */
-    public function get_external_metadata($object, string $object_type): bool
+    public function get_external_metadata(library_item $object, string $object_type): bool
     {
         // Artist and label metadata only for now
         $media_info = [];
