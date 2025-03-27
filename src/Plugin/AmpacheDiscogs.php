@@ -209,12 +209,20 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
             if (!empty($media_info['artist']) && !in_array('album', $media_info)) {
                 $artists = $this->search_artist($media_info['artist']);
                 if (isset($artists['results']) && count($artists['results']) > 0) {
-                    $artist = $this->get_artist((int)$artists['results'][0]['id']);
-                    if (isset($artist['images']) && count($artist['images']) > 0) {
-                        $results['art'] = $artist['images'][0]['uri'];
-                    }
-                    if (!empty($artist['cover_image'])) {
-                        $results['art'] = $artist['cover_image'];
+                    foreach ($artists['results'] as $result) {
+                        if ($result['title'] === $media_info['artist']) {
+                            $artist = $this->get_artist((int)$result['id']);
+                            if (isset($artist['images']) && count($artist['images']) > 0) {
+                                $results['art'] = $artist['images'][0]['uri'];
+                            }
+                            if (!empty($artist['cover_image'])) {
+                                $results['art'] = $artist['cover_image'];
+                            }
+
+                            // add in the data response as well
+                            $results['data'] = $artist;
+                            break;
+                        }
                     }
                 }
             }
@@ -311,6 +319,9 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                     if (!empty($genres)) {
                         $results['genre'] = array_unique($genres);
                     }
+
+                    // add in the data response as well
+                    $results['data'] = $album;
                 }
             }
         } catch (Exception $exception) {
