@@ -382,7 +382,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                 $release = $brainzData['releases'][0];
             }
 
-            $results = (array)$results;
+            $results = $results->getProps(true);
             if (isset($artist)) {
                 $results['mb_artistid'] = $artist['id'];
                 $results['artist']      = $artist['name'];
@@ -394,7 +394,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                     : $release->title;
             }
         } else {
-            $results = (array)$results;
+            $results = $results->getProps(true);
         }
 
         if (!empty($genres)) {
