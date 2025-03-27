@@ -58,6 +58,7 @@ final readonly class LatestSongFeed extends AbstractGenericRssFeed
                 'comments' => '',
                 'pubDate' => '',
                 'guid' => 'song-' . $song->id,
+                'isPermaLink' => 'false',
                 'image' => (string)Art::url($song->id, 'song', null, 2),
             ];
         }

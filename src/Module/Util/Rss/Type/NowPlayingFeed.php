@@ -113,6 +113,7 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
                 'comments' => $client->get_link(),
                 'pubDate' => date("r", (int)$element['expire']),
                 'guid' => $element['expire'] . '-' . $client->getId() . '-' . $media->getId(),
+                'isPermaLink' => 'false',
             ];
         }
     }

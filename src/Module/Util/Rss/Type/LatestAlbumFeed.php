@@ -57,6 +57,7 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
                 'comments' => '',
                 'pubDate' => date("c", $album->addition_time),
                 'guid' => 'album-' . $album->id,
+                'isPermaLink' => 'false',
                 'image' => (string)Art::url($album->id, 'album', null, 2),
             ];
         }

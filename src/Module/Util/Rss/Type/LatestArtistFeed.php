@@ -58,6 +58,7 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
                 'comments' => '',
                 'pubDate' => '',
                 'guid' => 'artist-' . $artist->id,
+                'isPermaLink' => 'false',
                 'image' => (string)Art::url($artist->id, 'artist', null, 2),
             ];
         }

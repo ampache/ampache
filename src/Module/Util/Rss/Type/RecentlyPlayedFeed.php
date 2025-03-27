@@ -91,6 +91,7 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
                     'comments' => $client->get_link(),
                     'pubDate' => date("r", (int)$item['date']),
                     'guid' => $item['date'] . '-' . $client->getId() . '-' . $song->getId(),
+                    'isPermaLink' => 'false',
                 ];
             }
         }

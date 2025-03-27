@@ -68,6 +68,7 @@ final readonly class LatestShoutFeed extends AbstractGenericRssFeed
                     'comments' => '',
                     'pubDate' => $shout->getDate()->format(DATE_ATOM),
                     'guid' => 'shout-' . $shout->getId(),
+                    'isPermaLink' => 'false',
                     'image' => (string) Art::url($shout->getObjectId(), $shout->getObjectType()->value, null, 2),
                 ];
             }
