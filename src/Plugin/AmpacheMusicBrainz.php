@@ -25,7 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Playback\Stream;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
@@ -164,6 +166,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         if (MusicBrainz::isMBID($mbid)) {
             try {
                 $brainz = MusicBrainz::newMusicBrainz('request');
+                $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
                 switch ($object_type) {
                     case 'label':
                         $lookup = $brainz->lookup($object_type, $mbid, ['genres', 'tags']);
@@ -208,6 +211,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         } else {
             try {
                 $brainz = MusicBrainz::newMusicBrainz('request');
+                $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
                 switch ($object_type) {
                     case 'label':
                         $args   = ['name' => $fullname];
@@ -320,6 +324,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         }
         try {
             $brainz = MusicBrainz::newMusicBrainz('request');
+            $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
         } catch (Exception) {
             return [];
         }
@@ -535,6 +540,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         if (MusicBrainz::isMBID($mbid)) {
             try {
                 $brainz = MusicBrainz::newMusicBrainz('request');
+                $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
                 $lookup = $brainz->lookup('artist', $mbid, ['tags']);
                 /**
                  * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json

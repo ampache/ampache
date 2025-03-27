@@ -37,7 +37,6 @@ use Ampache\Module\Database\DbaDatabaseConnection;
 use Ampache\Module\System\Cache\ArrayCacheDriver;
 use Ampache\Module\Util\EnvironmentInterface;
 use getID3;
-use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\MusicBrainz;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
@@ -66,7 +65,7 @@ return [
     }),
     getID3::class => autowire(getID3::class),
     MusicBrainz::class => factory(static function (): MusicBrainz {
-        return new MusicBrainz(new RequestsHttpAdapter());
+        return MusicBrainz::newMusicBrainz('request');
     }),
     SpotifyWebAPI::class => factory(static function (): SpotifyWebAPI {
         return new SpotifyWebAPI();
