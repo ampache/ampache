@@ -112,8 +112,12 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
                 'description' => str_replace('<p>Artist: </p><p>Album: </p>', '', $description),
                 'comments' => $client->get_link(),
                 'pubDate' => date("r", (int)$element['expire']),
-                'guid' => $element['expire'] . '-' . $client->getId() . '-' . $media->getId(),
-                'isPermaLink' => 'false',
+                'guid' => (isset($media->mbid))
+                    ? 'https://musicbrainz.org/recording/' . $media->mbid
+                    : $element['expire'] . '-' . $client->getId() . '-' . $media->getId(),
+                'isPermaLink' => (isset($media->mbid))
+                    ? 'true'
+                    : 'false',
             ];
         }
     }

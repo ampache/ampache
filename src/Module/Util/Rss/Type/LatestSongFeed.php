@@ -57,8 +57,12 @@ final readonly class LatestSongFeed extends AbstractGenericRssFeed
                 'description' => $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_artist_fullname(),
                 'comments' => '',
                 'pubDate' => '',
-                'guid' => 'song-' . $song->id,
-                'isPermaLink' => 'false',
+                'guid' => (isset($song->mbid))
+                    ? 'https://musicbrainz.org/recording/' . $song->mbid
+                    : 'song-' . $song->id,
+                'isPermaLink' => (isset($song->mbid))
+                    ? 'true'
+                    : 'false',
                 'image' => (string)Art::url($song->id, 'song', null, 2),
             ];
         }

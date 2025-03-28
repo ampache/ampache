@@ -56,8 +56,10 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
                 'description' => $album->get_artist_fullname() . ' - ' . $album->get_fullname(true),
                 'comments' => '',
                 'pubDate' => date("c", $album->addition_time),
-                'guid' => 'album-' . $album->id,
-                'isPermaLink' => 'false',
+                'guid' => (isset($album->mbid)) ? 'https://musicbrainz.org/release/' . $album->mbid : (isset($album->mbid_group) ? 'https://musicbrainz.org/release-group/' . $album->mbid_group : 'album-' . $album->id),
+                'isPermaLink' => (isset($album->mbid) || isset($album->mbid_group))
+                    ? 'true'
+                    : 'false',
                 'image' => (string)Art::url($album->id, 'album', null, 2),
             ];
         }

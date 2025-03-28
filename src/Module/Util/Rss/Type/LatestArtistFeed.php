@@ -57,8 +57,12 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
                 'description' => (string) $artist->summary,
                 'comments' => '',
                 'pubDate' => '',
-                'guid' => 'artist-' . $artist->id,
-                'isPermaLink' => 'false',
+                'guid' => (isset($artist->mbid))
+                    ? 'https://musicbrainz.org/artist/' . $artist->mbid
+                    : 'artist-' . $artist->id,
+                'isPermaLink' => (isset($artist->mbid))
+                    ? 'true'
+                    : 'false',
                 'image' => (string)Art::url($artist->id, 'artist', null, 2),
             ];
         }
