@@ -40,12 +40,17 @@ use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
 {
+    private ServerRequestInterface $request;
+
     public function __construct(
         private ContainerInterface $dic,
+        ServerRequestInterface $request,
     ) {
+        $this->request = $request;
     }
 
     /**
@@ -89,7 +94,8 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
         ?User $user
     ): FeedTypeInterface {
         return new LatestAlbumFeed(
-            $user
+            $user,
+            $this->request,
         );
     }
 
@@ -101,6 +107,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
     ): FeedTypeInterface {
         return new LatestArtistFeed(
             $user,
+            $this->request,
         );
     }
 
@@ -123,6 +130,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
     ): FeedTypeInterface {
         return new LatestSongFeed(
             $user,
+            $this->request,
         );
     }
 }

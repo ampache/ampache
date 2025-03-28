@@ -30,12 +30,17 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Generator;
+use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class LatestSongFeed extends AbstractGenericRssFeed
 {
+    private ServerRequestInterface $request;
+
     public function __construct(
         private ?User $user,
+        ServerRequestInterface $request,
     ) {
+        $this->request = $request;
     }
 
     protected function getTitle(): string
@@ -45,7 +50,10 @@ final readonly class LatestSongFeed extends AbstractGenericRssFeed
 
     protected function getItems(): Generator
     {
-        $ids = Stats::get_newest('song', 10, 0, 0, $this->user);
+        $queryParams = $this->request->getQueryParams();
+        $count       = (int)($queryParams['count'] ?? 10);
+        $offset      = (int)($queryParams['offset'] ?? 0);
+        $ids         = Stats::get_newest('song', $count, $offset, 0, $this->user);
 
         foreach ($ids as $songid) {
             $song = new Song($songid);
