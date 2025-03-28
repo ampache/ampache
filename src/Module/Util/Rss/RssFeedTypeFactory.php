@@ -45,8 +45,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
 {
     public function __construct(
-        private ContainerInterface $dic,
-        ServerRequestInterface $request,
+        private ContainerInterface $dic
     ) {
     }
 
@@ -89,7 +88,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      */
     public function createLatestAlbumFeed(
         ?User $user,
-              $request
+        ServerRequestInterface $request
     ): FeedTypeInterface {
         return new LatestAlbumFeed(
             $user,
