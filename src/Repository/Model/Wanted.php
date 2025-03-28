@@ -138,7 +138,11 @@ class Wanted extends database_object
         }
 
         try {
-            $brainz = MusicBrainz::newMusicBrainz('request');
+            $brainz = MusicBrainz::newMusicBrainz(
+                'request',
+                AmpConfig::get('musicbrainz_username'),
+                AmpConfig::get('musicbrainz_password')
+            );
             $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
             /**
              * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
@@ -331,7 +335,11 @@ class Wanted extends database_object
         $this->songs = [];
 
         try {
-            $brainz = MusicBrainz::newMusicBrainz('request');
+            $brainz = MusicBrainz::newMusicBrainz(
+                'request',
+                AmpConfig::get('musicbrainz_username'),
+                AmpConfig::get('musicbrainz_password')
+            );
             $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
             $user            = Core::get_global('user');
             $preview_plugins = Plugin::get_plugins(PluginTypeEnum::SONG_PREVIEW_PROVIDER);

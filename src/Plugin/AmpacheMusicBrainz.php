@@ -165,7 +165,11 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         $results = false;
         if (MusicBrainz::isMBID($mbid)) {
             try {
-                $brainz = MusicBrainz::newMusicBrainz('request');
+                $brainz = MusicBrainz::newMusicBrainz(
+                    'request',
+                    AmpConfig::get('musicbrainz_username'),
+                    AmpConfig::get('musicbrainz_password')
+                );
                 $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
                 switch ($object_type) {
                     case 'label':
@@ -210,7 +214,11 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
             }
         } else {
             try {
-                $brainz = MusicBrainz::newMusicBrainz('request');
+                $brainz = MusicBrainz::newMusicBrainz(
+                    'request',
+                    AmpConfig::get('musicbrainz_username'),
+                    AmpConfig::get('musicbrainz_password')
+                );
                 $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
                 switch ($object_type) {
                     case 'label':
@@ -328,7 +336,11 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
             return [];
         }
         try {
-            $brainz = MusicBrainz::newMusicBrainz('request');
+            $brainz = MusicBrainz::newMusicBrainz(
+                'request',
+                AmpConfig::get('musicbrainz_username'),
+                AmpConfig::get('musicbrainz_password')
+            );
             $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
         } catch (Exception) {
             return [];
@@ -544,7 +556,11 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         $data    = [];
         if (MusicBrainz::isMBID($mbid)) {
             try {
-                $brainz = MusicBrainz::newMusicBrainz('request');
+                $brainz = MusicBrainz::newMusicBrainz(
+                    'request',
+                    AmpConfig::get('musicbrainz_username'),
+                    AmpConfig::get('musicbrainz_password')
+                );
                 $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
                 $lookup = $brainz->lookup(
                     'artist',

@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 79
+config_version = 80
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -772,6 +772,20 @@ lastfm_api_secret = ""
 ; accessing their catalog API. (https://developer.spotify.com/dashboard/)
 ; DEFAULT: none
 ;spotify_client_id = ""
+
+; MusicBrainz API username
+; If you make a lot of requests you should use your MusicBrainz API account
+; This can help with rate limiting as MusicBrainz servers limit all requests
+; Your account can be created at https://musicbrainz.org/register
+; DEFAULT: none
+;musicbrainz_username = ""
+
+; MusicBrainz API password
+; If you make a lot of requests you should use your MusicBrainz API account
+; This can help with rate limiting as MusicBrainz servers limit all requests
+; Your account can be created at https://musicbrainz.org/register
+; DEFAULT: none
+;musicbrainz_password = ""
 
 ; Spotify client secret
 ; Both id and secret are required to access the spotify catalog.
