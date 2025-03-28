@@ -92,10 +92,10 @@ final readonly class ShowAction implements ApplicationActionInterface
             $handler = match ($type) {
                 default => $this->rssFeedTypeFactory->createNowPlayingFeed(),
                 RssFeedTypeEnum::RECENTLY_PLAYED => $this->rssFeedTypeFactory->createRecentlyPlayedFeed($user),
-                RssFeedTypeEnum::LATEST_ALBUM => $this->rssFeedTypeFactory->createLatestAlbumFeed($user),
-                RssFeedTypeEnum::LATEST_ARTIST => $this->rssFeedTypeFactory->createLatestArtistFeed($user),
+                RssFeedTypeEnum::LATEST_ALBUM => $this->rssFeedTypeFactory->createLatestAlbumFeed($user, $request),
+                RssFeedTypeEnum::LATEST_ARTIST => $this->rssFeedTypeFactory->createLatestArtistFeed($user, $request),
                 RssFeedTypeEnum::LATEST_SHOUT => $this->rssFeedTypeFactory->createLatestShoutFeed(),
-                RssFeedTypeEnum::LATEST_SONG => $this->rssFeedTypeFactory->createLatestSongFeed($user),
+                RssFeedTypeEnum::LATEST_SONG => $this->rssFeedTypeFactory->createLatestSongFeed($user, $request),
             };
         }
 

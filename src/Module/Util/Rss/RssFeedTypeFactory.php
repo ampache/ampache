@@ -44,13 +44,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
 {
-    private ServerRequestInterface $request;
-
     public function __construct(
         private ContainerInterface $dic,
         ServerRequestInterface $request,
     ) {
-        $this->request = $request;
     }
 
     /**
@@ -91,11 +88,12 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      * Creates a feed for recent albums
      */
     public function createLatestAlbumFeed(
-        ?User $user
+        ?User $user,
+              $request
     ): FeedTypeInterface {
         return new LatestAlbumFeed(
             $user,
-            $this->request,
+            $request,
         );
     }
 
@@ -103,11 +101,12 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      * Creates a feed for recent artists
      */
     public function createLatestArtistFeed(
-        ?User $user
+        ?User $user,
+              $request
     ): FeedTypeInterface {
         return new LatestArtistFeed(
             $user,
-            $this->request,
+            $request,
         );
     }
 
@@ -126,11 +125,12 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      * Creates a feed for recent songs
      */
     public function createLatestSongFeed(
-        ?User $user
+        ?User $user,
+        $request
     ): FeedTypeInterface {
         return new LatestSongFeed(
             $user,
-            $this->request,
+            $request,
         );
     }
 }
