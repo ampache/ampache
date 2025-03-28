@@ -101,7 +101,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      */
     public function createLatestArtistFeed(
         ?User $user,
-              $request
+        ServerRequestInterface $request
     ): FeedTypeInterface {
         return new LatestArtistFeed(
             $user,
@@ -125,7 +125,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      */
     public function createLatestSongFeed(
         ?User $user,
-        $request
+        ServerRequestInterface $request
     ): FeedTypeInterface {
         return new LatestSongFeed(
             $user,
