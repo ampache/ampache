@@ -425,7 +425,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
 
         // debug_event(self::class, "get_metadata(): Results:\n" . print_r($results, true), 5);
         // unset the MusicBrainz object
-        foreach ($results as $key => $value) {
+        foreach ($results['data'] as $key => $value) {
             if ($value instanceof MusicBrainz) {
                 unset($results[$key]);
             }
