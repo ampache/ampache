@@ -299,7 +299,7 @@ class Playlist extends playlist_object
                     debug_event(self::class, sprintf('get_items(): %s not handled', $object_type->value), 5);
             }
 
-            // debug_event(self::class, "get_items(): Results:\n" . print_r($results,true) , 5);
+            // debug_event(self::class, "get_items(): Results:\n" . print_r($results,true), 5);
             $db_results = Dba::read($sql, $params);
 
             while ($row = Dba::fetch_assoc($db_results)) {

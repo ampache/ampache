@@ -29,7 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -212,9 +212,8 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
     /**
      * get_external_metadata
      * Update an Artist using theAudioDb
-     * @param Label|Artist $object
      */
-    public function get_external_metadata($object, string $object_type): bool
+    public function get_external_metadata(library_item $object, string $object_type): bool
     {
         $valid_types = ['artist'];
         // Artist metadata only for now
@@ -226,7 +225,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
 
         $data = [];
         try {
-            if (in_array($object_type, $valid_types)) {
+            if ($object instanceof Artist) {
                 $release = null;
                 if ($object->mbid !== null && MusicBrainz::isMBID($object->mbid)) {
                     $artist  = $this->get_artist($object->mbid);

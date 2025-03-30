@@ -225,7 +225,7 @@ class AmpacheVlc extends localplay_controller
     }
 
     /**
-     * @param Stream_Url $url
+     * add_url
      */
     public function add_url(Stream_Url $url): bool
     {
@@ -488,7 +488,7 @@ class AmpacheVlc extends localplay_controller
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
                     $song->format();
-                    $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname() . ' - ' . $song->get_artist_fullname();
+                    $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_artist_fullname();
                     $data['link'] = $song->get_f_link();
                     break;
                 case 'demo_id':

@@ -233,7 +233,6 @@ class LocalPlay
 
     /**
      * add_url
-     * Add a URL to the Localplay module
      */
     public function add_url(Stream_Url $url): bool
     {

@@ -53,6 +53,7 @@
         "ext-zip": "*",
         "adhocore/cli": "^1.6",
         "ampache/ampacheapi-php": "dev-master",
+        "ampache/php-discogs-api": "^0.1.0",
         "cboden/ratchet": "0.4.*",
         "clue/multicast-react": "^1.1.0",
         "doctrine/cache": "^2",

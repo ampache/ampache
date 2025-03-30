@@ -40,6 +40,7 @@ Finally, for the plugin to actually be useful one or more of the following hooks
 * external_share(string $public_url, string $share_name): string
 * gather_arts(string $type, array $options, int $limit): array
 * get_avatar_url(User $user): string
+* get_external_metadata(library_item $object, string $object_type): bool
 * get_lyrics(Song $song): array|false
 * get_location_name(float $latitude float $longitude): string
 * get_metadata(array $gather_types, array $media_info): array

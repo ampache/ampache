@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
 /**
@@ -33,6 +34,22 @@ use Ampache\Repository\Model\User;
  */
 final class PreferenceRepository implements PreferenceRepositoryInterface
 {
+    /** @var string[] $HIDE_ARRAY */
+    private const HIDE_ARRAY = [
+        'disabled_custom_metadata_fields',
+        'geolocation',
+        'jp_volume',
+        'lastfm_grant_link',
+        'librefm_grant_link',
+        'personalfav_playlist',
+        'personalfav_smartlist',
+        'play_type',
+        'playlist_method',
+        'theme_color',
+        'theme_name',
+        'upload_catalog',
+    ];
+
     /**
      * Returns a nice flat dict of all the possible preferences
      *
@@ -46,17 +63,24 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
      *  level: int,
      *  type: string,
      *  category: string,
-     *  subcategory: string
+     *  subcategory: string,
+     *  has_access?: bool,
+     *  values?: string[],
      * }>
      */
-    public function getAll(?User $user = null): array
-    {
-        $userLimit = '';
-        $userId    = User::INTERNAL_SYSTEM_USER_ID;
-
+    public function getAll(
+        ?User $user = null,
+        ?bool $api = false
+    ): array {
         if ($user !== null) {
-            $userLimit = 'AND `preference`.`category` != \'system\'';
-            $userId    = $user->getId();
+            $userLimit   = 'AND `preference`.`category` != \'system\'';
+            $userId      = $user->getId();
+            $accessLevel = $user->access;
+        } else {
+            $user        = new User(User::INTERNAL_SYSTEM_USER_ID);
+            $userLimit   = '';
+            $userId      = User::INTERNAL_SYSTEM_USER_ID;
+            $accessLevel = 100;
         }
 
         $sql = <<<SQL
@@ -92,7 +116,12 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
         $results = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = [
+            if ($api && in_array($row['name'], self::HIDE_ARRAY)) {
+                // don't show these to API users as they are not useful
+                continue;
+            }
+
+            $result = [
                 'id' => (int) $row['id'],
                 'name' => $row['name'],
                 'level' => (int) $row['level'],
@@ -102,6 +131,16 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
                 'category' => $row['category'],
                 'subcategory' => $row['subcategory']
             ];
+            if ($api) {
+                $result['has_access'] = (((int)$row['level']) <= $accessLevel);
+            }
+            if ($row['type'] == 'special') {
+                $values = Preference::get_special_values($row['name'], $user);
+                if ($values) {
+                    $result['values'] = $values;
+                }
+            }
+            $results[] = $result;
         }
 
         return $results;

@@ -274,8 +274,8 @@ class User extends database_object
 
     /**
      * get_preferences
-     * This is a little more complicate now that we've got many types of preferences
-     * This function pulls all of them an arranges them into a spiffy little array
+     * This is a little more complicated now that we've got many types of preferences
+     * This function pulls all of them and arranges them into a spiffy little array
      * You can specify a type to limit it to a single type of preference
      * []['title'] = uppercase type name
      * []['prefs'] = array(array('name', 'display', 'value'));

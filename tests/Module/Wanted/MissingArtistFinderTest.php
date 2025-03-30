@@ -53,6 +53,15 @@ class MissingArtistFinderTest extends MockeryTestCase
         $musicBrainzId = 'some-mbid';
         $name          = 'some-name';
 
+        $this->musicBrainz->shouldReceive('setFilterByString')
+            ->with('artist', ['artist' => $artistName])
+            ->once();
+
+        $this->musicBrainz->shouldReceive('getFilter')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(Mockery::mock(ArtistFilter::class));
+
         $this->musicBrainz->shouldReceive('search')
             ->with(Mockery::type(ArtistFilter::class))
             ->once()

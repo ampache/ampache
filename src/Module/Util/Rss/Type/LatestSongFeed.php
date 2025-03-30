@@ -27,12 +27,12 @@ namespace Ampache\Module\Util\Rss\Type;
 
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Generator;
 use Psr\Http\Message\ServerRequestInterface;
 
-final readonly class LatestArtistFeed extends AbstractGenericRssFeed
+final readonly class LatestSongFeed extends AbstractGenericRssFeed
 {
     private ServerRequestInterface $request;
 
@@ -45,7 +45,7 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
 
     protected function getTitle(): string
     {
-        return T_('Newest Artists');
+        return T_('Newest Songs');
     }
 
     protected function getItems(): Generator
@@ -53,25 +53,25 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
         $queryParams = $this->request->getQueryParams();
         $count       = (int)($queryParams['count'] ?? 10);
         $offset      = (int)($queryParams['offset'] ?? 0);
-        $ids         = Stats::get_newest('artist', $count, $offset, 0, $this->user);
+        $ids         = Stats::get_newest('song', $count, $offset, 0, $this->user);
 
-        foreach ($ids as $artistid) {
-            $artist = new Artist($artistid);
-            $artist->format();
+        foreach ($ids as $songid) {
+            $song = new Song($songid);
+            $song->format();
 
             yield [
-                'title' => (string) $artist->get_fullname(),
-                'link' => $artist->get_link(),
-                'description' => (string) $artist->summary,
+                'title' => (string) $song->get_fullname(),
+                'link' => $song->get_link(),
+                'description' => $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_artist_fullname(),
                 'comments' => '',
                 'pubDate' => '',
-                'guid' => (isset($artist->mbid))
-                    ? 'https://musicbrainz.org/artist/' . $artist->mbid
-                    : 'artist-' . $artist->id,
-                'isPermaLink' => (isset($artist->mbid))
+                'guid' => (isset($song->mbid))
+                    ? 'https://musicbrainz.org/recording/' . $song->mbid
+                    : 'song-' . $song->id,
+                'isPermaLink' => (isset($song->mbid))
                     ? 'true'
                     : 'false',
-                'image' => (string)Art::url($artist->id, 'artist', null, 2),
+                'image' => (string)Art::url($song->id, 'song', null, 2),
             ];
         }
     }

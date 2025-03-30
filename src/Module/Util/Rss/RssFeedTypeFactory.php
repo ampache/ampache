@@ -30,6 +30,7 @@ use Ampache\Module\Util\Rss\Type\FeedTypeInterface;
 use Ampache\Module\Util\Rss\Type\LatestAlbumFeed;
 use Ampache\Module\Util\Rss\Type\LatestArtistFeed;
 use Ampache\Module\Util\Rss\Type\LatestShoutFeed;
+use Ampache\Module\Util\Rss\Type\LatestSongFeed;
 use Ampache\Module\Util\Rss\Type\LibraryItemFeed;
 use Ampache\Module\Util\Rss\Type\NowPlayingFeed;
 use Ampache\Module\Util\Rss\Type\RecentlyPlayedFeed;
@@ -39,11 +40,12 @@ use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
 {
     public function __construct(
-        private ContainerInterface $dic,
+        private ContainerInterface $dic
     ) {
     }
 
@@ -85,10 +87,12 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      * Creates a feed for recent albums
      */
     public function createLatestAlbumFeed(
-        ?User $user
+        ?User $user,
+        ServerRequestInterface $request
     ): FeedTypeInterface {
         return new LatestAlbumFeed(
-            $user
+            $user,
+            $request,
         );
     }
 
@@ -96,10 +100,12 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      * Creates a feed for recent artists
      */
     public function createLatestArtistFeed(
-        ?User $user
+        ?User $user,
+        ServerRequestInterface $request
     ): FeedTypeInterface {
         return new LatestArtistFeed(
             $user,
+            $request,
         );
     }
 
@@ -111,6 +117,19 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
         return new LatestShoutFeed(
             $this->dic->get(ShoutRepositoryInterface::class),
             $this->dic->get(ShoutObjectLoaderInterface::class),
+        );
+    }
+
+    /**
+     * Creates a feed for recent songs
+     */
+    public function createLatestSongFeed(
+        ?User $user,
+        ServerRequestInterface $request
+    ): FeedTypeInterface {
+        return new LatestSongFeed(
+            $user,
+            $request,
         );
     }
 }

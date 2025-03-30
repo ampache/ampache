@@ -115,7 +115,7 @@ class easy_captcha
     }
 
     // create solutions
-    public function generate()
+    public function generate(): void
     {
         // init
         srand();
@@ -165,7 +165,7 @@ class easy_captcha
     /**
      * @return bool
      */
-    public function is_valid()
+    public function is_valid(): bool
     {
         return isset($this->id) && ($this->created) && ($this->expires > time()) && ($this->tries > 0) && ($this->failures < 500) && ($this->passed < $this->maxpasses) || $this->delete() || $this->log("is_valid", "EXPIRED", "and deleted") && false;
     }

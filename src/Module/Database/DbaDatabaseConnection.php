@@ -49,9 +49,10 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
      */
     public function query(
         string $sql,
-        array $params = []
+        array $params = [],
+        bool $silent = false,
     ): PDOStatement {
-        $result = Dba::query($sql, $params);
+        $result = Dba::query($sql, $params, $silent);
 
         if ($result === false) {
             throw new QueryFailedException();

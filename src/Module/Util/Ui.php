@@ -646,7 +646,7 @@ class Ui implements UiInterface
      * Convenience function that, if the output is going to a browser,
      * blarfs JS to do a fancy update.  Otherwise it just outputs the text.
      * @param string $field
-     * @param $value
+     * @param int|string$value
      */
     public static function update_text($field, $value): void
     {

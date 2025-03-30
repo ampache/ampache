@@ -61,7 +61,16 @@ class Recommendation
      */
     public static function garbage_collection(): void
     {
-        Dba::write("DELETE FROM `recommendation` WHERE `last_update` < ? OR ((`object_type` = 'song' AND `object_id` NOT IN (SELECT `id` FROM `song`)) OR (`object_type` = 'artist' AND `object_id` NOT IN (SELECT `id` FROM `artist`)) OR (`object_type` = 'album' AND `object_id` NOT IN (SELECT `id` FROM `album`)));", [(time() - 31556952)]);
+        $sql = <<<SQL
+            DELETE FROM `recommendation`
+            WHERE `last_update` < ? OR
+                (
+                    (`object_type` = 'song' AND `object_id` NOT IN (SELECT `id` FROM `song`)) OR
+                    (`object_type` = 'artist' AND `object_id` NOT IN (SELECT `id` FROM `artist`)) OR
+                    (`object_type` = 'album' AND `object_id` NOT IN (SELECT `id` FROM `album`))
+                );
+            SQL;
+        Dba::write($sql, [(time() - 31556952)]);
         Dba::write("UPDATE `recommendation_item` SET `mbid` = NULL WHERE `mbid` = '';");
     }
 
@@ -209,10 +218,25 @@ class Recommendation
                         $s_name      = $searchname['string'];
                         $s_fullname  = trim(trim((string)$searchname['prefix']) . ' ' . trim((string)$searchname['string']));
 
-                        $sql = ($catalog_disable)
-                            ? "SELECT `song`.`id` FROM `song` LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND `catalog`.`enabled` = '1'"
-                            : "SELECT `song`.`id` FROM `song` LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ";
-
+                        if ($catalog_disable) {
+                            $sql = <<<SQL
+                                SELECT `song`.`id`
+                                FROM `song`
+                                    LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`
+                                    LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id`
+                                WHERE `song`.`title` = ? AND
+                                      (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND
+                                      `catalog`.`enabled` = '1'
+                                SQL;
+                        } else {
+                            $sql = <<<SQL
+                                SELECT `song`.`id`
+                                FROM `song`
+                                    LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`
+                                WHERE `song`.`title` = ? AND
+                                      (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?)
+                                SQL;
+                        }
                         $db_result = Dba::read($sql, [$song_name, $s_name, $s_fullname]);
                         if ($result = Dba::fetch_assoc($db_result)) {
                             $local_id = (int)$result['id'];

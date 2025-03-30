@@ -35,7 +35,6 @@ use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Tag;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\LabelRepositoryInterface;
@@ -105,7 +104,7 @@ final class EditObjectAction extends AbstractEditAction
         if (
             $libitem->get_user_owner() === $userId &&
             AmpConfig::get('upload_allow_edit') &&
-            !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            !$gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         ) {
             // TODO: improve this uniqueness check
             if (isset($_POST['user'])) {
@@ -177,10 +176,10 @@ final class EditObjectAction extends AbstractEditAction
     /**
      * clean_to_existing
      * Clean label list to existing label list only
-     * @param list<string>|string $labels
-     * @return list<string>|string
+     * @param string[]|string $labels
+     * @return string[]|string
      */
-    private function clean_to_existing($labels)
+    private function clean_to_existing($labels): array|string
     {
         $array = (is_array($labels)) ? $labels : preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels);
         $ret   = [];

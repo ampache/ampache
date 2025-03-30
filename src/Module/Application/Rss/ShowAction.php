@@ -38,6 +38,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\UserRepositoryInterface;
 use PhpTal\PHPTAL;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -79,7 +80,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $item = $this->libraryItemLoader->load(
                 LibraryItemEnum::from($queryParams['object_type'] ?? ''),
                 (int) ($queryParams['object_id'] ?? 0),
-                [Album::class, Artist::class, Podcast::class]
+                [Album::class, Artist::class, Podcast::class, Song::class]
             );
 
             if ($item === null) {
@@ -91,9 +92,10 @@ final readonly class ShowAction implements ApplicationActionInterface
             $handler = match ($type) {
                 default => $this->rssFeedTypeFactory->createNowPlayingFeed(),
                 RssFeedTypeEnum::RECENTLY_PLAYED => $this->rssFeedTypeFactory->createRecentlyPlayedFeed($user),
-                RssFeedTypeEnum::LATEST_ALBUM => $this->rssFeedTypeFactory->createLatestAlbumFeed($user),
-                RssFeedTypeEnum::LATEST_ARTIST => $this->rssFeedTypeFactory->createLatestArtistFeed($user),
+                RssFeedTypeEnum::LATEST_ALBUM => $this->rssFeedTypeFactory->createLatestAlbumFeed($user, $request),
+                RssFeedTypeEnum::LATEST_ARTIST => $this->rssFeedTypeFactory->createLatestArtistFeed($user, $request),
                 RssFeedTypeEnum::LATEST_SHOUT => $this->rssFeedTypeFactory->createLatestShoutFeed(),
+                RssFeedTypeEnum::LATEST_SONG => $this->rssFeedTypeFactory->createLatestSongFeed($user, $request),
             };
         }
 

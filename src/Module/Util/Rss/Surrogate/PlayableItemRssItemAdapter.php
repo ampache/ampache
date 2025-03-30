@@ -52,7 +52,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     public function getTitle(): string
     {
-        return sprintf('%s Podcast', $this->playable->get_fullname());
+        return (string)$this->playable->get_fullname();
     }
 
     /**
@@ -163,7 +163,10 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
 
             $data = [
                 'title' => (string) $media->get_fullname(),
-                'guid' => $media->get_link(),
+                'guid' => (isset($media->mbid))
+                    ? 'https://musicbrainz.org/recording/' . $media->mbid
+                    : $media->get_link(),
+                'isPermaLink' => 'true',
                 'length' => (string)$media->get_f_time(),
                 'author' => $media->get_artist_fullname(),
                 'pubDate' => null,

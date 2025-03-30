@@ -1105,8 +1105,6 @@ function get_theme($name)
  * Used in graph class also format string
  *
  * @see \Ampache\Module\Util\Graph
- *
- * @param $value
  */
 function pGraph_Yformat_bytes($value): string
 {

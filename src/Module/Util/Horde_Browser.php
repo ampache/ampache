@@ -608,7 +608,7 @@ class Horde_Browser
      * This is a pretty simplistic implementation, but it's intended to let us
      * tell what line breaks to send, so it's good enough for its purpose.
      */
-    private function setPlatform()
+    private function setPlatform(): void
     {
         if (strpos($this->_lowerAgent, 'wind') !== false) {
             $this->_platform = 'win';
@@ -632,7 +632,7 @@ class Horde_Browser
      *
      * @param string $browser The browser to set as current.
      */
-    private function setBrowser($browser)
+    private function setBrowser($browser): void
     {
         $this->_browser = $browser;
     }
@@ -670,7 +670,7 @@ class Horde_Browser
      *   - windowed_controls
      * @param bool $value Special behavior parameter.
      */
-    private function setQuirk($quirk, $value = true)
+    private function setQuirk($quirk, $value = true): void
     {
         if ($value) {
             $this->_quirks[$quirk] = $value;
@@ -717,7 +717,7 @@ class Horde_Browser
      *   - xmlhttpreq
      * @param bool|string|float|int $value Special capability parameter.
      */
-    public function setFeature($feature, $value = true)
+    public function setFeature($feature, $value = true): void
     {
         if ($value) {
             $this->_features[$feature] = $value;
