@@ -14,6 +14,8 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * Show merged tags for genres if they are set
 * Add Random play to Playlist and Smartlist object rows (Updated column CSS for these types)
 * Add example catalog update file example `catalog_update.sh`
+* Add RSS feed to get latest songs `rss.php?type=latest_song`
+* Add song as a possible library item for RSS
 * Browse
   * Add `added` and `updated` searches to Album and AlbumDisk searches
   * Add `artist`, `album`, `song` and `video` counts to the Genre browse
@@ -22,6 +24,8 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
   * Add `split_artist_regex` split the Artist and Album Artist tags on regex and use the first result
   * Add `catalog_verify_by_album` to allow grouping updates instead of just updating individual files
   * Remove plugins from default `metadata_order` (MusicBrainz enforces a 1 second sleep for each call)
+* Database 740001
+  * Fix boolean preferences with an incorrect type
 * CLI
   * Print messages in the CLI for actions again
   * UpdateCatalog: add new option limit. (-l|--limit) Only verify small chunk of files
@@ -46,6 +50,7 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * Use MusicBrainz library for MBID validity checks
 * Show **ALL** Genres in the edit list for objects
 * Set a CSS max-width (25%) for the now playing column with Song details
+* Don't add `Podcast` to the RSS titles for library item feeds
 * Jplayer
   * Repeat the current song if you press previous and there isn't a loop situation
 * webplayer
@@ -72,6 +77,8 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * Unable to update Tag lists when you had lots of tags (Over 40) linked to an object
 * Show newest AlbumDisk was not joining correctly
 * SQL error looking up License name
+* Fix up RSS to generate valid feeds again
+* Only insert additional metadata for scalar values
 * Plugin
   * Discogs: Fix up searching for releases without a master release
 

@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use AmpacheDiscogs\Discogs;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Exception;
-use WpOrg\Requests\Requests;
 
 class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface, PluginGetMetadataInterface
 {
@@ -52,6 +52,8 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
     private string $api_key;
 
     private string $secret;
+
+    private Discogs $discogs;
 
     /**
      * Constructor
@@ -128,65 +130,9 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
             return false;
         }
 
+        $this->discogs = new Discogs($this->api_key, $this->secret);
+
         return true;
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function query_discogs(string $query)
-    {
-        $url = 'https://api.discogs.com/' . $query;
-        $url .= (str_contains((string) $query, '?')) ? '&' : '?';
-        $url .= 'key=' . $this->api_key . '&secret=' . $this->secret;
-        debug_event(self::class, 'Discogs request: ' . $url, 5);
-        $request = Requests::get($url);
-
-        return json_decode($request->body, true);
-    }
-
-    /**
-     * @param string $artist
-     * @return mixed
-     */
-    protected function search_artist($artist)
-    {
-        $query = "database/search?type=artist&title=" . rawurlencode((string) $artist) . "&per_page=10";
-
-        return $this->query_discogs($query);
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function get_artist(int $object_id)
-    {
-        $query = "artists/" . $object_id;
-
-        return $this->query_discogs($query);
-    }
-
-    /**
-     * @param string $artist
-     * @param string $album
-     * @param string $type
-     * @return mixed
-     */
-    protected function search_album($artist, $album, $type = 'master')
-    {
-        $query = "database/search?type=" . $type . "&release_title=" . rawurlencode((string) $album) . "&artist=" . rawurlencode((string) $artist) . "&per_page=10";
-
-        return $this->query_discogs($query);
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function get_album(int $object_id, string $release_type = 'masters')
-    {
-        $query = $release_type . '/' . $object_id;
-
-        return $this->query_discogs($query);
     }
 
     /**
@@ -207,14 +153,22 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
         $results = [];
         try {
             if (!empty($media_info['artist']) && !in_array('album', $media_info)) {
-                $artists = $this->search_artist($media_info['artist']);
+                $artists = $this->discogs->search_artist($media_info['artist']);
                 if (isset($artists['results']) && count($artists['results']) > 0) {
-                    $artist = $this->get_artist((int)$artists['results'][0]['id']);
-                    if (isset($artist['images']) && count($artist['images']) > 0) {
-                        $results['art'] = $artist['images'][0]['uri'];
-                    }
-                    if (!empty($artist['cover_image'])) {
-                        $results['art'] = $artist['cover_image'];
+                    foreach ($artists['results'] as $result) {
+                        if ($result['title'] === $media_info['artist']) {
+                            $artist = $this->discogs->get_artist((int)$result['id']);
+                            if (isset($artist['images']) && count($artist['images']) > 0) {
+                                $results['art'] = $artist['images'][0]['uri'];
+                            }
+                            if (!empty($artist['cover_image'])) {
+                                $results['art'] = $artist['cover_image'];
+                            }
+
+                            // add in the data response as well
+                            $results['data'] = $artist;
+                            break;
+                        }
                     }
                 }
             }
@@ -222,9 +176,9 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                 /**
                  * https://api.discogs.com/database/search?type=master&release_title=Ghosts&artist=Ladytron&per_page=10&key=key@secret=secret
                  */
-                $albums = $this->search_album($media_info['albumartist'], $media_info['album']);
+                $albums = $this->discogs->search_album($media_info['albumartist'], $media_info['album']);
                 if (empty($albums['results'])) {
-                    $albums = $this->search_album($media_info['albumartist'], $media_info['album'], 'release');
+                    $albums = $this->discogs->search_album($media_info['albumartist'], $media_info['album'], 'release');
                 }
 
                 // get the album that matches $artist - $album
@@ -284,8 +238,8 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                          * } $album
                          */
                         $album = (($albums['results'][0]['master_id'] ?? 0) > 0)
-                            ? $this->get_album((int)$albums['results'][0]['master_id'])
-                            : $this->get_album((int)$albums['results'][0]['id'], 'releases');
+                            ? $this->discogs->get_album((int)$albums['results'][0]['master_id'])
+                            : $this->discogs->get_album((int)$albums['results'][0]['id'], 'releases');
                     }
                     // fallback to the initial search if we don't have a master
                     if (!isset($album['id'])) {
@@ -311,6 +265,9 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                     if (!empty($genres)) {
                         $results['genre'] = array_unique($genres);
                     }
+
+                    // add in the data response as well
+                    $results['data'] = $album;
                 }
             }
         } catch (Exception $exception) {

@@ -84,6 +84,7 @@ $albumString = (AmpConfig::get('album_group'))
         <link rel="alternate" href="<?php echo $web_path; ?>/rss.php?type=<?php echo RssFeedTypeEnum::RECENTLY_PLAYED->value; ?>" type="application/rss+xml" title="<?php echo T_('Recently Played'); ?>">
         <link rel="alternate" href="<?php echo $web_path; ?>/rss.php?type=<?php echo RssFeedTypeEnum::LATEST_ALBUM->value; ?>" type="application/rss+xml" title="<?php echo T_('Newest Albums'); ?>">
         <link rel="alternate" href="<?php echo $web_path; ?>/rss.php?type=<?php echo RssFeedTypeEnum::LATEST_ARTIST->value; ?>" type="application/rss+xml" title="<?php echo T_('Newest Artists'); ?>">
+        <link rel="alternate" href="<?php echo $web_path; ?>/rss.php?type=<?php echo RssFeedTypeEnum::LATEST_SONG->value; ?>" type="application/rss+xml" title="<?php echo T_('Newest Songs'); ?>">
         <?php if ($site_social) { ?>
         <link rel="alternate" href="<?php echo $web_path; ?>/rss.php?type=<?php echo RssFeedTypeEnum::LATEST_SHOUT->value; ?>" type="application/rss+xml" title="<?php echo T_('Newest Shouts'); ?>">
         <?php }

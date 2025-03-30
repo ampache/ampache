@@ -28,6 +28,7 @@ namespace Ampache\Module\Util\Rss;
 use Ampache\Module\Util\Rss\Type\FeedTypeInterface;
 use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface RssFeedTypeFactoryInterface
 {
@@ -49,15 +50,20 @@ interface RssFeedTypeFactoryInterface
     /**
      * Creates a feed for recent albums
      */
-    public function createLatestAlbumFeed(?User $user): FeedTypeInterface;
+    public function createLatestAlbumFeed(?User $user, ServerRequestInterface $request): FeedTypeInterface;
 
     /**
      * Creates a feed for recent artists
      */
-    public function createLatestArtistFeed(?User $user): FeedTypeInterface;
+    public function createLatestArtistFeed(?User $user, ServerRequestInterface $request): FeedTypeInterface;
 
     /**
      * Creates a feed for recent shouts
      */
     public function createLatestShoutFeed(): FeedTypeInterface;
+
+    /**
+     * Creates a feed for recent songs
+     */
+    public function createLatestSongFeed(?User $user, ServerRequestInterface $request): FeedTypeInterface;
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "36c9e832c4e4c5153c67b152946fd537",
+    "content-hash": "418472ba5ab8069bf174b920cbc49c4f",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -126,6 +126,62 @@
                 "source": "https://github.com/ampache/ampacheapi-php/tree/master"
             },
             "time": "2024-11-20T02:11:00+00:00"
+        },
+        {
+            "name": "ampache/php-discogs-api",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ampache/php-discogs-api.git",
+                "reference": "9e99566e5015c5347de90f2bac35a3ab9576565d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ampache/php-discogs-api/zipball/9e99566e5015c5347de90f2bac35a3ab9576565d",
+                "reference": "9e99566e5015c5347de90f2bac35a3ab9576565d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "rmccue/requests": "^2.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.49",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^11",
+                "rector/rector": "^1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "AmpacheDiscogs": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lachlan de Waard",
+                    "email": "lachlan.00@gmail.com",
+                    "homepage": "https://github.com/lachlan-00",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP library for accessing the Discogs API",
+            "homepage": "https://github.com/ampache/php-discogs-api",
+            "keywords": [
+                "api",
+                "discogs",
+                "library",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/ampache/php-discogs-api/issues",
+                "source": "https://github.com/ampache/php-discogs-api/tree/0.1.0"
+            },
+            "time": "2025-03-30T10:45:06+00:00"
         },
         {
             "name": "cboden/ratchet",
@@ -1407,12 +1463,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/lachlan-00/MusicBrainz.git",
-                "reference": "bee9c8f4ced056caa436c359caaf1914c3fac9b9"
+                "reference": "09c6731caefb721f453b360c570bca9c5d6d9f58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lachlan-00/MusicBrainz/zipball/bee9c8f4ced056caa436c359caaf1914c3fac9b9",
-                "reference": "bee9c8f4ced056caa436c359caaf1914c3fac9b9",
+                "url": "https://api.github.com/repos/lachlan-00/MusicBrainz/zipball/09c6731caefb721f453b360c570bca9c5d6d9f58",
+                "reference": "09c6731caefb721f453b360c570bca9c5d6d9f58",
                 "shasum": ""
             },
             "require": {
@@ -1461,7 +1517,7 @@
             "support": {
                 "source": "https://github.com/lachlan-00/MusicBrainz/tree/release"
             },
-            "time": "2025-03-24T05:11:48+00:00"
+            "time": "2025-03-27T01:16:47+00:00"
         },
         {
             "name": "laravel/serializable-closure",

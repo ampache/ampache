@@ -76,14 +76,21 @@ final class AdvancedSearchMethod
         }
 
         $type = (isset($input['type'])) ? (string) $input['type'] : 'song';
+        // confirm the correct data
+        if (!in_array(strtolower($type), Search::VALID_TYPES)) {
+            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+
+            return false;
+        }
+
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        // confirm the correct data
-        if (!in_array(strtolower($type), Search::VALID_TYPES)) {
-            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+
+        if ($type == 'label' && !AmpConfig::get('label')) {
+            Api::error('Enable: label', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

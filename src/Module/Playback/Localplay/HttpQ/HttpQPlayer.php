@@ -476,19 +476,20 @@ class HttpQPlayer
      * This returns a delimited string of all of the filenames
      * current in your playlist
      */
-    public function get_tracks(): bool
+    public function get_tracks(): ?string
     {
         // Pull a delimited list of all tracks
         $results = $this->sendCommand('getplaylistfile', ['delim' => '::']);
 
         if (
             !$results ||
+            !is_string($results) ||
             $results == '0'
         ) {
-            return false;
+            return null;
         }
 
-        return true;
+        return $results;
     }
 
     /**

@@ -60,6 +60,14 @@ final class UserPreferenceMethod
 
             return false;
         }
+
+        $results[0]['has_access'] = (((int)$results[0]['level']) <= $user->access);
+        if ($results[0]['type'] == 'special') {
+            $values = Preference::get_special_values($results[0]['name'], $user);
+            if ($values) {
+                $results[0]['values'] = $values;
+            }
+        }
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results[0], JSON_PRETTY_PRINT);

@@ -28,6 +28,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
@@ -36,7 +37,6 @@ use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
-use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\MusicBrainz;
 
 class Wanted extends database_object
@@ -127,7 +127,6 @@ class Wanted extends database_object
     public static function get_missing_albums($artist, $mbid = ''): array
     {
         $lookupId = $artist->mbid ?? $mbid;
-        $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
         $includes = ['release-groups'];
         $types    = AmpConfig::get('wanted_types', []);
         if (is_string($types)) {
@@ -139,6 +138,12 @@ class Wanted extends database_object
         }
 
         try {
+            $brainz = MusicBrainz::newMusicBrainz(
+                'request',
+                AmpConfig::get('musicbrainz_username'),
+                AmpConfig::get('musicbrainz_password')
+            );
+            $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
             /**
              * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
              * @var object{
@@ -162,7 +167,7 @@ class Wanted extends database_object
              *     country: string
              * } $martist
              */
-            $martist = $mbrainz->lookup('artist', $lookupId, $includes);
+            $martist = $brainz->lookup('artist', $lookupId, $includes);
             debug_event(self::class, 'get_missing_albums lookup: ' . $lookupId, 3);
         } catch (Exception $exception) {
             debug_event(self::class, 'get_missing_albums ERROR: ' . $exception, 3);
@@ -327,10 +332,15 @@ class Wanted extends database_object
      */
     public function load_all(): void
     {
-        $mbrainz     = new MusicBrainz(new RequestsHttpAdapter());
         $this->songs = [];
 
         try {
+            $brainz = MusicBrainz::newMusicBrainz(
+                'request',
+                AmpConfig::get('musicbrainz_username'),
+                AmpConfig::get('musicbrainz_password')
+            );
+            $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
             $user            = Core::get_global('user');
             $preview_plugins = Plugin::get_plugins(PluginTypeEnum::SONG_PREVIEW_PROVIDER);
             if (
@@ -351,7 +361,7 @@ class Wanted extends database_object
                  *     primary-type: string
                  * } $group
                  */
-                $group = $mbrainz->lookup('release-group', $this->mbid, ['releases']);
+                $group = $brainz->lookup('release-group', $this->mbid, ['releases']);
                 // Set fresh data
                 $this->name = $group->title;
                 $this->year = (strtotime((string) $group->{'first-release-date'}))
@@ -385,7 +395,7 @@ class Wanted extends database_object
                          *     packaging-id: string,
                          * } $release
                          */
-                        $release = $mbrainz->lookup('release', $release_mbid, ['recordings']);
+                        $release = $brainz->lookup('release', $release_mbid, ['recordings']);
 
                         foreach ($release->media as $media) {
                             foreach ($media->tracks as $track) {

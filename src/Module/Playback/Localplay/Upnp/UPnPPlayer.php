@@ -137,7 +137,7 @@ class UPnPPlayer
      * This returns a delimited string of all of the filenames
      * current in your playlist, only urls at the moment
      */
-    public function GetPlaylistItems()
+    public function GetPlaylistItems(): array
     {
         return $this->Playlist()->AllItems();
     }
@@ -245,9 +245,9 @@ class UPnPPlayer
     }
 
     /**
-     * @param $url
+     * CallAsyncURL
      */
-    private function CallAsyncURL($url)
+    private function CallAsyncURL($url): void
     {
         $curl = curl_init();
         if ($curl) {
@@ -428,7 +428,7 @@ class UPnPPlayer
     /**
      * @param $state
      */
-    private function SetIntState($state)
+    private function SetIntState($state): void
     {
         $this->_intState = $state;
 
@@ -442,7 +442,7 @@ class UPnPPlayer
         debug_event(self::class, 'SetIntState:' . $this->_intState, 5);
     }
 
-    private function ReadIndState()
+    private function ReadIndState(): void
     {
         $sid  = 'upnp_ply_' . $this->_description_url;
         $data = Session::read($sid);

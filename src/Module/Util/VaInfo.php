@@ -693,20 +693,6 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     * get_mbid_array
-     * @param string $mbid
-     * @return array
-     */
-    public static function get_mbid_array($mbid): array
-    {
-        if (preg_match(self::MBID_REGEX, $mbid, $matches)) {
-            return $matches;
-        }
-
-        return [$mbid];
-    }
-
-    /**
      * parse_mbid
      * Get the first valid mbid. (if it's valid)
      * @param string|array|null $mbid
@@ -1847,7 +1833,7 @@ final class VaInfo implements VaInfoInterface
         preg_match_all('/\%\w/', $pattern, $elements);
 
         // Mangle the pattern by turning the codes into regex captures
-        $pattern = preg_replace('/\%[d]/', '([0-9]?)', $pattern);
+        $pattern = preg_replace('/\%d/', '([0-9]?)', $pattern);
         $pattern = preg_replace('/\%[TyY]/', '([0-9]+?)', (string)$pattern);
         $pattern = preg_replace('/\%\w/', '(.+?)', (string)$pattern);
         $pattern = str_replace('/', '\/', (string)$pattern);
@@ -1974,7 +1960,7 @@ final class VaInfo implements VaInfoInterface
         //debug_event(self::class, "splitSlashedlist: " . print_r($data, true), 5);
         $delimiters = $this->configContainer->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
         if (!empty($data) && !empty($delimiters)) {
-            $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
+            $pattern = '~\s?(' . $delimiters . ')\s?~';
             $items   = preg_split($pattern, $data) ?: [];
             $items   = array_map('trim', $items);
             if (empty($items)) {

@@ -45,8 +45,13 @@ interface PreferenceRepositoryInterface
      *  level: int,
      *  type: string,
      *  category: string,
-     *  subcategory: string
+     *  subcategory: string,
+     *  has_access?: bool,
+     *  values?: string[],
      * }>
      */
-    public function getAll(?User $user = null): array;
+    public function getAll(
+        ?User $user = null,
+        ?bool $api = false
+    ): array;
 }

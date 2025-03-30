@@ -39,7 +39,8 @@ interface DatabaseConnectionInterface
      */
     public function query(
         string $sql,
-        array $params = []
+        array $params = [],
+        bool $silent = false,
     ): PDOStatement;
 
     /**
