@@ -299,7 +299,7 @@ class Playlist extends playlist_object
                     debug_event(self::class, sprintf('get_items(): %s not handled', $object_type->value), 5);
             }
 
-            // debug_event(self::class, "get_items(): Results:\n" . print_r($results,true), 5);
+            //debug_event(self::class, "get_items(): Results:\n" . print_r($results,true), 5);
             $db_results = Dba::read($sql, $params);
 
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -408,7 +408,7 @@ class Playlist extends playlist_object
 
         $sql .= "ORDER BY `playlist_data`.`track`";
         $db_results = Dba::read($sql, $params);
-        // debug_event(self::class, "get_songs(): " . $sql . ' ' . print_r($params, true), 5);
+        //debug_event(self::class, "get_songs(): " . $sql . ' ' . print_r($params, true), 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['object_id'];
@@ -500,7 +500,7 @@ class Playlist extends playlist_object
             return 0;
         }
 
-        // debug_event(self::class, "get_total_duration(): " . $sql, 5);
+        //debug_event(self::class, "get_total_duration(): " . $sql, 5);
 
         return (int) $row[0];
     }
