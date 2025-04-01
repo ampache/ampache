@@ -133,12 +133,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ampache/php-discogs-api.git",
-                "reference": "9e99566e5015c5347de90f2bac35a3ab9576565d"
+                "reference": "4d3a172df5355959f6d34e0985a81fc1b75a40d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ampache/php-discogs-api/zipball/9e99566e5015c5347de90f2bac35a3ab9576565d",
-                "reference": "9e99566e5015c5347de90f2bac35a3ab9576565d",
+                "url": "https://api.github.com/repos/ampache/php-discogs-api/zipball/4d3a172df5355959f6d34e0985a81fc1b75a40d9",
+                "reference": "4d3a172df5355959f6d34e0985a81fc1b75a40d9",
                 "shasum": ""
             },
             "require": {
@@ -179,9 +179,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ampache/php-discogs-api/issues",
-                "source": "https://github.com/ampache/php-discogs-api/tree/0.1.0"
+                "source": "https://github.com/ampache/php-discogs-api/tree/release"
             },
-            "time": "2025-03-30T10:45:06+00:00"
+            "time": "2025-04-01T07:35:01+00:00"
         },
         {
             "name": "cboden/ratchet",
