@@ -44,7 +44,6 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
      * If the query fails, a DatabaseException will be thrown
      *
      * @param list<mixed> $params
-     *
      * @throws QueryFailedException
      */
     public function query(
@@ -54,7 +53,10 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
     ): PDOStatement {
         $result = Dba::query($sql, $params, $silent);
 
-        if ($result === false) {
+        if (
+            $silent === false &&
+            $result === false
+        ) {
             throw new QueryFailedException();
         }
 
@@ -67,8 +69,8 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
      * Useful e.g. for counting-queries
      *
      * @param list<mixed> $params
-     *
      * @return mixed Will return `false` if row is empty
+     * @throws QueryFailedException
      */
     public function fetchOne(
         string $sql,
@@ -81,8 +83,8 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
      * Fetches a single whole row and returns it as an associative array
      *
      * @param list<mixed> $params
-     *
      * @return false|array<string, mixed> Will return `false` if row is empty
+     * @throws QueryFailedException
      */
     public function fetchRow(
         string $sql,
@@ -95,13 +97,17 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
      * Returns the most recent inserted id
      *
      * @return non-negative-int
+     * @throws InsertIdInvalidException
      */
-    public function getLastInsertedId(): int
+    public function getLastInsertedId($silent = false): int
     {
         // we assume insertion succeed (errors would throw exceptions), so simply cast it
         $result = (int) Dba::insert_id();
 
-        if ($result <= 0) {
+        if (
+            $silent === false &&
+            $result <= 0
+        ) {
             throw new InsertIdInvalidException();
         }
 
