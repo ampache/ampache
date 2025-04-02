@@ -8,22 +8,26 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 
 ### Added
 
+* Translations 2025-03-27
 * Add item count to the Genre browse pages
 * Allow sorting the Genre browse page by item count
 * Allow editing links tags for hidden genres
 * Show merged tags for genres if they are set
 * Add Random play to Playlist and Smartlist object rows (Updated column CSS for these types)
 * Add example catalog update file example `catalog_update.sh`
+* Use musicbrainz GUID links if available for RSS items
 * Add RSS feed to get latest songs `rss.php?type=latest_song`
 * Add song as a possible library item for RSS
+* Add `offest` and `count` parameters to all RSS latest feeds
 * Browse
   * Add `added` and `updated` searches to Album and AlbumDisk searches
   * Add `artist`, `album`, `song` and `video` counts to the Genre browse
   * Add `id` to the Album, AlbumDisk, Artist, Label, Playlist, Podcast, PodcastEpisode, Song and Video browse types
-* Config version 79
+* Config version 80
   * Add `split_artist_regex` split the Artist and Album Artist tags on regex and use the first result
   * Add `catalog_verify_by_album` to allow grouping updates instead of just updating individual files
   * Remove plugins from default `metadata_order` (MusicBrainz enforces a 1 second sleep for each call)
+  * Add MusicBrainz API username and password options (optional for API usage)
 * Database 740001
   * Fix boolean preferences with an incorrect type
 * CLI
@@ -46,8 +50,10 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * Don't collect garbage continually when doing a large verify action
 * Update individual counts for Artists after changes
 * Search with simple album name for external links
+* Split Discogs plugin into a separate library [ampache/php-discogs-api](https://github.com/ampache/php-discogs-api)
 * Change MusicBrainz library to [lachlan-00/MusicBrainz](https://github.com/lachlan-00/MusicBrainz)
 * Use MusicBrainz library for MBID validity checks
+* Set an Ampache specifig user agent on MusicBrainz requests
 * Show **ALL** Genres in the edit list for objects
 * Set a CSS max-width (25%) for the now playing column with Song details
 * Don't add `Podcast` to the RSS titles for library item feeds
@@ -79,6 +85,7 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * SQL error looking up License name
 * Fix up RSS to generate valid feeds again
 * Only insert additional metadata for scalar values
+* Silently faile on Metadata insert. (Fix up your tags)
 * Plugin
   * Discogs: Fix up searching for releases without a master release
 

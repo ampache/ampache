@@ -42,6 +42,8 @@ use Ampache\Module\Catalog\Catalog_Seafile;
 use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Catalog\CatalogLoader;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\Database\Exception\InsertIdInvalidException;
 use Ampache\Module\Metadata\MetadataEnabledInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
@@ -2883,7 +2885,11 @@ abstract class Catalog extends database_object
             $ctags = self::filterMetadata($song, $results);
             //debug_event(self::class, "get_clean_metadata " . print_r($ctags, true), 4);
             foreach ($ctags as $tag => $value) {
-                $metadataManager->updateOrAddMetadata($song, $tag, (string) $value);
+                try {
+                    $metadataManager->updateOrAddMetadata($song, $tag, (string)$value);
+                } catch (DatabaseException) {
+                    debug_event(self::class, "Error: DatabaseException: " .  $tag . ' ' .  $value, 4);
+                }
             }
 
             /** @var Metadata $metadata */
@@ -3354,7 +3360,11 @@ abstract class Catalog extends database_object
         $tags = self::filterMetadata($item, $tags);
 
         foreach ($tags as $tag => $value) {
-            $metadataManager->updateOrAddMetadata($item, $tag, (string) $value);
+            try {
+                $metadataManager->updateOrAddMetadata($item, $tag, (string) $value);
+            } catch (DatabaseException) {
+                debug_event(self::class, "Error: DatabaseException: " .  $tag . ' ' .  $value, 4);
+            }
         }
     }
 

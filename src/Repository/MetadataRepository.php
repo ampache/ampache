@@ -189,11 +189,10 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
                     $metadata->getFieldId(),
                     $metadata->getData(),
                     $metadata->getType()
-                ],
-                true
+                ]
             );
 
-            $result = $this->connection->getLastInsertedId(true);
+            $result = $this->connection->getLastInsertedId();
         } else {
             $this->connection->query(
                 'UPDATE `metadata` SET `object_id` = ?, `field` = ?, `data` = ?, `type` = ? WHERE `id` = ?',
@@ -203,8 +202,7 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
                     $metadata->getData(),
                     $metadata->getType(),
                     $metadata->getId()
-                ],
-                true
+                ]
             );
         }
 
