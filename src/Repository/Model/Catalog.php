@@ -43,7 +43,6 @@ use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Catalog\CatalogLoader;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
-use Ampache\Module\Database\Exception\InsertIdInvalidException;
 use Ampache\Module\Metadata\MetadataEnabledInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
@@ -2888,7 +2887,7 @@ abstract class Catalog extends database_object
                 try {
                     $metadataManager->updateOrAddMetadata($song, $tag, (string)$value);
                 } catch (DatabaseException) {
-                    debug_event(self::class, "Error: DatabaseException: " .  $tag . ' ' .  $value, 4);
+                    debug_event(self::class, "Error: DatabaseException: " . $tag . ' ' . $value, 4);
                 }
             }
 
@@ -3363,7 +3362,7 @@ abstract class Catalog extends database_object
             try {
                 $metadataManager->updateOrAddMetadata($item, $tag, (string) $value);
             } catch (DatabaseException) {
-                debug_event(self::class, "Error: DatabaseException: " .  $tag . ' ' .  $value, 4);
+                debug_event(self::class, "Error: DatabaseException: " . $tag . ' ' . $value, 4);
             }
         }
     }
