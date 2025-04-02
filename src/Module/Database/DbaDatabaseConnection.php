@@ -95,6 +95,7 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
      * Returns the most recent inserted id
      *
      * @return non-negative-int
+     * @throws InsertIdInvalidException
      */
     public function getLastInsertedId(): int
     {
