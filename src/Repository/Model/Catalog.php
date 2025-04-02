@@ -3360,7 +3360,11 @@ abstract class Catalog extends database_object
         $tags = self::filterMetadata($item, $tags);
 
         foreach ($tags as $tag => $value) {
-            $metadataManager->updateOrAddMetadata($item, $tag, (string) $value);
+            try {
+                $metadataManager->updateOrAddMetadata($item, $tag, (string) $value);
+            } catch (DatabaseException) {
+                debug_event(self::class, "Error: DatabaseException: " .  $tag . ' ' .  $value, 4);
+            }
         }
     }
 
