@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Metadata;
 
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Metadata;
 use Traversable;
 
@@ -51,6 +52,9 @@ interface MetadataManagerInterface
      */
     public function addMetadata(MetadataEnabledInterface $item, string $name, string $data): void;
 
+    /**
+     * @throws DatabaseException
+     */
     public function updateOrAddMetadata(MetadataEnabledInterface $item, string $name, string $data): void;
 
     /**

@@ -26,6 +26,7 @@ namespace Ampache\Module\Metadata;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\Model\Metadata;
@@ -131,6 +132,9 @@ final class MetadataManager implements MetadataManagerInterface
         $metadata->save();
     }
 
+    /**
+     * @throws DatabaseException
+     */
     public function updateOrAddMetadata(
         MetadataEnabledInterface $item,
         string $name,

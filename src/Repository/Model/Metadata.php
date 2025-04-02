@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
 
@@ -170,6 +171,7 @@ class Metadata
 
     /**
      * Saves the item
+     * @throws DatabaseException
      */
     public function save(): void
     {
