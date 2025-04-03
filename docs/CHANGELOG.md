@@ -70,7 +70,7 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * Lyrics would be chopped up if you repeatedly updated them; do it one way and once only
 * CSS in some areas for the light theme
 * `slideshow_time` being converted to bool
-* Don't show slideshow button if you don't have a flickr enabled
+* Don't show slideshow button if you don't have flickr enabled
 * Not able to edit Broadcast or select genre correctly
 * Missing artist tag options for Quicktime and ASF tags
 * Genre select SQL full group by on empty `object_type`
@@ -85,7 +85,7 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * SQL error looking up License name
 * Fix up RSS to generate valid feeds again
 * Only insert additional metadata for scalar values
-* Silently faile on Metadata insert. (Fix up your tags)
+* Silently fail on Metadata insert. (Fix up your tags)
 * Plugin
   * Discogs: Fix up searching for releases without a master release
 
