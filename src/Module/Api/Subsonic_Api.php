@@ -2709,7 +2709,8 @@ class Subsonic_Api
 
         if (
             (!$username || !$password) ||
-            $user->access >= AccessLevelEnum::ADMIN->value) {
+            $user->access >= AccessLevelEnum::ADMIN->value
+        ) {
             $access = AccessLevelEnum::USER;
             if ($coverArtRole) {
                 $access = AccessLevelEnum::MANAGER;
