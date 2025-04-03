@@ -68,7 +68,7 @@ class PlayableItemRssItemAdapterTest extends TestCase
             ->willReturn($title);
 
         static::assertSame(
-            sprintf('%s Podcast', $title),
+            $title,
             $this->subject->getTitle()
         );
     }

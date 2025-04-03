@@ -351,14 +351,14 @@ class VlcPlayer
      * This returns a delimited string of all of the filenames
      * current in your playlist, only urls at the moment,normal files put in the playlist with VLC wil not show'
      */
-    public function get_tracks()
+    public function get_tracks(): ?array
     {
         // Gets complete playlist + medialib in VLC's case, needs to be looked at
         $args = [];
 
         $results = $this->sendCommand('playlist.xml', $args);
         if ($results === null) {
-            return false;
+            return null;
         }
 
         return $results;

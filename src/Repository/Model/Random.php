@@ -141,7 +141,7 @@ class Random
 
         $sql .= sprintf('%s ORDER BY RAND() LIMIT %d', $where_sql, $limit);
         $db_results = Dba::read($sql);
-        //debug_event(self::class, "get_default " . $sql , 5);
+        //debug_event(self::class, "get_default " . $sql, 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];

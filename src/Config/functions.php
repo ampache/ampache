@@ -572,6 +572,10 @@ function debug_event($type, $message, $level, $username = ''): bool
     }
 
     global $dic;
+    if (!$dic) {
+        return false;
+    }
+
     $logger = $dic->get(LoggerInterface::class);
 
     // If the message is multiple lines, make multiple log lines
@@ -1101,8 +1105,6 @@ function get_theme($name)
  * Used in graph class also format string
  *
  * @see \Ampache\Module\Util\Graph
- *
- * @param $value
  */
 function pGraph_Yformat_bytes($value): string
 {
@@ -1125,6 +1127,9 @@ function canEditArtist(
     }
 
     global $dic;
+    if (!$dic) {
+        return false;
+    }
 
     return $dic->get(PrivilegeCheckerInterface::class)->check(
         AccessTypeEnum::INTERFACE,

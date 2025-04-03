@@ -157,6 +157,10 @@ final class PodcastSearch implements SearchInterface
                     $where[]      = "(`podcast`.`total_skip` $operator_sql ?)";
                     $parameters[] = $input;
                     break;
+                case 'id':
+                    $where[]      = "(`podcast`.`id` $operator_sql ?)";
+                    $parameters[] = $input;
+                    break;
                 case 'played_or_skipped_times':
                     $where[]      = "((`podcast`.`total_count` + `podcast`.`total_skip`) $operator_sql ?)";
                     $parameters[] = $input;

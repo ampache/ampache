@@ -133,7 +133,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 </div>
 <?php } ?>
 <div id="information_actions">
-    <h3><?php echo T_('Actions'); ?>:</h3>
+    <h3><?php echo T_('Actions'); ?></h3>
     <ul>
 <?php if ($is_album_type) {
     $original_year = (AmpConfig::get('use_original_year')) ? "original_year" : "year";

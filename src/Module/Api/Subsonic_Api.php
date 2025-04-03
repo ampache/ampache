@@ -196,7 +196,7 @@ class Subsonic_Api
     }
 
     /**
-     * @param $password
+     * @param string $password
      */
     public static function _decryptPassword($password): string
     {
@@ -1053,7 +1053,7 @@ class Subsonic_Api
         $response = Subsonic_Xml_Data::addSubsonicResponse($elementName);
         if ($type) {
             $albums = self::_albumList($input, $user, (string)$type);
-            if ($albums === false) {
+            if ($albums === null) {
                 $response     = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, $elementName);
             } else {
                 switch ($elementName) {
@@ -2707,7 +2707,10 @@ class Subsonic_Api
             $email = urldecode($email);
         }
 
-        if ($user->access >= AccessLevelEnum::ADMIN->value) {
+        if (
+            (!$username || !$password) ||
+            $user->access >= AccessLevelEnum::ADMIN->value
+        ) {
             $access = AccessLevelEnum::USER;
             if ($coverArtRole) {
                 $access = AccessLevelEnum::MANAGER;
@@ -3066,9 +3069,9 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      * @param string $type
-     * @return array|false
+     * @return int[]|null
      */
-    private static function _albumList($input, $user, $type)
+    private static function _albumList($input, $user, $type): ?array
     {
         $size          = (int)($input['size'] ?? 10);
         $offset        = (int)($input['offset'] ?? 0);
@@ -3083,7 +3086,7 @@ class Subsonic_Api
             $catalogs   = [];
             $catalogs[] = $musicFolderId;
         }
-        $albums = false;
+        $albums = null;
         switch ($type) {
             case 'random':
                 $albums = self::getAlbumRepository()->getRandom(

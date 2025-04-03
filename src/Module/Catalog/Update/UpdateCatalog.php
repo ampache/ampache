@@ -56,8 +56,9 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         bool $updateInfo,
         bool $optimizeDatabase,
         bool $collectGarbage,
+        string $catalogType,
         ?string $catalogName,
-        string $catalogType
+        ?int $limit
     ): void {
         $start_time = time();
         if ($deactivateMemoryLimit === true) {
@@ -144,7 +145,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         T_('Start cleaning orphaned media entries'),
                         true
                     );
-                    $changed += $catalog->clean_catalog();
+                    $changed += $catalog->clean_catalog($interactor);
 
                     $buffer = ob_get_contents();
 
@@ -167,7 +168,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         T_('Start adding new media'),
                         true
                     );
-                    $changed += $catalog->add_to_catalog($options);
+                    $changed += $catalog->add_to_catalog($options, $interactor);
 
                     $buffer = ob_get_contents();
 
@@ -190,7 +191,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         T_('Start verifying media related to Catalog entries'),
                         true
                     );
-                    $changed += $catalog->verify_catalog_proc();
+                    $changed += $catalog->verify_catalog_proc($limit, $interactor);
 
                     $buffer = ob_get_contents();
 
@@ -214,7 +215,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     T_('Start searching new media art'),
                     true
                 );
-                $catalog->gather_art();
+                $catalog->gather_art(null, null, $interactor);
 
                 $buffer = ob_get_contents();
 

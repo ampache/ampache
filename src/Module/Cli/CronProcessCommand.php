@@ -107,7 +107,12 @@ final class CronProcessCommand extends Command
             return;
         }
 
+        $start_time = time();
         debug_event(self::class, 'started cron process', 3);
+        $interactor->info(
+            T_('Ampache Cron'),
+            true
+        );
 
         /**
          * Catalog garbage_collection covers these functions
@@ -164,16 +169,24 @@ final class CronProcessCommand extends Command
         $this->objectCache->compute();
         debug_event(self::class, 'finished objectCache->compute()', 5);
 
+        $time = time();
+
         // mark the date this cron was completed.
         $this->updateInfoRepository->setValue(
             UpdateInfoEnum::CRON_DATE,
-            (string) time()
+            (string)$time
         );
 
         debug_event(self::class, 'finished cron process', 4);
 
         $interactor->info(
             T_('Cron process finished'),
+            true
+        );
+
+        $time_diff = time() - $start_time;
+        $interactor->info(
+            T_('Time') . ": " . date('i:s', $time_diff),
             true
         );
     }

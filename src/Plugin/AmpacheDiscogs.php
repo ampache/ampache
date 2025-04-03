@@ -25,14 +25,14 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use AmpacheDiscogs\Discogs;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Exception;
-use WpOrg\Requests\Requests;
 
-class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
+class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface, PluginGetMetadataInterface
 {
     public string $name        = 'Discogs';
 
@@ -52,6 +52,8 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
     private string $api_key;
 
     private string $secret;
+
+    private Discogs $discogs;
 
     /**
      * Constructor
@@ -128,67 +130,9 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
             return false;
         }
 
+        $this->discogs = new Discogs($this->api_key, $this->secret);
+
         return true;
-    }
-
-    /**
-     * @param $query
-     * @return mixed
-     */
-    protected function query_discogs($query)
-    {
-        $url = 'https://api.discogs.com/' . $query;
-        $url .= (str_contains((string) $query, '?')) ? '&' : '?';
-        $url .= 'key=' . $this->api_key . '&secret=' . $this->secret;
-        debug_event(self::class, 'Discogs request: ' . $url, 5);
-        $request = Requests::get($url);
-
-        return json_decode($request->body, true);
-    }
-
-    /**
-     * @param $artist
-     * @return mixed
-     */
-    protected function search_artist($artist)
-    {
-        $query = "database/search?type=artist&title=" . rawurlencode((string) $artist) . "&per_page=10";
-
-        return $this->query_discogs($query);
-    }
-
-    /**
-     * @param int $object_id
-     * @return mixed
-     */
-    protected function get_artist($object_id)
-    {
-        $query = "artists/" . $object_id;
-
-        return $this->query_discogs($query);
-    }
-
-    /**
-     * @param $artist
-     * @param $album
-     * @return mixed
-     */
-    protected function search_album($artist, $album)
-    {
-        $query = "database/search?type=master&release_title=" . rawurlencode((string) $album) . "&artist=" . rawurlencode((string) $artist) . "&per_page=10";
-
-        return $this->query_discogs($query);
-    }
-
-    /**
-     * @param int $object_id
-     * @return mixed
-     */
-    protected function get_album($object_id)
-    {
-        $query = "masters/" . $object_id;
-
-        return $this->query_discogs($query);
     }
 
     /**
@@ -208,21 +152,122 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
 
         $results = [];
         try {
-            if (in_array('artist', $gather_types)) {
-                $artists = $this->search_artist($media_info['title']);
-                if (count($artists['results']) > 0) {
-                    $artist = $this->get_artist($artists['results'][0]['id']);
-                    if (count($artist['images']) > 0) {
-                        $results['art'] = $artist['images'][0]['uri'];
+            if (!empty($media_info['artist']) && !in_array('album', $media_info)) {
+                $artists = $this->discogs->search_artist($media_info['artist']);
+                if (isset($artists['results']) && count($artists['results']) > 0) {
+                    foreach ($artists['results'] as $result) {
+                        if ($result['title'] === $media_info['artist']) {
+                            $artist = $this->discogs->get_artist((int)$result['id']);
+                            if (isset($artist['images']) && count($artist['images']) > 0) {
+                                $results['art'] = $artist['images'][0]['uri'];
+                            }
+                            if (!empty($artist['cover_image'])) {
+                                $results['art'] = $artist['cover_image'];
+                            }
+
+                            // add in the data response as well
+                            $results['data'] = $artist;
+                            break;
+                        }
                     }
                 }
-            } elseif (in_array('album', $gather_types)) {
-                $albums = $this->search_album($media_info['artist'], $media_info['title']);
+            }
+            if (!empty($media_info['albumartist']) && !empty($media_info['album'])) {
+                /**
+                 * https://api.discogs.com/database/search?type=master&release_title=Ghosts&artist=Ladytron&per_page=10&key=key@secret=secret
+                 */
+                $albums = $this->discogs->search_album($media_info['albumartist'], $media_info['album']);
+                if (empty($albums['results'])) {
+                    $albums = $this->discogs->search_album($media_info['albumartist'], $media_info['album'], 'release');
+                }
+
+                // get the album that matches $artist - $album
                 if (!empty($albums['results'])) {
-                    $album = $this->get_album($albums['results'][0]['id']);
-                    if (count($album['images']) > 0) {
+                    /**
+                     * @var array{
+                     *     country: string,
+                     *     year: string,
+                     *     format: string[],
+                     *     label: string[],
+                     *     type: string,
+                     *     genre: string[],
+                     *     style: string[],
+                     *     id: ?int,
+                     *     barcode: string[],
+                     *     master_id: int,
+                     *     master_url: string,
+                     *     uri: string,
+                     *     catno: string,
+                     *     title: string,
+                     *     thumb: string,
+                     *     cover_image: string,
+                     *     resource_url: string,
+                     *     community: object,
+                     *     format_quantity: ?int,
+                     *     formats: ?object,
+                     * } $albumSearch
+                     */
+                    foreach ($albums['results'] as $albumSearch) {
+                        if ($media_info['albumartist'] . ' - ' . $media_info['album'] === $albumSearch['title']) {
+                            $album = $albumSearch;
+                            break;
+                        }
+                    }
+                    // look up the master release if we have one or the first release
+                    if (!isset($album['id'])) {
+                        /**
+                         * @var array{
+                         *     id: ?int,
+                         *     main_release: int,
+                         *     most_recent_release: int,
+                         *     uri: string,
+                         *     versions_uri: string,
+                         *     main_release_uri: string,
+                         *     most_recent_release_uri: string,
+                         *     num_for_sale: int,
+                         *     lowest_price: int,
+                         *     images: object,
+                         *     genres: string[],
+                         *     styles: string[],
+                         *     year: int,
+                         *     tracklist: object,
+                         *     artists: object,
+                         *     title: string,
+                         *     data-quality: string,
+                         *     videos: object,
+                         * } $album
+                         */
+                        $album = (($albums['results'][0]['master_id'] ?? 0) > 0)
+                            ? $this->discogs->get_album((int)$albums['results'][0]['master_id'])
+                            : $this->discogs->get_album((int)$albums['results'][0]['id'], 'releases');
+                    }
+                    // fallback to the initial search if we don't have a master
+                    if (!isset($album['id'])) {
+                        $album = $albums['results'][0];
+                    }
+                    if (isset($album['images']) && count($album['images']) > 0) {
                         $results['art'] = $album['images'][0]['uri'];
                     }
+                    if (!empty($album['cover_image'])) {
+                        $results['art'] = $album['cover_image'];
+                    }
+
+                    $genres = [];
+                    foreach ($albums['results'] as $release) {
+                        if (!empty($release['genre'])) {
+                            $genres = array_merge($genres, $release['genre']);
+                        }
+                    }
+                    if (!empty($release['style'])) {
+                        $genres = array_merge($genres, $release['style']);
+                    }
+
+                    if (!empty($genres)) {
+                        $results['genre'] = array_unique($genres);
+                    }
+
+                    // add in the data response as well
+                    $results['data'] = $album;
                 }
             }
         } catch (Exception $exception) {

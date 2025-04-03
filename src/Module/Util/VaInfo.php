@@ -380,10 +380,9 @@ final class VaInfo implements VaInfoInterface
     /**
      * write_id3
      * This function runs the various steps to gathering the metadata
-     * @param $tagData
      * @throws Exception
      */
-    public function write_id3($tagData): void
+    public function write_id3(array $tagData): void
     {
         $TaggingFormat = 'UTF-8';
         $tagWriter     = new getid3_writetags();
@@ -649,7 +648,7 @@ final class VaInfo implements VaInfoInterface
 
             $info['language'] = (!$info['language'] && array_key_exists('language', $tags)) ? trim((string)$tags['language']) : $info['language'];
             $info['comment']  = (!$info['comment'] && array_key_exists('comment', $tags)) ? trim((string)$tags['comment']) : $info['comment'];
-            $info['lyrics']   = (!$info['lyrics'] && array_key_exists('lyrics', $tags)) ? strip_tags(nl2br((string) $tags['lyrics']), "<br>") : $info['lyrics'];
+            $info['lyrics']   = (!$info['lyrics'] && array_key_exists('lyrics', $tags) && is_string($tags['lyrics'])) ? nl2br(strip_tags($tags['lyrics'])) : $info['lyrics'];
 
             // extended checks to make sure "0" makes it through, which would otherwise eval to false
             $info['replaygain_track_gain'] = (!$info['replaygain_track_gain'] && array_key_exists('replaygain_track_gain', $tags) && !is_null($tags['replaygain_track_gain'])) ? (float) $tags['replaygain_track_gain'] : $info['replaygain_track_gain'];
@@ -676,7 +675,10 @@ final class VaInfo implements VaInfoInterface
             if (self::getConfigContainer()->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) && is_array($tags)) {
                 // Add rest of the tags without typecast to the array
                 foreach ($tags as $tag => $value) {
-                    if (!array_key_exists($tag, $info) && !is_array($value)) {
+                    if (
+                        !array_key_exists($tag, $info) &&
+                        is_scalar($value)
+                    ) {
                         $info[$tag] = trim((string)$value);
                     }
                 }
@@ -688,20 +690,6 @@ final class VaInfo implements VaInfoInterface
         $info['size'] = $info['size'] ?? $size;
 
         return $info;
-    }
-
-    /**
-     * get_mbid_array
-     * @param string $mbid
-     * @return array
-     */
-    public static function get_mbid_array($mbid): array
-    {
-        if (preg_match(self::MBID_REGEX, $mbid, $matches)) {
-            return $matches;
-        }
-
-        return [$mbid];
     }
 
     /**
@@ -745,22 +733,6 @@ final class VaInfo implements VaInfoInterface
         }
 
         return [];
-    }
-
-    /**
-     * is_mbid
-     * @param null|string $mbid
-     */
-    public static function is_mbid($mbid): bool
-    {
-        if ($mbid === null) {
-            return false;
-        }
-        if (preg_match(self::MBID_REGEX, $mbid)) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -936,10 +908,8 @@ final class VaInfo implements VaInfoInterface
      *
      * Gather and return the general information about a file
      * (vbr/cbr, sample rate, channels, etc.)
-     * @param $tags
-     * @return array
      */
-    private function _parse_general($tags): array
+    private function _parse_general(array $tags): array
     {
         //$this->logger->debug('_parse_general: ' . print_r($tags, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
         $parsed          = [];
@@ -1441,6 +1411,7 @@ final class VaInfo implements VaInfoInterface
                     case 'artists':
                         $parsed['artists'] = $this->parseArtists($id3v2['comments']['text'][$txxx['description']]);
                         break;
+                    case 'albumartist':
                     case 'album artist':
                         $parsed['albumartist'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
@@ -1635,6 +1606,9 @@ final class VaInfo implements VaInfoInterface
                 case 'isrc':
                     $parsed['isrc'] = $data[0];
                     break;
+                case '©art':
+                    $parsed['artist'] = $data[0];
+                    break;
                 case 'album_artist':
                     $parsed['albumartist'] = $data[0];
                     break;
@@ -1751,6 +1725,9 @@ final class VaInfo implements VaInfoInterface
                     case 'wm/artists':
                         $parsed['artists'] = $this->parseArtists($value);
                         break;
+                    case 'author':
+                        $parsed['artist'] = $value;
+                        break;
                     case 'wm/albumartist':
                         $parsed['albumartist'] = $value;
                         break;
@@ -1856,7 +1833,7 @@ final class VaInfo implements VaInfoInterface
         preg_match_all('/\%\w/', $pattern, $elements);
 
         // Mangle the pattern by turning the codes into regex captures
-        $pattern = preg_replace('/\%[d]/', '([0-9]?)', $pattern);
+        $pattern = preg_replace('/\%d/', '([0-9]?)', $pattern);
         $pattern = preg_replace('/\%[TyY]/', '([0-9]+?)', (string)$pattern);
         $pattern = preg_replace('/\%\w/', '(.+?)', (string)$pattern);
         $pattern = str_replace('/', '\/', (string)$pattern);
@@ -1966,7 +1943,7 @@ final class VaInfo implements VaInfoInterface
             $result = explode(';', str_replace("\x00", ';', $data));
         }
 
-        return $result;
+        return $result ?? [];
     }
 
     /**
@@ -1983,7 +1960,7 @@ final class VaInfo implements VaInfoInterface
         //debug_event(self::class, "splitSlashedlist: " . print_r($data, true), 5);
         $delimiters = $this->configContainer->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
         if (!empty($data) && !empty($delimiters)) {
-            $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
+            $pattern = '~\s?(' . $delimiters . ')\s?~';
             $items   = preg_split($pattern, $data) ?: [];
             $items   = array_map('trim', $items);
             if (empty($items)) {

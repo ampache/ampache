@@ -30,22 +30,30 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
 use Generator;
+use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class LatestArtistFeed extends AbstractGenericRssFeed
 {
+    private ServerRequestInterface $request;
+
     public function __construct(
         private ?User $user,
+        ServerRequestInterface $request,
     ) {
+        $this->request = $request;
     }
 
     protected function getTitle(): string
     {
-        return T_('Recently Artists');
+        return T_('Newest Artists');
     }
 
     protected function getItems(): Generator
     {
-        $ids = Stats::get_newest('artist', 10, 0, 0, $this->user);
+        $queryParams = $this->request->getQueryParams();
+        $count       = (int)($queryParams['count'] ?? 10);
+        $offset      = (int)($queryParams['offset'] ?? 0);
+        $ids         = Stats::get_newest('artist', $count, $offset, 0, $this->user);
 
         foreach ($ids as $artistid) {
             $artist = new Artist($artistid);
@@ -57,7 +65,12 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
                 'description' => (string) $artist->summary,
                 'comments' => '',
                 'pubDate' => '',
-                'guid' => 'artist-' . $artist->id,
+                'guid' => (isset($artist->mbid))
+                    ? 'https://musicbrainz.org/artist/' . $artist->mbid
+                    : 'artist-' . $artist->id,
+                'isPermaLink' => (isset($artist->mbid))
+                    ? 'true'
+                    : 'false',
                 'image' => (string)Art::url($artist->id, 'artist', null, 2),
             ];
         }

@@ -334,9 +334,8 @@ class Stream
      * @param Song|Podcast_Episode|Video $media
      * @param array $transcode_settings
      * @param array|string $options
-     * @return array|false
      */
-    public static function start_transcode($media, $transcode_settings, $options = [])
+    public static function start_transcode($media, $transcode_settings, $options = []): array
     {
         $out_file = false;
         if (is_string($options)) {
@@ -347,7 +346,7 @@ class Stream
         if (empty($transcode_settings)) {
             debug_event(self::class, 'Transcode requested, but get_transcode_settings failed', 2);
 
-            return false;
+            return [];
         }
         $song_file = self::scrub_arg($media->file);
         $bit_rate  = (isset($options['bitrate']))
@@ -356,7 +355,7 @@ class Stream
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
 
         // Finalise the command line
-        $command    = $transcode_settings['command'];
+        $command    = (string)$transcode_settings['command'];
         $string_map = [
             '%FILE%' => $song_file,
             '%SAMPLE%' => $bit_rate, // Deprecated
@@ -387,7 +386,7 @@ class Stream
         }
 
         foreach ($string_map as $search => $replace) {
-            $command = str_replace($search, $replace, $command, $ret);
+            $command = (string)str_replace($search, $replace, $command, $ret);
             if ($ret === null) {
                 debug_event(self::class, "$search not in transcode command", 5);
             }
@@ -406,14 +405,13 @@ class Stream
 
     /**
      * This function behaves like escapeshellarg, but isn't broken
-     * @param $arg
      */
-    private static function scrub_arg($arg): string
+    private static function scrub_arg(?string $arg): string
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            return '"' . str_replace(['"', '%'], ['', ''], $arg) . '"';
+            return '"' . str_replace(['"', '%'], ['', ''], (string)$arg) . '"';
         } else {
-            return "'" . str_replace("'", "'\\''", $arg) . "'";
+            return "'" . str_replace("'", "'\\''", (string)$arg) . "'";
         }
     }
 
@@ -440,7 +438,7 @@ class Stream
         // Never upsample a media
         if (isset($media->bitrate) && $media->type == $transcode_settings['format'] && ($bit_rate * 1024) > $media->bitrate && $media->bitrate > 0) {
             debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
-            $bit_rate = self::validate_bitrate($media->bitrate / 1024);
+            $bit_rate = self::validate_bitrate((int)($media->bitrate / 1024));
         }
 
         return $bit_rate;
@@ -464,7 +462,7 @@ class Stream
                 '%TIME%' => $frame
             ];
             foreach ($string_map as $search => $replace) {
-                $command = str_replace($search, $replace, $command, $ret);
+                $command = (string)str_replace($search, $replace, $command, $ret);
                 if ($ret === null) {
                     debug_event(self::class, "$search not in transcode command", 5);
                 }
@@ -487,11 +485,11 @@ class Stream
 
     /**
      * start_process
-     * @param $command
-     * @param array $settings
+     * @param string $command
+     * @param array{format?: string} $settings
      * @return array
      */
-    private static function start_process($command, $settings = []): array
+    private static function start_process(string $command, array $settings = []): array
     {
         debug_event(self::class, "Transcode command: " . $command, 3);
 
@@ -527,9 +525,8 @@ class Stream
 
     /**
      * kill_process
-     * @param $transcoder
      */
-    public static function kill_process($transcoder): void
+    public static function kill_process(array $transcoder): void
     {
         $status = proc_get_status($transcoder['process']);
         if ($status['running']) {
@@ -547,9 +544,8 @@ class Stream
     /**
      * validate_bitrate
      * this function takes a bitrate and returns a valid one
-     * @param $bitrate
      */
-    public static function validate_bitrate($bitrate): int
+    public static function validate_bitrate(int $bitrate): int
     {
         /* Round to standard bitrates */
         return (int) (16 * (floor((int) $bitrate / 16)));

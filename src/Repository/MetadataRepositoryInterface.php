@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\MetadataField;
 use Traversable;
@@ -76,6 +77,7 @@ interface MetadataRepositoryInterface
      * Saves the item
      *
      * @return null|int The id of the item if the item was new
+     * @throws DatabaseException
      */
     public function persist(Metadata $metadata): ?int;
 }

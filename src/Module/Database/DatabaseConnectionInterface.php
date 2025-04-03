@@ -24,6 +24,7 @@
 namespace Ampache\Module\Database;
 
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\Database\Exception\InsertIdInvalidException;
 use PDOStatement;
 
 interface DatabaseConnectionInterface
@@ -39,7 +40,8 @@ interface DatabaseConnectionInterface
      */
     public function query(
         string $sql,
-        array $params = []
+        array $params = [],
+        bool $silent = false,
     ): PDOStatement;
 
     /**
@@ -62,6 +64,7 @@ interface DatabaseConnectionInterface
      * @param list<mixed> $params
      *
      * @return false|array<string, mixed> Will return `false` if row is empty
+     * @throws InsertIdInvalidException
      */
     public function fetchRow(
         string $sql,

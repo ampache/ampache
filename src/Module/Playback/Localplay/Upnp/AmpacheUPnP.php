@@ -225,7 +225,7 @@ class AmpacheUPnP extends localplay_controller
     }
 
     /**
-     * @param Stream_Url $url
+     * add_url
      */
     public function add_url(Stream_Url $url): bool
     {

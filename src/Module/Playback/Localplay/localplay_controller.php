@@ -38,7 +38,7 @@ abstract class localplay_controller
 {
     // Required Functions
     /**
-     * @param Stream_Url $url
+     * add_url
      */
     abstract public function add_url(Stream_Url $url): bool; // Takes an array of song_ids
 

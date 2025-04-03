@@ -97,6 +97,7 @@ final class ArtistSearch implements SearchInterface
                     }
                     $parameters[] = $input;
                     break;
+                case 'id':
                 case 'yearformed':
                     $where[]      = "`artist`.`$rule[0]` $operator_sql ?";
                     $parameters[] = $input;

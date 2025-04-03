@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Api\Api;
+use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use SimpleXMLElement;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -221,6 +223,7 @@ class Preference extends database_object
         'bitly_username',
         'catalogfav_gridview',
         'catalogfav_max_items',
+        'catalogfav_compact',
         'catalogfav_order',
         'discogs_api_key',
         'discogs_secret_api_key',
@@ -578,6 +581,83 @@ class Preference extends database_object
 
         return $results;
     }
+    /**
+     * get_special_values
+     * This returns an array of the values for special preferences which are not kept in the database
+     */
+    public static function get_special_values(string $name, User $user): ?array
+    {
+        switch ($name) {
+            case 'upload_catalog':
+                return $user->get_catalogs('music');
+            case 'playlist_type':
+                return [
+                    'simple_m3u',
+                    'pls',
+                    'asx',
+                    'ram',
+                    'xspf',
+                    'm3u'
+                ];
+            case 'lang':
+                return array_keys(get_languages());
+            case 'localplay_controller':
+                return array_keys(LocalPlayTypeEnum::TYPE_MAPPING);
+            case 'api_force_version':
+                return [
+                    0,
+                    3,
+                    4,
+                    5,
+                    6
+                ];
+            case 'ratingmatch_stars':
+                return [
+                    '0',
+                    '1',
+                    '2',
+                    '3',
+                    '4',
+                    '5',
+                ];
+            case 'localplay_level':
+            case 'upload_access_level':
+                return [
+                    '0',
+                    '5',
+                    '25',
+                    '50',
+                    '75',
+                    '100',
+                ];
+            case 'webplayer_removeplayed':
+                return [
+                    '0',
+                    '1',
+                    '2',
+                    '3',
+                    '5',
+                    '10',
+                    '999',
+                ];
+            case 'transcode':
+                return [
+                    'never',
+                    'default',
+                    'always',
+                ];
+            case 'album_sort':
+                return [
+                    'default',
+                    'year_asc',
+                    'year_desc',
+                    'name_asc',
+                    'name_desc',
+                ];
+        }
+
+        return null;
+    }
 
     /**
      * get
@@ -587,7 +667,6 @@ class Preference extends database_object
      */
     public static function get($pref_name, $user_id): array
     {
-        $user_id    = Dba::escape($user_id);
         $user_limit = ($user_id != -1) ? "AND `preference`.`category` != 'system'" : "";
 
         $sql = sprintf('SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`, `preference`.`type`, `preference`.`category`, `preference`.`subcategory`, `user_preference`.`value` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` WHERE `preference`.`name` = ? AND `user_preference`.`user` = ? AND `preference`.`category` != \'internal\' %s ORDER BY `preference`.`subcategory`, `preference`.`description`', $user_limit);
@@ -1356,6 +1435,7 @@ class Preference extends database_object
             'catalog_check_duplicate' => T_('Check library item at import time and disable duplicates'),
             'catalogfav_gridview' => T_('Catalog favorites grid view display'),
             'catalogfav_max_items' => T_('Catalog favorites max items'),
+            'catalogfav_compact' => T_('Catalog favorites media row display'),
             'catalogfav_order' => T_('Plugin CSS order'),
             'cron_cache' => T_('Cache computed SQL data (eg. media hits stats) using a cron'),
             'custom_blankalbum' => T_('Custom blank album default image'),
@@ -1922,7 +2002,16 @@ class Preference extends database_object
             'bookmark_latest',
             'broadcast_by_default',
             'broadcast',
+            'browse_album_disk_grid_view',
+            'browse_album_grid_view',
+            'browse_artist_grid_view',
             'browse_filter',
+            'browse_live_stream_grid_view',
+            'browse_playlist_grid_view',
+            'browse_podcast_episode_grid_view',
+            'browse_podcast_grid_view',
+            'browse_song_grid_view',
+            'browse_video_grid_view',
             'browser_notify',
             'cache_aif',
             'cache_aiff',
@@ -1942,7 +2031,9 @@ class Preference extends database_object
             'catalog_check_duplicate',
             'catalog_disable',
             'catalog_filter',
+            'catalog_verify_by_album',
             'catalog_verify_by_time',
+            'catalogfav_compact',
             'catalogfav_gridview',
             'composer_no_dev',
             'condPL',

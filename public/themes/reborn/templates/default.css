@@ -1100,6 +1100,13 @@ table.tabledata tbody .cel_add {
     text-align: right;
 }
 
+table.tabledata tbody .cel_add_list {
+    max-width: 80px;
+    min-width: 80px;
+    width: 80px !important;
+    text-align: right;
+}
+
 table.tabledata tbody .cel_item_add {
     display: none;
 }
@@ -1293,6 +1300,7 @@ table.gridview td.cel_cover {
 
 table.gridview td.cel_play,
 table.gridview td.cel_add,
+table.gridview td.cel_add_list,
 table.gridview td.cel_action,
 table.gridview td.cel_year,
 table.gridview td.cel_drag {

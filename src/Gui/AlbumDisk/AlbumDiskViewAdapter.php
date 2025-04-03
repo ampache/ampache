@@ -297,7 +297,7 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
 
     public function getGenre(): string
     {
-        return (string)$this->albumDisk->get_f_tags();
+        return $this->albumDisk->get_f_tags();
     }
 
     public function getSongCount(): int

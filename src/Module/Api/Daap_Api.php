@@ -470,7 +470,7 @@ class Daap_Api
                                 $song_ids[] = $item['object_id'];
                             }
                         }
-                        if (AmpConfig::get('memory_cache')) {
+                        if (AmpConfig::get('memory_cache', false)) {
                             Song::build_cache($song_ids);
                         }
                         $songs = [];

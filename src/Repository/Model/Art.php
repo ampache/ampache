@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Plugin\AmpacheDiscogs;
+use Ampache\Plugin\AmpacheMusicBrainz;
 use Ampache\Plugin\AmpacheTheaudiodb;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\ArtCleanupInterface;
@@ -1205,7 +1206,7 @@ class Art extends database_object
 
     /**
      * Gather metadata from plugin.
-     * @param AmpacheDiscogs|AmpacheTheaudiodb $plugin
+     * @param AmpacheDiscogs|AmpacheTheaudiodb|AmpacheMusicBrainz $plugin
      * @param string $type
      * @param array $options
      * @return list<array{

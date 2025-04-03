@@ -2226,6 +2226,11 @@ parameters:
 			path: src/Module/Api/Method/GetBookmarkMethod.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\GetExternalMetadataMethod\\:\\:get_external_metadata\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/GetExternalMetadataMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\GetIndexesMethod\\:\\:get_indexes\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/GetIndexesMethod.php
@@ -2811,11 +2816,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_albumList\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_apiOutput\\(\\) has parameter \\$alwaysArray with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
@@ -2832,11 +2832,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_check_parameter\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_decryptPassword\\(\\) has parameter \\$password with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
 
@@ -4056,11 +4051,6 @@ parameters:
 			path: src/Module/Application/Admin/Catalog/AbstractCatalogAction.php
 
 		-
-			message: "#^Comparison operation \"\\=\\=\" between \\(array\\<int, string\\>\\|string\\) and int\\|string results in an error\\.$#"
-			count: 1
-			path: src/Module/Application/Image/AbstractShowAction.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Module/Application/Installation/DefaultAction.php
@@ -4244,16 +4234,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:\\$logger is never read, only written\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/MetaTagCollectorModule.php
-
-		-
-			message: "#^Cannot access property \\$asin on array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/MusicbrainzCollectorModule.php
-
-		-
-			message: "#^Cannot access property \\$relations on array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/MusicbrainzCollectorModule.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MusicbrainzCollectorModule\\:\\:collect\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
@@ -5536,11 +5516,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:CallAsyncURL\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:CallAsyncURL\\(\\) has parameter \\$url with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
@@ -5551,7 +5526,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:GetPlaylistItems\\(\\) has no return type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:GetPlaylistItems\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
@@ -5562,16 +5537,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:PlaylistRemove\\(\\) has parameter \\$track with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:ReadIndState\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:SetIntState\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
@@ -5721,7 +5686,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:get_tracks\\(\\) has no return type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:get_tracks\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
@@ -5901,27 +5866,12 @@ parameters:
 			path: src/Module/Playback/Stream.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:kill_process\\(\\) has parameter \\$transcoder with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:scrub_arg\\(\\) has parameter \\$arg with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:kill_process\\(\\) has parameter \\$transcoder with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:set_output_cache\\(\\) has parameter \\$output with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:start_process\\(\\) has parameter \\$command with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:start_process\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -5942,11 +5892,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:start_transcode\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:validate_bitrate\\(\\) has parameter \\$bitrate with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -6126,7 +6071,7 @@ parameters:
 			path: src/Module/Song/Tag/SongTagWriter.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:search_txxx\\(\\) has parameter \\$ndata with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:search_txxx\\(\\) has parameter \\$ndata with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Song/Tag/SongTagWriter.php
 
@@ -6637,11 +6582,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:__construct\\(\\) has parameter \\$captcha_id with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:generate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha.php
 
@@ -7381,11 +7321,6 @@ parameters:
 			path: src/Module/Util/Graph.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:get_catalog_all_pts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:get_catalog_files_pts\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
@@ -7397,11 +7332,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:get_geolocation_pts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:get_user_all_pts\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
 
@@ -7441,16 +7371,6 @@ parameters:
 			path: src/Module/Util/Graph.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_user_bandwidth\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_user_hits\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
 			message: "#^Parameter \\#2 \\$Format of method CpChart\\\\Data\\:\\:setXAxisDisplay\\(\\) expects array\\|null, string given\\.$#"
 			count: 4
 			path: src/Module/Util/Graph.php
@@ -7464,26 +7384,6 @@ parameters:
 			message: "#^Parameter \\#3 \\$Format of method CpChart\\\\Data\\:\\:setAxisDisplay\\(\\) expects array\\|null, string given\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:setBrowser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Horde_Browser.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:setFeature\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Horde_Browser.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:setPlatform\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Horde_Browser.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:setQuirk\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Horde_Browser.php
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:\\$_accept is never read, only written\\.$#"
@@ -7519,11 +7419,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:\\$_tablet is never read, only written\\.$#"
 			count: 1
 			path: src/Module/Util/Horde_Browser.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\MailerInterface\\:\\:send_to_group\\(\\) has parameter \\$group_name with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/MailerInterface.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\MemoryObject\\:\\:__construct\\(\\) has parameter \\$data with no type specified\\.$#"
@@ -8136,11 +8031,6 @@ parameters:
 			path: src/Module/Util/Ui.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:update_text\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
 			message: "#^PHPDoc tag @var above a method has no effect\\.$#"
 			count: 1
 			path: src/Module/Util/Ui.php
@@ -8281,7 +8171,7 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_parse_general\\(\\) has parameter \\$tags with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_parse_general\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -8302,11 +8192,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:clean_tag_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:get_mbid_array\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -8332,11 +8217,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:parseArtists\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:parseArtists\\(\\) should return array but returns array\\<int, string\\>\\|null\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -8386,7 +8266,7 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:write_id3\\(\\) has parameter \\$tagData with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:write_id3\\(\\) has parameter \\$tagData with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -8466,7 +8346,7 @@ parameters:
 			path: src/Module/Util/VaInfoInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:write_id3\\(\\) has parameter \\$tagData with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:write_id3\\(\\) has parameter \\$tagData with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfoInterface.php
 
@@ -8561,26 +8441,6 @@ parameters:
 			path: src/Plugin/AmpacheDiscogs.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:query_discogs\\(\\) has parameter \\$query with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:search_album\\(\\) has parameter \\$album with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:search_album\\(\\) has parameter \\$artist with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:search_artist\\(\\) has parameter \\$artist with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:\\$maxitems has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheFriendsTimeline.php
@@ -8663,16 +8523,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:get_metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^PHPDoc tag @var for variable \\$results has no value type specified in iterable type array\\.$#"
-			count: 8
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^PHPDoc tag @var for variable \\$track has no value type specified in iterable type array\\.$#"
-			count: 2
 			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
@@ -9576,6 +9426,11 @@ parameters:
 			path: src/Repository/Model/Preference.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:get_special_values\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Preference.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:update\\(\\) has parameter \\$value with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Preference.php
@@ -9991,17 +9846,7 @@ parameters:
 			path: src/Repository/Model/Tag.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_merged_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_object_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
 

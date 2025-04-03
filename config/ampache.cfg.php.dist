@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 77
+config_version = 80
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -278,7 +278,7 @@ getid3_tag_order = "vorbiscomment,id3v2,id3v1,quicktime,matroska,ape,asf,avi,mpe
 ; POSSIBLE VALUES (builtins): filename and getID3
 ; POSSIBLE VALUES (plugins): MusicBrainz,TheAudioDb, plus any others you've installed.
 ; DEFAULT: getID3 filename
-metadata_order = "getID3,MusicBrainz,TheAudioDb,filename"
+metadata_order = "getID3,filename"
 
 ; This determines the order in which metadata sources are used (and in the
 ; case of plugins, checked) for video files
@@ -298,6 +298,13 @@ deferred_ext_metadata = "true"
 ; This setting takes a regex pattern. TODO: explain that this is not just for genres until we can replace this safely
 ; DEFAULT: "[/]{2}|[/\\|,;]" (Split on "//", "_", "/", "\", "|", "," and ";")
 additional_genre_delimiters = "[/]{2}|[_/\\|,;]"
+
+; Split Artist and Album Artist tags by regex; keeping the first result.
+; Some clients add a \\ to their tags to support multiple artists. Ampache assumes that these tags are a single name.
+; The string must not have spaces around the delimiter to allow for bands who use \\ in their name.
+; NOTE: This is usually a single string tag so it's not enabled by default. The final regex is '/[^ ]\\\\[^ ]/'
+; DEFAULT: "\\\\"
+;split_artist_regex = "\\\\"
 
 ; Enable importing custom metadata from files.
 ; This will need a bit of time during the import. So you may want to disable this
@@ -381,6 +388,12 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; speed things up by checking modification date using filemtime() before loading
 ; DEFAULT: "false"
 ;catalog_verify_by_time = "true"
+
+; Catalog verify by album groups
+; Ampache will verify songs individually by default. If you enable this setting
+; We will update each album instead of just the individual songs.
+; DEFAULT: "false"
+;catalog_verify_by_album = "true"
 
 ;#########################################################
 ; Program Settings                                       #
@@ -759,6 +772,20 @@ lastfm_api_secret = ""
 ; accessing their catalog API. (https://developer.spotify.com/dashboard/)
 ; DEFAULT: none
 ;spotify_client_id = ""
+
+; MusicBrainz API username
+; If you make a lot of requests you should use your MusicBrainz API account
+; This can help with rate limiting as MusicBrainz servers limit all requests
+; Your account can be created at https://musicbrainz.org/register
+; DEFAULT: none
+;musicbrainz_username = ""
+
+; MusicBrainz API password
+; If you make a lot of requests you should use your MusicBrainz API account
+; This can help with rate limiting as MusicBrainz servers limit all requests
+; Your account can be created at https://musicbrainz.org/register
+; DEFAULT: none
+;musicbrainz_password = ""
 
 ; Spotify client secret
 ; Both id and secret are required to access the spotify catalog.

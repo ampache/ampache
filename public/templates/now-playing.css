@@ -62,6 +62,7 @@ label {
     justify-content: center;
     flex-direction: column;
     padding-left: 10px;
+    max-width: 25%;
 }
 
 #np_group_3,

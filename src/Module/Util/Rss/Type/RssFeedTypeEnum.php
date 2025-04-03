@@ -34,5 +34,6 @@ enum RssFeedTypeEnum: string
     case LATEST_ALBUM    = 'latest_album';
     case LATEST_ARTIST   = 'latest_artist';
     case LATEST_SHOUT    = 'latest_shout';
+    case LATEST_SONG     = 'latest_song';
     case LIBRARY_ITEM    = 'library_item';
 }

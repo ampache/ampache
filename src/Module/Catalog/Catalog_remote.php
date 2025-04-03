@@ -23,6 +23,7 @@
 
 namespace Ampache\Module\Catalog;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Core;
@@ -210,7 +211,7 @@ class Catalog_remote extends Catalog
      * @return int
      * @throws Exception
      */
-    public function add_to_catalog($options = null): int
+    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Remote Update'));
@@ -405,7 +406,7 @@ class Catalog_remote extends Catalog
     /**
      * verify_catalog_proc
      */
-    public function verify_catalog_proc(): int
+    public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
     {
         return 0;
     }
@@ -415,7 +416,7 @@ class Catalog_remote extends Catalog
      *
      * Removes remote songs that no longer exist.
      */
-    public function clean_catalog_proc(): int
+    public function clean_catalog_proc(?Interactor $interactor = null): int
     {
         $remote_handle = $this->connect();
         if (!$remote_handle) {
@@ -549,13 +550,12 @@ class Catalog_remote extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      * @param string $song_url
-     * @return int|bool
      */
-    public function check_remote_song($song_url)
+    public function check_remote_song($song_url): ?int
     {
         $url = preg_replace('/ssid=.*&/', '', $song_url);
         if (!$url) {
-            return false;
+            return null;
         }
         $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
         $db_results = Dba::read($sql, [$url]);
@@ -564,7 +564,7 @@ class Catalog_remote extends Catalog
             return (int)$results['id'];
         }
 
-        return false;
+        return null;
     }
 
     /**

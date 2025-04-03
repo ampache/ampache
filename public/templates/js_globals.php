@@ -41,7 +41,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
     var jsAmpConfigGeolocation = "<?php echo make_bool(AmpConfig::get('geolocation')); ?>";
     var jsAmpConfigLibitemContextmenu = "<?php echo make_bool(AmpConfig::get('libitem_contextmenu')); ?>";
     var jsAmpConfigPlayType = "<?php echo AmpConfig::get('play_type'); ?>";
-    var jsAmpConfigSlideshowTime = "<?php echo make_bool(AmpConfig::get('slideshow_time')); ?>";
+    var jsAmpConfigSlideshowTime = "<?php echo (int)(AmpConfig::get('slideshow_time', 0)); ?>";
     var jsAmpConfigSidebarHideSwitcher = "<?php echo make_bool(AmpConfig::get('sidebar_hide_switcher', false)); ?>";
 
     // Preferences

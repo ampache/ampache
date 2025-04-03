@@ -53,8 +53,9 @@ use Ampache\Repository\Model\Userflag;
     </div>
 </td>
 <td class="cel_playlist"><?php echo $libitem->get_f_link(); ?></td>
-<td class="cel_add">
+<td class="cel_add_list">
     <span class="cel_item_add">
+        <?php echo Ajax::button('?page=random&action=send_playlist&random_type=search&random_id=' . $libitem->id, 'autorenew', T_('Random Play'), 'play_random_' . $libitem->id); ?>
         <?php echo Ajax::button('?action=basket&type=search&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'add_playlist_' . $libitem->id); ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'search', '<?php echo $libitem->id; ?>')">
             <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>

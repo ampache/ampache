@@ -27,6 +27,7 @@ namespace Ampache\Module\Util\Rss\Type;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
+use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
@@ -50,6 +51,28 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
         $element = array_shift($data);
 
         return $element['expire'] ?? null;
+    }
+
+    /**
+     * Feed image link
+     */
+    protected function getImage(): ?string
+    {
+        // Little redundant, should be fixed by an improvement in the get_now_playing stuff
+        $data    = Stream::get_now_playing();
+        $element = array_shift($data);
+
+        /** @var Song|Video|null $media */
+        $media = $element['media'] ?? null;
+        if ($media === null) {
+            return null;
+        }
+
+        $type = ($media instanceof Video)
+            ? 'video'
+            : 'song';
+
+        return (string)Art::url($media->getId(), $type, null, 2);
     }
 
     protected function getItems(): Generator
@@ -89,7 +112,12 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
                 'description' => str_replace('<p>Artist: </p><p>Album: </p>', '', $description),
                 'comments' => $client->get_link(),
                 'pubDate' => date("r", (int)$element['expire']),
-                'guid' => $element['expire'] . '-' . $client->getId() . '-' . $media->getId(),
+                'guid' => (isset($media->mbid))
+                    ? 'https://musicbrainz.org/recording/' . $media->mbid
+                    : $element['expire'] . '-' . $client->getId() . '-' . $media->getId(),
+                'isPermaLink' => (isset($media->mbid))
+                    ? 'true'
+                    : 'false',
             ];
         }
     }

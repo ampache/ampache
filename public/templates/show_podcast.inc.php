@@ -69,7 +69,7 @@ Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $th
     </span>
 <?php } ?>
 <div id="information_actions">
-    <h3><?php echo T_('Actions'); ?>:</h3>
+    <h3><?php echo T_('Actions'); ?></h3>
     <ul>
         <?php if (AmpConfig::get('directplay')) { ?>
         <li>

@@ -1452,7 +1452,7 @@ class Upnp_Api
      * @param string|null $title
      * @return string
      */
-    private static function _replaceSpecialSymbols($title)
+    private static function _replaceSpecialSymbols($title): string
     {
         /*
          * replace non letter or digits

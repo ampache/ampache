@@ -90,7 +90,12 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
                     ),
                     'comments' => $client->get_link(),
                     'pubDate' => date("r", (int)$item['date']),
-                    'guid' => $item['date'] . '-' . $client->getId() . '-' . $song->getId(),
+                    'guid' => (isset($song->mbid))
+                        ? 'https://musicbrainz.org/recording/' . $song->mbid
+                        : $item['date'] . '-' . $client->getId() . '-' . $song->getId(),
+                    'isPermaLink' => (isset($song->mbid))
+                        ? 'true'
+                        : 'false',
                 ];
             }
         }

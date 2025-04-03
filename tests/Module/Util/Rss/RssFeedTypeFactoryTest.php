@@ -40,6 +40,7 @@ use Ampache\Repository\ShoutRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class RssFeedTypeFactoryTest extends TestCase
@@ -104,7 +105,8 @@ class RssFeedTypeFactoryTest extends TestCase
         static::assertInstanceOf(
             LatestAlbumFeed::class,
             $this->subject->createLatestAlbumFeed(
-                $this->createMock(User::class)
+                $this->createMock(User::class),
+                $this->createMock(ServerRequestInterface::class)
             )
         );
     }
@@ -114,7 +116,8 @@ class RssFeedTypeFactoryTest extends TestCase
         static::assertInstanceOf(
             LatestArtistFeed::class,
             $this->subject->createLatestArtistFeed(
-                $this->createMock(User::class)
+                $this->createMock(User::class),
+                $this->createMock(ServerRequestInterface::class)
             )
         );
     }
