@@ -18,9 +18,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.9
--- Generation Time: Feb 17, 2025 at 11:19 PM
--- Server version: 11.4.4-MariaDB-3
--- PHP Version: 8.3.16
+-- Generation Time: Apr 03, 2025 at 12:03 AM
+-- Server version: 10.11.6-MariaDB-0+deb12u1-log
+-- PHP Version: 8.3.17
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -890,7 +890,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (23, 'lock_songs', '0', 'Lock Songs', 100, 'boolean', 'system', NULL),
 (24, 'force_http_play', '0', 'Force HTTP playback regardless of port', 100, 'boolean', 'system', NULL),
 (29, 'play_type', 'web_player', 'Playback Type', 25, 'special', 'streaming', NULL),
-(31, 'lang', 'en_US', 'Language', 100, 'special', 'interface', NULL),
+(31, 'lang', 'en-US', 'Language', 100, 'special', 'interface', NULL),
 (32, 'playlist_type', 'm3u', 'Playlist Type', 100, 'special', 'playlist', NULL),
 (33, 'theme_name', 'reborn', 'Theme', 0, 'special', 'interface', 'theme'),
 (40, 'localplay_level', '0', 'Localplay Access', 100, 'special', 'options', 'localplay'),
@@ -910,7 +910,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'last.fm'),
 (82, 'now_playing_per_user', '1', 'Now Playing filtered per user', 50, 'boolean', 'interface', 'home'),
 (83, 'album_sort', '0', 'Album - Default sort', 25, 'string', 'interface', 'library'),
-(84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface', 'browse'),
+(84, 'show_played_times', '0', 'Show # played', 25, 'boolean', 'interface', 'browse'),
 (85, 'song_page_title', '1', 'Show current song in Web Player page title', 25, 'boolean', 'interface', 'player'),
 (86, 'subsonic_backend', '1', 'Use Subsonic backend', 100, 'boolean', 'system', 'backend'),
 (88, 'webplayer_flash', '1', 'Authorize Flash Web Player', 25, 'boolean', 'streaming', 'player'),
@@ -944,19 +944,19 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend'),
 (119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend'),
 (120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend'),
-(121, 'allow_video', '0', 'Allow Video Features', 75, 'integer', 'options', 'feature'),
+(121, 'allow_video', '0', 'Allow Video Features', 75, 'boolean', 'options', 'feature'),
 (122, 'album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface', 'library'),
 (123, 'ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface', NULL),
 (124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface', 'player'),
-(125, 'home_moment_albums', '1', 'Show Albums of the Moment', 25, 'integer', 'interface', 'home'),
-(126, 'home_moment_videos', '0', 'Show Videos of the Moment', 25, 'integer', 'interface', 'home'),
-(127, 'home_recently_played', '1', 'Show Recently Played', 25, 'integer', 'interface', 'home'),
-(128, 'home_now_playing', '1', 'Show Now Playing', 25, 'integer', 'interface', 'home'),
+(125, 'home_moment_albums', '1', 'Show Albums of the Moment', 25, 'boolean', 'interface', 'home'),
+(126, 'home_moment_videos', '0', 'Show Videos of the Moment', 25, 'boolean', 'interface', 'home'),
+(127, 'home_recently_played', '1', 'Show Recently Played', 25, 'boolean', 'interface', 'home'),
+(128, 'home_now_playing', '1', 'Show Now Playing', 25, 'boolean', 'interface', 'home'),
 (129, 'custom_logo', '', 'Custom URL - Logo', 25, 'string', 'interface', 'custom'),
 (130, 'album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type sort', 25, 'string', 'interface', 'library'),
-(131, 'browser_notify', '1', 'Web Player browser notifications', 25, 'integer', 'interface', 'notification'),
+(131, 'browser_notify', '1', 'Web Player browser notifications', 25, 'boolean', 'interface', 'notification'),
 (132, 'browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', 25, 'integer', 'interface', 'notification'),
-(133, 'geolocation', '0', 'Allow Geolocation', 25, 'integer', 'options', 'feature'),
+(133, 'geolocation', '0', 'Allow Geolocation', 25, 'boolean', 'options', 'feature'),
 (134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', 25, 'boolean', 'streaming', 'player'),
 (135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 100, 'boolean', 'system', 'upload'),
 (136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom'),
@@ -1008,8 +1008,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (184, 'bookmark_latest', '0', 'Only keep the latest media bookmark', 25, 'boolean', 'options', NULL),
 (185, 'jp_volume', '0.8', 'Default webplayer volume', 25, 'special', 'streaming', 'player'),
 (186, 'perpetual_api_session', '0', 'API sessions do not expire', 100, 'boolean', 'system', 'backend'),
-(187, 'home_recently_played_all', '1', 'Show all media types in Recently Played', 25, 'bool', 'interface', 'home'),
-(188, 'show_wrapped', '1', 'Enable access to your personal \"Spotify Wrapped\" from your user page', 25, 'bool', 'interface', 'privacy'),
+(187, 'home_recently_played_all', '1', 'Show all media types in Recently Played', 25, 'boolean', 'interface', 'home'),
+(188, 'show_wrapped', '1', 'Enable access to your personal \"Spotify Wrapped\" from your user page', 25, 'boolean', 'interface', 'privacy'),
 (189, 'sidebar_hide_switcher', '0', 'Hide sidebar switcher arrows', 25, 'boolean', 'interface', 'sidebar'),
 (190, 'sidebar_hide_browse', '0', 'Hide the Browse menu in the sidebar', 25, 'boolean', 'interface', 'sidebar'),
 (191, 'sidebar_hide_dashboard', '0', 'Hide the Dashboard menu in the sidebar', 25, 'boolean', 'interface', 'sidebar'),
@@ -1464,7 +1464,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '721001'),
+('db_version', '740001'),
 ('Plugin_Last.FM', '000005'),
 ('Plugin_Home Dashboard', '2');
 
