@@ -45,7 +45,7 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * Update `public/.htaccess.dist`
 * Only audit NPM production modules
 * Move prettyphoto into lib/modules. (Dead project marked as Malware by NPM)
-* After updating Album and Artist object tags only update conts for affected Artists
+* After updating Album and Artist object tags only update counts for affected Artists
 * Restore gather art on website Add actions
 * Don't collect garbage continually when doing a large verify action
 * Update individual counts for Artists after changes
@@ -60,7 +60,7 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * Jplayer
   * Repeat the current song if you press previous and there isn't a loop situation
 * webplayer
-  * Rearrange the buttons to make them aling better with different config
+  * Rearrange the buttons to make them align better with different config
   * Only show the slideshow button if you have a slideshow plugin enabled. (flickr)
 
 ### Fixed
