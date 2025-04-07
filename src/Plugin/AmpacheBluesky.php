@@ -29,15 +29,15 @@ use Ampache\Repository\Model\User;
 
 class AmpacheBluesky extends AmpachePlugin implements PluginExternalShareInterface
 {
-    public string $name        = 'Bluesky';
+    public string $name = 'Bluesky';
 
-    public string $categories  = 'share';
+    public string $categories = 'share';
 
     public string $description = 'Bluesky share';
 
-    public string $url         = 'https://bsky.app/';
+    public string $url = 'https://bsky.app/';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370027';
 

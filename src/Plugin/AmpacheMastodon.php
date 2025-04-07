@@ -25,19 +25,20 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\User;
 
 class AmpacheMastodon extends AmpachePlugin implements PluginExternalShareInterface
 {
-    public string $name        = 'Mastodon';
+    public string $name = 'Mastodon';
 
-    public string $categories  = 'share';
+    public string $categories = 'share';
 
     public string $description = 'Mastodon share';
 
-    public string $url         = 'https://mastodon.social/';
+    public string $url = 'https://fosstodon.org/';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370027';
 
@@ -83,7 +84,7 @@ class AmpacheMastodon extends AmpachePlugin implements PluginExternalShareInterf
      */
     public function external_share(string $url, string $text): string
     {
-        $share = \Ampache\Config\AmpConfig::get_web_path() . "/tootpick.html#text=" . rawurlencode($text) . " " . rawurlencode($url);
+        $share = AmpConfig::get_web_path() . "/tootpick.html#text=" . rawurlencode($text) . " " . rawurlencode($url);
 
         return $share;
     }
