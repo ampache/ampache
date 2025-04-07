@@ -51,6 +51,7 @@ final class PluginEnum
         'librefm' => Ampachelibrefm::class,
         'listenbrainz' => Ampachelistenbrainz::class,
         'lyrist' => AmpacheLyristLyrics::class,
+        'mastodon' => AmpacheMastodon::class,
         'matomo' => AmpacheMatomo::class,
         'musicbrainz' => AmpacheMusicBrainz::class,
         'paypal' => AmpachePaypal::class,

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<meta charset=UTF-8>
+<title>Tootpick</title>
+
+<!-- Used for Mastodon plugin -->
+
+<!--
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+-->
+
+<meta name=viewport content="width=device-width, initial-scale=1">
+<meta name=referrer content=no-referrer>
+<meta http-equiv=Content-Security-Policy content="default-src 'self' 'unsafe-inline' https:; connect-src https:; img-src  https:">
+<link rel=icon href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 -14 16 16'&gt;&lt;text&gt;🔁&lt;/text&gt;&lt;/svg&gt;">
+<style>
+	* {
+		box-sizing: border-box;
+	}
+	html {
+		height: 100%;
+		padding: 0;
+		margin: 0;
+	}
+	body {
+		padding: 0;
+		margin: 0;
+		display: flex;
+		min-height: 100%;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		background: #d9dce6;
+		background-size: cover;
+		background-position: 50% 50%;
+		line-height: 120%;
+		color: white;
+		font-family: sans-serif;
+		font-size: 15px;
+	}
+	main * {
+		font: inherit;
+		border: 0;
+		border-radius: 4px;
+	}
+	:focus {
+		outline: 1px dashed #eee;
+		outline-offset: 2px;
+	}
+	::placeholder {
+		font-style: italic;
+		color: #666;
+	}
+	a, summary {
+		color: inherit;
+		text-decoration: underline;
+		cursor: pointer;
+	}
+	a:hover, summary:hover {
+		filter: brightness(150%);
+	}
+	main {
+		display: flex;
+		flex-direction: column;
+		gap: .8em;
+		background: #444b5d;
+		border-radius: 4px;
+		padding: .8em;
+		max-width: 40rem;
+		margin-top: auto;
+		margin-bottom: auto;
+		transition: opacity 1s; /* same as JS timeout */
+		opacity: 1;
+	}
+	.transparent {
+		opacity: 0;
+	}
+	#message {
+		margin: 0;
+		background: white;
+		padding: .5em;
+		width: 100%;
+		background: #eee;
+		color: #222;
+		max-height: 9em;
+		overflow: auto;
+		cursor: not-allowed;
+	}
+	#message:hover {
+		background: #ccc;
+		color: #888;
+	}
+	#inputline {
+		display: flex;
+		align-items: center;
+		gap: .5em;
+		flex-wrap: wrap;
+	}
+	#inputline label {
+		flex: 1 0 auto;
+		display: flex;
+		align-items: center;
+	}
+	#inputline span#server {
+		white-space: nowrap;
+		margin-right: .5em;
+	}
+	input#instance {
+		padding: .2em .5em;
+		flex: 1 1 30em;
+		min-width: 10em;
+	}
+	input#instance:focus {
+		outline: 0;
+	}
+	button, input[type="submit"] {
+		background: #5455ff;
+		color: #fff;
+		padding: 7px 10px;
+		font-weight: 500;
+		font-size: 15px;
+		cursor: pointer;
+	}
+	button:hover, input[type="submit"]:hover {
+		background: #6364ff;
+	}
+	button:focus, input[type="submit"]:focus {
+		outline-offset: -5px;
+	}
+	#toot {
+		margin-left: auto;
+	}
+	#recent {
+		display: flex;
+		justify-content: space-around;
+		flex-wrap: wrap;
+		gap: .5em;
+	}
+	#recent > button {
+		flex: 0 1 140px;
+		display: flex;
+		flex-direction: column;
+		gap: .5em;
+		align-items: center;
+		padding-top: .5em;
+		position: relative;
+		margin-top: 1em;
+	}
+	#recent > button img {
+		width: 120px;
+		aspect-ratio: 1200/630;
+		object-fit: cover;
+	}
+	button.delete {
+		background: black;
+		color: #df405a;
+		position: absolute;
+		padding: .2em .3em;
+		top: .2em;
+		right: .2em;
+	}
+	button.delete::after {
+		content: '\002716';  /* HEAVY MULTIPLICATION X */
+	}
+	button.delete:hover {
+		background: #df405a;
+		color: white;
+	}
+	footer {
+		color: #1a1a1a;
+		padding: 1em;
+		text-align: center;
+	}
+	#statusline {
+		padding: .5em;
+		background: #9baec8;
+		color: black;
+	}
+	#statusline.error {
+		background: #df405a;
+		color: black;
+	}
+	.hidden {
+		display: none !important;
+	}
+	footer details:not([open]) {
+		display: inline-block;
+	}
+	footer details:not([open])::before {
+		content: '\0000B7\000020';  /* MIDDLE DOT, SPACE */
+	}
+	footer summary {
+		display: inline-block;
+	}
+	footer details[open] {
+		border: 1px solid #aaa;
+		padding: .5em;
+		max-width: 40em;
+		margin: .5em auto;
+	}
+	h4 {
+		margin: .5em;
+	}
+	@media (prefers-color-scheme: dark) {
+		body {
+			background: #191b22;
+		}
+		footer {
+			color: #aaa;
+		}
+	}
+</style>
+
+<script>
+	let message;
+	let notMastodon = 'That does not appear to be a Mastodon server.';
+	let timers = [];
+
+	function $(q) {
+		return document.querySelector(q);
+	}
+
+	function resetStyle() {
+		document.body.style.backgroundImage = 'none';
+		$('main').classList.remove('transparent');
+	}
+
+	function error(msg) {
+		let el = $('#statusline');
+		el.innerText = msg;
+		el.classList.add('error');
+		el.classList.remove('hidden');
+	}
+
+	function clearStatus() {
+		let el = $('#statusline');
+		el.classList.add('hidden');
+		el.classList.remove('error');
+		el.innerText = '';
+	}
+
+	function status(msg) {
+		let el = $('#statusline');
+		el.innerText = msg;
+		el.classList.remove('error');
+		el.classList.remove('hidden');
+	}
+
+	function setLocationGlobals() {
+		let hash = document.location.hash.replace(/^#/, '');
+		let args = {};
+		for (let arg of hash.split('&')) {
+			let i = arg.indexOf('=');  // .split() can't preserve a second "="
+			let k = arg.substr(0, i);
+			let v = arg.substr(i + 1);
+			try { args[ decodeURIComponent(k) ] = decodeURIComponent(v); }
+			catch (e) { }  // ignore URIError
+		}
+		message = args['text'] || "If you want a 'share with Mastodon' link on your website, have a look at Tootpick. https://tootpick.org/ #mastodon #tootpick";
+		if (args['plustospace'] == "yes") message = message.replace(/\+/g, " ");
+
+		$("#message").innerText = message;
+	}
+
+	function getRecent() {
+		try { return JSON.parse(localStorage.getItem('recent')) || []; }
+		catch (e) { return []; }
+	}
+
+	function setRecent(obj) {
+		// Deduplicate
+		let seen = new Set();
+		obj = obj.filter(x => {
+			let key = x['domain'];
+			return seen.has(key) ? false : seen.add(key);
+		});
+
+		// The box will show 2, 3, or 4 per row, limit of 12 ensures
+		// truncating at a whole row.
+		if (obj.length > 12) obj.length = 12;
+
+		localStorage.setItem('recent', JSON.stringify(obj));
+	}
+
+	function populateRecent() {
+		let recent = getRecent();
+
+		if (!recent.length) {
+			$("#recent").classList.add('hidden');
+			return;
+		}
+
+		$('#recent').innerHTML = '';
+
+		for (let item of getRecent()) {
+			let div = document.createElement('button');
+			div.dataset['instance'] = JSON.stringify(item);
+			let img = document.createElement('img');
+			img.src = item['thumbnail'];
+			img.setAttribute('alt', '');  // intentional empty string
+			let del = document.createElement('button');
+			del.classList.add('delete');
+			del.setAttribute('title', 'Forget ' + item['domain']);
+			let text = document.createElement('div');
+			text.innerText = "Continue with\n" + item['domain'];
+
+			div.setAttribute('title', item['title']);
+			div.appendChild(del);
+			div.appendChild(img);
+			div.appendChild(text);
+			$('#recent').appendChild(div);
+		}
+	}
+
+	function tootRedirect(domain, message) {
+		document.location = `https://${domain}/share?text=${ encodeURIComponent(message) }`;
+	}
+
+	function tryNewInstance(domain, message) {
+		status(`Connecting to ${domain}...`);
+
+		fetch(`https://${domain}/api/v1/instance`)
+		.then((resp) => resp.json())
+		.then(function (data) {
+			if (!data['version'] || data['version'].match(/compatible/i)) {
+				error(notMastodon);
+				return;
+			}
+			let thumbnail = data['thumbnail'];
+			let title = data['title'];
+
+			if ($('#remember').checked) {
+				let recent = getRecent();
+				recent.unshift({ domain, thumbnail, title });
+				setRecent(recent);
+			}
+
+			let redirect = () => tootRedirect(domain, message);
+			// backgroundImage doesn't trigger events; dummy image will load
+			// while background is also loaded, browser uses single connection
+			// for both.
+			let dummy = new Image();
+			dummy.addEventListener('error', redirect);  // no point in waiting
+			dummy.addEventListener('load', () => {
+				timers.push(setTimeout(redirect, 1000));
+				$("main").classList.add('transparent');
+				// backgroundImage not set here but loading in parallel,
+				// so visitor can see loading happening
+			});
+			dummy.src = thumbnail;
+			document.body.style.backgroundImage = `url(${thumbnail})`;
+			timers.push(setTimeout(redirect, 3500));  // fallback;
+		})
+		.catch((err) => {
+			// Can't do real webfinger, because that needs an acct: parameter.
+			// But we can at least do an opportunistic attempt to support
+			// *some* servers where WEB_DOMAIN != LOCAL_DOMAIN. This only
+			// works if the redirect and the target both allow CORS.
+			fetch(`https://${domain}/.well-known/webfinger`)
+			.then((resp) => {
+				if (resp.redirected) {
+					let found = resp.url.match(/^https:\/\/([^\/]+)\/\.well-known\/webfinger/);
+					if (found) tryNewInstance(found[1], message);
+					else throw(new Error('Weird webfinger'));
+				} else {
+					throw(new Error('No webfinger'));
+				}
+			})
+			.catch((err) => error(notMastodon));
+		});
+
+	}
+
+	window.addEventListener('hashchange', setLocationGlobals);
+
+	window.addEventListener('pageshow', () => {
+		while (timers.length) clearTimeout(timers.shift());
+		resetStyle();
+		setLocationGlobals();
+		populateRecent();
+		clearStatus();
+	});
+
+	window.addEventListener('DOMContentLoaded', () => {
+		$("#instance").addEventListener('keydown', clearStatus);
+		$("#instance").addEventListener('click', clearStatus);
+
+		$("#message").addEventListener('click', () => {
+			status($("#message").getAttribute('title'))
+		});
+
+		$("form").addEventListener('submit', (e) => {
+			e.preventDefault();
+
+			// domain is expected, but user might enter URL
+			let instance = $("#instance").value.trim();
+
+			if (instance == '') {
+				error($("#instance").closest("label").getAttribute("title"));
+				return;
+			}
+
+			// remove trailing slash and username, if present
+			instance = instance.replace(/\/+(?:@.*)?$/, "");
+
+			// newbies may write https:foo or https//foo too.
+			instance = instance.replace(/^https?\W+/, "");
+
+			// Deal with user@host and @user@host, and for really advanced
+			// newbies, acct:user@host because why not :)
+			instance = instance.replace(/^(?:acct:)?@?[^@]+@/, "");
+
+			// Some advanced users may enter an FQDN with a trailing dot, but
+			// that needs to be normalized because the domain is used as a
+			// lookup key. Speaking of normalization, let's lowercase.
+			instance = instance.replace(/\.$/, "").toLowerCase();
+
+			// Check whether the input is a valid domain name, in order to
+			// prevent leaking e.g. pasted clipboard text (passwords, credit
+			// card numbers, love letters, ...) via DNS. Can't prevent
+			// every mistake, but let's catch at least the obvious cases.
+			if (! instance.match(/^(?:(?:xn--)?[a-z0-9]+[-.])*[a-z0-9]+\.[a-z]{2,}$/)) {
+				// TODO: support user readable IDN and %-encoded IDN (both uncommon)
+				error('Not a valid internet domain name.');
+				return;
+			}
+
+			$("#instance").value = instance;
+
+			tryNewInstance(instance, message);
+		});
+
+		$("#recent").addEventListener('click', (event) => {
+			let button = event.target.closest('button');
+			if (!button) return;
+
+
+			if (button.classList.contains('delete')) {
+				let instance = JSON.parse( button.parentElement.dataset['instance'] );
+
+				setRecent(getRecent().filter(
+					x => x['domain'] != instance['domain']
+				));
+
+				button.parentElement.remove();
+			} else {
+				let instance = JSON.parse( button.dataset['instance'] );
+				document.body.style.backgroundImage = `url(${ instance['thumbnail'] })`;
+
+				let recent = getRecent();
+				recent.unshift(instance);
+				setRecent(recent);
+
+				$("main").classList.add('transparent');
+				timers.push(setTimeout(() => tootRedirect(instance['domain'], message), 1000));
+			}
+		});
+	});
+</script>
+
+<main data-nosnippet>
+	<noscript>
+		<div class=error>
+		Please enable JavaScript to use this service. This page requires
+		JavaScript to keep all the data in your browser. The alternative would
+		be to send message contents to the server, which would be the worse
+		decision privacy-wise.
+		</div>
+	</noscript>
+	<div>
+		Pick your Mastodon server to toot this message:
+	</div>
+	<blockquote id=message
+		title="You can edit the text on the next page, on your own Mastodon server.">
+	</blockquote>
+	<form id=inputline>
+		<label title="Enter the domain name of your Mastodon server (sometimes called 'instance')">
+			<span id=server>Server:</span>
+			<input id=instance placeholder="social.example.org">
+		</label>
+		<label>
+			<input type=checkbox id=remember checked> Remember
+		</label>
+		<input type=submit id=toot value="Continue">
+	</form>
+	<div id=statusline class="hidden">
+	</div>
+	<div id=recent>
+	</div>
+</main>
+<footer>
+	<a href="https://github.com/Juerd/tootpick">Tootpick</a> is a
+	privacy-preserving instance picker for sharing links from
+	news sites, blogs, etc.<br>
+	<a href="https://github.com/Juerd/tootpick">Add Tootpick to your website</a>
+	<details data-nosnippet>
+		<summary>Legal notices</summary>
+		<h4>License</h4>
+		This program is free software: you can redistribute it and/or modify it
+		under the terms of the <a href="https://www.gnu.org/licenses/agpl-3.0.html">
+		GNU Affero General Public License</a> as published by the Free Software
+		Foundation, either version 3 of the License, or (at your option) any
+		later version.
+		<h4>Disclaimer</h4>
+		This program is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU Affero General Public License for more details.
+		<h4>Privacy poliy</h4>
+		Tootpick does not collect or store any of your data except on your own
+		computer. The server that hosts Tootpick, and the Mastodon servers you
+		enter, will probably store your IP address and User-Agent (browser)
+		identification in a web server log file.
+	</details>
+</footer>
+
