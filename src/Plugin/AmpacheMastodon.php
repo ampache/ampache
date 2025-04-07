@@ -36,8 +36,6 @@ class AmpacheMastodon extends AmpachePlugin implements PluginExternalShareInterf
 
     public string $description = 'Mastodon share';
 
-    public string $url = 'https://fosstodon.org/';
-
     public string $version = '000001';
 
     public string $min_ampache = '370027';
@@ -84,9 +82,7 @@ class AmpacheMastodon extends AmpachePlugin implements PluginExternalShareInterf
      */
     public function external_share(string $url, string $text): string
     {
-        $share = AmpConfig::get_web_path() . "/tootpick.html#text=" . rawurlencode($text) . " " . rawurlencode($url);
-
-        return $share;
+        return AmpConfig::get_web_path() . "/tootpick.html#text=" . rawurlencode($text) . " " . rawurlencode($url);
     }
 
     /**
