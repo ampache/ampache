@@ -34,6 +34,7 @@ final class PluginEnum
         '7digital' => Ampache7digital::class,
         'amazon' => AmpacheAmazon::class,
         'bitly' => AmpacheBitly::class,
+        'bluesky' => AmpacheBluesky::class,
         'catalogfavorites' => AmpacheCatalogFavorites::class,
         'chartlyrics' => Ampachechartlyrics::class,
         'discogs' => AmpacheDiscogs::class,
