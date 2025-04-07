@@ -719,7 +719,7 @@ class Catalog_local extends Catalog
             true
         );
         debug_event('local.catalog', 'found ' . $total . " " . $media_type . " files to update. (last_update: " . $this->last_update . ")", 5);
-        while ($chunk <= $chunks) {
+        while ($chunk < $chunks) {
             $interactor?->info(
                 "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks",
                 true
