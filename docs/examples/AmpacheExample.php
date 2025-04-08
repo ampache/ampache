@@ -80,7 +80,7 @@ class AmpacheExample extends AmpachePlugin
      */
     public function load($user): bool
     {
-        $user->set_preferences();
+        unset($user);
 
         return true;
     }

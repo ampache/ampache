@@ -105,7 +105,7 @@ class AmpacheGravatar extends AmpachePlugin implements PluginGetAvatarUrlInterfa
      */
     public function load(User $user): bool
     {
-        $user->set_preferences();
+        unset($user);
 
         return true;
     }
