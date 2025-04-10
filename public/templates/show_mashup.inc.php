@@ -97,15 +97,10 @@ if (!empty($object_ids)) {
 }
 
 //debug_event('show_mashup.inc', "Popular: Stats::get_top", 5);
-if (
-    $user->getId() < 1 &&
-    is_array($hold_ids)
-) {
-    // public users just need to shuffle the hold_ids for a similar result
-    $object_ids = $hold_ids;
-} else {
-    $object_ids = Stats::get_top($object_type, 100, $threshold, 0, $user);
-}
+// public users just need to shuffle the hold_ids for a similar result
+$object_ids = ( $user->getId() < 1 && is_array($hold_ids))
+    ? $hold_ids
+    : Stats::get_top($object_type, 100, $threshold, 0, $user);
 if (!empty($object_ids)) {
     shuffle($object_ids);
     $object_ids = array_slice($object_ids, 0, $limit);
