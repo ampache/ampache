@@ -104,7 +104,7 @@ if (
     // public users just need to shuffle the hold_ids for a similar result
     $object_ids = $hold_ids;
 } else {
-    $object_ids = Stats::get_top($object_type, $limit, $threshold, 0, $user);
+    $object_ids = Stats::get_top($object_type, 100, $threshold, 0, $user);
 }
 if (!empty($object_ids)) {
     shuffle($object_ids);
