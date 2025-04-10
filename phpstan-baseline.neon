@@ -296,22 +296,12 @@ parameters:
 			path: src/Module/Api/Edit/RefreshUpdatedAction.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:albums\\(\\) has parameter \\$albums with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:artists\\(\\) has parameter \\$artists with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
 
@@ -326,52 +316,12 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:democratic\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:indexes\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:indexes\\(\\) should return string but returns array\\|string\\.$#"
-			count: 4
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:playlists\\(\\) has parameter \\$playlists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:podcast_episodes\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:podcasts\\(\\) has parameter \\$podcasts with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:shares\\(\\) has parameter \\$shares with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:songs\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:tags\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:tags_array\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
 
@@ -411,27 +361,7 @@ parameters:
 			path: src/Module/Api/Json5_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:democratic\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:genre_array\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:indexes\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:indexes\\(\\) should return string but returns array\\|string\\.$#"
-			count: 4
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:playlists\\(\\) has parameter \\$playlists with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
 
@@ -471,17 +401,7 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:browses\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:deleted\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:democratic\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -496,27 +416,12 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:indexes\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:indexes\\(\\) should return string but returns array\\|string\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:labels\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:lists\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:playlists\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -3761,27 +3666,12 @@ parameters:
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:albums\\(\\) has parameter \\$albums with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:artists\\(\\) has parameter \\$artists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:artists\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:democratic\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
 
@@ -3806,11 +3696,6 @@ parameters:
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:playlists\\(\\) has parameter \\$playlists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:songs\\(\\) has parameter \\$full_xml with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
@@ -3831,27 +3716,7 @@ parameters:
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:tags\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:tags_string\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:videos\\(\\) has parameter \\$videos with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:artists\\(\\) has parameter \\$artists with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml4_Data.php
 
@@ -3861,52 +3726,7 @@ parameters:
 			path: src/Module/Api/Xml4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:democratic\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:indexes\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:keyed_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:licenses\\(\\) has parameter \\$licenses with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:playlists\\(\\) has parameter \\$playlists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:podcasts\\(\\) has parameter \\$podcasts with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:shares\\(\\) has parameter \\$shares with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:tags\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:tags_string\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:videos\\(\\) has parameter \\$videos with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml4_Data.php
 
@@ -3922,21 +3742,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:deleted\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:democratic\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:genre_string\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:indexes\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml5_Data.php
 
@@ -3976,37 +3781,12 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:browses\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:deleted\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:democratic\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:genre_string\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:indexes\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:keyed_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:lists\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
 
@@ -4022,16 +3802,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:playlists\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:searches\\(\\) has parameter \\$counts with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:searches\\(\\) has parameter \\$searches with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
 
@@ -9457,11 +9227,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_allowed_filters\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_objects\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
 

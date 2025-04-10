@@ -924,6 +924,7 @@ class Query
      * This gets an array of the ids of the objects that we are
      * currently browsing by it applies the sql and logic based
      * filters
+     * @return int[]
      */
     public function get_objects(): array
     {

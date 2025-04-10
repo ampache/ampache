@@ -471,7 +471,7 @@ class Song extends database_object implements
      * This attempts to reduce queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point.
-     * @param int[] $song_ids
+     * @param list<int|string> $song_ids
      * @param string $limit_threshold
      */
     public static function build_cache($song_ids, $limit_threshold = ''): bool

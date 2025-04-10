@@ -26,6 +26,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Playback\Stream;
@@ -72,9 +73,9 @@ class Xml3_Data
      *
      * This takes an int and changes the offset
      *
-     * @param int $offset
+     * @param int|string $offset
      */
-    public static function set_offset($offset): void
+    public static function set_offset(int|string $offset): void
     {
         self::$offset = (int)$offset;
     }
@@ -83,10 +84,8 @@ class Xml3_Data
      * set_limit
      *
      * This sets the limit for any ampache transactions
-     *
-     * @param int|string $limit
      */
-    public static function set_limit($limit): bool
+    public static function set_limit(int|string $limit): bool
     {
         if (!$limit) {
             return false;
@@ -101,10 +100,8 @@ class Xml3_Data
      * set_type
      *
      * This sets the type of Xml_Data we are working on
-     *
-     * @param string $type    Xml_Data type
      */
-    public static function set_type($type): void
+    public static function set_type(string $type): void
     {
         if (in_array($type, ['rss', 'xspf', 'itunes'])) {
             self::$type = $type;
@@ -116,10 +113,10 @@ class Xml3_Data
      *
      * This generates a standard XML Error message
      *
-     * @param int $code    Error code
-     * @param string $string    Error message
+     * @param int $code Error code
+     * @param string $string Error message
      */
-    public static function error($code, $string): string
+    public static function error(int $code, string $string): string
     {
         $string = "\t<error code=\"$code\"><![CDATA[" . $string . "]]></error>";
 
@@ -132,9 +129,10 @@ class Xml3_Data
      * This takes two values, first the key second the string
      *
      * @param string $key
-     * @param string $string    xml data
+     * @param string $string xml data
+     * @return string
      */
-    public static function single_string($key, $string = ''): string
+    public static function single_string(string $key, string $string = ''): string
     {
         $final = self::_header();
         if (!empty($string)) {
@@ -175,9 +173,9 @@ class Xml3_Data
      * tags_string
      *
      * This returns the formatted 'tags' string for an xml document
-     * @param array $tags
+     * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
      */
-    private static function tags_string($tags): string
+    private static function tags_string(array $tags): string
     {
         $string = '';
 
@@ -261,9 +259,9 @@ class Xml3_Data
      *
      * This returns tags to the user, in a pretty xml document with the information
      *
-     * @param array $tags
+     * @param int[] $tags
      */
-    public static function tags($tags): string
+    public static function tags(array $tags): string
     {
         $string = "<total_count>" . count($tags) . "</total_count>\n";
 
@@ -289,12 +287,13 @@ class Xml3_Data
      * This takes an array of artists and then returns a pretty xml document with the information
      * we want
      *
-     * @param array $artists
+     * @param list<int|string> $artists
      * @param array $include Array of other items to include
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node
+     * @return string
      */
-    public static function artists($artists, $include, $user, $full_xml = true): string
+    public static function artists(array $artists, array $include, User $user, bool $full_xml = true): string
     {
         if (null == $include) {
             $include = [];
@@ -312,13 +311,13 @@ class Xml3_Data
         Rating::build_cache('artist', $artists);
 
         foreach ($artists as $artist_id) {
-            $artist = new Artist($artist_id);
+            $artist = new Artist((int)$artist_id);
             if ($artist->isNew()) {
                 continue;
             }
             $artist->format();
 
-            $rating      = new Rating($artist_id, 'artist');
+            $rating      = new Rating((int)$artist_id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
             $tag_string  = self::tags_string($artist->get_tags());
 
@@ -332,7 +331,7 @@ class Xml3_Data
                 $albums = $artist->album_count;
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs(self::getSongRepository()->getByArtist($artist_id), $user, '', false);
+                $songs = self::songs(self::getSongRepository()->getByArtist($artist->id), $user, '', false);
             } else {
                 $songs = $artist->song_count;
             }
@@ -348,12 +347,13 @@ class Xml3_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param array $albums
-     * @param array|false $include Array of other items to include
+     * @param list<int|string> $albums
+     * @param false|array $include Array of other items to include
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node
+     * @return string
      */
-    public static function albums($albums, $include, $user, $full_xml = true): string
+    public static function albums(array $albums, false|array $include, User $user, bool $full_xml = true): string
     {
         $string = "<total_count>" . count($albums) . "</total_count>\n";
 
@@ -368,13 +368,13 @@ class Xml3_Data
         Rating::build_cache('album', $albums);
 
         foreach ($albums as $album_id) {
-            $album = new Album($album_id);
+            $album = new Album((int)$album_id);
             if ($album->isNew()) {
                 continue;
             }
             $album->format();
 
-            $rating      = new Rating($album_id, 'album');
+            $rating      = new Rating((int)$album_id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
 
             // Build the Art URL, include session
@@ -404,9 +404,9 @@ class Xml3_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param array $playlists
+     * @param list<int|string> $playlists
      */
-    public static function playlists($playlists): string
+    public static function playlists(array $playlists): string
     {
         $string = "<total_count>" . count($playlists) . "</total_count>\n";
 
@@ -420,7 +420,7 @@ class Xml3_Data
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
-            $playlist = new Playlist($playlist_id);
+            $playlist = new Playlist((int)$playlist_id);
             if ($playlist->isNew()) {
                 continue;
             }
@@ -497,9 +497,9 @@ class Xml3_Data
      *
      * This builds the xml document for displaying video objects
      *
-     * @param array $videos
+     * @param list<int|string> $videos
      */
-    public static function videos($videos): string
+    public static function videos(array $videos): string
     {
         $string = "<total_count>" . count($videos) . "</total_count>\n";
 
@@ -512,7 +512,7 @@ class Xml3_Data
         }
 
         foreach ($videos as $video_id) {
-            $video = new Video($video_id);
+            $video = new Video((int)$video_id);
             if ($video->isNew()) {
                 continue;
             }
@@ -530,10 +530,15 @@ class Xml3_Data
      * This handles creating an xml document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param array $object_ids    Object IDs
+     * @param list<array{
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     track_id: int,
+     *     track: int}> $object_ids Object IDs
      * @param User $user
+     * @return string
      */
-    public static function democratic($object_ids, $user): string
+    public static function democratic(array $object_ids, User $user): string
     {
         if (!is_array($object_ids)) {
             $object_ids = [];
@@ -542,7 +547,7 @@ class Xml3_Data
         $string     = '';
 
         foreach ($object_ids as $row_id => $data) {
-            $className = ObjectTypeToClassNameMapper::map($data['object_type']);
+            $className = ObjectTypeToClassNameMapper::map($data['object_type']->value);
             /** @var Song $song */
             $song = new $className($data['object_id']);
             if ($song->isNew()) {
@@ -593,7 +598,7 @@ class Xml3_Data
      *
      * @param int[] $users    User identifier list
      */
-    public static function users($users): string
+    public static function users(array $users): string
     {
         $string = "<users>\n";
         foreach ($users as $user_id) {
@@ -639,7 +644,7 @@ class Xml3_Data
      *
      * @param int[] $activities    Activity identifier list
      */
-    public static function timeline($activities): string
+    public static function timeline(array $activities): string
     {
         $string = "<timeline>\n";
         foreach ($activities as $aid) {
