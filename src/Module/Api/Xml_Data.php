@@ -560,8 +560,8 @@ class Xml_Data
                 break;
             case 'song':
                 foreach ($objects as $object_id) {
-                    $song = new Song((int)$object_id);
-                    $song_album = self::getAlbumRepository()->getNames($song->album);
+                    $song        = new Song((int)$object_id);
+                    $song_album  = self::getAlbumRepository()->getNames($song->album);
                     $song_artist = Artist::get_name_array_by_id($song->artist);
                     $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n" .
                         "\t<artist id=\"" . $song->artist . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name><prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix><basename><![CDATA[" . $song_artist['basename'] . "]]></basename></artist>\n" .
@@ -578,10 +578,10 @@ class Xml_Data
             case 'playlist':
                 foreach ($objects as $object_id) {
                     if ((int)$object_id === 0) {
-                        $playlist = new Search((int)str_replace('smart_', '', (string)$object_id), 'song', $user);
+                        $playlist       = new Search((int)str_replace('smart_', '', (string)$object_id), 'song', $user);
                         $playitem_total = $playlist->last_count;
                     } else {
-                        $playlist = new Playlist((int)$object_id);
+                        $playlist       = new Playlist((int)$object_id);
                         $playitem_total = $playlist->get_media_count('song');
                     }
                     $playlist_name = $playlist->get_fullname();

@@ -332,11 +332,11 @@ class Xml4_Data
                         }
                         $playlist->format();
 
-                        $playlist_user = $playlist->username;
+                        $playlist_user  = $playlist->username;
                         $playitem_total = $playlist->get_media_count('song');
                     }
                     $playlist_name = $playlist->get_fullname();
-                    $songs = ($include) ? $playlist->get_items() : [];
+                    $songs         = ($include) ? $playlist->get_items() : [];
                     $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<items>" . (int)$playitem_total . "</items>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<type><![CDATA[" . $playlist->type . "]]></type>\n";
                     $playlist_track = 0;
                     foreach ($songs as $song_id) {
