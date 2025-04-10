@@ -246,7 +246,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         }
 
         $object_ids = ($this->popular)
-            ? Stats::get_top($object_type, 100, $threshold, 0, $this->user)
+            ? Stats::get_top($object_type, 100, $threshold, 0, ($this->user->getId() > 0) ? $this->user : null)
             : [];
         if ($object_ids !== []) {
             shuffle($object_ids);
