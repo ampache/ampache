@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## Ampache 7.4.1
+
+### Added
+
+* Add direct link alternative sharing to items for public users
+* Plugin
+  * Bluesky share plugin
+  * Mastodon share plugin
+
+### Changed
+
+* Update vite
+
+### Fixed
+
+* Speed up dashboard pages for pulic users calling the top query once
+* RSS compliance for date and atom links
+* Verify chunk count using the chunk and not the count
+* Waveform error when the file is missing
+* CLI
+  * Default options for `run:updateCatalog`
+
 ## Ampache 7.4.0
 
 The code has had a lot of updates dealing with verifications.
