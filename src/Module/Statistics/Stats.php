@@ -1010,11 +1010,11 @@ class Stats
         } elseif ($input_type === 'song_artist') {
             $base_type = 'artist';
             $sql       = "SELECT DISTINCT(`artist`.`id`) AS `id`, `artist`.`addition_time` AS `real_atime` FROM `artist_map` LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'song' ";
-            $sql_type  = '`artist_map`.`artist_id`';
+            $sql_type  = '`artist`.`id`';
         } elseif ($input_type === 'album_artist') {
             $base_type = 'artist';
             $sql       = "SELECT DISTINCT(`artist`.`id`) AS `id`, `artist`.`addition_time` AS `real_atime` FROM `artist_map` LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'album' ";
-            $sql_type  = '`artist_map`.`artist_id`';
+            $sql_type  = '`artist`.`id`';
             $type      = 'artist';
         } elseif ($type === 'podcast') {
             $base_type = 'podcast';
