@@ -1941,8 +1941,8 @@ class Subsonic_Api
                     ? (int)(((int)$input['time']) / 1000)
                     : time();
                 $previous  = Stats::get_last_play($user->id, $client, $time);
-                $prev_obj  = $previous['object_id'] ?? 0;
-                $prev_date = $previous['date'] ?? 0;
+                $prev_obj  = $previous['object_id'] ?: 0;
+                $prev_date = $previous['date'];
                 $type      = Subsonic_Xml_Data::_getAmpacheType((string)$subsonic_id);
                 $media     = Subsonic_Xml_Data::_getAmpacheObject((string)$subsonic_id);
                 if ($media === null || $media->isNew()) {
