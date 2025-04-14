@@ -98,13 +98,13 @@ class Search extends playlist_object
 
     /**
      * constructor
-     * @param int|null $search_id // saved searches have rules already
+     * @param int $search_id // saved searches have rules already
      * @param string $object_type // map to self::VALID_TYPES
      * @param User|null $user
      */
     public function __construct(
-        $search_id = 0,
-        $object_type = 'song',
+        int $search_id = 0,
+        string $object_type = 'song',
         ?User $user = null
     ) {
         $this->search_user = ($user instanceof User)
@@ -508,12 +508,8 @@ class Search extends playlist_object
      * _add_type_numeric
      *
      * Generic integer searches rules
-     * @param string $name
-     * @param string $label
-     * @param string $type
-     * @param string $group
      */
-    private function _add_type_numeric($name, $label, $type = 'numeric', $group = ''): void
+    private function _add_type_numeric(string $name, string $label, string $type = 'numeric', string $group = ''): void
     {
         $this->types[] = [
             'name' => $name,
@@ -531,11 +527,8 @@ class Search extends playlist_object
      * _add_type_date
      *
      * Generic date searches rules
-     * @param string $name
-     * @param string $label
-     * @param string $group
      */
-    private function _add_type_date($name, $label, $group = ''): void
+    private function _add_type_date(string $name, string $label, string $group = ''): void
     {
         $this->types[] = [
             'name' => $name,
@@ -553,11 +546,8 @@ class Search extends playlist_object
      * _add_type_text
      *
      * Generic text rules
-     * @param string $name
-     * @param string $label
-     * @param string $group
      */
-    private function _add_type_text($name, $label, $group = ''): void
+    private function _add_type_text(string $name, string $label, string $group = ''): void
     {
         $this->types[] = [
             'name' => $name,
@@ -575,13 +565,8 @@ class Search extends playlist_object
      * _add_type_select
      *
      * Generic rule to select from a list
-     * @param string $name
-     * @param string $label
-     * @param string $type
-     * @param array $array
-     * @param string $group
      */
-    private function _add_type_select($name, $label, $type, $array, $group = ''): void
+    private function _add_type_select(string $name, string $label, string $type, array $array, string $group = ''): void
     {
         $this->types[] = [
             'name' => $name,
@@ -599,12 +584,8 @@ class Search extends playlist_object
      * _add_type_boolean
      *
      * True or false generic searches
-     * @param string $name
-     * @param string $label
-     * @param string $type
-     * @param string $group
      */
-    private function _add_type_boolean($name, $label, $type = 'boolean', $group = ''): void
+    private function _add_type_boolean(string $name, string $label, string $type = 'boolean', string $group = ''): void
     {
         $this->types[] = [
             'name' => $name,
@@ -1140,11 +1121,11 @@ class Search extends playlist_object
     private function _set_types_tag(): void
     {
         $this->_add_type_text('title', T_('Genre'));
-        $this->_add_type_numeric('album_count', T_('Album Count'), 'numeric');
-        $this->_add_type_numeric('artist_count', T_('Album Count'), 'numeric');
-        $this->_add_type_numeric('song_count', T_('Song Count'), 'numeric');
+        $this->_add_type_numeric('album_count', T_('Album Count'));
+        $this->_add_type_numeric('artist_count', T_('Album Count'));
+        $this->_add_type_numeric('song_count', T_('Song Count'));
         if (AmpConfig::get('video')) {
-            $this->_add_type_numeric('video_count', T_('Video Count'), 'numeric');
+            $this->_add_type_numeric('video_count', T_('Video Count'));
         }
     }
 
@@ -1153,8 +1134,9 @@ class Search extends playlist_object
      *
      * Sanitizes raw search data
      * @param array $data
+     * @return array
      */
-    private function _filter_request($data): array
+    private function _filter_request(array $data): array
     {
         $request = [];
         foreach ($data as $key => $value) {
@@ -1219,9 +1201,8 @@ class Search extends playlist_object
      * get_searches
      *
      * Return the IDs of all saved searches accessible by the current user.
-     * @param int|null  $user_id
      */
-    public static function get_searches($user_id = null): array
+    public static function get_searches(?int $user_id = null): array
     {
         if ($user_id === null) {
             $user_id = (int)(Core::get_global('user')?->id);
@@ -1258,9 +1239,9 @@ class Search extends playlist_object
      * get_search_array
      * Returns a list of searches accessible by the user with formatted name.
      * @param int|null $user_id
-     * @return array<string>
+     * @return string[]
      */
-    public static function get_search_array($user_id = null): array
+    public static function get_search_array(?int $user_id = null): array
     {
         if ($user_id === null) {
             $user_id = (int)(Core::get_global('user')?->id);
@@ -1299,14 +1280,14 @@ class Search extends playlist_object
      *
      * This function prepares the sql and parameters for execution.
      * @param array $data
-     * @param User $user
+     * @param User|null $user
      * @param bool $require_rules // require a valid rule to return search items (instead of returning all items)
      * @return array{
      *     sql: string,
      *     parameters: array
      * }
      */
-    public static function prepare($data, $user = null, $require_rules = false): array
+    public static function prepare(array $data, ?User $user = null, bool $require_rules = false): array
     {
         $limit  = (int)($data['limit'] ?? 0);
         $offset = (int)($data['offset'] ?? 0);
@@ -1364,11 +1345,11 @@ class Search extends playlist_object
      * This function actually runs the search and returns an array of the
      * results.
      * @param array $data
-     * @param User $user
+     * @param User|null $user
      * @param bool $require_rules // require a valid rule to return search items (instead of returning all items)
      * @return int[]
      */
-    public static function run($data, $user = null, $require_rules = false): array
+    public static function run(array $data, ?User $user = null, bool $require_rules = false): array
     {
         $search_sql = self::prepare($data, $user, $require_rules);
         $db_results = Dba::read((string)$search_sql['sql'], $search_sql['parameters']);
@@ -1387,7 +1368,7 @@ class Search extends playlist_object
      * @param array $search_sql
      * @return array
      */
-    public static function query($search_sql): array
+    public static function query(array $search_sql): array
     {
         $db_results = Dba::read((string)$search_sql['sql'], $search_sql['parameters']);
         $num_rows   = Dba::num_rows($db_results);
@@ -1517,11 +1498,8 @@ class Search extends playlist_object
 
     /**
      * set_last
-     *
-     * @param int $count
-     * @param string $column
      */
-    private function set_last($count, $column): void
+    private function set_last(int $count, string $column): void
     {
         if (in_array($column, ['last_count', 'last_duration'])) {
             $sql = "UPDATE `search` SET `" . Dba::escape($column) . "` = ? WHERE `id` = ?";
@@ -1653,9 +1631,8 @@ class Search extends playlist_object
      *
      * Iterate over $this->types to validate the rule name and return the rule type
      * (text, date, etc)
-     * @param string $name
      */
-    private function _get_rule_name($name): string
+    private function _get_rule_name(string $name): string
     {
         // check that the rule you sent is not an alias (needed for pulling details from the rule)
         switch ($this->objectType) {
@@ -1823,9 +1800,8 @@ class Search extends playlist_object
      *
      * Iterate over $this->types to validate the rule name and return the rule type
      * (text, date, etc)
-     * @param string $name
      */
-    public function get_rule_type($name): ?string
+    public function get_rule_type(string $name): ?string
     {
         //debug_event(self::class, 'get_rule_type: ' . $name, 5);
         foreach ($this->types as $type) {
@@ -1843,7 +1819,7 @@ class Search extends playlist_object
      * Takes an array of sanitized search data from the form and generates our real array from it.
      * @param array $data
      */
-    public function set_rules($data): void
+    public function set_rules(array $data): void
     {
         if (isset($data['playlist_name'])) {
             $this->name = (string)$data['playlist_name'];
@@ -1949,9 +1925,11 @@ class Search extends playlist_object
     public function to_js(): string
     {
         $javascript = "";
-        foreach ($this->rules as $rule) {
-            // @see search.js SearchRow.add(ruleType, operator, input, subtype)
-            $javascript .= '<script>SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out($rule[1]) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3]) . '"); </script>';
+        if (is_array($this->rules)) {
+            foreach ($this->rules as $rule) {
+                // @see search.js SearchRow.add(ruleType, operator, input, subtype)
+                $javascript .= '<script>SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out($rule[1]) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3]) . '"); </script>';
+            }
         }
 
         return $javascript;
@@ -2003,6 +1981,8 @@ class Search extends playlist_object
      * Private convenience function.  Mangles the input according to a set
      * of predefined rules so that we don't have to include this logic in
      * _get_sql_foo.
+     * @param string $data
+     * @param string $type
      * @param array{
      *  name: string,
      *  description: string,
@@ -2012,7 +1992,7 @@ class Search extends playlist_object
      * } $operator
      * @return bool|int|null|string
      */
-    public function filter_data(string $data, string $type, array $operator)
+    public function filter_data(string $data, string $type, array $operator): bool|int|string|null
     {
         if (
             array_key_exists('preg_match', $operator) &&
@@ -2040,12 +2020,8 @@ class Search extends playlist_object
      * year_search
      *
      * Build search rules for year -> year album searches for subsonic.
-     * @param int $fromYear
-     * @param int $toYear
-     * @param int $size
-     * @param int $offset
      */
-    public static function year_search($fromYear, $toYear, $size, $offset): array
+    public static function year_search(int $fromYear, int $toYear, int $size, int $offset): array
     {
         $search           = [];
         $search['limit']  = $size;
