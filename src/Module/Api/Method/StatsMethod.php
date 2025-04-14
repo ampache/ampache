@@ -59,7 +59,7 @@ final class StatsMethod
      *
      * type     = (string)  'song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'
      * filter   = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' (Default: random) //optional
-     * user_id  = (integer) //optional
+     * user_id  = (string) //optional
      * username = (string)  //optional
      * offset   = (integer) //optional
      * limit    = (integer) Default: 10 (popular_threshold) //optional

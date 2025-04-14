@@ -58,6 +58,7 @@ final class BookmarkDeleteMethod
      *     type: string,
      *     client?: string,
      *     api_format: string,
+     *     auth: string,
      * } $input
      * @param User $user
      * @return bool

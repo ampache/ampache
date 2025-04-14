@@ -44,11 +44,12 @@ final class UsersMethod
      *
      * Get ids and usernames for your site
      * @param array{
-     *  api_format: string,
-     *  offset?: string,
-     *  limit?: string,
-     *  cond?: string,
-     *  sort?: string,
+     *     offset?: string,
+     *     limit?: string,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
      * } $input
      */
     public static function users(array $input, User $user): bool

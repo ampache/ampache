@@ -60,6 +60,7 @@ final class ArtistSongsMethod
      *     cond?: string,
      *     sort?: string,
      *     api_format: string,
+     *     auth: string,
      * } $input
      * @param User $user
      * @return bool

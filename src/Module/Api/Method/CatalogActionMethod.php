@@ -56,6 +56,7 @@ final class CatalogActionMethod
      *     task: string,
      *     catalog: int,
      *     api_format: string,
+     *     auth: string,
      * } $input
      * @param User $user
      * @return bool

@@ -70,6 +70,7 @@ final class AlbumMethod implements MethodInterface
      *     filter?: string,
      *     include?: string|string[],
      *     api_format: string,
+     *     auth: string,
      * } $input
      * @param User $user
      * @return ResponseInterface

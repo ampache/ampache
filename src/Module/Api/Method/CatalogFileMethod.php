@@ -65,6 +65,7 @@ final class CatalogFileMethod
      *     task: string,
      *     catalog: int,
      *     api_format: string,
+     *     auth: string,
      * } $input
      * @param User $user
      * @return bool

@@ -51,6 +51,7 @@ final class CatalogDeleteMethod
      * @param array{
      *     filter: string,
      *     api_format: string,
+     *     auth: string,
      * } $input
      * @param User $user
      * @return bool

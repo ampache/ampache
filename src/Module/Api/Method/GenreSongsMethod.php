@@ -46,7 +46,7 @@ final class GenreSongsMethod
      *
      * returns the songs for this genre
      *
-     * filter = (string) UID of Genre //optional
+     * filter = (string) UID of Genre
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional

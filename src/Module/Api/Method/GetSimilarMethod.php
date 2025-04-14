@@ -47,7 +47,7 @@ final class GetSimilarMethod
      * Return similar artist id's or similar song ids compared to the input filter
      *
      * type   = (string) 'song', 'artist'
-     * filter = (integer) artist id or song id
+     * filter = (string) artist id or song id
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */

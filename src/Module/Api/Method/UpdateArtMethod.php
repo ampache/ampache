@@ -52,7 +52,7 @@ final class UpdateArtMethod
      * Doesn't overwrite existing art by default.
      *
      * type      = (string) 'artist', 'album'
-     * id        = (integer) $artist_id, $album_id
+     * id        = (string) $artist_id, $album_id
      * overwrite = (integer) 0,1 //optional
      */
     public static function update_art(array $input, User $user): bool

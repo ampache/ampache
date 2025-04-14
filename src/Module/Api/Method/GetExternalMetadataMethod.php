@@ -51,8 +51,17 @@ final class GetExternalMetadataMethod
      *
      * Return External plugin metadata searching by object id and type
      *
+     * filter = (string) album id, artist id or song id
      * type   = (string) 'song', 'artist', 'album', 'label'
-     * filter = (integer) album id, artist id or song id
+     *
+     * @param array{
+     *        filter: string,
+     *        type: string,
+     *        api_format: string,
+     *        auth: string,
+     *    } $input
+     * @param User $user
+     * @return bool
      */
     public static function get_external_metadata(array $input, User $user): bool
     {

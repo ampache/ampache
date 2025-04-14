@@ -53,6 +53,18 @@ final class GetArtMethod
      * id       = (string) $object_id
      * type     = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
      * fallback = (integer) 0,1, if true return default art ('blankalbum.png') //optional
+     * size     = (string) width x height ('640x480') //optional
+     *
+     * @param array{
+     *      id: string,
+     *      type: string,
+     *      fallback?: int,
+     *      size?: string,
+     *      api_format: string,
+     *      auth: string,
+     *  } $input
+     * @param User $user
+     * @return bool
      */
     public static function get_art(array $input, User $user): bool
     {
@@ -100,11 +112,17 @@ final class GetArtMethod
 
         if ($art->has_db_info($fallback)) {
             header('Access-Control-Allow-Origin: *');
-            if ($size && AmpConfig::get('resize_images')) {
+            if (
+                $size &&
+                preg_match('/^[0-9]+x[0-9]+$/', $size) &&
+                AmpConfig::get('resize_images')
+            ) {
+                $dimensions    = explode('x', $size);
                 $dim           = [];
-                $dim['width']  = $size;
-                $dim['height'] = $size;
-                $thumb         = $art->get_thumb($dim);
+                $dim['width']  = (int) $dimensions[0];
+                $dim['height'] = (int) $dimensions[1];
+
+                $thumb = $art->get_thumb($dim);
                 if (!empty($thumb)) {
                     header('Content-type: ' . $thumb['thumb_mime']);
                     header('Content-Length: ' . strlen((string) $thumb['thumb']));

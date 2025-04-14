@@ -51,7 +51,7 @@ final class PlayerMethod
      * Inform the server about the state of your client. (Song you are playing, Play/Pause state, etc.)
      * Return the `now_playing` state when completed
      *
-     * filter  = (integer) $object_id
+     * filter  = (string) $object_id
      * type    = (string)  $object_type ('song', 'podcast_episode', 'video'), DEFAULT 'song'//optional
      * state   = (string)  'play', 'stop', DEFAULT 'play' //optional
      * time    = (integer) current song time in whole seconds, DEFAULT 0 //optional

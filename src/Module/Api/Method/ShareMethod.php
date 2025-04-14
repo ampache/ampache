@@ -46,7 +46,7 @@ final class ShareMethod
      *
      * Get the share from it's id.
      *
-     * filter = (integer) Share ID number
+     * filter = (string) Share ID number
      */
     public static function share(array $input, User $user): bool
     {

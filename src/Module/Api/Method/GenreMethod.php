@@ -47,6 +47,14 @@ final class GenreMethod
      * This returns a single genre based on UID
      *
      * filter = (string) UID of Genre
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function genre(array $input, User $user): bool
     {

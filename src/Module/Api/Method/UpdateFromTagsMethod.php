@@ -49,7 +49,7 @@ final class UpdateFromTagsMethod
      * updates a single album, artist, song from the tag data
      *
      * type = (string) 'artist', 'album', 'song'
-     * id   = (integer) $artist_id, $album_id, $song_id
+     * id   = (string) $artist_id, $album_id, $song_id
      */
     public static function update_from_tags(array $input, User $user): bool
     {

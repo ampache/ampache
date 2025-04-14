@@ -51,6 +51,7 @@ final class BookmarkMethod
      *     filter: string,
      *     include?: int,
      *     api_format: string,
+     *     auth: string,
      * } $input
      * @param User $user
      * @return bool
