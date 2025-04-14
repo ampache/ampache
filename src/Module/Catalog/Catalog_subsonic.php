@@ -204,9 +204,8 @@ class Catalog_subsonic extends Catalog
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
-     * @param array $options
      */
-    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
+    public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -405,9 +404,8 @@ class Catalog_subsonic extends Catalog
     /**
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
-     * @param string $new_path
      */
-    public function move_catalog_proc($new_path): bool
+    public function move_catalog_proc(string $new_path): bool
     {
         return false;
     }
@@ -511,9 +509,9 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * @param string $file_path
+     * get_rel_path
      */
-    public function get_rel_path($file_path): string
+    public function get_rel_path(string $file_path): string
     {
         $catalog_path = rtrim($this->uri, "/");
 
@@ -543,7 +541,7 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * @param Song|Podcast_Episode|Video $media
+     * @param Podcast_Episode|Song|Video $media
      * @return null|array{
      *  file_path: string,
      *  file_name: string,
@@ -551,17 +549,15 @@ class Catalog_subsonic extends Catalog
      *  file_type: string
      * }
      */
-    public function prepare_media($media): ?array
+    public function prepare_media(Podcast_Episode|Video|Song $media): ?array
     {
         return null;
     }
 
     /**
      * Returns the remote streaming-url if supported
-     *
-     * @param Song|Podcast_Episode|Video $media
      */
-    public function getRemoteStreamingUrl($media): ?string
+    public function getRemoteStreamingUrl(Podcast_Episode|Video|Song $media): ?string
     {
         $subsonic = $this->createClient();
 

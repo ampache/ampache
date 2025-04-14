@@ -621,7 +621,7 @@ class Subsonic_Api
 
         $catalogs = [];
         if (!empty($musicFolderId) && $musicFolderId != '-1') {
-            $catalogs[] = $musicFolderId;
+            $catalogs[] = (int)$musicFolderId;
         } else {
             $catalogs = $user->get_catalogs('music');
         }
@@ -649,7 +649,7 @@ class Subsonic_Api
                 $lastmodified = $clastmodified;
             }
             if (!empty($ifModifiedSince) && $clastmodified > (((int)$ifModifiedSince) / 1000)) {
-                $fcatalogs[] = $catalogid;
+                $fcatalogs[] = (int)$catalogid;
             }
         }
         if (empty($ifModifiedSince)) {

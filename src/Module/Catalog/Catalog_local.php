@@ -539,9 +539,8 @@ class Catalog_local extends Catalog
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
-     * @param array $options
      */
-    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
+    public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
         if (empty($options)) {
             $options = [
@@ -1193,9 +1192,9 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * @param string $file_path
+     * get_rel_path
      */
-    public function get_rel_path($file_path): string
+    public function get_rel_path(string $file_path): string
     {
         $catalog_path = rtrim($this->path, "/");
 
@@ -1211,7 +1210,7 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * @param Song|Podcast_Episode|Video $media
+     * @param Podcast_Episode|Song|Video $media
      * @return array{
      *  file_path: string,
      *  file_name: string,
@@ -1219,7 +1218,7 @@ class Catalog_local extends Catalog
      *  file_type: string
      * }
      */
-    public function prepare_media($media): array
+    public function prepare_media(Podcast_Episode|Video|Song $media): array
     {
         return [
             'file_path' => (string) $media->file,
@@ -1301,9 +1300,8 @@ class Catalog_local extends Catalog
     /**
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location
-     * @param string $new_path
      */
-    public function move_catalog_proc($new_path): bool
+    public function move_catalog_proc(string $new_path): bool
     {
         if (!self::check_path($new_path)) {
             return false;

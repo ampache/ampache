@@ -29,7 +29,6 @@ use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
@@ -260,9 +259,9 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @param string $file_path
+     * get_rel_path
      */
-    public function get_rel_path($file_path): string
+    public function get_rel_path(string $file_path): string
     {
         $arr = $this->seafile->from_virtual_path($file_path);
 
@@ -273,9 +272,8 @@ class Catalog_Seafile extends Catalog
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
-     * @param array $options
      */
-    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
+    public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -487,14 +485,14 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @param Media $media
+     * @param Podcast_Episode|Song|Video $media
      * @param array $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @return array
      * @throws Exception
      */
-    public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern): array
+    public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern): array
     {
         // if you have the file it's all good
         /** @var Song $media */
@@ -593,9 +591,8 @@ class Catalog_Seafile extends Catalog
     /**
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
-     * @param string $new_path
      */
-    public function move_catalog_proc($new_path): bool
+    public function move_catalog_proc(string $new_path): bool
     {
         return false;
     }
@@ -639,7 +636,7 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @param Song|Podcast_Episode|Video $media
+     * @param Podcast_Episode|Song|Video $media
      * @return array{
      *    file_path: string,
      *    file_name: string,
@@ -647,7 +644,7 @@ class Catalog_Seafile extends Catalog
      *    file_type: string
      * }
      */
-    public function prepare_media($media): array
+    public function prepare_media(Podcast_Episode|Video|Song $media): array
     {
         $stream_path = (string) $media->file;
         $stream_name = $media->getFileName();
