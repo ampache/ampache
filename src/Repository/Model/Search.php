@@ -1620,13 +1620,19 @@ class Search extends playlist_object
     /**
      * get_total_duration
      * Get the total duration of all songs.
-     * @param array $songs
+     * @param int[]|list<array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $songs
      */
-    public static function get_total_duration($songs): int
+    public static function get_total_duration(array $songs): int
     {
+        if (empty($songs)) {
+            return 0;
+        }
+
         $song_ids = [];
         foreach ($songs as $objects) {
-            $song_ids[] = (string)$objects['object_id'];
+            $song_ids[] = (is_array($objects))
+                ? (string)$objects['object_id']
+                : $objects;
         }
 
         $idlist = '(' . implode(',', $song_ids) . ')';
