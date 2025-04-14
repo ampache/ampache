@@ -110,10 +110,11 @@ class Bookmark extends database_object
     /**
      * getBookmarks
      * @param array{
-     *  object_type: string,
-     *  object_id: int,
-     *  comment: null|string,
-     *  user: int
+     *     object_type: string,
+     *     object_id: int,
+     *     comment: null|string,
+     *     user: int,
+     *     position?: int
      * } $data
      * @return list<int>
      */

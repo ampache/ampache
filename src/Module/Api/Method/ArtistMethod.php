@@ -48,6 +48,13 @@ final class ArtistMethod
      *
      * filter  = (string) Alpha-numeric search term
      * include = (array|string) 'albums', 'songs' //optional
+     * @param array{
+     *     filter: string,
+     *     include?: string|string[],
+     *     api_format: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function artist(array $input, User $user): bool
     {

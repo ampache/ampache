@@ -1133,7 +1133,7 @@ abstract class Catalog extends database_object
      * create
      *
      * This creates a new catalog entry and associate it to current instance
-     * @param array<string, string|int> $data
+     * @param array<string, string|int|null> $data
      */
     public static function create(array $data): int
     {

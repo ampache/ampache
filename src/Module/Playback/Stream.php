@@ -338,7 +338,8 @@ class Stream
     public static function start_transcode(
         Podcast_Episode|Video|Song $media,
         array $transcode_settings,
-        array|string $options = []): array {
+        array|string $options = []
+    ): array {
         $out_file = false;
         if (is_string($options)) {
             $out_file = $options;

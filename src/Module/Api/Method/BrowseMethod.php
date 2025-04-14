@@ -62,11 +62,26 @@ final class BrowseMethod
      * limit   = (integer) //optional
      * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
      * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     *
+     * @param array{
+     *     filter?: string,
+     *     type?: string,
+     *     catalog?: int,
+     *     add?: string,
+     *     update?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function browse(array $input, User $user): bool
     {
-        $catalog_id  = $input['catalog'] ?? null;
-        $object_id   = $input['filter'] ?? null;
+        $catalog_id  = (isset($input['catalog'])) ? (int)$input['catalog'] : null;
+        $object_id   = (isset($input['filter'])) ? (int)$input['filter'] : null;
         $object_type = $input['type'] ?? 'root';
         if (!AmpConfig::get('podcast') && $object_type == 'podcast') {
             Api::error('Enable: podcast', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
@@ -102,8 +117,10 @@ final class BrowseMethod
             if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
                 return false;
             }
-            $catalog = Catalog::create_from_id($object_id);
-            if ($catalog === null) {
+            $catalog = ($object_id !== null)
+                ? Catalog::create_from_id($object_id)
+                : null;
+            if ($catalog === null || $object_id === null) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
@@ -142,8 +159,10 @@ final class BrowseMethod
             if (!Api::check_parameter($input, ['filter', 'catalog'], self::ACTION)) {
                 return false;
             }
-            $catalog = Catalog::create_from_id($catalog_id);
-            if ($catalog === null) {
+            $catalog = ($catalog_id !== null)
+                ? Catalog::create_from_id($catalog_id)
+                : null;
+            if ($catalog === null || $catalog_id === null) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf('Not Found: %s', $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
 

@@ -38,6 +38,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Api;
+use Exception;
 
 /**
  * Class CatalogFileMethod
@@ -58,6 +59,15 @@ final class CatalogFileMethod
      * file    = (string) urlencode(FULL path to local file)
      * task    = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
      * catalog = (integer) $catalog_id
+     *
+     * @param array{
+     *     file: string,
+     *     task: string,
+     *     catalog: int,
+     *     api_format: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function catalog_file(array $input, User $user): bool
     {
@@ -140,7 +150,14 @@ final class CatalogFileMethod
                     case 'add':
                         if ($media->isNew()) {
                             /** @var Catalog_local $catalog */
-                            $catalog->add_file($file, []);
+                            try {
+                                $catalog->add_file($file, []);
+                            } catch (Exception) {
+                                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                                Api::error(sprintf('Bad Request: %s', $file), ErrorCodeEnum::GENERIC_ERROR, self::ACTION, 'file', $input['api_format']);
+
+                                return false;
+                            }
                         }
                         break;
                     case 'remove':

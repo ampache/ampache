@@ -57,15 +57,26 @@ final class BookmarkCreateMethod
      * client   = (string) Agent string //optional
      * date     = (integer) UNIXTIME() //optional
      * include  = (integer) 0,1, if true include the object in the bookmark //optional
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     position: string,
+     *     client?: string,
+     *     date?: int,
+     *     include?: int,
+     *     api_format: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function bookmark_create(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, ['filter', 'type', 'position'], self::ACTION)) {
             return false;
         }
-        $object_id = $input['filter'];
+        $object_id = (int)$input['filter'];
         $type      = $input['type'];
-        $position  = $input['position'];
+        $position  = (int)$input['position'];
         $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : null;
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         $include   = (bool)($input['include'] ?? false);
