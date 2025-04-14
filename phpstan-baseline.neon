@@ -136,16 +136,6 @@ parameters:
 			path: src/Module/Api/Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api\\:\\:message\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api\\:\\:server_details\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api4\\:\\:check_parameter\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Api4.php
@@ -442,11 +432,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:songs\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 

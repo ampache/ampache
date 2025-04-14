@@ -148,6 +148,7 @@ class Json_Data
      * nothing fancy here...
      *
      * @param string $string success message
+     * @param array<string, string> $return_data
      */
     public static function success(string $string, array $return_data = []): string
     {

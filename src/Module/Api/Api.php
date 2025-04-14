@@ -213,9 +213,9 @@ class Api
      * call the correct success message depending on format
      * @param string $message
      * @param string $format
-     * @param array $return_data
+     * @param array<string, string> $return_data
      */
-    public static function message($message, $format = 'xml', $return_data = []): void
+    public static function message(string $message, string $format = 'xml', array $return_data = []): void
     {
         switch ($format) {
             case 'json':
@@ -229,13 +229,8 @@ class Api
     /**
      * error
      * call the correct error message depending on format
-     * @param string $message
-     * @param int|string $error_code
-     * @param string $method
-     * @param string $error_type
-     * @param string $format
      */
-    public static function error($message, $error_code, $method, $error_type, $format = 'xml'): void
+    public static function error(string $message, int|string $error_code, string $method, string $error_type, string $format = 'xml'): void
     {
         switch ($format) {
             case 'json':
@@ -249,10 +244,8 @@ class Api
     /**
      * empty
      * call the correct empty message depending on format
-     * @param string|null $empty_type
-     * @param string $format
      */
-    public static function empty(?string $empty_type, $format = 'xml'): void
+    public static function empty(?string $empty_type, string $format = 'xml'): void
     {
         switch ($format) {
             case 'json':
@@ -272,8 +265,9 @@ class Api
      * @param array $input
      * @param string[] $parameters e.g. array('auth', type')
      * @param string $method
+     * @return bool
      */
-    public static function check_parameter($input, $parameters, $method): bool
+    public static function check_parameter(array $input, array $parameters, string $method): bool
     {
         foreach ($parameters as $parameter) {
             if (array_key_exists($parameter, $input) && ($input[$parameter] === 0 || $input[$parameter] === '0')) {
@@ -297,12 +291,8 @@ class Api
      *
      * This function checks the user can perform the function requested
      * 'interface', 100, $user->id
-     *
-     * @param int $user_id
-     * @param string $method
-     * @param string $format
      */
-    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, $user_id, $method, $format = 'xml'): bool
+    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method, string $format = 'xml'): bool
     {
         if (!Access::check($type, $level, $user_id)) {
             debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
@@ -321,9 +311,39 @@ class Api
      * get the server counts for pings and handshakes
      *
      * @param string $token
-     * @return array
+     * @return array{
+     *     auth?: ?string,
+     *     api?: string,
+     *     session_expire?: int|string,
+     *     update?: string,
+     *     add?: string,
+     *     clean?: string,
+     *     max_song?: int,
+     *     max_album?: int,
+     *     max_artist?: int,
+     *     max_video?: int,
+     *     max_podcast?: int,
+     *     max_podcast_episode?: int,
+     *     songs?: int,
+     *     albums?: int,
+     *     artists?: int,
+     *     genres?: int,
+     *     playlists?: int,
+     *     searches?: int,
+     *     playlists_searches?: int,
+     *     users?: int,
+     *     catalogs?: int,
+     *     videos?: int,
+     *     podcasts?: int,
+     *     podcast_episodes?: int,
+     *     shares?: int,
+     *     licenses?: int,
+     *     live_streams?: int,
+     *     labels?: int,
+     *     username?: string,
+     *  }
      */
-    public static function server_details($token = ''): array
+    public static function server_details(string $token = ''): array
     {
         // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
         $sql = <<<SQL
