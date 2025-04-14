@@ -633,7 +633,7 @@ class Xml5_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param array $playlists Playlist id's to include
+     * @param list<int|string> $playlists Playlist id's to include
      * @param User $user
      */
     public static function playlists($playlists, $user): string
@@ -662,7 +662,7 @@ class Xml5_Data
                 $object_type    = 'search';
                 $playitem_total = $playlist->last_count;
             } else {
-                $playlist = new Playlist($playlist_id);
+                $playlist = new Playlist((int)$playlist_id);
                 if ($playlist->isNew()) {
                     continue;
                 }

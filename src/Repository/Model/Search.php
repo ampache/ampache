@@ -1366,7 +1366,10 @@ class Search extends playlist_object
      *
      * This function is used to simplify api searches and return valuable data for responses
      * @param array $search_sql
-     * @return array
+     * @return array{
+     *     results: int[],
+     *     count: int
+     * }
      */
     public static function query(array $search_sql): array
     {

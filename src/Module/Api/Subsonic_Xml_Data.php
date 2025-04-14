@@ -94,10 +94,8 @@ class Subsonic_Xml_Data
 
     /**
      * addSubsonicResponse
-     * @param string $function
-     * @return SimpleXMLElement
      */
-    public static function addSubsonicResponse($function): SimpleXMLElement
+    public static function addSubsonicResponse(string $function): SimpleXMLElement
     {
         return self::_createSuccessResponse($function);
     }
@@ -105,12 +103,8 @@ class Subsonic_Xml_Data
     /**
      * addError
      * Add a failed subsonic-response with error information.
-     *
-     * @param int $code Error code
-     * @param string $function
-     * @return SimpleXMLElement
      */
-    public static function addError($code, $function): SimpleXMLElement
+    public static function addError(int $code, string $function): SimpleXMLElement
     {
         $xml  = self::_createFailedResponse($function);
         $xerr = self::addChildToResultXml($xml, 'error');
@@ -150,9 +144,8 @@ class Subsonic_Xml_Data
 
     /**
      * addLicense
-     * @param SimpleXMLElement $xml
      */
-    public static function addLicense($xml): void
+    public static function addLicense(SimpleXMLElement $xml): void
     {
         $xlic = self::addChildToResultXml($xml, 'license');
         $xlic->addAttribute('valid', 'true');
@@ -164,7 +157,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param int[] $catalogs
      */
-    public static function addMusicFolders($xml, $catalogs): void
+    public static function addMusicFolders(SimpleXMLElement $xml, array $catalogs): void
     {
         $xfolders = self::addChildToResultXml($xml, 'musicFolders');
         foreach ($catalogs as $folder_id) {
@@ -182,9 +175,9 @@ class Subsonic_Xml_Data
      * addIndexes
      * @param SimpleXMLElement $xml
      * @param array $artists
-     * @param int|null $lastModified
+     * @param int $lastModified
      */
-    public static function addIndexes($xml, $artists, $lastModified = 0): void
+    public static function addIndexes(SimpleXMLElement $xml, array $artists, int $lastModified = 0): void
     {
         $xindexes = self::addChildToResultXml($xml, 'indexes');
         $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));

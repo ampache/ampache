@@ -281,7 +281,7 @@ class AmpacheMpd extends localplay_controller
      * and delete it from the current playlist
      * @param int $object_id
      */
-    public function delete_track($object_id): bool
+    public function delete_track(int $object_id): bool
     {
         return $this->_mpd->PLRemove($object_id) !== false;
     }

@@ -243,6 +243,11 @@ final class BrowseMethod
 
         $sort    = $browse->get_sort();
         $results = Catalog::get_name_array($objects, $output_type, $sort['name'] ?? 'name', $sort['order'] ?? 'ASC');
+        if (empty($results)) {
+            Api::empty('browse', $input['api_format']);
+
+            return false;
+        }
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

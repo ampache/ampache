@@ -266,7 +266,7 @@ class AmpacheHttpq extends localplay_controller
      * and delete it from httpQ
      * @param int $object_id
      */
-    public function delete_track($object_id): bool
+    public function delete_track(int $object_id): bool
     {
         if ($this->_httpq->delete_pos($object_id) === null) {
             debug_event('httpq.controller', 'Unable to delete ' . $object_id . ' from httpQ', 1);

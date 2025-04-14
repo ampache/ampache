@@ -768,7 +768,7 @@ class Stream_Playlist
             $localplay->add_url($url);
         }
         if (!$append) {
-            // We don't have metadata on Stream_URL to know its kind
+            // We don't have metadata on Stream_Url to know its kind
             // so we check the content to know if it is democratic
             if (count($this->urls) == 1) {
                 $furl = $this->urls[0];

@@ -86,7 +86,7 @@ class Playlist extends playlist_object
     /**
      * build_cache
      * This is what builds the cache from the objects
-     * @param array $ids
+     * @param int[]|string[] $ids
      * @return bool
      */
     public static function build_cache(array $ids): bool
@@ -655,7 +655,7 @@ class Playlist extends playlist_object
     }
 
     /**
-     * @param iterable<int> $song_ids
+     * @param int[]|string[] $song_ids
      * This takes an array of song_ids and then adds it to the playlist
      */
     public function add_songs(iterable $song_ids = []): bool
@@ -664,7 +664,7 @@ class Playlist extends playlist_object
         foreach ($song_ids as $song_id) {
             $medias[] = [
                 'object_type' => LibraryItemEnum::SONG,
-                'object_id' => $song_id,
+                'object_id' => (int)$song_id,
             ];
         }
 

@@ -269,9 +269,9 @@ class AmpacheXbmc extends localplay_controller
     /**
      * delete_track
      * Delete a track from the xbmc playlist
-     * @param $object_id
+     * @param int $object_id
      */
-    public function delete_track($object_id): bool
+    public function delete_track(int $object_id): bool
     {
         if (!$this->_xbmc) {
             return false;

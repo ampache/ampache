@@ -1474,7 +1474,7 @@ abstract class Catalog extends database_object
      * @param string $table
      * @param string $sort
      * @param string $order
-     * @return array
+     * @return array{id: int|string, name: string}[]
      */
     public static function get_name_array(array $objects, string $table, string $sort = '', string $order = 'ASC'): array
     {
@@ -1530,7 +1530,10 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results, false)) {
-            $results[] = $row;
+            $results[] = [
+                'id' => $row['id'],
+                'name' => $row['name']
+            ];
         }
 
         return $results;
@@ -3913,7 +3916,7 @@ abstract class Catalog extends database_object
      * Get all tags from all Songs from [type] (artist, album, ...)
      * @param string $type
      * @param int $object_id
-     * @return array
+     * @return string[]
      */
     protected static function getSongTags(string $type, int $object_id): array
     {

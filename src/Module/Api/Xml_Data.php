@@ -756,7 +756,7 @@ class Xml_Data
      *
      * This takes a name array of objects and return the data in XML format
      *
-     * @param list<array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @param array{id: int|string, name: string}[] $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
      */
     public static function lists($objects): string
     {
@@ -768,8 +768,11 @@ class Xml_Data
 
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         foreach ($objects as $object) {
+            if (!is_array($object)) {
+                continue;
+            }
             $trimmed  = Catalog::trim_prefix(trim((string)$object['name']), $pattern);
-            $prefix   = $trimmed['prefix'];
+            $prefix   = $trimmed['prefix'] ?? null;
             $basename = $trimmed['string'];
             $string .= "<list id=\"" . $object['id'] . "\">\n" .
                 "\t<name><![CDATA[" . $object['name'] . "]]></name>\n" .
@@ -785,7 +788,7 @@ class Xml_Data
      *
      * This takes a name array of objects and return the data in XML format
      *
-     * @param list<array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @param array{id: int|string, name: string}[] $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
      * @param int|null $parent_id
      * @param string $parent_type
      * @param string $child_type
@@ -1059,11 +1062,12 @@ class Xml_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param array $objects Playlist id's to include
+     * @param list<int|string> $objects Playlist id's to include
      * @param User $user
      * @param bool $songs
+     * @return string
      */
-    public static function playlists($objects, $user, $songs = false): string
+    public static function playlists(array $objects, User $user, bool $songs = false): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1091,7 +1095,7 @@ class Xml_Data
                 $object_type    = 'search';
                 $playitem_total = (int)$playlist->last_count;
             } else {
-                $playlist = new Playlist($playlist_id);
+                $playlist = new Playlist((int)$playlist_id);
                 if ($playlist->isNew()) {
                     continue;
                 }

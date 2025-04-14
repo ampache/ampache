@@ -428,7 +428,7 @@ class Json_Data
      *
      * This takes a name array of objects and return the data in JSON list object
      *
-     * @param list<array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @param array{id: int|string, name: string}[] $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
      */
     public static function lists(array $objects): string
     {
@@ -446,7 +446,7 @@ class Json_Data
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         foreach ($objects as $object) {
             $trimmed  = Catalog::trim_prefix(trim((string)$object['name']), $pattern);
-            $prefix   = $trimmed['prefix'];
+            $prefix   = $trimmed['prefix'] ?? null;
             $basename = $trimmed['string'];
             $JSON[]   = [
                 "id" => (string)$object['id'],
@@ -465,7 +465,7 @@ class Json_Data
      *
      * This takes a name array of objects and return the data in JSON browse object
      *
-     * @param list<array{id: int|string, name:string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @param array{id: int|string, name: string}[] $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
      */
     public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
     {

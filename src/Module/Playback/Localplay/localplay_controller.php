@@ -44,9 +44,8 @@ abstract class localplay_controller
 
     /**
      * Takes a single object_id and removes it from the playlist
-     * @param int $object_id
      */
-    abstract public function delete_track($object_id): bool;
+    abstract public function delete_track(int $object_id): bool;
 
     abstract public function play(): bool;
 

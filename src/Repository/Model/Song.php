@@ -2103,11 +2103,12 @@ class Song extends database_object implements
 
     /**
      * Get transcode settings.
-     * @param string $target
-     * @param string $player
-     * @param array $options
+     * @param string|null $target
+     * @param string|null $player
+     * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
+     * @return array{format?: string, command?: string}
      */
-    public function get_transcode_settings($target = null, $player = null, $options = []): array
+    public function get_transcode_settings(?string $target = null, ?string $player = null, array $options = []): array
     {
         return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'song', $options);
     }

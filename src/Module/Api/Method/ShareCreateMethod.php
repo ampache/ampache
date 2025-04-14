@@ -64,7 +64,7 @@ final class ShareCreateMethod
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
-     * @param array $input
+     * @param array{filter: string, type: string, description?: string, expires?: int, api_format: string} $input
      *  filter      = (string) object_id
      *  type        = (string) object_type ('album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'song', 'video')
      *  description = (string) description (will be filled for you if empty) //optional

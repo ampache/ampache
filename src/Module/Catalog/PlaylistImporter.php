@@ -76,7 +76,7 @@ final class PlaylistImporter
                     $db_results = Dba::read($sql, [$url_data['id']]);
                     if (Dba::num_rows($db_results) && (int)$url_data['id'] > 0) {
                         debug_event(self::class, "import_playlist identified: {" . $url_data['id'] . "}", 5);
-                        $songs[$track] = $url_data['id'];
+                        $songs[$track] = (int)$url_data['id'];
                         $track++;
                         $found = true;
                     }

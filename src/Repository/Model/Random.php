@@ -318,8 +318,9 @@ class Random
      * @param string $sql_query
      * @param array $sql_params
      * @param array $data
+     * @return int[]
      */
-    private static function advanced_results($sql_query, $sql_params, $data): array
+    private static function advanced_results(string $sql_query, array $sql_params, array $data): array
     {
         // Run the query generated above so we can while it
         $db_results = Dba::read($sql_query, $sql_params);
@@ -349,7 +350,7 @@ class Random
                 }
 
                 $size_total += $new_size;
-                $results[]  = $row['id'];
+                $results[]  = (int)$row['id'];
 
                 // If we are within 4mb of target then jump ship
                 if (($data['size_limit'] - floor($size_total)) < 4) {
@@ -373,7 +374,7 @@ class Random
                 }
 
                 $time_total += $new_time;
-                $results[]  = $row['id'];
+                $results[]  = (int)$row['id'];
 
                 // If there are less then 2 min of free space return
                 if (($data['length'] - $time_total) < 2) {
@@ -382,7 +383,7 @@ class Random
             } // if length does matter
 
             if (!$size_limit && !$length) {
-                $results[] = (int) $row['id'];
+                $results[] = (int)$row['id'];
             }
         }
 
@@ -395,6 +396,10 @@ class Random
      * @param array $data
      * @param string $type
      * @param string $limit_sql
+     * @return array{
+     *     sql: string,
+     *     parameters: array
+     * }
      */
     private static function advanced_sql($data, $type, $limit_sql): array
     {

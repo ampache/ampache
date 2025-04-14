@@ -231,9 +231,9 @@ class Tmp_Playlist extends database_object
      * This function initializes a new Tmp_Playlist. It is associated with
      * the current session rather than a user, as you could have the same
      * user logged in from multiple locations.
-     * @param array $data
+     * @param array{session_id: string, type: string, object_type: string} $data
      */
-    public static function create($data): ?string
+    public static function create(array $data): ?string
     {
         $sql = "INSERT INTO `tmp_playlist` (`session`, `type`, `object_type`) VALUES (?, ?, ?)";
         Dba::write($sql, [$data['session_id'], $data['type'], $data['object_type']]);
@@ -326,9 +326,8 @@ class Tmp_Playlist extends database_object
     /**
      * delete_track
      * This deletes a track from the tmpplaylist
-     * @param $object_id
      */
-    public function delete_track($object_id): bool
+    public function delete_track(int $object_id): bool
     {
         /* delete the track its self */
         $sql = "DELETE FROM `tmp_playlist_data` WHERE `id` = ?";
