@@ -196,7 +196,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 $decname        = urldecode($name);
                 $decvalue       = urldecode($value);
             }
-            if (!$decname || !$decvalue) {
+            if (!$decname || $decvalue === false || $decvalue === '') {
                 continue;
             }
 

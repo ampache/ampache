@@ -179,7 +179,7 @@ class Subsonic_Api
      */
     private static function _check_parameter(array $input, string $parameter, bool $addheader = false): mixed
     {
-        if (empty($input[$parameter])) {
+        if (!array_key_exists($parameter, $input) || $input[$parameter] === '') {
             ob_end_clean();
             if ($addheader) {
                 self::_setHeader((string)($input['f'] ?? 'xml'));
