@@ -47,6 +47,17 @@ final class Album5Method
      *
      * filter  = (string) UID of Album
      * include = (array|string) 'songs' //optional
+     *
+     * @param array{
+     *     filter?: string,
+     *     include?: string|string[],
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function album(array $input, User $user): bool
     {

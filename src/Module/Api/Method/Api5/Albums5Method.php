@@ -50,6 +50,22 @@ final class Albums5Method
      * offset  = (integer) //optional
      * limit   = (integer) //optional
      * include = (array|string) 'songs' //optional
+     *
+     * @param array{
+     *     filter?: string,
+     *     include?: string|string[],
+     *     exact?: int,
+     *     add?: string,
+     *     update?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
 
     public static function albums(array $input, User $user): bool

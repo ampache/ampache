@@ -39,6 +39,21 @@ final class Albums3Method
     /**
      * albums
      * This returns albums based on the provided search filters
+     *
+     * @param array{
+     *     filter?: string,
+     *     include?: string|string[],
+     *     exact?: int,
+     *     add?: string,
+     *     update?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function albums(array $input, User $user): void
     {

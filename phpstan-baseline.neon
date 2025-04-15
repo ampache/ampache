@@ -441,46 +441,6 @@ parameters:
 			path: src/Module/Api/Method/AlbumSongsMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\AdvancedSearch3Method\\:\\:advanced_search\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/AdvancedSearch3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Album3Method\\:\\:album\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Album3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\AlbumSongs3Method\\:\\:album_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/AlbumSongs3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Albums3Method\\:\\:albums\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Albums3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Artist3Method\\:\\:artist\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Artist3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\ArtistAlbums3Method\\:\\:artist_albums\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/ArtistAlbums3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\ArtistSongs3Method\\:\\:artist_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/ArtistSongs3Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Artists3Method\\:\\:artists\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Artists3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Democratic3Method\\:\\:democratic\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Democratic3Method.php
@@ -566,11 +526,6 @@ parameters:
 			path: src/Module/Api/Method/Api3/Rate3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\SearchSongs3Method\\:\\:search_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/SearchSongs3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Song3Method\\:\\:song\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Song3Method.php
@@ -641,29 +596,14 @@ parameters:
 			path: src/Module/Api/Method/Api3/Videos3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\AdvancedSearch4Method\\:\\:advanced_search\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/AdvancedSearch4Method.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 3
 			path: src/Module/Api/Method/Api4/AdvancedSearch4Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Album4Method\\:\\:album\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Album4Method.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/Album4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\AlbumSongs4Method\\:\\:album_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/AlbumSongs4Method.php
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
@@ -671,19 +611,9 @@ parameters:
 			path: src/Module/Api/Method/Api4/AlbumSongs4Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Albums4Method\\:\\:albums\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Albums4Method.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/Albums4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Artist4Method\\:\\:artist\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Artist4Method.php
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
@@ -691,29 +621,14 @@ parameters:
 			path: src/Module/Api/Method/Api4/Artist4Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\ArtistAlbums4Method\\:\\:artist_albums\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/ArtistAlbums4Method.php
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
-			path: src/Module/Api/Method/Api4/ArtistAlbums4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\ArtistSongs4Method\\:\\:artist_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
 			path: src/Module/Api/Method/Api4/ArtistSongs4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/ArtistSongs4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Artists4Method\\:\\:artists\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Artists4Method.php
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
@@ -1011,11 +926,6 @@ parameters:
 			path: src/Module/Api/Method/Api4/Scrobble4Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\SearchSongs4Method\\:\\:search_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/SearchSongs4Method.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/SearchSongs4Method.php
@@ -1181,29 +1091,14 @@ parameters:
 			path: src/Module/Api/Method/Api4/Videos4Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\AdvancedSearch5Method\\:\\:advanced_search\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/AdvancedSearch5Method.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 4
 			path: src/Module/Api/Method/Api5/AdvancedSearch5Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Album5Method\\:\\:album\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Album5Method.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/Album5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\AlbumSongs5Method\\:\\:album_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/AlbumSongs5Method.php
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
@@ -1211,19 +1106,9 @@ parameters:
 			path: src/Module/Api/Method/Api5/AlbumSongs5Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Albums5Method\\:\\:albums\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Albums5Method.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/Albums5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Artist5Method\\:\\:artist\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Artist5Method.php
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
@@ -1231,29 +1116,14 @@ parameters:
 			path: src/Module/Api/Method/Api5/Artist5Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\ArtistAlbums5Method\\:\\:artist_albums\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/ArtistAlbums5Method.php
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
-			path: src/Module/Api/Method/Api5/ArtistAlbums5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\ArtistSongs5Method\\:\\:artist_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
 			path: src/Module/Api/Method/Api5/ArtistSongs5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/ArtistSongs5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Artists5Method\\:\\:artists\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Artists5Method.php
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
@@ -1634,11 +1504,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Scrobble5Method\\:\\:scrobble\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/Scrobble5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\SearchSongs5Method\\:\\:search_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/SearchSongs5Method.php
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"

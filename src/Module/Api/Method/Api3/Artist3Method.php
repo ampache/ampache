@@ -38,6 +38,14 @@ final class Artist3Method
     /**
      * artist
      * This returns a single artist based on the UID of said artist
+     *
+     * @param array{
+     *     filter: string,
+     *     include?: string|string[],
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function artist(array $input, User $user): void
     {

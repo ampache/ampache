@@ -53,6 +53,23 @@ final class Artists5Method
      * album_artist = (integer) 0,1, if true filter for album artists only //optional
      * offset       = (integer) //optional
      * limit        = (integer) //optional
+     *
+     * @param array{
+     *     filter?: string,
+     *     exact?: int,
+     *     add?: string,
+     *     update?: string,
+     *     include?: string|string[],
+     *     album_artist?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function artists(array $input, User $user): bool
     {

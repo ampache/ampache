@@ -38,6 +38,14 @@ final class Album3Method
     /**
      * album
      * This returns a single album based on the UID provided
+     *
+     * @param array{
+     *     filter: string,
+     *     include?: string|string[],
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function album(array $input, User $user): void
     {

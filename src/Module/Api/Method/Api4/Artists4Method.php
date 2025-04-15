@@ -51,6 +51,22 @@ final class Artists4Method
      * offset  = (integer) //optional
      * limit   = (integer) //optional
      * include = (array) 'albums'|'songs' //optional
+     *
+     * @param array{
+     *     filter?: string,
+     *     exact?: int,
+     *     add?: string,
+     *     update?: string,
+     *     include?: string|string[],
+     *     album_artist?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function artists(array $input, User $user): void
     {
