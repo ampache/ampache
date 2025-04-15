@@ -63,6 +63,21 @@ final class Stats5Method
      * username = (string)  //optional
      * offset   = (integer) //optional
      * limit    = (integer) Default: 10 (popular_threshold) //optional
+     *
+     * @param array{
+     *      type: string,
+     *      filter?: string,
+     *      user_id?: int,
+     *      username?: string,
+     *      offset?: int,
+     *      limit?: int,
+     *      cond?: string,
+     *      sort?: string,
+     *      api_format: string,
+     *      auth: string,
+     *  } $input
+     * @param User $user
+     * @return bool
      */
     public static function stats(array $input, User $user): bool
     {

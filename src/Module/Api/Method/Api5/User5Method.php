@@ -46,13 +46,21 @@ final class User5Method
      * This get a user's public information
      *
      * username = (string) $username
+     *
+     * @param array{
+     *      username: string,
+     *      api_format: string,
+     *      auth: string,
+     *  } $input
+     * @param User $user
+     * @return bool
      */
     public static function user(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
-        $username = (string) $input['username'];
+        $username = (string)$input['username'];
         if (empty($username)) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

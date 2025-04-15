@@ -54,6 +54,20 @@ final class PodcastEdit5Method
      * description = (string) //optional
      * generator   = (string) //optional
      * copyright   = (string) //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     feed?: string,
+     *     title?: string,
+     *     website?: string,
+     *     description?: string,
+     *     generator?: string,
+     *     copyright?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function podcast_edit(array $input, User $user): bool
     {

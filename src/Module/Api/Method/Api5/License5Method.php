@@ -47,6 +47,14 @@ final class License5Method
      * This returns a single license based on UID
      *
      * filter = (string) UID of license
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function license(array $input, User $user): bool
     {

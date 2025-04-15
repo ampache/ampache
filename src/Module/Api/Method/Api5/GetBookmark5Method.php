@@ -52,6 +52,17 @@ final class GetBookmark5Method
      *
      * filter = (string) object_id to find
      * type   = (string) object_type ('song', 'video', 'podcast_episode')
+     *
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     include?: int,
+     *     all?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function get_bookmark(array $input, User $user): bool
     {

@@ -49,6 +49,18 @@ final class ShareEdit5Method
      * download    = (boolean) 0,1 //optional
      * expires     = (integer) number of whole days before expiry //optional
      * description = (string) update description //optional
+     *
+     * @param array{
+     *      filter: string,
+     *      stream?: int,
+     *      download?: int,
+     *      expires?: int,
+     *      description?: string,
+     *      api_format: string,
+     *      auth: string,
+     *  } $input
+     * @param User $user
+     * @return bool
      */
     public static function share_edit(array $input, User $user): bool
     {

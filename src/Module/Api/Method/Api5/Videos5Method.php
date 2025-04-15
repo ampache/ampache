@@ -48,6 +48,19 @@ final class Videos5Method
      * exact  = (integer) 0,1, Whether to match the exact term or not //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     *
+     * @param array{
+     *      filter?: string,
+     *      exact?: int,
+     *      offset?: int,
+     *      limit?: int,
+     *      cond?: string,
+     *      sort?: string,
+     *      api_format: string,
+     *      auth: string,
+     *  } $input
+     * @param User $user
+     * @return bool
      */
     public static function videos(array $input, User $user): bool
     {
