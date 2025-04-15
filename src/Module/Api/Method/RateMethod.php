@@ -50,6 +50,16 @@ final class RateMethod
      * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
      * id     = (string) $object_id
      * rating = (integer) 0|1|2|3|4|5 $rating
+     *
+     * @param array{
+     *     type: string,
+     *     id: string,
+     *     rating: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function rate(array $input, User $user): bool
     {

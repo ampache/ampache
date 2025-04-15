@@ -47,7 +47,15 @@ final class PodcastEpisodeMethod
      *
      * Get the podcast_episode from it's id.
      *
-     * filter  = (string) podcast_episode ID number
+     * filter = (string) podcast_episode ID number
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function podcast_episode(array $input, User $user): bool
     {

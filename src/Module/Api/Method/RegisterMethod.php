@@ -49,11 +49,19 @@ final class RegisterMethod
      * Register a new user.
      * Requires the username, password and email.
      *
-     * @param array<string, string> $input
      * username = (string) $username
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password)
      * email    = (string) $email
+     *
+     * @param array{
+     *     username: string,
+     *     fullname?: string,
+     *     password: string,
+     *     email: string,
+     *     api_format: string,
+     * } $input
+     * @return bool
      */
     public static function register(array $input): bool
     {
