@@ -48,6 +48,17 @@ final class GetSimilar4Method
      * filter = (integer) artist id or song id
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function get_similar(array $input, User $user): bool
     {

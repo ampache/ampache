@@ -54,6 +54,24 @@ final class GetIndexes4Method
      * offset      = (integer) //optional
      * limit       = (integer) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
+     *
+     * @param array{
+     *     type: string,
+     *     filter?: string,
+     *     hide_search?: int,
+     *     exact?: int,
+     *     add?: string,
+     *     update?: string,
+     *     include?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function get_indexes(array $input, User $user): bool
     {

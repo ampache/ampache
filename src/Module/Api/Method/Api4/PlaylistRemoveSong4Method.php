@@ -50,6 +50,17 @@ final class PlaylistRemoveSong4Method
      * song   = (string) UID of song to remove from the playlist //optional
      * track  = (string) track number to remove from the playlist //optional
      * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
+     *
+     * @param array{
+     *     filter: string,
+     *     song?: string,
+     *     track?: string,
+     *     clear?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function playlist_remove_song(array $input, User $user): bool
     {
@@ -57,7 +68,7 @@ final class PlaylistRemoveSong4Method
             return false;
         }
         ob_end_clean();
-        $playlist = new Playlist($input['filter']);
+        $playlist = new Playlist((int)$input['filter']);
         if (!$playlist->has_collaborate($user)) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 

@@ -51,6 +51,16 @@ final class UpdateArt4Method
      * type      = (string) 'artist'|'album'
      * id        = (integer) $artist_id, $album_id
      * overwrite = (integer) 0,1 //optional
+     *
+     * @param array{
+     *      id: string,
+     *      type: string,
+     *      overwrite: int,
+     *      api_format: string,
+     *      auth: string,
+     *  } $input
+     * @param User $user
+     * @return bool
      */
     public static function update_art(array $input, User $user): bool
     {

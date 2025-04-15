@@ -45,6 +45,14 @@ final class Share4Method
      * Get the share from it's id.
      *
      * filter = (integer) Share ID number
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function share(array $input, User $user): bool
     {

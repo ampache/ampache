@@ -45,6 +45,13 @@ final class Goodbye4Method
      * Destroy session for auth key.
      *
      * auth = (string)
+     *
+     * @param array{
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function goodbye(array $input, User $user): bool
     {

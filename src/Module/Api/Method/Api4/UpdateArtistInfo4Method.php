@@ -47,6 +47,14 @@ final class UpdateArtistInfo4Method
      * Make sure lastfm_api_key is set in your configuration file
      *
      * id   = (integer) $artist_id
+     *
+     * @param array{
+     *      id: string,
+     *      api_format: string,
+     *      auth: string,
+     *  } $input
+     * @param User $user
+     * @return bool
      */
     public static function update_artist_info(array $input, User $user): bool
     {

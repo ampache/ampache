@@ -55,11 +55,19 @@ final class ShareCreate4Method
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
-     * @param array $input
      *  filter      = (string) object_id
      *  type        = (string) object_type
      *  description = (string) description (will be filled for you if empty) //optional
      *  expires     = (integer) days to keep active //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     description?: string,
+     *     expires?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      * @throws ContainerExceptionInterface
