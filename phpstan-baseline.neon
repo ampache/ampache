@@ -1936,27 +1936,12 @@ parameters:
 			path: src/Module/Api/Method/GenresMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\GetSimilarMethod\\:\\:get_similar\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/GetSimilarMethod.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 2
 			path: src/Module/Api/Method/GetSimilarMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\GoodbyeMethod\\:\\:goodbye\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/GoodbyeMethod.php
-
-		-
 			message: "#^Cannot call method getId\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/HandshakeMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\HandshakeMethod\\:\\:handshake\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/HandshakeMethod.php
 
@@ -1971,19 +1956,9 @@ parameters:
 			path: src/Module/Api/Method/LabelArtistsMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LabelMethod\\:\\:label\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LabelMethod.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/LabelMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LabelsMethod\\:\\:labels\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LabelsMethod.php
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
@@ -1991,69 +1966,9 @@ parameters:
 			path: src/Module/Api/Method/LabelsMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LastShoutsMethod\\:\\:last_shouts\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LastShoutsMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LicenseMethod\\:\\:license\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LicenseMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LicenseSongsMethod\\:\\:license_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LicenseSongsMethod.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/LicenseSongsMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LicensesMethod\\:\\:licenses\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LicensesMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\ListMethod\\:\\:list\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/ListMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LiveStreamCreateMethod\\:\\:live_stream_create\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LiveStreamCreateMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LiveStreamDeleteMethod\\:\\:live_stream_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LiveStreamDeleteMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LiveStreamEditMethod\\:\\:live_stream_edit\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LiveStreamEditMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LiveStreamMethod\\:\\:live_stream\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LiveStreamMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LiveStreamsMethod\\:\\:live_streams\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LiveStreamsMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LocalplayMethod\\:\\:localplay\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LocalplayMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LocalplaySongsMethod\\:\\:localplay_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LocalplaySongsMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\MethodInterface\\:\\:handle\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -2061,44 +1976,9 @@ parameters:
 			path: src/Module/Api/Method/MethodInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\NowPlayingMethod\\:\\:now_playing\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/NowPlayingMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlayerMethod\\:\\:player\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlayerMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistAddMethod\\:\\:playlist_add\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistAddMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistAddSongMethod\\:\\:playlist_add_song\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistAddSongMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistCreateMethod\\:\\:playlist_create\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistCreateMethod.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PlaylistCreateMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistDeleteMethod\\:\\:playlist_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistDeleteMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistEditMethod\\:\\:playlist_edit\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistEditMethod.php
 
 		-
 			message: "#^Variable \\$items in empty\\(\\) always exists and is not falsy\\.$#"
@@ -2106,24 +1986,9 @@ parameters:
 			path: src/Module/Api/Method/PlaylistEditMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistGenerateMethod\\:\\:playlist_generate\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistGenerateMethod.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PlaylistGenerateMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistHashMethod\\:\\:playlist_hash\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistHashMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistMethod\\:\\:playlist\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistMethod.php
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
@@ -2131,24 +1996,9 @@ parameters:
 			path: src/Module/Api/Method/PlaylistMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistRemoveSongMethod\\:\\:playlist_remove_song\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistRemoveSongMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistSongsMethod\\:\\:playlist_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistSongsMethod.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PlaylistSongsMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistsMethod\\:\\:playlists\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistsMethod.php
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"

@@ -55,11 +55,11 @@ final class GetExternalMetadataMethod
      * type   = (string) 'song', 'artist', 'album', 'label'
      *
      * @param array{
-     *        filter: string,
-     *        type: string,
-     *        api_format: string,
-     *        auth: string,
-     *    } $input
+     *     filter: string,
+     *     type: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

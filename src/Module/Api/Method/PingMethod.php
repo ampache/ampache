@@ -49,9 +49,14 @@ final class PingMethod
      * This can be called without being authenticated, it is useful for determining if what the status
      * of the server is, and what version it is running/compatible with
      *
-     * @param array<string, string> $input
      * auth    = (string) //optional
      * version = (string) $version //optional
+     *
+     * @param array{
+     *     auth?: string,
+     *     version?: string,
+     *     api_format: string,
+     * } $input
      */
     public static function ping(array $input): void
     {

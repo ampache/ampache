@@ -54,6 +54,18 @@ final class LiveStreamCreateMethod
      * codec    = (string) stream codec ('mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac')
      * catalog  = (int) Catalog ID to associate with this stream
      * site_url = (string) Homepage URL of the stream //optional
+     *
+     * @param array{
+     *     name: string,
+     *     url: string,
+     *     codec: string,
+     *     catalog: int,
+     *     site_url?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function live_stream_create(array $input, User $user): bool
     {

@@ -58,13 +58,13 @@ final class GetBookmarkMethod
      * all     = (integer) 0,1, if true every bookmark related to the object //optional
      *
      * @param array{
-     *       filter: string,
-     *       type: string,
-     *       include?: int,
-     *       all?: int,
-     *       api_format: string,
-     *       auth: string,
-     *   } $input
+     *     filter: string,
+     *     type: string,
+     *     include?: int,
+     *     all?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

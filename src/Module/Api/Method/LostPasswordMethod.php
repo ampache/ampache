@@ -51,15 +51,17 @@ final class LostPasswordMethod
      * Allows a non-admin user to reset their password without web access to the main site.
      * It requires a reset token hash using your username and email
      *
-     * @param array<string, string> $input
      * auth = (string) (
      *   $username;
      *   $key = hash('sha256', 'email');
      *   auth = hash('sha256', $username . $key);
      * )
+     *
+     * @param array{
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public static function lost_password(array $input): bool
     {

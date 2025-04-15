@@ -64,20 +64,20 @@ final class GetIndexesMethod
      * sort        = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
-     *      type: string,
-     *      filter?: string,
-     *      hide_search?: int,
-     *      exact?: int,
-     *      add?: string,
-     *      update?: string,
-     *      include?: int,
-     *      offset?: int,
-     *      limit?: int,
-     *      cond?: string,
-     *      sort?: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     type: string,
+     *     filter?: string,
+     *     hide_search?: int,
+     *     exact?: int,
+     *     add?: string,
+     *     update?: string,
+     *     include?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

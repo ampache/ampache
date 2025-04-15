@@ -56,6 +56,20 @@ final class PlayerMethod
      * state   = (string)  'play', 'stop', DEFAULT 'play' //optional
      * time    = (integer) current song time in whole seconds, DEFAULT 0 //optional
      * client  = (string)  $agent, DEFAULT 'api' //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     type?: string,
+     *     state?: string,
+     *     time?: int,
+     *     client?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function player(array $input, User $user): bool
     {

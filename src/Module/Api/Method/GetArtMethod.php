@@ -56,13 +56,13 @@ final class GetArtMethod
      * size     = (string) width x height ('640x480') //optional
      *
      * @param array{
-     *      id: string,
-     *      type: string,
-     *      fallback?: int,
-     *      size?: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     id: string,
+     *     type: string,
+     *     fallback?: int,
+     *     size?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */
