@@ -57,6 +57,7 @@ final class BookmarkCreateMethod
      * client   = (string) Agent string //optional
      * date     = (integer) UNIXTIME() //optional
      * include  = (integer) 0,1, if true include the object in the bookmark //optional
+     *
      * @param array{
      *     filter: string,
      *     type: string,

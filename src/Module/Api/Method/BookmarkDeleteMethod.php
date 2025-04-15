@@ -53,6 +53,7 @@ final class BookmarkDeleteMethod
      * filter = (string) object_id to delete
      * type   = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode')
      * client = (string) Agent string //optional
+     *
      * @param array{
      *     filter: string,
      *     type: string,

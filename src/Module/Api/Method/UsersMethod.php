@@ -43,6 +43,7 @@ final class UsersMethod
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get ids and usernames for your site
+     *
      * @param array{
      *     offset?: string,
      *     limit?: string,

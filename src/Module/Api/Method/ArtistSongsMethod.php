@@ -52,6 +52,7 @@ final class ArtistSongsMethod
      * limit  = (integer) //optional
      * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
      * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     *
      * @param array{
      *     filter: string,
      *     top50?: int,

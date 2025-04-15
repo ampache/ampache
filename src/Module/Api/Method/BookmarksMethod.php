@@ -47,6 +47,7 @@ final class BookmarksMethod
      *
      * client = (string) Filter results to a specific comment/client name //optional
      * include = (integer) 0,1, if true include the object in the bookmark //optional
+     *
      * @param array{
      *     client?: string,
      *     include?: int,

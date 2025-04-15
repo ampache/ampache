@@ -47,6 +47,14 @@ final class SongDeleteMethod
      * Delete an existing song.
      *
      * filter = (string) UID of song to delete
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function song_delete(array $input, User $user): bool
     {

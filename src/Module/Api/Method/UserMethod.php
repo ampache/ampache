@@ -50,10 +50,12 @@ final class UserMethod
      * username = (string) $username
      *
      * @param array{
-     *     username?: scalar,
+     *     username?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param User $user
+     * @return bool
      */
     public static function user(array $input, User $user): bool
     {

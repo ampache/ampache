@@ -48,6 +48,7 @@ final class ArtistMethod
      *
      * filter  = (string) Alpha-numeric search term
      * include = (array|string) 'albums', 'songs' //optional
+     *
      * @param array{
      *     filter: string,
      *     include?: string|string[],

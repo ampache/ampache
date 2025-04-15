@@ -63,6 +63,23 @@ final class StatsMethod
      * username = (string)  //optional
      * offset   = (integer) //optional
      * limit    = (integer) Default: 10 (popular_threshold) //optional
+     * cond     = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort     = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     *
+     * @param array{
+     *     type: string,
+     *     filter?: string,
+     *     user_id?: int,
+     *     username?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function stats(array $input, User $user): bool
     {
@@ -197,18 +214,16 @@ final class StatsMethod
             return false;
         }
 
-        $has_sort = isset($input['sort']);
-        $has_cond = isset($input['cond']);
         // allow sorting results
-        if ($has_sort || $has_cond) {
+        if (isset($input['sort']) || isset($input['cond'])) {
             $outputBrowse = Api::getBrowse($user);
             $outputBrowse->set_type($type);
             $outputBrowse->set_filter('id', $results);
-            if ($has_sort) {
+            if (isset($input['sort'])) {
                 $outputBrowse->set_sort_order(html_entity_decode((string)$input['sort']), ['', '']);
             }
 
-            if ($has_cond) {
+            if (isset($input['cond'])) {
                 $outputBrowse->set_conditions(html_entity_decode((string)$input['cond']));
             }
 
