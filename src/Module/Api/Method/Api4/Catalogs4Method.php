@@ -45,6 +45,17 @@ final class Catalogs4Method
      * filter = (string) set $filter_type 'music', 'video', 'podcast' //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     *
+     * @param array{
+     *     filter?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function catalogs(array $input, User $user): void
     {

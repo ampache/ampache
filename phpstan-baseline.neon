@@ -441,11 +441,6 @@ parameters:
 			path: src/Module/Api/Method/AlbumSongsMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Democratic3Method\\:\\:democratic\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Democratic3Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Followers3Method\\:\\:followers\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Followers3Method.php
@@ -636,17 +631,7 @@ parameters:
 			path: src/Module/Api/Method/Api4/Artists4Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Catalog4Method\\:\\:catalog\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Catalog4Method.php
-
-		-
 			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/CatalogAction4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\CatalogAction4Method\\:\\:catalog_action\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/CatalogAction4Method.php
 
@@ -654,26 +639,6 @@ parameters:
 			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/CatalogFile4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\CatalogFile4Method\\:\\:catalog_file\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/CatalogFile4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Catalogs4Method\\:\\:catalogs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Catalogs4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Democratic4Method\\:\\:democratic\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Democratic4Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Download4Method\\:\\:download\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Download4Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\Flag4Method\\:\\:flag\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -1131,37 +1096,7 @@ parameters:
 			path: src/Module/Api/Method/Api5/Artists5Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\BookmarkCreate5Method\\:\\:bookmark_create\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/BookmarkCreate5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\BookmarkDelete5Method\\:\\:bookmark_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/BookmarkDelete5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\BookmarkEdit5Method\\:\\:bookmark_edit\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/BookmarkEdit5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Bookmarks5Method\\:\\:bookmarks\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Bookmarks5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Catalog5Method\\:\\:catalog\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Catalog5Method.php
-
-		-
 			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/CatalogAction5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\CatalogAction5Method\\:\\:catalog_action\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/CatalogAction5Method.php
 
@@ -1169,36 +1104,6 @@ parameters:
 			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/CatalogFile5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\CatalogFile5Method\\:\\:catalog_file\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/CatalogFile5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Catalogs5Method\\:\\:catalogs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Catalogs5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\DeletedSongs5Method\\:\\:deleted_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/DeletedSongs5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\DeletedVideos5Method\\:\\:deleted_videos\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/DeletedVideos5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Democratic5Method\\:\\:democratic\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Democratic5Method.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Download5Method\\:\\:download\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Download5Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Flag5Method\\:\\:flag\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
