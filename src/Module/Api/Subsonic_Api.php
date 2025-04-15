@@ -1887,7 +1887,7 @@ class Subsonic_Api
         }
 
         $rating = self::_check_parameter($input, 'rating');
-        if (!$rating) {
+        if ($rating === false) {
             return;
         }
 
