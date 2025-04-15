@@ -40,12 +40,20 @@ final class PlaylistCreate3Method
     /**
      * playlist_create
      * Create a new playlist and return it
+     *
+     * @param array{
+     *     name: string,
+     *     type?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function playlist_create(array $input, User $user): void
     {
         $name = $input['name'];
-        $type = $input['type'];
-        if ($type != 'private') {
+        $type = $input['type'] ?? 'public';
+        if ($type !== 'private' && $type !== 'public') {
             $type = 'public';
         }
         Catalog::count_table('playlist');

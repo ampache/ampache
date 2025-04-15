@@ -42,19 +42,19 @@ final class Artists3Method
      * artist objects. This function is deprecated!
      *
      * @param array{
-     *      filter?: string,
-     *      exact?: int,
-     *      add?: string,
-     *      update?: string,
-     *      include?: string|string[],
-     *      album_artist?: int,
-     *      offset?: int,
-     *      limit?: int,
-     *      cond?: string,
-     *      sort?: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     filter?: string,
+     *     exact?: int,
+     *     add?: string,
+     *     update?: string,
+     *     include?: string|string[],
+     *     album_artist?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      */
     public static function artists(array $input, User $user): void

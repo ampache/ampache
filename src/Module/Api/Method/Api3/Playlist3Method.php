@@ -38,6 +38,13 @@ final class Playlist3Method
     /**
      * playlist
      * This returns a single playlist
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function playlist(array $input, User $user): void
     {

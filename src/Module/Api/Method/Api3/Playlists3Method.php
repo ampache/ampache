@@ -39,6 +39,23 @@ final class Playlists3Method
     /**
      * playlists
      * This returns playlists based on the specified filter
+     *
+     * @param array{
+     *     filter?: string,
+     *     hide_search?: int,
+     *     show_dupes?: int,
+     *     include?: int,
+     *     exact?: int,
+     *     add?: string,
+     *     update?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function playlists(array $input, User $user): void
     {
