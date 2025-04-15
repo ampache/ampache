@@ -1885,9 +1885,11 @@ class Subsonic_Api
         if (!$object_id) {
             return;
         }
-        $rating = (isset($input['rating']))
-            ? (int)$input['rating']
-            : -1;
+
+        $rating = self::_check_parameter($input, 'rating');
+        if (!$rating) {
+            return;
+        }
 
         $robj = null;
         if (Subsonic_Xml_Data::_isArtist($object_id)) {
