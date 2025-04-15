@@ -1885,8 +1885,11 @@ class Subsonic_Api
         if (!$object_id) {
             return;
         }
-        $rating = (int)($input['rating'] ?? -1);
-        $robj   = null;
+        $rating = (isset($input['rating']))
+            ? (int)$input['rating']
+            : -1;
+
+        $robj = null;
         if (Subsonic_Xml_Data::_isArtist($object_id)) {
             $robj = new Rating(Subsonic_Xml_Data::_getAmpacheId($object_id), "artist");
         } elseif (Subsonic_Xml_Data::_isAlbum($object_id)) {
