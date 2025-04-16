@@ -1089,7 +1089,16 @@ class Video extends database_object implements
     /**
      * get_deleted
      * get items from the deleted_videos table
-     * @return int[]
+     * @return list<array{
+     *     id: int,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: int,
+     *     total_count: int,
+     *     total_skip: int
+     * }>
      */
     public static function get_deleted(): array
     {
@@ -1097,7 +1106,16 @@ class Video extends database_object implements
         $sql        = "SELECT * FROM `deleted_video`";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $deleted[] = $row;
+            $deleted[] = [
+                'id' => (int) $row['id'],
+                'addition_time' => (int) $row['addition_time'],
+                'delete_time' => (int) $row['delete_time'],
+                'title' => $row['title'],
+                'file' => $row['file'],
+                'catalog' => (int) $row['catalog'],
+                'total_count' => (int) $row['total_count'],
+                'total_skip' => (int) $row['total_skip'],
+            ];
         }
 
         return $deleted;

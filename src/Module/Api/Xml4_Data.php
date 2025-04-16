@@ -453,9 +453,9 @@ class Xml4_Data
             }
             $artist->format();
 
-            $rating      = new Rating((int)$artist_id, 'artist');
+            $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag((int)$artist_id, 'artist');
+            $flag        = new Userflag($artist->id, 'artist');
             $tag_string  = self::tags_string($artist->get_tags());
 
             // Build the Art URL, include session
@@ -463,12 +463,12 @@ class Xml4_Data
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist((int)$artist_id), [], $user, false);
+                $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, false);
             } else {
                 $albums = $artist->album_count;
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs(self::getSongRepository()->getByArtist((int)$artist_id), $user, false);
+                $songs = self::songs(self::getSongRepository()->getByArtist($artist->id), $user, false);
             } else {
                 $songs = $artist->song_count;
             }
@@ -506,9 +506,9 @@ class Xml4_Data
             }
             $album->format();
 
-            $rating      = new Rating((int)$album_id, 'album');
+            $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag((int)$album_id, 'album');
+            $flag        = new Userflag($album->id, 'album');
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $album->id . '&object_type=album';
@@ -659,10 +659,10 @@ class Xml4_Data
             if ($podcast === null) {
                 continue;
             }
-            $rating      = new Rating((int)$podcast_id, 'podcast');
+            $rating      = new Rating($podcast->getId(), 'podcast');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag((int)$podcast_id, 'podcast');
-            $art_url     = Art::url((int)$podcast_id, 'podcast', Core::get_request('auth'));
+            $flag        = new Userflag($podcast->getId(), 'podcast');
+            $art_url     = Art::url($podcast->getId(), 'podcast', Core::get_request('auth'));
             $string .= "<podcast id=\"$podcast_id\">\n\t<name><![CDATA[" . $podcast->get_fullname() . "]]></name>\n\t<description><![CDATA[" . $podcast->get_description() . "]]></description>\n\t<language><![CDATA[" . scrub_out($podcast->getLanguage()) . "]]></language>\n\t<copyright><![CDATA[" . scrub_out($podcast->getCopyright()) . "]]></copyright>\n\t<feed_url><![CDATA[" . $podcast->getFeedUrl() . "]]></feed_url>\n\t<generator><![CDATA[" . scrub_out($podcast->getGenerator()) . "]]></generator>\n\t<website><![CDATA[" . scrub_out($podcast->getWebsite()) . "]]></website>\n\t<build_date><![CDATA[" . $podcast->getLastBuildDate()->format(DATE_ATOM) . "]]></build_date>\n\t<sync_date><![CDATA[" . $podcast->getLastSyncDate()->format(DATE_ATOM) . "]]></sync_date>\n\t<public_url><![CDATA[" . $podcast->get_link() . "]]></public_url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n";
             if ($episodes) {
                 $results = $podcast->getEpisodeIds();
@@ -699,9 +699,9 @@ class Xml4_Data
                 continue;
             }
             $episode->format();
-            $rating      = new Rating((int)$episode_id, 'podcast_episode');
+            $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag((int)$episode_id, 'podcast_episode');
+            $flag        = new Userflag($episode->id, 'podcast_episode');
             $art_url     = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
             $string .= "\t<podcast_episode id=\"$episode_id\">\n\t\t<title><![CDATA[" . $episode->get_fullname() . "]]></title>\n\t\t<name><![CDATA[" . $episode->get_fullname() . "]]></name>\n\t\t<description><![CDATA[" . $episode->get_description() . "]]></description>\n\t\t<category><![CDATA[" . $episode->getCategory() . "]]></category>\n\t\t<author><![CDATA[" . $episode->getAuthor() . "]]></author>\n\t\t<author_full><![CDATA[" . $episode->getAuthor() . "]]></author_full>\n\t\t<website><![CDATA[" . $episode->getWebsite() . "]]></website>\n\t\t<pubdate><![CDATA[" . $episode->getPubDate()->format(DATE_ATOM) . "]]></pubdate>\n\t\t<state><![CDATA[" . $episode->getState()->toDescription() . "]]></state>\n\t\t<filelength><![CDATA[" . $episode->get_f_time(true) . "]]></filelength>\n\t\t<filesize><![CDATA[" . $episode->getSizeFormatted() . "]]></filesize>\n\t\t<filename><![CDATA[" . $episode->getFileName() . "]]></filename>\n\t\t<mime><![CDATA[" . ((isset($episode->mime)) ? $episode->mime : '') . "]]></mime>\n\t\t<public_url><![CDATA[" . $episode->get_link() . "]]></public_url>\n\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t\t<catalog>" . $episode->catalog . "</catalog>\n\t\t<art><![CDATA[" . $art_url . "]]></art>\n\t\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t\t<preciserating>" . $user_rating . "</preciserating>\n\t\t<rating>" . $user_rating . "</rating>\n\t\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n\t\t<played>" . $episode->played . "</played>\n\t</podcast_episode>\n";
         } // end foreach
@@ -800,10 +800,10 @@ class Xml4_Data
                 continue;
             }
             $video->format();
-            $rating      = new Rating((int)$video_id, 'video');
+            $rating      = new Rating($video->id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag((int)$video_id, 'video');
-            $art_url     = Art::url((int)$video_id, 'video', Core::get_request('auth'));
+            $flag        = new Userflag($video->id, 'video');
+            $art_url     = Art::url($video->id, 'video', Core::get_request('auth'));
 
             $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->f_resolution . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n</video>\n";
         } // end foreach

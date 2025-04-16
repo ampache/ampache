@@ -271,22 +271,12 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:videos\\(\\) has parameter \\$videos with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:artists\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:deleted\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
 
@@ -317,11 +307,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:artists\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:deleted\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -1526,11 +1511,6 @@ parameters:
 			path: src/Module/Api/Xml4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:deleted\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:keyed_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml5_Data.php
@@ -1544,16 +1524,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:rss_feed\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:deleted\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:keyed_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
@@ -6796,11 +6766,6 @@ parameters:
 			path: src/Repository/Model/Preference.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Preference.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:get_categories\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Preference.php
@@ -7051,11 +7016,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_deleted\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -7292,11 +7252,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:get_deleted\\(\\) should return array\\<int\\> but returns array\\<int\\<0, max\\>, array\\>\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 

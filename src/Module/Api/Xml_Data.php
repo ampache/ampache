@@ -204,14 +204,9 @@ class Xml_Data
      * @param string $type
      * @return string
      */
-    public static function output_xml_from_array($array, bool $callback = false, string $type = ''): string
+    public static function output_xml_from_array(array $array, bool $callback = false, string $type = ''): string
     {
         $string = '';
-
-        // If we weren't passed an array then return
-        if (!is_array($array)) {
-            return $string;
-        }
 
         // The type is used for the different XML docs we pass
         switch ($type) {
@@ -278,13 +273,8 @@ class Xml_Data
      * keyed_array
      *
      * This will build an xml document from a key'd array,
-     *
-     * @param array $array keyed array of objects (key => value, key => value)
-     * @param bool $callback (don't output xml when true)
-     * @param bool|string $object
-     * @return string
      */
-    public static function keyed_array($array, bool $callback = false, bool|string $object = false): string
+    public static function keyed_array(array $array, bool $callback = false, bool|string $object = false): string
     {
         $string = '';
         // Foreach it
@@ -322,13 +312,8 @@ class Xml_Data
      *   <$object_type> //optional
      *     <$item id="123">
      *       <data></data>
-     *
-     * @param array $array
-     * @param string $item
-     * @param string $object_type
-     * @return string
      */
-    public static function object_array($array, string $item, string $object_type = ''): string
+    public static function object_array(array $array, string $item, string $object_type = ''): string
     {
         $string = ($object_type == '') ? '' : "<$object_type>\n";
         // Foreach it
@@ -573,8 +558,8 @@ class Xml_Data
                         $string .= "\t<albumartist id=\"" . $song->albumartist . "\"><name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</albumartist>\n";
                     }
                     $string .= "\t<disk><![CDATA[" . $song->disk . "]]></disk>\n\t<track>" . $song->track . "</track>\n</$object_type>\n";
-                    break;
                 }
+                break;
             case 'playlist':
                 foreach ($objects as $object_id) {
                     if ((int)$object_id === 0) {
@@ -758,7 +743,7 @@ class Xml_Data
      *
      * @param array{id: int|string, name: string}[] $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
      */
-    public static function lists($objects): string
+    public static function lists(array $objects): string
     {
         $count  = self::$count ?? count($objects);
         $string = "<total_count>" . $count . "</total_count>\n<md5>" . md5(serialize($objects)) . "</md5>\n";
@@ -788,13 +773,14 @@ class Xml_Data
      *
      * This takes a name array of objects and return the data in XML format
      *
-     * @param array{id: int|string, name: string}[] $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @param list<array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
      * @param int|null $parent_id
      * @param string $parent_type
      * @param string $child_type
      * @param int|null $catalog_id
+     * @return string
      */
-    public static function browses($objects, $parent_id, $parent_type, $child_type, $catalog_id): string
+    public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
     {
         $count  = self::$count ?? count($objects);
         $string = "<total_count>" . $count . "</total_count>\n<md5>" . md5(serialize($objects)) . "</md5>\n";
@@ -827,8 +813,9 @@ class Xml_Data
      *
      * @param int[] $objects Licence id's assigned to songs and artists
      * @param User $user
+     * @return string
      */
-    public static function licenses($objects, $user): string
+    public static function licenses(array $objects, User $user): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -856,8 +843,9 @@ class Xml_Data
      *
      * @param int[] $objects
      * @param User $user
+     * @return string
      */
-    public static function labels($objects, $user): string
+    public static function labels(array $objects, User $user): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -890,8 +878,9 @@ class Xml_Data
      * @param list<int|string> $objects
      * @param User $user
      * @param bool $full_xml
+     * @return string
      */
-    public static function live_streams($objects, $user, $full_xml = true): string
+    public static function live_streams(array $objects, User $user, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -916,8 +905,9 @@ class Xml_Data
      *
      * @param int[] $objects Genre id's to include
      * @param User $user
+     * @return string
      */
-    public static function genres($objects, $user): string
+    public static function genres(array $objects, User $user): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1147,8 +1137,9 @@ class Xml_Data
      *
      * @param list<int|string> $objects Share id's to include
      * @param User $user
+     * @return string
      */
-    public static function shares($objects, $user): string
+    public static function shares(array $objects, User $user): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1215,8 +1206,9 @@ class Xml_Data
      *
      * @param list<int|string> $objects group of catalog id's
      * @param User $user
+     * @return string
      */
-    public static function catalogs($objects, $user): string
+    public static function catalogs(array $objects, User $user): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1245,8 +1237,9 @@ class Xml_Data
      * @param int[] $objects Podcast id's to include
      * @param User $user
      * @param bool $episodes include the episodes of the podcast //optional
+     * @return string
      */
-    public static function podcasts($objects, $user, $episodes = false): string
+    public static function podcasts(array $objects, User $user, bool $episodes = false): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1289,8 +1282,9 @@ class Xml_Data
      * @param list<int|string> $objects Podcast_Episode id's to include
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
+     * @return string
      */
-    public static function podcast_episodes($objects, $user, $full_xml = true): string
+    public static function podcast_episodes(array $objects, User $user, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1305,9 +1299,9 @@ class Xml_Data
                 continue;
             }
             $episode->format();
-            $rating      = new Rating((int)$episode_id, 'podcast_episode');
+            $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag((int)$episode_id, 'podcast_episode');
+            $flag        = new Userflag($episode->id, 'podcast_episode');
             $art_url     = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
             $string .= "\t<podcast_episode id=\"$episode_id\">\n\t\t<title><![CDATA[" . $episode->get_fullname() . "]]></title>\n\t\t<name><![CDATA[" . $episode->get_fullname() . "]]></name>\n\t\t<podcast id=\"$episode->podcast\">\n\t\t\t<name><![CDATA[" . $episode->getPodcastName() . "]]></name></podcast>\n\t\t<description><![CDATA[" . $episode->get_description() . "]]></description>\n\t\t<category><![CDATA[" . $episode->getCategory() . "]]></category>\n\t\t<author><![CDATA[" . $episode->getAuthor() . "]]></author>\n\t\t<author_full><![CDATA[" . $episode->getAuthor() . "]]></author_full>\n\t\t<website><![CDATA[" . $episode->getWebsite() . "]]></website>\n\t\t<pubdate><![CDATA[" . $episode->getPubDate()->format(DATE_ATOM) . "]]></pubdate>\n\t\t<state><![CDATA[" . $episode->getState()->toDescription() . "]]></state>\n\t\t<filelength><![CDATA[" . $episode->get_f_time(true) . "]]></filelength>\n\t\t<filesize><![CDATA[" . $episode->getSizeFormatted() . "]]></filesize>\n\t\t<filename><![CDATA[" . $episode->getFileName() . "]]></filename>\n\t\t<mime><![CDATA[" . ((isset($episode->mime)) ? $episode->mime : '') . "]]></mime>\n\t\t<time>" . (int)$episode->time . "</time>\n\t\t<size>" . (int)$episode->size . "</size>\n\t<bitrate>" . $episode->bitrate . "</bitrate>\n\t<stream_bitrate>" . $episode->bitrate . "</stream_bitrate>\n\t<rate>" . $episode->rate . "</rate>\n\t<mode><![CDATA[" . $episode->mode . "]]></mode>\n\t<channels>" . $episode->channels . "</channels>\n\t\t<public_url><![CDATA[" . $episode->get_link() . "]]></public_url>\n\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t\t<catalog>" . $episode->catalog . "</catalog>\n\t\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($episode->has_art() ? 1 : 0) . "</has_art>\n\t\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t\t\t<rating>" . $user_rating . "</rating>\n\t\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n\t\t<playcount>" . $episode->total_count . "</playcount>\n\t\t<played>" . $episode->played . "</played>\n\t</podcast_episode>\n";
         } // end foreach
@@ -1323,8 +1317,9 @@ class Xml_Data
      * @param int[] $objects
      * @param User $user
      * @param bool $full_xml
+     * @return string
      */
-    public static function songs($objects, $user, $full_xml = true): string
+    public static function songs(array $objects, User $user, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1409,8 +1404,9 @@ class Xml_Data
      * @param list<int|string> $objects Video id's to include
      * @param User $user
      * @param bool $full_xml
+     * @return string
      */
-    public static function videos($objects, $user, $full_xml = true): string
+    public static function videos(array $objects, User $user, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1425,10 +1421,10 @@ class Xml_Data
                 continue;
             }
             $video->format();
-            $rating      = new Rating((int)$video_id, 'video');
+            $rating      = new Rating($video->id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag((int)$video_id, 'video');
-            $art_url     = Art::url((int)$video_id, 'video', Core::get_request('auth'));
+            $flag        = new Userflag($video->id, 'video');
+            $art_url     = Art::url($video->id, 'video', Core::get_request('auth'));
 
             $string .= "<video id=\"" . $video->id . "\">\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->f_resolution . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::genre_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($video->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $video->total_count . "</playcount>\n</video>\n";
         } // end foreach
@@ -1448,6 +1444,7 @@ class Xml_Data
      *     track_id: int,
      *     track: int}> $object_ids Object IDs
      * @param User $user
+     * @return string
      */
     public static function democratic(array $object_ids, User $user): string
     {
@@ -1515,7 +1512,7 @@ class Xml_Data
      *
      * @param int[] $objects User identifier list
      */
-    public static function users($objects): string
+    public static function users(array $objects): string
     {
         $count = self::$count ?? count($objects);
         if (($count > self::$limit || self::$offset > 0) && self::$limit) {
@@ -1583,11 +1580,7 @@ class Xml_Data
         return self::output_xml($string);
     }
 
-    /**
-     * @param string $string
-     * @param bool $full_xml
-     */
-    public static function output_xml($string, $full_xml = true): string
+    public static function output_xml(string $string, bool $full_xml = true): string
     {
         $xml = "";
         if ($full_xml) {
@@ -1620,7 +1613,7 @@ class Xml_Data
      *
      * @param int[] $activities Activity identifier list
      */
-    public static function timeline($activities): string
+    public static function timeline(array $activities): string
     {
         $string = "";
         foreach ($activities as $activity_id) {
@@ -1643,9 +1636,22 @@ class Xml_Data
      * we want
      *
      * @param string $object_type ('song', 'podcast_episode', 'video')
-     * @param array $objects deleted object list
+     * @param list<array{
+     *     id: int,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: int,
+     *     total_count: int,
+     *     total_skip: int,
+     *     update_time?: int,
+     *     album?: int,
+     *     artist?: int,
+     *     podcast?: int,
+     * }> $objects deleted object list
      */
-    public static function deleted($object_type, $objects): string
+    public static function deleted(string $object_type, array $objects): string
     {
         $count = self::$count ?? count($objects);
         if (($count > self::$limit || self::$offset > 0) && self::$limit) {
@@ -1657,12 +1663,16 @@ class Xml_Data
         foreach ($objects as $row) {
             switch ($object_type) {
                 case 'song':
-                    // id, addition_time, delete_time, title, file, `catalog`, total_count, total_skip, update_time, album, artist
-                    $string .= "<deleted_song id=\"" . $row['id'] . "\">\n\t<addition_time>" . $row['addition_time'] . "</addition_time>\n\t<delete_time>" . $row['delete_time'] . "</delete_time>\n\t<title><![CDATA[" . $row['title'] . "]]></title>\n\t<file><![CDATA[" . $row['file'] . "]]></file>\n\t<catalog>" . $row['catalog'] . "</catalog>\n\t<total_count>" . $row['total_count'] . "</total_count>\n\t<total_skip>" . $row['total_skip'] . "</total_skip>\n\t<update_time>" . $row['update_time'] . "</update_time>\n\t<album>" . $row['album'] . "</album>\n\t<artist>" . $row['artist'] . "</artist>\n</deleted_song>\n";
+                    if (isset($row['album']) && isset($row['artist']) && isset($row['update_time'])) {
+                        // id, addition_time, delete_time, title, file, `catalog`, total_count, total_skip, update_time, album, artist
+                        $string .= "<deleted_song id=\"" . $row['id'] . "\">\n\t<addition_time>" . $row['addition_time'] . "</addition_time>\n\t<delete_time>" . $row['delete_time'] . "</delete_time>\n\t<title><![CDATA[" . $row['title'] . "]]></title>\n\t<file><![CDATA[" . $row['file'] . "]]></file>\n\t<catalog>" . $row['catalog'] . "</catalog>\n\t<total_count>" . $row['total_count'] . "</total_count>\n\t<total_skip>" . $row['total_skip'] . "</total_skip>\n\t<update_time>" . $row['update_time'] . "</update_time>\n\t<album>" . $row['album'] . "</album>\n\t<artist>" . $row['artist'] . "</artist>\n</deleted_song>\n";
+                    }
                     break;
                 case 'podcast_episode':
-                    // id, addition_time, delete_time, title, file, `catalog`, total_count, total_skip, podcast
-                    $string .= "\t<deleted_podcast_episode id=\"" . $row['id'] . "\">\n\t<addition_time>" . $row['addition_time'] . "</addition_time>\n\t<delete_time>" . $row['delete_time'] . "</delete_time>\n\t<title><![CDATA[" . $row['title'] . "]]></title>\n\t<file><![CDATA[" . $row['file'] . "]]></file>\n\t<catalog>" . $row['catalog'] . "</catalog>\n\t<total_count>" . $row['total_count'] . "</total_count>\n\t<total_skip>" . $row['total_skip'] . "</total_skip>\n\t<played>" . $row['podcast'] . "</played>\n\t</deleted_podcast_episode>\n";
+                    if (isset($row['podcast'])) {
+                        // id, addition_time, delete_time, title, file, `catalog`, total_count, total_skip, podcast
+                        $string .= "\t<deleted_podcast_episode id=\"" . $row['id'] . "\">\n\t<addition_time>" . $row['addition_time'] . "</addition_time>\n\t<delete_time>" . $row['delete_time'] . "</delete_time>\n\t<title><![CDATA[" . $row['title'] . "]]></title>\n\t<file><![CDATA[" . $row['file'] . "]]></file>\n\t<catalog>" . $row['catalog'] . "</catalog>\n\t<total_count>" . $row['total_count'] . "</total_count>\n\t<total_skip>" . $row['total_skip'] . "</total_skip>\n\t<played>" . $row['podcast'] . "</played>\n\t</deleted_podcast_episode>\n";
+                    }
                     break;
                 case 'video':
                     // id, addition_time, delete_time, title, file, catalog, total_count, total_skip

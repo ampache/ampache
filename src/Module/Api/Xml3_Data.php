@@ -317,7 +317,7 @@ class Xml3_Data
             }
             $artist->format();
 
-            $rating      = new Rating((int)$artist_id, 'artist');
+            $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
             $tag_string  = self::tags_string($artist->get_tags());
 
@@ -374,7 +374,7 @@ class Xml3_Data
             }
             $album->format();
 
-            $rating      = new Rating((int)$album_id, 'album');
+            $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
 
             // Build the Art URL, include session
@@ -540,9 +540,6 @@ class Xml3_Data
      */
     public static function democratic(array $object_ids, User $user): string
     {
-        if (!is_array($object_ids)) {
-            $object_ids = [];
-        }
         $democratic = Democratic::get_current_playlist($user);
         $string     = '';
 

@@ -145,28 +145,26 @@ class Json4_Data
     {
         $JSON = [];
 
-        if (is_array($tags)) {
-            $atags = [];
-            foreach ($tags as $tag) {
-                if (array_key_exists($tag['id'], $atags)) {
-                    $atags[$tag['id']]['count']++;
-                } else {
-                    $atags[$tag['id']] = [
-                        'name' => $tag['name'],
-                        'count' => 1
-                    ];
-                }
+        $atags = [];
+        foreach ($tags as $tag) {
+            if (array_key_exists($tag['id'], $atags)) {
+                $atags[$tag['id']]['count']++;
+            } else {
+                $atags[$tag['id']] = [
+                    'name' => $tag['name'],
+                    'count' => 1
+                ];
             }
+        }
 
-            foreach ($atags as $tag_id => $data) {
-                if ($simple) {
-                    $JSON[] = ["name" => $data['name']];
-                } else {
-                    $JSON[] = [
-                        "id" => (string)$tag_id,
-                        "name" => $data['name']
-                    ];
-                }
+        foreach ($atags as $tag_id => $data) {
+            if ($simple) {
+                $JSON[] = ["name" => $data['name']];
+            } else {
+                $JSON[] = [
+                    "id" => (string)$tag_id,
+                    "name" => $data['name']
+                ];
             }
         }
 
@@ -326,21 +324,21 @@ class Json4_Data
             }
             $artist->format();
 
-            $rating      = new Rating((int)$artist_id, 'artist');
+            $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag((int)$artist_id, 'artist');
+            $flag        = new Userflag($artist->id, 'artist');
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $artist_id . '&object_type=artist';
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist((int)$artist_id), [], $user, false);
+                $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, false);
             } else {
                 $albums = $artist->album_count;
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs(self::getSongRepository()->getByArtist((int)$artist_id), $user, false);
+                $songs = self::songs(self::getSongRepository()->getByArtist($artist->id), $user, false);
             } else {
                 $songs = $artist->song_count;
             }
@@ -400,9 +398,9 @@ class Json4_Data
             }
             $album->format();
 
-            $rating      = new Rating((int)$album_id, 'album');
+            $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag((int)$album_id, 'album');
+            $flag        = new Userflag($album->id, 'album');
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $album->id . '&object_type=album';
@@ -590,7 +588,7 @@ class Json4_Data
      *
      * @param int[] $catalogs group of catalog id's
      */
-    public static function catalogs($catalogs): string
+    public static function catalogs(array $catalogs): string
     {
         if ((count($catalogs) > self::$limit || self::$offset > 0) && self::$limit) {
             $catalogs = array_splice($catalogs, self::$offset, self::$limit);
@@ -713,7 +711,7 @@ class Json4_Data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast_episode"
      */
-    public static function podcast_episodes(array $podcast_episodes, User $user, bool $encode = true, bool $object = true)
+    public static function podcast_episodes(array $podcast_episodes, User $user, bool $encode = true, bool $object = true): array|string
     {
         if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
@@ -725,9 +723,9 @@ class Json4_Data
                 continue;
             }
             $episode->format();
-            $rating      = new Rating((int)$episode_id, 'podcast_episode');
+            $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag((int)$episode_id, 'podcast_episode');
+            $flag        = new Userflag($episode->id, 'podcast_episode');
             $art_url     = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
             $JSON[]      = [
                 "id" => (string)$episode_id,
@@ -793,9 +791,9 @@ class Json4_Data
             }
 
             $song->format();
-            $rating      = new Rating((int)$song_id, 'song');
+            $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag((int)$song_id, 'song');
+            $flag        = new Userflag($song->id, 'song');
             $art_url     = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
@@ -883,10 +881,11 @@ class Json4_Data
      *
      * This builds the JSON document for displaying video objects
      *
-     * @param array $videos
+     * @param int[]|string[] $videos
      * @param User $user
+     * @return string
      */
-    public static function videos($videos, $user): string
+    public static function videos(array $videos, User $user): string
     {
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
@@ -894,15 +893,15 @@ class Json4_Data
 
         $JSON = [];
         foreach ($videos as $video_id) {
-            $video = new Video($video_id);
+            $video = new Video((int)$video_id);
             if ($video->isNew()) {
                 continue;
             }
             $video->format();
-            $rating      = new Rating($video_id, 'video');
+            $rating      = new Rating($video->id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag($video_id, 'video');
-            $art_url     = Art::url($video_id, 'video', Core::get_request('auth'));
+            $flag        = new Userflag($video->id, 'video');
+            $art_url     = Art::url($video->id, 'video', Core::get_request('auth'));
             $JSON[]      = [
                 "id" => (string)$video->id,
                 "title" => $video->title,
@@ -939,9 +938,6 @@ class Json4_Data
      */
     public static function democratic(array $object_ids, User $user): string
     {
-        if (!is_array($object_ids)) {
-            $object_ids = [];
-        }
         $democratic = Democratic::get_current_playlist($user);
 
         $JSON = [];
