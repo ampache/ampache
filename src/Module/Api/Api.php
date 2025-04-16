@@ -185,8 +185,8 @@ class Api
     public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
     public static string $auth_version    = '350001';
-    public static string $version         = '6.6.7'; // AMPACHE_VERSION
-    public static string $version_numeric = '667000'; // AMPACHE_VERSION
+    public static string $version         = '6.6.8'; // AMPACHE_VERSION
+    public static string $version_numeric = '668000'; // AMPACHE_VERSION
 
     public static ?Browse $browse = null;
 
