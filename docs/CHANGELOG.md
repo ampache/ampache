@@ -11,7 +11,7 @@
 
 ### Changed
 
-* Update vite
+* Update vite to 6.2.6
 
 ### Fixed
 
@@ -19,6 +19,8 @@
 * RSS compliance for date and atom links
 * Verify chunk count using the chunk and not the count
 * Waveform error when the file is missing
+* Plugins
+  * Don't set user preferences when not used in the plugin
 * CLI
   * Default options for `run:updateCatalog`
 
