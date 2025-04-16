@@ -186,7 +186,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if (!empty($postdata)) {
             $query_string .= '&' . $postdata;
         }
-        $query = explode('&', $query_string);
+        $query = explode('&', $query_string) ?: [];
         $input = [];
         foreach ($query as $param) {
             $decname  = false;

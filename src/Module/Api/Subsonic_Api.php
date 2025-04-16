@@ -234,7 +234,7 @@ class Subsonic_Api
             if ($rhpart[0] != "Transfer-Encoding") {
                 header($rheader);
             }
-        } elseif (substr($header, 0, 5) === "HTTP/") {
+        } elseif (str_starts_with($header, "HTTP/")) {
             // if $header starts with HTTP/ assume it's the status line
             http_response_code(curl_getinfo($curl, CURLINFO_HTTP_CODE));
         }
@@ -536,8 +536,6 @@ class Subsonic_Api
     /**
      * has_Nested_Array
      * Used for xml2json to detect a sub-array
-     * @param $properties
-     * @return bool
      */
     private static function _hasNestedArray($properties): bool
     {
@@ -1261,7 +1259,7 @@ class Subsonic_Api
         $operator = 0; // contains
         $original = unhtmlentities((string)$query);
         $query    = $original;
-        if (substr($original, 0, 1) == '"' && (substr($original, -1) == '"')) {
+        if (str_starts_with($original, '"') && (str_ends_with($original, '"'))) {
             $query = substr($original, 1, -1);
             // query is non-optional, but some clients send empty queries to fetch
             // all items. Fall back on default contains in such cases.
@@ -1269,7 +1267,7 @@ class Subsonic_Api
                 $operator = 4; // equals
             }
         }
-        if (substr($original, 0, 1) == '"' && substr($original, -2, 2) == '"*') {
+        if (str_starts_with($original, '"') && str_ends_with($original, '"*')) {
             $query    = substr($original, 1, -2);
             $operator = 4; // equals
         }
@@ -1279,7 +1277,7 @@ class Subsonic_Api
 
         if (strlen($query) > 1) {
             // if we didn't catch a "wrapped" query it might just be a starts with
-            if (substr($original, -1) == "*" && $operator == 0) {
+            if (str_ends_with($original, "*") && $operator == 0) {
                 $query    = substr($query, 0, -1);
                 $operator = 2; // Starts with
             }
