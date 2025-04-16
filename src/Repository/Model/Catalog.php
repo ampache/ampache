@@ -1544,6 +1544,14 @@ abstract class Catalog extends database_object
      *
      * Get each array of [id, f_name, name, album_count, catalog_id, has_art] for artists in an array of catalog id's
      * @param int[]|string[] $catalogs
+     * @return list<array{
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * }>
      */
     public static function get_artist_arrays(array $catalogs): array
     {
@@ -1554,7 +1562,14 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results, false)) {
-            $results[] = $row;
+            $results[] = [
+                'id' => (int)$row['id'],
+                'f_name' => $row['f_name'],
+                'name' => $row['name'],
+                'album_count' => (int)$row['album_count'],
+                'catalog_id' => (int)$row['catalog_id'],
+                'has_art' => (int)$row['has_art']
+            ];
         }
 
         return $results;

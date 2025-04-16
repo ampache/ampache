@@ -921,16 +921,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_apiOutput\\(\\) has parameter \\$alwaysArray with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_apiOutput2\\(\\) has parameter \\$alwaysArray with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_hasNestedArray\\(\\) has parameter \\$properties with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
@@ -961,42 +951,12 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_xml2Json\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Cannot cast array\\<int, string\\>\\|string\\|null to string\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_getAmpacheIdArrays\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_getAmpacheIdArrays\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addAlbumInfo\\(\\) has parameter \\$info with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addAlbumList\\(\\) has parameter \\$albums with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addAlbumList2\\(\\) has parameter \\$albums with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addArtistArray\\(\\) has parameter \\$artist with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -1021,62 +981,7 @@ parameters:
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addArtists\\(\\) has parameter \\$artists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addChildArray\\(\\) has parameter \\$child with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addGenres\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addIndex\\(\\) has parameter \\$artists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addIndexes\\(\\) has parameter \\$artists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addInternetRadioStations\\(\\) has parameter \\$radios with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addNowPlaying\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addPlaylists\\(\\) has parameter \\$playlists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addRandomSongs\\(\\) has parameter \\$songs with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addSearchResult2\\(\\) has parameter \\$albums with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addSearchResult2\\(\\) has parameter \\$artists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addSearchResult2\\(\\) has parameter \\$songs with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -1092,21 +997,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addSearchResult3\\(\\) has parameter \\$songs with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addSimilarSongs\\(\\) has parameter \\$similar_songs with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addSimilarSongs2\\(\\) has parameter \\$similar_songs with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addSongsByGenre\\(\\) has parameter \\$songs with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -1137,11 +1027,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addStarred2\\(\\) has parameter \\$songs with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addTopSongs\\(\\) has parameter \\$songs with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -5406,16 +5291,6 @@ parameters:
 			path: src/Module/Util/Recommendation.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:get_recommendation_cache\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/Recommendation.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:get_songs_like\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/Recommendation.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:update_recommendation_cache\\(\\) has parameter \\$recommendations with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/Recommendation.php
@@ -6341,16 +6216,6 @@ parameters:
 			path: src/Repository/Model/Artist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:get_id_arrays\\(\\) has parameter \\$catalogs with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:get_id_arrays\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
@@ -6432,11 +6297,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:gather_art\\(\\) has parameter \\$videos with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_artist_arrays\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -6836,16 +6696,6 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:advanced\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Random.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:advanced\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Random.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:advanced_results\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Random.php
@@ -6862,16 +6712,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:advanced_sql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Random.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_songs\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Random.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_songs\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Random.php
 

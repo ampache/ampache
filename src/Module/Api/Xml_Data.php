@@ -181,8 +181,8 @@ class Xml_Data
                     $atags[$tag['id']]['count']++;
                 } else {
                     $atags[$tag['id']] = [
-                        'name' => $tag['name'],
-                        'count' => 1
+                        "name" => $tag['name'],
+                        "count" => 1
                     ];
                 }
             }

@@ -201,8 +201,8 @@ class Json_Data
                     $atags[$tag['id']]['count']++;
                 } else {
                     $atags[$tag['id']] = [
-                        'name' => $tag['name'],
-                        'count' => 1
+                        "name" => $tag['name'],
+                        "count" => 1
                     ];
                 }
             }
@@ -572,10 +572,10 @@ class Json_Data
 
             if ($license !== null) {
                 $JSON[]  = [
-                    'id' => (string)$license_id,
-                    'name' => $license->getName(),
-                    'description' => $license->getDescription(),
-                    'external_link' => $license->getExternalLink()
+                    "id" => (string)$license_id,
+                    "name" => $license->getName(),
+                    "description" => $license->getDescription(),
+                    "external_link" => $license->getExternalLink()
                 ];
             }
         } // end foreach
@@ -674,8 +674,8 @@ class Json_Data
             $merge  = [];
             foreach ($merged as $mergedTag) {
                 $merge[] = [
-                    'id' => $mergedTag['id'],
-                    'name' => $mergedTag['name'],
+                    "id" => $mergedTag['id'],
+                    "name" => $mergedTag['name'],
                 ];
             }
             $JSON[] = [
@@ -1787,13 +1787,13 @@ class Json_Data
             $media = $now_playing['media'];
 
             $JSON[] = [
-                'id' => (string) $media->getId(),
-                'type' => $media->getMediaType()->value,
-                'client' => $now_playing['agent'],
-                'expire' => (int) $now_playing['expire'],
-                'user' => [
-                    'id' => (string) $user->getId(),
-                    'username' => $user->getUsername()
+                "id" => (string) $media->getId(),
+                "type" => $media->getMediaType()->value,
+                "client" => $now_playing['agent'],
+                "expire" => (int) $now_playing['expire'],
+                "user" => [
+                    "id" => (string) $user->getId(),
+                    "username" => $user->getUsername()
                 ]
             ];
         }
@@ -1818,14 +1818,14 @@ class Json_Data
             $user = $shout->getUser();
 
             $JSON[] = [
-                'id' => (string) $shout->getId(),
-                'date' => $shout->getDate()->getTimestamp(),
-                'text' => $shout->getText(),
-                'object_type' => $shout->getObjectType(),
-                'object_id' => $shout->getObjectId(),
-                'user' => [
-                    'id' => (string) ($user?->getId() ?? 0),
-                    'username' => $user?->getUsername() ?? '',
+                "id" => (string) $shout->getId(),
+                "date" => $shout->getDate()->getTimestamp(),
+                "text" => $shout->getText(),
+                "object_type" => $shout->getObjectType(),
+                "object_id" => $shout->getObjectId(),
+                "user" => [
+                    "id" => (string) ($user?->getId() ?? 0),
+                    "username" => $user?->getUsername() ?? '',
                 ]
             ];
         }

@@ -256,9 +256,10 @@ class Random
      * This processes the results of a post from a form and returns an
      * array of song items that were returned from said randomness
      * @param string $type
-     * @param array $data
+     * @param int[] $data
+     * @return int[]
      */
-    public static function advanced($type, $data): array
+    public static function advanced(string $type, array $data): array
     {
         /* Figure out our object limit */
         $limit     = (int)($data['limit'] ?? -1);
@@ -285,9 +286,10 @@ class Random
      * This processes the results of a post from a form and returns an
      * array of song items that were returned from said randomness
      * @param string $type
-     * @param array $results
+     * @param int[] $results
+     * @return int[]
      */
-    public static function get_songs($type, $results): array
+    public static function get_songs(string $type, array $results): array
     {
         switch ($type) {
             case 'song':
