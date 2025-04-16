@@ -531,11 +531,11 @@ class Xml5_Data
      * we want
      *
      * @param int[] $artists Artist id's to include
-     * @param array $include Array of other items to include.
+     * @param string[] $include Array of other items to include.
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
-    public static function artists($artists, $include, $user, $full_xml = true): string
+    public static function artists(array $artists, array $include, User $user, bool $full_xml = true): string
     {
         if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $artists = array_splice($artists, self::$offset, self::$limit);
@@ -579,11 +579,11 @@ class Xml5_Data
      * This echos out a standard albums XML document, it pays attention to the limit
      *
      * @param int[] $albums Album id's to include
-     * @param array|false $include Array of other items to include.
+     * @param string[] $include Array of other items to include.
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
-    public static function albums($albums, $include, $user, $full_xml = true): string
+    public static function albums(array $albums, array $include, User $user, bool $full_xml = true): string
     {
         if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $albums = array_splice($albums, self::$offset, self::$limit);
@@ -618,7 +618,7 @@ class Xml5_Data
             }
 
             // Handle includes
-            $songs = ($include && in_array("songs", $include))
+            $songs = (in_array("songs", $include))
                 ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false)
                 : '';
 

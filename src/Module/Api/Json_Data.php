@@ -712,7 +712,7 @@ class Json_Data
      * we want
      *
      * @param list<int|string> $objects Artist id's to include
-     * @param array $include
+     * @param string[] $include
      * @param User $user
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
@@ -795,13 +795,13 @@ class Json_Data
      * This echos out a standard albums JSON document, it pays attention to the limit
      *
      * @param list<int|string> $objects Album id's to include
-     * @param array|false $include
+     * @param string[] $include
      * @param User $user
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "album"
      */
-    public static function albums(array $objects, array|false $include, User $user, bool $encode = true, bool $object = true): array|string
+    public static function albums(array $objects, array $include, User $user, bool $encode = true, bool $object = true): array|string
     {
         $count  = self::$count ?? count($objects);
         $output = [
@@ -860,7 +860,7 @@ class Json_Data
             }
 
             // Handle includes
-            $songs = ($include && in_array("songs", $include))
+            $songs = (in_array("songs", $include))
                 ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false)
                 : [];
 

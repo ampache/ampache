@@ -52,12 +52,12 @@ final class Timeline5Method
      * since    = (integer) UNIXTIME() //optional
      *
      * @param array{
-     *      username: string,
-     *      limit?: int,
-     *      since?: int,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     username: string,
+     *     limit?: int,
+     *     since?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

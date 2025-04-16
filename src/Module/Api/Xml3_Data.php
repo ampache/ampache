@@ -288,7 +288,7 @@ class Xml3_Data
      * we want
      *
      * @param list<int|string> $artists
-     * @param array $include Array of other items to include
+     * @param string[] $include Array of other items to include
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node
      * @return string
@@ -348,12 +348,12 @@ class Xml3_Data
      * This echos out a standard albums XML document, it pays attention to the limit
      *
      * @param list<int|string> $albums
-     * @param false|array $include Array of other items to include
+     * @param string[] $include Array of other items to include
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node
      * @return string
      */
-    public static function albums(array $albums, false|array $include, User $user, bool $full_xml = true): string
+    public static function albums(array $albums, array $include, User $user, bool $full_xml = true): string
     {
         $string = "<total_count>" . count($albums) . "</total_count>\n";
 
@@ -387,7 +387,7 @@ class Xml3_Data
             }
 
             // Handle includes
-            if ($include && in_array("songs", $include)) {
+            if (in_array("songs", $include)) {
                 $songs = self::songs(self::getSongRepository()->getByAlbum($album->id), $user, '', false);
             } else {
                 $songs = $album->song_count;

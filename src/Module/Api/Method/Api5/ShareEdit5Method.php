@@ -51,14 +51,14 @@ final class ShareEdit5Method
      * description = (string) update description //optional
      *
      * @param array{
-     *      filter: string,
-     *      stream?: int,
-     *      download?: int,
-     *      expires?: int,
-     *      description?: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     filter: string,
+     *     stream?: int,
+     *     download?: int,
+     *     expires?: int,
+     *     description?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

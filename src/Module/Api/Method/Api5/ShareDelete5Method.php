@@ -48,10 +48,10 @@ final class ShareDelete5Method
      * filter = (string) UID of share to delete
      *
      * @param array{
-     *      filter: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

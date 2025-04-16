@@ -432,7 +432,7 @@ class Xml4_Data
      * we want
      *
      * @param list<int|string> $artists
-     * @param array $include Array of other items to include
+     * @param string[] $include Array of other items to include
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node
      * @return string
@@ -485,12 +485,12 @@ class Xml4_Data
      * This echos out a standard albums XML document, it pays attention to the limit
      *
      * @param int[] $albums
-     * @param false|array $include Array of other items to include
+     * @param string[] $include Array of other items to include
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node
      * @return string
      */
-    public static function albums(array $albums, false|array $include, User $user, bool $full_xml = true): string
+    public static function albums(array $albums, array $include, User $user, bool $full_xml = true): string
     {
         if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $albums = array_splice($albums, self::$offset, self::$limit);
@@ -519,7 +519,7 @@ class Xml4_Data
                 $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[" . $album->get_artist_fullname() . "]]></artist>\n";
             }
             // Handle includes
-            if ($include && in_array("songs", $include) && isset($album->id)) {
+            if (in_array("songs", $include) && isset($album->id)) {
                 $songs = self::songs(self::getAlbumRepository()->getSongs($album->id), $user, false);
             } else {
                 $songs = $album->song_count;

@@ -304,7 +304,7 @@ class Json4_Data
      * we want
      *
      * @param list<int|string> $artists
-     * @param array $include
+     * @param string[] $include
      * @param User $user
      * @param bool $encode
      * @return array|string return JSON
@@ -379,12 +379,12 @@ class Json4_Data
      * This echos out a standard albums JSON document, it pays attention to the limit
      *
      * @param list<int|string> $albums
-     * @param false|array $include
+     * @param string[] $include
      * @param User $user
      * @param bool $encode
      * @return array|string
      */
-    public static function albums(array $albums, false|array $include, User $user, bool $encode = true): array|string
+    public static function albums(array $albums, array $include, User $user, bool $encode = true): array|string
     {
         if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $albums = array_splice($albums, self::$offset, self::$limit);
@@ -420,7 +420,7 @@ class Json4_Data
             }
 
             // Handle includes
-            if ($include && in_array("songs", $include) && isset($album->id)) {
+            if (in_array("songs", $include) && isset($album->id)) {
                 $songs = self::songs(self::getAlbumRepository()->getSongs($album->id), $user, false);
             } else {
                 $songs = $album->song_count;

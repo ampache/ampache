@@ -59,23 +59,23 @@ final class UserUpdate4Method
      * maxbitrate = (integer) $maxbitrate //optional
      *
      * @param array{
-     *      username: string,
-     *      fullname?: string,
-     *      password?: string,
-     *      email?: string,
-     *      website?: string,
-     *      state?: string,
-     *      city?: string,
-     *      disable?: int,
-     *      group?: int,
-     *      maxbitrate?: int,
-     *      fullname_public?: int,
-     *      reset_apikey?: int,
-     *      reset_streamtoken?: int,
-     *      clear_stats?: int,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     username: string,
+     *     fullname?: string,
+     *     password?: string,
+     *     email?: string,
+     *     website?: string,
+     *     state?: string,
+     *     city?: string,
+     *     disable?: int,
+     *     group?: int,
+     *     maxbitrate?: int,
+     *     fullname_public?: int,
+     *     reset_apikey?: int,
+     *     reset_streamtoken?: int,
+     *     clear_stats?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

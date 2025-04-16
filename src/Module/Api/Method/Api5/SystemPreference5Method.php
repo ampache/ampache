@@ -49,10 +49,10 @@ final class SystemPreference5Method
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      *
      * @param array{
-     *      filter: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

@@ -44,10 +44,10 @@ final class Video4Method
      * filter = (string) UID of video
      *
      * @param array{
-     *      filter: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

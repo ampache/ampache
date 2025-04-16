@@ -405,7 +405,7 @@ class Json5_Data
      * we want
      *
      * @param list<int|string> $artists Artist id's to include
-     * @param array $include
+     * @param string[] $include
      * @param User $user
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
@@ -478,13 +478,13 @@ class Json5_Data
      * This echos out a standard albums JSON document, it pays attention to the limit
      *
      * @param list<int|string> $albums Album id's to include
-     * @param false|array $include
+     * @param string[] $include
      * @param User $user
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "album"
      */
-    public static function albums(array $albums, false|array $include, User $user, bool $encode = true, bool $object = true): array|string
+    public static function albums(array $albums, array $include, User $user, bool $encode = true, bool $object = true): array|string
     {
         if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $albums = array_splice($albums, self::$offset, self::$limit);
@@ -525,7 +525,7 @@ class Json5_Data
             }
 
             // Handle includes
-            $songs = ($include && in_array("songs", $include))
+            $songs = (in_array("songs", $include))
                 ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false)
                 : [];
 

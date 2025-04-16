@@ -951,11 +951,12 @@ class Xml_Data
      * we want
      *
      * @param int[] $objects Artist id's to include
-     * @param array $include Array of other items to include.
+     * @param string[] $include Array of other items to include.
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
+     * @return string
      */
-    public static function artists($objects, $include, $user, $full_xml = true): string
+    public static function artists(array $objects, array $include, User $user, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -997,11 +998,12 @@ class Xml_Data
      * This echos out a standard albums XML document, it pays attention to the limit
      *
      * @param int[] $objects Album id's to include
-     * @param array|false $include Array of other items to include.
+     * @param string[] $include Array of other items to include.
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
+     * @return string
      */
-    public static function albums($objects, $include, $user, $full_xml = true): string
+    public static function albums(array $objects, array $include, User $user, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1047,7 +1049,7 @@ class Xml_Data
             }
 
             // Handle includes
-            $songs = ($include && in_array("songs", $include)) ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false) : '';
+            $songs = (in_array("songs", $include)) ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false) : '';
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $album->id . '&object_type=album';

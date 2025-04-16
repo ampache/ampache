@@ -48,10 +48,10 @@ final class Share5Method
      * filter = (integer) Share ID number
      *
      * @param array{
-     *      filter: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

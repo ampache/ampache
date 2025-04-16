@@ -42,10 +42,10 @@ final class ToggleFollow3Method
      * This follow/unfollow a user
      *
      * @param array{
-     *      username: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     username: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      */
     public static function toggle_follow(array $input, User $user): void

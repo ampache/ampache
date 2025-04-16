@@ -49,10 +49,10 @@ final class UrlToSong5Method
      * url = (string) $url
      *
      * @param array{
-     *      url: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     url: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

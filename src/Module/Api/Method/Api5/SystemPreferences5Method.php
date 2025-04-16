@@ -46,9 +46,9 @@ final class SystemPreferences5Method
      * Get your system preferences
      *
      * @param array{
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

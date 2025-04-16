@@ -56,16 +56,16 @@ final class Stream5Method
      * length  = (integer) 0,1
      *
      * @param array{
-     *      id: string,
-     *      type: string,
-     *      bitrate?: int,
-     *      format?: int,
-     *      offset?: int,
-     *      length?: int,
-     *      stats?: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     id: string,
+     *     type: string,
+     *     bitrate?: int,
+     *     format?: int,
+     *     offset?: int,
+     *     length?: int,
+     *     stats?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

@@ -40,10 +40,10 @@ final class Video3Method
      * This returns a single video
      *
      * @param array{
-     *      filter: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      */
     public static function video(array $input, User $user): void

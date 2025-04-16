@@ -47,15 +47,15 @@ final class Videos4Method
      * limit  = (integer) //optional
      *
      * @param array{
-     *      filter?: string,
-     *      exact?: int,
-     *      offset?: int,
-     *      limit?: int,
-     *      cond?: string,
-     *      sort?: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     filter?: string,
+     *     exact?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      */
     public static function videos(array $input, User $user): void

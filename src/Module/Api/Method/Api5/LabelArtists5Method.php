@@ -95,10 +95,10 @@ final class LabelArtists5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::artists($results, $include, $user);
+                echo Json5_Data::artists($results, $include ?: [], $user);
                 break;
             default:
-                echo Xml5_Data::artists($results, $include, $user);
+                echo Xml5_Data::artists($results, $include ?: [], $user);
         }
 
         return true;

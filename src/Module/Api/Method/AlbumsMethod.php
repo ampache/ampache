@@ -145,7 +145,7 @@ final class AlbumsMethod implements MethodInterface
         /** @var string $result */
         $result = $output->albums(
             $results,
-            $include,
+            $include ?: [],
             $user
         );
 

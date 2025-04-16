@@ -43,12 +43,12 @@ final class Timeline3Method
      * This gets a user's timeline
      *
      * @param array{
-     *      username: string,
-     *      limit?: int,
-     *      since?: int,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     username: string,
+     *     limit?: int,
+     *     since?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      */
     public static function timeline(array $input, User $user): void

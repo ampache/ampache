@@ -50,12 +50,12 @@ final class UpdatePodcast5Method
      * filter = (string) UID of podcast
      *
      * @param array{
-     *      filter: string,
-     *      type: string,
-     *      overwrite: int,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     filter: string,
+     *     type: string,
+     *     overwrite: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

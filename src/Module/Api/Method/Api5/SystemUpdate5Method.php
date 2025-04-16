@@ -50,9 +50,9 @@ final class SystemUpdate5Method
      * Check Ampache for updates and run the update if there is one.
      *
      * @param array{
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

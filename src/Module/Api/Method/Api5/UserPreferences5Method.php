@@ -43,9 +43,9 @@ final class UserPreferences5Method
      * Get your user preferences
      *
      * @param array{
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      */
     public static function user_preferences(array $input, User $user): void

@@ -53,12 +53,12 @@ final class UpdateArt4Method
      * overwrite = (integer) 0,1 //optional
      *
      * @param array{
-     *      id: string,
-     *      type: string,
-     *      overwrite: int,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     id: string,
+     *     type: string,
+     *     overwrite: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

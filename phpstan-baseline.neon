@@ -121,31 +121,6 @@ parameters:
 			path: src/Gui/TalViewInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api\\:\\:check_parameter\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api4\\:\\:check_parameter\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Api4.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api5\\:\\:check_parameter\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Api5.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api5\\:\\:message\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Api5.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api5\\:\\:server_details\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Api5.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\ApiHandler\\:\\:_executeDebugHandler\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/ApiHandler.php
@@ -276,17 +251,7 @@ parameters:
 			path: src/Module/Api/Edit/RefreshUpdatedAction.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:artists\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
 
@@ -311,17 +276,7 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:artists\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
 
@@ -356,17 +311,7 @@ parameters:
 			path: src/Module/Api/Json5_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:artists\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -1536,16 +1481,6 @@ parameters:
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:artists\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:header\\(\\) has parameter \\$title with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
@@ -1586,29 +1521,9 @@ parameters:
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:artists\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:keyed_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:artists\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:deleted\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
@@ -1634,16 +1549,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:artists\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:deleted\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"

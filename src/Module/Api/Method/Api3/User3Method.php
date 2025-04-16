@@ -40,10 +40,10 @@ final class User3Method
      * This get a user's public information
      *
      * @param array{
-     *      username: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     username: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      */
     public static function user(array $input, User $user): void

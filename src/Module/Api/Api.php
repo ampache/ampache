@@ -257,33 +257,52 @@ class Api
     }
 
     /**
-     * check_parameter
+     * parameter_exists
      *
      * This function checks the $input actually has the parameter.
      * Parameters must be an array of required elements as a string
      *
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param string[] $parameters e.g. array('auth', type')
-     * @param string $method
-     * @return bool
+     * @return bool|string
      */
-    public static function check_parameter(array $input, array $parameters, string $method): bool
+    public static function parameter_exists(array $input, array $parameters): bool|string
     {
         foreach ($parameters as $parameter) {
             if (array_key_exists($parameter, $input) && ($input[$parameter] === 0 || $input[$parameter] === '0')) {
                 continue;
             }
             if (!array_key_exists($parameter, $input)) {
-                debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
-
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
-
-                return false;
+                return $parameter;
             }
         }
 
         return true;
+    }
+
+    /**
+     * check_parameter
+     *
+     * Return an error for missing parameters for API6
+     *
+     * @param array<string, mixed> $input
+     * @param string[] $parameters e.g. array('auth', type')
+     * @param string $method
+     * @return bool
+     */
+    public static function check_parameter(array $input, array $parameters, string $method): bool
+    {
+        $parameter = !self::parameter_exists($input, $parameters);
+        if ($parameter === true) {
+            return true;
+        }
+
+        debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
+
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
+
+        return false;
     }
 
     /**

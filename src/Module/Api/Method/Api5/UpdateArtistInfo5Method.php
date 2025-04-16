@@ -50,10 +50,10 @@ final class UpdateArtistInfo5Method
      * id = (integer) $artist_id
      *
      * @param array{
-     *      id: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     id: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

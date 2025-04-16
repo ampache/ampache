@@ -45,13 +45,13 @@ final class Users5Method
      * Get ids and usernames for your site
      *
      * @param array{
-     *      offset?: string,
-     *      limit?: string,
-     *      cond?: string,
-     *      sort?: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     offset?: string,
+     *     limit?: string,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

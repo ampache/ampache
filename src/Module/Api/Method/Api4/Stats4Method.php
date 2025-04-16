@@ -61,17 +61,17 @@ final class Stats4Method
      * limit    = (integer)Default: 10 (popular_threshold) //optional
      *
      * @param array{
-     *      type: string,
-     *      filter?: string,
-     *      user_id?: int,
-     *      username?: string,
-     *      offset?: int,
-     *      limit?: int,
-     *      cond?: string,
-     *      sort?: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     type: string,
+     *     filter?: string,
+     *     user_id?: int,
+     *     username?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

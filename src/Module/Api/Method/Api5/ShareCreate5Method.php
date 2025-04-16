@@ -63,13 +63,13 @@ final class ShareCreate5Method
      *  expires     = (integer) days to keep active //optional
      *
      * @param array{
-     *      filter: string,
-     *      type: string,
-     *      description?: string,
-     *      expires?: int,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     filter: string,
+     *     type: string,
+     *     description?: string,
+     *     expires?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      * @throws ContainerExceptionInterface

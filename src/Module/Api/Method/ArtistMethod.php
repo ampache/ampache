@@ -78,10 +78,10 @@ final class ArtistMethod
         }
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::artists([$object_id], $include, $user, true, false);
+                echo Json_Data::artists([$object_id], $include ?: [], $user, true, false);
                 break;
             default:
-                echo Xml_Data::artists([$object_id], $include, $user);
+                echo Xml_Data::artists([$object_id], $include ?: [], $user);
         }
 
         return true;

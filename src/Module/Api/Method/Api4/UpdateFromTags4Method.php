@@ -50,11 +50,11 @@ final class UpdateFromTags4Method
      * id   = (integer) $artist_id, $album_id, $song_id
      *
      * @param array{
-     *      id: string,
-     *      type: string,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     id: string,
+     *     type: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */

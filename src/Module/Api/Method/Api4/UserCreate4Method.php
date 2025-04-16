@@ -53,15 +53,15 @@ final class UserCreate4Method
      * disable  = (integer) 0,1 //optional, default = 0
      *
      * @param array{
-     *      username: string,
-     *      fullname?: string,
-     *      password: string,
-     *      email: string,
-     *      disable?: int,
-     *      group?: int,
-     *      api_format: string,
-     *      auth: string,
-     *  } $input
+     *     username: string,
+     *     fullname?: string,
+     *     password: string,
+     *     email: string,
+     *     disable?: int,
+     *     group?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @param User $user
      * @return bool
      */
