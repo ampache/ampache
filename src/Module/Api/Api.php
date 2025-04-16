@@ -273,9 +273,7 @@ class Api
                 continue;
             }
 
-            if (!array_key_exists($parameter, $input)) {
-                return $parameter;
-            }
+            return $parameter;
         }
 
         return true;
@@ -293,7 +291,7 @@ class Api
      */
     public static function check_parameter(array $input, array $parameters, string $method): bool
     {
-        $parameter = !self::parameter_exists($input, $parameters);
+        $parameter = self::parameter_exists($input, $parameters);
         if ($parameter === true) {
             return true;
         }
