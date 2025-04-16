@@ -1770,10 +1770,10 @@ class Json_Data
      * This handles creating an JSON document for a now_playing list
      *
      * @param list<array{
-     *  media: library_item,
-     *  client: User,
-     *  agent: string,
-     *  expire: int
+     *     media: library_item,
+     *     client: User,
+     *     agent: string,
+     *     expire: int
      * }> $results
      */
     public static function now_playing(array $results): string

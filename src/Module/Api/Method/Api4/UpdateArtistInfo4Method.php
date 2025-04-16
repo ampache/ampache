@@ -64,21 +64,26 @@ final class UpdateArtistInfo4Method
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, 'update_artist_info', $input['api_format'])) {
             return false;
         }
-        $object = (int) $input['id'];
-        $item   = new Artist($object);
+        $object_id = (int) $input['id'];
+        $item      = new Artist($object_id);
         if ($item->isNew()) {
             Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
 
             return false;
         }
-        // update your object
-        // need at least catalog_manager access to the db
-        if (!empty(Recommendation::get_artist_info($object) || !empty(Recommendation::get_artists_like($object)))) {
-            Api4::message('success', 'Updated artist info: ' . (string) $object, null, $input['api_format']);
+
+        $info = Recommendation::get_artist_info($object_id);
+        $like = Recommendation::get_artists_like($object_id);
+        // update your object, you need at least catalog_manager access to the db
+        if (
+            array_key_exists('id', $info) && $info['id'] !== null ||
+            count($like) > 0
+        ) {
+            Api4::message('success', 'Updated artist info: ' . (string)$object_id, null, $input['api_format']);
 
             return true;
         }
-        Api4::message('error', T_('Failed to update_artist_info or recommendations for ' . (string) $object), '400', $input['api_format']);
+        Api4::message('error', T_('Failed to update_artist_info or recommendations for ' . (string)$object_id), '400', $input['api_format']);
 
         return true;
     }

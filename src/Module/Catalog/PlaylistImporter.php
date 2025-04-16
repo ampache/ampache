@@ -37,13 +37,9 @@ final class PlaylistImporter
      * Attempts to create a Public Playlist based on the playlist file
      *
      * @return null|array{
-     *  count: int,
-     *  id: int,
-     *  results: list<array{
-     *   track: int,
-     *   file: string,
-     *   found: int
-     *  }>
+     *     count: int,
+     *     id: int,
+     *     results: list<array{track: int, file: string, found: int}>
      * }
      */
     public static function import_playlist(string $playlist_file, int $user_id, string $playlist_type): ?array

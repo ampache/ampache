@@ -95,26 +95,26 @@ abstract class Catalog extends database_object
     ];
 
     /** @var array{
-     *  album: int,
-     *  album_disk: int,
-     *  album_group: int,
-     *  artist: int,
-     *  catalog: int,
-     *  items: int,
-     *  label: int,
-     *  license: int,
-     *  live_stream: int,
-     *  playlist: int,
-     *  podcast: int,
-     *  podcast_episode: int,
-     *  search: int,
-     *  share: int,
-     *  size: int,
-     *  song: int,
-     *  tag: int,
-     *  time: int,
-     *  user: int,
-     *  video: int
+     *     album: int,
+     *     album_disk: int,
+     *     album_group: int,
+     *     artist: int,
+     *     catalog: int,
+     *     items: int,
+     *     label: int,
+     *     license: int,
+     *     live_stream: int,
+     *     playlist: int,
+     *     podcast: int,
+     *     podcast_episode: int,
+     *     search: int,
+     *     share: int,
+     *     size: int,
+     *     song: int,
+     *     tag: int,
+     *     time: int,
+     *     user: int,
+     *     video: int
      * }
      */
     private const SERVER_COUNTS = [
@@ -260,10 +260,10 @@ abstract class Catalog extends database_object
     /**
      * @param Podcast_Episode|Song|Video $media
      * @return null|array{
-     *  file_path: string,
-     *  file_name: string,
-     *  file_size: int,
-     *  file_type: string
+     *     file_path: string,
+     *     file_name: string,
+     *     file_size: int,
+     *     file_type: string
      * }
      */
     abstract public function prepare_media(Podcast_Episode|Video|Song $media): ?array;

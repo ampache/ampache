@@ -672,7 +672,7 @@ class Preference extends database_object
      *     value: mixed,
      *     type: string,
      *     category: string,
-     *     subcategory: string|null
+     *     subcategory: ?string
      * }>
      */
     public static function get($pref_name, $user_id): array

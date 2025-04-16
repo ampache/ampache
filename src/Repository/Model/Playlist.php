@@ -43,10 +43,10 @@ class Playlist extends playlist_object
 
     /**
      * @var array<int, array{
-     *  object_type: LibraryItemEnum,
-     *  object_id: int,
-     *  track: int,
-     *  track_id: int
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     track: int,
+     *     track_id: int
      * }>
      */
     public array $items = [];
@@ -242,10 +242,10 @@ class Playlist extends playlist_object
      * Because the same media can be on the same playlist twice they are
      * keyed by the uid from playlist_data
      * @return list<array{
-     *  object_type: LibraryItemEnum,
-     *  object_id: int,
-     *  track_id: int,
-     *  track: int
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     track_id: int,
+     *     track: int
      * }>
      */
     public function get_items(): array

@@ -84,7 +84,7 @@ final class GetSimilar4Method
                 $similar = Recommendation::get_songs_like($filter);
         }
         foreach ($similar as $child) {
-            $results[] = $child['id'];
+            $results[] = (int)$child['id'];
         }
 
         ob_end_clean();

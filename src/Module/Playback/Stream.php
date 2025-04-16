@@ -631,10 +631,10 @@ class Stream
      * This returns the Now Playing information
      * @param int $user_id
      * @return list<array{
-     *  media: library_item,
-     *  client: User,
-     *  agent: string,
-     *  expire: int
+     *     media: library_item,
+     *     client: User,
+     *     agent: string,
+     *     expire: int
      * }>
      */
     public static function get_now_playing($user_id = 0): array

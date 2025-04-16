@@ -117,9 +117,9 @@ final class UpdateRunner implements UpdateRunnerInterface
      * Runs the migrations with are determined by the given updates
      *
      * @param Traversable<array{
-     *  versionFormatted: string,
-     *  version: int,
-     *  migration: MigrationInterface
+     *     versionFormatted: string,
+     *     version: int,
+     *     migration: MigrationInterface
      * }> $updates Updates to perform
      *
      * @throws UpdateFailedException
@@ -187,9 +187,9 @@ final class UpdateRunner implements UpdateRunnerInterface
      * Checks the db for the existence of tables provided by the given updates
      *
      * @param Traversable<array{
-     *  versionFormatted: string,
-     *  version: int,
-     *  migration: MigrationInterface
+     *     versionFormatted: string,
+     *     version: int,
+     *     migration: MigrationInterface
      * }> $updates Update to perform
      *
      * @return Generator<string>

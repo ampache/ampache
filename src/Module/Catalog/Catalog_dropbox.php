@@ -711,13 +711,13 @@ class Catalog_dropbox extends Catalog
 
     /**
      * @param Podcast_Episode|Song|Video $media
-     *
      * @return array{
-     *  file_path: string,
-     *  file_name: string,
-     *  file_size: int,
-     *  file_type: string
+     *     file_path: string,
+     *     file_name: string,
+     *     file_size: int,
+     *     file_type: string
      * }
+     * @throws DropboxClientException
      */
     public function prepare_media(Podcast_Episode|Video|Song $media): array
     {

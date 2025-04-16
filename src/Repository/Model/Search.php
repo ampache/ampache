@@ -1413,10 +1413,10 @@ class Search extends playlist_object
      * Return an array of the items output by our search
      * (part of the playlist interface).
      * @return list<array{
-     *  object_type: LibraryItemEnum,
-     *  object_id: int,
-     *  track_id: int,
-     *  track: int
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     track_id: int,
+     *     track: int
      * }>
      */
     public function get_items(): array
@@ -1987,11 +1987,11 @@ class Search extends playlist_object
      * @param string $data
      * @param string $type
      * @param array{
-     *  name: string,
-     *  description: string,
-     *  sql: string,
-     *  preg_match?: string|array,
-     *  preg_replace?: string|array,
+     *     name: string,
+     *     description: string,
+     *     sql: string,
+     *     preg_match?: string|array,
+     *     preg_replace?: string|array,
      * } $operator
      * @return bool|int|null|string
      */

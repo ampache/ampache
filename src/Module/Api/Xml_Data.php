@@ -940,7 +940,7 @@ class Xml_Data
      * This takes an array of artists and then returns a pretty xml document with the information
      * we want
      *
-     * @param int[] $objects Artist id's to include
+     * @param list<int|string> $objects Artist id's to include
      * @param string[] $include Array of other items to include.
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
@@ -958,23 +958,23 @@ class Xml_Data
         Rating::build_cache('artist', $objects);
 
         foreach ($objects as $artist_id) {
-            $artist = new Artist($artist_id);
+            $artist = new Artist((int)$artist_id);
             if ($artist->isNew()) {
                 continue;
             }
             $artist->format();
 
-            $rating      = new Rating($artist_id, 'artist');
+            $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag($artist_id, 'artist');
+            $flag        = new Userflag($artist->id, 'artist');
             $tag_string  = self::genre_string($artist->get_tags());
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $artist_id . '&object_type=artist';
 
             // Handle includes
-            $albums = (in_array("albums", $include)) ? self::albums(self::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false) : '';
-            $songs  = (in_array("songs", $include)) ? self::songs(self::getSongRepository()->getByArtist($artist_id), $user, false) : '';
+            $albums = (in_array("albums", $include)) ? self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, false) : '';
+            $songs  = (in_array("songs", $include)) ? self::songs(self::getSongRepository()->getByArtist($artist->id), $user, false) : '';
 
             $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<albumcount>" . $artist->album_count . "</albumcount>\n\t<songs>" . $songs . "</songs>\n\t<songcount>" . $artist->song_count . "</songcount>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($artist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<time><![CDATA[" . $artist->time . "]]></time>\n\t<yearformed>" . (int)$artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
         } // end foreach artists
@@ -987,7 +987,7 @@ class Xml_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param int[] $objects Album id's to include
+     * @param list<int|string> $objects Album id's to include
      * @param string[] $include Array of other items to include.
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
@@ -1007,7 +1007,7 @@ class Xml_Data
         Rating::build_cache('album', $objects);
 
         foreach ($objects as $album_id) {
-            $album = new Album($album_id);
+            $album = new Album((int)$album_id);
             if ($album->isNew()) {
                 continue;
             }
@@ -1021,9 +1021,9 @@ class Xml_Data
                 $song_artists[] = Artist::get_name_array_by_id($artist_id);
             }
 
-            $rating      = new Rating($album_id, 'album');
+            $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag($album_id, 'album');
+            $flag        = new Userflag($album->id, 'album');
             $year        = ($original_year && $album->original_year)
                 ? $album->original_year
                 : $album->year;
@@ -1535,10 +1535,10 @@ class Xml_Data
      * This handles creating a xml document for a now_playing list
      *
      * @param list<array{
-     *  media: library_item,
-     *  client: User,
-     *  agent: string,
-     *  expire: int
+     *     media: library_item,
+     *     client: User,
+     *     agent: string,
+     *     expire: int
      * }> $results
      */
     public static function now_playing(array $results): string

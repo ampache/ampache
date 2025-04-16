@@ -48,13 +48,13 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
 
     /**
      * @return Generator<array{
-     *  title: string,
-     *  link: string,
-     *  description: string,
-     *  comments: ?string,
-     *  pubDate: string,
-     *  guid: string,
-     *  image?: string
+     *     title: string,
+     *     link: string,
+     *     description: string,
+     *     comments: ?string,
+     *     pubDate: string,
+     *     guid: string,
+     *     image?: string
      * }>
      */
     abstract protected function getItems(): Traversable;

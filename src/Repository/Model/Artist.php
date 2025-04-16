@@ -860,10 +860,10 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * This takes a key'd array of data and updates the current artist
      * @param array{
      *     name?: string,
-     *     mbid?: string|null,
-     *     summary?: string|null,
-     *     placeformed?: string|null,
-     *     yearformed?: int|null,
+     *     mbid?: ?string,
+     *     summary?: ?string,
+     *     placeformed?: ?string,
+     *     yearformed?: ?int,
      *     overwrite_childs?: string,
      *     add_to_childs?: string,
      *     edit_tags?: string,

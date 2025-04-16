@@ -198,15 +198,15 @@ class Stream_Playlist
      * media_to_urlarray
      * Formats the URL and media information and adds it to the object
      * @param list<array{
-     *  object_type: LibraryItemEnum,
-     *  object_id: int,
-     *  client?: string,
-     *  action?: string,
-     *  cache?: string,
-     *  player?: string,
-     *  format?: string,
-     *  transcode_to?: string,
-     *  custom_play_action?: string
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     client?: string,
+     *     action?: string,
+     *     cache?: string,
+     *     player?: string,
+     *     format?: string,
+     *     transcode_to?: string,
+     *     custom_play_action?: string
      * }> $media
      * @return list<Stream_Url>
      */
@@ -226,15 +226,15 @@ class Stream_Playlist
     /**
      * media_to_url
      * @param array{
-     *  object_type?: LibraryItemEnum,
-     *  object_id?: int,
-     *  client?: string,
-     *  action?: string,
-     *  cache?: string,
-     *  player?: string,
-     *  format?: string,
-     *  transcode_to?: string,
-     *  custom_play_action?: string
+     *     object_type?: LibraryItemEnum,
+     *     object_id?: int,
+     *     client?: string,
+     *     action?: string,
+     *     cache?: string,
+     *     player?: string,
+     *     format?: string,
+     *     transcode_to?: string,
+     *     custom_play_action?: string
      * } $media
      */
     public static function media_to_url(
@@ -528,15 +528,15 @@ class Stream_Playlist
      * add
      * Adds an array of media
      * @param list<array{
-     *  object_type: LibraryItemEnum,
-     *  object_id: int,
-     *  client?: string,
-     *  action?: string,
-     *  cache?: string,
-     *  player?: string,
-     *  format?: string,
-     *  transcode_to?: string,
-     *  custom_play_action?: string
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     client?: string,
+     *     action?: string,
+     *     cache?: string,
+     *     player?: string,
+     *     format?: string,
+     *     transcode_to?: string,
+     *     custom_play_action?: string
      * }> $media
      * @param string $additional_params
      */

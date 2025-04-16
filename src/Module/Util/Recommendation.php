@@ -97,7 +97,7 @@ class Recommendation
      * @return null|array{
      *     id: int,
      *     last_update: string,
-     *     items?: list<array{id: ?int, name: string, rel: string, mbid: string}>
+     *     items?: list<array{id: ?int, name: string, rel: ?string, mbid: ?string}>
      * }
      */
     protected static function get_recommendation_cache(string $type, int $object_id, bool $get_items = false): ?array
@@ -122,12 +122,13 @@ class Recommendation
             $db_results     = Dba::read($sql, [$cache['id']]);
             while ($results = Dba::fetch_assoc($db_results)) {
                 $cache['items'][] = [
-                    'id' => ($results['id'] !== null )? (int)$results['id'] : null,
+                    'id' => ($results['id'] !== null) ? (int)$results['id'] : null,
                     'name' => (string)$results['name'],
-                    'rel' => (string)$results['rel'],
-                    'mbid' => (string)$results['mbid'],
+                    'rel' => ($results['rel'] !== null) ? (string)$results['rel'] : null,
+                    'mbid' => ($results['mbid'] !== null) ? (string)$results['mbid'] : null,
                 ];
             }
+
             return $cache;
         }
 
@@ -183,8 +184,8 @@ class Recommendation
      * @return list<array{
      *     id: ?int,
      *     name: string,
-     *     rel: string,
-     *     mbid: string
+     *     rel: ?string,
+     *     mbid?: ?string
      * }>
      */
     public static function get_songs_like(int $song_id, int $limit = 5, bool $local_only = true): array
@@ -283,7 +284,7 @@ class Recommendation
         if ($similars) {
             $results = [];
             foreach ($similars as $similar) {
-                /** @var array{id: int|null, name: string, rel: string, mbid: string} $similar */
+                /** @var array{id: ?int, name: string, rel: ?string, mbid: ?string} $similar */
                 if (!$local_only || $similar['id'] !== null) {
                     $results[] = $similar;
                 }
@@ -307,7 +308,12 @@ class Recommendation
      * @param int $artist_id
      * @param int $limit
      * @param bool $local_only
-     * @return array
+     * @return list<array{
+     *      id: ?int,
+     *      name: string,
+     *      rel?: ?string,
+     *      mbid?: ?string
+     *  }>
      */
     public static function get_artists_like($artist_id, $limit = 10, $local_only = true): array
     {
@@ -439,7 +445,16 @@ class Recommendation
      * get_artist_info
      * Returns artist information
      * @param int $artist_id
-     * @return array
+     * @return array{
+     *      id: ?int,
+     *      summary: ?string,
+     *      placeformed: ?string,
+     *      yearformed: ?int,
+     *      largephoto: ?string,
+     *      smallphoto: ?string,
+     *      mediumphoto: ?string,
+     *      megaphoto: ?string
+     *  }
      */
     public static function get_artist_info($artist_id): array
     {
@@ -466,10 +481,25 @@ class Recommendation
         try {
             $xml = self::get_lastfm_results('artist.getinfo', $query);
         } catch (LastFmQueryFailedException) {
-            return [];
+            return [
+                'id' => $artist_id,
+                'summary' => null,
+                'placeformed' => null,
+                'yearformed' => null,
+                'largephoto' => null,
+                'smallphoto' => null,
+                'mediumphoto' => null,
+                'megaphoto' => null,
+            ];
         }
 
-        $results            = [];
+        $results = [
+            'id' => null,
+            'largephoto' => null,
+            'smallphoto' => null,
+            'mediumphoto' => null,
+            'megaphoto' => null,
+        ];
         $results['summary'] = strip_tags(
             (string)preg_replace(
                 "#<a href=([^<]*)Last\.fm</a>.#",
@@ -503,7 +533,14 @@ class Recommendation
      * get_album_info
      * Returns album information
      * @param int $album_id
-     * @return array
+     * @return array{
+     *     id: int,
+     *     summary: ?string,
+     *     largephoto: ?string,
+     *     smallphoto: ?string,
+     *     mediumphoto: ?string,
+     *     megaphoto: ?string
+     * }
      */
     public static function get_album_info($album_id): array
     {

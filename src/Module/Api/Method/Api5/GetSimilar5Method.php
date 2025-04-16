@@ -85,7 +85,7 @@ final class GetSimilar5Method
                 $similar = Recommendation::get_songs_like($object_id);
         }
         foreach ($similar as $child) {
-            $results[] = $child['id'];
+            $results[] = (int)$child['id'];
         }
         if (empty($results)) {
             Api5::empty($type, $input['api_format']);
