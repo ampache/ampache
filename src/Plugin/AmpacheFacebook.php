@@ -95,7 +95,7 @@ class AmpacheFacebook extends AmpachePlugin implements PluginExternalShareInterf
      */
     public function load(User $user): bool
     {
-        $user->set_preferences();
+        unset($user);
 
         return true;
     }

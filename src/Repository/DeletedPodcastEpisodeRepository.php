@@ -44,15 +44,15 @@ final readonly class DeletedPodcastEpisodeRepository implements DeletedPodcastEp
      * Returns all deleted podcast episodes
      *
      * @return Generator<array{
-     *  id: int,
-     *  addition_time: int,
-     *  delete_time: int,
-     *  title: string,
-     *  file: string,
-     *  catalog: int,
-     *  total_count: int,
-     *  total_skip: int,
-     *  podcast: int
+     *     id: int,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: int,
+     *     total_count: int,
+     *     total_skip: int,
+     *     podcast: int
      * }>
      */
     public function findAll(): Generator

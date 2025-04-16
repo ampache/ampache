@@ -50,6 +50,14 @@ final class FollowingMethod
      * Error when user not found or no followers
      *
      * username = (string) $username//optional
+     *
+     * @param array{
+     *     username?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function following(array $input, User $user): bool
     {
@@ -58,10 +66,10 @@ final class FollowingMethod
 
             return false;
         }
-        $username = (isset($input['username']))
+        $username = (!empty($input['username']))
             ? $input['username']
             : $user->username;
-        $leader   = User::get_from_username($username);
+        $leader = User::get_from_username((string)$username);
         if ($leader === null || $leader->id < 1) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

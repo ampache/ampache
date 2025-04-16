@@ -51,6 +51,17 @@ final class Flag4Method
      * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
      * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
+     *
+     * @param array{
+     *     id: string,
+     *     type: string,
+     *     flag: int,
+     *     date?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function flag(array $input, User $user): bool
     {
@@ -65,7 +76,7 @@ final class Flag4Method
         ob_end_clean();
         $type      = (string) $input['type'];
         $object_id = $input['id'];
-        $flag      = (bool)($input['flag'] ?? false);
+        $flag      = (bool)$input['flag'];
         $user_id   = null;
         if ($user->id > 0) {
             $user_id = $user->id;
@@ -82,13 +93,13 @@ final class Flag4Method
         } else {
             $className = ObjectTypeToClassNameMapper::map($type);
             /** @var library_item $item */
-            $item = new $className($object_id);
+            $item = new $className((int)$object_id);
             if ($item->getId() === 0) {
                 Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
 
                 return false;
             }
-            $userflag = new Userflag($object_id, $type);
+            $userflag = new Userflag((int)$object_id, $type);
             if ($userflag->set_flag($flag, $user_id)) {
                 $message = ($flag) ? 'flag ADDED to ' : 'flag REMOVED from ';
                 Api4::message('success', $message . $object_id, null, $input['api_format']);

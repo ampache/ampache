@@ -51,6 +51,17 @@ final class RecordPlay4Method
      * user   = (integer|string) $user_id OR $username //optional
      * client = (string) $agent Default: 'api' //optional
      * date   = (integer) UNIXTIME() //optional
+     *
+     * @param array{
+     *     id: string,
+     *     user?: int|string,
+     *     client?: string,
+     *     date?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function record_play(array $input, User $user): bool
     {

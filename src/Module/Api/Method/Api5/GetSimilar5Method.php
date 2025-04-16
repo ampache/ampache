@@ -49,6 +49,17 @@ final class GetSimilar5Method
      * filter = (integer) artist id or song id
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function get_similar(array $input, User $user): bool
     {
@@ -74,7 +85,7 @@ final class GetSimilar5Method
                 $similar = Recommendation::get_songs_like($object_id);
         }
         foreach ($similar as $child) {
-            $results[] = $child['id'];
+            $results[] = (int)$child['id'];
         }
         if (empty($results)) {
             Api5::empty($type, $input['api_format']);

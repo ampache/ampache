@@ -54,6 +54,20 @@ final class Stream5Method
      * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding // Song only
      * offset  = (integer) time offset in seconds
      * length  = (integer) 0,1
+     *
+     * @param array{
+     *     id: string,
+     *     type: string,
+     *     bitrate?: int,
+     *     format?: int,
+     *     offset?: int,
+     *     length?: int,
+     *     stats?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function stream(array $input, User $user): bool
     {

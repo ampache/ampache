@@ -127,13 +127,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 
     /**
      * Get item keywords for metadata searches.
-     * @return array{
-     *  podcast: array{
-     *    important: bool,
-     *    label: string,
-     *    value: null|string
-     *  }
-     * }
+     * @return array{podcast: array{important: bool, label: string, value: ?string}}
      */
     public function get_keywords(): array
     {

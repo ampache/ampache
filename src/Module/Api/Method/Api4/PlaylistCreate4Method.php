@@ -47,6 +47,15 @@ final class PlaylistCreate4Method
      *
      * name = (string) Playlist name
      * type = (string) 'public'|'private'
+     *
+     * @param array{
+     *     name: string,
+     *     type?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function playlist_create(array $input, User $user): bool
     {
@@ -54,8 +63,8 @@ final class PlaylistCreate4Method
             return false;
         }
         $name = $input['name'];
-        $type = $input['type'];
-        if ($type != 'private') {
+        $type = $input['type'] ?? 'public';
+        if ($type !== 'private' && $type !== 'public') {
             $type = 'public';
         }
 
@@ -63,10 +72,10 @@ final class PlaylistCreate4Method
         Catalog::count_table('playlist');
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::playlists([$uid], $user);
+                echo Json4_Data::playlists([(int)$uid], $user);
                 break;
             default:
-                echo Xml4_Data::playlists([$uid], $user);
+                echo Xml4_Data::playlists([(int)$uid], $user);
         }
 
         return true;

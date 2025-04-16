@@ -38,6 +38,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
@@ -74,9 +75,9 @@ class Json5_Data
      *
      * This takes an int and changes the offset
      *
-     * @param int $offset Change the starting position of your results. (e.g 5001 when selecting in groups of 5000)
+     * @param int|string $offset Change the starting position of your results. (e.g 5001 when selecting in groups of 5000)
      */
-    public static function set_offset($offset): void
+    public static function set_offset(int|string $offset): void
     {
         self::$offset = (int)$offset;
     }
@@ -88,7 +89,7 @@ class Json5_Data
      *
      * @param int|string $limit Set a limit on your results
      */
-    public static function set_limit($limit): bool
+    public static function set_limit(int|string $limit): bool
     {
         if (!$limit) {
             return false;
@@ -110,7 +111,7 @@ class Json5_Data
      * @param string $action Error method
      * @param string $type Error type
      */
-    public static function error($code, $string, $action, $type): string
+    public static function error(int|string $code, string $string, string $action, string $type): string
     {
         $output = [
             "error" => [
@@ -132,8 +133,9 @@ class Json5_Data
      *
      * @param string $string success message
      * @param array $return_data
+     * @return string
      */
-    public static function success($string, $return_data = []): string
+    public static function success(string $string, array $return_data = []): string
     {
         $output = ["success" => $string];
         foreach ($return_data as $title => $data) {
@@ -151,7 +153,7 @@ class Json5_Data
      *
      * @param string $type object type
      */
-    public static function empty($type): string
+    public static function empty(string $type): string
     {
         return json_encode([$type => []], JSON_PRETTY_PRINT) ?: '';
     }
@@ -168,12 +170,12 @@ class Json5_Data
 
         if (!empty($tags)) {
             $atags = [];
-            foreach ($tags as $tag_id => $data) {
-                if (array_key_exists($data['id'], $atags)) {
-                    $atags[$data['id']]['count']++;
+            foreach ($tags as $tag) {
+                if (array_key_exists($tag['id'], $atags)) {
+                    $atags[$tag['id']]['count']++;
                 } else {
-                    $atags[$data['id']] = [
-                        'name' => $data['name'],
+                    $atags[$tag['id']] = [
+                        'name' => $tag['name'],
                         'count' => 1
                     ];
                 }
@@ -195,42 +197,62 @@ class Json5_Data
      *
      * This takes an array of object_ids and return JSON based on the type of object
      *
-     * @param array $objects Array of object_ids (Mixed string|int)
+     * @param list<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
      * @param User $user
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
-    public static function indexes($objects, $type, $user, $include = false)
+    public static function indexes(array $objects, string $type, User $user, bool $include = false): string
     {
         // here is where we call the object type
         switch ($type) {
             case 'song':
-                return self::songs($objects, $user);
+                /** @var string $results */
+                $results = self::songs($objects, $user);
+                break;
             case 'album':
                 $include_array = ($include) ? ['songs'] : [];
 
-                return self::albums($objects, $include_array, $user);
+                /** @var string $results */
+                $results = self::albums($objects, $include_array, $user);
+                break;
             case 'artist':
                 $include_array = ($include) ? ['songs', 'albums'] : [];
 
-                return self::artists($objects, $include_array, $user);
+                /** @var string $results */
+                $results = self::artists($objects, $include_array, $user);
+                break;
             case 'playlist':
-                return self::playlists($objects, $user, $include);
+                /** @var string $results */
+                $results = self::playlists($objects, $user, $include);
+                break;
             case 'share':
-                return self::shares($objects);
+                /** @var string $results */
+                $results = self::shares($objects);
+                break;
             case 'podcast':
-                return self::podcasts($objects, $user, $include);
+                /** @var string $results */
+                $results = self::podcasts($objects, $user, $include);
+                break;
             case 'podcast_episode':
-                return self::podcast_episodes($objects, $user);
+                /** @var string $results */
+                $results = self::podcast_episodes($objects, $user);
+                break;
             case 'video':
-                return self::videos($objects, $user);
+                /** @var string $results */
+                $results = self::videos($objects, $user);
+                break;
             case 'live_stream':
-                return self::live_streams($objects);
+                /** @var string $results */
+                $results = self::live_streams($objects);
+                break;
             default:
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
         }
+
+        return $results;
     }
 
     /**
@@ -238,10 +260,10 @@ class Json5_Data
      *
      * This returns live_streams to the user, in a pretty JSON document with the information
      *
-     * @param int[] $live_streams
+     * @param list<int|string> $live_streams
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function live_streams($live_streams, $object = true): string
+    public static function live_streams(array $live_streams, bool $object = true): string
     {
         if ((count($live_streams) > self::$limit || self::$offset > 0) && self::$limit) {
             $live_streams = array_splice($live_streams, self::$offset, self::$limit);
@@ -249,7 +271,7 @@ class Json5_Data
 
         $JSON = [];
         foreach ($live_streams as $live_stream_id) {
-            $live_stream = new Live_Stream($live_stream_id);
+            $live_stream = new Live_Stream((int)$live_stream_id);
             if ($live_stream->isNew()) {
                 continue;
             }
@@ -276,7 +298,7 @@ class Json5_Data
      * @param list<int> $licenses Licence id's assigned to songs and artists
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function licenses(array $licenses, $object = true): string
+    public static function licenses(array $licenses, bool $object = true): string
     {
         if ((count($licenses) > self::$limit || self::$offset > 0) && self::$limit) {
             $licenses = array_splice($licenses, self::$offset, self::$limit);
@@ -310,7 +332,7 @@ class Json5_Data
      * @param int[] $labels
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function labels($labels, $object = true): string
+    public static function labels(array $labels, bool $object = true): string
     {
         if ((count($labels) > self::$limit || self::$offset > 0) && self::$limit) {
             $labels = array_splice($labels, self::$offset, self::$limit);
@@ -351,7 +373,7 @@ class Json5_Data
      * @param int[] $tags Genre id's to include
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function genres($tags, $object = true): string
+    public static function genres(array $tags, bool $object = true): string
     {
         if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
             $tags = array_splice($tags, self::$offset, self::$limit);
@@ -382,14 +404,14 @@ class Json5_Data
      * This takes an array of artists and then returns a pretty JSON document with the information
      * we want
      *
-     * @param int[] $artists Artist id's to include
-     * @param array $include
+     * @param list<int|string> $artists Artist id's to include
+     * @param string[] $include
      * @param User $user
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "artist"
      */
-    public static function artists($artists, $include, $user, $encode = true, $object = true)
+    public static function artists(array $artists, array $include, User $user, bool $encode = true, bool $object = true): array|string
     {
         if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $artists = array_splice($artists, self::$offset, self::$limit);
@@ -399,25 +421,25 @@ class Json5_Data
 
         Rating::build_cache('artist', $artists);
         foreach ($artists as $artist_id) {
-            $artist = new Artist($artist_id);
+            $artist = new Artist((int)$artist_id);
             if ($artist->isNew()) {
                 continue;
             }
             $artist->format();
 
-            $rating      = new Rating($artist_id, 'artist');
+            $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag($artist_id, 'artist');
+            $flag        = new Userflag($artist->id, 'artist');
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $artist_id . '&object_type=artist';
 
             // Handle includes
             $albums = (in_array("albums", $include))
-                ? self::albums(self::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false)
+                ? self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, false)
                 : [];
             $songs = (in_array("songs", $include))
-                ? self::songs(self::getSongRepository()->getByArtist($artist_id), $user, false)
+                ? self::songs(self::getSongRepository()->getByArtist($artist->id), $user, false)
                 : [];
 
             $JSON[] = [
@@ -455,14 +477,14 @@ class Json5_Data
      *
      * This echos out a standard albums JSON document, it pays attention to the limit
      *
-     * @param int[] $albums Album id's to include
-     * @param array|false $include
+     * @param list<int|string> $albums Album id's to include
+     * @param string[] $include
      * @param User $user
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "album"
      */
-    public static function albums($albums, $include, $user, $encode = true, $object = true)
+    public static function albums(array $albums, array $include, User $user, bool $encode = true, bool $object = true): array|string
     {
         if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $albums = array_splice($albums, self::$offset, self::$limit);
@@ -474,15 +496,15 @@ class Json5_Data
 
         $JSON = [];
         foreach ($albums as $album_id) {
-            $album = new Album($album_id);
+            $album = new Album((int)$album_id);
             if ($album->isNew()) {
                 continue;
             }
             $album->format();
 
-            $rating      = new Rating($album_id, 'album');
+            $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag($album_id, 'album');
+            $flag        = new Userflag($album->id, 'album');
             $year        = ($original_year && $album->original_year)
                 ? $album->original_year
                 : $album->year;
@@ -503,7 +525,7 @@ class Json5_Data
             }
 
             // Handle includes
-            $songs = ($include && in_array("songs", $include))
+            $songs = (in_array("songs", $include))
                 ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false)
                 : [];
 
@@ -538,12 +560,13 @@ class Json5_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
-     * @param array $playlists Playlist id's to include
+     * @param list<int|string> $playlists Playlist id's to include
      * @param User $user
      * @param bool $songs
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return string
      */
-    public static function playlists($playlists, $user, $songs = false, $object = true): string
+    public static function playlists(array $playlists, User $user, bool $songs = false, bool $object = true): string
     {
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
@@ -566,7 +589,7 @@ class Json5_Data
                 $object_type    = 'search';
                 $playitem_total = $playlist->last_count;
             } else {
-                $playlist = new Playlist($playlist_id);
+                $playlist = new Playlist((int)$playlist_id);
                 if ($playlist->isNew()) {
                     continue;
                 }
@@ -620,10 +643,10 @@ class Json5_Data
      *
      * This returns shares to the user, in a pretty json document with the information
      *
-     * @param int[] $shares Share id's to include
+     * @param list<int|string> $shares Share id's to include
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function shares($shares, $object = true): string
+    public static function shares(array $shares, bool $object = true): string
     {
         if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
@@ -631,7 +654,7 @@ class Json5_Data
 
         $JSON = [];
         foreach ($shares as $share_id) {
-            $share                = new Share($share_id);
+            $share                = new Share((int)$share_id);
             $share_name           = $share->getObjectName();
             $share_user           = $share->getUserName();
             $share_allow_stream   = (int) $share->allow_stream;
@@ -678,7 +701,7 @@ class Json5_Data
      * @param int[] $bookmarks Bookmark id's to include
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function bookmarks($bookmarks, $object = true): string
+    public static function bookmarks(array $bookmarks, bool $object = true): string
     {
         if ((count($bookmarks) > self::$limit || self::$offset > 0) && self::$limit) {
             $bookmarks = array_splice($bookmarks, self::$offset, self::$limit);
@@ -725,7 +748,7 @@ class Json5_Data
      * @param int[] $catalogs group of catalog id's
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function catalogs($catalogs, $object = true): string
+    public static function catalogs(array $catalogs, bool $object = true): string
     {
         if ((count($catalogs) > self::$limit || self::$offset > 0) && self::$limit) {
             $catalogs = array_splice($catalogs, self::$offset, self::$limit);
@@ -773,12 +796,13 @@ class Json5_Data
      *
      * This returns podcasts to the user, in a pretty json document with the information
      *
-     * @param int[] $podcasts Podcast id's to include
+     * @param list<int|string> $podcasts Podcast id's to include
      * @param User $user
      * @param bool $episodes include the episodes of the podcast
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return string
      */
-    public static function podcasts($podcasts, $user, $episodes = false, $object = true): string
+    public static function podcasts(array $podcasts, User $user, bool $episodes = false, bool $object = true): string
     {
         if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
@@ -788,16 +812,16 @@ class Json5_Data
 
         $JSON = [];
         foreach ($podcasts as $podcast_id) {
-            $podcast = $podcastRepository->findById($podcast_id);
+            $podcast = $podcastRepository->findById((int)$podcast_id);
 
             if ($podcast === null) {
                 continue;
             }
 
-            $rating              = new Rating($podcast_id, 'podcast');
+            $rating              = new Rating((int)$podcast_id, 'podcast');
             $user_rating         = $rating->get_user_rating($user->getId());
-            $flag                = new Userflag($podcast_id, 'podcast');
-            $art_url             = Art::url($podcast_id, 'podcast', Core::get_request('auth'));
+            $flag                = new Userflag((int)$podcast_id, 'podcast');
+            $art_url             = Art::url((int)$podcast_id, 'podcast', Core::get_request('auth'));
             $podcast_name        = $podcast->get_fullname();
             $podcast_description = $podcast->get_description();
             $podcast_language    = scrub_out($podcast->getLanguage());
@@ -844,27 +868,27 @@ class Json5_Data
      *
      * This returns podcasts to the user, in a pretty json document with the information
      *
-     * @param int[] $podcast_episodes Podcast_Episode id's to include
+     * @param list<int|string> $podcast_episodes Podcast_Episode id's to include
      * @param User $user
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast_episode"
      */
-    public static function podcast_episodes($podcast_episodes, $user, $encode = true, $object = true)
+    public static function podcast_episodes(array $podcast_episodes, User $user, bool $encode = true, bool $object = true): array|string
     {
         if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
         }
         $JSON = [];
         foreach ($podcast_episodes as $episode_id) {
-            $episode = new Podcast_Episode($episode_id);
+            $episode = new Podcast_Episode((int)$episode_id);
             if ($episode->isNew()) {
                 continue;
             }
             $episode->format();
-            $rating      = new Rating($episode_id, 'podcast_episode');
+            $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag($episode_id, 'podcast_episode');
+            $flag        = new Userflag($episode->id, 'podcast_episode');
             $art_url     = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
             $JSON[]      = [
                 "id" => (string)$episode_id,
@@ -908,13 +932,13 @@ class Json5_Data
      *
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
-     * @param int[] $songs
+     * @param list<int|string> $songs
      * @param User $user
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "song"
      */
-    public static function songs($songs, $user, $encode = true, $object = true)
+    public static function songs(array $songs, User $user, bool $encode = true, bool $object = true): array|string
     {
         if ((count($songs) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -928,15 +952,15 @@ class Json5_Data
 
         // Foreach the ids!
         foreach ($songs as $song_id) {
-            $song = new Song($song_id);
+            $song = new Song((int)$song_id);
             // If the song id is invalid/null
             if ($song->isNew()) {
                 continue;
             }
             $song->format();
-            $rating      = new Rating($song_id, 'song');
+            $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag($song_id, 'song');
+            $flag        = new Userflag($song->id, 'song');
             $art_url     = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
@@ -1030,11 +1054,12 @@ class Json5_Data
      *
      * This builds the JSON document for displaying video objects
      *
-     * @param int[] $videos Video id's to include
+     * @param list<int|string> $videos Video id's to include
      * @param User $user
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return string
      */
-    public static function videos($videos, $user, $object = true): string
+    public static function videos(array $videos, User $user, bool $object = true): string
     {
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
@@ -1042,15 +1067,15 @@ class Json5_Data
 
         $JSON = [];
         foreach ($videos as $video_id) {
-            $video = new Video($video_id);
+            $video = new Video((int)$video_id);
             if ($video->isNew()) {
                 continue;
             }
             $video->format();
-            $rating      = new Rating($video_id, 'video');
+            $rating      = new Rating($video->id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag($video_id, 'video');
-            $art_url     = Art::url($video_id, 'video', Core::get_request('auth'));
+            $flag        = new Userflag($video->id, 'video');
+            $art_url     = Art::url($video->id, 'video', Core::get_request('auth'));
             $JSON[]      = [
                 "id" => (string)$video->id,
                 "title" => $video->title,
@@ -1079,11 +1104,16 @@ class Json5_Data
      * This handles creating an JSON document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param array $object_ids Object IDs
+     * @param list<array{
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     track_id: int,
+     *     track: int}> $object_ids Object IDs
      * @param User $user
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return string
      */
-    public static function democratic($object_ids, $user, $object = true): string
+    public static function democratic(array $object_ids, User $user, bool $object = true): string
     {
         if (!is_array($object_ids)) {
             $object_ids = [];
@@ -1092,7 +1122,7 @@ class Json5_Data
 
         $JSON = [];
         foreach ($object_ids as $row_id => $data) {
-            $className = ObjectTypeToClassNameMapper::map($data['object_type']);
+            $className = ObjectTypeToClassNameMapper::map($data['object_type']->value);
             /** @var Song $song */
             $song = new $className($data['object_id']);
             if ($song->isNew()) {
@@ -1182,7 +1212,7 @@ class Json5_Data
      * @param int[] $users User id list
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function users($users, $object = true): string
+    public static function users(array $users, bool $object = true): string
     {
         $JSON = [];
         foreach ($users as $user_id) {
@@ -1205,7 +1235,7 @@ class Json5_Data
      * @param Traversable<Shoutbox> $shouts Shout id list
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function shouts(Traversable $shouts, $object = true): string
+    public static function shouts(Traversable $shouts, bool $object = true): string
     {
         $JSON = [];
 
@@ -1236,7 +1266,7 @@ class Json5_Data
      * @param int[] $activities Activity id list
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function timeline($activities, $object = true): string
+    public static function timeline(array $activities, bool $object = true): string
     {
         $JSON = [];
         foreach ($activities as $activity_id) {
@@ -1266,9 +1296,22 @@ class Json5_Data
      * This handles creating a JSON document for deleted items
      *
      * @param string $object_type ('song', 'podcast_episode', 'video')
-     * @param array $objects deleted object list
+     * @param list<array{
+     *     id: int,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: int,
+     *     total_count: int,
+     *     total_skip: int,
+     *     update_time?: int,
+     *     album?: int,
+     *     artist?: int,
+     *     podcast?: int,
+     * }> $objects deleted object list
      */
-    public static function deleted($object_type, $objects): string
+    public static function deleted(string $object_type, array $objects): string
     {
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -1277,34 +1320,38 @@ class Json5_Data
         foreach ($objects as $row) {
             switch ($object_type) {
                 case 'song':
-                    $objArray = [
-                        "id" => (string)$row['id'],
-                        "addition_time" => $row['addition_time'],
-                        "delete_time" => $row['delete_time'],
-                        "title" => $row['title'],
-                        "file" => $row['file'],
-                        "catalog" => $row['catalog'],
-                        "total_count" => $row['total_count'],
-                        "total_skip" => $row['total_skip'],
-                        "update_time" => $row['update_time'],
-                        "album" => (string)$row['album'],
-                        "artist" => (string)$row['artist']
-                    ];
-                    $JSON[] = $objArray;
+                    if (isset($row['album']) && isset($row['artist']) && isset($row['update_time'])) {
+                        $objArray = [
+                            "id" => (string)$row['id'],
+                            "addition_time" => $row['addition_time'],
+                            "delete_time" => $row['delete_time'],
+                            "title" => $row['title'],
+                            "file" => $row['file'],
+                            "catalog" => $row['catalog'],
+                            "total_count" => $row['total_count'],
+                            "total_skip" => $row['total_skip'],
+                            "update_time" => $row['update_time'],
+                            "album" => (string)$row['album'],
+                            "artist" => (string)$row['artist']
+                        ];
+                        $JSON[] = $objArray;
+                    }
                     break;
                 case 'podcast_episode':
-                    $objArray = [
-                        "id" => (string)$row['id'],
-                        "addition_time" => $row['addition_time'],
-                        "delete_time" => $row['delete_time'],
-                        "title" => $row['title'],
-                        "file" => $row['file'],
-                        "catalog" => $row['catalog'],
-                        "total_count" => $row['total_count'],
-                        "total_skip" => $row['total_skip'],
-                        "podcast" => (string)$row['podcast']
-                    ];
-                    $JSON[] = $objArray;
+                    if (isset($row['podcast'])) {
+                        $objArray = [
+                            "id" => (string)$row['id'],
+                            "addition_time" => $row['addition_time'],
+                            "delete_time" => $row['delete_time'],
+                            "title" => $row['title'],
+                            "file" => $row['file'],
+                            "catalog" => $row['catalog'],
+                            "total_count" => $row['total_count'],
+                            "total_skip" => $row['total_skip'],
+                            "podcast" => (string)$row['podcast']
+                        ];
+                        $JSON[] = $objArray;
+                    }
                     break;
                 case 'video':
                     $objArray = [

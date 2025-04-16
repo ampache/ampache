@@ -49,10 +49,21 @@ final class FlagMethod
      * Setting flag to true (1) will set the flag
      * Setting flag to false (0) will remove the flag
      *
+     * id   = (string) $object_id
      * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
-     * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
      * date = (integer) UNIXTIME() //optional
+     *
+     * @param array{
+     *     id: string,
+     *     type: string,
+     *     flag: int,
+     *     date?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function flag(array $input, User $user): bool
     {
@@ -67,7 +78,7 @@ final class FlagMethod
         ob_end_clean();
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $flag      = (bool)($input['flag'] ?? false);
+        $flag      = (bool)$input['flag'];
         $date      = (int)($input['date'] ?? time());
 
         // confirm the correct data

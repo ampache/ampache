@@ -55,11 +55,22 @@ final class Handshake5Method
      * This is the function that handles verifying a new handshake
      * Takes a timestamp, auth key, and username.
      *
-     * @param array $input
      * auth      = (string) $passphrase
      * user      = (string) $username //optional
      * timestamp = (integer) UNIXTIME() //Required if login/password authentication
      * version   = (string) $version //optional
+     *
+     * @param array{
+     *     user?: string,
+     *     timestamp?: int,
+     *     version?: string,
+     *     client?: string,
+     *     geo_latitude?: float,
+     *     geo_longitude?: float,
+     *     geo_name?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -67,7 +78,7 @@ final class Handshake5Method
     public static function handshake(array $input): bool
     {
         $now_time   = time();
-        $timestamp  = (int)preg_replace('/[^0-9]/', '', $input['timestamp'] ?? $now_time);
+        $timestamp  = (int)preg_replace('/[^0-9]/', '', (string)($input['timestamp'] ?? $now_time));
         $passphrase = $input['auth'];
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');

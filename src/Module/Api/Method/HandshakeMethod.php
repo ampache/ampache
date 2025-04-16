@@ -56,11 +56,22 @@ final class HandshakeMethod
      * This is the function that handles verifying a new handshake
      * Takes a timestamp, auth key, and username.
      *
-     * @param array $input
      * auth      = (string) $passphrase
      * user      = (string) $username //optional
      * timestamp = (integer) UNIXTIME() //Required if login/password authentication
      * version   = (string) $version //optional
+     *
+     * @param array{
+     *     user?: string,
+     *     timestamp?: int,
+     *     version?: string,
+     *     client?: string,
+     *     geo_latitude?: float,
+     *     geo_longitude?: float,
+     *     geo_name?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -68,7 +79,7 @@ final class HandshakeMethod
     public static function handshake(array $input): bool
     {
         $now_time   = time();
-        $timestamp  = (int)preg_replace('/[^0-9]/', '', $input['timestamp'] ?? $now_time);
+        $timestamp  = (int)preg_replace('/[^0-9]/', '', (string)($input['timestamp'] ?? $now_time));
         $passphrase = $input['auth'];
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');
@@ -154,10 +165,10 @@ final class HandshakeMethod
                     $data['agent'] = scrub_in((string) $input['client']);
                 }
                 if (isset($input['geo_latitude'])) {
-                    $data['geo_latitude'] = $input['geo_latitude'];
+                    $data['geo_latitude'] = (float)$input['geo_latitude'];
                 }
                 if (isset($input['geo_longitude'])) {
-                    $data['geo_longitude'] = $input['geo_longitude'];
+                    $data['geo_longitude'] = (float)$input['geo_longitude'];
                 }
                 if (isset($input['geo_name'])) {
                     $data['geo_name'] = $input['geo_name'];

@@ -65,9 +65,9 @@ final class Updater implements UpdaterInterface
      * This yields a list of the needed updates to the database
      *
      * @return Generator<array{
-     *  versionFormatted: string,
-     *  version: int,
-     *  migration: MigrationInterface
+     *     versionFormatted: string,
+     *     version: int,
+     *     migration: MigrationInterface
      * }>
      */
     public function getPendingUpdates(): Generator

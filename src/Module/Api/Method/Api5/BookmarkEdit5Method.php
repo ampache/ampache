@@ -55,6 +55,19 @@ final class BookmarkEdit5Method
      * position = (integer) current track time in seconds
      * client   = (string) Agent string Default: 'AmpacheAPI' //optional
      * date     = (integer) UNIXTIME() //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     position: string,
+     *     client?: string,
+     *     date?: int,
+     *     include?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function bookmark_edit(array $input, User $user): bool
     {
@@ -88,7 +101,7 @@ final class BookmarkEdit5Method
         }
 
         /** @var Song|Podcast_Episode|Video $item */
-        $item = new $className($object_id);
+        $item = new $className((int)$object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
@@ -97,10 +110,10 @@ final class BookmarkEdit5Method
         }
         $object = [
             'user' => $user->id,
-            'object_id' => $object_id,
+            'object_id' => (int)$object_id,
             'object_type' => $type,
             'comment' => $comment,
-            'position' => $position,
+            'position' => (int)$position,
         ];
 
         // check for the bookmark first

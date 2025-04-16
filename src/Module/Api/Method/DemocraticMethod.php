@@ -48,7 +48,16 @@ final class DemocraticMethod
      * This is for controlling democratic play
      *
      * method = (string) 'vote', 'devote', 'playlist', 'play'
-     * oid    = (integer) //optional
+     * oid    = (string) //optional
+     *
+     * @param array{
+     *     method: string,
+     *     oid?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function democratic(array $input, User $user): bool
     {

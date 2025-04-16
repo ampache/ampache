@@ -110,10 +110,11 @@ class Bookmark extends database_object
     /**
      * getBookmarks
      * @param array{
-     *  object_type: string,
-     *  object_id: int,
-     *  comment: null|string,
-     *  user: int
+     *     object_type: string,
+     *     object_id: int,
+     *     comment: ?string,
+     *     user: int,
+     *     position?: int
      * } $data
      * @return list<int>
      */
@@ -140,10 +141,10 @@ class Bookmark extends database_object
     /**
      * create
      * @param array{
-     *  comment: null|string,
-     *  object_type: string,
-     *  object_id: int,
-     *  position: int
+     *     comment: null|string,
+     *     object_type: string,
+     *     object_id: int,
+     *     position: int
      * } $data
      */
     public static function create(array $data, int $userId, int $updateDate): void
@@ -164,8 +165,8 @@ class Bookmark extends database_object
     /**
      * edit
      * @param array{
-     *  position: int,
-     *  comment: null|string
+     *     position: int,
+     *     comment: ?string
      * } $data
      */
     public static function edit(int $bookmarkId, array $data, int $updateDate): void

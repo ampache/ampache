@@ -46,6 +46,13 @@ final class LocalplaySongs5Method
      * MINIMUM_API_VERSION=5.0.0
      *
      * get the list of songs in your localplay instance
+     *
+     * @param array{
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function localplay_songs(array $input, User $user): bool
     {

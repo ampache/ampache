@@ -96,11 +96,17 @@ $gart = Art::display('video', $video->id, $fullname, 7); ?>
                 <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo Ui::get_material_symbol('comment', T_('Post Shout')); ?></a>
             <?php } ?>
         <?php } ?>
-    <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
-            <?php if (AmpConfig::get('share')) { ?>
-                <?php echo Share::display_ui('video', $video->id, false); ?>
-            <?php } ?>
-        <?php } ?>
+    <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('share')) { ?>
+            <?php echo Share::display_ui('video', $video->id, false); ?>
+        <?php } else {
+            $link = "&nbsp;" . T_('Link'); ?>
+        <li>
+            <a href="<?php echo $video->get_link(); ?>" target=_blank>
+                <?php echo Ui::get_material_symbol('open_in_new', $link);
+            echo $link; ?>
+            </a>
+        </li>
+    <?php } ?>
         <?php if (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD)) { ?>
             <a class="nohtml" href="<?php echo $video->play_url(); ?>"><?php echo Ui::get_material_symbol('link', T_('Link')); ?></a>
             <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>

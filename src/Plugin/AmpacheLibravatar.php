@@ -112,7 +112,7 @@ class AmpacheLibravatar extends AmpachePlugin implements PluginGetAvatarUrlInter
      */
     public function load(User $user): bool
     {
-        $user->set_preferences();
+        unset($user);
 
         return true;
     }

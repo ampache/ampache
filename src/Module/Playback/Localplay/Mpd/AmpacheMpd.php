@@ -94,7 +94,17 @@ class AmpacheMpd extends localplay_controller
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
         /* We need to create the MPD table */
-        $sql = "CREATE TABLE `localplay_mpd` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `host` VARCHAR(255) COLLATE $collation NOT NULL, `port` INT(11) UNSIGNED NOT NULL DEFAULT '6600', `password` VARCHAR(255) COLLATE $collation NOT NULL, `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0') ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = <<<SQL
+            CREATE TABLE `localplay_mpd` (
+                `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `name` VARCHAR(128) COLLATE $collation NOT NULL,
+                `owner` INT(11) NOT NULL,
+                `host` VARCHAR(255) COLLATE $collation NOT NULL,
+                `port` INT(11) UNSIGNED NOT NULL DEFAULT '6600',
+                `password` VARCHAR(255) COLLATE $collation NOT NULL,
+                `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0'
+            ) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation
+            SQL;
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
@@ -271,7 +281,7 @@ class AmpacheMpd extends localplay_controller
      * and delete it from the current playlist
      * @param int $object_id
      */
-    public function delete_track($object_id): bool
+    public function delete_track(int $object_id): bool
     {
         return $this->_mpd->PLRemove($object_id) !== false;
     }

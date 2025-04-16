@@ -40,6 +40,18 @@ final class Localplay3Method
     /**
      * localplay
      * This is for controling localplay
+     *
+     * @param array{
+     *     command: string,
+     *     oid?: string,
+     *     type?: string,
+     *     clear?: int,
+     *     track?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function localplay(array $input, User $user): bool
     {

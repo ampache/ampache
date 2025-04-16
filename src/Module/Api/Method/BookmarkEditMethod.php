@@ -57,13 +57,26 @@ final class BookmarkEditMethod
      * client   = (string) Agent string //optional
      * date     = (integer) UNIXTIME() //optional
      * include  = (integer) 0,1, if true include the object in the bookmark //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     position: string,
+     *     client?: string,
+     *     date?: int,
+     *     include?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function bookmark_edit(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, ['filter', 'type', 'position'], self::ACTION)) {
             return false;
         }
-        $object_id = $input['filter'];
+        $object_id = (int)$input['filter'];
         $type      = $input['type'];
         $position  = (int)filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT);
         $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : null;
@@ -100,10 +113,10 @@ final class BookmarkEditMethod
             }
         }
         $object = [
-            'user' => $user->id,
-            'object_id' => $object_id,
             'object_type' => $type,
+            'object_id' => $object_id,
             'comment' => $comment,
+            'user' => $user->id,
             'position' => $position,
         ];
 

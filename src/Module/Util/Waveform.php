@@ -240,7 +240,7 @@ class Waveform
      * Great function slightly modified as posted by Minux at
      * http://forums.clantemplates.com/showthread.php?t=133805
      * @param string $input
-     * @return array
+     * @return array{float|int, float|int, float|int}
      */
     protected static function html2rgb($input): array
     {
@@ -321,11 +321,14 @@ class Waveform
         // $data_size = (size_of_file - header_bytes_read) / skipped_bytes + 1
         $data_size  = floor((Core::get_filesize($filename) - 44) / ($ratio + $byte) + 1);
         $data_point = 0;
+        $img_width  = (int) ($data_size / $detail);
 
         // create original image width based on amount of detail
         // each waveform to be processed with be $height high, but will be condensed
         // and resized later (if specified)
-        $img = imagecreatetruecolor((int) ($data_size / $detail), (int) $height);
+        $img = ($img_width > 0 && $height > 0)
+            ? imagecreatetruecolor($img_width, $height)
+            : false;
         if ($img === false) {
             debug_event(self::class, 'Cannot create image.', 1);
 

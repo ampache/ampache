@@ -186,7 +186,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if (!empty($postdata)) {
             $query_string .= '&' . $postdata;
         }
-        $query = explode('&', $query_string);
+        $query = explode('&', $query_string) ?: [];
         $input = [];
         foreach ($query as $param) {
             $decname  = false;
@@ -196,43 +196,41 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 $decname        = urldecode($name);
                 $decvalue       = urldecode($value);
             }
-            if (!$decname || !$decvalue) {
-                continue;
-            }
-
-            // workaround for clementine/Qt5 bug
-            // see https://github.com/clementine-player/Clementine/issues/6080
-            $matches = [];
-            if ($decname == "id" && preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $decvalue, $matches)) {
-                $calc = (
-                    (((int)$matches[1]) << 24) +
-                    (((int)$matches[2]) << 16) +
-                    (((int)$matches[3]) << 8) +
-                    ((int)$matches[4])
-                );
-                if ($calc) {
-                    $this->logger->notice(
-                        "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc",
-                        [LegacyLogger::CONTEXT_TYPE => self::class]
+            if ($decname && $decvalue !== false && $decvalue !== '') {
+                // workaround for clementine/Qt5 bug
+                // see https://github.com/clementine-player/Clementine/issues/6080
+                $matches = [];
+                if ($decname == "id" && preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $decvalue, $matches)) {
+                    $calc = (
+                        (((int)$matches[1]) << 24) +
+                        (((int)$matches[2]) << 16) +
+                        (((int)$matches[3]) << 8) +
+                        ((int)$matches[4])
                     );
-                    $decvalue = $calc;
+                    if ($calc) {
+                        $this->logger->notice(
+                            "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc",
+                            [LegacyLogger::CONTEXT_TYPE => self::class]
+                        );
+                        $decvalue = $calc;
+                    } else {
+                        $this->logger->warning(
+                            "Got id parameter $decvalue, which looks like an IP address. Recalculation of the correct id failed, though",
+                            [LegacyLogger::CONTEXT_TYPE => self::class]
+                        );
+                    }
+                }
+
+                if (array_key_exists($decname, $input)) {
+                    if (is_array($input[$decname]) === false) {
+                        $oldvalue          = $input[$decname];
+                        $input[$decname]   = [];
+                        $input[$decname][] = $oldvalue;
+                    }
+                    $input[$decname][] = $decvalue;
                 } else {
-                    $this->logger->warning(
-                        "Got id parameter $decvalue, which looks like an IP address. Recalculation of the correct id failed, though",
-                        [LegacyLogger::CONTEXT_TYPE => self::class]
-                    );
+                    $input[$decname] = $decvalue;
                 }
-            }
-
-            if (array_key_exists($decname, $input)) {
-                if (is_array($input[$decname]) === false) {
-                    $oldvalue          = $input[$decname];
-                    $input[$decname]   = [];
-                    $input[$decname][] = $oldvalue;
-                }
-                $input[$decname][] = $decvalue;
-            } else {
-                $input[$decname] = $decvalue;
             }
         }
         //$this->logger->debug(print_r($input, true), [LegacyLogger::CONTEXT_TYPE => self::class]);

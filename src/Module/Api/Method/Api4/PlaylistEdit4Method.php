@@ -50,6 +50,20 @@ final class PlaylistEdit4Method
      * items  = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
      * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
      * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     name?: string,
+     *     type?: string,
+     *     owner?: int|string,
+     *     items?: string,
+     *     tracks?: string,
+     *     sort?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function playlist_edit(array $input, User $user): bool
     {

@@ -58,6 +58,16 @@ final class CatalogFolderMethod
      * folder  = (string) urlencode(FULL path to local folder)
      * task    = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
      * catalog = (integer) $catalog_id
+     *
+     * @param array{
+     *     folder: string,
+     *     task: string,
+     *     catalog: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function catalog_folder(array $input, User $user): bool
     {

@@ -187,9 +187,17 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * get_id_arrays
      *
      * Get each id from the artist table with the minimum detail required for subsonic
-     * @param array $catalogs
+     * @param int[] $catalogs
+     * @return list<array{
+     *      id: int,
+     *      f_name: string,
+     *      name: string,
+     *      album_count: int,
+     *      catalog_id: int,
+     *      has_art: int
+     *  }>
      */
-    public static function get_id_arrays($catalogs = []): array
+    public static function get_id_arrays(array $catalogs = []): array
     {
         $results = [];
         // if you have no catalogs set, just grab it all
@@ -198,14 +206,30 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
             foreach ($catalogs as $catalog_id) {
                 $db_results = Dba::read($sql, [$catalog_id]);
                 while ($row = Dba::fetch_assoc($db_results, false)) {
-                    $results[] = $row;
+                    $results[] = [
+                        'id' => (int)$row['id'],
+                        'f_name' => $row['f_name'],
+                        'name' => $row['name'],
+                        'album_count' => (int)$row['album_count'],
+                        'song_count' => (int)$row['song_count'],
+                        'catalog_id' => $catalog_id,
+                        'has_art' => (int)$row['has_art'],
+                    ];
                 }
             }
         } else {
             $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' ORDER BY `artist`.`name`";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results, false)) {
-                $results[] = $row;
+                $results[] = [
+                    'id' => (int)$row['id'],
+                    'f_name' => $row['f_name'],
+                    'name' => $row['name'],
+                    'album_count' => (int)$row['album_count'],
+                    'song_count' => (int)$row['song_count'],
+                    'catalog_id' => 0,
+                    'has_art' => (int)$row['has_art'],
+                ];
             }
         }
 
@@ -835,16 +859,16 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * update
      * This takes a key'd array of data and updates the current artist
      * @param array{
-     *      name?: string,
-     *      mbid?: string|null,
-     *      summary?: string|null,
-     *      placeformed?: string|null,
-     *      yearformed?: int|null,
-     *      overwrite_childs?: string,
-     *      add_to_childs?: string,
-     *      edit_tags?: string,
-     *      edit_labels?: string
-     *  } $data
+     *     name?: string,
+     *     mbid?: ?string,
+     *     summary?: ?string,
+     *     placeformed?: ?string,
+     *     yearformed?: ?int,
+     *     overwrite_childs?: string,
+     *     add_to_childs?: string,
+     *     edit_tags?: string,
+     *     edit_labels?: string
+     * } $data
      */
     public function update(array $data): int
     {

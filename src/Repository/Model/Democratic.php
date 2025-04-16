@@ -518,8 +518,9 @@ class Democratic extends Tmp_Playlist
      * create
      * This is the democratic play create function it inserts this into the democratic table
      * @param array $data
+     * @return string|null
      */
-    public static function create($data): ?string
+    public static function create(array $data): ?string
     {
         // Clean up the input
         $name    = $data['name'];

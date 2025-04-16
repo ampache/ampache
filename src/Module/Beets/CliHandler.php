@@ -53,25 +53,21 @@ class CliHandler extends Handler
 
     /**
      * Choose whether the -f argument from beets is applied. May be needed to use other commands than 'beet ls'
-     * @var bool
      */
-    protected $useCustomFields = true;
+    protected bool $useCustomFields = true;
 
     /**
      * All stored beets fields
-     * @var array
      */
-    protected $fields = [];
+    protected array $fields = [];
 
     /**
      * Beets command
-     * @var string
      */
     protected string $beetsCommand = 'beet';
 
     /**
      * Seperator between command and arguments
-     * @var string
      */
     protected string $commandSeperator = ' ';
 
@@ -88,9 +84,8 @@ class CliHandler extends Handler
 
     /**
      * CliHandler constructor.
-     * @param Catalog $handler
      */
-    public function __construct($handler)
+    public function __construct(Catalog $handler)
     {
         $this->handler = $handler;
     }
@@ -107,7 +102,7 @@ class CliHandler extends Handler
     }
 
     /**
-     * @param $handle
+     * @param resource $handle
      */
     public function iterateItems($handle): void
     {
@@ -159,7 +154,7 @@ class CliHandler extends Handler
      * @param string $item
      * @return array
      */
-    protected function parse($item): array
+    protected function parse(string $item): array
     {
         $item               = str_replace($this->itemEnd, '', $item);
         $values             = explode($this->seperator, $item);

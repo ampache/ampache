@@ -69,11 +69,11 @@ interface RssItemInterface
      *   title: string,
      *   guid: string,
      *   length: string,
-     *   author: null|string,
-     *   pubDate: null|string,
-     *   type: null|string,
-     *   size: null|string,
-     *   url: null|string
+     *   author: ?string,
+     *   pubDate: ?string,
+     *   type: ?string,
+     *   size: ?string,
+     *   url: ?string
      * }>
      */
     public function getMedias(): Traversable;
