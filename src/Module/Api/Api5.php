@@ -222,7 +222,7 @@ class Api5
      */
     public static function check_parameter(array $input, array $parameters, string $method): bool
     {
-        $parameter = !Api::parameter_exists($input, $parameters);
+        $parameter = Api::parameter_exists($input, $parameters);
         if ($parameter === true) {
             return true;
         }
