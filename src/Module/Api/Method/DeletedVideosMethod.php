@@ -47,6 +47,15 @@ final class DeletedVideosMethod
      *
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     *
+     * @param array{
+     *     limit?: string,
+     *     offset?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function deleted_videos(array $input, User $user): bool
     {

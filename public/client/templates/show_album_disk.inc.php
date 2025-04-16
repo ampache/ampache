@@ -202,14 +202,20 @@ if (AmpConfig::get('sociable') && !empty($owner_id)) {
             <?php
             } ?>
         <?php } ?>
-    <?php if ($access25) { ?>
-            <?php if (AmpConfig::get('share')) { ?>
+    <?php if ($access25 && AmpConfig::get('share')) { ?>
             <li>
                 <?php echo Share::display_ui('album_disk', $albumDisk->id); ?>
             </li>
-            <?php } ?>
-        <?php } ?>
-<?php if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || $access50) {
+        <?php } else {
+            $link = "&nbsp;" . T_('Link'); ?>
+        <li>
+            <a href="<?php echo $albumDisk->get_link(); ?>" target=_blank>
+                <?php echo Ui::get_material_symbol('open_in_new', $link);
+            echo $link; ?>
+            </a>
+        </li>
+    <?php } ?>
+        <?php if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || $access50) {
             if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album_disk&object_id=<?php echo $albumDisk->id; ?>">

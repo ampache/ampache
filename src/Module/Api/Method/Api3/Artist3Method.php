@@ -38,6 +38,14 @@ final class Artist3Method
     /**
      * artist
      * This returns a single artist based on the UID of said artist
+     *
+     * @param array{
+     *     filter: string,
+     *     include?: string|string[],
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function artist(array $input, User $user): void
     {
@@ -46,6 +54,6 @@ final class Artist3Method
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include'])));
         }
-        echo Xml3_Data::artists([$uid], $include, $user);
+        echo Xml3_Data::artists([$uid], $include ?: [], $user);
     }
 }

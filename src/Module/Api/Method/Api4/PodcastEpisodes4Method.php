@@ -48,6 +48,18 @@ final class PodcastEpisodes4Method
      * filter = (string) UID of podcast
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     offset?: string,
+     *     limit?: string,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function podcast_episodes(array $input, User $user): bool
     {
@@ -59,7 +71,7 @@ final class PodcastEpisodes4Method
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $podcast_id = (int) $input['filter'];
+        $podcast_id = (int)$input['filter'];
         debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $podcast_id, 5);
         $podcastRepository = self::getPodcastRepository();
         $podcast           = $podcastRepository->findById($podcast_id);

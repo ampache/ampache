@@ -47,6 +47,14 @@ final class Label5Method
      * This returns a single label based on UID
      *
      * filter = (string) UID of label
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function label(array $input, User $user): bool
     {

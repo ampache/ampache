@@ -46,13 +46,25 @@ final class Download4Method
      * id     = (string) $song_id| $podcast_episode_id
      * type   = (string) 'song'|'podcast'
      * format = (string) 'mp3'|'ogg', etc //optional SONG ONLY
+     *
+     * @param array{
+     *     id: string,
+     *     type: string,
+     *     bitrate?: int,
+     *     format?: int,
+     *     stats?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function download(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, ['id', 'type'], self::ACTION)) {
             return false;
         }
-        $fileid       = $input['id'];
+        $fileid       = (int)$input['id'];
         $type         = $input['type'];
         $format       = $input['format'] ?? null; // mp3, flv or raw
         $transcode_to = $format && $format != 'raw';

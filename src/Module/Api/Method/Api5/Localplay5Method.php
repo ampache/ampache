@@ -55,6 +55,18 @@ final class Localplay5Method
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
      * track   = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) //optional
+     *
+     * @param array{
+     *     command: string,
+     *     oid?: string,
+     *     type?: string,
+     *     clear?: int,
+     *     track?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function localplay(array $input, User $user): bool
     {
@@ -104,7 +116,7 @@ final class Localplay5Method
                 break;
             case 'skip':
                 // localplay_songs 'track' starts at 1 but localplay starts at 0 behind the scenes
-                $result = $localplay->skip((int)$input['track'] - 1);
+                $result = $localplay->skip((int)($input['track'] ?? 1) - 1);
                 break;
             case 'next':
                 $result = $localplay->next();

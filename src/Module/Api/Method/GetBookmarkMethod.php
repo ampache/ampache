@@ -56,6 +56,17 @@ final class GetBookmarkMethod
      * type    = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
      * include = (integer) 0,1, if true include the object in the bookmark //optional
      * all     = (integer) 0,1, if true every bookmark related to the object //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     include?: int,
+     *     all?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function get_bookmark(array $input, User $user): bool
     {

@@ -30,11 +30,11 @@ use Ampache\Repository\Model\Wanted;
  * @phpstan-type DatabaseRow array{
  *   id: int,
  *   user: int,
- *   artist: null|int,
- *   artist_mbid: null|string,
- *   mbid: null|string,
- *   name: null|string,
- *   year: null|int,
+ *   artist: ?int,
+ *   artist_mbid: ?string,
+ *   mbid: ?string,
+ *   name: ?string,
+ *   year: ?int,
  *   date: int,
  *   accepted: int
  *  }

@@ -71,10 +71,10 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * @return list<array{
-     *  object_type: LibraryItemEnum,
-     *  object_id: int,
-     *  track: int,
-     *  track_id: int
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     track: int,
+     *     track_id: int
      * }>
      */
     abstract public function get_items(): array;

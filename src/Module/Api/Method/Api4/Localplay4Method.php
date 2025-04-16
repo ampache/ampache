@@ -50,6 +50,18 @@ final class Localplay4Method
      * oid     = (integer) object_id //optional
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
+     *
+     * @param array{
+     *     command: string,
+     *     oid?: string,
+     *     type?: string,
+     *     clear?: int,
+     *     track?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function localplay(array $input, User $user): bool
     {

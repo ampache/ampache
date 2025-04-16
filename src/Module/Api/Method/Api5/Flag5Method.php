@@ -51,6 +51,17 @@ final class Flag5Method
      * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
      * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
+     *
+     * @param array{
+     *     id: string,
+     *     type: string,
+     *     flag: int,
+     *     date?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function flag(array $input, User $user): bool
     {
@@ -65,7 +76,7 @@ final class Flag5Method
         ob_end_clean();
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $flag      = (bool)($input['flag'] ?? false);
+        $flag      = (bool)($input['flag']);
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'])) {
             Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);

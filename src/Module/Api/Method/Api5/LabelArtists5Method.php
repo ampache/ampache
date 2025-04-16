@@ -48,6 +48,19 @@ final class LabelArtists5Method
      *
      * filter  = (string) UID of label
      * include = (array|string) 'albums', 'songs' //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     include?: array|string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function label_artists(array $input, User $user): bool
     {
@@ -82,10 +95,10 @@ final class LabelArtists5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::artists($results, $include, $user);
+                echo Json5_Data::artists($results, $include ?: [], $user);
                 break;
             default:
-                echo Xml5_Data::artists($results, $include, $user);
+                echo Xml5_Data::artists($results, $include ?: [], $user);
         }
 
         return true;

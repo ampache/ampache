@@ -151,7 +151,7 @@ function invert_bool($value): bool
  * different languages installed, this means that all you have to do
  * is drop one in and it will show up on the context menu. It returns
  * in the form of an array of names
- * @return array
+ * @return array<string, string>
  */
 function get_languages(): array
 {
@@ -363,9 +363,9 @@ function get_datetime($time, $date_format = 'short', $time_format = 'short', $ov
 /**
  * check_config_values
  * checks to make sure that they have at least set the needed variables
- * @param array $conf
+ * @param array<string, mixed> $conf
  */
-function check_config_values($conf): bool
+function check_config_values(array $conf): bool
 {
     if (!is_array($conf)) {
         return false;

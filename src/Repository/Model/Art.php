@@ -1210,9 +1210,9 @@ class Art extends database_object
      * @param string $type
      * @param array $options
      * @return list<array{
-     *  url: string,
-     *  mime: string,
-     *  title: string
+     *     url: string,
+     *     mime: string,
+     *     title: string
      * }>
      */
     public static function gather_metadata_plugin($plugin, $type, $options): array

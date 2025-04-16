@@ -48,6 +48,14 @@ final class PodcastDelete5Method
      * Delete an existing podcast.
      *
      * filter = (string) UID of podcast to delete
+     *
+     * @param array{
+     *     filter?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function podcast_delete(array $input, User $user): bool
     {
@@ -62,7 +70,7 @@ final class PodcastDelete5Method
         if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $object_id = (int) $input['filter'];
+        $object_id = (int)($input['filter'] ?? 0);
         $podcast   = self::getPodcastRepository()->findById($object_id);
 
         if ($podcast === null) {

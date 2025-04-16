@@ -57,6 +57,27 @@ final class UserUpdate4Method
      * city       = (string) $city //optional
      * disable    = (integer) 0,1 true to disable, false to enable //optional
      * maxbitrate = (integer) $maxbitrate //optional
+     *
+     * @param array{
+     *     username: string,
+     *     fullname?: string,
+     *     password?: string,
+     *     email?: string,
+     *     website?: string,
+     *     state?: string,
+     *     city?: string,
+     *     disable?: int,
+     *     group?: int,
+     *     maxbitrate?: int,
+     *     fullname_public?: int,
+     *     reset_apikey?: int,
+     *     reset_streamtoken?: int,
+     *     clear_stats?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function user_update(array $input, User $user): bool
     {
@@ -89,8 +110,8 @@ final class UserUpdate4Method
             : null;
         $state      = $input['state'] ?? null;
         $city       = $input['city'] ?? null;
-        $disable    = $input['disable'] ?? null;
-        $maxbitrate = (int)($input['maxBitRate'] ?? 0);
+        $disable    = (isset($input['disable'])) ? (int)$input['disable'] : null;
+        $maxbitrate = (int)($input['maxbitrate'] ?? 0);
 
         $user_id = $update_user->id;
         if ($user_id > 0) {
@@ -113,9 +134,9 @@ final class UserUpdate4Method
                 $update_user->update_city($city);
             }
             $userStateToggler = self::getUserStateToggler();
-            if ($disable === '1') {
+            if ($disable === 1) {
                 $userStateToggler->disable($update_user);
-            } elseif ($disable === '0') {
+            } elseif ($disable === 0) {
                 $userStateToggler->enable($update_user);
             }
             if ($maxbitrate > 0) {

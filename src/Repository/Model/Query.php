@@ -395,8 +395,8 @@ class Query
      * get_sort
      * This returns the current sort
      * @return array{
-     *  name: string|null,
-     *  order: string|null
+     *     name: ?string,
+     *     order: ?string
      * }
      */
     public function get_sort(): array
@@ -924,6 +924,7 @@ class Query
      * This gets an array of the ids of the objects that we are
      * currently browsing by it applies the sql and logic based
      * filters
+     * @return int[]
      */
     public function get_objects(): array
     {

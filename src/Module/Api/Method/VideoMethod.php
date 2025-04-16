@@ -46,6 +46,14 @@ final class VideoMethod
      * This returns a single video
      *
      * filter = (string) UID of video
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function video(array $input, User $user): bool
     {

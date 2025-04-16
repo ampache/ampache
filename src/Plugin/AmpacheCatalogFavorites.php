@@ -225,7 +225,15 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                         }
                         if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('share')) {
                             echo Share::display_ui('song', $item->getId(), false);
-                        } ?>
+                        } else {
+                            $link = "&nbsp;" . T_('Link'); ?>
+                            <li>
+                                <a href="<?php echo $item->get_link(); ?>" target=_blank>
+                                    <?php echo Ui::get_material_symbol('open_in_new', $link);
+                            echo $link; ?>
+                                </a>
+                            </li>
+                        <?php } ?>
                             </td>
                         </tr>
                         <?php

@@ -172,14 +172,14 @@ class Subsonic_Api
 
     /**
      * check_parameter
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param string $parameter
      * @param bool $addheader
      * @return false|mixed
      */
-    private static function _check_parameter($input, $parameter, $addheader = false)
+    private static function _check_parameter(array $input, string $parameter, bool $addheader = false): mixed
     {
-        if (empty($input[$parameter])) {
+        if (!array_key_exists($parameter, $input) || $input[$parameter] === '') {
             ob_end_clean();
             if ($addheader) {
                 self::_setHeader((string)($input['f'] ?? 'xml'));
@@ -195,10 +195,7 @@ class Subsonic_Api
         return $input[$parameter];
     }
 
-    /**
-     * @param string $password
-     */
-    public static function _decryptPassword($password): string
+    public static function _decryptPassword(string $password): string
     {
         // Decode hex-encoded password
         $encpwd = strpos($password, "enc:");
@@ -237,7 +234,7 @@ class Subsonic_Api
             if ($rhpart[0] != "Transfer-Encoding") {
                 header($rheader);
             }
-        } elseif (substr($header, 0, 5) === "HTTP/") {
+        } elseif (str_starts_with($header, "HTTP/")) {
             // if $header starts with HTTP/ assume it's the status line
             http_response_code(curl_getinfo($curl, CURLINFO_HTTP_CODE));
         }
@@ -247,9 +244,8 @@ class Subsonic_Api
 
     /**
      * _follow_stream
-     * @param string $url
      */
-    private static function _follow_stream($url): void
+    private static function _follow_stream(string $url): void
     {
         set_time_limit(0);
         ob_end_clean();
@@ -308,10 +304,7 @@ class Subsonic_Api
         }
     }
 
-    /**
-     * @param string $filetype
-     */
-    public static function _setHeader($filetype): void
+    public static function _setHeader(string $filetype): void
     {
         if (strtolower((string)$filetype) == "json") {
             header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
@@ -327,12 +320,11 @@ class Subsonic_Api
 
     /**
      * _apiOutput
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param SimpleXMLElement $xml
-     * @param array $alwaysArray
+     * @param string[] $alwaysArray
      */
-
-    private static function _apiOutput($input, $xml, $alwaysArray = self::ALWAYS_ARRAY): void
+    private static function _apiOutput(array $input, SimpleXMLElement $xml, array $alwaysArray = self::ALWAYS_ARRAY): void
     {
         $format   = strtolower($input['f'] ?? 'xml');
         $callback = $input['callback'] ?? $format;
@@ -344,9 +336,9 @@ class Subsonic_Api
      * @param string $format
      * @param SimpleXMLElement $xml
      * @param string $callback
-     * @param array $alwaysArray
+     * @param string[] $alwaysArray
      */
-    public static function _apiOutput2($format, $xml, $callback = '', $alwaysArray = self::ALWAYS_ARRAY): void
+    public static function _apiOutput2(string $format, SimpleXMLElement $xml, string $callback = '', array $alwaysArray = self::ALWAYS_ARRAY): void
     {
         $conf = ['alwaysArray' => $alwaysArray];
         if ($format == "json") {
@@ -386,9 +378,9 @@ class Subsonic_Api
      * Because we cannot use only json_encode to respect JSON Subsonic API
      * @param SimpleXMLElement $xml
      * @param array $input_options
-     * @return array
+     * @return array<string, mixed>
      */
-    private static function _xml2Json($xml, $input_options = []): array
+    private static function _xml2Json(SimpleXMLElement $xml, array $input_options = []): array
     {
         $defaults = [
             'namespaceSeparator' => ' :', // you may want this to be something other than a colon
@@ -544,7 +536,6 @@ class Subsonic_Api
     /**
      * has_Nested_Array
      * Used for xml2json to detect a sub-array
-     * @param $properties
      */
     private static function _hasNestedArray($properties): bool
     {
@@ -561,10 +552,10 @@ class Subsonic_Api
      * ping
      * Used to test connectivity with the server.
      * http://www.subsonic.org/pages/api.jsp#ping
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function ping($input, $user): void
+    public static function ping(array $input, User $user): void
     {
         unset($user);
         // Don't check client API version here. Some client give version 0.0.0 for ping command
@@ -576,10 +567,10 @@ class Subsonic_Api
      * Get details about the software license. (Always return a valid default license.)
      * Returns a <subsonic-response> element with a nested <license> element on success.
      * http://www.subsonic.org/pages/api.jsp#getLicense
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getlicense($input, $user): void
+    public static function getlicense(array $input, User $user): void
     {
         unset($user);
         $response = Subsonic_Xml_Data::addSubsonicResponse('getlicense');
@@ -592,10 +583,10 @@ class Subsonic_Api
      * Returns all configured top-level music folders (Ampache catalogs).
      * Returns a <subsonic-response> element with a nested <musicFolders> element on success.
      * http://www.subsonic.org/pages/api.jsp#getMusicFolders
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getmusicfolders($input, $user): void
+    public static function getmusicfolders(array $input, User $user): void
     {
         $catalogs = $user->get_catalogs('music');
         $response = Subsonic_Xml_Data::addSubsonicResponse('getmusicfolders');
@@ -609,10 +600,10 @@ class Subsonic_Api
      * Returns an indexed structure of all artists.
      * Returns a <subsonic-response> element with a nested <indexes> element on success.
      * http://www.subsonic.org/pages/api.jsp#getIndexes
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getindexes($input, $user): void
+    public static function getindexes(array $input, User $user): void
     {
         set_time_limit(300);
 
@@ -621,7 +612,7 @@ class Subsonic_Api
 
         $catalogs = [];
         if (!empty($musicFolderId) && $musicFolderId != '-1') {
-            $catalogs[] = $musicFolderId;
+            $catalogs[] = (int)$musicFolderId;
         } else {
             $catalogs = $user->get_catalogs('music');
         }
@@ -649,7 +640,7 @@ class Subsonic_Api
                 $lastmodified = $clastmodified;
             }
             if (!empty($ifModifiedSince) && $clastmodified > (((int)$ifModifiedSince) / 1000)) {
-                $fcatalogs[] = $catalogid;
+                $fcatalogs[] = (int)$catalogid;
             }
         }
         if (empty($ifModifiedSince)) {
@@ -669,10 +660,10 @@ class Subsonic_Api
      * Returns a listing of all files in a music directory. Typically used to get list of albums for an artist, or list of songs for an album.
      * Returns a <subsonic-response> element with a nested <directory> element on success.
      * http://www.subsonic.org/pages/api.jsp#getMusicDirectory
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getmusicdirectory($input, $user): void
+    public static function getmusicdirectory(array $input, User $user): void
     {
         unset($user);
         $object_id = $input['id'] ?? 0;
@@ -697,10 +688,10 @@ class Subsonic_Api
      * Returns all genres.
      * Returns a <subsonic-response> element with a nested <genres> element on success.
      * http://www.subsonic.org/pages/api.jsp#getGenres
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getgenres($input, $user): void
+    public static function getgenres(array $input, User $user): void
     {
         unset($user);
         $response = Subsonic_Xml_Data::addSubsonicResponse('getgenres');
@@ -713,10 +704,10 @@ class Subsonic_Api
      * See self::getIndexes()
      * Returns a <subsonic-response> element with a nested <artists> element on success.
      * http://www.subsonic.org/pages/api.jsp#getArtists
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getartists($input, $user): void
+    public static function getartists(array $input, User $user): void
     {
         unset($user);
         $musicFolderId = $input['musicFolderId'] ?? '';
@@ -735,10 +726,10 @@ class Subsonic_Api
      * Returns details for an artist, including a list of albums. This method organizes music according to ID3 tags.
      * Returns a <subsonic-response> element with a nested <artist> element on success.
      * http://www.subsonic.org/pages/api.jsp#getArtist
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getartist($input, $user): void
+    public static function getartist(array $input, User $user): void
     {
         unset($user);
         $artistid = self::_check_parameter($input, 'id');
@@ -760,10 +751,10 @@ class Subsonic_Api
      * Returns details for an album, including a list of songs. This method organizes music according to ID3 tags.
      * Returns a <subsonic-response> element with a nested <album> element on success.
      * http://www.subsonic.org/pages/api.jsp#getAlbum
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getalbum($input, $user): void
+    public static function getalbum(array $input, User $user): void
     {
         unset($user);
         $albumid = self::_check_parameter($input, 'id');
@@ -787,10 +778,10 @@ class Subsonic_Api
      * Returns a <subsonic-response> element with a nested <song> element on success.
      * http://www.subsonic.org/pages/api.jsp#getSong
      * id = (string) The album ID.
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getsong($input, $user): void
+    public static function getsong(array $input, User $user): void
     {
         unset($user);
         $songid = self::_check_parameter($input, 'id');
@@ -808,10 +799,10 @@ class Subsonic_Api
      * Returns all video files.
      * Returns a <subsonic-response> element with a nested <videos> element on success.
      * http://www.subsonic.org/pages/api.jsp#getVideos
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getvideos($input, $user): void
+    public static function getvideos(array $input, User $user): void
     {
         unset($user);
         $response = Subsonic_Xml_Data::addSubsonicResponse('getvideos');
@@ -822,10 +813,10 @@ class Subsonic_Api
 
     /**
      * Returns details for a video, including information about available audio tracks, subtitles (captions) and conversions.
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getvideoinfo($input, $user): void
+    public static function getvideoinfo(array $input, User $user): void
     {
         unset($user);
         $video_id = self::_check_parameter($input, 'id');
@@ -842,11 +833,11 @@ class Subsonic_Api
      * Returns artist info with biography, image URLs and similar artists, using data from last.fm.
      * Returns a <subsonic-response> element with a nested <artistInfo> element on success.
      * http://www.subsonic.org/pages/api.jsp#getArtistInfo
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      * @param string $elementName
      */
-    public static function getartistinfo($input, $user, $elementName = "artistInfo"): void
+    public static function getartistinfo(array $input, User $user, string $elementName = "artistInfo"): void
     {
         unset($user);
         $object_id = self::_check_parameter($input, 'id');
@@ -881,20 +872,20 @@ class Subsonic_Api
      * See self::getArtistInfo()
      * Returns a <subsonic-response> element with a nested <artistInfo2> element on success.
      * http://www.subsonic.org/pages/api.jsp#getArtistInfo2
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getartistinfo2($input, $user): void
+    public static function getartistinfo2(array $input, User $user): void
     {
         self::getartistinfo($input, $user, 'artistInfo2');
     }
 
     /**
      * getAlbumInfo
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getalbuminfo($input, $user): void
+    public static function getalbuminfo(array $input, User $user): void
     {
         unset($user);
         $object_id = self::_check_parameter($input, 'id');
@@ -916,10 +907,10 @@ class Subsonic_Api
 
     /**
      * getAlbumInfo2
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getalbuminfo2($input, $user): void
+    public static function getalbuminfo2(array $input, User $user): void
     {
         self::getalbuminfo($input, $user);
     }
@@ -929,11 +920,11 @@ class Subsonic_Api
      * Returns a random collection of songs from the given artist and similar artists, using data from last.fm. Typically used for artist radio features.
      * Returns a <subsonic-response> element with a nested <similarSongs> element on success.
      * http://www.subsonic.org/pages/api.jsp#getSimilarSongs
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      * @param string $elementName
      */
-    public static function getsimilarsongs($input, $user, $elementName = "similarSongs"): void
+    public static function getsimilarsongs(array $input, User $user, string $elementName = "similarSongs"): void
     {
         unset($user);
         if (!AmpConfig::get('show_similar')) {
@@ -1001,10 +992,10 @@ class Subsonic_Api
      * See self::getSimilarSongs()
      * Returns a <subsonic-response> element with a nested <similarSongs2> element on success.
      * http://www.subsonic.org/pages/api.jsp#getSimilarSongs2
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getsimilarsongs2($input, $user): void
+    public static function getsimilarsongs2(array $input, User $user): void
     {
         self::getsimilarsongs($input, $user, "similarSongs2");
     }
@@ -1014,10 +1005,10 @@ class Subsonic_Api
      * Returns top songs for the given artist, using data from last.fm.
      * Returns a <subsonic-response> element with a nested <topSongs> element on success.
      * http://www.subsonic.org/pages/api.jsp#getTopSongs
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function gettopsongs($input, $user): void
+    public static function gettopsongs(array $input, User $user): void
     {
         unset($user);
         $name   = self::_check_parameter($input, 'artist');
@@ -1043,11 +1034,11 @@ class Subsonic_Api
      * Returns a list of random, newest, highest rated etc. albums. Similar to the album lists on the home page of the Subsonic web interface.
      * Returns a <subsonic-response> element with a nested <albumList> element on success.
      * http://www.subsonic.org/pages/api.jsp#getAlbumList
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      * @param string $elementName
      */
-    public static function getalbumlist($input, $user, $elementName = "albumList"): void
+    public static function getalbumlist(array $input, User $user, string $elementName = "albumList"): void
     {
         $type     = self::_check_parameter($input, 'type');
         $response = Subsonic_Xml_Data::addSubsonicResponse($elementName);
@@ -1074,10 +1065,10 @@ class Subsonic_Api
      * See self::getAlbumList()
      * Returns a <subsonic-response> element with a nested <albumList2> element on success.
      * http://www.subsonic.org/pages/api.jsp#getAlbumList2
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getalbumlist2($input, $user): void
+    public static function getalbumlist2(array $input, User $user): void
     {
         self::getalbumlist($input, $user, "albumList2");
     }
@@ -1087,10 +1078,10 @@ class Subsonic_Api
      * Returns random songs matching the given criteria.
      * Returns a <subsonic-response> element with a nested <randomSongs> element on success.
      * http://www.subsonic.org/pages/api.jsp#getRandomSongs
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getrandomsongs($input, $user): void
+    public static function getrandomsongs(array $input, User $user): void
     {
         $size = (int)($input['size'] ?? 10);
 
@@ -1160,10 +1151,10 @@ class Subsonic_Api
      * Returns songs in a given genre.
      * Returns a <subsonic-response> element with a nested <songsByGenre> element on success.
      * http://www.subsonic.org/pages/api.jsp#getSongsByGenre
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getsongsbygenre($input, $user): void
+    public static function getsongsbygenre(array $input, User $user): void
     {
         unset($user);
         $genre  = self::_check_parameter($input, 'genre');
@@ -1186,10 +1177,10 @@ class Subsonic_Api
      * Get what is currently being played by all users.
      * Returns a <subsonic-response> element with a nested <nowPlaying> element on success.
      * http://www.subsonic.org/pages/api.jsp#getNowPlaying
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getnowplaying($input, $user): void
+    public static function getnowplaying(array $input, User $user): void
     {
         unset($user);
         $data     = Stream::get_now_playing();
@@ -1203,11 +1194,11 @@ class Subsonic_Api
      * Get starred songs, albums and artists.
      * Returns a <subsonic-response> element with a nested <starred> element on success.
      * http://www.subsonic.org/pages/api.jsp#getStarred
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      * @param string $elementName
      */
-    public static function getstarred($input, $user, $elementName = "starred"): void
+    public static function getstarred(array $input, User $user, string $elementName = "starred"): void
     {
         $response = Subsonic_Xml_Data::addSubsonicResponse($elementName);
         switch ($elementName) {
@@ -1236,10 +1227,10 @@ class Subsonic_Api
      * See self::getStarred()
      * Returns a <subsonic-response> element with a nested <starred2> element on success.
      * http://www.subsonic.org/pages/api.jsp#getStarred2
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getstarred2($input, $user): void
+    public static function getstarred2(array $input, User $user): void
     {
         self::getstarred($input, $user, "starred2");
     }
@@ -1249,12 +1240,12 @@ class Subsonic_Api
      * Returns albums, artists and songs matching the given search criteria. Supports paging through the result.
      * Returns a <subsonic-response> element with a nested <searchResult2> element on success.
      * http://www.subsonic.org/pages/api.jsp#search2
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      * @param string $elementName
      * @param bool $search3
      */
-    public static function search2($input, $user, $elementName = "searchResult2", $search3 = false): void
+    public static function search2(array $input, User $user, string $elementName = "searchResult2", bool $search3 = false): void
     {
         $query = ($search3)
             ? $input['query'] ?? ''
@@ -1268,7 +1259,7 @@ class Subsonic_Api
         $operator = 0; // contains
         $original = unhtmlentities((string)$query);
         $query    = $original;
-        if (substr($original, 0, 1) == '"' && (substr($original, -1) == '"')) {
+        if (str_starts_with($original, '"') && (str_ends_with($original, '"'))) {
             $query = substr($original, 1, -1);
             // query is non-optional, but some clients send empty queries to fetch
             // all items. Fall back on default contains in such cases.
@@ -1276,7 +1267,7 @@ class Subsonic_Api
                 $operator = 4; // equals
             }
         }
-        if (substr($original, 0, 1) == '"' && substr($original, -2, 2) == '"*') {
+        if (str_starts_with($original, '"') && str_ends_with($original, '"*')) {
             $query    = substr($original, 1, -2);
             $operator = 4; // equals
         }
@@ -1286,7 +1277,7 @@ class Subsonic_Api
 
         if (strlen($query) > 1) {
             // if we didn't catch a "wrapped" query it might just be a starts with
-            if (substr($original, -1) == "*" && $operator == 0) {
+            if (str_ends_with($original, "*") && $operator == 0) {
                 $query    = substr($query, 0, -1);
                 $operator = 2; // Starts with
             }
@@ -1365,10 +1356,10 @@ class Subsonic_Api
      * See self::search2()
      * Returns a <subsonic-response> element with a nested <searchResult3> element on success.
      * http://www.subsonic.org/pages/api.jsp#search3
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function search3($input, $user): void
+    public static function search3(array $input, User $user): void
     {
         self::search2($input, $user, "searchResult3", true);
     }
@@ -1378,10 +1369,10 @@ class Subsonic_Api
      * Returns all playlists a user is allowed to play.
      * Returns a <subsonic-response> element with a nested <playlists> element on success.
      * http://www.subsonic.org/pages/api.jsp#getPlaylists
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getplaylists($input, $user): void
+    public static function getplaylists(array $input, User $user): void
     {
         $user = (isset($input['username']))
             ? User::get_from_username($input['username']) ?? $user
@@ -1414,10 +1405,10 @@ class Subsonic_Api
      * Returns a listing of files in a saved playlist.
      * Returns a <subsonic-response> element with a nested <playlist> element on success.
      * http://www.subsonic.org/pages/api.jsp#getPlaylist
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getplaylist($input, $user): void
+    public static function getplaylist(array $input, User $user): void
     {
         $playlistId = self::_check_parameter($input, 'id');
         if (!$playlistId) {
@@ -1440,10 +1431,10 @@ class Subsonic_Api
      * Since 1.14.0 the newly created/updated playlist is returned.
      * In earlier versions an empty <subsonic-response> element is returned.
      * http://www.subsonic.org/pages/api.jsp#createPlaylist
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function createplaylist($input, $user): void
+    public static function createplaylist(array $input, User $user): void
     {
         $playlistId = $input['playlistId'] ?? null;
         $name       = $input['name'] ?? '';
@@ -1477,10 +1468,10 @@ class Subsonic_Api
      * updatePlaylist
      * Updates a playlist. Only the owner of a playlist is allowed to update it.
      * http://www.subsonic.org/pages/api.jsp#updatePlaylist
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function updateplaylist($input, $user): void
+    public static function updateplaylist(array $input, User $user): void
     {
         unset($user);
         $playlistId        = self::_check_parameter($input, 'playlistId');
@@ -1515,10 +1506,10 @@ class Subsonic_Api
      * deletePlaylist
      * Deletes a saved playlist.
      * http://www.subsonic.org/pages/api.jsp#deletePlaylist
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function deleteplaylist($input, $user): void
+    public static function deleteplaylist(array $input, User $user): void
     {
         $playlistId = self::_check_parameter($input, 'id');
         if (!$playlistId) {
@@ -1540,10 +1531,10 @@ class Subsonic_Api
      * Streams a given media file.
      * Returns binary data on success, or an XML document on error (in which case the HTTP content type will start with "text/xml").
      * http://www.subsonic.org/pages/api.jsp#stream
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function stream($input, $user): void
+    public static function stream(array $input, User $user): void
     {
         $fileid = self::_check_parameter($input, 'id', true);
 
@@ -1594,10 +1585,10 @@ class Subsonic_Api
      * Downloads a given media file. Similar to stream, but this method returns the original media data without transcoding or downsampling.
      * Returns binary data on success, or an XML document on error (in which case the HTTP content type will start with "text/xml").
      * http://www.subsonic.org/pages/api.jsp#download
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function download($input, $user): void
+    public static function download(array $input, User $user): void
     {
         $fileid = self::_check_parameter($input, 'id', true);
         $client = scrub_in((string) ($input['c'] ?? 'Subsonic'));
@@ -1605,10 +1596,10 @@ class Subsonic_Api
         $url    = '';
         if (Subsonic_Xml_Data::_isSong($fileid)) {
             $object = new Song(Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url('', 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         } elseif (Subsonic_Xml_Data::_isPodcastEpisode($fileid)) {
             $object = new Podcast_episode((int) Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url('', 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         }
         // return an error on missing files
         if (empty($url)) {
@@ -1625,10 +1616,10 @@ class Subsonic_Api
      * Creates an HLS (HTTP Live Streaming) playlist used for streaming video or audio.
      * Returns an M3U8 playlist on success (content type "application/vnd.apple.mpegurl"), or an XML document on error (in which case the HTTP content type will start with "text/xml").
      * http://www.subsonic.org/pages/api.jsp#hls
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function hls($input, $user): void
+    public static function hls(array $input, User $user): void
     {
         unset($user);
         $fileid  = self::_check_parameter($input, 'id', true);
@@ -1665,10 +1656,10 @@ class Subsonic_Api
 
     /**
      * getCaptions
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getcaptions($input, $user): void
+    public static function getcaptions(array $input, User $user): void
     {
         // Ampache doesn't support srt/subtitles and probably won't ever support them but the function is required
     }
@@ -1678,10 +1669,10 @@ class Subsonic_Api
      * Returns a cover art image.
      * Returns the cover art image in binary form.
      * http://www.subsonic.org/pages/api.jsp#getCoverArt
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getcoverart($input, $user): void
+    public static function getcoverart(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id');
         if (!$sub_id) {
@@ -1780,10 +1771,10 @@ class Subsonic_Api
      * Returns a <subsonic-response> element with a nested <lyrics> element on success.
      * The <lyrics> element is empty if no matching lyrics was found.
      * http://www.subsonic.org/pages/api.jsp#getLyrics
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getlyrics($input, $user): void
+    public static function getlyrics(array $input, User $user): void
     {
         $artist = (string)($input['artist'] ?? '');
         $title  = (string)($input['title'] ?? '');
@@ -1819,10 +1810,10 @@ class Subsonic_Api
      * Returns the avatar (personal image) for a user.
      * Returns the avatar image in binary form.
      * http://www.subsonic.org/pages/api.jsp#getAvatar
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getavatar($input, $user): void
+    public static function getavatar(array $input, User $user): void
     {
         $username = self::_check_parameter($input, 'username');
         $response = null;
@@ -1857,10 +1848,10 @@ class Subsonic_Api
      * star
      * Attaches a star to a song, album or artist.
      * http://www.subsonic.org/pages/api.jsp#star
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function star($input, $user): void
+    public static function star(array $input, User $user): void
     {
         self::_setStar($input, $user, true);
     }
@@ -1869,10 +1860,10 @@ class Subsonic_Api
      * unstar
      * Removes the star from a song, album or artist.
      * http://www.subsonic.org/pages/api.jsp#unstar
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function unstar($input, $user): void
+    public static function unstar(array $input, User $user): void
     {
         self::_setStar($input, $user, false);
     }
@@ -1881,17 +1872,22 @@ class Subsonic_Api
      * setRating
      * Sets the rating for a music file.
      * http://www.subsonic.org/pages/api.jsp#setRating
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function setrating($input, $user): void
+    public static function setrating(array $input, User $user): void
     {
         $object_id = self::_check_parameter($input, 'id');
         if (!$object_id) {
             return;
         }
-        $rating = (int)($input['rating'] ?? -1);
-        $robj   = null;
+
+        $rating = self::_check_parameter($input, 'rating');
+        if ($rating === false) {
+            return;
+        }
+
+        $robj = null;
         if (Subsonic_Xml_Data::_isArtist($object_id)) {
             $robj = new Rating(Subsonic_Xml_Data::_getAmpacheId($object_id), "artist");
         } elseif (Subsonic_Xml_Data::_isAlbum($object_id)) {
@@ -1915,10 +1911,10 @@ class Subsonic_Api
      * scrobble
      * Registers the local playback of one or more media files. Typically used when playing media that is cached on the client.
      * http://www.subsonic.org/pages/api.jsp#scrobble
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function scrobble($input, $user): void
+    public static function scrobble(array $input, User $user): void
     {
         $object_ids = self::_check_parameter($input, 'id');
         if (!$object_ids) {
@@ -1941,8 +1937,8 @@ class Subsonic_Api
                     ? (int)(((int)$input['time']) / 1000)
                     : time();
                 $previous  = Stats::get_last_play($user->id, $client, $time);
-                $prev_obj  = $previous['object_id'] ?? 0;
-                $prev_date = $previous['date'] ?? 0;
+                $prev_obj  = $previous['object_id'] ?: 0;
+                $prev_date = $previous['date'];
                 $type      = Subsonic_Xml_Data::_getAmpacheType((string)$subsonic_id);
                 $media     = Subsonic_Xml_Data::_getAmpacheObject((string)$subsonic_id);
                 if ($media === null || $media->isNew()) {
@@ -1975,10 +1971,10 @@ class Subsonic_Api
      * Returns information about shared media this user is allowed to manage. Takes no extra parameters.
      * Returns a <subsonic-response> element with a nested <shares> element on success.
      * http://www.subsonic.org/pages/api.jsp#getShares
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getshares($input, $user): void
+    public static function getshares(array $input, User $user): void
     {
         $response = Subsonic_Xml_Data::addSubsonicResponse('getshares');
 
@@ -1994,12 +1990,12 @@ class Subsonic_Api
      * Creates a public URL that can be used by anyone to stream music or video from the Subsonic server.
      * Returns a <subsonic-response> element with a nested <shares> element on success, which in turns contains a single <share> element for the newly created share.
      * http://www.subsonic.org/pages/api.jsp#createShare
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public static function createshare($input, $user): void
+    public static function createshare(array $input, User $user): void
     {
         $object_id = self::_check_parameter($input, 'id');
         if (!$object_id) {
@@ -2063,10 +2059,10 @@ class Subsonic_Api
      * updateShare
      * Updates the description and/or expiration date for an existing share.
      * http://www.subsonic.org/pages/api.jsp#updateShare
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function updateshare($input, $user): void
+    public static function updateshare(array $input, User $user): void
     {
         $share_id = self::_check_parameter($input, 'id');
         if (!$share_id) {
@@ -2105,10 +2101,10 @@ class Subsonic_Api
      * deleteShare
      * Deletes an existing share.
      * http://www.subsonic.org/pages/api.jsp#deleteShare
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function deleteshare($input, $user): void
+    public static function deleteshare(array $input, User $user): void
     {
         $share_id = self::_check_parameter($input, 'id');
         if (!$share_id) {
@@ -2140,10 +2136,10 @@ class Subsonic_Api
      * Returns all Podcast channels the server subscribes to, and (optionally) their episodes.
      * Returns a <subsonic-response> element with a nested <podcasts> element on success.
      * http://www.subsonic.org/pages/api.jsp#getPodcasts
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getpodcasts($input, $user): void
+    public static function getpodcasts(array $input, User $user): void
     {
         $podcast_id      = $input['id'] ?? null;
         $includeEpisodes = !isset($input['includeEpisodes']) || $input['includeEpisodes'] === "true";
@@ -2175,10 +2171,10 @@ class Subsonic_Api
      * Returns the most recently published Podcast episodes.
      * Returns a <subsonic-response> element with a nested <newestPodcasts> element on success.
      * http://www.subsonic.org/pages/api.jsp#getNewestPodcasts
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getnewestpodcasts($input, $user): void
+    public static function getnewestpodcasts(array $input, User $user): void
     {
         unset($user);
         $count = $input['count'] ?? AmpConfig::get('podcast_new_download');
@@ -2196,10 +2192,10 @@ class Subsonic_Api
      * refreshPodcasts
      * Requests the server to check for new Podcast episodes.
      * http://www.subsonic.org/pages/api.jsp#refreshPodcasts
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function refreshpodcasts($input, $user): void
+    public static function refreshpodcasts(array $input, User $user): void
     {
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $podcasts = Catalog::get_podcasts(User::get_user_catalogs($user->id));
@@ -2220,10 +2216,10 @@ class Subsonic_Api
      * createPodcastChannel
      * Adds a new Podcast channel.
      * http://www.subsonic.org/pages/api.jsp#createPodcastChannel
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function createpodcastchannel($input, $user): void
+    public static function createpodcastchannel(array $input, User $user): void
     {
         $url = self::_check_parameter($input, 'url');
         if (!$url) {
@@ -2256,10 +2252,10 @@ class Subsonic_Api
      * deletePodcastChannel
      * Deletes a Podcast channel.
      * http://www.subsonic.org/pages/api.jsp#deletePodcastChannel
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function deletepodcastchannel($input, $user): void
+    public static function deletepodcastchannel(array $input, User $user): void
     {
         $podcast_id = self::_check_parameter($input, 'id');
         if (!$podcast_id) {
@@ -2284,10 +2280,10 @@ class Subsonic_Api
      * deletePodcastEpisode
      * Deletes a Podcast episode.
      * http://www.subsonic.org/pages/api.jsp#deletePodcastEpisode
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function deletepodcastepisode($input, $user): void
+    public static function deletepodcastepisode(array $input, User $user): void
     {
         $episode_id = self::_check_parameter($input, 'id');
         if (!$episode_id) {
@@ -2314,10 +2310,10 @@ class Subsonic_Api
      * downloadPodcastEpisode
      * Request the server to start downloading a given Podcast episode.
      * http://www.subsonic.org/pages/api.jsp#downloadPodcastEpisode
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function downloadpodcastepisode($input, $user): void
+    public static function downloadpodcastepisode(array $input, User $user): void
     {
         $episode_id = self::_check_parameter($input, 'id');
         if (!$episode_id) {
@@ -2343,10 +2339,10 @@ class Subsonic_Api
      * Controls the jukebox, i.e., playback directly on the server's audio hardware.
      * Returns a <jukeboxStatus> element on success, unless the get action is used, in which case a nested <jukeboxPlaylist> element is returned.
      * http://www.subsonic.org/pages/api.jsp#jukeboxControl
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function jukeboxcontrol($input, $user): void
+    public static function jukeboxcontrol(array $input, User $user): void
     {
         $action     = self::_check_parameter($input, 'action');
         $object_id  = $input['id'] ?? [];
@@ -2447,10 +2443,10 @@ class Subsonic_Api
      * Returns all internet radio stations.
      * Returns a <subsonic-response> element with a nested <internetRadioStations> element on success.
      * http://www.subsonic.org/pages/api.jsp#getInternetRadioStations
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getinternetradiostations($input, $user): void
+    public static function getinternetradiostations(array $input, User $user): void
     {
         unset($user);
         $response = Subsonic_Xml_Data::addSubsonicResponse('getinternetradiostations');
@@ -2464,10 +2460,10 @@ class Subsonic_Api
      * Creates a public URL that can be used by anyone to stream music or video from the Subsonic server.
      * Returns a <subsonic-response> element with a nested <internetradiostations> element on success, which in turns contains a single <internetradiostation> element for the newly created internetradiostation.
      * http://www.subsonic.org/pages/api.jsp#createInternetRadioStation
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function createinternetradiostation($input, $user): void
+    public static function createinternetradiostation(array $input, User $user): void
     {
         $url = self::_check_parameter($input, 'streamUrl');
         if (!$url) {
@@ -2504,10 +2500,10 @@ class Subsonic_Api
      * updateInternetRadioStation
      * Updates the description and/or expiration date for an existing internetradiostation.
      * http://www.subsonic.org/pages/api.jsp#updateInternetRadioStation
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function updateinternetradiostation($input, $user): void
+    public static function updateinternetradiostation(array $input, User $user): void
     {
         $internetradiostation_id = self::_check_parameter($input, 'id');
         if (!$internetradiostation_id) {
@@ -2551,10 +2547,10 @@ class Subsonic_Api
      * deleteInternetRadioStation
      * Deletes an existing internetradiostation.
      * http://www.subsonic.org/pages/api.jsp#deleteInternetRadioStation
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function deleteinternetradiostation($input, $user): void
+    public static function deleteinternetradiostation(array $input, User $user): void
     {
         $stream_id = self::_check_parameter($input, 'id');
         if (!$stream_id) {
@@ -2584,10 +2580,10 @@ class Subsonic_Api
      * Returns the current visible (non-expired) chat messages.
      * Returns a <subsonic-response> element with a nested <chatMessages> element on success.
      * http://www.subsonic.org/pages/api.jsp#getChatMessages
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getchatmessages($input, $user): void
+    public static function getchatmessages(array $input, User $user): void
     {
         unset($user);
         $since                    = (int)($input['since'] ?? 0);
@@ -2610,10 +2606,10 @@ class Subsonic_Api
      * addChatMessage
      * Adds a message to the chat log.
      * http://www.subsonic.org/pages/api.jsp#addChatMessage
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function addchatmessage($input, $user): void
+    public static function addchatmessage(array $input, User $user): void
     {
         $message = self::_check_parameter($input, 'message');
         if (!$message) {
@@ -2635,10 +2631,10 @@ class Subsonic_Api
      * Get details about a given user, including which authorization roles and folder access it has.
      * Returns a <subsonic-response> element with a nested <user> element on success.
      * http://www.subsonic.org/pages/api.jsp#getUser
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getuser($input, $user): void
+    public static function getuser(array $input, User $user): void
     {
         $username = self::_check_parameter($input, 'username');
         if ($user->access === 100 || $user->username == $username) {
@@ -2664,10 +2660,10 @@ class Subsonic_Api
      * Get details about all users, including which authorization roles and folder access they have.
      * Returns a <subsonic-response> element with a nested <users> element on success.
      * http://www.subsonic.org/pages/api.jsp#getUsers
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getusers($input, $user): void
+    public static function getusers(array $input, User $user): void
     {
         if ($user->access === 100) {
             $response = Subsonic_Xml_Data::addSubsonicResponse('getusers');
@@ -2683,10 +2679,10 @@ class Subsonic_Api
      * createUser
      * Creates a new Subsonic user.
      * http://www.subsonic.org/pages/api.jsp#createUser
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function createuser($input, $user): void
+    public static function createuser(array $input, User $user): void
     {
         $username     = self::_check_parameter($input, 'username');
         $password     = self::_check_parameter($input, 'password');
@@ -2745,10 +2741,10 @@ class Subsonic_Api
      * updateUser
      * Modifies an existing Subsonic user.
      * http://www.subsonic.org/pages/api.jsp#updateUser
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function updateuser($input, $user): void
+    public static function updateuser(array $input, User $user): void
     {
         $username = self::_check_parameter($input, 'username');
         $password = $input['password'] ?? false;
@@ -2812,10 +2808,10 @@ class Subsonic_Api
      * getOpenSubsonicExtensions
      * List the OpenSubsonic extensions supported by this server.
      * https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getopensubsonicextensions($input, $user): void
+    public static function getopensubsonicextensions(array $input, User $user): void
     {
         unset($user);
         $response = Subsonic_Xml_Data::addSubsonicResponse('getopensubsonicextensions');
@@ -2829,10 +2825,10 @@ class Subsonic_Api
      * deleteUser
      * Deletes an existing Subsonic user.
      * http://www.subsonic.org/pages/api.jsp#deleteUser
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function deleteuser($input, $user): void
+    public static function deleteuser(array $input, User $user): void
     {
         $username = self::_check_parameter($input, 'username');
         if ($user->access === 100) {
@@ -2854,10 +2850,10 @@ class Subsonic_Api
      * changePassword
      * Changes the password of an existing Subsonic user.
      * http://www.subsonic.org/pages/api.jsp#changePassword
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function changepassword($input, $user): void
+    public static function changepassword(array $input, User $user): void
     {
         $username = self::_check_parameter($input, 'username');
         $inp_pass = self::_check_parameter($input, 'password');
@@ -2884,7 +2880,7 @@ class Subsonic_Api
      * @param array<mixed> $input
      * @param User $user
      */
-    public static function getbookmarks($input, $user): void
+    public static function getbookmarks(array $input, User $user): void
     {
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getbookmarks');
         $bookmarks = [];
@@ -2907,10 +2903,10 @@ class Subsonic_Api
      * createBookmark
      * Creates or updates a bookmark (a position within a media file). Bookmarks are personal and not visible to other users.
      * http://www.subsonic.org/pages/api.jsp#createBookmark
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function createbookmark($input, $user): void
+    public static function createbookmark(array $input, User $user): void
     {
         $object_id = self::_check_parameter($input, 'id');
         $position  = self::_check_parameter($input, 'position');
@@ -2947,10 +2943,10 @@ class Subsonic_Api
      * deleteBookmark
      * Deletes the bookmark for a given file.
      * http://www.subsonic.org/pages/api.jsp#deleteBookmark
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function deletebookmark($input, $user): void
+    public static function deletebookmark(array $input, User $user): void
     {
         $object_id = self::_check_parameter($input, 'id');
         if (!$object_id) {
@@ -2974,10 +2970,10 @@ class Subsonic_Api
      * Returns a <subsonic-response> element with a nested <playQueue> element on success
      * or an empty <subsonic-response> if no play queue has been saved.
      * http://www.subsonic.org/pages/api.jsp#getPlayQueue
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getplayqueue($input, $user): void
+    public static function getplayqueue(array $input, User $user): void
     {
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getplayqueue');
         $client    = scrub_in((string) ($input['c'] ?? 'Subsonic'));
@@ -2990,10 +2986,10 @@ class Subsonic_Api
      * savePlayQueue
      * Saves the state of the play queue for this user.
      * http://www.subsonic.org/pages/api.jsp#savePlayQueue
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function saveplayqueue($input, $user): void
+    public static function saveplayqueue(array $input, User $user): void
     {
         $id_list  = $input['id'] ?? '';
         $current  = (string)($input['current'] ?? '');
@@ -3066,12 +3062,12 @@ class Subsonic_Api
 
     /**
      * _albumList
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      * @param string $type
      * @return int[]|null
      */
-    private static function _albumList($input, $user, $type): ?array
+    private static function _albumList(array $input, User $user, string $type): ?array
     {
         $size          = (int)($input['size'] ?? 10);
         $offset        = (int)($input['offset'] ?? 0);
@@ -3144,24 +3140,24 @@ class Subsonic_Api
      * _updatePlaylist
      * @param int|string $playlist_id
      * @param string $name
-     * @param array $songsIdToAdd
-     * @param array $songIndexToRemove
+     * @param int[]|string[] $songsIdToAdd
+     * @param int[]|string[] $songIndexToRemove
      * @param bool $public
      * @param bool $clearFirst
      */
     private static function _updatePlaylist(
-        $playlist_id,
-        $name,
-        $songsIdToAdd = [],
-        $songIndexToRemove = [],
-        $public = true,
-        $clearFirst = false
+        int|string $playlist_id,
+        string $name,
+        array $songsIdToAdd = [],
+        array $songIndexToRemove = [],
+        bool $public = true,
+        bool $clearFirst = false
     ): void {
         // If it's a string it probably needs a clean up
         if (is_string($playlist_id)) {
             $playlist_id = Subsonic_Xml_Data::_getAmpacheId($playlist_id);
         }
-        $playlist           = new Playlist($playlist_id);
+        $playlist           = new Playlist((int)$playlist_id);
         $songsIdToAdd_count = count($songsIdToAdd);
         $newdata            = [];
         $newdata['name']    = (!empty($name)) ? $name : $playlist->name;
@@ -3173,7 +3169,7 @@ class Subsonic_Api
 
         if ($songsIdToAdd_count > 0) {
             for ($i = 0; $i < $songsIdToAdd_count; ++$i) {
-                $songsIdToAdd[$i] = Subsonic_Xml_Data::_getAmpacheId($songsIdToAdd[$i]);
+                $songsIdToAdd[$i] = Subsonic_Xml_Data::_getAmpacheId((string)$songsIdToAdd[$i]);
             }
             $playlist->add_songs($songsIdToAdd);
         }
@@ -3190,11 +3186,11 @@ class Subsonic_Api
 
     /**
      * _setStar
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      * @param bool $star
      */
-    private static function _setStar($input, $user, $star): void
+    private static function _setStar(array $input, User $user, bool $star): void
     {
         $object_id = $input['id'] ?? null;
         $albumId   = $input['albumId'] ?? null;
@@ -3254,10 +3250,10 @@ class Subsonic_Api
 
     /**
      * startScan
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function startscan($input, $user): void
+    public static function startscan(array $input, User $user): void
     {
         $response = Subsonic_Xml_Data::addSubsonicResponse('startscan');
         Subsonic_Xml_Data::addScanStatus($response, $user);
@@ -3266,10 +3262,10 @@ class Subsonic_Api
 
     /**
      * getscanstatus
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getscanstatus($input, $user): void
+    public static function getscanstatus(array $input, User $user): void
     {
         $response = Subsonic_Xml_Data::addSubsonicResponse('getscanstatus');
         Subsonic_Xml_Data::addScanStatus($response, $user);

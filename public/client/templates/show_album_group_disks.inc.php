@@ -208,30 +208,36 @@ if (!AmpConfig::get('use_auth') || $access25) {
     <?php
     }
 }
-if ($access25) {
-    if (AmpConfig::get('share')) { ?>
+if ($access25 && AmpConfig::get('share')) { ?>
             <li>
                 <?php echo Share::display_ui('album', $album->id); ?>
             </li>
-    <?php }
-    }
-if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || $access50) {
-    if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+    <?php } else {
+        $link = "&nbsp;" . T_('Link'); ?>
+    <li>
+        <a href="<?php echo $album->get_link(); ?>" target=_blank>
+            <?php echo Ui::get_material_symbol('open_in_new', $link);
+        echo $link; ?>
+        </a>
+    </li>
+<?php }
+    if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || $access50) {
+        if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs'));
-        echo T_('Graphs'); ?>
+            echo T_('Graphs'); ?>
                 </a>
             </li>
     <?php } ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
                 <?php echo Ui::get_material_symbol('sync_alt', T_('Update from tags'));
-    echo "&nbsp;" . T_('Update from tags'); ?>
+        echo "&nbsp;" . T_('Update from tags'); ?>
             </a>
         </li>
 <?php
-}
+    }
 if ($isAlbumEditable) {
     $t_upload = "&nbsp;" . T_('Upload');
     if (Upload::can_upload($current_user) && $album->album_artist > 0) { ?>
@@ -304,14 +310,20 @@ foreach ($album->getDisks() as $album_disk) {
         echo Ajax::button('?action=basket&type=album_disk&id=' . $album_disk->id, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $album_disk->id);
         echo Ajax::button('?action=basket&type=album_disk_random&id=' . $album_disk->id, 'shuffle', T_('Random to Temporary Playlist'), 'play_random_' . $album_disk->id);
     }
-    if ($access25) {
-        if ($can_shout) { ?>
-                <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album_disk&id=<?php echo $album_disk->id; ?>"><?php echo Ui::get_material_symbol('comment', T_('Post Shout')); ?></a>
-            <?php }
-        if ($can_share) {
-            echo Share::display_ui('album_disk', $album_disk->id, false);
-        }
-    }
+    if ((!AmpConfig::get('use_auth') || $access25) && $can_shout) { ?>
+            <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album_disk&id=<?php echo $album_disk->id; ?>"><?php echo Ui::get_material_symbol('comment', T_('Post Shout')); ?></a>
+    <?php }
+    if ($access25 && $can_share) {
+        echo Share::display_ui('album_disk', $album_disk->id, false);
+    } else {
+        $link = "&nbsp;" . T_('Link'); ?>
+        <li>
+            <a href="<?php echo $album_disk->get_link(); ?>" target=_blank>
+                <?php echo Ui::get_material_symbol('open_in_new', $link);
+        echo $link; ?>
+            </a>
+        </li>
+    <?php }
     if ($isAlbumEditable) { ?>
         <a id="<?php echo 'edit_album_disk_' . $album_disk->id; ?>" onclick="showEditDialog('album_disk_row', '<?php echo $album_disk->id; ?>', '<?php echo 'edit_album_disk_' . $album_disk->id; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
                     <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>

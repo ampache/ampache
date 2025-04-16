@@ -57,6 +57,20 @@ final class StreamMethod
      * offset  = (integer) time offset in seconds
      * length  = (integer) 0,1
      * stats   = (integer) 0,1, if false disable stat recording when playing the object (default: 1) //optional
+     *
+     * @param array{
+     *     id: string,
+     *     type: string,
+     *     bitrate?: int,
+     *     format?: int,
+     *     offset?: int,
+     *     length?: int,
+     *     stats?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function stream(array $input, User $user): bool
     {

@@ -51,6 +51,15 @@ final class PodcastCreate4Method
      *
      * url     = (string) rss url for podcast
      * catalog = (string) podcast catalog
+     *
+     * @param array{
+     *     url: string,
+     *     catalog: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function podcast_create(array $input, User $user): bool
     {
@@ -66,7 +75,7 @@ final class PodcastCreate4Method
             return false;
         }
 
-        $catalog = Catalog::create_from_id((int) ($input['catalog'] ?? 0));
+        $catalog = Catalog::create_from_id((int)$input['catalog']);
 
         if ($catalog === null) {
             Api4::message('error', T_('Catalog not found'), '401', $input['api_format']);

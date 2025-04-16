@@ -471,7 +471,7 @@ class Song extends database_object implements
      * This attempts to reduce queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point.
-     * @param int[] $song_ids
+     * @param list<int|string> $song_ids
      * @param string $limit_threshold
      */
     public static function build_cache($song_ids, $limit_threshold = ''): bool
@@ -2103,11 +2103,12 @@ class Song extends database_object implements
 
     /**
      * Get transcode settings.
-     * @param string $target
-     * @param string $player
-     * @param array $options
+     * @param string|null $target
+     * @param string|null $player
+     * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
+     * @return array{format?: string, command?: string}
      */
-    public function get_transcode_settings($target = null, $player = null, $options = []): array
+    public function get_transcode_settings(?string $target = null, ?string $player = null, array $options = []): array
     {
         return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'song', $options);
     }
@@ -2246,6 +2247,18 @@ class Song extends database_object implements
     /**
      * get_deleted
      * get items from the deleted_songs table
+     * @return list<array{
+     *      id: int,
+     *      addition_time: int,
+     *      delete_time: int,
+     *      title: string,
+     *      file: string,
+     *      catalog: int,
+     *      total_count: int,
+     *      total_skip: int,
+     *      album: int,
+     *      artist: int,
+     *  }>
      */
     public static function get_deleted(): array
     {
@@ -2253,7 +2266,18 @@ class Song extends database_object implements
         $sql        = "SELECT * FROM `deleted_song`";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $deleted[] = $row;
+            $deleted[] = [
+                'id' => (int)$row['id'],
+                'addition_time' => (int)$row['addition_time'],
+                'delete_time' => (int)$row['delete_time'],
+                'title' => $row['title'],
+                'file' => $row['file'],
+                'catalog' => (int)$row['catalog'],
+                'total_count' => (int)$row['total_count'],
+                'total_skip' => (int)$row['total_skip'],
+                'album' => (int)$row['album'],
+                'artist' => (int)$row['artist'],
+            ];
         }
 
         return $deleted;

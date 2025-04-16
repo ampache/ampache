@@ -3,6 +3,7 @@
     <channel>
         <title tal:content="TITLE">TITLE</title>
         <link tal:content="LINK">LINK</link>
+        <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/rss+xml" href="" tal:attributes="href LINK_RSS" />
         <description tal:content="TITLE">TITLE</description>
         <pubDate tal:condition="PUBDATE | false" tal:content="PUBDATE">PUBDATE</pubDate>
         <image tal:condition="IMAGE | false">

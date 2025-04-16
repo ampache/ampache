@@ -48,6 +48,17 @@ final class PlaylistSongs4Method
      * filter = (string) UID of playlist
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     random?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function playlist_songs(array $input, User $user): bool
     {

@@ -40,10 +40,21 @@ class AlbumSongs3Method
     /**
      * album_songs
      * This returns the songs of a specified album
+     *
+     * @param array{
+     *     filter: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function album_songs(array $input, User $user): void
     {
-        $album   = new Album($input['filter']);
+        $album   = new Album((int)$input['filter']);
         $results = [];
         if (isset($album->id)) {
             $results = self::getAlbumRepository()->getSongs($album->id);

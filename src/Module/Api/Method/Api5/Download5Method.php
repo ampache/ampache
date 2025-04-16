@@ -49,6 +49,18 @@ final class Download5Method
      * id     = (string) $song_id| $podcast_episode_id
      * type   = (string) 'song', 'podcast_episode', 'search', 'playlist'
      * format = (string) 'mp3', 'ogg', etc //optional
+     *
+     * @param array{
+     *     id: string,
+     *     type: string,
+     *     bitrate?: int,
+     *     format?: int,
+     *     stats?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function download(array $input, User $user): bool
     {

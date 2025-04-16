@@ -41,6 +41,13 @@ final class UrlToSong3Method
      * url_to_song
      *
      * This takes a url and returns the song object in question
+     *
+     * @param array{
+     *     url: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function url_to_song(array $input, User $user): void
     {

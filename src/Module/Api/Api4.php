@@ -144,12 +144,8 @@ class Api4
     /**
      * message
      * call the correct error / success message depending on format
-     * @param string $type
-     * @param string $message
-     * @param string|null $error_code
-     * @param string $format
      */
-    public static function message($type, $message, $error_code = null, $format = 'xml'): void
+    public static function message(string $type, string $message, ?string $error_code = null, string $format = 'xml'): void
     {
         if ($type === 'error') {
             switch ($format) {
@@ -177,25 +173,22 @@ class Api4
      * This function checks the $input actually has the parameter.
      * Parameters must be an array of required elements as a string
      *
-     * @param array $input
+     * @param array<string, mixed> $input
      * @param string[] $parameters e.g. array('auth', type')
      * @param string $method
+     * @return bool
      */
-    public static function check_parameter($input, $parameters, $method = ''): bool
+    public static function check_parameter(array $input, array $parameters, string $method = ''): bool
     {
-        foreach ($parameters as $parameter) {
-            if ($input[$parameter] === 0 || $input[$parameter] === '0') {
-                continue;
-            }
-            if (empty($input[$parameter])) {
-                debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
-                self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '401', $input['api_format']);
-
-                return false;
-            }
+        $parameter = Api::parameter_exists($input, $parameters);
+        if ($parameter === true) {
+            return true;
         }
 
-        return true;
+        debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
+        self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '401', $input['api_format']);
+
+        return false;
     }
 
     /**
@@ -203,12 +196,8 @@ class Api4
      *
      * This function checks the user can perform the function requested
      * 'interface', 100, $user->id
-     *
-     * @param int $user_id
-     * @param string $method
-     * @param string $format
      */
-    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, $user_id, $method = '', $format = 'xml'): bool
+    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method = '', string $format = 'xml'): bool
     {
         if (!Access::check($type, $level, $user_id)) {
             debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);

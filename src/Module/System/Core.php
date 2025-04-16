@@ -371,10 +371,10 @@ class Core
 
     /**
      * requests_options
-     * @param array $options
-     * @return array
+     * @param array<string, mixed> $options
+     * @return array<string, mixed>
      */
-    public static function requests_options($options = []): array
+    public static function requests_options(array $options = []): array
     {
         if (!isset($options['proxy'])) {
             if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {

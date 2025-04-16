@@ -57,6 +57,16 @@ final class CatalogFile4Method
      * file    = (string) urlencode(FULL path to local file)
      * task    = (string) 'add'|'clean'|'verify'|'remove'
      * catalog = (integer) $catalog_id
+     *
+     * @param array{
+     *     file: string,
+     *     task: string,
+     *     catalog: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function catalog_file(array $input, User $user): bool
     {

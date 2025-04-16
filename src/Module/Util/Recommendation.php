@@ -94,34 +94,45 @@ class Recommendation
      * @param string $type
      * @param int $object_id
      * @param bool $get_items
-     * @return array
+     * @return null|array{
+     *     id: int,
+     *     last_update: string,
+     *     items?: list<array{id: ?int, name: string, rel: ?string, mbid: ?string}>
+     * }
      */
-    protected static function get_recommendation_cache($type, $object_id, $get_items = false): array
+    protected static function get_recommendation_cache(string $type, int $object_id, bool $get_items = false): ?array
     {
         if (!AmpConfig::get('cron_cache')) {
             self::garbage_collection();
         }
 
+        $cache      = null;
         $sql        = "SELECT `id`, `last_update` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, [$type, $object_id]);
-
-        if ($cache = Dba::fetch_assoc($db_results)) {
-            if ($get_items) {
-                $cache['items'] = [];
-                $sql            = "SELECT `recommendation_id`, `name`, `rel`, `mbid` FROM `recommendation_item` WHERE `recommendation` = ?";
-                $db_results     = Dba::read($sql, [$cache['id']]);
-                while ($results = Dba::fetch_assoc($db_results)) {
-                    $cache['items'][] = [
-                        'id' => $results['recommendation_id'],
-                        'name' => $results['name'],
-                        'rel' => $results['rel'],
-                        'mbid' => $results['mbid'],
-                    ];
-                }
-            }
+        if ($row = Dba::fetch_assoc($db_results)) {
+            $cache = [
+                'id' => (int)$row['id'],
+                'last_update' => (string)$row['last_update'],
+            ];
         }
 
-        return $cache;
+        if (is_array($cache) && $get_items) {
+            $cache['items'] = [];
+            $sql            = "SELECT `recommendation_id` AS `id`, `name`, `rel`, `mbid` FROM `recommendation_item` WHERE `recommendation` = ?";
+            $db_results     = Dba::read($sql, [$cache['id']]);
+            while ($results = Dba::fetch_assoc($db_results)) {
+                $cache['items'][] = [
+                    'id' => ($results['id'] !== null) ? (int)$results['id'] : null,
+                    'name' => (string)$results['name'],
+                    'rel' => ($results['rel'] !== null) ? (string)$results['rel'] : null,
+                    'mbid' => ($results['mbid'] !== null) ? (string)$results['mbid'] : null,
+                ];
+            }
+
+            return $cache;
+        }
+
+        return null;
     }
 
     /**
@@ -132,7 +143,7 @@ class Recommendation
     protected static function delete_recommendation_cache($type, $object_id): void
     {
         $cache = self::get_recommendation_cache($type, $object_id);
-        if (array_key_exists('id', $cache)) {
+        if ($cache !== null && array_key_exists('id', $cache)) {
             Dba::write('DELETE FROM `recommendation_item` WHERE `recommendation` = ?', [$cache['id']]);
             Dba::write('DELETE FROM `recommendation` WHERE `id` = ?', [$cache['id']]);
         }
@@ -170,16 +181,21 @@ class Recommendation
      * @param int $song_id
      * @param int $limit
      * @param bool $local_only
-     * @return array
+     * @return list<array{
+     *     id: ?int,
+     *     name: string,
+     *     rel: ?string,
+     *     mbid?: ?string
+     * }>
      */
-    public static function get_songs_like($song_id, $limit = 5, $local_only = true): array
+    public static function get_songs_like(int $song_id, int $limit = 5, bool $local_only = true): array
     {
         if (!AmpConfig::get('lastfm_api_key')) {
             return [];
         }
 
-        $song     = new Song($song_id);
-        $artist   = new Artist($song->artist);
+        $song   = new Song($song_id);
+        $artist = new Artist($song->artist);
 
         if ($artist->isNew()) {
             debug_event(
@@ -203,7 +219,7 @@ class Recommendation
         }
 
         $cache = self::get_recommendation_cache('song', $song_id, true);
-        if (!array_key_exists('id', $cache)) {
+        if ($cache === null || !array_key_exists('id', $cache)) {
             $similars = [];
             try {
                 $xml = self::get_lastfm_results('track.getsimilar', $query);
@@ -268,6 +284,7 @@ class Recommendation
         if ($similars) {
             $results = [];
             foreach ($similars as $similar) {
+                /** @var array{id: ?int, name: string, rel: ?string, mbid: ?string} $similar */
                 if (!$local_only || $similar['id'] !== null) {
                     $results[] = $similar;
                 }
@@ -291,7 +308,12 @@ class Recommendation
      * @param int $artist_id
      * @param int $limit
      * @param bool $local_only
-     * @return array
+     * @return list<array{
+     *      id: ?int,
+     *      name: string,
+     *      rel?: ?string,
+     *      mbid?: ?string
+     *  }>
      */
     public static function get_artists_like($artist_id, $limit = 10, $local_only = true): array
     {
@@ -300,7 +322,7 @@ class Recommendation
         }
 
         $cache = self::get_recommendation_cache('artist', $artist_id, true);
-        if (!array_key_exists('id', $cache)) {
+        if ($cache === null || !array_key_exists('id', $cache)) {
             $artist   = new Artist($artist_id);
             $similars = [];
             $fullname = (string)$artist->get_fullname();
@@ -423,7 +445,16 @@ class Recommendation
      * get_artist_info
      * Returns artist information
      * @param int $artist_id
-     * @return array
+     * @return array{
+     *      id: ?int,
+     *      summary: ?string,
+     *      placeformed: ?string,
+     *      yearformed: ?int,
+     *      largephoto: ?string,
+     *      smallphoto: ?string,
+     *      mediumphoto: ?string,
+     *      megaphoto: ?string
+     *  }
      */
     public static function get_artist_info($artist_id): array
     {
@@ -450,10 +481,25 @@ class Recommendation
         try {
             $xml = self::get_lastfm_results('artist.getinfo', $query);
         } catch (LastFmQueryFailedException) {
-            return [];
+            return [
+                'id' => $artist_id,
+                'summary' => null,
+                'placeformed' => null,
+                'yearformed' => null,
+                'largephoto' => null,
+                'smallphoto' => null,
+                'mediumphoto' => null,
+                'megaphoto' => null,
+            ];
         }
 
-        $results            = [];
+        $results = [
+            'id' => null,
+            'largephoto' => null,
+            'smallphoto' => null,
+            'mediumphoto' => null,
+            'megaphoto' => null,
+        ];
         $results['summary'] = strip_tags(
             (string)preg_replace(
                 "#<a href=([^<]*)Last\.fm</a>.#",
@@ -487,7 +533,14 @@ class Recommendation
      * get_album_info
      * Returns album information
      * @param int $album_id
-     * @return array
+     * @return array{
+     *     id: int,
+     *     summary: ?string,
+     *     largephoto: ?string,
+     *     smallphoto: ?string,
+     *     mediumphoto: ?string,
+     *     megaphoto: ?string
+     * }
      */
     public static function get_album_info($album_id): array
     {
