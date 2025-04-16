@@ -269,9 +269,10 @@ class Api
     public static function parameter_exists(array $input, array $parameters): bool|string
     {
         foreach ($parameters as $parameter) {
-            if (array_key_exists($parameter, $input) && ($input[$parameter] === 0 || $input[$parameter] === '0')) {
+            if (array_key_exists($parameter, $input) || ($input[$parameter] === 0 || $input[$parameter] === '0')) {
                 continue;
             }
+
             if (!array_key_exists($parameter, $input)) {
                 return $parameter;
             }
