@@ -806,7 +806,7 @@ Kick off a catalog update or clean for the selected catalog
 | Input     | Type    | Description                       | Optional |
 |-----------|---------|-----------------------------------|---------:|
 | 'task'    | string  | `add_to_catalog`, `clean_catalog` |       NO |
-| 'catalog' | integer | $catalog_id                       |       NO |
+| 'catalog' | string  | $catalog_id                       |       NO |
 
 * return object
 
@@ -902,7 +902,7 @@ Make sure you remember to urlencode those file names!
 |-----------|---------|--------------------------------------------------------------------------|---------:|
 | 'file'    | string  | FULL path to local file                                                  |       NO |
 | 'task'    | string  | `add`, `clean`, `verify`, `remove`, (can include comma-separated values) |       NO |
-| 'catalog' | integer | $catalog_id                                                              |       NO |
+| 'catalog' | string  | $catalog_id                                                              |       NO |
 
 * return object
 
@@ -930,7 +930,7 @@ Make sure you remember to urlencode those folder names!
 |-----------|---------|--------------------------------------------------------------------------|---------:|
 | 'folder'  | string  | FULL path to local folder                                                |       NO |
 | 'task'    | string  | `add`, `clean`, `verify`, `remove`, (can include comma-separated values) |       NO |
-| 'catalog' | integer | $catalog_id                                                              |       NO |
+| 'catalog' | string  | $catalog_id                                                              |       NO |
 
 * return object
 
@@ -1026,7 +1026,7 @@ This flags a library item as a favorite
 |--------|---------|-------------------------------------------------------|---------:|
 | 'type' | string  | `song`, `album`, `artist`, `playlist`, `podcast`      |       NO |
 |        |         | `podcast_episode`, `video`, `tvshow`, `tvshow_season` |          |
-| 'id'   | integer | $object_id                                            |       NO |
+| 'id'   | string  | $object_id                                            |       NO |
 | 'flag' | boolean | `0`, `1`                                              |       NO |
 
 * return object
@@ -1180,7 +1180,7 @@ This returns the albums associated with the genre in question
 
 | Input    | Type    | Description                                                                   | Optional |
 |----------|---------|-------------------------------------------------------------------------------|---------:|
-| 'filter' | string  | UID of genre, returns album JSON                                              |      YES |
+| 'filter' | string  | UID of genre, returns album JSON                                              |       NO |
 | 'offset' | integer | Return results starting from this index position                              |      YES |
 | 'limit'  | integer | Maximum number of results to return                                           |      YES |
 | 'cond'   | string  | Apply additional filters to the browse using `;` separated comma string pairs |      YES |
@@ -1208,7 +1208,7 @@ This returns the artists associated with the genre in question as defined by the
 
 | Input    | Type    | Description                                                                   | Optional |
 |----------|---------|-------------------------------------------------------------------------------|---------:|
-| 'filter' | string  | UID of genre, returns artist JSON                                             |      YES |
+| 'filter' | string  | UID of genre, returns artist JSON                                             |       NO |
 | 'offset' | integer | Return results starting from this index position                              |      YES |
 | 'limit'  | integer | Maximum number of results to return                                           |      YES |
 | 'cond'   | string  | Apply additional filters to the browse using `;` separated comma string pairs |      YES |
@@ -1236,7 +1236,7 @@ returns the songs for this genre
 
 | Input    | Type    | Description                                                                   | Optional |
 |----------|---------|-------------------------------------------------------------------------------|---------:|
-| 'filter' | string  | UID of genre, returns song JSON                                               |      YES |
+| 'filter' | string  | UID of genre, returns song JSON                                               |       NO |
 | 'offset' | integer | Return results starting from this index position                              |      YES |
 | 'limit'  | integer | Maximum number of results to return                                           |      YES |
 | 'cond'   | string  | Apply additional filters to the browse using `;` separated comma string pairs |      YES |
@@ -1348,7 +1348,7 @@ Return similar artist id's or similar song ids compared to the input filter
 | Input    | Type    | Description                                      | Optional |
 |----------|---------|--------------------------------------------------|---------:|
 | 'type'   | string  | `song`, `artist`                                 |       NO |
-| 'filter' | integer | artist id or song id                             |       NO |
+| 'filter' | string  | artist id or song id                             |       NO |
 | 'offset' | integer | Return results starting from this index position |      YES |
 | 'limit'  | integer | Maximum number of results to return              |      YES |
 
@@ -2049,8 +2049,8 @@ Get a list of song JSON, indexes or id's based on some simple search criteria
 |----------|---------|------------------------------------------------------------------|---------:|
 | 'mode'   | string  | `recent`, `forgotten`, `unplayed`, `random` (default = 'random') |      YES |
 | 'filter' | string  | string LIKE matched to song title                                |      YES |
-| 'album'  | integer | $album_id                                                        |      YES |
-| 'artist' | integer | $artist_id                                                       |      YES |
+| 'album'  | string  | $album_id                                                        |      YES |
+| 'artist' | string  | $artist_id                                                       |      YES |
 | 'flag'   | boolean | `0`, `1` (get flagged songs only. default = 0)                   |      YES |
 | 'format' | string  | `song`, `index`, `id` (default = 'song')                         |      YES |
 | 'offset' | integer | Return results starting from this index position                 |      YES |
@@ -2450,7 +2450,7 @@ This rates a library item
 |----------|---------|-------------------------------------------------------|---------:|
 | 'type'   | string  | `song`, `album`, `artist`, `playlist`, `podcast`      |       NO |
 |          |         | `podcast_episode`, `video`, `tvshow`, `tvshow_season` |          |
-| 'id'     | integer | library item id                                       |       NO |
+| 'id'     | string  | library item id                                       |       NO |
 | 'rating' | integer | rating between 0-5                                    |       NO |
 
 * return object
@@ -2477,8 +2477,8 @@ If you don't supply a user id (optional) then just fall back to you.
 
 | Input    | Type    | Description | Optional |
 |----------|---------|-------------|---------:|
-| 'id'     | integer | $object_id  |       NO |
-| 'user'   | integer | $user_id    |      YES |
+| 'id'     | string  | $object_id  |       NO |
+| 'user'   | string  | $user_id    |      YES |
 | 'client' | string  | $agent      |      YES |
 | 'date'   | integer | UNIXTIME()  |      YES |
 
@@ -3014,7 +3014,7 @@ Doesn't overwrite existing art by default.
 
 | Input       | Type    | Description       | Optional |
 |-------------|---------|-------------------|---------:|
-| 'id'        | integer | $object_id        |       NO |
+| 'id'        | string  | $object_id        |       NO |
 | 'type'      | string  | `song`, `podcast` |       NO |
 | 'overwrite' | boolean | `0`, `1`          |      YES |
 
@@ -3041,7 +3041,7 @@ Make sure lastfm_API_key is set in your configuration file
 
 | Input | Type    | Description | Optional |
 |-------|---------|-------------|---------:|
-| 'id'  | integer | $artist_id  |       NO |
+| 'id'  | string  | $artist_id  |       NO |
 
 * return object
 
@@ -3064,7 +3064,7 @@ Update a single album, artist, song from the tag data
 | Input  | Type    | Description                     | Optional |
 |--------|---------|---------------------------------|---------:|
 | 'type' | string  | `song`, `artist`, `album`       |       NO |
-| 'id'   | integer | $artist_id, $album_id, $song_id |       NO |
+| 'id'   | string  | $artist_id, $album_id, $song_id |       NO |
 
 * return object
 
@@ -3088,7 +3088,7 @@ Sync and download new podcast episodes
 
 | Input | Type    | Description | Optional |
 |-------|---------|-------------|---------:|
-| 'id'  | integer | $object_id  |       NO |
+| 'id'  | string  | $object_id  |       NO |
 
 * return object
 
@@ -3428,7 +3428,7 @@ Downloads a given media file. set format=raw to download the full file
 
 | Input     | Type    | Description                                                                    | Optional |
 |-----------|---------|--------------------------------------------------------------------------------|---------:|
-| 'id'      | integer | $object_id                                                                     |       NO |
+| 'id'      | string  | $object_id                                                                     |       NO |
 | 'type'    | string  | `song`, `podcast_episode`, `search`, `playlist`                                |       NO |
 | 'bitrate' | integer | max bitrate for transcoding in bytes (e.g 192000=192Kb)                        |      YES |
 | 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format)                     |      YES |
@@ -3444,7 +3444,7 @@ Get an art image.
 
 | Input  | Type    | Description                                                | Optional |
 |--------|---------|------------------------------------------------------------|---------:|
-| 'id'   | integer | $object_id                                                 |       NO |
+| 'id'   | string  | $object_id                                                 |       NO |
 | 'type' | string  | `song`, `artist`, `album`, `playlist`, `search`, `podcast` |       NO |
 
 * return image (HTTP 200 OK)
@@ -3459,7 +3459,7 @@ Streams a given media file. Takes the file id in parameter with optional max bit
 
 | Input     | Type    | Description                                                                    | Optional |
 |-----------|---------|--------------------------------------------------------------------------------|---------:|
-| 'id'      | integer | $object_id                                                                     |       NO |
+| 'id'      | string  | $object_id                                                                     |       NO |
 | 'type'    | string  | `song`, `podcast_episode`, `search`, `playlist`                                |       NO |
 | 'bitrate' | integer | max bitrate for transcoding in bytes (e.g 192000=192Kb)                        |      YES |
 | 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format)                     |      YES |
@@ -3485,7 +3485,7 @@ This is for controlling democratic play (Songs only)
 
 | Input    | Type    | Description                          | Optional |
 |----------|---------|--------------------------------------|---------:|
-| 'oid'    | integer | UID of Song object                   |       NO |
+| 'oid'    | string  | UID of Song object                   |       NO |
 | 'method' | string  | `vote`, `devote`, `playlist`, `play` |       NO |
 
 * return object|array
@@ -3514,7 +3514,7 @@ This is for controlling localplay
 |-----------|---------|-----------------------------------------------------------------------------------------|---------:|
 | 'command' | string  | `next`, `prev`, `stop`, `play`, `pause`, `add`, `volume_up`                             |       NO |
 |           |         | `volume_down`, `volume_mute`, `delete_all`, `skip`, `status`                            |          |
-| 'oid'     | integer | $object_id                                                                              |      YES |
+| 'oid'     | string  | $object_id                                                                              |      YES |
 | 'type'    | string  | `song`, `video`, `podcast_episode`, `channel`, `broadcast`, `democratic`, `live_stream` |      YES |
 | 'clear'   | boolean | `0`, `1` (Clear the current playlist before adding)                                     |      YES |
 

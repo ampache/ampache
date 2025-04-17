@@ -71,7 +71,7 @@ class Ui implements UiInterface
         ?array $params = null
     ): string {
         $strparams = "";
-        if ($params != null && is_array($params)) {
+        if (is_array($params)) {
             foreach ($params as $key => $value) {
                 $strparams .= "&" . scrub_out($key) . "=" . scrub_out($value);
             }
@@ -102,9 +102,8 @@ class Ui implements UiInterface
      * Return the path to the template file wanted. The file can be overwritten
      * by the theme if it's not a php file, or if it is and if option
      * allow_php_themes is set to true.
-     * @param string $template
      */
-    public static function find_template($template, bool $extern = false): string
+    public static function find_template(string $template, bool $extern = false): string
     {
         $path      = AmpConfig::get('theme_path') . '/templates/' . $template;
         $realpath  = __DIR__ . '/../../../public/client/' . $path;
@@ -206,9 +205,8 @@ class Ui implements UiInterface
      * Removes characters that aren't valid in XML
      * (which is a subset of valid UTF-8, but close enough for our purposes.)
      * See http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
-     * @param string $string
      */
-    public static function clean_utf8($string): string
+    public static function clean_utf8(string $string): string
     {
         if ($string) {
             $clean = preg_replace(
@@ -231,11 +229,11 @@ class Ui implements UiInterface
      * format_bytes
      *
      * Turns a size in bytes into the best human-readable value
-     * @param $value
-     * @param int $precision
-     * @param int $pass
+     * @param int|float $value Size in bytes
+     * @param int $precision Number of decimal places to show
+     * @param int $pass Internal counter for recursion
      */
-    public static function format_bytes($value, $precision = 2, $pass = 0): string
+    public static function format_bytes(int|float $value, int $precision = 2, int $pass = 0): string
     {
         if (!$value) {
             return '';
@@ -261,11 +259,9 @@ class Ui implements UiInterface
      * unformat_bytes
      *
      * Parses a human-readable size
-     * @param string|int $value
-     * @return string
      * @noinspection PhpMissingBreakStatementInspection
      */
-    public static function unformat_bytes($value): string
+    public static function unformat_bytes(int|string $value): string
     {
         if (preg_match('/^([0-9]+) *([[:alpha:]]+)$/', (string)$value, $matches)) {
             $value = (int)$matches[1];
@@ -289,7 +285,6 @@ class Ui implements UiInterface
                 // Intentional break fall-through
             case 'k':
                 $value *= 1024;
-                // Intentional break fall-through
         }
 
         return (string)$value;
@@ -395,9 +390,8 @@ class Ui implements UiInterface
      * _find_icon
      *
      * Does the finding icon thing. match svg first over png
-     * @param string $name
      */
-    private static function _find_icon($name): string
+    private static function _find_icon(string $name): string
     {
         if (isset(self::$_icon_cache[$name])) {
             return self::$_icon_cache[$name];
@@ -492,9 +486,8 @@ class Ui implements UiInterface
      * _find_image
      *
      * Does the finding image thing. match svg first over png
-     * @param string $name
      */
-    private static function _find_image($name): string
+    private static function _find_image(string $name): string
     {
         if (isset(self::$_image_cache[$name])) {
             return self::$_image_cache[$name];
@@ -596,12 +589,10 @@ class Ui implements UiInterface
      * show_box_top
      *
      * This shows the top of the box.
-     * @param string $title
-     * @param string $class
      *
      * @deprecated Use non-static version
      */
-    public static function show_box_top($title = '', $class = ''): void
+    public static function show_box_top(string $title = '', string $class = ''): void
     {
         require self::find_template('show_box_top.inc.php');
     }
@@ -644,11 +635,9 @@ class Ui implements UiInterface
      * update_text
      *
      * Convenience function that, if the output is going to a browser,
-     * blarfs JS to do a fancy update.  Otherwise it just outputs the text.
-     * @param string $field
-     * @param int|string$value
+     * blarfs JS to do a fancy update. Otherwise it just outputs the text.
      */
-    public static function update_text($field, $value): void
+    public static function update_text(string $field, int|string $value): void
     {
         if (defined('API')) {
             return;
@@ -679,9 +668,8 @@ class Ui implements UiInterface
      * get_logo_url
      *
      * Get the custom logo or logo relating to your theme color
-     * @param string $color
      */
-    public static function get_logo_url($color = null): string
+    public static function get_logo_url(?string $color = null): string
     {
         if (AmpConfig::get('custom_logo')) {
             return AmpConfig::get('custom_logo');

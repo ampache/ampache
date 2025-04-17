@@ -366,8 +366,8 @@ class Xml5_Data
                             $string .= "\t\t<playlisttrack id=\"" . $song_id['object_id'] . "\">" . $playlist_track . "</playlisttrack>\n";
                         }
                     }
+                    $string .= "</$object_type>\n";
                 }
-                $string .= "</$object_type>\n";
                 break;
             case 'share':
                 $string .= self::shares($objects, $user);

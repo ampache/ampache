@@ -60,8 +60,8 @@ final class AlbumMethod implements MethodInterface
      *
      * This returns a single album based on the UID provided
      *
-     *  filter  = (string) UID of Album
-     *  include = (array|string) 'songs' //optional
+     * filter  = (string) UID of Album
+     * include = (array|string) 'songs' //optional
      *
      * @param GatekeeperInterface $gatekeeper
      * @param ResponseInterface $response
