@@ -410,15 +410,16 @@ final class VaInfo implements VaInfoInterface
         $tagWriter->tag_encoding      = $TaggingFormat;
         $tagWriter->tag_data          = $tagData;
 
-        /*
-        *  Currently getid3 doesn't remove pictures on *nix, only vorbiscomments.
-        *  This hasn't been tested on Windows and there is evidence that
-        *  metaflac.exe behaves differently.
+        /**
+        * Currently getid3 doesn't remove pictures on *nix, only vorbiscomments.
+        * This hasn't been tested on Windows and there is evidence that
+        * metaflac.exe behaves differently.
         */
         if ($extension !== 'mp3') {
             if (php_uname('s') == 'Linux') {
-                /* First check for installation of metaflac and
-                *  vorbiscomment system tools.
+                /**
+                * First check for installation of metaflac and
+                * vorbiscomment system tools.
                 */
                 exec('which metaflac', $output, $retval);
                 exec('which vorbiscomment', $output, $retval1);

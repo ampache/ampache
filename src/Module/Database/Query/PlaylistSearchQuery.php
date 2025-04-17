@@ -69,7 +69,13 @@ final class PlaylistSearchQuery implements QueryInterface
 
     protected string $select = "`playlist`.`id`";
 
-    protected string $base = "SELECT %%SELECT%% FROM (SELECT `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, 'playlist' AS `object_type` FROM `playlist` UNION SELECT CONCAT('smart_', `id`) AS `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, 'search' AS `object_type` FROM `search`) AS `playlist` ";
+    protected string $base = <<<SQL
+        SELECT %%SELECT%% FROM (
+            SELECT `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, 'playlist' AS `object_type` FROM `playlist`
+            UNION
+            SELECT CONCAT('smart_', `id`) AS `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, 'search' AS `object_type` FROM `search`
+        ) AS `playlist`
+        SQL;
 
     /**
      * get_select

@@ -50,6 +50,18 @@ class AlbumSongs5Method
      * exact  = (integer) 0,1, if true don't group songs from different disks //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function album_songs(array $input, User $user): bool
     {

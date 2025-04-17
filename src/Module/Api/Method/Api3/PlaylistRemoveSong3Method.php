@@ -39,13 +39,23 @@ final class PlaylistRemoveSong3Method
     /**
      * playlist_remove_song
      * This remove a song from a playlist
+     *
+     * @param array{
+     *     filter: string,
+     *     song?: string,
+     *     track?: string,
+     *     clear?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function playlist_remove_song(array $input, User $user): void
     {
         unset($user);
         ob_end_clean();
-        $playlist = new Playlist($input['filter']);
-        $track    = (int) scrub_in((string) $input['track']);
+        $playlist = new Playlist((int)$input['filter']);
+        $track    = (int) scrub_in((string)($input['track'] ?? 0));
         if (!$playlist->has_collaborate()) {
             echo Xml3_Data::error(401, T_('Access denied to this playlist.'));
         } else {

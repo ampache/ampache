@@ -42,13 +42,27 @@ final class Stats3Method
 
     /**
      * This get library stats.
+     *
+     * @param array{
+     *     type: string,
+     *     filter?: string,
+     *     user_id?: int,
+     *     username?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function stats(array $input, User $user): void
     {
         $type     = $input['type'];
-        $offset   = $input['offset'];
-        $limit    = $input['limit'];
-        $username = $input['username'];
+        $offset   = $input['offset'] ?? 0;
+        $limit    = $input['limit'] ?? 0;
+        $username = $input['username'] ?? '';
         // override your user if you're looking at others
         if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
             $user = User::get_from_username($input['username']);

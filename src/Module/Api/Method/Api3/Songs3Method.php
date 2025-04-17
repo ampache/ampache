@@ -39,6 +39,20 @@ final class Songs3Method
     /**
      * songs
      * Returns songs based on the specified filter
+     *
+     * @param array{
+     *     filter?: string,
+     *     exact?: int,
+     *     add?: string,
+     *     update?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function songs(array $input, User $user): void
     {

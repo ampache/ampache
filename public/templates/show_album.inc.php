@@ -206,13 +206,19 @@ if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, Acce
             <?php
     }
 }
-if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
-    if (AmpConfig::get('share')) { ?>
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('share')) { ?>
             <li>
                 <?php echo Share::display_ui('album', $album->id); ?>
             </li>
-            <?php }
-    }
+<?php } else {
+    $link = "&nbsp;" . T_('Link'); ?>
+            <li>
+                <a href="<?php echo $album->get_link(); ?>" target=_blank>
+                    <?php echo Ui::get_material_symbol('open_in_new', $link);
+    echo $link; ?>
+                </a>
+            </li>
+<?php }
 if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
     $saveorder = T_('Save Track Order');
     if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>

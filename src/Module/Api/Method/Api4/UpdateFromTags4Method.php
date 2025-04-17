@@ -48,6 +48,15 @@ final class UpdateFromTags4Method
      *
      * type = (string) 'artist'|'album'|'song'
      * id   = (integer) $artist_id, $album_id, $song_id
+     *
+     * @param array{
+     *     id: string,
+     *     type: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function update_from_tags(array $input, User $user): bool
     {

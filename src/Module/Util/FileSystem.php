@@ -43,7 +43,7 @@ class FileSystem
             throw new Exception('Path does not exist: ' . $path);
         }
         if (!empty($this->base)) {
-            if (strpos($temp, $this->base) !== 0) {
+            if (!str_starts_with($temp, $this->base)) {
                 throw new Exception('Path is not inside base (' . $this->base . '): ' . $temp);
             }
         }
@@ -52,11 +52,10 @@ class FileSystem
     }
 
     /**
-     * @param string $fs_id
-     * @return string
+     * path
      * @throws Exception
      */
-    protected function path($fs_id): string
+    protected function path(string $fs_id): string
     {
         $fs_id = str_replace('/', DIRECTORY_SEPARATOR, $fs_id);
         $fs_id = trim($fs_id, DIRECTORY_SEPARATOR);
@@ -65,11 +64,10 @@ class FileSystem
     }
 
     /**
-     * @param string $path
-     * @return string
+     * id
      * @throws Exception
      */
-    protected function id($path): string
+    protected function id(string $path): string
     {
         $path = $this->real($path);
         $path = substr($path, strlen((string)$this->base));
@@ -83,10 +81,9 @@ class FileSystem
 
     /**
      * fs constructor.
-     * @param $base
      * @throws Exception
      */
-    public function __construct($base)
+    public function __construct(string $base)
     {
         $this->base = $this->real($base);
         if (!$this->base) {
@@ -95,12 +92,18 @@ class FileSystem
     }
 
     /**
-     * @param $fs_id
+     * @param string $fs_id
      * @param bool $with_root
-     * @return array
+     * @return array<int, array{
+     *     title: string,
+     *     children?: array<array{title: string, key: string, lazy: bool}>,
+     *     key: string,
+     *     expanded?: bool,
+     *     lazy: bool,
+     * }>|array<array{title: string, key: string, lazy: bool}>
      * @throws Exception
      */
-    public function lst($fs_id, $with_root = false): array
+    public function lst(string $fs_id, bool $with_root = false): array
     {
         $dir = (string)$this->path($fs_id);
         $lst = @scandir($dir);
@@ -172,7 +175,7 @@ class FileSystem
             $ext = (strpos($dir, '.') !== false)
                 ? substr($dir, strrpos($dir, '.') + 1)
                 : '';
-            $dat = ['type' => $ext, 'content' => ''];
+            $dat = ['type' => $ext];
             switch ($ext) {
                 /*case 'txt':
                 case 'text':
@@ -212,13 +215,13 @@ class FileSystem
     }
 
     /**
-     * @param $fs_id
+     * @param string $fs_id
      * @param string $name
      * @param bool $mkdir
-     * @return array
+     * @return array{id: string}
      * @throws Exception
      */
-    public function create($fs_id, $name, $mkdir = false): array
+    public function create(string $fs_id, string $name, bool $mkdir = false): array
     {
         $dir = $this->path($fs_id);
         debug_event('fs.ajax', 'create ' . $fs_id . ' ' . $name, 5);
@@ -235,12 +238,12 @@ class FileSystem
     }
 
     /**
-     * @param $fs_id
+     * @param string $fs_id
      * @param string $name
-     * @return array
+     * @return array{id: string}
      * @throws Exception
      */
-    public function rename($fs_id, $name): array
+    public function rename(string $fs_id, string $name): array
     {
         $dir = $this->path($fs_id);
         if ($dir === $this->base) {
@@ -262,8 +265,8 @@ class FileSystem
     }
 
     /**
-     * @param $fs_id
-     * @return array
+     * @param string $fs_id
+     * @return array{status: string}
      * @throws Exception
      */
     public function remove($fs_id): array
@@ -286,12 +289,12 @@ class FileSystem
     }
 
     /**
-     * @param $fs_id
-     * @param $par
-     * @return array
+     * @param string $fs_id
+     * @param string $par
+     * @returnarray{id: string}
      * @throws Exception
      */
-    public function move($fs_id, $par): array
+    public function move(string $fs_id, string $par): array
     {
         $dir = $this->path($fs_id);
         $par = $this->path($par);
@@ -304,12 +307,12 @@ class FileSystem
     }
 
     /**
-     * @param $fs_id
-     * @param $par
-     * @return array
+     * @param string $fs_id
+     * @param string $par
+     * @return array{id: string}
      * @throws Exception
      */
-    public function copy($fs_id, $par): array
+    public function copy(string $fs_id, string $par): array
     {
         $dir = $this->path($fs_id);
         $par = $this->path($par);

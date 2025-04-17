@@ -44,6 +44,14 @@ final class Genre4Method
      * This returns a single genre based on UID
      *
      * filter = (string) UID of Genre
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function genre(array $input, User $user): bool
     {
@@ -55,10 +63,10 @@ final class Genre4Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::tags([$uid]);
+                echo Json4_Data::tags([(int)$uid]);
                 break;
             default:
-                echo Xml4_Data::tags([$uid]);
+                echo Xml4_Data::tags([(int)$uid]);
         }
 
         return true;

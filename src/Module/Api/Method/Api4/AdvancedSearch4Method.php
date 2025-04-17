@@ -62,6 +62,9 @@ final class AdvancedSearch4Method
      * type            = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
      * offset          = (integer)
      * limit           = (integer)
+     *
+     * @param array<string, mixed> $input
+     * @param User $user
      */
     public static function advanced_search(array $input, User $user): void
     {

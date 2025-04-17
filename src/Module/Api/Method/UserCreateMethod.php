@@ -54,6 +54,19 @@ final class UserCreateMethod
      * email    = (string) $email
      * disable  = (integer) 0,1 //optional, default = 0
      * group    = (integer) Catalog filter group for the new user //optional, default = 0
+     *
+     * @param array{
+     *     username: string,
+     *     fullname?: string,
+     *     password: string,
+     *     email: string,
+     *     disable?: int,
+     *     group?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function user_create(array $input, User $user): bool
     {

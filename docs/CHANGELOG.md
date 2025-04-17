@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## Ampache 7.4.1
+
+### Added
+
+* Add direct link alternative sharing to items for public users
+* Plugin
+  * Bluesky share plugin
+  * Mastodon share plugin
+
+### Changed
+
+* Update vite to 6.2.6
+
+### Fixed
+
+* Speed up dashboard pages for pulic users calling the top query once
+* RSS compliance for date and atom links
+* Verify chunk count using the chunk and not the count
+* Waveform error when the file is missing
+* Plugins
+  * Don't set user preferences when not used in the plugin
+* CLI
+  * Default options for `run:updateCatalog`
+
 ## Ampache 7.4.0
 
 The code has had a lot of updates dealing with verifications.
@@ -45,7 +69,7 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * Update `public/.htaccess.dist`
 * Only audit NPM production modules
 * Move prettyphoto into lib/modules. (Dead project marked as Malware by NPM)
-* After updating Album and Artist object tags only update conts for affected Artists
+* After updating Album and Artist object tags only update counts for affected Artists
 * Restore gather art on website Add actions
 * Don't collect garbage continually when doing a large verify action
 * Update individual counts for Artists after changes
@@ -60,7 +84,7 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * Jplayer
   * Repeat the current song if you press previous and there isn't a loop situation
 * webplayer
-  * Rearrange the buttons to make them aling better with different config
+  * Rearrange the buttons to make them align better with different config
   * Only show the slideshow button if you have a slideshow plugin enabled. (flickr)
 
 ### Fixed
@@ -70,7 +94,7 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * Lyrics would be chopped up if you repeatedly updated them; do it one way and once only
 * CSS in some areas for the light theme
 * `slideshow_time` being converted to bool
-* Don't show slideshow button if you don't have a flickr enabled
+* Don't show slideshow button if you don't have flickr enabled
 * Not able to edit Broadcast or select genre correctly
 * Missing artist tag options for Quicktime and ASF tags
 * Genre select SQL full group by on empty `object_type`
@@ -85,7 +109,7 @@ It is recommended that you take out MusicBrainz from your config `metadata_order
 * SQL error looking up License name
 * Fix up RSS to generate valid feeds again
 * Only insert additional metadata for scalar values
-* Silently faile on Metadata insert. (Fix up your tags)
+* Silently fail on Metadata insert. (Fix up your tags)
 * Plugin
   * Discogs: Fix up searching for releases without a master release
 

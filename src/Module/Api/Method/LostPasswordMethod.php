@@ -33,8 +33,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Core;
 use Ampache\Repository\UserRepositoryInterface;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class LostPasswordMethod
@@ -51,15 +49,17 @@ final class LostPasswordMethod
      * Allows a non-admin user to reset their password without web access to the main site.
      * It requires a reset token hash using your username and email
      *
-     * @param array $input
      * auth = (string) (
      *   $username;
      *   $key = hash('sha256', 'email');
      *   auth = hash('sha256', $username . $key);
      * )
+     *
+     * @param array{
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public static function lost_password(array $input): bool
     {

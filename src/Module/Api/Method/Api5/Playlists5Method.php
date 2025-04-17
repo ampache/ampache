@@ -55,6 +55,24 @@ final class Playlists5Method
      * update      = $browse->set_api_filter(date) //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
+     *
+     * @param array{
+     *     filter?: string,
+     *     hide_search?: int,
+     *     show_dupes?: int,
+     *     include?: int,
+     *     exact?: int,
+     *     add?: string,
+     *     update?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function playlists(array $input, User $user): bool
     {

@@ -45,13 +45,26 @@ final class ArtistAlbums4Method
      * filter = (string) UID of artist
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     album_artist?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function artist_albums(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $artist  = new Artist($input['filter']);
+        $artist  = new Artist((int)$input['filter']);
         $results = [];
         if (isset($artist->id)) {
             $results = self::getAlbumRepository()->getAlbumByArtist($artist->id);

@@ -47,6 +47,14 @@ final class PreferenceDeleteMethod
      * Delete a non-system preference by name
      *
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function preference_delete(array $input, User $user): bool
     {
@@ -56,7 +64,7 @@ final class PreferenceDeleteMethod
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $pref_name  = (string)($input['filter'] ?? '');
+        $pref_name  = $input['filter'];
         $preference = Preference::get($pref_name, -1);
         if (empty($preference)) {
             Api::error(sprintf('Not Found: %s', $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);

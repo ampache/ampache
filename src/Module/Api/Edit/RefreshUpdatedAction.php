@@ -334,18 +334,18 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_end_clean();
                 break;
             default:
-                /*
-                 * Templates that don't need anything special
-                 *
-                 * broadcast_row
-                 * label_row
-                 * pvmsg_row
-                 * search_row
-                 * share_row
-                 * song_preview_row
-                 * tag_row
-                 * wanted_album_row
-                 */
+                /**
+                * Templates that don't need anything special
+                *
+                * broadcast_row
+                * label_row
+                * pvmsg_row
+                * search_row
+                * share_row
+                * song_preview_row
+                * tag_row
+                * wanted_album_row
+                */
                 ob_start();
 
                 $this->ui->show(

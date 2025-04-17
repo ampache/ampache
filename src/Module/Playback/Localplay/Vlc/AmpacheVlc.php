@@ -89,7 +89,17 @@ class AmpacheVlc extends localplay_controller
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
-        $sql = "CREATE TABLE `localplay_vlc` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `host` VARCHAR(255) COLLATE $collation NOT NULL, `port` INT(11) UNSIGNED NOT NULL, `password` VARCHAR(255) COLLATE $collation NOT NULL, `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0') ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = <<<SQL
+            CREATE TABLE `localplay_vlc` (
+                `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `name` VARCHAR(128) COLLATE $collation NOT NULL,
+                `owner` INT(11) NOT NULL,
+                `host` VARCHAR(255) COLLATE $collation NOT NULL,
+                `port` INT(11) UNSIGNED NOT NULL,
+                `password` VARCHAR(255) COLLATE $collation NOT NULL,
+                `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0'
+            ) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation
+            SQL;
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
@@ -244,7 +254,7 @@ class AmpacheVlc extends localplay_controller
      * and delete them from VLC webinterface
      * @param int $object_id
      */
-    public function delete_track($object_id): bool
+    public function delete_track(int $object_id): bool
     {
         if ($this->_vlc->delete_pos($object_id) === null) {
             debug_event(self::class, 'ERROR Unable to delete ' . $object_id . ' from VLC', 1);

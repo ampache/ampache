@@ -95,7 +95,17 @@ class AmpacheXbmc extends localplay_controller
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
-        $sql = "CREATE TABLE `localplay_xbmc` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `host` VARCHAR(255) COLLATE $collation NOT NULL, `port` INT(11) UNSIGNED NOT NULL, `user` VARCHAR(255) COLLATE $collation NOT NULL, `pass` VARCHAR(255) COLLATE $collation NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = <<<SQL
+            CREATE TABLE `localplay_xbmc` (
+                `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `name` VARCHAR(128) COLLATE $collation NOT NULL,
+                `owner` INT(11) NOT NULL,
+                `host` VARCHAR(255) COLLATE $collation NOT NULL,
+                `port` INT(11) UNSIGNED NOT NULL,
+                `user` VARCHAR(255) COLLATE $collation NOT NULL,
+                `pass` VARCHAR(255) COLLATE $collation NOT NULL
+            ) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation;
+            SQL;
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
@@ -259,9 +269,9 @@ class AmpacheXbmc extends localplay_controller
     /**
      * delete_track
      * Delete a track from the xbmc playlist
-     * @param $object_id
+     * @param int $object_id
      */
-    public function delete_track($object_id): bool
+    public function delete_track(int $object_id): bool
     {
         if (!$this->_xbmc) {
             return false;

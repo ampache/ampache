@@ -934,7 +934,7 @@ final class PlayAction implements ApplicationActionInterface
                 $streamConfiguration['file_type'],
                 $troptions
             );
-            $transcode_to = $transcode_settings['format'];
+            $transcode_to = $transcode_settings['format'] ?? $format;
 
             // At this point, the bitrate has already been decided inside Stream::start_transcode
             // so we just try to emulate that logic here
@@ -943,7 +943,7 @@ final class PlayAction implements ApplicationActionInterface
                 // note that the bitrate transcode option is stored as metric bits i.e. kilobits*1000 instead of kilobits*1024
                 $stream_rate = $troptions['bitrate'] / 1024;
             } elseif (!empty($transcode_settings)) {
-                $stream_rate = Stream::get_max_bitrate($media, $transcode_settings);
+                $stream_rate = Stream::get_max_bitrate($media, $transcode_settings, $troptions);
             }
 
             // We always guess MP3 content length even when not required, since that codec calculates properly

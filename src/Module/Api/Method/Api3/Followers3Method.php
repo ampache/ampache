@@ -40,6 +40,17 @@ final class Followers3Method
     /**
      * followers
      * This gets a user's followers
+     *
+     * @param array{
+     *     username: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function followers(array $input, User $user): void
     {

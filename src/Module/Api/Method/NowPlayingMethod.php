@@ -43,6 +43,18 @@ final class NowPlayingMethod
      * MINIMUM_API_VERSION=6.3.1
      *
      * Get what is currently being played by all users.
+     *
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
+     *
+     * @param array{
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function now_playing(array $input, User $user): bool
     {

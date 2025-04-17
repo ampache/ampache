@@ -106,9 +106,9 @@ final readonly class UpdateViewAdapter implements UpdateViewAdapterInterface
 
     /**
      * @return Generator<array{
-     *  title: string,
-     *  changelog: list<string>,
-     *  warning: bool
+     *     title: string,
+     *     changelog: list<string>,
+     *     warning: bool
      * }>
      */
     public function getUpdateInfo(): Generator

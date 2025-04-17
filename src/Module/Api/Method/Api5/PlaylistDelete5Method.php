@@ -45,6 +45,14 @@ final class PlaylistDelete5Method
      * This deletes a playlist
      *
      * filter = (string) UID of playlist
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function playlist_delete(array $input, User $user): bool
     {
@@ -52,7 +60,7 @@ final class PlaylistDelete5Method
             return false;
         }
         ob_end_clean();
-        $playlist = new Playlist($input['filter']);
+        $playlist = new Playlist((int)$input['filter']);
         if (!$playlist->has_access($user)) {
             Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
         } else {

@@ -92,8 +92,8 @@ final class RequestParser implements RequestParserInterface
 
         /**
          * @var array{
-         *  name: string,
-         *  expire: int
+         *     name: string,
+         *     expire: int
          * } $form
          */
         $form = $_SESSION['forms'][$sid];

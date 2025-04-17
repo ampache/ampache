@@ -48,6 +48,14 @@ final class Following4Method
      * Error when user not found or no followers
      *
      * username = (string) $username
+     *
+     * @param array{
+     *     username: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function following(array $input, User $user): bool
     {

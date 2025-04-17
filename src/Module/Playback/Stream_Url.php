@@ -29,7 +29,7 @@ use Ampache\Module\Util\MemoryObject;
 use Ampache\Config\AmpConfig;
 
 /**
- * Stream_URL Class
+ * Stream_Url Class
  *
  * A class for passing around an URL and associated data
  * @property string $url
@@ -63,9 +63,9 @@ class Stream_Url extends MemoryObject
      *
      * Takes an url and parses out all the chewy goodness.
      * @param string $url
-     * @return array
+     * @return array<string, string>
      */
-    public static function parse($url): array
+    public static function parse(string $url): array
     {
         if (empty($url)) {
             return [];

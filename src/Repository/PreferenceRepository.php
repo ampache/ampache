@@ -56,16 +56,16 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
      * If no user is provided, all available system-wide preferences will be returned
      *
      * @return list<array{
-     *  id: int,
-     *  name: string,
-     *  value: string,
-     *  description: string,
-     *  level: int,
-     *  type: string,
-     *  category: string,
-     *  subcategory: string,
-     *  has_access?: bool,
-     *  values?: string[],
+     *     id: int,
+     *     name: string,
+     *     value: string,
+     *     description: string,
+     *     level: int,
+     *     type: string,
+     *     category: string,
+     *     subcategory: string,
+     *     has_access?: bool,
+     *     values?: string[],
      * }>
      */
     public function getAll(

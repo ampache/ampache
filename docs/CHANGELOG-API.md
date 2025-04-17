@@ -1,5 +1,25 @@
 # API CHANGELOG
 
+## API 6.6.8
+
+This version is being released for Ampache7 **only**
+
+This is a massive update to the code typing and backend quality without changing function.
+
+### Changed
+
+* ALL
+  * Type parameters properties and arrays for all API versions
+  * Ensure nullable input is allowed to be null in the code
+  * Make sure size dimensions for `get_art` calls are valid and split correctly
+* API6
+  * Empty reaults on `list` calls will send an empty response
+* API5
+  * `playlist_generate` with `flag` not checking value
+  * `catalog_file` catch exception on add_file error
+
+### Fixed
+
 ## API 6.6.7
 
 This version is being released for Ampache7 **only**

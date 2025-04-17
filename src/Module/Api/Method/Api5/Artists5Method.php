@@ -53,6 +53,23 @@ final class Artists5Method
      * album_artist = (integer) 0,1, if true filter for album artists only //optional
      * offset       = (integer) //optional
      * limit        = (integer) //optional
+     *
+     * @param array{
+     *     filter?: string,
+     *     exact?: int,
+     *     add?: string,
+     *     update?: string,
+     *     include?: string|string[],
+     *     album_artist?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function artists(array $input, User $user): bool
     {
@@ -86,12 +103,12 @@ final class Artists5Method
             case 'json':
                 Json5_Data::set_offset($input['offset'] ?? 0);
                 Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::artists($results, $include, $user);
+                echo Json5_Data::artists($results, $include ?: [], $user);
                 break;
             default:
                 Xml5_Data::set_offset($input['offset'] ?? 0);
                 Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::artists($results, $include, $user);
+                echo Xml5_Data::artists($results, $include ?: [], $user);
         }
 
         return true;

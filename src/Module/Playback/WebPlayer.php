@@ -39,9 +39,8 @@ class WebPlayer
 {
     /**
      * Check if the playlist is a radio playlist.
-     * @param Stream_Playlist $playlist
      */
-    public static function is_playlist_radio($playlist): bool
+    public static function is_playlist_radio(Stream_Playlist $playlist): bool
     {
         $radios = [];
 
@@ -56,41 +55,42 @@ class WebPlayer
 
     /**
      * Check if the playlist is a video playlist.
-     * @param Stream_Playlist $playlist
      */
-    public static function is_playlist_video($playlist): bool
+    public static function is_playlist_video(Stream_Playlist $playlist): bool
     {
         return (count($playlist->urls) > 0 && $playlist->urls[0]->type == "video");
     }
 
     /**
      * Check if the playlist is a random playlist.
-     * @param Stream_Playlist $playlist
      */
-    public static function is_playlist_random($playlist): bool
+    public static function is_playlist_random(Stream_Playlist $playlist): bool
     {
         return (count($playlist->urls) > 0 && $playlist->urls[0]->title == "Random");
     }
 
     /**
      * Check if the playlist is a democratic playlist.
-     * @param Stream_Playlist $playlist
      */
-    public static function is_playlist_democratic($playlist): bool
+    public static function is_playlist_democratic(Stream_Playlist $playlist): bool
     {
         return (count($playlist->urls) > 0 && $playlist->urls[0]->title == "Democratic");
     }
 
     /**
      * Get types information for an item.
-     * @param Stream_URL $item
+     * @param Stream_Url $item
      * @param string $force_type
      * @param array $urlinfo
-     * @param array $transcode_cfg
+     * @param string $transcode_cfg
      * @return array
      */
-    protected static function get_types($item, $urlinfo, $transcode_cfg, $force_type = ''): array
-    {
+    protected static function get_types(
+        Stream_Url $item,
+        array $urlinfo,
+        string $transcode_cfg,
+        string $force_type = ''
+    ): array {
         $types = ['real' => 'mp3', 'player' => ''];
 
         if ($item->codec && array_key_exists('type', $urlinfo)) {
@@ -179,16 +179,16 @@ class WebPlayer
      * @param string $file_type
      * @param array $types
      * @param array $urlinfo
+     * @param string $transcode_cfg
      * @param string $force_type
-     * @param array $transcode_cfg
      */
     public static function can_transcode(
-        $media_type,
-        $file_type,
-        $types,
-        $urlinfo,
-        $transcode_cfg,
-        $force_type = ''
+        string $media_type,
+        string $file_type,
+        array  $types,
+        array  $urlinfo,
+        string $transcode_cfg,
+        string $force_type = ''
     ): bool {
         $transcode = false;
 
@@ -246,7 +246,7 @@ class WebPlayer
                 $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
                 break;
             } else {
-                $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item, $transcode_cfg) . ");";
+                $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
             }
         }
 
@@ -268,7 +268,7 @@ class WebPlayer
                 $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
                 break;
             } else {
-                $addjs .= $callback_container . "playNext(" . self::get_media_js_param($item, $transcode_cfg) . ");";
+                $addjs .= $callback_container . "playNext(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
             }
         }
 
@@ -277,12 +277,12 @@ class WebPlayer
 
     /**
      * Get media javascript parameters.
-     * @param Stream_URL $item
-     * @param string $force_type
-     * @param array $transcode_cfg
      */
-    public static function get_media_js_param($item, $transcode_cfg, $force_type = ''): string
-    {
+    public static function get_media_js_param(
+        Stream_Url $item,
+        string $transcode_cfg,
+        string $force_type = ''
+    ): string {
         $json = [];
         foreach (['title', 'author'] as $member) {
             if ($member == "author") {

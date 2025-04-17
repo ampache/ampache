@@ -53,6 +53,18 @@ final class FollowersMethod
      * limit    = (integer) //optional
      * cond     = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
      * sort     = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     *
+     * @param array{
+     *     username?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function followers(array $input, User $user): bool
     {
@@ -61,10 +73,10 @@ final class FollowersMethod
 
             return false;
         }
-        $username = (isset($input['username']))
+        $username = (!empty($input['username']))
             ? $input['username']
             : $user->username;
-        $leadUser = User::get_from_username($username);
+        $leadUser = User::get_from_username((string)$username);
         if ($leadUser === null) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

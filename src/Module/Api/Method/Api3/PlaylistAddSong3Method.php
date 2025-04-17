@@ -38,13 +38,22 @@ final class PlaylistAddSong3Method
 
     /**
      * playlist_add_song
-     * This add a song to a playlist
+     * This adds a song to a playlist
+     *
+     * @param array{
+     *     filter: string,
+     *     song: string,
+     *     check?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function playlist_add_song(array $input, User $user): void
     {
         unset($user);
         ob_end_clean();
-        $playlist = new Playlist($input['filter']);
+        $playlist = new Playlist((int)$input['filter']);
         $song     = (int)$input['song'];
         if (!$playlist->has_collaborate()) {
             echo Xml3_Data::error(401, T_('Access denied to this playlist.'));

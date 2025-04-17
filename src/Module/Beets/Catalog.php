@@ -86,7 +86,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * prepare_media
-     * @param Song|Podcast_Episode|Video $media
+     * @param Podcast_Episode|Song|Video $media
      * @return array{
      *   file_path: string,
      *   file_name: string,
@@ -94,7 +94,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      *   file_type: string
      * }
      */
-    public function prepare_media($media): array
+    public function prepare_media(Podcast_Episode|Video|Song $media): array
     {
         debug_event(self::class, 'Play: Started remote stream - ' . $media->file, 5);
 
@@ -138,9 +138,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Adds new songs to the catalog
-     * @param array $options
      */
-    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
+    public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             require Ui::find_template('show_adds_catalog.inc.php');
@@ -290,9 +289,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
-     * @param string $new_path
      */
-    public function move_catalog_proc($new_path): bool
+    public function move_catalog_proc(string $new_path): bool
     {
         return false;
     }
@@ -402,9 +400,9 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     * @param string $file_path
+     * get_rel_path
      */
-    public function get_rel_path($file_path): string
+    public function get_rel_path(string $file_path): string
     {
         return '';
     }

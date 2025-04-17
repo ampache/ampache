@@ -56,6 +56,20 @@ final class PreferenceCreateMethod
      * description = (string) description of preference //optional
      * subcategory = (string) $subcategory //optional
      * level       = (integer) access level required to change the value (default 100) //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     default: string|int,
+     *     category: string,
+     *     description?: string,
+     *     subcategory?: string,
+     *     level?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function preference_create(array $input, User $user): bool
     {
@@ -65,7 +79,7 @@ final class PreferenceCreateMethod
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $pref_name = (string)($input['filter'] ?? '');
+        $pref_name = $input['filter'];
         $pref_list = Preference::get($pref_name, -1);
         // if you found the preference or it's a system preference; don't add it.
         if (!empty($pref_list) || in_array($pref_name, array_merge(Preference::SYSTEM_LIST, Preference::PLUGIN_LIST))) {

@@ -37,10 +37,22 @@ final class ArtistAlbums3Method
     /**
      * artist_albums
      * This returns the albums of an artist
+     *
+     * @param array{
+     *     filter: string,
+     *     album_artist?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function artist_albums(array $input, User $user): void
     {
-        $artist  = new Artist($input['filter']);
+        $artist  = new Artist((int)$input['filter']);
         $results = [];
         if (isset($artist->id)) {
             $results = self::getAlbumRepository()->getAlbumByArtist($artist->id);

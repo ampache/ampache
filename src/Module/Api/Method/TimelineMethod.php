@@ -51,6 +51,16 @@ final class TimelineMethod
      * username = (string)
      * limit    = (integer) //optional
      * since    = (integer) UNIXTIME() //optional
+     *
+     * @param array{
+     *     username: string,
+     *     limit?: int,
+     *     since?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function timeline(array $input, User $user): bool
     {

@@ -116,11 +116,17 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
     <?php
     }
 }
-if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
-    if (AmpConfig::get('share')) {
-        echo Share::display_ui('video', $libitem->id, false);
-    }
-}
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('share')) {
+    echo Share::display_ui('video', $libitem->id, false);
+} else {
+    $link = "&nbsp;" . T_('Link'); ?>
+    <li>
+        <a href="<?php echo $libitem->get_link(); ?>" target=_blank>
+            <?php echo Ui::get_material_symbol('open_in_new', $link);
+    echo $link; ?>
+        </a>
+    </li>
+<?php }
 if (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD)) { ?>
     <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
 <?php }

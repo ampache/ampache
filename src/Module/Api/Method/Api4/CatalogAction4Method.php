@@ -49,6 +49,15 @@ final class CatalogAction4Method
      *
      * task    = (string) 'add_to_catalog'|'clean_catalog'
      * catalog = (integer) $catalog_id
+     *
+     * @param array{
+     *     task: string,
+     *     catalog: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function catalog_action(array $input, User $user): bool
     {

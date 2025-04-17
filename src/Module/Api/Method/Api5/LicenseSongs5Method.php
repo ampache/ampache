@@ -47,6 +47,18 @@ final class LicenseSongs5Method
      * This returns all songs attached to a license ID
      *
      * filter = (string) UID of license
+     *
+     * @param array{
+     *     filter: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function license_songs(array $input, User $user): bool
     {

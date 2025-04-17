@@ -53,13 +53,23 @@ final class BookmarkDeleteMethod
      * filter = (string) object_id to delete
      * type   = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode')
      * client = (string) Agent string //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     client?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function bookmark_delete(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, ['filter', 'type'], self::ACTION)) {
             return false;
         }
-        $object_id = $input['filter'];
+        $object_id = (int)$input['filter'];
         $type      = $input['type'];
         $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : null;
         if (!AmpConfig::get('allow_video') && $type == 'video') {
@@ -94,10 +104,10 @@ final class BookmarkDeleteMethod
             }
         }
         $object = [
-            'user' => $user->id,
-            'object_id' => $object_id,
             'object_type' => $type,
+            'object_id' => $object_id,
             'comment' => $comment,
+            'user' => $user->id,
         ];
 
         $find = Bookmark::getBookmarks($object);

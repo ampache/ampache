@@ -35,15 +35,15 @@ interface FeedLoaderInterface
      * Load the podcast content by its feed-url
      *
      * @return array{
-     *  title: string,
-     *  website: string,
-     *  description: string,
-     *  language: string,
-     *  copyright: string,
-     *  generator: string,
-     *  episodes: SimpleXMLElement,
-     *  artUrl: null|string,
-     *  lastBuildDate: null|DateTimeInterface
+     *     title: string,
+     *     website: string,
+     *     description: string,
+     *     language: string,
+     *     copyright: string,
+     *     generator: string,
+     *     episodes: SimpleXMLElement,
+     *     artUrl: null|string,
+     *     lastBuildDate: null|DateTimeInterface
      * }
      *
      * @throws FeedLoadingException

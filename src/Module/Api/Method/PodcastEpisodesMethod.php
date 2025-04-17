@@ -68,14 +68,21 @@ final class PodcastEpisodesMethod implements MethodInterface
      * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
      * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array{
-     *  api_format: string,
-     *  filter?: string,
-     *  offset?: string,
-     *  limit?: string,
-     *  cond?: string,
-     *  sort?: string,
+     *     filter?: string,
+     *     offset?: string,
+     *     limit?: string,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
      * } $input
+     * @param User $user
+     * @return ResponseInterface
+     * @throws RequestParamMissingException|ResultEmptyException
      */
     public function handle(
         GatekeeperInterface $gatekeeper,
@@ -97,10 +104,7 @@ final class PodcastEpisodesMethod implements MethodInterface
             return $response;
         }
 
-        $podcastId = (int) ($input['filter'] ?? 0);
-        $offset    = (int) ($input['offset'] ?? 0);
-        $limit     = (int) ($input['limit'] ?? 0);
-
+        $podcastId = (int)($input['filter'] ?? 0);
         if ($podcastId === 0) {
             throw new RequestParamMissingException(
                 sprintf(T_('Bad Request: %s'), 'filter')
@@ -135,8 +139,8 @@ final class PodcastEpisodesMethod implements MethodInterface
             return $response;
         }
 
-        $output->setOffset($offset);
-        $output->setLimit($limit);
+        $output->setOffset((int)($input['offset'] ?? 0));
+        $output->setLimit((int)($input['limit'] ?? 0));
         $output->setCount($browse->get_total());
 
         $response->getBody()->write(

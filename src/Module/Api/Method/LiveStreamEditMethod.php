@@ -55,6 +55,19 @@ final class LiveStreamEditMethod
      * codec    = (string) stream codec ('mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac') //optional
      * catalog  = (int) Catalog ID to associate with this stream //optional
      * site_url = (string) Homepage URL of the stream //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     name?: string,
+     *     url?: string,
+     *     codec?: string,
+     *     catalog?: int,
+     *     site_url?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function live_stream_edit(array $input, User $user): bool
     {

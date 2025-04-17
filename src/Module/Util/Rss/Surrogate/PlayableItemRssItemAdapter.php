@@ -136,14 +136,14 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      * Returns all media-items which are associated with the item
      *
      * @return Generator<array{
-     *  title: string,
-     *  guid: string,
-     *  length: string,
-     *  author: null|string,
-     *  pubDate: null|string,
-     *  type: null|string,
-     *  size: null|string,
-     *  url: null|string
+     *     title: string,
+     *     guid: string,
+     *     length: string,
+     *     author: null|string,
+     *     pubDate: null|string,
+     *     type: null|string,
+     *     size: null|string,
+     *     url: null|string
      * }>
      */
     public function getMedias(): Generator

@@ -45,6 +45,14 @@ final class UserPreference5Method
      * Get your user preference by name
      *
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
+     *
+     * @param array{
+     *     filter?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function user_preference(array $input, User $user): bool
     {

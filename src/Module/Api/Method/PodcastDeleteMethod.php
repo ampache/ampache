@@ -74,7 +74,17 @@ final class PodcastDeleteMethod implements MethodInterface
      *
      * filter = (string) ID of podcast to delete
      *
-     * @param array{filter?: string} $input
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
+     * @param array{
+     *     filter?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return ResponseInterface
+     * @throws AccessDeniedException|RequestParamMissingException|ResultEmptyException
      */
     public function handle(
         GatekeeperInterface $gatekeeper,
@@ -95,7 +105,7 @@ final class PodcastDeleteMethod implements MethodInterface
             );
         }
 
-        $podcastId = (int) ($input['filter'] ?? 0);
+        $podcastId = (int)($input['filter'] ?? 0);
 
         if ($podcastId === 0) {
             throw new RequestParamMissingException(

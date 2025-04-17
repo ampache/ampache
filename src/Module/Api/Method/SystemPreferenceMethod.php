@@ -48,6 +48,14 @@ final class SystemPreferenceMethod
      * Get your system preferences by name
      *
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function system_preference(array $input, User $user): bool
     {
@@ -57,7 +65,7 @@ final class SystemPreferenceMethod
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $pref_name = (string)($input['filter'] ?? '');
+        $pref_name = $input['filter'];
         $results   = Preference::get($pref_name, -1);
         if (empty($results)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

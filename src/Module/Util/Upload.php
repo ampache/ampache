@@ -200,11 +200,9 @@ class Upload
     /**
      * can_upload
      * check settings and permissions for uploads
-     * @param User|string|null $user
-     * @return bool
      * @throws RuntimeException
      */
-    public static function can_upload($user = null): bool
+    public static function can_upload(string|User|null $user = null): bool
     {
         if (empty($user)) {
             $user = Core::get_global('user');
@@ -217,11 +215,9 @@ class Upload
 
     /**
      * rerror
-     * @param string $file
-     * @return bool
      * @throws RuntimeException
      */
-    public static function rerror($file = null): bool
+    public static function rerror(?string $file = null): bool
     {
         if ($file !== null) {
             if (unlink($file) === false) {
@@ -238,10 +234,8 @@ class Upload
 
     /**
      * upload_script
-     * @param string $targetdir
-     * @param string $targetfile
      */
-    public static function upload_script($targetdir, $targetfile): void
+    public static function upload_script(string $targetdir, string $targetfile): void
     {
         $script = AmpConfig::get('upload_script');
         if (AmpConfig::get('allow_upload_scripts') && $script) {
@@ -253,10 +247,8 @@ class Upload
 
     /**
      * check_artist
-     * @param string $artist_name
-     * @param int $user_id
      */
-    public static function check_artist($artist_name, $user_id): ?int
+    public static function check_artist(string $artist_name, int $user_id): ?int
     {
         debug_event(self::class, 'check_artist: looking for ' . $artist_name, 5);
         if ($artist_name !== '') {
@@ -282,10 +274,8 @@ class Upload
 
     /**
      * check_album
-     * @param string $album_name
-     * @param int|null $artist_id
      */
-    public static function check_album($album_name, $artist_id): ?int
+    public static function check_album(string $album_name, ?int $artist_id): ?int
     {
         debug_event(self::class, 'check_album: looking for ' . $album_name, 5);
         if ($album_name !== '') {
@@ -304,9 +294,8 @@ class Upload
 
     /**
      * check_target_path
-     * @param string $targetfile
      */
-    public static function check_target_path($targetfile): ?string
+    public static function check_target_path(string $targetfile): ?string
     {
         debug_event(self::class, 'Target File `' . $targetfile, 4);
         if (Core::is_readable($targetfile)) {
@@ -325,9 +314,8 @@ class Upload
 
     /**
      * check_target_dir
-     * @param string $catalog_dir
      */
-    public static function check_target_dir($catalog_dir): ?string
+    public static function check_target_dir(string $catalog_dir): ?string
     {
         $targetdir = $catalog_dir;
         $folder    = (Core::get_post('folder') == '..') ? '' : Core::get_post('folder');
@@ -349,10 +337,8 @@ class Upload
 
     /**
      * get_root
-     * @param Catalog $catalog
-     * @param string $username
      */
-    public static function get_root($catalog = null, $username = null): string
+    public static function get_root(Catalog $catalog = null, ?string $username = null): string
     {
         if ($catalog == null) {
             $catalog_id = AmpConfig::get('upload_catalog');

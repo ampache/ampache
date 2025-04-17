@@ -48,6 +48,14 @@ final class LiveStreamMethod
      * This returns a single live_stream based on UID
      *
      * filter = (string) UID of live_stream
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function live_stream(array $input, User $user): bool
     {

@@ -28,6 +28,7 @@ namespace Ampache\Module\WebDav;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Sabre\DAV;
+use Sabre\DAV\Exception\NotFound;
 
 /**
  * WebDAV Catalog Directory Class
@@ -64,6 +65,7 @@ class WebDavCatalog extends DAV\Collection
 
     /**
      * @param string $name
+     * @throws NotFound
      */
     public function getChild($name): DAV\Node
     {

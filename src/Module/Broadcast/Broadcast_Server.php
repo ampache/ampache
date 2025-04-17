@@ -148,7 +148,7 @@ class Broadcast_Server implements MessageComponentInterface
         $item          = Stream_Playlist::media_to_urlarray($media);
         $transcode_cfg = AmpConfig::get('transcode', 'default');
 
-        return WebPlayer::get_media_js_param($item[0], $transcode_cfg);
+        return WebPlayer::get_media_js_param($item[0], (string)$transcode_cfg);
     }
 
     /**

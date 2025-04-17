@@ -48,6 +48,14 @@ final class UpdateArtistInfo5Method
      * Make sure lastfm_api_key is set in your configuration file
      *
      * id = (integer) $artist_id
+     *
+     * @param array{
+     *     id: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function update_artist_info(array $input, User $user): bool
     {
@@ -67,8 +75,13 @@ final class UpdateArtistInfo5Method
             return false;
         }
 
+        $info = Recommendation::get_artist_info($object_id);
+        $like = Recommendation::get_artists_like($object_id);
         // update your object, you need at least catalog_manager access to the db
-        if (!empty(Recommendation::get_artist_info($object_id) || !empty(Recommendation::get_artists_like($object_id)))) {
+        if (
+            array_key_exists('id', $info) && $info['id'] !== null ||
+            count($like) > 0
+        ) {
             Api5::message('Updated artist info: ' . (string) $object_id, $input['api_format']);
 
             return true;

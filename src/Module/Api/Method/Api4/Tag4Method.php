@@ -42,6 +42,14 @@ final class Tag4Method
      * This returns a single tag based on UID
      *
      * filter = (string) UID of Tag
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function tag(array $input, User $user): bool
     {

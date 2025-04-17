@@ -55,6 +55,19 @@ final class BookmarkCreate5Method
      * position = (integer) current track time in seconds
      * client   = (string) Agent string Default: 'AmpacheAPI' //optional
      * date     = (integer) UNIXTIME() //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     position: string,
+     *     client?: string,
+     *     date?: int,
+     *     include?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function bookmark_create(array $input, User $user): bool
     {
@@ -97,10 +110,10 @@ final class BookmarkCreate5Method
         }
         $object = [
             'user' => $user->getId(),
-            'object_id' => $object_id,
+            'object_id' => (int)$object_id,
             'object_type' => $type,
             'comment' => $comment,
-            'position' => $position,
+            'position' => (int)$position,
         ];
 
         // create it then retrieve it

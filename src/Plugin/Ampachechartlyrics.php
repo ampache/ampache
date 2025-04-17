@@ -88,7 +88,7 @@ class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterfa
      */
     public function load(User $user): bool
     {
-        $user->set_preferences();
+        unset($user);
 
         return true;
     }

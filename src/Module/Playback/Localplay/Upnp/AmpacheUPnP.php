@@ -243,9 +243,10 @@ class AmpacheUPnP extends localplay_controller
     /**
      * delete_track
      * Delete a track from the UPnP playlist
-     * @param $object_id
+     * @param int $object_id
+     * @return bool
      */
-    public function delete_track($object_id): bool
+    public function delete_track(int $object_id): bool
     {
         if (!$this->_upnp) {
             return false;
@@ -458,7 +459,7 @@ class AmpacheUPnP extends localplay_controller
 
             $url_data = Stream_Url::parse($data['link']);
             if (array_key_exists('id', $url_data)) {
-                $song = new Song($url_data['id']);
+                $song = new Song((int)$url_data['id']);
                 if ($song->isNew() === false) {
                     $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
                 }
@@ -498,7 +499,7 @@ class AmpacheUPnP extends localplay_controller
 
         $url_data = Stream_Url::parse($array['track']);
         if (array_key_exists('id', $url_data)) {
-            $song = new Song($url_data['id']);
+            $song = new Song((int)$url_data['id']);
             if ($song->isNew() === false) {
                 $array['track_artist'] = $song->get_artist_fullname();
                 $array['track_album']  = $song->get_album_fullname();

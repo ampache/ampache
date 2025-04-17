@@ -124,7 +124,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
             );
 
             /* Open up the directory */
-            $handle = opendir($dir);
+            $handle = @opendir($dir);
 
             if (!$handle) {
                 AmpError::add('general', T_('Unable to open') . ' ' . $dir);

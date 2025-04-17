@@ -60,6 +60,21 @@ final class PlaylistGenerate5Method
      * format = (string)  'song', 'index', 'id'         //optional, default = 'song'
      * offset = (integer)                               //optional
      * limit  = (integer)                               //optional
+     *
+     * @param array{
+     *     mode?: string,
+     *     filter?: string,
+     *     album?: string,
+     *     artist?: string,
+     *     flag?: int,
+     *     format?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function playlist_generate(array $input, User $user): bool
     {
@@ -105,7 +120,7 @@ final class PlaylistGenerate5Method
             $rule_count++;
         }
         // additional rules
-        if (array_key_exists('', $input) && (int)$input['flag'] == 1) {
+        if (array_key_exists('flag', $input) && (int)$input['flag'] == 1) {
             $data['rule_' . $rule_count]               = 'favorite';
             $data['rule_' . $rule_count . '_input']    = '%';
             $data['rule_' . $rule_count . '_operator'] = 0;
@@ -113,7 +128,7 @@ final class PlaylistGenerate5Method
         }
         if (array_key_exists('filter', $input)) {
             $data['rule_' . $rule_count]               = 'title';
-            $data['rule_' . $rule_count . '_input']    = (string)($input['filter'] ?? '');
+            $data['rule_' . $rule_count . '_input']    = (string)$input['filter'];
             $data['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }

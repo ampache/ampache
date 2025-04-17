@@ -49,6 +49,15 @@ final class LastShoutsMethod
      *
      * username = (string) $username //optional
      * limit = (integer) $limit Default: 10 (popular_threshold) //optional
+     *
+     * @param array{
+     *     username?: string,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function last_shouts(array $input, User $user): bool
     {

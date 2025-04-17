@@ -38,6 +38,13 @@ final class Song3Method
     /**
      * song
      * returns a single song
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function song(array $input, User $user): void
     {

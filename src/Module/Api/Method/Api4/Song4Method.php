@@ -44,6 +44,14 @@ final class Song4Method
      * return a single song
      *
      * filter = (string) UID of song
+     *
+     * @param array{
+     *      filter: string,
+     *      api_format: string,
+     *      auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function song(array $input, User $user): bool
     {

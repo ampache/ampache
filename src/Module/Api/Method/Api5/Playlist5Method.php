@@ -47,6 +47,14 @@ final class Playlist5Method
      * This returns a single playlist
      *
      * filter = (string) UID of playlist
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function playlist(array $input, User $user): bool
     {

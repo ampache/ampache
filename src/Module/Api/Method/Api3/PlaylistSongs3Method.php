@@ -40,10 +40,20 @@ final class PlaylistSongs3Method
     /**
      * playlist_songs
      * This returns the songs for a playlist
+     *
+     * @param array{
+     *     filter: string,
+     *     random?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function playlist_songs(array $input, User $user): void
     {
-        $playlist = new Playlist($input['filter']);
+        $playlist = new Playlist((int)$input['filter']);
         $items    = $playlist->get_items();
 
         $results = [];

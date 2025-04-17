@@ -47,10 +47,28 @@ final class SharesMethod
      * Get information about shared media this user is allowed to manage.
      *
      * filter = (string) Alpha-numeric search term //optional
+     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add    = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
      * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     *
+     * @param array{
+     *     filter?: string,
+     *     exact?: int,
+     *     add?: string,
+     *     update?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function shares(array $input, User $user): bool
     {

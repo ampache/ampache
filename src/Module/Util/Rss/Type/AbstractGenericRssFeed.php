@@ -38,6 +38,7 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
         $tal->set('TITLE', AmpConfig::get('site_title') . ' - ' . $this->getTitle());
         $tal->set('ITEMS', $this->getItems());
         $tal->set('LINK', AmpConfig::get_web_path());
+        $tal->set('LINK_RSS', AmpConfig::get_web_path() . ($_SERVER['SCRIPT_URI'] ?? '/rss.php') . '?' . $_SERVER['QUERY_STRING']);
         $tal->set(
             'PUBDATE',
             ($this->getPubDate()) ? date('r', (int)$this->getPubDate()) : null
@@ -47,13 +48,13 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
 
     /**
      * @return Generator<array{
-     *  title: string,
-     *  link: string,
-     *  description: string,
-     *  comments: ?string,
-     *  pubDate: string,
-     *  guid: string,
-     *  image?: string
+     *     title: string,
+     *     link: string,
+     *     description: string,
+     *     comments: ?string,
+     *     pubDate: string,
+     *     guid: string,
+     *     image?: string
      * }>
      */
     abstract protected function getItems(): Traversable;

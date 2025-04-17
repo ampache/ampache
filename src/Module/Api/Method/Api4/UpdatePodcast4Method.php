@@ -47,6 +47,16 @@ final class UpdatePodcast4Method
      * Sync and download new podcast episodes
      *
      * filter = (string) UID of podcast
+     *
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     overwrite: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function update_podcast(array $input, User $user): bool
     {

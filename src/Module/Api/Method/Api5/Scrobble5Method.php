@@ -54,6 +54,24 @@ final class Scrobble5Method
      * albummbid  = (string)  $album_mbid //optional
      * date       = (integer) UNIXTIME() //optional
      * client     = (string)  $agent //optional
+     *
+     * @param array{
+     *     song: string,
+     *     artist: string,
+     *     album: string,
+     *     songmbid?: string,
+     *     song_mbid?: string,
+     *     artistmbid?: string,
+     *     artist_mbid?: string,
+     *     albummbid?: string,
+     *     album_mbid?: string,
+     *     date?: int,
+     *     client?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function scrobble(array $input, User $user): bool
     {

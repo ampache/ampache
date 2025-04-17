@@ -48,6 +48,18 @@ final class Followers4Method
      * Error when user not found or no followers
      *
      * username = (string) $username
+     *
+     * @param array{
+     *     username: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function followers(array $input, User $user): bool
     {

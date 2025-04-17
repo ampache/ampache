@@ -47,10 +47,13 @@ final class DeletedPodcastEpisodesMethod
      * limit  = (integer) //optional
      *
      * @param array{
-     *  api_format: string,
-     *  limit?: string,
-     *  offset?: string
+     *     limit?: string,
+     *     offset?: string,
+     *     api_format: string,
+     *     auth: string,
      * } $input
+     * @param User $user
+     * @return bool
      */
     public static function deleted_podcast_episodes(array $input, User $user): bool
     {

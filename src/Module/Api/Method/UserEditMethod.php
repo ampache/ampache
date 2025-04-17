@@ -53,8 +53,8 @@ final class UserEditMethod
      * Takes the username with optional parameters.
      *
      * username          = (string) $username
-     * password          = (string) hash('sha256', $password) //optional
      * fullname          = (string) $fullname //optional
+     * password          = (string) hash('sha256', $password) //optional
      * email             = (string) $email //optional
      * website           = (string) $website //optional
      * state             = (string) $state //optional
@@ -66,6 +66,27 @@ final class UserEditMethod
      * reset_apikey      = (integer) 0,1 true to reset a user Api Key //optional
      * reset_streamtoken = (integer) 0,1 true to reset a user Stream Token //optional
      * clear_stats       = (integer) 0,1 true reset all stats for this user //optional
+     *
+     * @param array{
+     *     username: string,
+     *     fullname?: string,
+     *     password?: string,
+     *     email?: string,
+     *     website?: string,
+     *     state?: string,
+     *     city?: string,
+     *     disable?: int,
+     *     group?: int,
+     *     maxbitrate?: int,
+     *     fullname_public?: int,
+     *     reset_apikey?: int,
+     *     reset_streamtoken?: int,
+     *     clear_stats?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function user_edit(array $input, User $user): bool
     {
@@ -101,10 +122,10 @@ final class UserEditMethod
             : null;
         $state                = $input['state'] ?? null;
         $city                 = $input['city'] ?? null;
-        $disable              = $input['disable'] ?? null;
+        $disable              = (isset($input['disable'])) ? (int)$input['disable'] : null;
         $catalog_filter_group = $input['group'] ?? null;
-        $maxbitrate           = (int)($input['maxBitRate'] ?? 0);
-        $fullname_public      = $input['fullname_public'] ?? null;
+        $maxbitrate           = (int)($input['maxbitrate'] ?? 0);
+        $fullname_public      = (isset($input['fullname_public'])) ? (bool)$input['fullname_public'] : null;
         $reset_apikey         = $input['reset_apikey'] ?? null;
         $reset_streamtoken    = $input['reset_streamtoken'] ?? null;
         $clear_stats          = $input['clear_stats'] ?? null;
@@ -130,9 +151,9 @@ final class UserEditMethod
                 $update_user->update_city($city);
             }
             $userStateToggler = self::getUserStateToggler();
-            if ((int)$user->disabled === 0 && $disable === '1') {
+            if ((int)$user->disabled === 0 && $disable === 1) {
                 $userStateToggler->disable($update_user);
-            } elseif ((int)$user->disabled === 1 && $disable === '0') {
+            } elseif ((int)$user->disabled === 1 && $disable === 0) {
                 $userStateToggler->enable($update_user);
             }
             if ($catalog_filter_group !== null) {

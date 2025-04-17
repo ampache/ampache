@@ -31,6 +31,19 @@ use Ampache\Repository\Model\User;
 
 /**
  * Class Tag5Method
+ *
+ * @param array{
+ *     filter?: string,
+ *     exact?: int,
+ *     offset?: int,
+ *     limit?: int,
+ *     cond?: string,
+ *     sort?: string,
+ *     api_format: string,
+ *     auth: string,
+ * } $input
+ * @param User $user
+ * @return bool
  */
 final class Tag5Method
 {

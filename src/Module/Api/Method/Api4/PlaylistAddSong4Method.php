@@ -46,6 +46,16 @@ final class PlaylistAddSong4Method
      * filter = (string) UID of playlist
      * song   = (string) UID of song to add to playlist
      * check  = (integer) 0,1 Check for duplicates //optional, default = 0
+     *
+     * @param array{
+     *     filter: string,
+     *     song: string,
+     *     check?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function playlist_add_song(array $input, User $user): bool
     {
@@ -53,15 +63,14 @@ final class PlaylistAddSong4Method
             return false;
         }
         ob_end_clean();
-        $playlist = new Playlist($input['filter']);
+        $playlist = new Playlist((int)$input['filter']);
         $song     = (int)$input['song'];
         if (!$playlist->has_collaborate($user)) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 
             return false;
         }
-        $unique = ((bool)AmpConfig::get('unique_playlist', false) || (int) $input['check'] == 1);
-        if (($unique) && in_array($song, $playlist->get_songs())) {
+        if ((AmpConfig::get('unique_playlist') || (array_key_exists('check', $input) && (int)$input['check'] == 1)) && $playlist->has_item($song)) {
             Api4::message('error', T_("Can't add a duplicate item when check is enabled"), '400', $input['api_format']);
 
             return false;

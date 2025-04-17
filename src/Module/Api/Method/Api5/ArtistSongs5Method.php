@@ -50,6 +50,19 @@ final class ArtistSongs5Method
      * top50  = (integer) 0,1, if true filter to the artist top 50 //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     top50?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function artist_songs(array $input, User $user): bool
     {

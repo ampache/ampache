@@ -86,10 +86,16 @@ Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->getPodcastLink(), 
                 </a>
             <?php } ?>
         <?php } ?>
-        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
-            <?php if (AmpConfig::get('share')) { ?>
-                <?php echo Share::display_ui('podcast_episode', $episode->id, false); ?>
-            <?php } ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('share')) { ?>
+            <?php echo Share::display_ui('podcast_episode', $episode->id, false); ?>=
+        <?php } else {
+            $link = "&nbsp;" . T_('Link'); ?>
+            <li>
+                <a href="<?php echo $episode->get_link(); ?>" target=_blank>
+                    <?php echo Ui::get_material_symbol('open_in_new', $link);
+            echo $link; ?>
+                </a>
+            </li>
         <?php } ?>
         <?php if (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD) && !empty($episode->file)) { ?>
             <a class="nohtml" href="<?php echo $episode->play_url(); ?>"><?php echo Ui::get_material_symbol('link', T_('Link')); ?></a>

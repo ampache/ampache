@@ -47,6 +47,15 @@ final class Podcast4Method
      *
      * filter  = (integer) Podcast ID number
      * include = (string) 'episodes' (include episodes in the response) //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     include?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function podcast(array $input, User $user): bool
     {

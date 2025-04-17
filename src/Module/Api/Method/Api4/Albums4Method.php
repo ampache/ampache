@@ -50,6 +50,21 @@ final class Albums4Method
      * offset  = (integer) //optional
      * limit   = (integer) //optional
      * include = (array) 'songs' //optional
+     *
+     * @param array{
+     *     filter?: string,
+     *     include?: string|string[],
+     *     exact?: int,
+     *     add?: string,
+     *     update?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function albums(array $input, User $user): void
     {
@@ -72,12 +87,12 @@ final class Albums4Method
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::albums($results, $include, $user);
+                echo Json4_Data::albums($results, $include ?: [], $user);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::albums($results, $include, $user);
+                echo Xml4_Data::albums($results, $include ?: [], $user);
         }
     }
 }

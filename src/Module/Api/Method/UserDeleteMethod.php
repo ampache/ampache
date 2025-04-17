@@ -48,6 +48,14 @@ final class UserDeleteMethod
      * Takes the username in parameter.
      *
      * username = (string) $username
+     *
+     * @param array{
+     *     username: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function user_delete(array $input, User $user): bool
     {

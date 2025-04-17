@@ -45,9 +45,17 @@ final class BookmarksMethod
      *
      * Get information about bookmarked media this user is allowed to manage.
      *
-     * @param array $input
      * client = (string) Filter results to a specific comment/client name //optional
      * include = (integer) 0,1, if true include the object in the bookmark //optional
+     *
+     * @param array{
+     *     client?: string,
+     *     include?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function bookmarks(array $input, User $user): bool
     {

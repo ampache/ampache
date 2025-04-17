@@ -580,9 +580,8 @@ class LocalPlay
      * delete_track
      * This removes songs from the players playlist it takes a single ID as provided
      * by the get command
-     * @param int $object_id
      */
-    public function delete_track($object_id): bool
+    public function delete_track(int $object_id): bool
     {
         if (
             !$this->_player instanceof localplay_controller ||

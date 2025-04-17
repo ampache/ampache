@@ -449,7 +449,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 }
 
                 $object_ids = ($action === 'dashboard_popular')
-                    ? Stats::get_top($object_type, 100, $threshold, 0, $user)
+                    ? Stats::get_top($object_type, 100, $threshold, 0, ($user->getId() > 0) ? $user : null)
                     : [];
                 if ($object_ids !== []) {
                     shuffle($object_ids);

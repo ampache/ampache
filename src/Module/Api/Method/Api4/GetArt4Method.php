@@ -50,6 +50,17 @@ final class GetArt4Method
      *
      * id   = (string) $object_id
      * type = (string) 'song'|'artist'|'album'|'playlist'|'search'|'podcast'
+     *
+     * @param array{
+     *     id: string,
+     *     type: string,
+     *     fallback?: int,
+     *     size?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function get_art(array $input, User $user): bool
     {
@@ -96,10 +107,15 @@ final class GetArt4Method
 
         if ($art->has_db_info()) {
             header('Access-Control-Allow-Origin: *');
-            if ($size && AmpConfig::get('resize_images')) {
+            if (
+                $size &&
+                preg_match('/^[0-9]+x[0-9]+$/', $size) &&
+                AmpConfig::get('resize_images')
+            ) {
+                $dimensions    = explode('x', $size);
                 $dim           = [];
-                $dim['width']  = $size;
-                $dim['height'] = $size;
+                $dim['width']  = (int) $dimensions[0];
+                $dim['height'] = (int) $dimensions[1];
                 $thumb         = $art->get_thumb($dim);
                 if (!empty($thumb)) {
                     header('Content-type: ' . $thumb['thumb_mime']);
