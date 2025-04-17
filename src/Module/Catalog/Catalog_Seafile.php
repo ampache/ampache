@@ -270,8 +270,9 @@ class Catalog_Seafile extends Catalog
 
     /**
      * add_to_catalog
-     * this function adds new files to an
-     * existing catalog
+     * @param null|array<string, string|bool> $options
+     * @param null|Interactor $interactor
+     * @return int
      */
     public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {

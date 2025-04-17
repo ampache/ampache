@@ -205,10 +205,8 @@ class Catalog_remote extends Catalog
 
     /**
      * add_to_catalog
-     * this function adds new files to an
-     * existing catalog
-     * @param array|null $options
-     * @param Interactor|null $interactor
+     * @param null|array<string, string|bool> $options
+     * @param null|Interactor $interactor
      * @return int
      * @throws Exception
      */

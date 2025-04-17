@@ -224,6 +224,12 @@ abstract class Catalog extends database_object
      */
     abstract public function install(): bool;
 
+    /**
+     * add_to_catalog
+     * @param null|array<string, string|bool> $options
+     * @param null|Interactor $interactor
+     * @return int
+     */
     abstract public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int;
 
     /**

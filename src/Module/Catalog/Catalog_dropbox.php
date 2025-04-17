@@ -254,8 +254,9 @@ class Catalog_dropbox extends Catalog
 
     /**
      * add_to_catalog
-     * this function adds new files to an
-     * existing catalog
+     * @param null|array<string, string|bool> $options
+     * @param null|Interactor $interactor
+     * @return int
      */
     public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
@@ -263,7 +264,7 @@ class Catalog_dropbox extends Catalog
         set_time_limit(0);
 
         if ($options != null) {
-            $this->authcode = $options['authcode'];
+            $this->authcode = (string)$options['authcode'];
         }
 
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {

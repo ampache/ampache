@@ -137,7 +137,10 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     abstract public function checkSong(array $song): bool;
 
     /**
-     * Adds new songs to the catalog
+     * add_to_catalog
+     * @param null|array<string, string|bool> $options
+     * @param null|Interactor $interactor
+     * @return int
      */
     public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
