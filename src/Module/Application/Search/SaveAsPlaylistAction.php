@@ -88,11 +88,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
             $playlist    = $this->modelFactory->createPlaylist($playlist_id);
             $playlist->delete_all();
             // different browses could store objects in different ways
-            if (is_array($objects[0])) {
-                $playlist->add_medias($objects);
-            } else {
-                $playlist->add_songs($objects);
-            }
+            $playlist->add_songs($objects);
 
             $this->ui->showConfirmation(
                 T_('No Problem'),

@@ -3365,7 +3365,7 @@ abstract class Catalog extends database_object
      * @param string[] $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
-     * @return array
+     * @return array<string, mixed>
      */
     public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern): array
     {

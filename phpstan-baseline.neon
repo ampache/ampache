@@ -4686,11 +4686,6 @@ parameters:
 			path: src/Module/Util/UtilityFactoryInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:__construct\\(\\) has parameter \\$gatherTypes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_asf\\(\\) has parameter \\$tags with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -4776,16 +4771,6 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_get_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_parse_filename\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_parse_general\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -4802,16 +4787,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:clean_tag_info\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:clean_tag_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:get_metadata_order\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -4837,26 +4812,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:parseGenres\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:parse_mbid\\(\\) has parameter \\$mbid with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:parse_mbid_array\\(\\) has parameter \\$mbid with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:parse_mbid_array\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:parse_pattern\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -4921,22 +4876,12 @@ parameters:
 			path: src/Module/Util/VaInfoInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:clean_tag_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfoInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:get_tag_type\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfoInterface.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:get_tag_type\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfoInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:parse_pattern\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfoInterface.php
 
@@ -5616,11 +5561,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_media_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:process_action\\(\\) has parameter \\$catalogs with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -5946,11 +5886,6 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:_post_process\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:_serialize\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
@@ -5966,11 +5901,6 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_saved\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_total\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
@@ -5982,11 +5912,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_type\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Query\\:\\:\\$_cache type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
 
@@ -6021,16 +5946,6 @@ parameters:
 			path: src/Repository/Model/Search.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:_filter_request\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:_filter_request\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:filter_data\\(\\) has parameter \\$operator with no value type specified in iterable type array\\.$#"
 			count: 2
 			path: src/Repository/Model/Search.php
@@ -6056,27 +5971,12 @@ parameters:
 			path: src/Repository/Model/Search.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:prepare\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:prepare\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:query\\(\\) has parameter \\$search_sql with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:run\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:set_rules\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
