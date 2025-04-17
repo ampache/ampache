@@ -47,7 +47,7 @@ class Recommendation
      * @return SimpleXMLElement
      * @throws LastFmQueryFailedException
      */
-    public static function get_lastfm_results($method, $query): SimpleXMLElement
+    public static function get_lastfm_results(string $method, string $query): SimpleXMLElement
     {
         global $dic;
 
@@ -137,10 +137,8 @@ class Recommendation
 
     /**
      * delete_recommendation_cache
-     * @param string $type
-     * @param int $object_id
      */
-    protected static function delete_recommendation_cache($type, $object_id): void
+    protected static function delete_recommendation_cache(string $type, int $object_id): void
     {
         $cache = self::get_recommendation_cache($type, $object_id);
         if ($cache !== null && array_key_exists('id', $cache)) {
@@ -151,11 +149,19 @@ class Recommendation
 
     /**
      * update_recommendation_cache
+     * Updates the recommendation cache for a given object type and object ID with provided recommendations.
+     *
      * @param string $type
      * @param int $object_id
-     * @param array $recommendations
+     * @param array<array{
+     *     id?: ?int,
+     *     name?: ?string,
+     *     rel?: ?string,
+     *     mbid?: ?string
+     * }> $recommendations
+     * @return void
      */
-    protected static function update_recommendation_cache($type, $object_id, $recommendations): void
+    protected static function update_recommendation_cache(string $type, int $object_id, array $recommendations): void
     {
         if (count($recommendations) > 0) {
             self::delete_recommendation_cache($type, $object_id);
@@ -315,7 +321,7 @@ class Recommendation
      *      mbid?: ?string
      *  }>
      */
-    public static function get_artists_like($artist_id, $limit = 10, $local_only = true): array
+    public static function get_artists_like(int $artist_id, int $limit = 10, bool $local_only = true): array
     {
         if (!AmpConfig::get('lastfm_api_key')) {
             return [];
@@ -411,15 +417,23 @@ class Recommendation
 
     /**
      * get_artist_info_by_name
-     * Returns artist information
-     * @param string $fullname
-     * @return array
+     * Returns artist information by full name.
+     * @param string $fullname The full name of the artist.
+     * @return array{
+     *     summary: ?string,
+     *     placeformed: ?string,
+     *     yearformed: ?string
+     * }
      */
-    public static function get_artist_info_by_name($fullname): array
+    public static function get_artist_info_by_name(string $fullname): array
     {
         $query = 'artist=' . rawurlencode($fullname);
 
-        $results = [];
+        $results = [
+            'summary' => null,
+            'placeformed' => null,
+            'yearformed' => null,
+        ];
 
         try {
             $xml = self::get_lastfm_results('artist.getinfo', $query);
@@ -456,7 +470,7 @@ class Recommendation
      *      megaphoto: ?string
      *  }
      */
-    public static function get_artist_info($artist_id): array
+    public static function get_artist_info(int $artist_id): array
     {
         $artist = new Artist($artist_id);
         $query  = ($artist->mbid)
@@ -542,7 +556,7 @@ class Recommendation
      *     megaphoto: ?string
      * }
      */
-    public static function get_album_info($album_id): array
+    public static function get_album_info(int $album_id): array
     {
         $album = new Album($album_id);
         $query = ($album->mbid)
@@ -586,10 +600,8 @@ class Recommendation
 
     /**
      * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param int $old_object_id
      */
-    public static function migrate($object_type, $old_object_id): void
+    public static function migrate(string $object_type, int $old_object_id): void
     {
         self::delete_recommendation_cache($object_type, $old_object_id);
     }
