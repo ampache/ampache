@@ -25,33 +25,32 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback\Scrobble;
 
+use Ampache\Repository\Model\Song;
 use WpOrg\Requests;
 use Thread;
 use Ampache\Repository\Model\User;
 
 abstract class ScrobblerAsync extends Thread
 {
-    public $user;
-    public $song_info;
+    public User $user;
+    public Song $song;
 
     /**
      * scrobbler_async constructor.
-     * @param $user
-     * @param $song_info
      */
     public function __construct(
-        $user,
-        $song_info
+        User $user,
+        Song $song
     ) {
-        $this->user      = $user;
-        $this->song_info = $song_info;
+        $this->user = $user;
+        $this->song = $song;
     }
 
-    public function run()
+    public function run(): void
     {
         Requests\Autoload::register();
-        if ($this->song_info) {
-            User::save_mediaplay($this->user, $this->song_info);
+        if ($this->song->isNew() === false) {
+            User::save_mediaplay($this->user, $this->song);
         }
     }
 }

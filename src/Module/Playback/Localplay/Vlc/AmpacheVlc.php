@@ -126,9 +126,14 @@ class AmpacheVlc extends localplay_controller
     /**
      * add_instance
      * This takes key'd data and inserts a new VLC instance
-     * @param array $data
+     * @param array{
+     *     name?: string,
+     *     host?: string,
+     *     port?: string,
+     *     password?: string,
+     * } $data
      */
-    public function add_instance($data): void
+    public function add_instance(array $data): void
     {
         $sql     = "INSERT INTO `localplay_vlc` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
         $user_id = (Core::get_global('user') instanceof User)
@@ -141,9 +146,8 @@ class AmpacheVlc extends localplay_controller
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
-     * @param int $uid
      */
-    public function delete_instance($uid): void
+    public function delete_instance(int $uid): void
     {
         $sql = "DELETE FROM `localplay_vlc` WHERE `id` = ?";
         Dba::query($sql, [$uid]);
@@ -153,6 +157,7 @@ class AmpacheVlc extends localplay_controller
      * get_instances
      * This returns a key'd array of the instance information with
      * [UID]=>[NAME]
+     * @return string[]
      */
     public function get_instances(): array
     {
@@ -171,9 +176,14 @@ class AmpacheVlc extends localplay_controller
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
      * @param int $uid
-     * @param array $data
+     * @param array{
+     *     host: string,
+     *     port: string,
+     *     name: string,
+     *     password: string,
+     * } $data
      */
-    public function update_instance($uid, $data): void
+    public function update_instance(int $uid, array $data): void
     {
         $sql = "UPDATE `localplay_vlc` SET `host` = ?, `port` = ?, `name` = ?, `password` = ? WHERE `id` = ?";
         Dba::query($sql, [$data['host'], $data['port'], $data['name'], $data['password'], $uid]);
@@ -183,6 +193,10 @@ class AmpacheVlc extends localplay_controller
      * instance_fields
      * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
      * fields so that we can on-the-fly generate a form
+     * @return array<
+     *     string,
+     *     array{description: string, type: string}
+     * >
      */
     public function instance_fields(): array
     {
@@ -198,6 +212,16 @@ class AmpacheVlc extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all it's variables
+     * @param string|null $instance
+     * @return array{
+     *      id?: int,
+     *      name?: string,
+     *      owner?: int,
+     *      host?: string,
+     *      port?: int,
+     *      password?: string,
+     *      access?: int
+     *  }
      */
     public function get_instance(?string $instance = ''): array
     {
@@ -205,7 +229,19 @@ class AmpacheVlc extends localplay_controller
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_vlc` WHERE `id` = ?" : "SELECT * FROM `localplay_vlc`";
         $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
-        return Dba::fetch_assoc($db_results);
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return [
+                'id' => (int)$row['id'],
+                'name' => $row['name'],
+                'owner' => (int)$row['owner'],
+                'host' => $row['host'],
+                'port' => (int)$row['port'],
+                'password' => $row['password'],
+                'access' => (int)$row['access'],
+            ];
+        }
+
+        return [];
     }
 
     /**
@@ -634,7 +670,11 @@ class AmpacheVlc extends localplay_controller
      */
     public function connect(): bool
     {
-        $options    = self::get_instance();
+        $options = self::get_instance();
+        if ($options === []) {
+            return false;
+        }
+
         $this->_vlc = new VlcPlayer($options['host'], $options['password'], $options['port']);
         // Test our connection by retriving the version, no version in status file, just need to see if returned
         // Not yet working all values returned are true for beta testing purpose

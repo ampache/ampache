@@ -48,9 +48,8 @@ class Stream
      * set_session
      *
      * This overrides the normal session value, without adding another session into the database, should be called with care
-     * @param int|string $sid
      */
-    public static function set_session($sid): void
+    public static function set_session(int|string $sid): void
     {
         if (!empty($sid)) {
             self::$session = (string)$sid;
@@ -637,7 +636,7 @@ class Stream
      *     expire: int
      * }>
      */
-    public static function get_now_playing($user_id = 0): array
+    public static function get_now_playing(int $user_id = 0): array
     {
         $sql = "SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` LEFT JOIN `session` ON `session`.`id` = `np`.`id` ";
 

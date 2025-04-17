@@ -121,9 +121,10 @@ class WebPlayer
 
     /**
      * Check if the playlist is a video playlist.
-     * @param array $urlinfo
+     * @param array<string, string> $urlinfo
+     * @return Media|null
      */
-    public static function get_media_object($urlinfo): ?Media
+    public static function get_media_object(array $urlinfo): ?Media
     {
         if (array_key_exists('id', $urlinfo) && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
             $className = ObjectTypeToClassNameMapper::map($urlinfo['type']);
@@ -133,7 +134,7 @@ class WebPlayer
             return $media;
         }
         if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
-            return new Song_Preview($urlinfo['id']);
+            return new Song_Preview((int)$urlinfo['id']);
         }
 
         return null;
@@ -141,13 +142,13 @@ class WebPlayer
 
     /**
      * Check if the playlist is a video playlist.
-     * @param array $urlinfo
-     * @param array $types
+     * @param array<string, string> $urlinfo
+     * @param array<string, string> $types
      * @param string $file_type
      * @param bool $transcode
-     * @return array
+     * @return array<string, string|null>
      */
-    public static function get_media_types($urlinfo, $types, $file_type, $transcode): array
+    public static function get_media_types(array $urlinfo, array $types, string $file_type, bool $transcode): array
     {
         $types['real'] = ($transcode)
             ? Stream::get_transcode_format($file_type, null, 'webplayer', $urlinfo['type'])
@@ -177,10 +178,11 @@ class WebPlayer
      * Check if we can transcode this file type
      * @param string $media_type
      * @param string $file_type
-     * @param array $types
-     * @param array $urlinfo
+     * @param array<string, string> $types
+     * @param array<string, string> $urlinfo
      * @param string $transcode_cfg
      * @param string $force_type
+     * @return bool
      */
     public static function can_transcode(
         string $media_type,
@@ -234,10 +236,8 @@ class WebPlayer
 
     /**
      * Get add_media javascript.
-     * @param Stream_Playlist $playlist
-     * @param string $callback_container
      */
-    public static function add_media_js($playlist, $callback_container = ''): string
+    public static function add_media_js(Stream_Playlist $playlist, string $callback_container = ''): string
     {
         $transcode_cfg = AmpConfig::get('transcode', 'default');
         $addjs         = "";
@@ -255,10 +255,8 @@ class WebPlayer
 
     /**
      * Get play_next javascript.
-     * @param Stream_Playlist $playlist
-     * @param string $callback_container
      */
-    public static function play_next_js($playlist, $callback_container = ''): string
+    public static function play_next_js(Stream_Playlist $playlist, string $callback_container = ''): string
     {
         $transcode_cfg = AmpConfig::get('transcode', 'default');
         $addjs         = "";

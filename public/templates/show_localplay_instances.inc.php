@@ -30,7 +30,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var LocalPlay $localplay */
 /** @var string[] $instances */
-/** @var list<array{description: string, type: string}> $fields */
+/** @var array<string, array{description: string, type: string}> $fields */
 
 Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
 <table class="tabledata striped-rows">
@@ -46,11 +46,13 @@ Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances');
     <?php foreach ($fields as $key => $field) { ?>
     <td>
         <?php
+        if (isset($instance[$key])) {
             if ($field["type"] != "password") {
-                echo scrub_out($instance[$key]);
+                echo scrub_out((string)$instance[$key]);
             } else {
                 echo "*****";
-            } ?>
+            }
+        } ?>
     </td>
     <?php } ?>
     <td>
