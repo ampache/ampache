@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Search;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -88,7 +89,13 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
             $playlist    = $this->modelFactory->createPlaylist($playlist_id);
             $playlist->delete_all();
             // different browses could store objects in different ways
-            $playlist->add_songs($objects);
+            if (is_array($objects[0])) {
+                /** @var array<array{object_type: string, object_id: int}> $objects */
+                $playlist->add_medias($objects);
+            } else {
+                /** @var int[] $objects */
+                $playlist->add_songs($objects);
+            }
 
             $this->ui->showConfirmation(
                 T_('No Problem'),

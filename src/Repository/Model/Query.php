@@ -888,7 +888,7 @@ class Query
     /**
      * get_saved
      * This looks in the session for the saved stuff and returns what it finds.
-     * @return int[]
+     * @return int[]|array<array{object_id: int,object_type: string,track_id: int,track: int}>
      */
     public function get_saved(): array
     {
@@ -940,7 +940,7 @@ class Query
         foreach ($results as $data) {
             // Make sure that this object passes the logic filter
             if (array_key_exists('id', $data)) {
-                $filtered[] = $data['id'];
+                $filtered[] = (int)$data['id'];
             }
         }
 

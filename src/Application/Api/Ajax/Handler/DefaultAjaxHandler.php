@@ -101,14 +101,18 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             $objects = $browse->get_saved();
                             switch ($browse->get_type()) {
                                 case 'album':
-                                    foreach ($objects as $object_id) {
-                                        $songs = array_merge($songs, $this->getSongRepository()->getByAlbum($object_id));
+                                    foreach ($objects as $object) {
+                                        $songs = (is_array($object))
+                                            ? array_merge($songs, $this->getSongRepository()->getByAlbum($object['object_id']))
+                                            : array_merge($songs, $this->getSongRepository()->getByAlbum($object));
                                     }
 
                                     break;
                                 case 'artist':
-                                    foreach ($objects as $object_id) {
-                                        $songs = array_merge($songs, $this->getSongRepository()->getAllByArtist($object_id));
+                                    foreach ($objects as $object) {
+                                        $songs = (is_array($object))
+                                            ? array_merge($songs, $this->getSongRepository()->getAllByArtist($object['object_id']))
+                                            : array_merge($songs, $this->getSongRepository()->getAllByArtist($object));
                                     }
 
                                     break;
@@ -121,8 +125,8 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                                 shuffle($songs);
                             }
 
-                            foreach ($songs as $object_id) {
-                                $user->playlist?->add_object($object_id, LibraryItemEnum::SONG);
+                            foreach ($songs as $object) {
+                                $user->playlist?->add_object((is_array($object)) ? $object['object_id'] : $object, LibraryItemEnum::SONG);
                             }
 
                             break;
