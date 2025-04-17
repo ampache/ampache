@@ -219,14 +219,14 @@ class AmpacheHttpq extends localplay_controller
      * This returns a single instance and all its variables
      * @param string|null $instance
      * @return array{
-     *      id?: int,
-     *      name?: string,
-     *      owner?: int,
-     *      host?: string,
-     *      port?: int,
-     *      password?: string,
-     *      access?: int
-     *  }
+     *     id?: int,
+     *     name?: string,
+     *     owner?: int,
+     *     host?: string,
+     *     port?: int,
+     *     password?: string,
+     *     access?: int
+     * }
      */
     public function get_instance(?string $instance = ''): array
     {

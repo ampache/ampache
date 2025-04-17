@@ -145,7 +145,10 @@ class Catalog_Seafile extends Catalog
      * catalog_fields
      *
      * Return the necessary settings fields for creating a new Seafile catalog
-     * @return array
+     * @return array<
+     *     string,
+     *     array{description: string, type: string, value: scalar}
+     * >
      */
     public function catalog_fields(): array
     {
@@ -582,7 +585,7 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function check_catalog_proc(): array
     {

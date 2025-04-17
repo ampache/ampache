@@ -44,7 +44,17 @@ final class ArtistSearch implements SearchInterface
     /**
      * Handles the generation of the SQL for artist searches.
      * @param Search $search
-     * @return array
+     * @return array{
+     *     base: string,
+     *     join: array<string, bool>,
+     *     where: string[],
+     *     where_sql: string,
+     *     table: array<string, string>,
+     *     table_sql: string,
+     *     group_sql: string,
+     *     having_sql: string,
+     *     parameters: array<int, mixed>,
+     * }
      */
     public function getSql(
         Search $search

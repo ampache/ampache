@@ -149,11 +149,8 @@ final class Session implements SessionInterface
      * write
      *
      * This saves the session information into the database.
-     * @param $key
-     * @param $value
-     * @param bool $perpetual
      */
-    public static function write($key, $value, $perpetual = false): bool
+    public static function write(string $key, float|bool|int|string $value, bool $perpetual = false): bool
     {
         if (defined('NO_SESSION_UPDATE')) {
             return true;
@@ -174,9 +171,8 @@ final class Session implements SessionInterface
      * destroy
      *
      * This removes the specified session from the database.
-     * @param string $key
      */
-    public static function destroy($key): bool
+    public static function destroy(string $key): bool
     {
         if (!strlen((string)$key)) {
             return false;
@@ -242,9 +238,8 @@ final class Session implements SessionInterface
      * read
      *
      * This takes a key and returns the data from the database.
-     * @param $key
      */
-    public static function read($key): string
+    public static function read(string $key): string
     {
         return self::_read($key, 'value');
     }
@@ -253,10 +248,8 @@ final class Session implements SessionInterface
      * _read
      *
      * This returns the specified column from the session row.
-     * @param string $key
-     * @param string $column
      */
-    private static function _read($key, $column): string
+    private static function _read(string $key, string $column): string
     {
         $sql = (AmpConfig::get('perpetual_api_session'))
             ? "SELECT * FROM `session` WHERE `id` = ? AND ((`expire` = 0 AND `type` = 'api') OR `expire` > ?);"
@@ -278,9 +271,8 @@ final class Session implements SessionInterface
      * username
      *
      * This returns the username associated with a session ID, if any
-     * @param $key
      */
-    public static function username($key): string
+    public static function username(string $key): string
     {
         return self::_read($key, 'username');
     }
@@ -289,9 +281,8 @@ final class Session implements SessionInterface
      * agent
      *
      * This returns the agent associated with a session ID, if any
-     * @param string $key
      */
-    public static function agent($key): string
+    public static function agent(string $key): string
     {
         return self::_read($key, 'agent');
     }
@@ -301,19 +292,29 @@ final class Session implements SessionInterface
      * This is called when you want to create a new session
      * it takes care of setting the initial cookie, and inserting the first
      * chunk of data, nifty ain't it!
-     * @param array $data
+     * @param array{
+     *     type?: string,
+     *     apikey?: string,
+     *     username?: ?string,
+     *     value?: scalar,
+     *     geo_latitude?: float,
+     *     geo_longitude?: float,
+     *     geo_name?: string,
+     *     agent?: string,
+     *     sid?: string,
+     * } $data
      */
-    public static function create($data): string
+    public static function create(array $data): string
     {
         $type = $data['type'] ?? '';
         // Regenerate the session ID to prevent fixation
         switch ($type) {
             case 'header':
                 $type = 'api';
-                $key  = $data['apikey'];
+                $key  = $data['apikey'] ?? false;
                 break;
             case 'api':
-                $key = (isset($data['apikey'])) ? md5(((string) $data['apikey'] . md5(uniqid((string) rand(), true)))) : md5(uniqid((string) rand(), true));
+                $key = (isset($data['apikey'])) ? md5(($data['apikey'] . md5(uniqid((string) rand(), true)))) : md5(uniqid((string) rand(), true));
                 break;
             case 'stream':
                 $key = (isset($data['sid'])) ? $data['sid'] : md5(uniqid((string)rand(), true));
@@ -326,6 +327,12 @@ final class Session implements SessionInterface
                 $key = session_id();
                 break;
         } // end switch on data type
+
+        if (!$key) {
+            debug_event(self::class, 'Session creation failed', 1);
+
+            return '';
+        }
 
         if (self::exists($type, $key)) {
             debug_event(self::class, $type . ' session already exists.', 3);
@@ -435,12 +442,9 @@ final class Session implements SessionInterface
      * exists
      *
      * This checks to see if the specified session of the specified type
-     * exists
-     * based on the type.
-     * @param string $type
-     * @param string $key
+     * exists based on the type.
      */
-    public static function exists($type, $key): bool
+    public static function exists(string $type, string $key): bool
     {
         // didn't pass an auth key so don't let them in!
         if (!$key) {
@@ -559,12 +563,8 @@ final class Session implements SessionInterface
     /**
      * update_geolocation
      * Update session geolocation.
-     * @param string $sid
-     * @param float $latitude
-     * @param float $longitude
-     * @param string $name
      */
-    public static function update_geolocation($sid, $latitude, $longitude, $name): void
+    public static function update_geolocation(string $sid, float $latitude, float $longitude, string $name): void
     {
         if ($sid) {
             $sql = "UPDATE `session` SET `geo_latitude` = ?, `geo_longitude` = ?, `geo_name` = ? WHERE `id` = ?";
@@ -576,9 +576,13 @@ final class Session implements SessionInterface
      * get_geolocation
      * Get session geolocation.
      * @param string $sid
-     * @return array
+     * @return array{
+     *     latitude?: float,
+     *     longitude?: float,
+     *     name?: string
+     * }
      */
-    public static function get_geolocation($sid): array
+    public static function get_geolocation(string $sid): array
     {
         $location = [];
 
@@ -586,8 +590,8 @@ final class Session implements SessionInterface
             $sql        = "SELECT `geo_latitude`, `geo_longitude`, `geo_name` FROM `session` WHERE `id` = ?";
             $db_results = Dba::read($sql, [$sid]);
             if ($row = Dba::fetch_assoc($db_results)) {
-                $location['latitude']  = $row['geo_latitude'];
-                $location['longitude'] = $row['geo_longitude'];
+                $location['latitude']  = (float)$row['geo_latitude'];
+                $location['longitude'] = (float)$row['geo_longitude'];
                 $location['name']      = $row['geo_name'];
             }
         }
@@ -598,9 +602,8 @@ final class Session implements SessionInterface
     /**
      * get_api_version
      * Get session geolocation.
-     * @param string $sid
      */
-    public static function get_api_version($sid): int
+    public static function get_api_version(string $sid): int
     {
         $api_version = Api::DEFAULT_VERSION;
 
@@ -694,9 +697,8 @@ final class Session implements SessionInterface
      * It must be used for information only.
      *
      * It also creates a cookie to store used language.
-     * @param string $username
      */
-    public static function create_user_cookie($username): void
+    public static function create_user_cookie(string $username): void
     {
         $session_name   = AmpConfig::get('session_name');
         $cookie_options = [
@@ -715,9 +717,8 @@ final class Session implements SessionInterface
      * create_remember_cookie
      *
      * This function just creates the remember me cookie, nothing special.
-     * @param string $username
      */
-    public static function create_remember_cookie($username): void
+    public static function create_remember_cookie(string $username): void
     {
         $session_name    = AmpConfig::get('session_name');
         $remember_length = (int)(time() + AmpConfig::get('remember_length', 604800));
@@ -742,9 +743,8 @@ final class Session implements SessionInterface
      * create_preference_cookies
      *
      * Store default cookie for preferences on login
-     * @param User $user
      */
-    public static function create_preference_cookies($user): void
+    public static function create_preference_cookies(User $user): void
     {
         $cookie_options = [
             'expires' => (int)AmpConfig::get('cookie_life'),

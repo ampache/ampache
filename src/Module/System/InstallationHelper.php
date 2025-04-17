@@ -36,16 +36,15 @@ final class InstallationHelper implements InstallationHelperInterface
 {
     /**
      * splits up a standard SQL dump file into distinct sql queries
-     * @param string $sql
      */
-    private function split_sql($sql): array
+    private function split_sql(string $sql): array
     {
-        $sql       = trim((string) $sql);
+        $sql       = trim($sql);
         $sql       = (string)preg_replace("/\n--[^\n]*\n/", "\n", $sql);
         $buffer    = [];
         $ret       = [];
         $in_string = false;
-        for ($count = 0; $count < strlen((string) $sql) - 1; $count++) {
+        for ($count = 0; $count < strlen($sql) - 1; $count++) {
             if ($sql[$count] == ";" && !$in_string) {
                 $ret[] = substr($sql, 0, $count);
                 $sql   = substr($sql, $count + 1);
@@ -137,13 +136,7 @@ final class InstallationHelper implements InstallationHelperInterface
         return (strpos($_SERVER['SERVER_SOFTWARE'], "Apache/") === 0);
     }
 
-    /**
-     * @param string $file
-     * @param $web_path
-     * @param bool $fix
-     * @return bool|string
-     */
-    public function install_check_rewrite_rules($file, $web_path, $fix = false)
+    public function install_check_rewrite_rules(string $file, string $web_path, bool $fix = false): bool|string
     {
         if (!is_readable($file)) {
             $file .= '.dist';
@@ -184,12 +177,7 @@ final class InstallationHelper implements InstallationHelperInterface
         return $valid;
     }
 
-    /**
-     * @param string $file
-     * @param $web_path
-     * @param bool $download
-     */
-    public function install_rewrite_rules($file, $web_path, $download): bool
+    public function install_rewrite_rules(string $file, string $web_path, bool $download): bool
     {
         $final = $this->install_check_rewrite_rules($file, $web_path, true);
         if (empty($final)) {
@@ -223,22 +211,15 @@ final class InstallationHelper implements InstallationHelperInterface
      * install_insert_db
      *
      * Inserts the database using the values from Config.
-     * @param string $db_user
-     * @param string $db_pass
-     * @param bool $create_db
-     * @param bool $overwrite
-     * @param bool $create_tables
-     * @param string $charset
-     * @param string $collation
      */
     public function install_insert_db(
-        $db_user = null,
-        $db_pass = null,
-        $create_db = true,
-        $overwrite = false,
-        $create_tables = true,
-        $charset = 'utf8mb4',
-        $collation = 'utf8mb4_unicode_ci'
+        ?string $db_user = null,
+        ?string $db_pass = null,
+        bool $create_db = true,
+        bool $overwrite = false,
+        bool $create_tables = true,
+        string $charset = 'utf8mb4',
+        string $collation = 'utf8mb4_unicode_ci'
     ): bool {
         $database = (string) AmpConfig::get('database_name');
         // Make sure that the database name is valid
@@ -384,11 +365,9 @@ final class InstallationHelper implements InstallationHelperInterface
 
     /**
      * Attempts to write out the config file or offer it as a download.
-     * @param bool $download
-     * @return bool
      * @throws Exception
      */
-    public function install_create_config($download = false): bool
+    public function install_create_config(bool $download = false): bool
     {
         $config_file = __DIR__ . '/../../../config/ampache.cfg.php';
 
@@ -445,11 +424,8 @@ final class InstallationHelper implements InstallationHelperInterface
 
     /**
      * this creates your initial account and sets up the preferences for the -1 user and you
-     * @param string $username
-     * @param string $password
-     * @param string $password2
      */
-    public function install_create_account($username, $password, $password2): bool
+    public function install_create_account(string $username, string $password, string $password2): bool
     {
         if (!strlen((string) $username) || !strlen((string) $password)) {
             AmpError::add('general', T_('No username or password was specified'));
@@ -491,10 +467,7 @@ final class InstallationHelper implements InstallationHelperInterface
         return true;
     }
 
-    /**
-     * @param string $command
-     */
-    private function command_exists($command): bool
+    private function command_exists(string $command): bool
     {
         if (!function_exists('proc_open')) {
             return false;
@@ -526,7 +499,7 @@ final class InstallationHelper implements InstallationHelperInterface
 
     /**
      * get transcode modes available on this machine.
-     * @return array
+     * @return string[]
      */
     public function install_get_transcode_modes(): array
     {
@@ -542,10 +515,7 @@ final class InstallationHelper implements InstallationHelperInterface
         return $modes;
     }
 
-    /**
-     * @param $mode
-     */
-    public function install_config_transcode_mode($mode)
+    public function install_config_transcode_mode(string $mode): void
     {
         $trconfig = [
             'encode_target' => 'mp3',
@@ -569,10 +539,7 @@ final class InstallationHelper implements InstallationHelperInterface
         }
     }
 
-    /**
-     * @param $case
-     */
-    public function install_config_use_case($case)
+    public function install_config_use_case(string $case): void
     {
         $trconfig = [
             'use_auth' => 'true',
@@ -638,9 +605,9 @@ final class InstallationHelper implements InstallationHelperInterface
     }
 
     /**
-     * @param array $backends
+     * @param string[] $backends
      */
-    public function install_config_backends(array $backends)
+    public function install_config_backends(array $backends): void
     {
         $dbconfig = [
             'subsonic_backend' => '0',
@@ -763,7 +730,7 @@ final class InstallationHelper implements InstallationHelperInterface
      * @param string|string[] $str
      * @return string|string[]
      */
-    private function escape_ini($str)
+    private function escape_ini(array|string $str): array|string
     {
         return str_replace('"', '\"', $str);
     }

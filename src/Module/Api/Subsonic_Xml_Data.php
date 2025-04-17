@@ -208,13 +208,13 @@ class Subsonic_Xml_Data
      * addIndex
      * @param SimpleXMLElement $xml
      * @param list<array{
-     *      id: int,
-     *      f_name: string,
-     *      name: string,
-     *      album_count: int,
-     *      catalog_id: int,
-     *      has_art: int
-     *  }> $artists
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * }> $artists
      */
     private static function addIndex(SimpleXMLElement $xml, array $artists): void
     {
@@ -273,13 +273,13 @@ class Subsonic_Xml_Data
      * addArtists
      * @param SimpleXMLElement $xml
      * @param list<array{
-     *       id: int,
-     *       f_name: string,
-     *       name: string,
-     *       album_count: int,
-     *       catalog_id: int,
-     *       has_art: int
-     *   }> $artists
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * }> $artists
      */
     public static function addArtists(SimpleXMLElement $xml, array $artists): void
     {

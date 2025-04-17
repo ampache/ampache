@@ -83,7 +83,10 @@ class WebPlayer
      * @param string $force_type
      * @param array $urlinfo
      * @param string $transcode_cfg
-     * @return array
+     * @return array{
+     *     real: string,
+     *     player: string,
+     * }
      */
     protected static function get_types(
         Stream_Url $item,
@@ -108,12 +111,12 @@ class WebPlayer
         } else {
             $ext = pathinfo($item->url, PATHINFO_EXTENSION);
             if (!empty($ext)) {
-                $types['real'] = $ext;
+                $types['real'] = (string)$ext;
             }
         }
 
-        if (empty($types['player'])) {
-            $types['player'] = $types['real'];
+        if (!$types['player']) {
+            $types['player'] = (string)$types['real'];
         }
 
         return $types;
@@ -146,32 +149,39 @@ class WebPlayer
      * @param array<string, string> $types
      * @param string $file_type
      * @param bool $transcode
-     * @return array<string, string|null>
+     * @return array{
+     *     real: string,
+     *     player: string,
+     * }
      */
     public static function get_media_types(array $urlinfo, array $types, string $file_type, bool $transcode): array
     {
-        $types['real'] = ($transcode)
-            ? Stream::get_transcode_format($file_type, null, 'webplayer', $urlinfo['type'])
+        $player = $file_type;
+        $real   = ($transcode)
+            ? Stream::get_transcode_format($file_type, null, 'webplayer', $urlinfo['type']) ?? $file_type
             : $file_type;
 
         if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
-            if ($types['real'] == "ogg" || $types['real'] == "opus") {
-                $types['player'] = "oga";
-            } elseif ($types['real'] == "mp4") {
-                $types['player'] = "m4a";
+            if ($real == "ogg" || $real == "opus") {
+                $player = "oga";
+            } elseif ($real == "mp4") {
+                $player = "m4a";
             }
         }
         if ($urlinfo['type'] == 'video') {
-            if ($types['real'] == "ogg") {
-                $types['player'] = "ogv";
-            } elseif ($types['real'] == "webm") {
-                $types['player'] = "webmv";
-            } elseif ($types['real'] == "mp4") {
-                $types['player'] = "m4v";
+            if ($real == "ogg") {
+                $player = "ogv";
+            } elseif ($real == "webm") {
+                $player = "webmv";
+            } elseif ($real == "mp4") {
+                $player = "m4v";
             }
         }
 
-        return $types;
+        return [
+            'real' => $real,
+            'player' => $player
+        ];
     }
 
     /**

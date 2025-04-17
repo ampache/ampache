@@ -127,7 +127,10 @@ class Catalog_remote extends Catalog
     }
 
     /**
-     * @return array
+     * @return array<
+     *     string,
+     *     array{description: string, type: string}
+     * >
      */
     public function catalog_fields(): array
     {
@@ -451,7 +454,7 @@ class Catalog_remote extends Catalog
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function check_catalog_proc(): array
     {
@@ -588,11 +591,11 @@ class Catalog_remote extends Catalog
     /**
      * @param Podcast_Episode|Song|Video $media
      * @return null|array{
-     *   file_path: string,
-     *   file_name: string,
-     *   file_size: int,
-     *   file_type: string
-     *  }
+     *     file_path: string,
+     *     file_name: string,
+     *     file_size: int,
+     *     file_type: string
+     * }
      */
     public function prepare_media(Podcast_Episode|Video|Song $media): ?array
     {

@@ -223,14 +223,14 @@ class AmpacheXbmc extends localplay_controller
      * This returns a single instance and all it's variables
      * @param string|null $instance
      * @return array{
-     *      id?: int,
-     *      name?: string,
-     *      owner?: int,
-     *      host?: string,
-     *      port?: int,
-     *      user?: string,
-     *      pass?: string
-     *  }
+     *     id?: int,
+     *     name?: string,
+     *     owner?: int,
+     *     host?: string,
+     *     port?: int,
+     *     user?: string,
+     *     pass?: string
+     * }
      */
     public function get_instance(?string $instance = ''): array
     {

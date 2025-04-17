@@ -242,6 +242,9 @@ abstract class Catalog extends database_object
      */
     abstract public function clean_catalog_proc(?Interactor $interactor = null): int;
 
+    /**
+     * @return string[]
+     */
     abstract public function check_catalog_proc(): array;
 
     abstract public function move_catalog_proc(string $new_path): bool;
@@ -251,6 +254,12 @@ abstract class Catalog extends database_object
      */
     abstract public function cache_catalog_proc(): bool;
 
+    /**
+     * @return array<
+     *     string,
+     *     array{description: string, type: string, value?: scalar}
+     * >
+     */
     abstract public function catalog_fields(): array;
 
     /**

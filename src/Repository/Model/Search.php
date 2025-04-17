@@ -1942,6 +1942,18 @@ class Search extends playlist_object
      * to_sql
      *
      * Call the appropriate real function.
+     *
+     * @return array{
+     *     base: string,
+     *     join: array<string, bool>,
+     *     where: string[],
+     *     where_sql: string,
+     *     table: array<string, string>,
+     *     table_sql: string,
+     *     group_sql: string,
+     *     having_sql: string,
+     *     parameters: array<int, mixed>,
+     * }
      */
     public function to_sql(): array
     {

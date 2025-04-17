@@ -626,9 +626,9 @@ class LocalPlay
      * This loads the fields from the Localplay
      * player and returns them
      * @return array<
-     *      string,
-     *      array{description: string, type: string}
-     *  >
+     *     string,
+     *     array{description: string, type: string}
+     * >
      */
     public function get_instance_fields(): array
     {

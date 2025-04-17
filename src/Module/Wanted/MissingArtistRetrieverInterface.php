@@ -35,10 +35,10 @@ interface MissingArtistRetrieverInterface
      * @param string $musicBrainzId mbid of the artist
      *
      * @return null|array{
-     *   mbid: string,
-     *   name: string,
-     *   link: string
-     *  }
+     *     mbid: string,
+     *     name: string,
+     *     link: string
+     * }
      */
     public function retrieve(string $musicBrainzId): ?array;
 }
