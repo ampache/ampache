@@ -208,8 +208,10 @@ class Upnp_Api
     }
 
     /**
-     * @param $data
-     * @return array
+     * Extracts headers from a given data string and returns them as an associative array.
+     *
+     * @param string $data The raw data string containing the headers to process.
+     * @return array An associative array of headers where keys are header names and values are their corresponding values.
      */
     public static function get_headers($data): array
     {
@@ -234,8 +236,8 @@ class Upnp_Api
     }
 
     /**
-     * @param $data
-     * @param $address
+     * @param string $data
+     * @param string $address
      * @throws Exception
      */
     public static function discovery_request($data, $address): void
@@ -547,18 +549,18 @@ class Upnp_Api
         $prmResponseType = 'u:BrowseResponse',
         $prmUpdateID = '0'
     ): DOMDocument {
-        /*
-         * $prmDIDL is DIDL XML string
-         * XML-Layout:
-         *
-         *        -s:Envelope
-         *            -s:Body
-         *                -u:BrowseResponse
-         *                    Result (DIDL)
-         *                    NumberReturned
-         *                    TotalMatches
-         *                    UpdateID
-         */
+        /**
+        * $prmDIDL is DIDL XML string
+        * XML-Layout:
+        *
+        *        -s:Envelope
+        *            -s:Body
+        *                -u:BrowseResponse
+        *                    Result (DIDL)
+        *                    NumberReturned
+        *                    TotalMatches
+        *                    UpdateID
+        */
         $doc               = new DOMDocument('1.0', 'utf-8');
         $doc->formatOutput = true;
         $ndEnvelope        = $doc->createElementNS('http://schemas.xmlsoap.org/soap/envelope/', 's:Envelope');
@@ -1454,12 +1456,12 @@ class Upnp_Api
      */
     private static function _replaceSpecialSymbols($title): string
     {
-        /*
-         * replace non letter or digits
-         * 17 Oct. patched this out because it's changing the titles of tracks so that
-         * when the device comes to play and searches for songs belonging to the album, the
-         * album is no longer found as a match
-         */
+        /**
+        * replace non letter or digits
+        * 17 Oct. patched this out because it's changing the titles of tracks so that
+        * when the device comes to play and searches for songs belonging to the album, the
+        * album is no longer found as a match
+        */
         //debug_event(self::class, 'replace <<< ' . $title, 5);
         //$title = preg_replace('~[^\\pL\d\.:\s\(\)\.\,\'\"]+~u', '-', $title);
         //debug_event(self::class, 'replace >>> ' . $title, 5);

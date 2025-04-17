@@ -1166,21 +1166,6 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:discovery_request\\(\\) has parameter \\$address with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:discovery_request\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:get_headers\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:get_headers\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
@@ -4431,36 +4416,6 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_utility.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:__construct\\(\\) has parameter \\$base with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:copy\\(\\) has parameter \\$fs_id with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:copy\\(\\) has parameter \\$par with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:copy\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:create\\(\\) has parameter \\$fs_id with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:create\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:data\\(\\) has parameter \\$fs_id with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/FileSystem.php
@@ -4471,52 +4426,12 @@ parameters:
 			path: src/Module/Util/FileSystem.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:lst\\(\\) has parameter \\$fs_id with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:lst\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:move\\(\\) has parameter \\$fs_id with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:move\\(\\) has parameter \\$par with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:move\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/FileSystem.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:real\\(\\) has parameter \\$path with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:remove\\(\\) has parameter \\$fs_id with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:remove\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:rename\\(\\) has parameter \\$fs_id with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:rename\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/FileSystem.php
 
@@ -5191,16 +5106,6 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthUtil.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:get_artist_info_by_name\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/Recommendation.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:update_recommendation_cache\\(\\) has parameter \\$recommendations with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/Recommendation.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Slideshow\\:\\:getCurrentSlideshow\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/Slideshow.php
@@ -5217,11 +5122,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:createPreferenceInput\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:format_bytes\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Ui.php
 
