@@ -924,7 +924,7 @@ class Query
      * get_objects
      * This gets an array of the ids of the objects that we are
      * currently browsing by it applies the sql and logic based filters
-     * @return int[]
+     * @return list<int|string>
      */
     public function get_objects(): array
     {
@@ -940,7 +940,7 @@ class Query
         foreach ($results as $data) {
             // Make sure that this object passes the logic filter
             if (array_key_exists('id', $data)) {
-                $filtered[] = (int)$data['id'];
+                $filtered[] = $data['id'];
             }
         }
 
