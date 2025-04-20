@@ -667,7 +667,6 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        $date        = time();
         $this->count = 0;
         $chunk_size  = 10000;
 
@@ -750,7 +749,7 @@ class Catalog_local extends Catalog
 
         // No limit set OR we set a limit and we didn't find anything so update the last_update time
         if ($limit === 0 || ($update_time > 0 && $total === 0)) {
-            $this->update_last_update($date);
+            $this->update_last_update(time());
         }
 
         return $this->count;
@@ -768,8 +767,8 @@ class Catalog_local extends Catalog
     {
         $count = $chunk * $chunk_size;
         $sql   = match ($tableName) {
-            'album' => "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? AND song.update_time < " . $this->last_update . " GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT $count, $chunk_size",
-            default => "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `$tableName`.`file` DESC LIMIT $count, $chunk_size",
+            'album' => "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? AND (`song`.`update_time` IS NULL OR song.update_time < " . $this->last_update . ") GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC $chunk_size",
+            default => "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? AND (`$tableName`.`update_time` IS NULL OR `$tableName`.`update_time` < `catalog`.`last_update`) ORDER BY `$tableName`.`file` DESC LIMIT $chunk_size",
         };
 
         //debug_event(self::class, '_verify_chunk (' . $chunk . ') ' . $sql. ' ' . print_r($params, true), 5);
@@ -805,6 +804,19 @@ class Catalog_local extends Catalog
                 AmpError::add('general', sprintf(T_("The file couldn't be read. Does it exist? %s"), $row['file']));
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
                 continue;
+            }
+            if ($verify_by_time && $tableName === 'song') {
+                $file_time = filemtime($row['file']);
+                if ($file_time === false) {
+                    debug_event('local.catalog', 'Unable to get file modification time for ' . $row['file'], 3);
+                    continue;
+                }
+                // check the modification time on the file to see if it's worth checking the tags.
+                if ((int)($row['min_update_time'] ?? 0) > $file_time) {
+                    //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
+                    Song::update_utime($row['id']);
+                    continue;
+                }
             }
 
             if ($verify_by_time && $tableName !== 'album') {

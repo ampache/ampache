@@ -100,7 +100,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                     break;
             }
             $interactor->info(
-                sprintf(T_('File count: %d'), count($file_ids)),
+                sprintf(T_('Number of files in the database inside folder: %d'), count($file_ids)),
                 true
             );
             foreach ($file_ids as $file_id) {

@@ -1323,12 +1323,11 @@ abstract class Catalog extends database_object
             $where_sql = 'AND';
         }
 
-        if ($update_time > 0) {
-            $sql .= ($table === 'album')
-                ? $where_sql . " (`song`.`update_time` IS NULL OR `song`.`update_time` <= ?) "
-                : $where_sql . " (`update_time` IS NULL OR `update_time` <= ?) ";
-            $params[] = $update_time;
-        }
+        $sql .= ($table === 'album')
+            ? $where_sql . "(`song`.`update_time` IS NULL OR `song`.`update_time` < ?) "
+            : $where_sql . "(`update_time` IS NULL OR `update_time` < ?) ";
+        $params[] = $update_time;
+
 
         $sql .= ($limit > 0)
             ? 'LIMIT ' . (int)$limit . ') AS `table_count`;'
