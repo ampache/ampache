@@ -99,6 +99,10 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                     $className = Song::class;
                     break;
             }
+            $interactor->info(
+                sprintf(T_('Number of files in the database inside folder: %d'), count($file_ids)),
+                true
+            );
             foreach ($file_ids as $file_id) {
                 /** @var Song|Podcast_Episode|Video $className */
                 $media     = new $className($file_id);
