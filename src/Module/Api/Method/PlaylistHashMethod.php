@@ -47,6 +47,14 @@ final class PlaylistHashMethod
      * This returns the md5 hash for the songs in a playlist
      *
      * filter = (string) UID of playlist
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function playlist_hash(array $input, User $user): bool
     {

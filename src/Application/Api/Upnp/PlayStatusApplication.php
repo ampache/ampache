@@ -41,6 +41,10 @@ final class PlayStatusApplication implements ApplicationInterface
         // get current UPnP player instance
         $controller = new AmpacheUPnP();
         $instance   = $controller->get_instance();
+        if ($instance === []) {
+            die("No UPnP instance found");
+        }
+
         echo "UPnP instance = " . $instance['name'] . "\n";
 
         $deviceDescr = $instance['url'];

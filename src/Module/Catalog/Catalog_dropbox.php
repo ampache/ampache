@@ -140,7 +140,10 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @return array
+     * @return array<
+     *     string,
+     *     array{description: string, type: string, value?: scalar}
+     * >
      */
     public function catalog_fields(): array
     {
@@ -254,17 +257,17 @@ class Catalog_dropbox extends Catalog
 
     /**
      * add_to_catalog
-     * this function adds new files to an
-     * existing catalog
-     * @param array $options
+     * @param null|array<string, string|bool> $options
+     * @param null|Interactor $interactor
+     * @return int
      */
-    public function add_to_catalog($options = null, ?Interactor $interactor = null): int
+    public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
         // Prevent the script from timing out
         set_time_limit(0);
 
         if ($options != null) {
-            $this->authcode = $options['authcode'];
+            $this->authcode = (string)$options['authcode'];
         }
 
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
@@ -633,7 +636,7 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function check_catalog_proc(): array
     {
@@ -643,9 +646,8 @@ class Catalog_dropbox extends Catalog
     /**
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
-     * @param string $new_path
      */
-    public function move_catalog_proc($new_path): bool
+    public function move_catalog_proc(string $new_path): bool
     {
         return false;
     }
@@ -691,9 +693,9 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @param string $file_path
+     * get_rel_path
      */
-    public function get_rel_path($file_path): string
+    public function get_rel_path(string $file_path): string
     {
         $path = strpos($file_path, "|");
         if ($path !== false) {
@@ -712,16 +714,16 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @param Song|Podcast_Episode|Video $media
-     *
+     * @param Podcast_Episode|Song|Video $media
      * @return array{
-     *  file_path: string,
-     *  file_name: string,
-     *  file_size: int,
-     *  file_type: string
+     *     file_path: string,
+     *     file_name: string,
+     *     file_size: int,
+     *     file_type: string
      * }
+     * @throws DropboxClientException
      */
-    public function prepare_media($media): array
+    public function prepare_media(Podcast_Episode|Video|Song $media): array
     {
         $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
         $dropbox = new Dropbox($app);
@@ -760,7 +762,7 @@ class Catalog_dropbox extends Catalog
      * @return bool
      * @throws DropboxClientException
      */
-    public function gather_art($songs = null, $videos = null, ?Interactor $interactor = null): bool
+    public function gather_art(array $songs = null, $videos = null, ?Interactor $interactor = null): bool
     {
         // Make sure they've actually got methods
         $art_order = AmpConfig::get('art_order');

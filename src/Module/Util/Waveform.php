@@ -68,12 +68,9 @@ class Waveform
 {
     /**
      * Get a song or podcast_episode waveform.
-     * @param Song|Podcast_Episode $media
-     * @param string $object_type
-     * @return null|string
      * @throws RuntimeException
      */
-    public static function get($media, string $object_type): ?string
+    public static function get(Podcast_Episode|Song $media, string $object_type): ?string
     {
         $waveform = null;
 
@@ -108,7 +105,7 @@ class Waveform
 
                                 $transcode_settings = $media->get_transcode_settings($transcode_to);
                                 $transcoder         = Stream::start_transcode($media, $transcode_settings);
-                                if (!is_array($transcoder)) {
+                                if (empty($transcoder)) {
                                     return null;
                                 }
 
@@ -162,10 +159,8 @@ class Waveform
 
     /**
      * Return full path of the Waveform file.
-     * @param int $object_id
-     * @param string $object_type
      */
-    public static function get_filepath($object_id, $object_type): ?string
+    public static function get_filepath(int $object_id, string $object_type): ?string
     {
         $path = AmpConfig::get('local_metadata_dir');
         if (!$path) {
@@ -192,10 +187,8 @@ class Waveform
 
     /**
      * Return content of a Waveform file.
-     * @param int $object_id
-     * @param string $object_type
      */
-    public static function get_from_file($object_id, $object_type): ?string
+    public static function get_from_file(int $object_id, string $object_type): ?string
     {
         $file = self::get_filepath($object_id, $object_type);
         if (!empty($file) && file_exists($file)) {
@@ -212,11 +205,8 @@ class Waveform
 
     /**
      * Save content of a Waveform into a file.
-     * @param int $object_id
-     * @param string $object_type
-     * @param string $waveform
      */
-    public static function save_to_file($object_id, $object_type, $waveform): void
+    public static function save_to_file(int $object_id, string $object_type, string $waveform): void
     {
         $file = self::get_filepath($object_id, $object_type);
         if (!empty($file)) {
@@ -226,9 +216,8 @@ class Waveform
 
     /**
      * findValues
-     * @return float|int
      */
-    protected static function findValues(string $byte1, string $byte2)
+    protected static function findValues(string $byte1, string $byte2): float|int
     {
         $byte1 = hexdec(bin2hex($byte1));
         $byte2 = hexdec(bin2hex($byte2));
@@ -240,9 +229,9 @@ class Waveform
      * Great function slightly modified as posted by Minux at
      * http://forums.clantemplates.com/showthread.php?t=133805
      * @param string $input
-     * @return array
+     * @return array{float|int, float|int, float|int}
      */
-    protected static function html2rgb($input): array
+    protected static function html2rgb(string $input): array
     {
         $input = ($input[0] == "#") ? substr($input, 1, 6) : substr($input, 0, 6);
 
@@ -255,9 +244,8 @@ class Waveform
 
     /**
      * Create waveform from song file.
-     * @param string $filename
      */
-    protected static function create_waveform($filename): ?string
+    protected static function create_waveform(string $filename): ?string
     {
         if (!file_exists($filename)) {
             debug_event(self::class, 'File ' . $filename . ' doesn\'t exists', 1);
@@ -426,11 +414,8 @@ class Waveform
 
     /**
      * Save waveform to db.
-     * @param int $object_id
-     * @param string $object_type
-     * @param string $waveform
      */
-    protected static function save_to_db($object_id, $object_type, $waveform): void
+    protected static function save_to_db(int $object_id, string $object_type, string $waveform): void
     {
         $sql = ($object_type == 'podcast_episode')
             ? "UPDATE `podcast_episode` SET `waveform` = ? WHERE `id` = ?"

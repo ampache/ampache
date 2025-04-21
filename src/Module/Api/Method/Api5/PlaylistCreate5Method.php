@@ -48,6 +48,15 @@ final class PlaylistCreate5Method
      *
      * name = (string) Playlist name
      * type = (string) 'public', 'private'
+     *
+     * @param array{
+     *     name: string,
+     *     type?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function playlist_create(array $input, User $user): bool
     {

@@ -125,8 +125,8 @@ class Query
         'use_pages' => false,
     ];
 
-    /** @var array $_cache */
-    protected $_cache = [];
+    /** @var int[] $_cache */
+    protected array $_cache = [];
 
     /** @var QueryInterface|null $queryType */
     private ?QueryInterface $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
@@ -395,8 +395,8 @@ class Query
      * get_sort
      * This returns the current sort
      * @return array{
-     *  name: string|null,
-     *  order: string|null
+     *     name: ?string,
+     *     order: ?string
      * }
      */
     public function get_sort(): array
@@ -419,7 +419,7 @@ class Query
      * This returns the total number of objects for this current sort type.
      * If it's already cached used it. if they pass us an array then use
      * that.
-     * @param array $object_ids
+     * @param array|null $object_ids
      */
     public function get_total($object_ids = null): int
     {
@@ -888,6 +888,7 @@ class Query
     /**
      * get_saved
      * This looks in the session for the saved stuff and returns what it finds.
+     * @return int[]|string[]|array<array{object_id: int,object_type: string,track_id: int,track: int}>
      */
     public function get_saved(): array
     {
@@ -922,9 +923,8 @@ class Query
     /**
      * get_objects
      * This gets an array of the ids of the objects that we are
-     * currently browsing by it applies the sql and logic based
-     * filters
-     * @return int[]
+     * currently browsing by it applies the sql and logic based filters
+     * @return list<int|string>
      */
     public function get_objects(): array
     {
@@ -1198,8 +1198,9 @@ class Query
      * This does some additional work on the results that we've received
      * before returning them. TODO this is only for tags/genres? should do this in the select/return if possible
      * @param array $data
+     * @return array<array{id: int}>
      */
-    private function _post_process($data): array
+    private function _post_process(array $data): array
     {
         $tags = $this->_state['filter']['tag'] ?? '';
 
@@ -1218,7 +1219,7 @@ class Query
 
         foreach ($count as $key => $value) {
             if ($value >= $tag_count) {
-                $results[] = ['id' => $key];
+                $results[] = ['id' => (int)$key];
             }
         }
 
@@ -1412,11 +1413,11 @@ class Query
 
     /**
      * save_objects
-     * This takes the full array of object ids, often passed into show and
-     * if necessary it saves them
+     * This takes the full array of object ids, often passed into show and if necessary it saves them
      * @param array $object_ids
+     * @return bool
      */
-    public function save_objects($object_ids): bool
+    public function save_objects(array $object_ids): bool
     {
         // Saving these objects has two operations, one holds it in
         // a local variable and then second holds it in a row in the

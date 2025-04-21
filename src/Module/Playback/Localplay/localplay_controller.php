@@ -44,9 +44,8 @@ abstract class localplay_controller
 
     /**
      * Takes a single object_id and removes it from the playlist
-     * @param int $object_id
      */
-    abstract public function delete_track($object_id): bool;
+    abstract public function delete_track(int $object_id): bool;
 
     abstract public function play(): bool;
 
@@ -93,23 +92,29 @@ abstract class localplay_controller
     // For display we need the following 'instance' functions
 
     /**
-     * @param $data
+     * @param array<string, string> $data
      */
-    abstract public function add_instance($data): void;
+    abstract public function add_instance(array $data): void;
+
+    abstract public function delete_instance(int $uid): void;
 
     /**
      * @param int $uid
+     * @param array<string, string> $data
      */
-    abstract public function delete_instance($uid): void;
+    abstract public function update_instance(int $uid, array $data): void;
 
     /**
-     * @param int $uid
-     * @param array $data
+     * @return string[]
      */
-    abstract public function update_instance($uid, $data): void;
-
     abstract public function get_instances(): array;
 
+    /**
+     * @return array<
+     *     string,
+     *     array{description: string, type: string}
+     * >
+     */
     abstract public function instance_fields(): array;
 
     abstract public function set_active_instance(int $uid): bool;
@@ -153,9 +158,8 @@ abstract class localplay_controller
      * parse_url
      * This takes an Ampache URL and then returns the 'primary' part of it
      * So that it's easier for Localplay modules to return valid song information
-     * @param string $url
      */
-    public function parse_url($url): array
+    public function parse_url(string $url): array
     {
         // Define possible 'primary' keys
         $primary_array = ['oid', 'demo_id', 'random'];

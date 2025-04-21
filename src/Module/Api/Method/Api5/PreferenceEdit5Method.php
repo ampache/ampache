@@ -49,6 +49,16 @@ final class PreferenceEdit5Method
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * value  = (string|integer) Preference value
      * all    = (boolean) apply to all users //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     value: string|int,
+     *     all?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function preference_edit(array $input, User $user): bool
     {
@@ -63,7 +73,7 @@ final class PreferenceEdit5Method
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
-        $pref_name  = (string)($input['filter'] ?? '');
+        $pref_name  = (string)$input['filter'];
         $preference = Preference::get($pref_name, $user->id);
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

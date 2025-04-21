@@ -74,11 +74,11 @@ final class PodcastOpmlExporter implements PodcastExporterInterface
 
     /**
      * @return Generator<array{
-     *  title: string,
-     *  feedUrl: string,
-     *  website: string,
-     *  language: string,
-     *  description: string
+     *     title: string,
+     *     feedUrl: string,
+     *     website: string,
+     *     language: string,
+     *     description: string
      * }>
      */
     private function retrievePodcasts(): Generator

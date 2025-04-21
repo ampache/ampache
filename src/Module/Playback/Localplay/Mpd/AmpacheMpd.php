@@ -130,9 +130,14 @@ class AmpacheMpd extends localplay_controller
     /**
      * add_instance
      * This takes key'd data and inserts a new MPD instance
-     * @param array $data
+     * @param array{
+     *     name?: string,
+     *     host?: string,
+     *     port?: string,
+     *     password?: string,
+     * } $data
      */
-    public function add_instance($data): void
+    public function add_instance(array $data): void
     {
         $sql     = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
         $user_id = (Core::get_global('user') instanceof User)
@@ -145,9 +150,8 @@ class AmpacheMpd extends localplay_controller
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
-     * @param int $uid
      */
-    public function delete_instance($uid): void
+    public function delete_instance(int $uid): void
     {
         $uid = Dba::escape($uid);
         $sql = "DELETE FROM `localplay_mpd` WHERE `id`='$uid'";
@@ -158,6 +162,7 @@ class AmpacheMpd extends localplay_controller
      * get_instances
      * This returns a key'd array of the instance information with
      * [UID]=>[NAME]
+     * @return string[]
      */
     public function get_instances(): array
     {
@@ -166,7 +171,7 @@ class AmpacheMpd extends localplay_controller
         $db_results = Dba::read($sql);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = $row['name'];
+            $results[(int)$row['id']] = $row['name'];
         }
 
         return $results;
@@ -176,7 +181,16 @@ class AmpacheMpd extends localplay_controller
      * get_instance
      * This returns the specified instance and all it's pretty variables
      * If no instance is passed current is used
-     * @return array
+     * @param string|null $instance
+     * @return array{
+     *     id?: int,
+     *     name?: string,
+     *     owner?: int,
+     *     host?: string,
+     *     port?: int,
+     *     password?: string,
+     *     access?: int
+     * }
      */
     public function get_instance(?string $instance = ''): array
     {
@@ -184,34 +198,46 @@ class AmpacheMpd extends localplay_controller
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_mpd` WHERE `id` = ?" : "SELECT * FROM `localplay_mpd`";
         $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
-        return Dba::fetch_assoc($db_results);
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return [
+                'id' => (int)$row['id'],
+                'name' => $row['name'],
+                'owner' => (int)$row['owner'],
+                'host' => $row['host'],
+                'port' => (int)$row['port'],
+                'password' => $row['password'],
+                'access' => (int)$row['access'],
+            ];
+        }
+
+        return [];
     }
 
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
      * @param int $uid
-     * @param array $data
+     * @param array{
+     *     host?: string,
+     *     port?: string,
+     *     name: string,
+     *     password: string,
+     * } $data
      */
-    public function update_instance($uid, $data): void
+    public function update_instance(int $uid, array $data): void
     {
-        $uid  = Dba::escape($uid);
-        $host = ($data['host'])
-            ? Dba::escape($data['host'])
-            : '127.0.0.1';
-        $port = ($data['port'])
-            ? Dba::escape($data['port'])
-            : '6600';
-        $name = Dba::escape($data['name']);
-        $pass = Dba::escape($data['password']);
-        $sql  = "UPDATE `localplay_mpd` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'";
-        Dba::write($sql);
+        $sql  = "UPDATE `localplay_mpd` SET `host` = ?, `port` = ?, `name` = ?, `password` = ? WHERE `id` = ?;";
+        Dba::write($sql, [$data['host'] ?? '127.0.0.1', $data['port'] ?? '6600', $data['name'], $data['password'], $uid]);
     }
 
     /**
      * instance_fields
      * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
      * fields so that we can on-the-fly generate a form
+     * @return array<
+     *     string,
+     *     array{description: string, type: string}
+     * >
      */
     public function instance_fields(): array
     {
@@ -231,7 +257,7 @@ class AmpacheMpd extends localplay_controller
     public function set_active_instance(int $uid): bool
     {
         $user = Core::get_global('user');
-        if (empty($user)) {
+        if (!$user instanceof User) {
             return false;
         }
         Preference::update('mpd_active', $user->id, $uid);
@@ -281,7 +307,7 @@ class AmpacheMpd extends localplay_controller
      * and delete it from the current playlist
      * @param int $object_id
      */
-    public function delete_track($object_id): bool
+    public function delete_track(int $object_id): bool
     {
         return $this->_mpd->PLRemove($object_id) !== false;
     }
@@ -587,9 +613,10 @@ class AmpacheMpd extends localplay_controller
     {
         // Look at the current instance and pull the options for said instance
         $options = self::get_instance();
-        if (!array_key_exists('host', $options) && !array_key_exists('port', $options)) {
+        if ($options === []) {
             return false;
         }
+
         $this->_mpd = new mpd($options['host'], $options['port'], $options['password'] ?? null, 'debug_event');
 
         return $this->_mpd->connected;

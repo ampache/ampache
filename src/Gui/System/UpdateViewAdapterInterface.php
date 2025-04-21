@@ -47,9 +47,9 @@ interface UpdateViewAdapterInterface
 
     /**
      * @return Traversable<array{
-     *  title: string,
-     *  changelog: list<string>,
-     *  warning: bool
+     *     title: string,
+     *     changelog: list<string>,
+     *     warning: bool
      * }>
      */
     public function getUpdateInfo(): Traversable;

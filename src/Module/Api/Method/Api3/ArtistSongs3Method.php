@@ -40,10 +40,22 @@ final class ArtistSongs3Method
     /**
      * artist_songs
      * This returns the songs of the specified artist
+     *
+     * @param array{
+     *     filter: string,
+     *     top50?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function artist_songs(array $input, User $user): void
     {
-        $artist  = new Artist($input['filter']);
+        $artist  = new Artist((int)$input['filter']);
         $results = self::getSongRepository()->getByArtist($artist->id);
 
         // Set the offset

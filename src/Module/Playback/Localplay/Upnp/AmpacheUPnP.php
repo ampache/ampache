@@ -117,9 +117,12 @@ class AmpacheUPnP extends localplay_controller
     /**
      * add_instance
      * This takes key'd data and inserts a new UPnP instance
-     * @param array $data
+     * @param array{
+     *     name?: string,
+     *     url?: string,
+     * } $data
      */
-    public function add_instance($data): void
+    public function add_instance(array $data): void
     {
         $sql     = "INSERT INTO `localplay_upnp` (`name`, `url`, `owner`) VALUES (?, ?, ?)";
         $user_id = (Core::get_global('user') instanceof User)
@@ -132,9 +135,8 @@ class AmpacheUPnP extends localplay_controller
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
-     * @param int $uid
      */
-    public function delete_instance($uid): void
+    public function delete_instance(int $uid): void
     {
         $sql = "DELETE FROM `localplay_upnp` WHERE `id` = ?";
         Dba::query($sql, [$uid]);
@@ -144,6 +146,7 @@ class AmpacheUPnP extends localplay_controller
      * get_instances
      * This returns a key'd array of the instance information with
      * [UID]=>[NAME]
+     * @return string[]
      */
     public function get_instances(): array
     {
@@ -162,9 +165,12 @@ class AmpacheUPnP extends localplay_controller
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
      * @param int $uid
-     * @param array $data
+     * @param array{
+     *     url: string,
+     *     name: string,
+     * } $data
      */
-    public function update_instance($uid, $data): void
+    public function update_instance(int $uid, array $data): void
     {
         $sql = "UPDATE `localplay_upnp` SET `url` = ?, `name` = ? WHERE `id` = ?";
         Dba::query($sql, [$data['url'], $data['name'], $uid]);
@@ -174,6 +180,10 @@ class AmpacheUPnP extends localplay_controller
      * instance_fields
      * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
      * fields so that we can on-the-fly generate a form
+     * @return array<
+     *     string,
+     *     array{description: string, type: string}
+     * >
      */
     public function instance_fields(): array
     {
@@ -187,7 +197,13 @@ class AmpacheUPnP extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all it's variables
-     * @return array
+     * @param string|null $instance
+     * @return array{
+     *     id?: int,
+     *     name?: string,
+     *     owner?: int,
+     *     url?: string,
+     * }
      */
     public function get_instance(?string $instance = ''): array
     {
@@ -195,7 +211,16 @@ class AmpacheUPnP extends localplay_controller
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_upnp` WHERE `id` = ?" : "SELECT * FROM `localplay_upnp`";
         $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
-        return Dba::fetch_assoc($db_results);
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return [
+                'id' => (int)$row['id'],
+                'name' => $row['name'],
+                'owner' => (int)$row['owner'],
+                'url' => $row['url'],
+            ];
+        }
+
+        return [];
     }
 
     /**
@@ -243,9 +268,10 @@ class AmpacheUPnP extends localplay_controller
     /**
      * delete_track
      * Delete a track from the UPnP playlist
-     * @param $object_id
+     * @param int $object_id
+     * @return bool
      */
-    public function delete_track($object_id): bool
+    public function delete_track(int $object_id): bool
     {
         if (!$this->_upnp) {
             return false;
@@ -458,7 +484,7 @@ class AmpacheUPnP extends localplay_controller
 
             $url_data = Stream_Url::parse($data['link']);
             if (array_key_exists('id', $url_data)) {
-                $song = new Song($url_data['id']);
+                $song = new Song((int)$url_data['id']);
                 if ($song->isNew() === false) {
                     $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
                 }
@@ -498,7 +524,7 @@ class AmpacheUPnP extends localplay_controller
 
         $url_data = Stream_Url::parse($array['track']);
         if (array_key_exists('id', $url_data)) {
-            $song = new Song($url_data['id']);
+            $song = new Song((int)$url_data['id']);
             if ($song->isNew() === false) {
                 $array['track_artist'] = $song->get_artist_fullname();
                 $array['track_album']  = $song->get_album_fullname();

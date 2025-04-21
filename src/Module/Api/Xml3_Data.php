@@ -259,7 +259,7 @@ class Xml3_Data
      *
      * This returns tags to the user, in a pretty xml document with the information
      *
-     * @param int[] $tags
+     * @param list<int|string> $tags
      */
     public static function tags(array $tags): string
     {
@@ -274,7 +274,7 @@ class Xml3_Data
         }
 
         foreach ($tags as $tag_id) {
-            $tag = new Tag($tag_id);
+            $tag = new Tag((int)$tag_id);
             $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<stream>0</stream>\n</tag>\n";
         } // end foreach
 
@@ -288,7 +288,7 @@ class Xml3_Data
      * we want
      *
      * @param list<int|string> $artists
-     * @param array $include Array of other items to include
+     * @param string[] $include Array of other items to include
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node
      * @return string
@@ -317,7 +317,7 @@ class Xml3_Data
             }
             $artist->format();
 
-            $rating      = new Rating((int)$artist_id, 'artist');
+            $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
             $tag_string  = self::tags_string($artist->get_tags());
 
@@ -348,12 +348,12 @@ class Xml3_Data
      * This echos out a standard albums XML document, it pays attention to the limit
      *
      * @param list<int|string> $albums
-     * @param false|array $include Array of other items to include
+     * @param string[] $include Array of other items to include
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node
      * @return string
      */
-    public static function albums(array $albums, false|array $include, User $user, bool $full_xml = true): string
+    public static function albums(array $albums, array $include, User $user, bool $full_xml = true): string
     {
         $string = "<total_count>" . count($albums) . "</total_count>\n";
 
@@ -374,7 +374,7 @@ class Xml3_Data
             }
             $album->format();
 
-            $rating      = new Rating((int)$album_id, 'album');
+            $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
 
             // Build the Art URL, include session
@@ -387,7 +387,7 @@ class Xml3_Data
             }
 
             // Handle includes
-            if ($include && in_array("songs", $include)) {
+            if (in_array("songs", $include)) {
                 $songs = self::songs(self::getSongRepository()->getByAlbum($album->id), $user, '', false);
             } else {
                 $songs = $album->song_count;
@@ -540,9 +540,6 @@ class Xml3_Data
      */
     public static function democratic(array $object_ids, User $user): string
     {
-        if (!is_array($object_ids)) {
-            $object_ids = [];
-        }
         $democratic = Democratic::get_current_playlist($user);
         $string     = '';
 
@@ -596,13 +593,13 @@ class Xml3_Data
      *
      * This handles creating an xml document for a user list
      *
-     * @param int[] $users    User identifier list
+     * @param list<int|string> $users    User identifier list
      */
     public static function users(array $users): string
     {
         $string = "<users>\n";
         foreach ($users as $user_id) {
-            $user = new User($user_id);
+            $user = new User((int)$user_id);
             if ($user->isNew() === false) {
                 $string .= "\t<username><![CDATA[" . $user->username . "]]></username>\n";
             }

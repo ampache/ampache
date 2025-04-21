@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Plugin\PluginEnum;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
@@ -107,8 +108,8 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
 
         $plugins = Plugin::get_plugins(PluginTypeEnum::EXTERNAL_SHARE);
         foreach ($plugins as $plugin_name) {
-            $plugin_class = \Ampache\Plugin\PluginEnum::LIST[strtolower($plugin_name)];
-            $pl           = new $plugin_class();
+            $plugin_class = PluginEnum::LIST[strtolower($plugin_name)];
+            $plugin       = new $plugin_class();
 
             $link .= sprintf(
                 '<a onclick="handleShareAction(\'%s/share.php?action=external_share&plugin=%s&type=%s&id=%d\')" target="_blank">%s</a>&nbsp;',
@@ -118,7 +119,7 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
                 $object_id,
                 Ui::get_icon(
                     'share_' . strtolower($plugin_name),
-                    $pl->description
+                    $plugin->description
                 )
             );
         }

@@ -41,6 +41,17 @@ final class TagSongs5Method
      * MINIMUM_API_VERSION=380001
      *
      * returns the songs for this genre
+     *
+     * @param array{
+     *     filter?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function tag_songs(array $input, User $user): void
     {

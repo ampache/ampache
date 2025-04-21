@@ -27,6 +27,7 @@ namespace Ampache\Module\System\Cache;
 use DateInterval;
 use Generator;
 use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 
 /**
  * Simple array-cache implementation
@@ -96,7 +97,10 @@ final class ArrayCacheDriver implements CacheInterface
     public function deleteMultiple(iterable $keys): bool
     {
         foreach ($keys as $key) {
-            $this->delete($key);
+            try {
+                $this->delete($key);
+            } catch (InvalidArgumentException) {
+            }
         }
 
         return true;

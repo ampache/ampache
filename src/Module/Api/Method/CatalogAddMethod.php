@@ -57,6 +57,21 @@ final class CatalogAddMethod
      * folder_pattern = (string) Pattern used identify tags from the folder name. Default '%a/%A' //optional
      * username       = (string) login to remote catalog ('remote', 'subsonic', 'seafile') //optional
      * password       = (string) password to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote') //optional
+     *
+     * @param array{
+     *     name: string,
+     *     path: string,
+     *     type?: string,
+     *     media_type?: string,
+     *     file_pattern?: string,
+     *     folder_pattern?: string,
+     *     username?: string,
+     *     password?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function catalog_add(array $input, User $user): bool
     {

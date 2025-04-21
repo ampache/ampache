@@ -40,6 +40,13 @@ final class Following3Method
     /**
      * following
      * This get the user list followed by a user
+     *
+     * @param array{
+     *     username: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function following(array $input, User $user): void
     {

@@ -74,10 +74,13 @@ class Scrobbler
      * get_api_sig
      * Provide the API signature for calling Last.fm / Libre.fm services
      * It is the md5 of the <name><value> of all parameter plus API's secret
-     * @param array $vars
+     * @param null|array<string, string> $vars
      */
-    public function get_api_sig($vars = []): string
+    public function get_api_sig(?array $vars = []): string
     {
+        if (!$vars) {
+            return '';
+        }
         ksort($vars);
         $sig = '';
         foreach ($vars as $name => $value) {
@@ -94,13 +97,13 @@ class Scrobbler
      * It need the method (GET/POST), the url and the parameters
      * @param string $url
      * @param string $method
-     * @param array $vars
-     * @return string|false
+     * @param array<string, string>|null $vars
+     * @return string|null
      */
-    public function call_url($url, $method = 'GET', $vars = [])
+    public function call_url(string $url, string $method = 'GET', ?array $vars = []): ?string
     {
         // Encode parameters per RFC1738
-        $params = http_build_query($vars);
+        $params = http_build_query($vars ?? []);
         $opts   = [
             'http' => [
                 'method' => $method,
@@ -127,7 +130,7 @@ class Scrobbler
         if (!$filepath) {
             debug_event(self::class, 'Cannot access ' . $target, 1);
 
-            return false;
+            return null;
         }
         ob_start();
         fpassthru($filepath);
@@ -135,7 +138,7 @@ class Scrobbler
         ob_end_clean();
         fclose($filepath);
 
-        return $buffer;
+        return $buffer ?: null;
     }
 
     /**
@@ -158,10 +161,8 @@ class Scrobbler
      * get_session_key
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
-     * @param string $token
-     * @return bool|SimpleXMLElement
      */
-    public function get_session_key($token = null)
+    public function get_session_key(string $token = null): ?SimpleXMLElement
     {
         if ($token !== null) {
             $vars = [
@@ -185,22 +186,22 @@ class Scrobbler
                     } else {
                         $this->error_msg = 'Did not receive a valid response';
 
-                        return false;
+                        return null;
                     }
                 } else {
                     $this->error_msg = $xml->error;
 
-                    return false;
+                    return null;
                 }
             } else {
                 $this->error_msg = 'Did not receive a valid response';
 
-                return false;
+                return null;
             }
         }
         $this->error_msg = 'Need a token to call getSession';
 
-        return false;
+        return null;
     }
 
     /**
@@ -258,18 +259,18 @@ class Scrobbler
         $vars  = [];
         foreach ($this->queued_tracks as $track) {
             // construct array of parameters for each song
-            $vars["artist[$count]"]      = $track['artist'];
-            $vars["track[$count]"]       = $track['title'];
-            $vars["timestamp[$count]"]   = $track['time'];
-            $vars["album[$count]"]       = $track['album'];
-            $vars["trackNumber[$count]"] = $track['track'];
-            $vars["duration[$count]"]    = $track['length'];
+            $vars["artist[$count]"]      = (string)$track['artist'];
+            $vars["track[$count]"]       = (string)$track['title'];
+            $vars["timestamp[$count]"]   = (string)$track['time'];
+            $vars["album[$count]"]       = (string)$track['album'];
+            $vars["trackNumber[$count]"] = (string)$track['track'];
+            $vars["duration[$count]"]    = (string)$track['length'];
             $count++;
         }
         // Add the method, API and session keys
         $vars['method']  = 'track.scrobble';
         $vars['api_key'] = $this->api_key;
-        $vars['sk']      = $this->challenge;
+        $vars['sk']      = (string)$this->challenge;
 
         // Sign the call
         $sig             = $this->get_api_sig($vars);
@@ -300,11 +301,8 @@ class Scrobbler
      * love
      * This takes care of spreading your love to the world
      * If passed the API key, session key combined with the signature
-     * @param bool $is_loved
-     * @param string $artist
-     * @param string $title
      */
-    public function love($is_loved, $artist = '', $title = ''): bool
+    public function love(bool $is_loved, string $artist = '', string $title = ''): bool
     {
         $vars           = [];
         $vars['track']  = $title;
@@ -312,7 +310,7 @@ class Scrobbler
         // Add the method, API and session keys
         $vars['method']  = ($is_loved) ? 'track.love' : 'track.unlove';
         $vars['api_key'] = $this->api_key;
-        $vars['sk']      = $this->challenge;
+        $vars['sk']      = (string)$this->challenge;
 
         // Sign the call
         $sig             = $this->get_api_sig($vars);

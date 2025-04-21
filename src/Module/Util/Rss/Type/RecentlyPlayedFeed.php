@@ -44,13 +44,13 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
 
     /**
      * @return Generator<array{
-     *  title: string,
-     *  link: string,
-     *  description: string,
-     *  comments: ?string,
-     *  pubDate: string,
-     *  guid: string,
-     *  image?: string
+     *     title: string,
+     *     link: string,
+     *     description: string,
+     *     comments: ?string,
+     *     pubDate: string,
+     *     guid: string,
+     *     image?: string
      * }>
      */
     protected function getItems(): Generator

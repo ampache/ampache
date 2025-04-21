@@ -29,7 +29,7 @@ use Ampache\Module\Util\MemoryObject;
 use Ampache\Config\AmpConfig;
 
 /**
- * Stream_URL Class
+ * Stream_Url Class
  *
  * A class for passing around an URL and associated data
  * @property string $url
@@ -63,9 +63,9 @@ class Stream_Url extends MemoryObject
      *
      * Takes an url and parses out all the chewy goodness.
      * @param string $url
-     * @return array
+     * @return array<string, string>
      */
-    public static function parse($url): array
+    public static function parse(string $url): array
     {
         if (empty($url)) {
             return [];
@@ -130,10 +130,8 @@ class Stream_Url extends MemoryObject
      * add_options
      *
      * Add options to an existing stream url.
-     * @param string $url
-     * @param string $options
      */
-    public static function add_options($url, $options): string
+    public static function add_options(string $url, string $options): string
     {
         if (AmpConfig::get('stream_beautiful_url')) {
             // We probably want beautiful url to have a real mp3 filename at the end.
@@ -167,9 +165,8 @@ class Stream_Url extends MemoryObject
     /**
      * format
      * This format the string url according to settings.
-     * @param string $url
      */
-    public static function format($url): string
+    public static function format(string $url): string
     {
         if (AmpConfig::get('stream_beautiful_url')) {
             $url = str_replace('index.php?&', '', $url);
@@ -184,9 +181,8 @@ class Stream_Url extends MemoryObject
     /**
      * get_title
      * Get a translated title for the webplayer
-     * @param string $url
      */
-    public static function get_title($url): string
+    public static function get_title(string $url): string
     {
         $urlinfo = self::parse($url);
         $type    = $urlinfo['type'] ?? 'URL-Add';

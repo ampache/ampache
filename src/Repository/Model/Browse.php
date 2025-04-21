@@ -776,10 +776,9 @@ class Browse extends Query
     }
 
     /**
-     * Allow the current page to be save into the current session
-     * @param bool $update_session
+     * Allow the current page to be saved into the current session
      */
-    public function set_update_session($update_session): void
+    public function set_update_session(bool $update_session): void
     {
         $this->_state['update_session'] = $update_session;
     }
@@ -835,7 +834,7 @@ class Browse extends Query
     /**
      * @param string $default
      */
-    public function get_title($default): string
+    public function get_title(string $default): string
     {
         return (string)($this->_state['title'] ?? $default);
     }

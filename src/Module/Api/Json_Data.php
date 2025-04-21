@@ -148,6 +148,7 @@ class Json_Data
      * nothing fancy here...
      *
      * @param string $string success message
+     * @param array<string, string> $return_data
      */
     public static function success(string $string, array $return_data = []): string
     {
@@ -200,8 +201,8 @@ class Json_Data
                     $atags[$tag['id']]['count']++;
                 } else {
                     $atags[$tag['id']] = [
-                        'name' => $tag['name'],
-                        'count' => 1
+                        "name" => $tag['name'],
+                        "count" => 1
                     ];
                 }
             }
@@ -427,7 +428,7 @@ class Json_Data
      *
      * This takes a name array of objects and return the data in JSON list object
      *
-     * @param list<array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @param array{id: int|string, name: string}[] $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
      */
     public static function lists(array $objects): string
     {
@@ -445,7 +446,7 @@ class Json_Data
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         foreach ($objects as $object) {
             $trimmed  = Catalog::trim_prefix(trim((string)$object['name']), $pattern);
-            $prefix   = $trimmed['prefix'];
+            $prefix   = $trimmed['prefix'] ?? null;
             $basename = $trimmed['string'];
             $JSON[]   = [
                 "id" => (string)$object['id'],
@@ -464,7 +465,7 @@ class Json_Data
      *
      * This takes a name array of objects and return the data in JSON browse object
      *
-     * @param list<array{id: int|string, name:string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @param array{id: int|string, name: string}[] $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
      */
     public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
     {
@@ -548,7 +549,7 @@ class Json_Data
      *
      * This returns licenses to the user, in a pretty JSON document with the information
      *
-     * @param int[] $objects Licence id's assigned to songs and artists
+     * @param list<int|string> $objects Licence id's assigned to songs and artists
      * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function licenses(array $objects, bool $object = true): string
@@ -567,14 +568,14 @@ class Json_Data
 
         $JSON = [];
         foreach ($objects as $license_id) {
-            $license = $licenseRepository->findById($license_id);
+            $license = $licenseRepository->findById((int)$license_id);
 
             if ($license !== null) {
                 $JSON[]  = [
-                    'id' => (string)$license_id,
-                    'name' => $license->getName(),
-                    'description' => $license->getDescription(),
-                    'external_link' => $license->getExternalLink()
+                    "id" => (string)$license_id,
+                    "name" => $license->getName(),
+                    "description" => $license->getDescription(),
+                    "external_link" => $license->getExternalLink()
                 ];
             }
         } // end foreach
@@ -592,7 +593,7 @@ class Json_Data
      *
      * This returns labels to the user, in a pretty JSON document with the information
      *
-     * @param int[] $objects
+     * @param list<int|string> $objects
      * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "label"
@@ -613,7 +614,7 @@ class Json_Data
         $labelRepository = self::getLabelRepository();
 
         foreach ($objects as $label_id) {
-            $label = $labelRepository->findById($label_id);
+            $label = $labelRepository->findById((int)$label_id);
             if ($label === null) {
                 continue;
             }
@@ -650,7 +651,7 @@ class Json_Data
      *
      * This returns genres to the user, in a pretty JSON document with the information
      *
-     * @param int[] $objects Genre id's to include
+     * @param list<int|string> $objects Genre id's to include
      * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "label"
@@ -668,13 +669,13 @@ class Json_Data
         }
         $JSON = [];
         foreach ($objects as $tag_id) {
-            $tag    = new Tag($tag_id);
+            $tag    = new Tag((int)$tag_id);
             $merged = $tag->get_merged_tags();
             $merge  = [];
             foreach ($merged as $mergedTag) {
                 $merge[] = [
-                    'id' => $mergedTag['id'],
-                    'name' => $mergedTag['name'],
+                    "id" => $mergedTag['id'],
+                    "name" => $mergedTag['name'],
                 ];
             }
             $JSON[] = [
@@ -711,7 +712,7 @@ class Json_Data
      * we want
      *
      * @param list<int|string> $objects Artist id's to include
-     * @param array $include
+     * @param string[] $include
      * @param User $user
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
@@ -737,19 +738,19 @@ class Json_Data
             }
             $artist->format();
 
-            $rating      = new Rating((int)$artist_id, 'artist');
+            $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag((int)$artist_id, 'artist');
+            $flag        = new Userflag($artist->id, 'artist');
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $artist_id . '&object_type=artist';
 
             // Handle includes
             $albums = (in_array("albums", $include))
-                ? self::albums(self::getAlbumRepository()->getAlbumByArtist((int)$artist_id), [], $user, false)
+                ? self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, false)
                 : [];
             $songs = (in_array("songs", $include))
-                ? self::songs(self::getSongRepository()->getByArtist((int)$artist_id), $user, false)
+                ? self::songs(self::getSongRepository()->getByArtist($artist->id), $user, false)
                 : [];
 
             $JSON[] = [
@@ -794,13 +795,13 @@ class Json_Data
      * This echos out a standard albums JSON document, it pays attention to the limit
      *
      * @param list<int|string> $objects Album id's to include
-     * @param array|false $include
+     * @param string[] $include
      * @param User $user
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "album"
      */
-    public static function albums(array $objects, array|false $include, User $user, bool $encode = true, bool $object = true): array|string
+    public static function albums(array $objects, array $include, User $user, bool $encode = true, bool $object = true): array|string
     {
         $count  = self::$count ?? count($objects);
         $output = [
@@ -823,9 +824,9 @@ class Json_Data
             }
             $album->format();
 
-            $rating      = new Rating((int)$album_id, 'album');
+            $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag((int)$album_id, 'album');
+            $flag        = new Userflag($album->id, 'album');
             $year        = ($original_year && $album->original_year)
                 ? $album->original_year
                 : $album->year;
@@ -859,7 +860,7 @@ class Json_Data
             }
 
             // Handle includes
-            $songs = ($include && in_array("songs", $include))
+            $songs = (in_array("songs", $include))
                 ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false)
                 : [];
 
@@ -1324,9 +1325,9 @@ class Json_Data
                 continue;
             }
             $episode->format();
-            $rating      = new Rating((int)$episode_id, 'podcast_episode');
+            $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag((int)$episode_id, 'podcast_episode');
+            $flag        = new Userflag($episode->id, 'podcast_episode');
             $art_url     = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
             $JSON[]      = [
                 "id" => (string)$episode_id,
@@ -1559,10 +1560,10 @@ class Json_Data
                 continue;
             }
             $video->format();
-            $rating      = new Rating((int)$video_id, 'video');
+            $rating      = new Rating($video->id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag((int)$video_id, 'video');
-            $art_url     = Art::url((int)$video_id, 'video', Core::get_request('auth'));
+            $flag        = new Userflag($video->id, 'video');
+            $art_url     = Art::url($video->id, 'video', Core::get_request('auth'));
             $JSON[]      = [
                 "id" => (string)$video->id,
                 "title" => $video->title,
@@ -1726,7 +1727,7 @@ class Json_Data
      *
      * This handles creating an JSON document for a user list
      *
-     * @param int[] $objects User id list
+     * @param list<int|string> $objects User id list
      * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "label"
@@ -1740,7 +1741,7 @@ class Json_Data
 
         $JSON = [];
         foreach ($objects as $user_id) {
-            $user = new User($user_id);
+            $user = new User((int)$user_id);
             if ($user->isNew()) {
                 continue;
             }
@@ -1769,10 +1770,10 @@ class Json_Data
      * This handles creating an JSON document for a now_playing list
      *
      * @param list<array{
-     *  media: library_item,
-     *  client: User,
-     *  agent: string,
-     *  expire: int
+     *     media: library_item,
+     *     client: User,
+     *     agent: string,
+     *     expire: int
      * }> $results
      */
     public static function now_playing(array $results): string
@@ -1786,13 +1787,13 @@ class Json_Data
             $media = $now_playing['media'];
 
             $JSON[] = [
-                'id' => (string) $media->getId(),
-                'type' => $media->getMediaType()->value,
-                'client' => $now_playing['agent'],
-                'expire' => (int) $now_playing['expire'],
-                'user' => [
-                    'id' => (string) $user->getId(),
-                    'username' => $user->getUsername()
+                "id" => (string) $media->getId(),
+                "type" => $media->getMediaType()->value,
+                "client" => $now_playing['agent'],
+                "expire" => (int) $now_playing['expire'],
+                "user" => [
+                    "id" => (string) $user->getId(),
+                    "username" => $user->getUsername()
                 ]
             ];
         }
@@ -1817,14 +1818,14 @@ class Json_Data
             $user = $shout->getUser();
 
             $JSON[] = [
-                'id' => (string) $shout->getId(),
-                'date' => $shout->getDate()->getTimestamp(),
-                'text' => $shout->getText(),
-                'object_type' => $shout->getObjectType(),
-                'object_id' => $shout->getObjectId(),
-                'user' => [
-                    'id' => (string) ($user?->getId() ?? 0),
-                    'username' => $user?->getUsername() ?? '',
+                "id" => (string) $shout->getId(),
+                "date" => $shout->getDate()->getTimestamp(),
+                "text" => $shout->getText(),
+                "object_type" => $shout->getObjectType(),
+                "object_id" => $shout->getObjectId(),
+                "user" => [
+                    "id" => (string) ($user?->getId() ?? 0),
+                    "username" => $user?->getUsername() ?? '',
                 ]
             ];
         }
@@ -1871,7 +1872,20 @@ class Json_Data
      * This handles creating a JSON document for deleted items
      *
      * @param string $object_type ('song', 'podcast_episode', 'video')
-     * @param array $objects deleted object list
+     * @param list<array{
+     *     id: int,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: int,
+     *     total_count: int,
+     *     total_skip: int,
+     *     update_time?: int,
+     *     album?: int,
+     *     artist?: int,
+     *     podcast?: int,
+     * }> $objects deleted object list
      */
     public static function deleted(string $object_type, array $objects): string
     {
@@ -1888,34 +1902,38 @@ class Json_Data
         foreach ($objects as $row) {
             switch ($object_type) {
                 case 'song':
-                    $objArray = [
-                        "id" => (string)$row['id'],
-                        "addition_time" => $row['addition_time'],
-                        "delete_time" => $row['delete_time'],
-                        "title" => $row['title'],
-                        "file" => $row['file'],
-                        "catalog" => (string)$row['catalog'],
-                        "total_count" => $row['total_count'],
-                        "total_skip" => $row['total_skip'],
-                        "update_time" => $row['update_time'],
-                        "album" => (string)$row['album'],
-                        "artist" => (string)$row['artist']
-                    ];
-                    $JSON[] = $objArray;
+                    if (isset($row['album']) && isset($row['artist']) && isset($row['update_time'])) {
+                        $objArray = [
+                            "id" => (string)$row['id'],
+                            "addition_time" => $row['addition_time'],
+                            "delete_time" => $row['delete_time'],
+                            "title" => $row['title'],
+                            "file" => $row['file'],
+                            "catalog" => (string)$row['catalog'],
+                            "total_count" => $row['total_count'],
+                            "total_skip" => $row['total_skip'],
+                            "update_time" => $row['update_time'],
+                            "album" => (string)$row['album'],
+                            "artist" => (string)$row['artist']
+                        ];
+                        $JSON[] = $objArray;
+                    }
                     break;
                 case 'podcast_episode':
-                    $objArray = [
-                        "id" => (string)$row['id'],
-                        "addition_time" => $row['addition_time'],
-                        "delete_time" => $row['delete_time'],
-                        "title" => $row['title'],
-                        "file" => $row['file'],
-                        "catalog" => (string)$row['catalog'],
-                        "total_count" => $row['total_count'],
-                        "total_skip" => $row['total_skip'],
-                        "podcast" => (string)$row['podcast']
-                    ];
-                    $JSON[] = $objArray;
+                    if (isset($row['podcast'])) {
+                        $objArray = [
+                            "id" => (string)$row['id'],
+                            "addition_time" => $row['addition_time'],
+                            "delete_time" => $row['delete_time'],
+                            "title" => $row['title'],
+                            "file" => $row['file'],
+                            "catalog" => (string)$row['catalog'],
+                            "total_count" => $row['total_count'],
+                            "total_skip" => $row['total_skip'],
+                            "podcast" => (string)$row['podcast']
+                        ];
+                        $JSON[] = $objArray;
+                    }
                     break;
                 case 'video':
                     $objArray = [

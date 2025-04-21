@@ -664,6 +664,16 @@ class Preference extends database_object
      * This returns a nice flat array of all of the possible preferences for the specified user
      * @param string $pref_name
      * @param int $user_id
+     * @return list<array{
+     *     id: int,
+     *     name: string,
+     *     level: int,
+     *     description: string,
+     *     value: mixed,
+     *     type: string,
+     *     category: string,
+     *     subcategory: ?string
+     * }>
      */
     public static function get($pref_name, $user_id): array
     {
