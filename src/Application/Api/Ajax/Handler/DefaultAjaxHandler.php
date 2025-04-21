@@ -104,7 +104,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                                     foreach ($objects as $object) {
                                         $songs = (is_array($object))
                                             ? array_merge($songs, $this->getSongRepository()->getByAlbum($object['object_id']))
-                                            : array_merge($songs, $this->getSongRepository()->getByAlbum($object));
+                                            : array_merge($songs, $this->getSongRepository()->getByAlbum((int)$object));
                                     }
 
                                     break;
@@ -112,7 +112,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                                     foreach ($objects as $object) {
                                         $songs = (is_array($object))
                                             ? array_merge($songs, $this->getSongRepository()->getAllByArtist($object['object_id']))
-                                            : array_merge($songs, $this->getSongRepository()->getAllByArtist($object));
+                                            : array_merge($songs, $this->getSongRepository()->getAllByArtist((int)$object));
                                     }
 
                                     break;
@@ -126,7 +126,10 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             }
 
                             foreach ($songs as $object) {
-                                $user->playlist?->add_object((is_array($object)) ? $object['object_id'] : $object, LibraryItemEnum::SONG);
+                                $user->playlist?->add_object(
+                                    (is_array($object)) ? $object['object_id'] : (int)$object,
+                                    LibraryItemEnum::SONG
+                                );
                             }
 
                             break;

@@ -34,7 +34,7 @@ interface ApiOutputInterface
     public function setCount(int $count): void;
 
     /**
-     * @param list<int> $result
+     * @param list<int|string> $result
      */
     public function podcastEpisodes(
         array $result,
@@ -85,7 +85,7 @@ interface ApiOutputInterface
     ): string;
 
     /**
-     * @param int[] $albums
+     * @param list<int|string> $albums
      * @param array $include
      * @param User $user
      * @param bool $encode

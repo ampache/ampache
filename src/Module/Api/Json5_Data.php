@@ -295,7 +295,7 @@ class Json5_Data
      *
      * This returns licenses to the user, in a pretty JSON document with the information
      *
-     * @param list<int> $licenses Licence id's assigned to songs and artists
+     * @param list<int|string> $licenses Licence id's assigned to songs and artists
      * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function licenses(array $licenses, bool $object = true): string
@@ -308,7 +308,7 @@ class Json5_Data
 
         $JSON = [];
         foreach ($licenses as $license_id) {
-            $license = $licenseRepository->findById($license_id);
+            $license = $licenseRepository->findById((int)$license_id);
 
             if ($license !== null) {
                 $JSON[]  = [
@@ -329,7 +329,7 @@ class Json5_Data
      *
      * This returns labels to the user, in a pretty JSON document with the information
      *
-     * @param int[] $labels
+     * @param list<int|string> $labels
      * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function labels(array $labels, bool $object = true): string
@@ -342,7 +342,7 @@ class Json5_Data
 
         $JSON = [];
         foreach ($labels as $label_id) {
-            $label = $labelRepository->findById($label_id);
+            $label = $labelRepository->findById((int)$label_id);
             if ($label === null) {
                 continue;
             }
@@ -370,7 +370,7 @@ class Json5_Data
      *
      * This returns genres to the user, in a pretty JSON document with the information
      *
-     * @param int[] $tags Genre id's to include
+     * @param list<int|string> $tags Genre id's to include
      * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function genres(array $tags, bool $object = true): string
@@ -381,7 +381,7 @@ class Json5_Data
 
         $JSON = [];
         foreach ($tags as $tag_id) {
-            $tag    = new Tag($tag_id);
+            $tag    = new Tag((int)$tag_id);
             $JSON[] = [
                 "id" => (string)$tag_id,
                 "name" => $tag->name,
