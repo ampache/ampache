@@ -224,6 +224,12 @@ abstract class Catalog extends database_object
      */
     abstract public function install(): bool;
 
+    /**
+     * add_to_catalog
+     * @param null|array<string, string|bool> $options
+     * @param null|Interactor $interactor
+     * @return int
+     */
     abstract public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int;
 
     /**
@@ -236,6 +242,9 @@ abstract class Catalog extends database_object
      */
     abstract public function clean_catalog_proc(?Interactor $interactor = null): int;
 
+    /**
+     * @return string[]
+     */
     abstract public function check_catalog_proc(): array;
 
     abstract public function move_catalog_proc(string $new_path): bool;
@@ -245,6 +254,12 @@ abstract class Catalog extends database_object
      */
     abstract public function cache_catalog_proc(): bool;
 
+    /**
+     * @return array<
+     *     string,
+     *     array{description: string, type: string, value?: scalar}
+     * >
+     */
     abstract public function catalog_fields(): array;
 
     /**
@@ -3350,7 +3365,7 @@ abstract class Catalog extends database_object
      * @param string[] $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
-     * @return array
+     * @return array<string, mixed>
      */
     public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern): array
     {

@@ -206,7 +206,7 @@ class Stats
      * @param int $object_id
      * @param int $user_id
      * @param string $agent
-     * @param array{latitude?: string, longitude?: string, name?: string,} $location
+     * @param array{latitude?: float|string, longitude?: float|string, name?: string,} $location
      * @param string $count_type
      * @param int|null $date
      * @return bool
@@ -233,8 +233,8 @@ class Stats
             return false;
         }
 
-        $latitude  = $location['latitude'] ?? null;
-        $longitude = $location['longitude'] ?? null;
+        $latitude  = (isset($location['latitude'])) ? (float)$location['latitude'] : null;
+        $longitude = (isset($location['longitude'])) ? (float)$location['longitude'] : null;
         $geoname   = $location['name'] ?? null;
 
         // allow setting date for scrobbles
@@ -247,7 +247,11 @@ class Stats
 
         // the count was inserted
         if ($db_results) {
-            if (in_array($type, ['song', 'album', 'album_disk', 'artist', 'video', 'podcast', 'podcast_episode']) && $count_type === 'stream' && $user_id > 0 && $agent !== 'debug') {
+            if (
+                in_array($type, ['song', 'album', 'album_disk', 'artist', 'video', 'podcast', 'podcast_episode']) &&
+                $count_type === 'stream' && $user_id > 0 &&
+                $agent !== 'debug'
+            ) {
                 self::count($type, $object_id, 'up');
                 // don't register activity for album or artist plays
                 if (!in_array($type, ['album', 'album_disk', 'artist', 'podcast'])) {

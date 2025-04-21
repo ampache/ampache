@@ -435,7 +435,7 @@ class Random
             case 'album':
             case 'artist':
                 $sql = sprintf('SELECT `%s`.`id`, SUM(`song`.`size`) AS `size`, SUM(`%s`.`time`) AS `time` FROM `%s` ', $type, $type, $type);
-                if (!$search_info || !array_key_exists('join', $search_info) || !array_key_exists('song', $search_info)) {
+                if (!array_key_exists('join', $search_info) || !array_key_exists('song', $search_info['join'])) {
                     $sql .= sprintf('LEFT JOIN `song` ON `song`.`%s`=`%s`.`id` ', $type, $type);
                 }
 

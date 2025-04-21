@@ -32,7 +32,17 @@ final class UserSearch implements SearchInterface
     /**
      * Handles the generation of the SQL for user searches.
      * @param Search $search
-     * @return array
+     * @return array{
+     *     base: string,
+     *     join: array<string, bool>,
+     *     where: string[],
+     *     where_sql: string,
+     *     table: array<string, string>,
+     *     table_sql: string,
+     *     group_sql: string,
+     *     having_sql: string,
+     *     parameters: array<int, mixed>,
+     * }
      */
     public function getSql(
         Search $search

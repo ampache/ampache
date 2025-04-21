@@ -259,7 +259,7 @@ class Xml3_Data
      *
      * This returns tags to the user, in a pretty xml document with the information
      *
-     * @param int[] $tags
+     * @param list<int|string> $tags
      */
     public static function tags(array $tags): string
     {
@@ -274,7 +274,7 @@ class Xml3_Data
         }
 
         foreach ($tags as $tag_id) {
-            $tag = new Tag($tag_id);
+            $tag = new Tag((int)$tag_id);
             $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<stream>0</stream>\n</tag>\n";
         } // end foreach
 
@@ -593,13 +593,13 @@ class Xml3_Data
      *
      * This handles creating an xml document for a user list
      *
-     * @param int[] $users    User identifier list
+     * @param list<int|string> $users    User identifier list
      */
     public static function users(array $users): string
     {
         $string = "<users>\n";
         foreach ($users as $user_id) {
-            $user = new User($user_id);
+            $user = new User((int)$user_id);
             if ($user->isNew() === false) {
                 $string .= "\t<username><![CDATA[" . $user->username . "]]></username>\n";
             }

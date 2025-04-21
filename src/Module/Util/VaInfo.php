@@ -145,9 +145,9 @@ final class VaInfo implements VaInfoInterface
      * @param ConfigContainerInterface $configContainer
      * @param LoggerInterface $logger
      * @param string $file
-     * @param array $gatherTypes
-     * @param string $encoding
-     * @param string $encodingId3v1
+     * @param string[] $gatherTypes
+     * @param string|null $encoding
+     * @param string|null $encodingId3v1
      * // TODO: where did this go? param string $encodingId3v2
      * @param string $dirPattern
      * @param string $filePattern
@@ -157,13 +157,13 @@ final class VaInfo implements VaInfoInterface
         UserRepositoryInterface $userRepository,
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
-        $file,
-        $gatherTypes = [],
-        $encoding = null,
-        $encodingId3v1 = null,
-        $dirPattern = '',
-        $filePattern = '',
-        $islocal = true
+        string $file,
+        array $gatherTypes = [],
+        ?string $encoding = null,
+        ?string $encodingId3v1 = null,
+        string $dirPattern = '',
+        string $filePattern = '',
+        bool $islocal = true
     ) {
         $this->islocal     = $islocal;
         $this->filename    = $file;
@@ -267,12 +267,9 @@ final class VaInfo implements VaInfoInterface
     /**
      * _detect_encoding
      *
-     * Takes an array of tags and attempts to automatically detect their
-     * encoding.
-     * @param array|string $tags
-     * @param string $mb_order
+     * Takes an array of tags and attempts to automatically detect their encoding.
      */
-    private static function _detect_encoding($tags, $mb_order): string
+    private static function _detect_encoding(array|string $tags, string $mb_order): string
     {
         if (!function_exists('mb_detect_encoding')) {
             return 'ISO-8859-1';
@@ -329,7 +326,7 @@ final class VaInfo implements VaInfoInterface
 
             return;
         }
-        $enabled_sources = (array)$this->get_metadata_order();
+        $enabled_sources = $this->get_metadata_order();
 
         if (
             in_array('getid3', $enabled_sources) &&
@@ -363,9 +360,8 @@ final class VaInfo implements VaInfoInterface
     /**
      * check_time
      * check a cached file is close to the expected time
-     * @param int $time
      */
-    public function check_time($time): bool
+    public function check_time(int $time): bool
     {
         $this->gather_tags();
         foreach ($this->tags as $results) {
@@ -465,7 +461,7 @@ final class VaInfo implements VaInfoInterface
      * @param array $frames
      * @return array
      */
-    public function prepare_metadata_for_writing($frames): array
+    public function prepare_metadata_for_writing(array $frames): array
     {
         $ndata = [];
         foreach ($frames as $key => $text) {
@@ -520,7 +516,7 @@ final class VaInfo implements VaInfoInterface
      * @param string $configKey
      * @return array
      */
-    public static function get_tag_type($results, $configKey = 'metadata_order'): array
+    public static function get_tag_type(array $results, string $configKey = 'metadata_order'): array
     {
         $tagorderMap = [
             'metadata_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
@@ -571,10 +567,10 @@ final class VaInfo implements VaInfoInterface
      * sanitized format that Ampache can actually use
      * @param array $results
      * @param array $keys
-     * @param string $filename
-     * @return array
+     * @param string|null $filename
+     * @return array<string, mixed>
      */
-    public static function clean_tag_info($results, $keys, $filename = null): array
+    public static function clean_tag_info(array $results, array $keys, string $filename = null): array
     {
         $info         = self::DEFAULT_INFO;
         $info['file'] = $filename;
@@ -696,9 +692,9 @@ final class VaInfo implements VaInfoInterface
     /**
      * parse_mbid
      * Get the first valid mbid. (if it's valid)
-     * @param string|array|null $mbid
+     * @param string[]|string|null $mbid
      */
-    public static function parse_mbid($mbid): ?string
+    public static function parse_mbid(array|string|null $mbid): ?string
     {
         if (empty($mbid)) {
             return null;
@@ -718,10 +714,10 @@ final class VaInfo implements VaInfoInterface
     /**
      * parse_mbid_array
      * Return only valid mbid data
-     * @param string|array $mbid
-     * @return array
+     * @param string[]|string $mbid
+     * @return string[]
      */
-    public static function parse_mbid_array($mbid): array
+    public static function parse_mbid_array(array|string $mbid): array
     {
         if (empty($mbid)) {
             return [];
@@ -766,7 +762,7 @@ final class VaInfo implements VaInfoInterface
      * _get_tags
      *
      * This processes the raw getID3 output and bakes it.
-     * @return array
+     * @return array<string, mixed>
      * @throws Exception
      */
     private function _get_tags(): array
@@ -850,7 +846,7 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * get_metadata_order
-     * @return array
+     * @return string[]
      */
     private function get_metadata_order(): array
     {
@@ -970,10 +966,7 @@ final class VaInfo implements VaInfoInterface
         return $parsed;
     }
 
-    /**
-     * @param string $string
-     */
-    private function trimAscii($string): string
+    private function trimAscii(string $string): string
     {
         return (string)preg_replace('/[\x00-\x1F\x80-\xFF]/', '', trim((string)$string));
     }
@@ -981,9 +974,8 @@ final class VaInfo implements VaInfoInterface
     /**
      * _clean_type
      * This standardizes the type that we are given into a recognized type.
-     * @param string $type
      */
-    private function _clean_type($type): string
+    private function _clean_type(string $type): string
     {
         switch ($type) {
             case 'mp2':
@@ -1784,9 +1776,9 @@ final class VaInfo implements VaInfoInterface
      * _parse_filename
      * This function uses the file and directory patterns to pull out extra tag information.
      * @param string $filepath
-     * @return array
+     * @return array<string, mixed>
      */
-    private function _parse_filename($filepath): array
+    private function _parse_filename(string $filepath): array
     {
         $origin  = $filepath;
         $results = [];
@@ -1810,11 +1802,12 @@ final class VaInfo implements VaInfoInterface
      * @param string $filepath
      * @param string $dirPattern
      * @param string $filePattern
-     * @return array
+     * @return array<string, mixed>
      */
-    public static function parse_pattern($filepath, $dirPattern, $filePattern): array
+    public static function parse_pattern(string $filepath, string $dirPattern, string $filePattern): array
     {
-        $logger          = self::getLogger();
+        //global $dic;
+        //$logger = $dic->get(LoggerInterface::class);
         $results         = [];
         $slash_type_preg = DIRECTORY_SEPARATOR;
         if ($slash_type_preg == '\\') {
@@ -1901,7 +1894,7 @@ final class VaInfo implements VaInfoInterface
      * @return string[]
      * @throws Exception
      */
-    private function parseGenres($data): array
+    private function parseGenres(array|string $data): array
     {
         //debug_event(self::class, "parseGenres: " . print_r($data, true), 5);
         $result = [];
@@ -1924,9 +1917,8 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * parseArtists
-     * @param array|string $data
      */
-    private function parseArtists($data): array
+    private function parseArtists(array|string $data): array
     {
         //debug_event(self::class, "parseArtists: " . print_r($data, true), 5);
         $result = null;
@@ -1956,7 +1948,7 @@ final class VaInfo implements VaInfoInterface
      * @return string[]
      * @throws Exception
      */
-    public function splitSlashedlist($data): array
+    public function splitSlashedlist(string $data): array
     {
         //debug_event(self::class, "splitSlashedlist: " . print_r($data, true), 5);
         $delimiters = $this->configContainer->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
@@ -2018,15 +2010,5 @@ final class VaInfo implements VaInfoInterface
         global $dic;
 
         return $dic->get(ConfigContainerInterface::class);
-    }
-
-    /**
-     * @deprecated inject by constructor
-     */
-    private static function getLogger(): LoggerInterface
-    {
-        global $dic;
-
-        return $dic->get(LoggerInterface::class);
     }
 }

@@ -105,7 +105,7 @@ class Waveform
 
                                 $transcode_settings = $media->get_transcode_settings($transcode_to);
                                 $transcoder         = Stream::start_transcode($media, $transcode_settings);
-                                if (!is_array($transcoder)) {
+                                if (empty($transcoder)) {
                                     return null;
                                 }
 

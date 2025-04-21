@@ -359,7 +359,7 @@ class Api
      *     live_streams?: int,
      *     labels?: int,
      *     username?: string,
-     *  }
+     * }
      */
     public static function server_details(string $token = ''): array
     {

@@ -425,15 +425,12 @@ class UPnPPlayer
         return $volume;
     }
 
-    /**
-     * @param $state
-     */
-    private function SetIntState($state): void
+    private function SetIntState(int $state): void
     {
         $this->_intState = $state;
 
         $sid  = 'upnp_ply_' . $this->_description_url;
-        $data = json_encode($this->_intState);
+        $data = json_encode($this->_intState) ?: '';
         if (!Session::exists(AccessTypeEnum::STREAM->value, $sid)) {
             Session::create(['type' => 'stream', 'sid' => $sid, 'value' => $data]);
         } else {

@@ -38,81 +38,51 @@ interface InstallationHelperInterface
      */
     public function install_check_server_apache(): bool;
 
-    /**
-     * @param string $file
-     * @param $web_path
-     * @param bool $fix
-     * @return bool|string
-     */
-    public function install_check_rewrite_rules($file, $web_path, $fix = false);
+    public function install_check_rewrite_rules(string $file, string $web_path, bool $fix = false): bool|string;
 
-    /**
-     * @param string $file
-     * @param $web_path
-     * @param bool $download
-     */
-    public function install_rewrite_rules($file, $web_path, $download): bool;
+    public function install_rewrite_rules(string $file, string $web_path, bool $download): bool;
 
     /**
      * Inserts the database using the values from Config.
-     * @param string $db_user
-     * @param string $db_pass
-     * @param bool $create_db
-     * @param bool $overwrite
-     * @param bool $create_tables
-     * @param string $charset
-     * @param string $collation
      */
     public function install_insert_db(
-        $db_user = null,
-        $db_pass = null,
-        $create_db = true,
-        $overwrite = false,
-        $create_tables = true,
-        $charset = 'utf8mb4',
-        $collation = 'utf8mb4_unicode_ci'
+        ?string $db_user = null,
+        ?string $db_pass = null,
+        bool $create_db = true,
+        bool $overwrite = false,
+        bool $create_tables = true,
+        string $charset = 'utf8mb4',
+        string $collation = 'utf8mb4_unicode_ci'
     ): bool;
 
     /**
      * Attempts to write out the config file or offer it as a download.
-     * @param bool $download
-     * @return bool
      * @throws Exception
      */
-    public function install_create_config($download = false): bool;
+    public function install_create_config(bool $download = false): bool;
 
     /**
      * this creates your initial account and sets up the preferences for the -1 user and you
-     * @param string $username
-     * @param string $password
-     * @param string $password2
      */
-    public function install_create_account($username, $password, $password2): bool;
+    public function install_create_account(string $username, string $password, string $password2): bool;
 
     /**
      * get transcode modes available on this machine.
-     * @return array
+     * @return string[]
      */
     public function install_get_transcode_modes(): array;
 
-    /**
-     * @param $mode
-     */
-    public function install_config_transcode_mode($mode);
+    public function install_config_transcode_mode(string $mode);
+
+    public function install_config_use_case(string $case);
 
     /**
-     * @param $case
-     */
-    public function install_config_use_case($case);
-
-    /**
-     * @param array $backends
+     * @param string[] $backends
      */
     public function install_config_backends(array $backends);
 
     /**
      * Write new configuration into the current configuration file by keeping old values.
-     * @param string $current_file_path
      */
     public function write_config(string $current_file_path): bool;
 

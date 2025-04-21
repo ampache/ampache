@@ -2248,17 +2248,17 @@ class Song extends database_object implements
      * get_deleted
      * get items from the deleted_songs table
      * @return list<array{
-     *      id: int,
-     *      addition_time: int,
-     *      delete_time: int,
-     *      title: string,
-     *      file: string,
-     *      catalog: int,
-     *      total_count: int,
-     *      total_skip: int,
-     *      album: int,
-     *      artist: int,
-     *  }>
+     *     id: int,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: int,
+     *     total_count: int,
+     *     total_skip: int,
+     *     album: int,
+     *     artist: int,
+     * }>
      */
     public static function get_deleted(): array
     {

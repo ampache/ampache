@@ -549,7 +549,7 @@ class Json_Data
      *
      * This returns licenses to the user, in a pretty JSON document with the information
      *
-     * @param int[] $objects Licence id's assigned to songs and artists
+     * @param list<int|string> $objects Licence id's assigned to songs and artists
      * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function licenses(array $objects, bool $object = true): string
@@ -568,7 +568,7 @@ class Json_Data
 
         $JSON = [];
         foreach ($objects as $license_id) {
-            $license = $licenseRepository->findById($license_id);
+            $license = $licenseRepository->findById((int)$license_id);
 
             if ($license !== null) {
                 $JSON[]  = [
@@ -593,7 +593,7 @@ class Json_Data
      *
      * This returns labels to the user, in a pretty JSON document with the information
      *
-     * @param int[] $objects
+     * @param list<int|string> $objects
      * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "label"
@@ -614,7 +614,7 @@ class Json_Data
         $labelRepository = self::getLabelRepository();
 
         foreach ($objects as $label_id) {
-            $label = $labelRepository->findById($label_id);
+            $label = $labelRepository->findById((int)$label_id);
             if ($label === null) {
                 continue;
             }
@@ -651,7 +651,7 @@ class Json_Data
      *
      * This returns genres to the user, in a pretty JSON document with the information
      *
-     * @param int[] $objects Genre id's to include
+     * @param list<int|string> $objects Genre id's to include
      * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "label"
@@ -669,7 +669,7 @@ class Json_Data
         }
         $JSON = [];
         foreach ($objects as $tag_id) {
-            $tag    = new Tag($tag_id);
+            $tag    = new Tag((int)$tag_id);
             $merged = $tag->get_merged_tags();
             $merge  = [];
             foreach ($merged as $mergedTag) {
@@ -1727,7 +1727,7 @@ class Json_Data
      *
      * This handles creating an JSON document for a user list
      *
-     * @param int[] $objects User id list
+     * @param list<int|string> $objects User id list
      * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "label"
@@ -1741,7 +1741,7 @@ class Json_Data
 
         $JSON = [];
         foreach ($objects as $user_id) {
-            $user = new User($user_id);
+            $user = new User((int)$user_id);
             if ($user->isNew()) {
                 continue;
             }
