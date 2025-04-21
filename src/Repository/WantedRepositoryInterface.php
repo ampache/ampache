@@ -28,16 +28,16 @@ use Ampache\Repository\Model\Wanted;
 
 /**
  * @phpstan-type DatabaseRow array{
- *   id: int,
- *   user: int,
- *   artist: ?int,
- *   artist_mbid: ?string,
- *   mbid: ?string,
- *   name: ?string,
- *   year: ?int,
- *   date: int,
- *   accepted: int
- *  }
+ *     id: int,
+ *     user: int,
+ *     artist: ?int,
+ *     artist_mbid: ?string,
+ *     mbid: ?string,
+ *     name: ?string,
+ *     year: ?int,
+ *     date: int,
+ *     accepted: int
+ * }
  */
 interface WantedRepositoryInterface
 {

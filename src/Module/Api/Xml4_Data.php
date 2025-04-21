@@ -382,7 +382,7 @@ class Xml4_Data
      *
      * This returns licenses to the user, in a pretty xml document with the information
      *
-     * @param int[] $licenses
+     * @param list<int|string> $licenses
      */
     public static function licenses(array $licenses): string
     {
@@ -394,7 +394,7 @@ class Xml4_Data
         $licenseRepository = self::getLicenseRepository();
 
         foreach ($licenses as $license_id) {
-            $license = $licenseRepository->findById($license_id);
+            $license = $licenseRepository->findById((int)$license_id);
             if ($license !== null) {
                 $string .= "<license id=\"$license_id\">\n\t<name><![CDATA[" . $license->getName() . "]]></name>\n\t<description><![CDATA[" . $license->getDescription() . "]]></description>\n\t<external_link><![CDATA[" . $license->getExternalLink() . "]]></external_link>\n</license>\n";
             }
@@ -408,7 +408,7 @@ class Xml4_Data
      *
      * This returns tags to the user, in a pretty xml document with the information
      *
-     * @param int[] $tags
+     * @param list<int|string> $tags
      */
     public static function tags(array $tags): string
     {
@@ -418,7 +418,7 @@ class Xml4_Data
         $string = "<total_count>" . count($tags) . "</total_count>\n";
 
         foreach ($tags as $tag_id) {
-            $tag = new Tag($tag_id);
+            $tag = new Tag((int)$tag_id);
             $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<stream>0</stream>\n</tag>\n";
         } // end foreach
 
@@ -484,7 +484,7 @@ class Xml4_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param int[] $albums
+     * @param list<int|string> $albums
      * @param string[] $include Array of other items to include
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node
@@ -713,7 +713,7 @@ class Xml4_Data
      * songs
      *
      * This returns an xml document from an array of song ids. (Spiffy isn't it!)
-     * @param int[] $songs
+     * @param list<int|string> $songs
      * @param User $user
      * @param bool $full_xml
      * @return string
@@ -732,7 +732,7 @@ class Xml4_Data
 
         // Foreach the ids!
         foreach ($songs as $song_id) {
-            $song = new Song($song_id);
+            $song = new Song((int)$song_id);
 
             // If the song id is invalid/null
             if ($song->isNew()) {
@@ -740,10 +740,10 @@ class Xml4_Data
             }
 
             $song->format();
-            $tag_string  = self::tags_string(Tag::get_top_tags('song', $song_id));
-            $rating      = new Rating($song_id, 'song');
+            $tag_string  = self::tags_string(Tag::get_top_tags('song', $song->id));
+            $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag($song_id, 'song');
+            $flag        = new Userflag($song->id, 'song');
             $art_url     = Art::url($song->album, 'album', Core::get_request('auth'));
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
@@ -882,13 +882,13 @@ class Xml4_Data
      *
      * This handles creating an xml document for a user list
      *
-     * @param int[] $users    User identifier list
+     * @param list<int|string> $users    User identifier list
      */
     public static function users(array $users): string
     {
         $string = "<users>\n";
         foreach ($users as $user_id) {
-            $user = new User($user_id);
+            $user = new User((int)$user_id);
             if ($user->isNew() === false) {
                 $string .= "<user id=\"" . (string) $user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n</user>\n";
             }

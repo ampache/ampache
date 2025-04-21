@@ -138,7 +138,10 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * @return array
+     * @return array<
+     *     string,
+     *     array{description: string, type: string}
+     * >
      */
     public function catalog_fields(): array
     {
@@ -537,8 +540,9 @@ class Catalog_local extends Catalog
 
     /**
      * add_to_catalog
-     * this function adds new files to an
-     * existing catalog
+     * @param null|array<string, string|bool> $options
+     * @param null|Interactor $interactor
+     * @return int
      */
     public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
@@ -1263,7 +1267,7 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function check_catalog_proc(): array
     {

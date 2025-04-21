@@ -48,9 +48,8 @@ class Stream
      * set_session
      *
      * This overrides the normal session value, without adding another session into the database, should be called with care
-     * @param int|string $sid
      */
-    public static function set_session($sid): void
+    public static function set_session(int|string $sid): void
     {
         if (!empty($sid)) {
             self::$session = (string)$sid;
@@ -333,7 +332,12 @@ class Stream
      * @param Podcast_Episode|Song|Video $media
      * @param array{format?: string, command?: string} $transcode_settings
      * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float}|string $options
-     * @return array
+     * @return array{
+     *     handle?: resource|null,
+     *     process?: resource|null,
+     *     stderr?: resource|null,
+     *     format?: string|null
+     * }
      */
     public static function start_transcode(
         Podcast_Episode|Video|Song $media,
@@ -501,7 +505,12 @@ class Stream
      * start_process
      * @param string $command
      * @param array{format?: string} $settings
-     * @return array
+     * @return array{
+     *     handle: resource|null,
+     *     process?: resource,
+     *     stderr?: resource|null,
+     *     format?: string
+     * }
      */
     private static function start_process(string $command, array $settings = []): array
     {
@@ -518,10 +527,10 @@ class Stream
 
         debug_event(self::class, "Transcode command prefix: " . $cmdPrefix, 3);
 
+        $parray  = ['handle' => null];
         $process = proc_open($cmdPrefix . $command, $descriptors, $pipes);
         if ($process === false) {
             debug_event(self::class, 'Transcode command failed to open.', 1);
-            $parray = ['handle' => null];
         } else {
             $parray = [
                 'process' => $process,
@@ -637,7 +646,7 @@ class Stream
      *     expire: int
      * }>
      */
-    public static function get_now_playing($user_id = 0): array
+    public static function get_now_playing(int $user_id = 0): array
     {
         $sql = "SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` LEFT JOIN `session` ON `session`.`id` = `np`.`id` ";
 

@@ -2,8 +2,13 @@
 
 ## Ampache 7.4.1
 
+Parameter typing and ensuring valid data to functions has been done this release.
+
+Functionally the code isn't changed but we are now ensuring valid data is getting to the functions.
+
 ### Added
 
+* Translations 2025-04-16
 * Add direct link alternative sharing to items for public users
 * Plugin
   * Bluesky share plugin
@@ -15,7 +20,7 @@
 
 ### Fixed
 
-* Speed up dashboard pages for pulic users calling the top query once
+* Speed up dashboard pages for pulic users calling the top_sql query once
 * RSS compliance for date and atom links
 * Verify chunk count using the chunk and not the count
 * Waveform error when the file is missing
@@ -23,6 +28,8 @@
   * Don't set user preferences when not used in the plugin
 * CLI
   * Default options for `run:updateCatalog`
+* Subsonic
+  * Could not set a 0 rating
 
 ## Ampache 7.4.0
 

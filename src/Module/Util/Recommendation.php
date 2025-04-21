@@ -315,11 +315,11 @@ class Recommendation
      * @param int $limit
      * @param bool $local_only
      * @return list<array{
-     *      id: ?int,
-     *      name: string,
-     *      rel?: ?string,
-     *      mbid?: ?string
-     *  }>
+     *     id: ?int,
+     *     name: string,
+     *     rel?: ?string,
+     *     mbid?: ?string
+     * }>
      */
     public static function get_artists_like(int $artist_id, int $limit = 10, bool $local_only = true): array
     {
@@ -460,15 +460,15 @@ class Recommendation
      * Returns artist information
      * @param int $artist_id
      * @return array{
-     *      id: ?int,
-     *      summary: ?string,
-     *      placeformed: ?string,
-     *      yearformed: ?int,
-     *      largephoto: ?string,
-     *      smallphoto: ?string,
-     *      mediumphoto: ?string,
-     *      megaphoto: ?string
-     *  }
+     *     id: ?int,
+     *     summary: ?string,
+     *     placeformed: ?string,
+     *     yearformed: ?int,
+     *     largephoto: ?string,
+     *     smallphoto: ?string,
+     *     mediumphoto: ?string,
+     *     megaphoto: ?string
+     * }
      */
     public static function get_artist_info(int $artist_id): array
     {

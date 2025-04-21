@@ -1736,17 +1736,7 @@ parameters:
 			path: src/Module/Beets/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:add_to_catalog\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:checkSong\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:check_catalog_proc\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
@@ -1886,21 +1876,6 @@ parameters:
 			path: src/Module/Broadcast/Broadcast_Server.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:add_to_catalog\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:catalog_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:check_catalog_proc\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:create_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
@@ -1961,11 +1936,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_beets.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_beets\\:\\:catalog_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_beets.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_beets\\:\\:checkSong\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_beets.php
@@ -1974,11 +1944,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_beets\\:\\:create_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_beets.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_beetsremote\\:\\:catalog_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_beetsremote.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_beetsremote\\:\\:checkSong\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
@@ -2007,21 +1972,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:add_files\\(\\) has parameter \\$path with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:add_to_catalog\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:catalog_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:check_catalog_proc\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_dropbox.php
 
@@ -2091,21 +2041,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_local.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:add_to_catalog\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:catalog_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:check_catalog_proc\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:create_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
@@ -2121,39 +2056,9 @@ parameters:
 			path: src/Module/Catalog/Catalog_local.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_remote\\:\\:add_to_catalog\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_remote.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_remote\\:\\:catalog_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_remote.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_remote\\:\\:check_catalog_proc\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_remote.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_remote\\:\\:create_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_remote.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:add_to_catalog\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:catalog_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:check_catalog_proc\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:check_remote_song\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
@@ -2197,11 +2102,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SeafileAdapter\\:\\:for_all_files\\(\\) has parameter \\$func with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SeafileAdapter\\:\\:from_virtual_path\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/SeafileAdapter.php
 
@@ -2351,11 +2251,6 @@ parameters:
 			path: src/Module/Cli/RunWebsocketCommand.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:add_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
@@ -2366,27 +2261,7 @@ parameters:
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:get_instance\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:get_instances\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:instance_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:status\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:update_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
 
@@ -2416,27 +2291,7 @@ parameters:
 			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:add_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:get_instance\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:get_instance_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:get_instances\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
@@ -2451,32 +2306,12 @@ parameters:
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:add_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:get_active_instance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:get_instance\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:get_instances\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:instance_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
@@ -2492,11 +2327,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:status\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:update_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
@@ -2716,11 +2546,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:add_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
@@ -2731,27 +2556,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:get_instance\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:get_instances\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:instance_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:status\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:update_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
 
@@ -2827,11 +2632,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:PlaylistRemove\\(\\) has parameter \\$track with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:SetIntState\\(\\) has parameter \\$state with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
@@ -2916,11 +2716,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlaylist.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:add_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
@@ -2931,27 +2726,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:get_instance\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:get_instances\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:instance_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:status\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:update_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
 
@@ -3011,11 +2786,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:add_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
@@ -3026,27 +2796,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:get_instance\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:get_instances\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:instance_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:status\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:update_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
 
@@ -3069,11 +2819,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:\\$_xbmc has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\localplay_controller\\:\\:add_instance\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/localplay_controller.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\localplay_controller\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -3101,17 +2846,7 @@ parameters:
 			path: src/Module/Playback/Localplay/localplay_controller.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\localplay_controller\\:\\:get_instances\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/localplay_controller.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\localplay_controller\\:\\:get_url\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/localplay_controller.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\localplay_controller\\:\\:instance_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/localplay_controller.php
 
@@ -3126,32 +2861,7 @@ parameters:
 			path: src/Module/Playback/Localplay/localplay_controller.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\localplay_controller\\:\\:update_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/localplay_controller.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:call_url\\(\\) has parameter \\$vars with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:get_api_sig\\(\\) has parameter \\$vars with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:kill_process\\(\\) has parameter \\$transcoder with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:start_process\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:start_transcode\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -3166,49 +2876,9 @@ parameters:
 			path: src/Module/Playback/Stream_Url.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:can_transcode\\(\\) has parameter \\$types with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/WebPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:can_transcode\\(\\) has parameter \\$urlinfo with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/WebPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:get_media_object\\(\\) has parameter \\$urlinfo with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/WebPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:get_media_types\\(\\) has parameter \\$types with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/WebPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:get_media_types\\(\\) has parameter \\$urlinfo with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/WebPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:get_media_types\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/WebPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:get_types\\(\\) has parameter \\$urlinfo with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/WebPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:get_types\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/WebPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\AlbumDiskSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/AlbumDiskSearch.php
 
 		-
 			message: "#^Call to function array_key_exists\\(\\) with 'count' and array\\{album_map\\?\\: true, image\\?\\: true, song\\: bool, catalog\\: bool, catalog_map\\: mixed\\} will always evaluate to false\\.$#"
@@ -3216,64 +2886,9 @@ parameters:
 			path: src/Module/Playlist/Search/AlbumSearch.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\AlbumSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/AlbumSearch.php
-
-		-
 			message: "#^Call to function array_key_exists\\(\\) with 'count' and array\\{album\\?\\: true, catalog\\: bool, image\\?\\: true, song\\?\\: true, catalog_map\\: mixed\\} will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Playlist/Search/ArtistSearch.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\ArtistSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/ArtistSearch.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\LabelSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/LabelSearch.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\PlaylistSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/PlaylistSearch.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\PodcastEpisodeSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/PodcastEpisodeSearch.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\PodcastSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/PodcastSearch.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\SearchInterface\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/SearchInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\SongSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/SongSearch.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\TagSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/TagSearch.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\UserSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/UserSearch.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\VideoSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/VideoSearch.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:check_for_duplicate\\(\\) has parameter \\$apic_typeid with no type specified\\.$#"
@@ -3396,51 +3011,6 @@ parameters:
 			path: src/Module/System/InstallationHelper.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelper\\:\\:install_check_rewrite_rules\\(\\) has parameter \\$web_path with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelper\\:\\:install_config_backends\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelper\\:\\:install_config_backends\\(\\) has parameter \\$backends with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelper\\:\\:install_config_transcode_mode\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelper\\:\\:install_config_transcode_mode\\(\\) has parameter \\$mode with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelper\\:\\:install_config_use_case\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelper\\:\\:install_config_use_case\\(\\) has parameter \\$case with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelper\\:\\:install_get_transcode_modes\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelper\\:\\:install_rewrite_rules\\(\\) has parameter \\$web_path with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelper\\:\\:split_sql\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/System/InstallationHelper.php
@@ -3451,17 +3021,7 @@ parameters:
 			path: src/Module/System/InstallationHelperInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:install_check_rewrite_rules\\(\\) has parameter \\$web_path with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelperInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:install_config_backends\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelperInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:install_config_backends\\(\\) has parameter \\$backends with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/System/InstallationHelperInterface.php
 
@@ -3471,27 +3031,7 @@ parameters:
 			path: src/Module/System/InstallationHelperInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:install_config_transcode_mode\\(\\) has parameter \\$mode with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelperInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:install_config_use_case\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelperInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:install_config_use_case\\(\\) has parameter \\$case with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelperInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:install_get_transcode_modes\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelperInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:install_rewrite_rules\\(\\) has parameter \\$web_path with no type specified\\.$#"
 			count: 1
 			path: src/Module/System/InstallationHelperInterface.php
 
@@ -3544,36 +3084,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\System\\\\LegacyLogger\\:\\:warning\\(\\) has parameter \\$message with no type specified\\.$#"
 			count: 1
 			path: src/Module/System/LegacyLogger.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Session\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/System/Session.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Session\\:\\:get_geolocation\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/System/Session.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Session\\:\\:read\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/Session.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Session\\:\\:username\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/Session.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Session\\:\\:write\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/Session.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\Session\\:\\:write\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/Session.php
 
 		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
@@ -5176,11 +4686,6 @@ parameters:
 			path: src/Module/Util/UtilityFactoryInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:__construct\\(\\) has parameter \\$gatherTypes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_asf\\(\\) has parameter \\$tags with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -5266,16 +4771,6 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_get_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_parse_filename\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_parse_general\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -5292,16 +4787,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:clean_tag_info\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:clean_tag_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:get_metadata_order\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -5327,26 +4812,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:parseGenres\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:parse_mbid\\(\\) has parameter \\$mbid with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:parse_mbid_array\\(\\) has parameter \\$mbid with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:parse_mbid_array\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:parse_pattern\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -5411,22 +4876,12 @@ parameters:
 			path: src/Module/Util/VaInfoInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:clean_tag_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfoInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:get_tag_type\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfoInterface.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:get_tag_type\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfoInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:parse_pattern\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfoInterface.php
 
@@ -6081,21 +5536,6 @@ parameters:
 			path: src/Repository/Model/Browse.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:add_to_catalog\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:catalog_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:check_catalog_proc\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:gather_art\\(\\) has parameter \\$songs with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -6117,11 +5557,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_media_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -6451,11 +5886,6 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:_post_process\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:_serialize\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
@@ -6471,11 +5901,6 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_saved\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_total\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
@@ -6487,11 +5912,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_type\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Query\\:\\:\\$_cache type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
 
@@ -6526,16 +5946,6 @@ parameters:
 			path: src/Repository/Model/Search.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:_filter_request\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:_filter_request\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:filter_data\\(\\) has parameter \\$operator with no value type specified in iterable type array\\.$#"
 			count: 2
 			path: src/Repository/Model/Search.php
@@ -6561,32 +5971,12 @@ parameters:
 			path: src/Repository/Model/Search.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:prepare\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:prepare\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:query\\(\\) has parameter \\$search_sql with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:run\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:set_rules\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:to_sql\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 

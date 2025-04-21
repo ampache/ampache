@@ -175,7 +175,7 @@ class UPnPPlaylist
                 'upnp_playlist' => $this->_songs,
                 'upnp_current' => $this->_current
             ]
-        );
+        ) ?: '';
         if (!Session::exists(AccessTypeEnum::STREAM->value, $sid)) {
             Session::create(['type' => 'stream', 'sid' => $sid, 'value' => $pls_data]);
         } else {

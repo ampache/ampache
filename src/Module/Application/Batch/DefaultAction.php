@@ -121,7 +121,14 @@ final readonly class DefaultAction implements ApplicationActionInterface
                     $object_id        = (int)$this->requestParser->getFromRequest('browse_id');
                     $browse           = $this->modelFactory->createBrowse($object_id);
                     $browse_media_ids = $browse->get_saved();
-                    foreach ($browse_media_ids as $media_id) {
+                    foreach ($browse_media_ids as $media) {
+                        if (is_array($media)) {
+                            /** @var array<array{object_type: string, object_id: int}> $media */
+                            $media_id = (int)$media['object_id'];
+                        } else {
+                            /** @var int $media */
+                            $media_id = $media;
+                        }
                         switch ($object_type) {
                             case 'album':
                                 $album = $this->modelFactory->createAlbum($media_id);

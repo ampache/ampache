@@ -104,12 +104,12 @@ final class DefaultAction implements ApplicationActionInterface
         }
 
         if (array_key_exists('transcode_template', $_REQUEST)) {
-            $mode = $_REQUEST['transcode_template'];
+            $mode = (string)$_REQUEST['transcode_template'];
             $this->installationHelper->install_config_transcode_mode($mode);
         }
 
         if (array_key_exists('usecase', $_REQUEST)) {
-            $case = $_REQUEST['usecase'];
+            $case = (string)$_REQUEST['usecase'];
             if (Dba::check_database()) {
                 $this->installationHelper->install_config_use_case($case);
             }

@@ -1133,8 +1133,8 @@ class Search extends playlist_object
      * _filter_request
      *
      * Sanitizes raw search data
-     * @param array $data
-     * @return array
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
      */
     private function _filter_request(array $data): array
     {
@@ -1279,7 +1279,7 @@ class Search extends playlist_object
      * prepare
      *
      * This function prepares the sql and parameters for execution.
-     * @param array $data
+     * @param array<string, mixed> $data
      * @param User|null $user
      * @param bool $require_rules // require a valid rule to return search items (instead of returning all items)
      * @return array{
@@ -1344,7 +1344,7 @@ class Search extends playlist_object
      *
      * This function actually runs the search and returns an array of the
      * results.
-     * @param array $data
+     * @param array<string, mixed> $data
      * @param User|null $user
      * @param bool $require_rules // require a valid rule to return search items (instead of returning all items)
      * @return int[]
@@ -1365,7 +1365,10 @@ class Search extends playlist_object
      * query
      *
      * This function is used to simplify api searches and return valuable data for responses
-     * @param array $search_sql
+     * @param array{
+     *     sql: string,
+     *     parameters: array
+     * } $search_sql
      * @return array{
      *     results: int[],
      *     count: int
@@ -1820,7 +1823,7 @@ class Search extends playlist_object
      * set_rules
      *
      * Takes an array of sanitized search data from the form and generates our real array from it.
-     * @param array $data
+     * @param array<string, mixed> $data
      */
     public function set_rules(array $data): void
     {
@@ -1942,6 +1945,18 @@ class Search extends playlist_object
      * to_sql
      *
      * Call the appropriate real function.
+     *
+     * @return array{
+     *     base: string,
+     *     join: array<string, bool>,
+     *     where: string[],
+     *     where_sql: string,
+     *     table: array<string, string>,
+     *     table_sql: string,
+     *     group_sql: string,
+     *     having_sql: string,
+     *     parameters: array<int, mixed>,
+     * }
      */
     public function to_sql(): array
     {

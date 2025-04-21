@@ -89,8 +89,10 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
             $playlist->delete_all();
             // different browses could store objects in different ways
             if (is_array($objects[0])) {
+                /** @var array<array{object_type: string, object_id: int}> $objects */
                 $playlist->add_medias($objects);
             } else {
+                /** @var int[] $objects */
                 $playlist->add_songs($objects);
             }
 

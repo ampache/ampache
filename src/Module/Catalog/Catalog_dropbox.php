@@ -140,7 +140,10 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @return array
+     * @return array<
+     *     string,
+     *     array{description: string, type: string, value?: scalar}
+     * >
      */
     public function catalog_fields(): array
     {
@@ -254,8 +257,9 @@ class Catalog_dropbox extends Catalog
 
     /**
      * add_to_catalog
-     * this function adds new files to an
-     * existing catalog
+     * @param null|array<string, string|bool> $options
+     * @param null|Interactor $interactor
+     * @return int
      */
     public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
@@ -263,7 +267,7 @@ class Catalog_dropbox extends Catalog
         set_time_limit(0);
 
         if ($options != null) {
-            $this->authcode = $options['authcode'];
+            $this->authcode = (string)$options['authcode'];
         }
 
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
@@ -632,7 +636,7 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function check_catalog_proc(): array
     {

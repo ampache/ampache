@@ -98,7 +98,7 @@ class UPnPDevice
             [
                 'type' => 'stream',
                 'sid' => 'upnp_dev_' . $descriptionUrl,
-                'value' => json_encode($this->_settings)
+                'value' => json_encode($this->_settings) ?: '',
             ]
         );
     }

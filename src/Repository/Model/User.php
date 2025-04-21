@@ -821,10 +821,8 @@ class User extends database_object
 
     /**
      * save_mediaplay
-     * @param User $user
-     * @param Song $media
      */
-    public static function save_mediaplay($user, $media): void
+    public static function save_mediaplay(User $user, Song $media): void
     {
         foreach (Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY) as $plugin_name) {
             try {

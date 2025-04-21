@@ -189,13 +189,13 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * Get each id from the artist table with the minimum detail required for subsonic
      * @param int[] $catalogs
      * @return list<array{
-     *      id: int,
-     *      f_name: string,
-     *      name: string,
-     *      album_count: int,
-     *      catalog_id: int,
-     *      has_art: int
-     *  }>
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * }>
      */
     public static function get_id_arrays(array $catalogs = []): array
     {

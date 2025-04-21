@@ -234,7 +234,7 @@ class Json4_Data
      *
      * This returns licenses to the user, in a pretty JSON document with the information
      *
-     * @param int[] $licenses
+     * @param list<int|string> $licenses
      */
     public static function licenses(array $licenses): string
     {
@@ -244,7 +244,7 @@ class Json4_Data
 
         $JSON = [];
         foreach ($licenses as $license_id) {
-            $license = self::getLicenseRepository()->findById($license_id);
+            $license = self::getLicenseRepository()->findById((int)$license_id);
 
             if ($license !== null) {
                 $JSON[]  = [
@@ -264,7 +264,7 @@ class Json4_Data
      *
      * This returns tags to the user, in a pretty JSON document with the information
      *
-     * @param int[] $tags
+     * @param list<int|string> $tags
      */
     public static function tags(array $tags): string
     {
@@ -276,7 +276,7 @@ class Json4_Data
         $TAGS = [];
 
         foreach ($tags as $tag_id) {
-            $tag    = new Tag($tag_id);
+            $tag    = new Tag((int)$tag_id);
             $TAGS[] = [
                 "id" => (string)$tag_id,
                 "name" => $tag->name,
@@ -1028,14 +1028,14 @@ class Json4_Data
      *
      * This handles creating an JSON document for a user list
      *
-     * @param int[] $users    User identifier list
+     * @param list<int|string> $users    User identifier list
      */
     public static function users(array $users): string
     {
         $JSON       = [];
         $user_array = [];
         foreach ($users as $user_id) {
-            $user         = new User($user_id);
+            $user         = new User((int)$user_id);
             $user_array[] = [
                 "id" => (string)$user_id,
                 "username" => $user->username
