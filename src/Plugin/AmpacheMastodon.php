@@ -82,7 +82,7 @@ class AmpacheMastodon extends AmpachePlugin implements PluginExternalShareInterf
      */
     public function external_share(string $url, string $text): string
     {
-        return AmpConfig::get_web_path() . "/tootpick.html#text=" . rawurlencode($text) . " " . rawurlencode($url);
+        return AmpConfig::get_web_path('/client') . "/tootpick.html#text=" . rawurlencode($text) . " " . rawurlencode($url);
     }
 
     /**
