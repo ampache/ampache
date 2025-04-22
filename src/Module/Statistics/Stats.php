@@ -616,7 +616,7 @@ class Stats
             $user === null &&
             AmpConfig::get('cron_cache') &&
             !$addAdditionalColumns &&
-            in_array($type, ['album', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode', 'playlist'])
+            in_array($type, ['album', 'album_disk', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode', 'playlist'])
         ) {
             $sql = "SELECT `object_id` AS `id`, MAX(`count`) AS `count` FROM `cache_object_count` WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "' GROUP BY `object_id`, `object_type`";
         } else {
@@ -643,7 +643,9 @@ class Stats
                 $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `object_count`.`object_id` AND `object_count`.`object_type` = 'artist'";
             }
             if ($input_type == 'album_disk') {
-                $sql   = "SELECT `album_disk`.`id` AS `id`, COUNT(*) AS `count` FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` AND `object_type` = 'song' LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `song`.`disk` = `album_disk`.`disk`";
+                $sql   = ($addAdditionalColumns)
+                    ? "SELECT `album_disk`.`id` AS `id`, COUNT(*) AS `count`, 'album_disk' AS `object_type`, `count_type`, " . $threshold . " AS `threshold` FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` AND `object_type` = 'song' LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `song`.`disk` = `album_disk`.`disk`"
+                    : "SELECT `album_disk`.`id` AS `id`, COUNT(*) AS `count` FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` AND `object_type` = 'song' LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `song`.`disk` = `album_disk`.`disk`";
                 $group = '`album_disk`.`id`';
                 $type  = 'song';
             }
