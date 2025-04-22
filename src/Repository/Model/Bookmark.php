@@ -57,14 +57,11 @@ class Bookmark extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull for
-     * @param int|null $object_id
-     * @param string $object_type
-     * @param int $user_id
      */
     public function __construct(
-        $object_id = 0,
-        $object_type = null,
-        $user_id = null
+        ?int $object_id = 0,
+        ?string $object_type = null,
+        ?int $user_id = null
     ) {
         if (!$object_id) {
             return;

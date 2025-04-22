@@ -77,9 +77,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     public ?string $link = null;
 
-    /** @var int $albums */
-    public $albums;
-
     /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
@@ -95,10 +92,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /**
      * Artist class, for modifying an artist
      * Takes the ID of the artist and pulls the info from the db
-     * @param int|null $artist_id
      */
     public function __construct(
-        $artist_id = 0
+        ?int $artist_id = 0
     ) {
         if (!$artist_id) {
             return;
@@ -128,11 +124,17 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * construct_from_array
-     * This is used by the metadata class specifically but fills out a Artist object
-     * based on a key'd array, it sets $_fake to true
-     * @param array $data
+     * This is used by the metadata class specifically but fills out a Artist object based on a key'd array
+     * @param array{
+     *     id: int,
+     *     name: ?string,
+     *     prefix: ?string,
+     *     summary: ?string,
+     *     album_count: int,
+     *     album_count: int
+     * } $data
      */
-    public static function construct_from_array($data): Artist
+    public static function construct_from_array(array $data): Artist
     {
         $artist = new Artist(0);
         foreach ($data as $key => $value) {
@@ -147,8 +149,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * @param int[] $ids
      * @param bool $extra
      * @param string $limit_threshold
+     * @return bool
      */
-    public static function build_cache($ids, $extra = false, $limit_threshold = ''): bool
+    public static function build_cache(array $ids, bool $extra = false, string $limit_threshold = ''): bool
     {
         if (empty($ids)) {
             return false;
@@ -240,14 +243,38 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * get_id_array
      *
      * Get info from the artist table with the minimum detail required for subsonic
-     * @param int $artist_id
+     * @return array{
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     song_count: int,
+     *     catalog_id: int,
+     * }
      */
-    public static function get_id_array($artist_id): array
+    public static function get_id_array(int $artist_id): array
     {
-        $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, `catalog_map`.`catalog_id`, `image`.`object_id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = (SELECT MIN(`catalog_map`.`catalog_id`) FROM `catalog_map` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id`) LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `artist`.`id` = ? ORDER BY `artist`.`name`";
+        $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, `catalog_map`.`catalog_id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = (SELECT MIN(`catalog_map`.`catalog_id`) FROM `catalog_map` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id`) WHERE `artist`.`id` = ? ORDER BY `artist`.`name`";
         $db_results = Dba::read($sql, [$artist_id]);
+        if ($row = Dba::fetch_assoc($db_results, false)) {
+            return [
+                'id' => (int)$row['id'],
+                'f_name' => $row['f_name'],
+                'name' => $row['name'],
+                'album_count' => (int)$row['album_count'],
+                'song_count' => (int)$row['song_count'],
+                'catalog_id' => (int)$row['catalog_id'],
+            ];
+        }
 
-        return Dba::fetch_assoc($db_results, false);
+        return [
+            'id' => 0,
+            'f_name' => '',
+            'name' => '',
+            'album_count' => 0,
+            'song_count' => 0,
+            'catalog_id' => 0,
+        ];
     }
 
     /**
@@ -306,6 +333,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
      */
     public function get_keywords(): array
     {
@@ -313,12 +341,12 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
             'mb_artistid' => [
                 'important' => false,
                 'label' => T_('Artist MusicBrainzID'),
-                'value' => $this->mbid,
+                'value' => (string)$this->mbid,
             ],
             'artist' => [
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => $this->get_fullname(),
+                'value' => (string)$this->get_fullname(),
             ],
         ];
     }
@@ -427,9 +455,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /**
      * get_display
      * This returns a csv formatted version of the artists that we are given
-     * @param array $artists
+     * @param int[] $artists
      */
-    public static function get_display($artists): string
+    public static function get_display(array $artists): string
     {
         $results = '';
         if (empty($artists)) {
@@ -616,11 +644,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * check
      *
      * Checks for an existing artist; if none exists, insert one.
-     * @param string $name
-     * @param string|null $mbid
-     * @param bool $readonly
      */
-    public static function check($name, $mbid = '', $readonly = false): ?int
+    public static function check(string $name, ?string $mbid = '', bool $readonly = false): ?int
     {
         $split_artist = AmpConfig::get('split_artist_regex', false);
         $full_name    = ($split_artist && preg_match('/[^ ]' . $split_artist . '[^ ]/', $name))
@@ -1078,10 +1103,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Migrate an object's associate stats to a new object
-     * @param int $old_object_id
-     * @param int $new_object_id
      */
-    public static function migrate($old_object_id, $new_object_id): void
+    public static function migrate(int $old_object_id, int $new_object_id): void
     {
         if ((int)$new_object_id > 0) {
             // migrating to a new artist

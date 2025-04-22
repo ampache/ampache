@@ -246,7 +246,7 @@ class FileSystem
     public function rename(string $fs_id, string $name): array
     {
         $dir = $this->path($fs_id);
-        if ($dir === $this->base) {
+        if ($this->base && $dir === $this->base) {
             throw new Exception('Cannot rename root');
         }
         if (preg_match('([^ a-zа-я-_0-9.]+)ui', $name) || !strlen($name)) {
@@ -291,7 +291,7 @@ class FileSystem
     /**
      * @param string $fs_id
      * @param string $par
-     * @returnarray{id: string}
+     * @return array{id: string}
      * @throws Exception
      */
     public function move(string $fs_id, string $par): array

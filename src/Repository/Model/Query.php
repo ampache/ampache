@@ -80,17 +80,14 @@ class Query
         'year' => 'ASC',
     ];
 
-    /** @var int|string $id */
-    public $id;
+    public int|string $id;
 
-    /** @var int|null $catalog */
-    public $catalog = null;
+    public ?int $catalog = null;
 
-    /** @var int|null $user_id */
-    public $user_id = null;
+    public ?int $user_id = null;
 
     /** @var array $_state */
-    protected $_state = [
+    protected array $_state = [
         'album_artist' => false, // Used by $browse->set_type() to filter artists to album artist only
         'base' => null,
         'custom' => false,
@@ -128,7 +125,6 @@ class Query
     /** @var int[] $_cache */
     protected array $_cache = [];
 
-    /** @var QueryInterface|null $queryType */
     private ?QueryInterface $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
 
     /**

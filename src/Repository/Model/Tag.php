@@ -57,9 +57,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * constructor
      * This takes a tag id and returns all of the relevant information
-     * @param int|null $tag_id
      */
-    public function __construct($tag_id = 0)
+    public function __construct(?int $tag_id = 0)
     {
         if (!$tag_id) {
             return;
@@ -896,8 +895,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * clean_to_existing
      * Clean tag list to existing tag list only
-     * @param array|string $tags
-     * @return array|string
+     * @param string[]|string $tags
+     * @return string[]|string
      */
     public static function clean_to_existing($tags)
     {
@@ -1009,14 +1008,17 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     /**
      * Get item keywords for metadata searches.
+     * @return array{tag: array{important: true, label: string, value: string}}
      */
     public function get_keywords(): array
     {
-        return ['tag' => [
-            'important' => true,
-            'label' => T_('Genre'),
-            'value' => $this->name,
-        ]];
+        return [
+            'tag' => [
+                'important' => true,
+                'label' => T_('Genre'),
+                'value' => (string)$this->name,
+            ]
+        ];
     }
 
     /**
@@ -1140,11 +1142,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     /**
      * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id): void
+    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
         $sql = "UPDATE IGNORE `tag_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 

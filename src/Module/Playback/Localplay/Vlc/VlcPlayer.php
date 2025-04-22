@@ -580,6 +580,6 @@ class VlcPlayer
             }
         }
 
-        return ($bigxml_array);
+        return $bigxml_array;
     }
 }

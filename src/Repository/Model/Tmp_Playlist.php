@@ -56,9 +56,8 @@ class Tmp_Playlist extends database_object
      * This takes a playlist_id as an optional argument and gathers the
      * information.  If no playlist_id is passed or the requested one isn't
      * found, return false.
-     * @param int|null $playlist_id
      */
-    public function __construct($playlist_id = 0)
+    public function __construct(?int $playlist_id = 0)
     {
         if (!$playlist_id) {
             return;
@@ -86,9 +85,8 @@ class Tmp_Playlist extends database_object
      * has_info
      * This is an internal (private) function that gathers the information
      * for this object from the playlist_id that was passed in.
-     * @param int $playlist_id
      */
-    private function has_info($playlist_id): bool
+    private function has_info(int $playlist_id): bool
     {
         $sql        = "SELECT * FROM `tmp_playlist` WHERE `id` = ?;";
         $db_results = Dba::read($sql, [$playlist_id]);
@@ -108,9 +106,8 @@ class Tmp_Playlist extends database_object
      * get_from_session
      * This returns a playlist object based on the session that is passed to
      * us.  This is used by the load_playlist on user for the most part.
-     * @param string $session_id
      */
-    public static function get_from_session($session_id): Tmp_Playlist
+    public static function get_from_session(string $session_id): Tmp_Playlist
     {
         $sql        = "SELECT `id` FROM `tmp_playlist` WHERE `session` = ?";
         $db_results = Dba::read($sql, [$session_id]);
@@ -127,9 +124,8 @@ class Tmp_Playlist extends database_object
      * get_from_username
      * This returns a tmp playlist object based on a userid passed
      * this is used for the user profiles page
-     * @param string $username
      */
-    public static function get_from_username($username): ?int
+    public static function get_from_username(string $username): ?int
     {
         $sql        = "SELECT `tmp_playlist`.`id` FROM `tmp_playlist` LEFT JOIN `session` ON `session`.`id`=`tmp_playlist`.`session` WHERE `session`.`username` = ? ORDER BY `session`.`expire` DESC";
         $db_results = Dba::read($sql, [$username]);
@@ -251,12 +247,9 @@ class Tmp_Playlist extends database_object
 
     /**
      * session_clean
-     * This deletes any other tmp_playlists associated with this
-     * session
-     * @param $sessid
-     * @param string|false $plist_id
+     * This deletes any other tmp_playlists associated with thisvsession
      */
-    public static function session_clean($sessid, $plist_id): void
+    public static function session_clean(string $sessid, string $plist_id): void
     {
         $sql = "DELETE FROM `tmp_playlist` WHERE `session` = ? AND `id` != ?";
         Dba::write($sql, [$sessid, $plist_id]);
@@ -316,7 +309,7 @@ class Tmp_Playlist extends database_object
     /**
      * @param list<array{object_type: LibraryItemEnum, object_id: int}> $medias
      */
-    public function add_medias($medias): void
+    public function add_medias(array $medias): void
     {
         foreach ($medias as $media) {
             $this->add_object($media['object_id'], $media['object_type']);

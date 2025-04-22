@@ -120,9 +120,8 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      * to this album from the database it does not
      * pull the album or thumb art by default or
      * get any of the counts.
-     * @param int|null $album_disk_id
      */
-    public function __construct($album_disk_id = 0)
+    public function __construct(?int $album_disk_id = 0)
     {
         if (!$album_disk_id) {
             $this->album = new Album();
@@ -184,13 +183,8 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      * check
      *
      * Insert album_disk and do additional steps for data on insert
-     * @param int $album_id
-     * @param int $disk
-     * @param int $catalog_id
-     * @param null|string $disksubtitle
-     * @param null|int $current_id
      */
-    public static function check($album_id, $disk, $catalog_id, $disksubtitle = null, $current_id = null): int
+    public static function check(int $album_id, int $disk, int $catalog_id, ?string $disksubtitle = null, ?int $current_id = null): int
     {
         // check if the album_disk exists
         $db_results = (!empty($disksubtitle))
@@ -275,6 +269,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     /**
      * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
      */
     public function get_keywords(): array
     {
@@ -282,37 +277,35 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             'mb_albumid' => [
                 'important' => false,
                 'label' => T_('Album MusicBrainzID'),
-                'value' => $this->mbid,
+                'value' => (string)$this->mbid,
             ],
             'mb_albumid_group' => [
                 'important' => false,
                 'label' => T_('Release Group MusicBrainzID'),
-                'value' => $this->mbid_group,
+                'value' => (string)$this->mbid_group,
             ],
             'artist' => [
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => ($this->get_artist_fullname()),
+                'value' => (string)$this->get_artist_fullname(),
             ],
             'album' => [
                 'important' => true,
                 'label' => T_('Album'),
-                'value' => $this->get_fullname(true),
+                'value' => (string)$this->get_fullname(true),
             ],
             'year' => [
                 'important' => false,
                 'label' => T_('Year'),
-                'value' => $this->year,
+                'value' => (string)$this->year,
             ],
         ];
     }
 
     /**
      * Get item fullname.
-     * @param bool $simple
-     * @param bool $force_year
      */
-    public function get_fullname($simple = false, $force_year = false): string
+    public function get_fullname(bool $simple = false, bool $force_year = false): string
     {
         // return the basic name without all the wild formatting
         if ($simple) {

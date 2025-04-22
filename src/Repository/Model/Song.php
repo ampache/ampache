@@ -191,9 +191,8 @@ class Song extends database_object implements
      * Constructor
      *
      * Song class, for modifying a song.
-     * @param int|null $song_id
      */
-    public function __construct($song_id = 0)
+    public function __construct(?int $song_id = 0)
     {
         if (!$song_id) {
             return;
@@ -227,6 +226,7 @@ class Song extends database_object implements
      * insert
      *
      * This inserts the song described by the passed array
+     * @param array<string, mixed> $results
      */
     public static function insert(array $results): ?int
     {
@@ -473,8 +473,9 @@ class Song extends database_object implements
      * db connection is the slow point.
      * @param list<int|string> $song_ids
      * @param string $limit_threshold
+     * @return bool
      */
-    public static function build_cache($song_ids, $limit_threshold = ''): bool
+    public static function build_cache(array $song_ids, string $limit_threshold = ''): bool
     {
         if (empty($song_ids)) {
             return false;
@@ -536,11 +537,7 @@ class Song extends database_object implements
         return true;
     }
 
-    /**
-     * has_info
-     * @param int $song_id
-     */
-    private function has_info($song_id): array
+    private function has_info(int $song_id): array
     {
         if (parent::is_cached('song', $song_id)) {
             return parent::get_from_cache('song', $song_id);
@@ -558,11 +555,7 @@ class Song extends database_object implements
         return [];
     }
 
-    /**
-     * has_id
-     * @param int|string $song_id
-     */
-    public static function has_id($song_id): bool
+    public static function has_id(int|string $song_id): bool
     {
         $sql        = "SELECT `song`.`id` FROM `song` WHERE `song`.`id` = ?";
         $db_results = Dba::read($sql, [$song_id]);
@@ -575,20 +568,14 @@ class Song extends database_object implements
      * can_scrobble
      *
      * return a song id based on a last.fm-style search in the database
-     * @param string $song_name
-     * @param string $artist_name
-     * @param string $album_name
-     * @param string $song_mbid
-     * @param string $artist_mbid
-     * @param string $album_mbid
      */
     public static function can_scrobble(
-        $song_name,
-        $artist_name,
-        $album_name,
-        $song_mbid = '',
-        $artist_mbid = '',
-        $album_mbid = ''
+        string $song_name,
+        string $artist_name,
+        string $album_name,
+        string $song_mbid = '',
+        string $artist_mbid = '',
+        string $album_mbid = ''
     ): string {
         // by default require song, album, artist for any searches
         $sql    = "SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?)";
@@ -630,9 +617,8 @@ class Song extends database_object implements
      * _get_ext_info
      * This function gathers information from the song_ext_info table and adds it to the
      * current object
-     * @param string $select
      */
-    public function _get_ext_info($select = ''): array
+    public function _get_ext_info(string $select = ''): array
     {
         if (parent::is_cached('song_data', $this->id)) {
             return parent::get_from_cache('song_data', $this->id);
@@ -657,9 +643,8 @@ class Song extends database_object implements
     /**
      * fill_ext_info
      * This calls the _get_ext_info and then sets the correct vars
-     * @param string $data_filter
      */
-    public function fill_ext_info($data_filter = ''): void
+    public function fill_ext_info(string $data_filter = ''): void
     {
         $info = $this->_get_ext_info($data_filter);
         if (empty($info)) {
@@ -703,9 +688,9 @@ class Song extends database_object implements
 
     /**
      * find
-     * @param array $data
+     * @param array<string, mixed> $data
      */
-    public static function find($data): bool
+    public static function find(array $data): bool
     {
         $sql_base = "SELECT `song`.`id` FROM `song`";
         if ($data['mb_trackid']) {
@@ -966,12 +951,13 @@ class Song extends database_object implements
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param int $user_id
-     * @param string $agent
-     * @param array $location
-     * @param int $date
+     * @param array{
+     *      latitude?: float,
+     *      longitude?: float,
+     *      name?: string
+     *  } $location
      */
-    public function set_played($user_id, $agent, $location, $date): bool
+    public function set_played(int $user_id, string $agent, array $location, int $date): bool
     {
         // ignore duplicates or skip the last track
         if (!$this->check_play_history($user_id, $agent, $date)) {
@@ -1225,7 +1211,6 @@ class Song extends database_object implements
                 case 'license':
                 case 'mbid':
                 case 'mode':
-                case 'publisher':
                 case 'rate':
                 case 'size':
                 case 'title':
@@ -1243,7 +1228,6 @@ class Song extends database_object implements
                          * @see self::update_label()
                          * @see self::update_language()
                          * @see self::update_comment()
-                         * @see self::update_publisher()
                          * @see self::update_bitrate()
                          * @see self::update_rate()
                          * @see self::update_mode()
@@ -1373,17 +1357,6 @@ class Song extends database_object implements
     public static function update_composer($new_composer, $song_id): void
     {
         self::_update_item('composer', $new_composer, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
-    }
-
-    /**
-     * update_publisher
-     * updates the publisher field
-     * @param string $new_publisher
-     * @param int $song_id
-     */
-    public static function update_publisher($new_publisher, $song_id): void
-    {
-        self::_update_item('publisher', $new_publisher, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1657,6 +1630,7 @@ class Song extends database_object implements
 
     /**
      * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
      */
     public function get_keywords(): array
     {
@@ -1664,7 +1638,7 @@ class Song extends database_object implements
             'mb_trackid' => [
                 'important' => false,
                 'label' => T_('Track MusicBrainzID'),
-                'value' => $this->mbid,
+                'value' => (string)$this->mbid,
             ],
             'artist' => [
                 'important' => true,
@@ -1674,7 +1648,7 @@ class Song extends database_object implements
             'title' => [
                 'important' => true,
                 'label' => T_('Title'),
-                'value' => $this->get_fullname(),
+                'value' => (string)$this->get_fullname(),
             ],
         ];
     }

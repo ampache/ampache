@@ -305,7 +305,6 @@ class AmpacheMpd extends localplay_controller
      * delete_track
      * This must take a single ID (as returned by the get function)
      * and delete it from the current playlist
-     * @param int $object_id
      */
     public function delete_track(int $object_id): bool
     {
@@ -447,7 +446,14 @@ class AmpacheMpd extends localplay_controller
      * This functions returns an array containing information about
      * the songs that MPD currently has in its playlist. This must be
      * done in a standardized fashion
-     * @return array
+     * @return array<int, array{
+     *     id: int,
+     *     raw: string,
+     *     oid?: int,
+     *     name?: string,
+     *     link?: string,
+     *     track: int,
+     * }>
      */
     public function get(): array
     {
@@ -479,7 +485,7 @@ class AmpacheMpd extends localplay_controller
 
             switch ($url_key) {
                 case 'oid':
-                    $data['oid'] = $url_data['oid'];
+                    $data['oid'] = (int)$url_data['oid'];
                     $song        = new Song($data['oid']);
                     $song->format();
                     $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_artist_fullname();
@@ -518,7 +524,7 @@ class AmpacheMpd extends localplay_controller
                                 /** @var Live_Stream $media */
                                 $site_url     = ($media->site_url) ? '(' . $media->site_url . ')' : '';
                                 $data['name'] = "$media->name $site_url";
-                                $data['link'] = $media->site_url;
+                                $data['link'] = (string)$media->site_url;
                                 break;
                         } // end switch on type
                     } else {

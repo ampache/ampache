@@ -84,7 +84,7 @@ Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?ac
     </span>
 </td>
 <td class="cel_songs optional"><?php echo $libitem->song_count; ?></td>
-<td class="cel_albums optional"><?php echo $libitem->albums; ?></td>
+<td class="cel_albums optional"><?php echo $libitem->get_album_count(); ?></td>
 <td class="<?php echo $cel_time; ?> optional"><?php echo $libitem->get_f_time(); ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
     <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>

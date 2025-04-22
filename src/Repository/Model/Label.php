@@ -65,8 +65,8 @@ class Label extends database_object implements library_item
 
     public ?string $link = null;
 
-    /** @var array $artists */
-    public $artists = [];
+    /** @var int[] $artists */
+    public array $artists = [];
 
     private ?int $artist_count = null;
 
@@ -74,9 +74,8 @@ class Label extends database_object implements library_item
 
     /**
      * __construct
-     * @param int|null $label_id
      */
-    public function __construct($label_id = 0)
+    public function __construct(?int $label_id = 0)
     {
         if (!$label_id) {
             return;
@@ -202,6 +201,7 @@ class Label extends database_object implements library_item
 
     /**
      * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
      */
     public function get_keywords(): array
     {
@@ -209,7 +209,7 @@ class Label extends database_object implements library_item
             'label' => [
                 'important' => true,
                 'label' => T_('Label'),
-                'value' => $this->get_fullname()
+                'value' => (string)$this->get_fullname()
             ]
         ];
     }
@@ -390,10 +390,11 @@ class Label extends database_object implements library_item
     /**
      * get_display
      * This returns a csv formatted version of the labels that we are given
-     * @param array $labels
+     * @param array<int, string> $labels
      * @param bool $link
+     * @return string
      */
-    public static function get_display($labels, $link = false): string
+    public static function get_display(array $labels, bool $link = false): string
     {
         if (empty($labels)) {
             return '';
@@ -420,11 +421,8 @@ class Label extends database_object implements library_item
 
     /**
      * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id): void
+    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
         if ($object_type == 'artist') {
             $sql    = "UPDATE `label_asso` SET `artist` = ? WHERE `artist` = ?";
