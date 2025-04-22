@@ -356,7 +356,7 @@ class Preference extends database_object
      * update
      * This updates a single preference from the given name or id
      */
-    public static function update(int|string $preference, int $user_id, array|int|float|string|bool|null $value, bool $applytoall = false, bool $applytodefault = false): bool
+    public static function update(int|string $preference, int $user_id, array|int|float|string|bool|null $value, ?bool $applytoall = false, ?bool $applytodefault = false): bool
     {
         $access100 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
         // First prepare
