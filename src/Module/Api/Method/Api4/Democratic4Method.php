@@ -78,8 +78,8 @@ final class Democratic4Method
                 $democratic->add_vote(
                     [
                         [
-                            'object_type' => $type,
-                            'object_id' => $media->id
+                            $type,
+                            $media->id
                         ]
                     ]
                 );
@@ -107,7 +107,9 @@ final class Democratic4Method
                 }
 
                 $object_id = $democratic->get_uid_from_object_id($media->id, $type);
-                $democratic->remove_vote($object_id);
+                if ($object_id) {
+                    $democratic->remove_vote($object_id);
+                }
 
                 // Everything was ok
                 $results = [

@@ -82,14 +82,13 @@ final readonly class ShowAction extends AbstractShowAction
         /**
          * @deprecated FIXME: Legacy stuff - should be removed after a version or so
          */
-        $objectType = $queryParams['object_type'] ??
-            ($this->configContainer->get(ConfigurationKeyEnum::SHOW_SONG_ART) ? 'song' : 'album');
+        $objectType = (string)($queryParams['object_type'] ?? ($this->configContainer->get(ConfigurationKeyEnum::SHOW_SONG_ART) ? 'song' : 'album'));
 
         if (!Art::is_valid_type($objectType)) {
             return null;
         }
 
-        $objectId = (int) ($queryParams['object_id'] ?? 0);
+        $objectId = (int)($queryParams['object_id'] ?? 0);
 
         $item = $this->libraryItemLoader->load(
             LibraryItemEnum::from($objectType),

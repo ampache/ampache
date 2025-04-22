@@ -400,8 +400,8 @@ class Ui implements UiInterface
         $path       = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/icons/';
         // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
         $filesearch = array_merge(
-            glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.svg'),
-            glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.png')
+            glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.svg') ?: [],
+            glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.png') ?: []
         );
 
         if (empty($filesearch)) {
@@ -413,8 +413,8 @@ class Ui implements UiInterface
                 // finally fall back to the public images folder
                 // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
                 $filesearch = array_merge(
-                    glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.svg'),
-                    glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.png')
+                    glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.svg') ?: [],
+                    glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.png') ?: []
                 );
             }
         }
@@ -505,20 +505,20 @@ class Ui implements UiInterface
         $path       = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/';
         // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
         $filesearch = array_merge(
-            glob(__DIR__ . '/../../../public/' . $path . $name . '.svg'),
-            glob(__DIR__ . '/../../../public/' . $path . $name . '.png')
+            glob(__DIR__ . '/../../../public/' . $path . $name . '.svg') ?: [],
+            glob(__DIR__ . '/../../../public/' . $path . $name . '.png') ?: []
         );
 
         if (empty($filesearch)) {
             $path = 'images/';
             // check private resources folder for svg files
-            $filesearch = glob(__DIR__ . '/../../../resources/' . $path . $name . '.svg');
+            $filesearch = glob(__DIR__ . '/../../../resources/' . $path . $name . '.svg') ?: [];
             if (empty($filesearch)) {
                 // finally fall back to the public images folder
                 // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
                 $filesearch = array_merge(
-                    glob(__DIR__ . '/../../../public/' . $path . $name . '.svg'),
-                    glob(__DIR__ . '/../../../public/' . $path . $name . '.png')
+                    glob(__DIR__ . '/../../../public/' . $path . $name . '.svg') ?: [],
+                    glob(__DIR__ . '/../../../public/' . $path . $name . '.png') ?: []
                 );
             }
         }

@@ -30,7 +30,7 @@ interface ArtCollectorInterface
     /**
      * This tries to get the art in question
      * @param Art $art
-     * @param array $options
+     * @param array<string, mixed> $options
      * @param int $limit
      * @return array
      */

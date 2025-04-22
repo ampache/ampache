@@ -80,9 +80,8 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     /**
      * Podcast
      * Takes the ID of the podcast and pulls the info from the db
-     * @param int|null $podcast_id
      */
-    public function __construct($podcast_id = 0)
+    public function __construct(?int $podcast_id = 0)
     {
         if (!$podcast_id) {
             return;
@@ -127,7 +126,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 
     /**
      * Get item keywords for metadata searches.
-     * @return array{podcast: array{important: bool, label: string, value: ?string}}
+     * @return array<string, array{important: bool, label: string, value: string}>
      */
     public function get_keywords(): array
     {
@@ -135,7 +134,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
             'podcast' => [
                 'important' => true,
                 'label' => T_('Podcast'),
-                'value' => $this->get_fullname(),
+                'value' => (string)$this->get_fullname(),
             ],
         ];
     }

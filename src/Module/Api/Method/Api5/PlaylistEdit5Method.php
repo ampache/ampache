@@ -110,7 +110,7 @@ final class PlaylistEdit5Method
             $array = [
                 "name" => $name,
                 "pl_type" => $type,
-                "pl_user" => $owner,
+                "pl_user" => (int)$owner,
             ];
             $playlist->update($array);
         }

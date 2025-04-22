@@ -91,11 +91,8 @@ class Random
     /**
      * get_single_song
      * This returns a single song pulled based on the passed random method
-     * @param string $random_type
-     * @param User $user
-     * @param int $object_id
      */
-    public static function get_single_song($random_type, $user, $object_id = 0): int
+    public static function get_single_song(string $random_type, User $user, int $object_id = 0): int
     {
         $song_ids = match ($random_type) {
             'artist' => self::get_artist(1, $user),
@@ -112,12 +109,9 @@ class Random
     /**
      * get_default
      * This just randomly picks a song at whim from all catalogs
-     * nothing special here...
-     * @param int $limit
-     * @param User $user
      * @return int[]
      */
-    public static function get_default($limit, $user = null): array
+    public static function get_default(int $limit, ?User $user = null): array
     {
         $results = [];
 
@@ -154,11 +148,9 @@ class Random
      * get_artist
      * This looks at the last artist played and then randomly picks a song from the
      * same artist
-     * @param int $limit
-     * @param User $user
      * @return int[]
      */
-    public static function get_artist($limit, $user = null): array
+    public static function get_artist(int $limit, ?User $user = null): array
     {
         $results = [];
 
@@ -184,7 +176,7 @@ class Random
         }
 
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && $user instanceof User) {
+        if ($rating_filter > 0 && $rating_filter <= 5) {
             $where_sql .= ($where_sql == "")
                 ? sprintf('WHERE `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id)
                 : sprintf('AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id);
@@ -203,11 +195,9 @@ class Random
     /**
      * get_playlist
      * Get a random song from a playlist (that you own)
-     * @param User $user
-     * @param int $playlist_id
      * @return int[]
      */
-    public static function get_playlist($user, $playlist_id = 0): array
+    public static function get_playlist(User $user, int $playlist_id = 0): array
     {
         $results  = [];
         $playlist = new Playlist($playlist_id);
@@ -229,10 +219,9 @@ class Random
     /**
      * get_search
      * Get a random song from a search (that you own)
-     * @param int $search_id
      * @return int[]
      */
-    public static function get_search(User $user, $search_id = 0): array
+    public static function get_search(User $user, int $search_id = 0): array
     {
         $results = [];
         $search  = new Search($search_id, 'song', $user);
@@ -403,7 +392,7 @@ class Random
      *     parameters: array
      * }
      */
-    private static function advanced_sql($data, $type, $limit_sql): array
+    private static function advanced_sql(array $data, string $type, string $limit_sql): array
     {
         $search = new Search(0, $type);
         $search->set_rules($data);
@@ -465,10 +454,8 @@ class Random
     /**
      * get_play_url
      * This returns the special play URL for random play
-     * @param string $object_type
-     * @param int $object_id
      */
-    public static function get_play_url($object_type, $object_id): string
+    public static function get_play_url(string $object_type, int $object_id): string
     {
         $user = Core::get_global('user');
         $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . scrub_out((string)($user?->id ?? '')) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string)$object_id);

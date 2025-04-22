@@ -54,15 +54,15 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
         // Switch on the actions
         switch ($action) {
             case 'delete_vote':
-                $democratic->remove_vote($_REQUEST['row_id']);
+                $democratic->remove_vote((int)$_REQUEST['row_id']);
                 $show_browse = true;
                 break;
             case 'add_vote':
                 $democratic->add_vote(
                     [
                         [
-                            'object_type' => Core::get_request('type'),
-                            'object_id' => filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
+                            Core::get_request('type'),
+                            (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
                         ]
                     ]
                 );

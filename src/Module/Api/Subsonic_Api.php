@@ -377,7 +377,7 @@ class Subsonic_Api
      * [based from http://outlandish.com/blog/xml-to-json/]
      * Because we cannot use only json_encode to respect JSON Subsonic API
      * @param SimpleXMLElement $xml
-     * @param array $input_options
+     * @param array<string, mixed> $input_options
      * @return array<string, mixed>
      */
     private static function _xml2Json(SimpleXMLElement $xml, array $input_options = []): array

@@ -81,7 +81,7 @@ class WebPlayer
      * Get types information for an item.
      * @param Stream_Url $item
      * @param string $force_type
-     * @param array $urlinfo
+     * @param array<string, string> $urlinfo
      * @param string $transcode_cfg
      * @return array{
      *     real: string,
@@ -187,7 +187,10 @@ class WebPlayer
      * Check if we can transcode this file type
      * @param string $media_type
      * @param string $file_type
-     * @param array<string, string> $types
+     * @param array{
+     *     real: string,
+     *     player: string,
+     * } $types
      * @param array<string, string> $urlinfo
      * @param string $transcode_cfg
      * @param string $force_type

@@ -47,9 +47,8 @@ class Useractivity extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the flag for
-     * @param int|null $useract_id
      */
-    public function __construct($useract_id = 0)
+    public function __construct(?int $useract_id = 0)
     {
         if (!$useract_id) {
             return;
@@ -70,7 +69,7 @@ class Useractivity extends database_object
      * this attempts to build a cache of the data from the passed activities all in one query
      * @param int[] $ids
      */
-    public static function build_cache($ids): bool
+    public static function build_cache(array $ids): bool
     {
         if (empty($ids)) {
             return false;

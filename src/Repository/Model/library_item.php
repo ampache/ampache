@@ -38,6 +38,7 @@ interface library_item extends playable_item
 
     /**
      * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
      */
     public function get_keywords(): array;
 
@@ -64,6 +65,7 @@ interface library_item extends playable_item
 
     /**
      * update
+     * @param array<string, mixed> $data
      */
     public function update(array $data): ?int;
 
