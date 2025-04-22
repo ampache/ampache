@@ -380,7 +380,7 @@ class User extends database_object
      * set_user_data
      * This updates some background data for user specific function
      */
-    public static function set_user_data(int $user_id, string $key, int|string $value): void
+    public static function set_user_data(int $user_id, string $key, float|int|string $value): void
     {
         Dba::write("REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;", [$user_id, $key, $value]);
     }
