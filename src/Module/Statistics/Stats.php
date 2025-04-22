@@ -919,7 +919,7 @@ class Stats
             'album_artist', 'song_artist' => 'artist',
             'genre' => 'tag',
             default => 'song',
-        }; // end switch
+        };
     }
 
     /**

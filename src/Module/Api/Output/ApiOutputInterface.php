@@ -106,7 +106,8 @@ interface ApiOutputInterface
      * nothing fancy here...
      *
      * @param string $string success message
-     * @param array<mixed> $return_data
+     * @param array<string, string> $return_data
+     * @return string
      */
     public function success(string $string, array $return_data = []): string;
 }

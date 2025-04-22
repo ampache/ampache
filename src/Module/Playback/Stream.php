@@ -394,7 +394,7 @@ class Stream
 
         foreach ($string_map as $search => $replace) {
             $command = (string)str_replace($search, (string)$replace, $command, $ret);
-            if ($ret === null) {
+            if (!$ret) {
                 debug_event(self::class, "$search not in transcode command", 5);
             }
         }
@@ -481,7 +481,7 @@ class Stream
             ];
             foreach ($string_map as $search => $replace) {
                 $command = (string)str_replace($search, $replace, $command, $ret);
-                if ($ret === null) {
+                if (!$ret) {
                     debug_event(self::class, "$search not in transcode command", 5);
                 }
             }

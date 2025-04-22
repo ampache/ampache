@@ -507,6 +507,14 @@ class Playlist extends playlist_object
     /**
      * update
      * This function takes a key'd array of data and runs updates
+     * @param array{
+     *     name?: ?string,
+     *     pl_type?: ?string,
+     *     pl_user?: ?int,
+     *     collaborate?: null|list<string>,
+     *     last_count?: ?int,
+     *     last_duration?: ?int,
+     * } $data
      */
     public function update(array $data): int
     {

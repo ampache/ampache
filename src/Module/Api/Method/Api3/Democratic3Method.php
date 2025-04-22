@@ -65,8 +65,8 @@ final class Democratic3Method
                 $democratic->add_vote(
                     [
                         [
-                            'object_type' => 'song',
-                            'object_id' => $media->id
+                            'song',
+                            $media->id
                         ]
                     ]
                 );
@@ -85,7 +85,9 @@ final class Democratic3Method
                 }
 
                 $uid = $democratic->get_uid_from_object_id($media->id);
-                $democratic->remove_vote($uid);
+                if ($uid) {
+                    $democratic->remove_vote($uid);
+                }
 
                 // Everything was ok
                 $results = [

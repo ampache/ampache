@@ -56,19 +56,14 @@ class Broadcast extends database_object implements library_item
 
     public ?string $link = null;
 
-    /** @var int $song_position */
-    public $song_position;
+    public int $song_position;
 
     /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
     private ?string $f_link = null;
 
-    /**
-     * Constructor
-     * @param int|null $broadcast_id
-     */
-    public function __construct($broadcast_id = 0)
+    public function __construct(?int $broadcast_id = 0)
     {
         if (!$broadcast_id) {
             return;
@@ -181,6 +176,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
      */
     public function get_keywords(): array
     {

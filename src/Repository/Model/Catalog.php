@@ -1654,14 +1654,15 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT " . $size;
         } elseif ($offset > 0) {
             // MySQL doesn't have notation for last row, so we have to use the largest possible BIGINT value
-            // https://dev.mysql.com/doc/refman/5.0/en/select.html  // TODO mysql8 test
+            // https://dev.mysql.com/doc/refman/5.0/en/select.html
             $sql_limit = "LIMIT " . $offset . ", 18446744073709551615";
         }
 
-        $sql        = sprintf('SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `artist`.`album_count` AS `albums` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` %s GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, `artist`.`album_count` ORDER BY `artist`.`name` ', $sql_where) . $sql_limit;
+        $sql        = sprintf('SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `artist`.`album_count`, `artist`.`album_disk_count` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` %s GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, `artist`.`album_count` ORDER BY `artist`.`name` ', $sql_where) . $sql_limit;
         $db_results = Dba::read($sql);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
+            /** @var array{id: int, name: ?string, prefix: ?string, summary: ?string, album_count: int, album_disk_count: int} $row */
             $results[] = Artist::construct_from_array($row);
         }
 

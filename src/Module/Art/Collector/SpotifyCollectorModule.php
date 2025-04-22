@@ -56,9 +56,16 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
      *
      * @param Art $art
      * @param int $limit
-     * @param array $data
-     *
-     * @return array
+     * @param array{
+     *     mb_albumid?: string,
+     *     artist?: string,
+     *     album?: string,
+     *     cover?: ?string,
+     *     file?: string,
+     *     year_filter?: string,
+     *     search_limit?: int,
+     * } $data
+     * @return array<int, array{url: string, mime: string, title: string}>
      */
     public function collect(
         Art $art,
@@ -102,7 +109,10 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
         $this->spotifyWebAPI->setAccessToken($accessToken);
         $getType = 'getAlbum';
 
-        if ($art->type == 'artist') {
+        if (
+            isset($data['artist']) &&
+            $art->type == 'artist'
+        ) {
             $this->logger->debug(
                 'gather_spotify artist: ' . $data['artist'],
                 [LegacyLogger::CONTEXT_TYPE => self::class]

@@ -79,11 +79,7 @@ class Share extends database_object
 
     private ?library_item $object = null;
 
-    /**
-     * Constructor
-     * @param int|null $share_id
-     */
-    public function __construct($share_id = 0)
+    public function __construct(?int $share_id = 0)
     {
         if (!$share_id) {
             return;
@@ -231,10 +227,8 @@ class Share extends database_object
 
     /**
      * is_valid
-     * @param string $secret
-     * @param string $action
      */
-    public function is_valid($secret, $action): bool
+    public function is_valid(string $secret, string $action): bool
     {
         if ($this->isNew()) {
             debug_event(self::class, 'Access Denied: Invalid share.', 3);
@@ -357,9 +351,8 @@ class Share extends database_object
     /**
      * get_expiry
      * get the expiry date in days from a time()
-     * @param int $time
      */
-    public static function get_expiry($time = null): int
+    public static function get_expiry(?int $time = null): int
     {
         if (isset($time)) {
             // 0 is a valid expiry too
@@ -374,12 +367,7 @@ class Share extends database_object
         return (int)$expire_days;
     }
 
-    /**
-     * @param string $object_type
-     * @param int $object_id
-     * @param bool $show_text
-     */
-    public static function display_ui($object_type, $object_id, $show_text = true): string
+    public static function display_ui(string $object_type, int $object_id, bool $show_text = true): string
     {
         $result = sprintf(
             '<a onclick="showShareDialog(event, \'%s\', %d);">%s',

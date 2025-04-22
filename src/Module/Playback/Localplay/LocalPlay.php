@@ -663,16 +663,15 @@ class LocalPlay
      * get_user_state
      * This function returns a user friendly version
      * of the current player state
-     * @param string|null $state
      */
-    public function get_user_state($state): string
+    public function get_user_state(?string $state): string
     {
         return match ($state) {
             'play' => T_('Now Playing'),
             'stop' => T_('Stopped'),
             'pause' => T_('Paused'),
             default => T_('Unknown'),
-        }; // switch on state
+        };
     }
 
     /**

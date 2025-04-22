@@ -841,11 +841,13 @@ class Subsonic_Xml_Data
             $date->setTimezone(new DateTimeZone('UTC'));
             $changedBy  = $playQueue->client ?? '';
             $xplayqueue = self::addChildToResultXml($xml, 'playQueue');
-            $xplayqueue->addAttribute('current', (string)self::_getSongId($current['object_id']));
-            $xplayqueue->addAttribute('position', (string)($current['current_time'] * 1000));
-            $xplayqueue->addAttribute('username', (string)$username);
-            $xplayqueue->addAttribute('changed', $date->format("c"));
-            $xplayqueue->addAttribute('changedBy', (string)$changedBy);
+            if (!empty($current)) {
+                $xplayqueue->addAttribute('current', (string)self::_getSongId($current['object_id']));
+                $xplayqueue->addAttribute('position', (string)($current['current_time'] * 1000));
+                $xplayqueue->addAttribute('username', (string)$username);
+                $xplayqueue->addAttribute('changed', $date->format("c"));
+                $xplayqueue->addAttribute('changedBy', (string)$changedBy);
+            }
 
             foreach ($items as $row) {
                 // TODO addEntry
@@ -1757,8 +1759,8 @@ class Subsonic_Xml_Data
             if (AmpConfig::get('ratings')) {
                 $starred = new Userflag($object_id, $objectType);
                 $result  = $starred->get_flag(null, true);
-                if (is_array($result) && isset($result[1])) {
-                    $xml->addAttribute('starred', date("Y-m-d\TH:i:s\Z", (int)$result[1]));
+                if (is_array($result)) {
+                    $xml->addAttribute('starred', date("Y-m-d\TH:i:s\Z", $result[1]));
                 }
             }
         }
