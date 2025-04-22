@@ -841,11 +841,13 @@ class Subsonic_Xml_Data
             $date->setTimezone(new DateTimeZone('UTC'));
             $changedBy  = $playQueue->client ?? '';
             $xplayqueue = self::addChildToResultXml($xml, 'playQueue');
-            $xplayqueue->addAttribute('current', (string)self::_getSongId($current['object_id']));
-            $xplayqueue->addAttribute('position', (string)($current['current_time'] * 1000));
-            $xplayqueue->addAttribute('username', (string)$username);
-            $xplayqueue->addAttribute('changed', $date->format("c"));
-            $xplayqueue->addAttribute('changedBy', (string)$changedBy);
+            if (!empty($current)) {
+                $xplayqueue->addAttribute('current', (string)self::_getSongId($current['object_id']));
+                $xplayqueue->addAttribute('position', (string)($current['current_time'] * 1000));
+                $xplayqueue->addAttribute('username', (string)$username);
+                $xplayqueue->addAttribute('changed', $date->format("c"));
+                $xplayqueue->addAttribute('changedBy', (string)$changedBy);
+            }
 
             foreach ($items as $row) {
                 // TODO addEntry
