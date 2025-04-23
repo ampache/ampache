@@ -43,21 +43,20 @@ class Playlist extends playlist_object
 
     /**
      * @var array<int, array{
-     *  object_type: LibraryItemEnum,
-     *  object_id: int,
-     *  track: int,
-     *  track_id: int
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     track: int,
+     *     track_id: int
      * }>
      */
-    public $items = [];
+    public array $items = [];
 
     /**
      * Constructor
      * This takes a playlist_id as an optional argument and gathers the information
      * if not playlist_id is passed returns false (or if it isn't found
-     * @param int|null $object_id
      */
-    public function __construct($object_id = 0)
+    public function __construct(?int $object_id = 0)
     {
         if (!$object_id) {
             return;
@@ -87,9 +86,10 @@ class Playlist extends playlist_object
     /**
      * build_cache
      * This is what builds the cache from the objects
-     * @param array $ids
+     * @param int[]|string[] $ids
+     * @return bool
      */
-    public static function build_cache($ids): bool
+    public static function build_cache(array $ids): bool
     {
         if (empty($ids)) {
             return false;
@@ -109,7 +109,7 @@ class Playlist extends playlist_object
     /**
      * get_playlists
      * Returns a list of playlists accessible by the user.
-     * @param int $user_id
+     * @param int|null $user_id
      * @param string $playlist_name
      * @param bool $like
      * @param bool $includePublic
@@ -118,12 +118,12 @@ class Playlist extends playlist_object
      * @return int[]
      */
     public static function get_playlists(
-        $user_id = null,
-        $playlist_name = '',
-        $like = true,
-        $includePublic = true,
-        $includeHidden = true,
-        $userOnly = false
+        int    $user_id = null,
+        string $playlist_name = '',
+        bool   $like = true,
+        bool   $includePublic = true,
+        bool   $includeHidden = true,
+        bool   $userOnly = false
     ): array {
         if (!$user_id) {
             $user    = Core::get_global('user');
@@ -194,7 +194,7 @@ class Playlist extends playlist_object
      * @param int|null $user_id
      * @return array<string>
      */
-    public static function get_playlist_array($user_id = null): array
+    public static function get_playlist_array(?int $user_id = null): array
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -242,10 +242,10 @@ class Playlist extends playlist_object
      * Because the same media can be on the same playlist twice they are
      * keyed by the uid from playlist_data
      * @return list<array{
-     *  object_type: LibraryItemEnum,
-     *  object_id: int,
-     *  track_id: int,
-     *  track: int
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     track_id: int,
+     *     track: int
      * }>
      */
     public function get_items(): array
@@ -287,7 +287,7 @@ class Playlist extends playlist_object
                         if ($system) {
                             $sql .= 'AND `playlist_data`.`object_type`="podcast_episode" AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) ';
                         } else {
-                            $sql .= 'AND `playlist_data`.`object_type`="podcast_episode" AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) ';
+                            $sql .= 'AND `playlist_data`.`object_type`="podcast_episode" AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ';
                             $params[] = $user_id;
                         }
                     }
@@ -421,9 +421,8 @@ class Playlist extends playlist_object
      * get_media_count
      * This simply returns a int of how many media elements exist in this playlist
      * For now let's consider a dyn_media a single entry
-     * @param string $type
      */
-    public function get_media_count($type = ''): int
+    public function get_media_count(string $type = ''): int
     {
         $user      = Core::get_global('user');
         $user_id   = $user?->id ?? -1;
@@ -508,6 +507,14 @@ class Playlist extends playlist_object
     /**
      * update
      * This function takes a key'd array of data and runs updates
+     * @param array{
+     *     name?: ?string,
+     *     pl_type?: ?string,
+     *     pl_user?: ?int,
+     *     collaborate?: null|list<string>,
+     *     last_count?: ?int,
+     *     last_duration?: ?int,
+     * } $data
      */
     public function update(array $data): int
     {
@@ -544,9 +551,8 @@ class Playlist extends playlist_object
     /**
      * update_type
      * This updates the playlist type, it calls the generic update_item function
-     * @param string $new_type
      */
-    private function _update_type($new_type): void
+    private function _update_type(string $new_type): void
     {
         if ($this->_update_item('type', $new_type)) {
             $this->type = $new_type;
@@ -556,9 +562,8 @@ class Playlist extends playlist_object
     /**
      * update_user
      * This updates the playlist type, it calls the generic update_item function
-     * @param int $new_user
      */
-    private function _update_user($new_user): void
+    private function _update_user(int $new_user): void
     {
         if ($this->_update_item('user', $new_user)) {
             $this->user     = $new_user;
@@ -571,9 +576,8 @@ class Playlist extends playlist_object
     /**
      * update_name
      * This updates the playlist name, it calls the generic update_item function
-     * @param string $new_name
      */
-    private function _update_name($new_name): void
+    private function _update_name(string $new_name): void
     {
         if ($this->_update_item('name', $new_name)) {
             $this->name = $new_name;
@@ -619,10 +623,8 @@ class Playlist extends playlist_object
     /**
      * _update_item
      * This is the generic update function, it does the escaping and error checking
-     * @param string $field
-     * @param string|int $value
      */
-    private function _update_item($field, $value): bool
+    private function _update_item(string $field, int|string $value): bool
     {
         if (Core::get_global('user')?->getId() != $this->user && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
             return false;
@@ -636,10 +638,8 @@ class Playlist extends playlist_object
     /**
      * update_track_number
      * This takes a playlist_data.id and a track (int) and updates the track value
-     * @param int $track_id
-     * @param int $index
      */
-    public function update_track_number($track_id, $index): void
+    public function update_track_number(int $track_id, int $index): void
     {
         $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?";
         Dba::write($sql, [$index, $track_id]);
@@ -663,7 +663,7 @@ class Playlist extends playlist_object
     }
 
     /**
-     * @param iterable<int> $song_ids
+     * @param int[]|string[] $song_ids
      * This takes an array of song_ids and then adds it to the playlist
      */
     public function add_songs(iterable $song_ids = []): bool
@@ -672,7 +672,7 @@ class Playlist extends playlist_object
         foreach ($song_ids as $song_id) {
             $medias[] = [
                 'object_type' => LibraryItemEnum::SONG,
-                'object_id' => $song_id,
+                'object_id' => (int)$song_id,
             ];
         }
 
@@ -738,11 +738,8 @@ class Playlist extends playlist_object
     /**
      * check
      * This function creates an empty playlist, gives it a name and type
-     * @param string $name
-     * @param string $type
-     * @param int $user_id
      */
-    public static function check($name, $type, $user_id = null): int
+    public static function check(string $name, string $type, ?int $user_id = null): int
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -768,12 +765,8 @@ class Playlist extends playlist_object
     /**
      * create
      * This function creates an empty playlist, gives it a name and type
-     * @param string $name
-     * @param string $type
-     * @param int $user_id
-     * @param bool $existing
      */
-    public static function create($name, $type, $user_id = null, $existing = true): ?int
+    public static function create(string $name, string $type, ?int $user_id = null, bool $existing = true): ?int
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -817,11 +810,8 @@ class Playlist extends playlist_object
 
     /**
      * set_last
-     *
-     * @param int $count
-     * @param string $column
      */
-    private function _set_last($count, $column): void
+    private function _set_last(int $count, string $column): void
     {
         if (
             $this->id &&
@@ -851,10 +841,9 @@ class Playlist extends playlist_object
 
     /**
      * delete_song
-     * @param int $object_id
      * this deletes a single track, you specify the playlist_data.id here
      */
-    public function delete_song($object_id): bool
+    public function delete_song(int $object_id): bool
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? LIMIT 1";
         Dba::write($sql, [$this->id, $object_id]);
@@ -868,9 +857,8 @@ class Playlist extends playlist_object
     /**
      * delete_track
      * this deletes a single track, you specify the playlist_data.id here
-     * @param int $object_id
      */
-    public function delete_track($object_id): bool
+    public function delete_track(int $object_id): bool
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`id` = ? LIMIT 1";
         Dba::write($sql, [$this->id, $object_id]);
@@ -898,11 +886,9 @@ class Playlist extends playlist_object
 
     /**
      * set_by_track_number
-     * this deletes a single track by it's track #, you specify the playlist_data.track here
-     * @param int $object_id
-     * @param int $track
+     * resort a playlist by track number and update
      */
-    public function set_by_track_number($object_id, $track): bool
+    public function set_by_track_number(int $object_id, int $track): bool
     {
         if (AmpConfig::get('unique_playlist') && $this->has_item($object_id, $track)) {
             return false;
@@ -924,10 +910,8 @@ class Playlist extends playlist_object
     /**
      * has_item
      * look for the track id or the object id in a playlist (TODO song only so extend this to other types)
-     * @param int $object
-     * @param int $track
      */
-    public function has_item($object = null, $track = null): bool
+    public function has_item(?int $object = null, ?int $track = null): bool
     {
         if ($object === null && $track === null) {
             return false;
@@ -937,7 +921,6 @@ class Playlist extends playlist_object
             // searching by track
             $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? AND `playlist_data`.`object_type` = 'song' LIMIT 1";
             $db_results = Dba::read($sql, [$this->id, $track]);
-            $results    = Dba::fetch_assoc($db_results);
         } else {
             if ($track !== null) {
                 $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' AND `track` <= ? LIMIT 1";
@@ -947,9 +930,9 @@ class Playlist extends playlist_object
                 $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' LIMIT 1";
                 $db_results = Dba::read($sql, [$this->id, $object]);
             }
-            $results = Dba::fetch_assoc($db_results);
         }
 
+        $results = Dba::fetch_assoc($db_results);
         if (isset($results['object_id']) || isset($results['track'])) {
             debug_event(self::class, $this->id . ' has_item: ' . ($results['object_id'] ?? $results['track']), 5);
 
@@ -962,9 +945,8 @@ class Playlist extends playlist_object
     /**
      * has_search
      * Look for a saved smartlist with the same name as this playlist that the user can access
-     * @param int $playlist_user
      */
-    public function has_search($playlist_user): int
+    public function has_search(int $playlist_user): int
     {
         // search for your own playlist
         $sql        = "SELECT `id`, `name` FROM `search` WHERE `user` = ?";
@@ -1048,11 +1030,8 @@ class Playlist extends playlist_object
 
     /**
      * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id): void
+    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
         $sql    = "UPDATE `playlist_data` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?;";
         $params = [$new_object_id, $old_object_id, $object_type];

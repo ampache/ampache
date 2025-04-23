@@ -46,12 +46,10 @@ class User_Playlist extends database_object
      * This takes a user_id as an optional argument and gathers the
      * information.  If no user_id is passed or the requested one isn't
      * found, return false.
-     * @param int|null $user_id
-     * @param string|null $client
      */
     public function __construct(
-        $user_id = 0,
-        $client = null
+        ?int $user_id = 0,
+        ?string $client = null
     ) {
         if (!$user_id) {
             return;
@@ -94,11 +92,8 @@ class User_Playlist extends database_object
     /**
      * set_current_object
      * set the active object in the user_playlist.
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $position
      */
-    public function set_current_object($object_type, $object_id, $position): void
+    public function set_current_object(string $object_type, int $object_id, int $position): void
     {
         // remove the old current
         $sql = "UPDATE `user_playlist` SET `current_track` = 0, `current_time` = 0 WHERE `user` = ?";
@@ -111,11 +106,8 @@ class User_Playlist extends database_object
     /**
      * set_current_id
      * set the active object using the row id in user_playlist.
-     * @param string $object_type
-     * @param int $track
-     * @param int $position
      */
-    public function set_current_id($object_type, $track, $position): void
+    public function set_current_id(string $object_type, int $track, int $position): void
     {
         // remove the old current
         $sql = "UPDATE `user_playlist` SET `current_track` = 0, `current_time` = 0 WHERE `user` = ?";
@@ -206,12 +198,12 @@ class User_Playlist extends database_object
      * get_items
      * Returns an array of all object_ids currently in this User_Playlist.
      * @return list<array{
-     *  object_type: string,
-     *  object_id: int,
-     *  track: int,
-     *  track_id: int,
-     *  current_track: int,
-     *  current_time: int
+     *     object_type: string,
+     *     object_id: int,
+     *     track: int,
+     *     track_id: int,
+     *     current_track: int,
+     *     current_time: int
      * }>
      */
     public function get_items(): array

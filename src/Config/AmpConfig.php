@@ -40,18 +40,16 @@ use Ampache\Module\System\AmpError;
  */
 class AmpConfig
 {
-    /** @var array $_global */
-    private static $_global = [];
+    /** @var array<string, mixed> $_global */
+    private static array $_global = [];
 
     /**
      * get
      *
      * This returns a config value.
-     * @param string $name
-     * @param mixed $default
      * @return mixed|null
      */
-    public static function get($name, $default = null)
+    public static function get(string $name, mixed $default = null)
     {
         if (isset(self::$_global[$name])) {
             return self::$_global[$name];
@@ -64,7 +62,7 @@ class AmpConfig
      * get_all
      *
      * This returns all of the current config variables as an array.
-     * @return array
+     * @return array<string, mixed>
      */
     public static function get_all(): array
     {
@@ -103,11 +101,8 @@ class AmpConfig
      * set
      *
      * This sets config values.
-     * @param string $name
-     * @param mixed $value
-     * @param bool $clobber
      */
-    public static function set($name, $value, $clobber = false): bool
+    public static function set(string $name, mixed $value, bool $clobber = false): bool
     {
         if (isset(self::$_global[$name]) && !$clobber) {
             debug_event(self::class, "Tried to overwrite existing key $name without setting clobber", 5);
@@ -144,10 +139,8 @@ class AmpConfig
      * get_skip_timer
      *
      * pull the timer and check using the time of the song for %complete skips
-     * @param int $previous_time
-     * @return int|null
      */
-    public static function get_skip_timer($previous_time): ?int
+    public static function get_skip_timer(int $previous_time): ?int
     {
         $timekeeper = self::get('skip_timer');
         $skip_time  = 20;

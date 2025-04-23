@@ -39,6 +39,18 @@ final class Videos3Method
     /**
      * videos
      * This returns video objects!
+     *
+     * @param array{
+     *     filter?: string,
+     *     exact?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function videos(array $input, User $user): void
     {

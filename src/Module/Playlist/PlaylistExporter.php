@@ -110,7 +110,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 }
                 $items = [];
                 foreach ($ids as $playlist_id) {
-                    $playlist = new Playlist($playlist_id);
+                    $playlist = new Playlist((int)$playlist_id);
                     if ($playlist->isNew() === false) {
                         $items[] = $playlist;
                     }

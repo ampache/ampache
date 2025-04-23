@@ -47,6 +47,16 @@ final class PlaylistAddSong5Method
      * filter = (string) UID of playlist
      * song   = (string) UID of song to add to playlist
      * check  = (integer) 0,1 Check for duplicates //optional, default = 0
+     *
+     * @param array{
+     *     filter: string,
+     *     song: string,
+     *     check?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function playlist_add_song(array $input, User $user): bool
     {
@@ -54,8 +64,8 @@ final class PlaylistAddSong5Method
             return false;
         }
         ob_end_clean();
-        $playlist = new Playlist($input['filter']);
-        $song     = $input['song'];
+        $playlist = new Playlist((int)$input['filter']);
+        $song     = (int)$input['song'];
         if (!$playlist->has_collaborate($user)) {
             Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 

@@ -62,7 +62,16 @@ final class ArtCollector implements ArtCollectorInterface
     /**
      * This tries to get the art in question
      * @param Art $art
-     * @param array $options
+     * @param array{
+     *      type?: string,
+     *      mb_albumid?: string,
+     *      artist?: string,
+     *      album?: string,
+     *      cover?: ?string,
+     *      file?: string,
+     *      year_filter?: string,
+     *      search_limit?: int,
+     *  } $options
      * @param int $limit
      * @return array
      */

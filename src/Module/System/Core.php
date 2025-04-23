@@ -40,10 +40,8 @@ class Core
     /**
      * get_global
      * Return a $GLOBAL variable instead of calling directly
-     *
-     * @param string $variable
      */
-    public static function get_global($variable): ?User
+    public static function get_global(string $variable): ?User
     {
         return $GLOBALS[$variable] ?? null;
     }
@@ -51,13 +49,9 @@ class Core
     /**
      * get_request
      * Return a $REQUEST variable instead of calling directly
-     *
-     * @param string $variable
-     * @return string
-     *
      * @deprecated Use RequestParser
      */
-    public static function get_request($variable): string
+    public static function get_request(string $variable): string
     {
         if (!array_key_exists($variable, $_REQUEST)) {
             return '';
@@ -69,10 +63,8 @@ class Core
     /**
      * get_get
      * Return a $GET variable instead of calling directly
-     *
-     * @param string $variable
      */
-    public static function get_get($variable): string
+    public static function get_get(string $variable): string
     {
         if (!array_key_exists($variable, $_GET)) {
             return '';
@@ -82,14 +74,11 @@ class Core
     }
 
     /**
-     * @param string $variable
-     * @return string
-     * @deprecated Not in use
-     *
      * get_cookie
      * Return a $COOKIE variable instead of calling directly
+     * @deprecated Not in use
      */
-    public static function get_cookie($variable): string
+    public static function get_cookie(string $variable): string
     {
         if (!array_key_exists($variable, $_COOKIE)) {
             return '';
@@ -101,10 +90,8 @@ class Core
     /**
      * get_server
      * Return a $SERVER variable instead of calling directly
-     *
-     * @param string $variable
      */
-    public static function get_server($variable): string
+    public static function get_server(string $variable): string
     {
         if (!array_key_exists($variable, $_SERVER)) {
             return '';
@@ -116,10 +103,8 @@ class Core
     /**
      * get_post
      * Return a $POST variable instead of calling directly
-     *
-     * @param string $variable
      */
-    public static function get_post($variable): string
+    public static function get_post(string $variable): string
     {
         if (!array_key_exists($variable, $_POST)) {
             return '';
@@ -150,10 +135,8 @@ class Core
      * form_register
      * This registers a form with a SID, inserts it into the session
      * variables and then returns a string for use in the HTML form
-     * @param string $name
-     * @param string $type
      */
-    public static function form_register($name, $type = 'post'): string
+    public static function form_register(string $name, string $type = 'post'): string
     {
         // Make ourselves a nice little sid
         $sid    = md5(uniqid((string)rand(), true));
@@ -182,10 +165,9 @@ class Core
      * This generates a cryptographically secure token.
      * Returns a token of the required bytes length, as a string. Returns false
      * if it could not generate a cryptographically secure token.
-     * @param int $length
      * @throws Exception
      */
-    public static function gen_secure_token($length): ?string
+    public static function gen_secure_token(int $length): ?string
     {
         if ($length < 1) {
             return null;
@@ -211,7 +193,7 @@ class Core
      * @param string $image_data
      * @return array{width: int, height: int}
      */
-    public static function image_dimensions($image_data): array
+    public static function image_dimensions(string $image_data): array
     {
         $empty = [
             'width' => 0,
@@ -252,10 +234,8 @@ class Core
      *
      * Replacement function because PHP's is_readable is buggy:
      * https://bugs.php.net/bug.php?id=49620
-     *
-     * @param string $path
      */
-    public static function is_readable($path): bool
+    public static function is_readable(string $path): bool
     {
         if (!$path) {
             return false;
@@ -289,9 +269,8 @@ class Core
     /**
      * get_filesize
      * Get a file size. This because filesize() doesn't work on 32-bit OS with files > 2GB
-     * @param string|null $filename
      */
-    public static function get_filesize($filename): int
+    public static function get_filesize(?string $filename): int
     {
         if (!$filename || !file_exists($filename)) {
             return 0;
@@ -323,9 +302,8 @@ class Core
      * conv_lc_file
      *
      * Convert site charset filename to local charset filename for file operations
-     * @param string $filename
      */
-    public static function conv_lc_file($filename): string
+    public static function conv_lc_file(string $filename): string
     {
         $lc_filename  = $filename;
         $site_charset = AmpConfig::get('site_charset');
@@ -371,10 +349,10 @@ class Core
 
     /**
      * requests_options
-     * @param array $options
-     * @return array
+     * @param array<string, mixed> $options
+     * @return array<string, mixed>
      */
-    public static function requests_options($options = []): array
+    public static function requests_options(array $options = []): array
     {
         if (!isset($options['proxy'])) {
             if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {

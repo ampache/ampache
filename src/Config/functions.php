@@ -45,9 +45,8 @@ use Psr\Log\LoggerInterface;
  * set_memory_limit
  * This function attempts to change the php memory limit using init_set.
  * Will never reduce it below the current setting.
- * @param int|string $new_limit
  */
-function set_memory_limit($new_limit): void
+function set_memory_limit(int|string $new_limit): void
 {
     $current_limit = ini_get('memory_limit');
     if ($current_limit == -1) {
@@ -151,7 +150,7 @@ function invert_bool($value): bool
  * different languages installed, this means that all you have to do
  * is drop one in and it will show up on the context menu. It returns
  * in the form of an array of names
- * @return array
+ * @return array<string, string>
  */
 function get_languages(): array
 {
@@ -233,7 +232,7 @@ function get_languages(): array
                     T_('Unknown %s'),
                     '(' . $file . ')'
                 ),
-            }; // end switch
+            };
 
             $results[$file] = $name;
         }
@@ -363,9 +362,9 @@ function get_datetime($time, $date_format = 'short', $time_format = 'short', $ov
 /**
  * check_config_values
  * checks to make sure that they have at least set the needed variables
- * @param array $conf
+ * @param array<string, mixed> $conf
  */
-function check_config_values($conf): bool
+function check_config_values(array $conf): bool
 {
     if (!is_array($conf)) {
         return false;
@@ -406,10 +405,10 @@ function check_config_values($conf): bool
 }
 
 /**
- * @param string $val
- * @return int|string
+ * return_bytes
+ * @noinspection PhpMissingBreakStatementInspection
  */
-function return_bytes($val)
+function return_bytes(string $val): int
 {
     $val  = trim((string) $val);
     $last = strtolower((string) $val[strlen((string) $val) - 1]);
@@ -425,7 +424,7 @@ function return_bytes($val)
             break;
     }
 
-    return $val;
+    return (int)$val;
 }
 
 /**

@@ -53,9 +53,16 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
      *
      * @param Art $art
      * @param int $limit
-     * @param array $data
-     *
-     * @return array
+     * @param array{
+     *      mb_albumid?: string,
+     *      artist?: string,
+     *      album?: string,
+     *      cover?: ?string,
+     *      file?: string,
+     *      year_filter?: string,
+     *      search_limit?: int,
+     *  } $data
+     * @return array<int, array{url: string, mime: string, title: string}>
      */
     public function collect(
         Art $art,
@@ -69,7 +76,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
             return $images;
         }
 
-        if (!array_key_exists('mb_albumid', $data) || $data['mb_albumid'] === null) {
+        if (!array_key_exists('mb_albumid', $data) || empty($data['mb_albumid'])) {
             return $images;
         }
         $this->logger->debug(

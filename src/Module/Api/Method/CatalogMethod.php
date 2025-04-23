@@ -46,7 +46,15 @@ final class CatalogMethod
      *
      * Get the catalogs from it's id.
      *
-     * filter = (integer) Catalog ID number
+     * filter = (string) Catalog ID number
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function catalog(array $input, User $user): bool
     {

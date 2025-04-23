@@ -132,9 +132,8 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * to this album from the database it does not
      * pull the album or thumb art by default or
      * get any of the counts.
-     * @param int|null $album_id
      */
-    public function __construct($album_id = 0)
+    public function __construct(?int $album_id = 0)
     {
         if (!$album_id) {
             return;
@@ -249,34 +248,21 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * check
      *
      * Searches for an album; if none is found, insert a new one.
-     * @param int $catalog_id
-     * @param string $name
-     * @param int $year
-     * @param string|null $mbid
-     * @param string|null $mbid_group
-     * @param int|null $album_artist
-     * @param string|null $release_type
-     * @param string|null $release_status
-     * @param int|null $original_year
-     * @param string|null $barcode
-     * @param string|null $catalog_number
-     * @param string|null $version
-     * @param bool $readonly
      */
     public static function check(
-        $catalog_id,
-        $name,
-        $year = 0,
-        $mbid = null,
-        $mbid_group = null,
-        $album_artist = null,
-        $release_type = null,
-        $release_status = null,
-        $original_year = null,
-        $barcode = null,
-        $catalog_number = null,
-        $version = null,
-        $readonly = false
+        int $catalog_id,
+        string $name,
+        int $year = 0,
+        ?string $mbid = null,
+        ?string $mbid_group = null,
+        ?int $album_artist = null,
+        ?string $release_type = null,
+        ?string $release_status = null,
+        ?int $original_year = null,
+        ?string $barcode = null,
+        ?string $catalog_number = null,
+        ?string $version = null,
+        bool $readonly = false
     ): int {
         $trimmed        = Catalog::trim_prefix(trim((string) $name));
         $name           = $trimmed['string'];
@@ -482,6 +468,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
      */
     public function get_keywords(): array
     {
@@ -489,37 +476,35 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             'mb_albumid' => [
                 'important' => false,
                 'label' => T_('Album MusicBrainzID'),
-                'value' => $this->mbid,
+                'value' => (string)$this->mbid,
             ],
             'mb_albumid_group' => [
                 'important' => false,
                 'label' => T_('Release Group MusicBrainzID'),
-                'value' => $this->mbid_group,
+                'value' => (string)$this->mbid_group,
             ],
             'artist' => [
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => ($this->get_artist_fullname()),
+                'value' => (string)$this->get_artist_fullname(),
             ],
             'album' => [
                 'important' => true,
                 'label' => T_('Album'),
-                'value' => $this->get_fullname(true),
+                'value' => (string)$this->get_fullname(true),
             ],
             'year' => [
                 'important' => false,
                 'label' => T_('Year'),
-                'value' => $this->year,
+                'value' => (string)$this->year,
             ],
         ];
     }
 
     /**
      * Get item fullname.
-     * @param bool $simple
-     * @param bool $force_year
      */
-    public function get_fullname($simple = false, $force_year = false): string
+    public function get_fullname(bool $simple = false, bool $force_year = false): string
     {
         // return the basic name without all the wild formatting
         if ($simple) {
@@ -738,12 +723,9 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Get parent album artists.
-     * @param int $album_id
-     * @param int $primary_id
-     * @param string $object_type
      * @return int[]
      */
-    public static function get_parent_array($album_id, $primary_id, $object_type = 'album'): array
+    public static function get_parent_array(int $album_id, int $primary_id, string $object_type = 'album'): array
     {
         $results    = [];
         $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` = ?;";
@@ -1105,11 +1087,8 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Update an album field.
-     * @param string $field
-     * @param string|int|null $value
-     * @param int $album_id
      */
-    private static function update_field($field, $value, $album_id): void
+    private static function update_field(string $field, int|string|null $value, int $album_id): void
     {
         if ($value === null) {
             $sql = "UPDATE `album` SET `" . $field . "` = NULL WHERE `id` = ?";
@@ -1315,9 +1294,8 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /**
      * sanitize_disk
      * Change letter disk numbers (like vinyl/cassette) to an integer
-     * @param string|int $disk
      */
-    public static function sanitize_disk($disk): int
+    public static function sanitize_disk(int|string $disk): int
     {
         if ((int)$disk == 0) {
             // A is 0 but we want to start at disk 1

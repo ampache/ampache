@@ -49,10 +49,7 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     private ?int $creation_date = null;
 
-    /**
-     * @param int|null $pm_id
-     */
-    public function __construct($pm_id = 0)
+    public function __construct(?int $pm_id = 0)
     {
         if (!$pm_id) {
             return;

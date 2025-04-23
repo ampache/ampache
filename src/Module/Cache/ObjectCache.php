@@ -46,6 +46,7 @@ final class ObjectCache implements ObjectCacheInterface
         }
         $object_types = [
             'album',
+            'album_disk',
             'artist',
             'catalog',
             'genre',

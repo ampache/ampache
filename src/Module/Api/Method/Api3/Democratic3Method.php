@@ -40,6 +40,14 @@ final class Democratic3Method
     /**
      * democratic
      * This is for controlling democratic play
+     *
+     * @param array{
+     *     method: string,
+     *     oid?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function democratic(array $input, User $user): void
     {
@@ -49,7 +57,7 @@ final class Democratic3Method
 
         switch ($input['method']) {
             case 'vote':
-                $media = new Song($input['oid']);
+                $media = new Song($input['oid'] ?? 0);
                 if ($media->isNew()) {
                     echo Xml3_Data::error(400, T_('Media Object Invalid or Not Specified'));
                     break;
@@ -57,8 +65,8 @@ final class Democratic3Method
                 $democratic->add_vote(
                     [
                         [
-                            'object_type' => 'song',
-                            'object_id' => $media->id
+                            'song',
+                            $media->id
                         ]
                     ]
                 );
@@ -71,13 +79,15 @@ final class Democratic3Method
                 echo Xml3_Data::keyed_array($results);
                 break;
             case 'devote':
-                $media = new Song($input['oid']);
+                $media = new Song($input['oid'] ?? 0);
                 if ($media->isNew()) {
                     echo Xml3_Data::error(400, T_('Media Object Invalid or Not Specified'));
                 }
 
                 $uid = $democratic->get_uid_from_object_id($media->id);
-                $democratic->remove_vote($uid);
+                if ($uid) {
+                    $democratic->remove_vote($uid);
+                }
 
                 // Everything was ok
                 $results = [

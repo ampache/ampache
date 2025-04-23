@@ -30,7 +30,15 @@ interface CollectorModuleInterface
     /**
      * @param Art $art
      * @param int $limit
-     * @param array $data
+     * @param array{
+     *      mb_albumid?: string,
+     *      artist?: string,
+     *      album?: string,
+     *      cover?: ?string,
+     *      file?: string,
+     *      year_filter?: string,
+     *      search_limit?: int,
+     *  } $data
      *
      * @return array
      */

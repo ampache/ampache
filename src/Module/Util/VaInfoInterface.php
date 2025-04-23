@@ -43,9 +43,8 @@ interface VaInfoInterface
     /**
      * check_time
      * check a cached file is close to the expected time
-     * @param int $time
      */
-    public function check_time($time): bool;
+    public function check_time(int $time): bool;
 
     /**
      * write_id3
@@ -60,7 +59,7 @@ interface VaInfoInterface
      * @param array $frames
      * @return array
      */
-    public function prepare_metadata_for_writing($frames): array;
+    public function prepare_metadata_for_writing(array $frames): array;
 
     /**
      * read_id3
@@ -81,7 +80,7 @@ interface VaInfoInterface
      * @param string $configKey
      * @return array
      */
-    public static function get_tag_type($results, $configKey = 'metadata_order'): array;
+    public static function get_tag_type(array $results, string $configKey = 'metadata_order'): array;
 
     /**
      * clean_tag_info
@@ -91,19 +90,19 @@ interface VaInfoInterface
      * sanitized format that Ampache can actually use
      * @param array $results
      * @param array $keys
-     * @param string $filename
-     * @return array
+     * @param string|null $filename
+     * @return array<string, mixed>
      */
-    public static function clean_tag_info($results, $keys, $filename = null): array;
+    public static function clean_tag_info(array $results, array $keys, ?string $filename = null): array;
 
     /**
      * parse_pattern
      * @param string $filepath
      * @param string $dirPattern
      * @param string $filePattern
-     * @return array
+     * @return array<string, mixed>
      */
-    public static function parse_pattern($filepath, $dirPattern, $filePattern): array;
+    public static function parse_pattern(string $filepath, string $dirPattern, string $filePattern): array;
 
     /**
      * set_broken

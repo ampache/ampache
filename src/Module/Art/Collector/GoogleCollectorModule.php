@@ -47,9 +47,17 @@ final class GoogleCollectorModule implements CollectorModuleInterface
      *
      * @param Art $art
      * @param int $limit
-     * @param array $data
-     *
-     * @return array
+     * @param array{
+     *      mb_albumid?: string,
+     *      artist?: string,
+     *      album?: string,
+     *      cover?: ?string,
+     *      file?: string,
+     *      year_filter?: string,
+     *      search_limit?: int,
+     *      keyword?: string,
+     *  } $data
+     * @return array<int, array{url: string, mime: string, title: string}>
      */
     public function collect(
         Art $art,
@@ -61,6 +69,10 @@ final class GoogleCollectorModule implements CollectorModuleInterface
         }
 
         $images = [];
+        if (empty($data['keyword'])) {
+            return $images;
+        }
+
         $search = rawurlencode($data['keyword']);
         $size   = '&imgsz=m'; // Medium
 
@@ -102,7 +114,11 @@ final class GoogleCollectorModule implements CollectorModuleInterface
                     $mime = 'image/';
                     $mime .= $results['extension'] ?? 'jpg';
 
-                    $images[] = ['url' => $match, 'mime' => $mime, 'title' => 'Google'];
+                    $images[] = [
+                        'url' => $match,
+                        'mime' => $mime,
+                        'title' => 'Google'
+                    ];
                     if ($limit > 0 && count($images) >= $limit) {
                         break;
                     }

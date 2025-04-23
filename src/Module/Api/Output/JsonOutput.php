@@ -33,7 +33,7 @@ use Ampache\Repository\Model\User;
 final class JsonOutput implements ApiOutputInterface
 {
     /**
-     * @param list<int> $result
+     * @param list<int|string> $result
      */
     public function podcastEpisodes(array $result, User $user): string
     {
@@ -111,7 +111,7 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param int[] $albums
+     * @param list<int|string> $albums
      * @param array $include
      * @param User $user
      * @param bool $encode
@@ -134,7 +134,8 @@ final class JsonOutput implements ApiOutputInterface
      * nothing fancy here...
      *
      * @param string $string success message
-     * @param array<mixed> $return_data
+     * @param array<string, string> $return_data
+     * @return string
      */
     public function success(string $string, array $return_data = []): string
     {

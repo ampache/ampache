@@ -61,23 +61,16 @@ class Wanted extends database_object
 
     public int $accepted;
 
-    /** @var null|string $link */
-    public $link;
+    public ?string $link = null;
 
-    /** @var null|string $f_user */
-    public $f_user;
+    public ?string $f_user = null;
 
     /** @var Song_Preview[] $songs */
-    public array $songs;
+    public array $songs = [];
 
-    /** @var null|string $f_link */
     private ?string $f_link = null;
 
-    /**
-     * Constructor
-     * @param int|null $wanted_id
-     */
-    public function __construct($wanted_id = 0)
+    public function __construct(?int $wanted_id = 0)
     {
         if (!$wanted_id) {
             return;
@@ -120,15 +113,13 @@ class Wanted extends database_object
     /**
      * get_missing_albums
      * Get list of library's missing albums from MusicBrainz
-     * @param Artist|null $artist
-     * @param string $mbid
      * @return list<Wanted>
      */
-    public static function get_missing_albums($artist, $mbid = ''): array
+    public static function get_missing_albums(?Artist $artist, ?string $mbid = ''): array
     {
-        $lookupId = $artist->mbid ?? $mbid;
-        $includes = ['release-groups'];
-        $types    = AmpConfig::get('wanted_types', []);
+        $lookupMbid = (string)($artist->mbid ?? $mbid);
+        $includes   = ['release-groups'];
+        $types      = AmpConfig::get('wanted_types', []);
         if (is_string($types)) {
             $types = explode(',', $types);
         }
@@ -167,26 +158,23 @@ class Wanted extends database_object
              *     country: string
              * } $martist
              */
-            $martist = $brainz->lookup('artist', $lookupId, $includes);
-            debug_event(self::class, 'get_missing_albums lookup: ' . $lookupId, 3);
+            $martist = $brainz->lookup('artist', $lookupMbid, $includes);
+            debug_event(self::class, 'get_missing_albums lookup: ' . $lookupMbid, 3);
         } catch (Exception $exception) {
             debug_event(self::class, 'get_missing_albums ERROR: ' . $exception, 3);
 
             return [];
         }
 
-        $wartist = [];
-        if ($artist === null) {
-            $wartist['mbid'] = $lookupId;
-            $wartist['name'] = $martist->{'name'};
-            parent::add_to_cache('missing_artist', $lookupId, $wartist);
-            $wartist = self::getMissingArtistRetriever()->retrieve($lookupId);
-        }
 
         $wantedRepository = self::getWantedRepository();
 
         $results = [];
         if (!empty($martist)) {
+            // cache the artist if it's missing from the database
+            if ($artist === null) {
+                parent::add_to_cache('missing_artist', $lookupMbid, $martist->{'name'});
+            }
             $user = Core::get_global('user');
             foreach ($martist->{'release-groups'} as $group) {
                 if (is_array($types) && in_array(strtolower((string)$group->{'primary-type'}), $types)) {
@@ -211,7 +199,7 @@ class Wanted extends database_object
                             if ($artist !== null) {
                                 $wanted->artist = $artist->id;
                             } else {
-                                $wanted->artist_mbid = $lookupId;
+                                $wanted->artist_mbid = $lookupMbid;
                             }
 
                             $wanted->user = $user?->getId();
@@ -231,7 +219,7 @@ class Wanted extends database_object
                             if ($artist !== null) {
                                 $wanted->link .= "&artist=" . $wanted->artist;
                             } else {
-                                $wanted->link .= "&artist_mbid=" . $lookupId;
+                                $wanted->link .= "&artist_mbid=" . $lookupMbid;
                             }
 
                             $wanted->f_user = Core::get_global('user')?->get_fullname() ?? '';

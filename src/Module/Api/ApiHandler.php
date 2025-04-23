@@ -454,6 +454,7 @@ final class ApiHandler implements ApiHandlerInterface
 
         $debugHandler = $this->configContainer->get('api_debug_handler');
         if ($debugHandler) {
+            /** @noinspection PhpUnhandledExceptionInspection */
             return $this->_executeDebugHandler(
                 $gatekeeper,
                 $is_public,

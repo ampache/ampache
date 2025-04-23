@@ -52,6 +52,21 @@ final class Songs5Method
      * update = $browse->set_api_filter(date) //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     *
+     * @param array{
+     *     filter?: string,
+     *     exact?: int,
+     *     add?: string,
+     *     update?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function songs(array $input, User $user): bool
     {

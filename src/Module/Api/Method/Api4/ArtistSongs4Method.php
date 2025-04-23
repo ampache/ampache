@@ -48,13 +48,26 @@ final class ArtistSongs4Method
      * filter = (string) UID of Artist
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     top50?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function artist_songs(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $artist  = new Artist($input['filter']);
+        $artist  = new Artist((int)$input['filter']);
         $results = self::getSongRepository()->getByArtist($artist->id);
 
         if (!empty($results)) {

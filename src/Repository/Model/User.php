@@ -89,29 +89,21 @@ class User extends database_object
     // Constructed variables
     public string $ip_history = '';
 
-    /** @var array $prefs */
-    public $prefs = [];
+    /** @var array<string, mixed> $prefs */
+    public array $prefs = [];
 
-    /** @var Tmp_Playlist|null $playlist */
-    public $playlist;
+    public ?Tmp_Playlist $playlist = null;
 
-    /** @var null|string $link */
-    public $link;
+    public ?string $link = null;
 
     private ?string $f_link = null;
 
-    /** @var array $catalogs */
-    public $catalogs;
+    /** @var array<string, array<int>> $catalogs */
+    public array $catalogs;
 
     private ?bool $has_art = null;
 
-    /**
-     * Constructor
-     * This function is the constructor object for the user
-     * class, it currently takes a username
-     * @param int|null $user_id
-     */
-    public function __construct($user_id = 0)
+    public function __construct(?int $user_id = 0)
     {
         if (!$user_id) {
             return;
@@ -197,9 +189,8 @@ class User extends database_object
     /**
      * get_playlists
      * Get your playlists and just your playlists
-     * @param bool $show_all
      */
-    public function get_playlists($show_all): array
+    public function get_playlists(bool $show_all): array
     {
         $results = [];
         $sql     = ($show_all)
@@ -231,9 +222,8 @@ class User extends database_object
      * get_from_username
      * This returns a built user from a username. This is a
      * static function so it doesn't require an instance
-     * @param string $username
      */
-    public static function get_from_username($username): ?User
+    public static function get_from_username(string $username): ?User
     {
         return self::getUserRepository()->findByUsername($username);
     }
@@ -241,11 +231,9 @@ class User extends database_object
     /**
      * get_user_catalogs
      * This returns the catalogs as an array of ids that this user is allowed to access
-     * @param int $user_id
-     * @param string $filter
      * @return int[]
      */
-    public static function get_user_catalogs($user_id, $filter = ''): array
+    public static function get_user_catalogs(int $user_id, string $filter = ''): array
     {
         if (parent::is_cached('user_catalog' . $filter, $user_id)) {
             return parent::get_from_cache('user_catalog' . $filter, $user_id);
@@ -280,10 +268,8 @@ class User extends database_object
      * []['title'] = uppercase type name
      * []['prefs'] = array(array('name', 'display', 'value'));
      * []['admin'] = t/f value if this is an admin only section
-     * @param int|string $type
-     * @param bool $system
      */
-    public function get_preferences($type = 0, $system = false): array
+    public function get_preferences(int|string $type = 0, bool $system = false): array
     {
         $user_limit = "";
         if (!$system) {
@@ -393,9 +379,8 @@ class User extends database_object
     /**
      * set_user_data
      * This updates some background data for user specific function
-     * @param string|int $value
      */
-    public static function set_user_data(int $user_id, string $key, $value): void
+    public static function set_user_data(int $user_id, string $key, float|int|string $value): void
     {
         Dba::write("REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;", [$user_id, $key, $value]);
     }
@@ -403,11 +388,8 @@ class User extends database_object
     /**
      * get_user_data
      * This updates some background data for user specific function
-     * @param int $user_id
-     * @param string $key
-     * @param string|int|null $default
      */
-    public static function get_user_data($user_id, $key = null, $default = null): array
+    public static function get_user_data(int $user_id, string $key = null, int|string $default = null): array
     {
         $sql    = "SELECT `key`, `value` FROM `user_data` WHERE `user` = ?";
         $params = [$user_id];
@@ -430,9 +412,8 @@ class User extends database_object
     /**
      * get_play_size
      * A user might be missing the play_size so it needs to be calculated
-     * @param int $user_id
      */
-    public static function get_play_size($user_id): int
+    public static function get_play_size(int $user_id): int
     {
         $params = [$user_id];
         $total  = 0;
@@ -519,9 +500,8 @@ class User extends database_object
     /**
      * update_catalog_filter_group
      * Set a new filter group catalog filter
-     * @param int $new_filter
      */
-    public function update_catalog_filter_group($new_filter): void
+    public function update_catalog_filter_group(int $new_filter): void
     {
         $sql = "UPDATE `user` SET `catalog_filter_group` = ? WHERE `id` = ?";
 
@@ -530,12 +510,7 @@ class User extends database_object
         Dba::write($sql, [$new_filter, $this->id]);
     }
 
-    /**
-     * update_username
-     * updates their username
-     * @param string $new_username
-     */
-    public function update_username($new_username): void
+    public function update_username(string $new_username): void
     {
         $sql            = "UPDATE `user` SET `username` = ? WHERE `id` = ?";
         $this->username = $new_username;
@@ -550,9 +525,8 @@ class User extends database_object
      * This is used by the registration mumbojumbo
      * Use this function to update the validation key
      * NOTE: crap this doesn't have update_item the humanity of it all
-     * @param string $new_validation
      */
-    public function update_validation($new_validation): bool
+    public function update_validation(string $new_validation): bool
     {
         $sql              = "UPDATE `user` SET `validation` = ?, `disabled`='1' WHERE `id` = ?";
         $db_results       = (Dba::write($sql, [$new_validation, $this->id]) !== false);
@@ -561,12 +535,7 @@ class User extends database_object
         return $db_results;
     }
 
-    /**
-     * update_fullname
-     * updates their fullname
-     * @param string $new_fullname
-     */
-    public function update_fullname($new_fullname): void
+    public function update_fullname(string $new_fullname): void
     {
         $sql = "UPDATE `user` SET `fullname` = ? WHERE `id` = ?";
 
@@ -575,12 +544,7 @@ class User extends database_object
         Dba::write($sql, [$new_fullname, $this->id]);
     }
 
-    /**
-     * update_fullname_public
-     * updates their fullname public
-     * @param bool|string $new_fullname_public
-     */
-    public function update_fullname_public($new_fullname_public): void
+    public function update_fullname_public(bool|string $new_fullname_public): void
     {
         $sql = "UPDATE `user` SET `fullname_public` = ? WHERE `id` = ?";
 
@@ -589,12 +553,7 @@ class User extends database_object
         Dba::write($sql, [($new_fullname_public) ? '1' : '0', $this->id]);
     }
 
-    /**
-     * update_email
-     * updates their email address
-     * @param string $new_email
-     */
-    public function update_email($new_email): void
+    public function update_email(string $new_email): void
     {
         $sql = "UPDATE `user` SET `email` = ? WHERE `id` = ?";
 
@@ -603,12 +562,7 @@ class User extends database_object
         Dba::write($sql, [$new_email, $this->id]);
     }
 
-    /**
-     * update_website
-     * updates their website address
-     * @param string $new_website
-     */
-    public function update_website($new_website): void
+    public function update_website(string $new_website): void
     {
         $new_website = filter_var(urldecode($new_website), FILTER_VALIDATE_URL) ?: null;
         $new_website = (is_string($new_website))
@@ -621,12 +575,7 @@ class User extends database_object
         Dba::write($sql, [$new_website, $this->id]);
     }
 
-    /**
-     * update_state
-     * updates their state
-     * @param string $new_state
-     */
-    public function update_state($new_state): void
+    public function update_state(string $new_state): void
     {
         $sql = "UPDATE `user` SET `state` = ? WHERE `id` = ?";
 
@@ -635,12 +584,7 @@ class User extends database_object
         Dba::write($sql, [$new_state, $this->id]);
     }
 
-    /**
-     * update_city
-     * updates their city
-     * @param string $new_city
-     */
-    public function update_city($new_city): void
+    public function update_city(string $new_city): void
     {
         $sql = "UPDATE `user` SET `city` = ? WHERE `id` = ?";
 
@@ -821,10 +765,8 @@ class User extends database_object
 
     /**
      * save_mediaplay
-     * @param User $user
-     * @param Song $media
      */
-    public static function save_mediaplay($user, $media): void
+    public static function save_mediaplay(User $user, Song $media): void
     {
         foreach (Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY) as $plugin_name) {
             try {
@@ -842,30 +784,19 @@ class User extends database_object
     /**
      * create
      * inserts a new user into Ampache
-     * @param string $username
-     * @param string $fullname
-     * @param string $email
-     * @param string $website
-     * @param string $password
-     * @param AccessLevelEnum $access
-     * @param int|null $catalog_filter_group
-     * @param string|null $state
-     * @param string|null $city
-     * @param bool|null $disabled
-     * @param bool|null $encrypted
      */
     public static function create(
-        $username,
-        $fullname,
-        $email,
-        $website,
-        $password,
+        string $username,
+        string $fullname,
+        string $email,
+        string $website,
+        string $password,
         AccessLevelEnum $access,
-        $catalog_filter_group = 0,
-        $state = '',
-        $city = '',
-        $disabled = false,
-        $encrypted = false
+        ?int $catalog_filter_group = 0,
+        ?string $state = '',
+        ?string $city = '',
+        ?bool $disabled = false,
+        ?bool $encrypted = false
     ): int {
         // don't try to overwrite users that already exist
         if (
@@ -956,13 +887,7 @@ class User extends database_object
         return $insert_id;
     }
 
-    /**
-     * update_password
-     * updates a users password
-     * @param string $new_password
-     * @param string $hashed_password
-     */
-    public function update_password($new_password, $hashed_password = null): void
+    public function update_password(string $new_password, ?string $hashed_password = null): void
     {
         debug_event(self::class, 'Updating password', 1);
         if (!$hashed_password) {
@@ -1140,9 +1065,8 @@ class User extends database_object
      * delay how long since last_seen in seconds default of 20 min
      * calculates difference between now and last_seen
      * if less than delay, we consider them still online
-     * @param int $delay
      */
-    public function is_online($delay = 1200): bool
+    public function is_online(int $delay = 1200): bool
     {
         return time() - $this->last_seen <= $delay;
     }
@@ -1151,13 +1075,9 @@ class User extends database_object
      * get_recently_played
      * This gets the recently played items for this user respecting
      * the limit passed. ger recent by default or oldest if $newest is false.
-     * @param string $type
-     * @param int $count
-     * @param int $offset
-     * @param bool $newest
      * @return int[]
      */
-    public function get_recently_played($type, $count, $offset = 0, $newest = true, $count_type = 'stream'): array
+    public function get_recently_played(string $type, int $count, int $offset = 0, bool $newest = true, string $count_type = 'stream'): array
     {
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
         $limit    = ($offset < 1) ? $count : $offset . "," . $count;
@@ -1244,9 +1164,8 @@ class User extends database_object
 
     /**
      * Get item name based on whether they allow public fullname access.
-     * @param int $user_id
      */
-    public static function get_username($user_id): string
+    public static function get_username(int $user_id): string
     {
         $users = self::getUserRepository()->getValidArray(true);
 
@@ -1265,9 +1184,8 @@ class User extends database_object
     /**
      * get_avatar
      * Get the user avatar
-     * @param bool $local
      */
-    public function get_avatar($local = false): array
+    public function get_avatar(bool $local = false): array
     {
         $avatar          = [];
         $avatar['title'] = T_('User avatar');
@@ -1311,11 +1229,7 @@ class User extends database_object
         return $avatar;
     }
 
-    /**
-     * @param string $data
-     * @param string $mime
-     */
-    public function update_avatar($data, $mime = ''): bool
+    public function update_avatar(string $data, string $mime = ''): bool
     {
         debug_event(self::class, 'Updating avatar for ' . $this->id, 4);
 
@@ -1478,10 +1392,8 @@ class User extends database_object
 
     /**
      * Returns the value of a certain user-preference
-     *
-     * @return int|string|null
      */
-    public function getPreferenceValue(string $preferenceName)
+    public function getPreferenceValue(string $preferenceName): int|string|null
     {
         return Preference::get_by_user($this->id, $preferenceName);
     }

@@ -39,12 +39,19 @@ final class PlaylistDelete3Method
     /**
      * playlist_delete
      * This delete a playlist
+     *
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function playlist_delete(array $input, User $user): void
     {
         unset($user);
         ob_end_clean();
-        $playlist = new Playlist($input['filter']);
+        $playlist = new Playlist((int)$input['filter']);
         if (!$playlist->has_access()) {
             echo Xml3_Data::error(401, T_('Access denied to this playlist.'));
         } else {

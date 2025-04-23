@@ -52,6 +52,16 @@ final class PlaylistAddMethod
      * filter = (string) UID of playlist
      * id     = (string) $object_id
      * type   = (string) 'song', 'album', 'artist', 'playlist'
+     *
+     * @param array{
+     *     filter: string,
+     *     id: string,
+     *     type: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function playlist_add(array $input, User $user): bool
     {
@@ -59,7 +69,7 @@ final class PlaylistAddMethod
             return false;
         }
         ob_end_clean();
-        $playlist    = new Playlist($input['filter']);
+        $playlist    = new Playlist((int)$input['filter']);
         $object_id   = $input['id'];
         $object_type = $input['type'];
 

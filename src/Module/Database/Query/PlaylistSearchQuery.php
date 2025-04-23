@@ -69,7 +69,13 @@ final class PlaylistSearchQuery implements QueryInterface
 
     protected string $select = "`playlist`.`id`";
 
-    protected string $base = "SELECT %%SELECT%% FROM (SELECT `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, 'playlist' AS `object_type` FROM `playlist` UNION SELECT CONCAT('smart_', `id`) AS `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, 'search' AS `object_type` FROM `search`) AS `playlist` ";
+    protected string $base = <<<SQL
+        SELECT %%SELECT%% FROM (
+            SELECT `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, 'playlist' AS `object_type` FROM `playlist`
+            UNION
+            SELECT CONCAT('smart_', `id`) AS `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, 'search' AS `object_type` FROM `search`
+        ) AS `playlist`
+        SQL;
 
     /**
      * get_select
@@ -185,8 +191,8 @@ final class PlaylistSearchQuery implements QueryInterface
      *
      * Sorting SQL for ORDER BY
      * @param Query $query
-     * @param string $field
-     * @param string $order
+     * @param string|null $field
+     * @param string|null $order
      * @return string
      */
     public function get_sql_sort($query, $field, $order): string

@@ -47,6 +47,18 @@ final class GenreArtists5Method
      * filter = (string) UID of Album //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     *
+     * @param array{
+     *     filter?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function genre_artists(array $input, User $user): bool
     {

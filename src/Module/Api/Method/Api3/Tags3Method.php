@@ -39,6 +39,18 @@ final class Tags3Method
     /**
      * tags
      * This returns the tags based on the specified filter
+     *
+     * @param array{
+     *     filter?: string,
+     *     exact?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
      */
     public static function tags(array $input, User $user): void
     {

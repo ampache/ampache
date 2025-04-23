@@ -49,12 +49,10 @@ class Userflag extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the flag for
-     * @param int|null $object_id
-     * @param string $type
      */
     public function __construct(
-        $object_id,
-        $type
+        ?int $object_id,
+        string $type
     ) {
         $this->id   = (int)($object_id);
         $this->type = $type;
@@ -69,11 +67,8 @@ class Userflag extends database_object
      * build_cache
      * This attempts to get everything we'll need for this page load in a
      * single query, saving on connection overhead
-     * @param string $type
-     * @param array $ids
-     * @param int $user_id
      */
-    public static function build_cache($type, $ids, $user_id = null): bool
+    public static function build_cache(string $type, array $ids, ?int $user_id = null): bool
     {
         if (empty($ids)) {
             return false;
@@ -116,10 +111,8 @@ class Userflag extends database_object
      * garbage_collection
      *
      * Remove userflag for items that no longer exist.
-     * @param string $object_type
-     * @param int $object_id
      */
-    public static function garbage_collection($object_type = null, $object_id = null): void
+    public static function garbage_collection(?string $object_type = null, ?int $object_id = null): void
     {
         $types = [
             'album_disk',
@@ -154,11 +147,11 @@ class Userflag extends database_object
 
     /**
      * get_flag
-     * @param int $user_id
+     * @param int|null $user_id
      * @param bool $get_date
-     * @return bool|array
+     * @return bool|array{bool, int}
      */
-    public function get_flag($user_id = null, $get_date = false)
+    public function get_flag(?int $user_id = null, bool $get_date = false): bool|array
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -177,7 +170,10 @@ class Userflag extends database_object
             }
 
             if ($get_date) {
-                return $object;
+                return [
+                    (bool)$object[0],
+                    (int)$object[1],
+                ];
             }
 
             return (bool)$object[0];
@@ -188,11 +184,11 @@ class Userflag extends database_object
         $db_results = Dba::read($sql, [$user_id, $this->id, $this->type]);
         if ($row = Dba::fetch_assoc($db_results)) {
             // always cache the date in case it's called by subsonic
-            parent::add_to_cache($key, $this->id, [true, $row['date']]);
+            parent::add_to_cache($key, $this->id, [true, (int)$row['date']]);
             if ($get_date) {
                 return [
                     true,
-                    $row['date']
+                    (int)$row['date']
                 ];
             }
 
@@ -206,11 +202,8 @@ class Userflag extends database_object
      * set_flag
      * This function sets the user flag for the current object.
      * If no user_id is passed in, we use the currently logged in user.
-     * @param bool $flagged
-     * @param int $user_id
-     * @param int|null $date
      */
-    public function set_flag($flagged, $user_id = null, $date = null): bool
+    public function set_flag(bool $flagged, ?int $user_id = null, ?int $date = null): bool
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -254,11 +247,8 @@ class Userflag extends database_object
     /**
      * save_flag
      * Forward flag to last.fm and Libre.fm (song only)
-     * @param User $user
-     * @param Song $song
-     * @param bool $flagged
      */
-    public static function save_flag($user, $song, $flagged): void
+    public static function save_flag(User $user, Song $song, bool $flagged): void
     {
         foreach (Plugin::get_plugins(PluginTypeEnum::USER_FLAG_MANAGER) as $plugin_name) {
             try {
@@ -275,16 +265,12 @@ class Userflag extends database_object
 
     /**
      * get_latest_sql
-     * Get the latest sql
-     * @param string $input_type
-     * @param int $since
-     * @param int $before
      */
     public static function get_latest_sql(
-        $input_type,
+        string $input_type,
         ?User $user = null,
-        $since = 0,
-        $before = 0
+        int $since = 0,
+        int $before = 0
     ): string {
         $type    = Stats::validate_type($input_type);
         $sql     = "SELECT DISTINCT(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag`";
@@ -326,20 +312,15 @@ class Userflag extends database_object
     /**
      * get_latest
      * Get the latest user flagged objects
-     * @param string $type
-     * @param int $count
-     * @param int $offset
-     * @param int $since
-     * @param int $before
      * @return int[]
      */
     public static function get_latest(
-        $type,
+        string $type,
         ?User $user = null,
-        $count = 0,
-        $offset = 0,
-        $since = 0,
-        $before = 0
+        int $count = 0,
+        int $offset = 0,
+        int $since = 0,
+        int $before = 0
     ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -371,12 +352,9 @@ class Userflag extends database_object
 
     /**
      * show
-     * This takes an id and a type and displays the flag state
-     * enabled.
-     * @param int $object_id
-     * @param string $type
+     * This takes an id and a type and displays the flag statemenabled.
      */
-    public static function show($object_id, $type): string
+    public static function show(int $object_id, string $type): string
     {
         // If user flags aren't enabled don't do anything
         if (!AmpConfig::get('ratings')) {
@@ -408,11 +386,8 @@ class Userflag extends database_object
 
     /**
      * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id): void
+    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
         $sql = "UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 

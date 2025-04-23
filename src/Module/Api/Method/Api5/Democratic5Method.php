@@ -48,6 +48,15 @@ final class Democratic5Method
      *
      * method = (string) 'vote', 'devote', 'playlist', 'play'
      * oid    = (integer) //optional
+     *
+     * @param array{
+     *     method: string,
+     *     oid?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function democratic(array $input, User $user): bool
     {
@@ -71,8 +80,8 @@ final class Democratic5Method
                 $democratic->add_vote(
                     [
                         [
-                            'object_type' => $type,
-                            'object_id' => $media->id
+                            $type,
+                            $media->id
                         ]
                     ]
                 );
@@ -101,7 +110,9 @@ final class Democratic5Method
                 }
 
                 $object_id = $democratic->get_uid_from_object_id($media->id, $type);
-                $democratic->remove_vote($object_id);
+                if ($object_id) {
+                    $democratic->remove_vote($object_id);
+                }
 
                 // Everything was ok
                 $results = [

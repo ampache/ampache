@@ -43,6 +43,15 @@ final class Bookmarks5Method
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get information about bookmarked media this user is allowed to manage.
+     *
+     * @param array{
+     *     client?: string,
+     *     include?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function bookmarks(array $input, User $user): bool
     {

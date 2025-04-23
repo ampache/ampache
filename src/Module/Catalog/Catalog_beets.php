@@ -85,7 +85,10 @@ class Catalog_beets extends Catalog
     }
 
     /**
-     * @return array
+     * @return array<
+     *     string,
+     *     array{description: string, type: string}
+     * >
      */
     public function catalog_fields(): array
     {

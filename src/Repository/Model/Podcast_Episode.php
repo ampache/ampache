@@ -117,9 +117,8 @@ class Podcast_Episode extends database_object implements
      * Constructor
      *
      * Podcast Episode class
-     * @param int|null $episode_id
      */
-    public function __construct($episode_id = 0)
+    public function __construct(?int $episode_id = 0)
     {
         if (!$episode_id) {
             return;
@@ -235,6 +234,7 @@ class Podcast_Episode extends database_object implements
 
     /**
      * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
      */
     public function get_keywords(): array
     {
@@ -247,7 +247,7 @@ class Podcast_Episode extends database_object implements
             'title' => [
                 'important' => true,
                 'label' => T_('Title'),
-                'value' => $this->get_fullname()
+                'value' => (string)$this->get_fullname()
             ]
         ];
     }
@@ -458,6 +458,13 @@ class Podcast_Episode extends database_object implements
     /**
      * update
      * This takes a key'd array of data and updates the current podcast episode
+     * @param array{
+     *      title?: string,
+     *      website?: string,
+     *      category: ?string,
+     *      description?: ?string,
+     *      author?: ?string,
+     *  } $data
      */
     public function update(array $data): int
     {
@@ -487,12 +494,13 @@ class Podcast_Episode extends database_object implements
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param int $user_id
-     * @param string $agent
-     * @param array $location
-     * @param int $date
+     * @param array{
+     *      latitude?: float,
+     *      longitude?: float,
+     *      name?: string
+     *  } $location
      */
-    public function set_played($user_id, $agent, $location, $date): bool
+    public function set_played(int $user_id, string $agent, array $location, int $date): bool
     {
         // ignore duplicates or skip the last track
         if (!$this->check_play_history($user_id, $agent, $date)) {
@@ -563,11 +571,12 @@ class Podcast_Episode extends database_object implements
 
     /**
      * Get transcode settings.
-     * @param string $target
-     * @param string $player
-     * @param array $options
+     * @param string|null $target
+     * @param string|null $player
+     * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
+     * @return array{format?: string, command?: string}
      */
-    public function get_transcode_settings($target = null, $player = null, $options = []): array
+    public function get_transcode_settings(?string $target = null, ?string $player = null, array $options = []): array
     {
         return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'song', $options);
     }

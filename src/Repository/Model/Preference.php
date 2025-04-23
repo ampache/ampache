@@ -25,9 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Api\Api;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
-use SimpleXMLElement;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -303,13 +301,9 @@ class Preference extends database_object
      * get_by_user
      * Return a preference for specific user identifier
      * Get all preference the first time and add them to the cache
-     * @param int $user_id
-     * @param string $pref_name
-     * @return int|string|null
-     *
      * @see User::getPreferenceValue()
      */
-    public static function get_by_user($user_id, $pref_name)
+    public static function get_by_user(int $user_id, string $pref_name): int|string|null
     {
         //debug_event(self::class, 'Getting preference {' . $pref_name . '} for user identifier {' . $user_id . '}...', 5);
         if (parent::is_cached('get_by_user-' . $pref_name, $user_id)) {
@@ -361,13 +355,8 @@ class Preference extends database_object
     /**
      * update
      * This updates a single preference from the given name or id
-     * @param string|int $preference
-     * @param int $user_id
-     * @param array|string|int|bool|SimpleXMLElement|null $value
-     * @param bool $applytoall
-     * @param bool $applytodefault
      */
-    public static function update($preference, $user_id, $value, $applytoall = false, $applytodefault = false): bool
+    public static function update(int|string $preference, int $user_id, array|int|float|string|bool|null $value, ?bool $applytoall = false, ?bool $applytodefault = false): bool
     {
         $access100 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
         // First prepare
@@ -440,10 +429,8 @@ class Preference extends database_object
     /**
      * update_level
      * This takes a preference ID and updates the level required to update it (performed by an admin)
-     * @param string|int $preference
-     * @param int $level
      */
-    public static function update_level($preference, $level): bool
+    public static function update_level(int|string $preference, int $level): bool
     {
         // First prepare
         $preference_id = (is_numeric($preference))
@@ -459,10 +446,8 @@ class Preference extends database_object
     /**
      * update_all
      * This takes a preference id and a value and updates all users with the new info
-     * @param string $preference
-     * @param string|int|null $value
      */
-    public static function update_all($preference, $value): bool
+    public static function update_all(string $preference, int|string|null $value): bool
     {
         $ampacheSeven = true;
         if (!Dba::read('SELECT `name` FROM `user_preference` LIMIT 1;', [], true)) {
@@ -484,9 +469,8 @@ class Preference extends database_object
     /**
      * exists
      * This just checks to see if a preference currently exists
-     * @param string|int $preference
      */
-    public static function exists($preference): int
+    public static function exists(int|string $preference): int
     {
         // Don't assume it's the name
         if (!is_numeric($preference)) {
@@ -504,9 +488,8 @@ class Preference extends database_object
      * has_access
      * This checks to see if the current user has access to modify this preference
      * as defined by the preference name
-     * @param string $preference
      */
-    public static function has_access($preference): bool
+    public static function has_access(string $preference): bool
     {
         // Nothing for those demo thugs
         if (AmpConfig::get('demo_mode')) {
@@ -523,9 +506,8 @@ class Preference extends database_object
     /**
      * id_from_name
      * This takes a name and returns the id
-     * @param string $name
      */
-    public static function id_from_name($name): ?int
+    public static function id_from_name(string $name): ?int
     {
         if (parent::is_cached('id_from_name', $name)) {
             return (int)(parent::get_from_cache('id_from_name', $name))[0];
@@ -547,9 +529,8 @@ class Preference extends database_object
      * name_from_id
      * This returns the name from an id, it's the exact opposite
      * of the function above it, amazing!
-     * @param int|string $pref_id
      */
-    public static function name_from_id($pref_id): ?string
+    public static function name_from_id(int|string $pref_id): ?string
     {
         $pref_id    = Dba::escape($pref_id);
         $sql        = "SELECT `name` FROM `preference` WHERE `id` = ?";
@@ -664,8 +645,18 @@ class Preference extends database_object
      * This returns a nice flat array of all of the possible preferences for the specified user
      * @param string $pref_name
      * @param int $user_id
+     * @return list<array{
+     *     id: int,
+     *     name: string,
+     *     level: int,
+     *     description: string,
+     *     value: mixed,
+     *     type: string,
+     *     category: string,
+     *     subcategory: ?string
+     * }>
      */
-    public static function get($pref_name, $user_id): array
+    public static function get(string $pref_name, int $user_id): array
     {
         $user_limit = ($user_id != -1) ? "AND `preference`.`category` != 'system'" : "";
 
@@ -694,24 +685,16 @@ class Preference extends database_object
      * insert
      * This inserts a new preference into the preference table
      * it does NOT sync up the users, that should be done independently
-     * @param string $name
-     * @param string $description
-     * @param string|int|float $default
-     * @param int $level
-     * @param string $type
-     * @param string $category
-     * @param null|string $subcategory
-     * @param bool $replace
      */
     public static function insert(
-        $name,
-        $description,
-        $default,
-        $level,
-        $type,
-        $category,
-        $subcategory = null,
-        $replace = false
+        string $name,
+        string $description,
+        float|int|string $default,
+        int $level,
+        string $type,
+        string $category,
+        ?string $subcategory = null,
+        bool $replace = false
     ): bool {
         if ($replace) {
             self::delete($name);
@@ -782,9 +765,8 @@ class Preference extends database_object
     /**
      * delete
      * This deletes the specified preference, a name or an ID can be passed
-     * @param string|int $preference
      */
-    public static function delete($preference): bool
+    public static function delete(int|string $preference): bool
     {
         if (self::exists($preference) === 0) {
             return true;
@@ -809,10 +791,8 @@ class Preference extends database_object
     /**
      * rename
      * This renames a preference in the database
-     * @param string $old
-     * @param string $new
      */
-    public static function rename($old, $new): void
+    public static function rename(string $old, string $new): void
     {
         $sql = "UPDATE `preference` SET `name` = ? WHERE `name` = ?";
         Dba::write($sql, [$new, $old]);
@@ -833,9 +813,9 @@ class Preference extends database_object
      * fix_preferences
      * This takes the preferences, explodes what needs to
      * become an array and boolean everything
-     * @param array $results
+     * @param array<string, mixed> $results
      */
-    public static function fix_preferences($results): array
+    public static function fix_preferences(array $results): array
     {
         $arrays = [
             'allow_zip_types',
@@ -1622,9 +1602,8 @@ class Preference extends database_object
     /**
      * load_from_session
      * This loads the preferences from the session rather then creating a connection to the database
-     * @param int $uid
      */
-    public static function load_from_session($uid = -1): bool
+    public static function load_from_session(int $uid = -1): bool
     {
         if (!isset($_SESSION)) {
             return false;
@@ -1646,10 +1625,9 @@ class Preference extends database_object
 
     /**
      * set_level
-     * Set access level to change preferences, usefull for locked down sites and for resetting to the default values
-     * @param string $level
+     * Set access level to change preferences, useful for locked down sites and for resetting to the default values
      */
-    public static function set_level($level = 'default'): bool
+    public static function set_level(string $level = 'default'): bool
     {
         switch ($level) {
             case 'guest':
@@ -1733,8 +1711,6 @@ class Preference extends database_object
     /**
      * set_preset
      * Set user preferences to configured preset values ('system', 'default', 'minimalist', 'community')
-     * @param string $username
-     * @param string $preset
      */
     public static function set_preset(string $username, string $preset): bool
     {
@@ -1961,9 +1937,8 @@ class Preference extends database_object
      * This returns true / false if the preference in question is a boolean preference
      * This is currently only used by the debug view, could be used other places.. wouldn't be a half
      * bad idea
-     * @param string $key
      */
-    public static function is_boolean($key): bool
+    public static function is_boolean(string $key): bool
     {
         $boolean_array = [
             'access_control',

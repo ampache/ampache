@@ -48,6 +48,15 @@ final class ArtistMethod
      *
      * filter  = (string) Alpha-numeric search term
      * include = (array|string) 'albums', 'songs' //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     include?: string|string[],
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function artist(array $input, User $user): bool
     {
@@ -69,10 +78,10 @@ final class ArtistMethod
         }
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::artists([$object_id], $include, $user, true, false);
+                echo Json_Data::artists([$object_id], $include ?: [], $user, true, false);
                 break;
             default:
-                echo Xml_Data::artists([$object_id], $include, $user);
+                echo Xml_Data::artists([$object_id], $include ?: [], $user);
         }
 
         return true;

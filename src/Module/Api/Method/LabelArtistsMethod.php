@@ -53,6 +53,19 @@ final class LabelArtistsMethod
      * limit   = (integer) //optional
      * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
      * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     *
+     * @param array{
+     *     filter: string,
+     *     include?: array|string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
      */
     public static function label_artists(array $input, User $user): bool
     {
@@ -65,7 +78,7 @@ final class LabelArtistsMethod
             return false;
         }
 
-        $label = self::getLabelRepository()->findById((int) ($input['filter'] ?? 0));
+        $label = self::getLabelRepository()->findById((int)$input['filter']);
         if ($label === null) {
             Api::empty('artist', $input['api_format']);
 
@@ -99,13 +112,13 @@ final class LabelArtistsMethod
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 Json_Data::set_count($browse->get_total());
-                echo Json_Data::artists($results, $include, $user);
+                echo Json_Data::artists($results, $include ?: [], $user);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 Xml_Data::set_count($browse->get_total());
-                echo Xml_Data::artists($results, $include, $user);
+                echo Xml_Data::artists($results, $include ?: [], $user);
         }
 
         return true;

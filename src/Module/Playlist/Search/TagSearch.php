@@ -32,7 +32,17 @@ final class TagSearch implements SearchInterface
     /**
      * Handles the generation of the SQL for tag (genre) searches.
      * @param Search $search
-     * @return array
+     * @return array{
+     *     base: string,
+     *     join: array<string, bool>,
+     *     where: string[],
+     *     where_sql: string,
+     *     table: array<string, string>,
+     *     table_sql: string,
+     *     group_sql: string,
+     *     having_sql: string,
+     *     parameters: array<int, mixed>,
+     * }
      */
     public function getSql(
         Search $search
@@ -101,7 +111,7 @@ final class TagSearch implements SearchInterface
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         return [
-            'base' => 'SELECT DISTINCT(`tag`.`id`) FROM `tag`',
+            'base' => 'SELECT DISTINCT(`tag`.`id`), `tag`.`name` FROM `tag`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,

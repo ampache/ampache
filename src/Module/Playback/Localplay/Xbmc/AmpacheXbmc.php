@@ -95,7 +95,17 @@ class AmpacheXbmc extends localplay_controller
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
-        $sql = "CREATE TABLE `localplay_xbmc` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `host` VARCHAR(255) COLLATE $collation NOT NULL, `port` INT(11) UNSIGNED NOT NULL, `user` VARCHAR(255) COLLATE $collation NOT NULL, `pass` VARCHAR(255) COLLATE $collation NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = <<<SQL
+            CREATE TABLE `localplay_xbmc` (
+                `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `name` VARCHAR(128) COLLATE $collation NOT NULL,
+                `owner` INT(11) NOT NULL,
+                `host` VARCHAR(255) COLLATE $collation NOT NULL,
+                `port` INT(11) UNSIGNED NOT NULL,
+                `user` VARCHAR(255) COLLATE $collation NOT NULL,
+                `pass` VARCHAR(255) COLLATE $collation NOT NULL
+            ) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation;
+            SQL;
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
@@ -122,9 +132,15 @@ class AmpacheXbmc extends localplay_controller
     /**
      * add_instance
      * This takes key'd data and inserts a new xbmc instance
-     * @param array $data
+     * @param array{
+     *     name?: string,
+     *     host?: string,
+     *     port?: string,
+     *     user?: string,
+     *     pass?: string,
+     * } $data
      */
-    public function add_instance($data): void
+    public function add_instance(array $data): void
     {
         $sql     = "INSERT INTO `localplay_xbmc` (`name`, `host`, `port`, `user`, `pass`, `owner`) VALUES (?, ?, ?, ?, ?, ?)";
         $user_id = (Core::get_global('user') instanceof User)
@@ -137,9 +153,8 @@ class AmpacheXbmc extends localplay_controller
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
-     * @param int $uid
      */
-    public function delete_instance($uid): void
+    public function delete_instance(int $uid): void
     {
         $sql = "DELETE FROM `localplay_xbmc` WHERE `id` = ?";
         Dba::query($sql, [$uid]);
@@ -149,6 +164,7 @@ class AmpacheXbmc extends localplay_controller
      * get_instances
      * This returns a key'd array of the instance information with
      * [UID]=>[NAME]
+     * @return string[]
      */
     public function get_instances(): array
     {
@@ -167,9 +183,15 @@ class AmpacheXbmc extends localplay_controller
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
      * @param int $uid
-     * @param array $data
+     * @param array{
+     *     host: string,
+     *     port: string,
+     *     name: string,
+     *     user: string,
+     *     pass: string,
+     * } $data
      */
-    public function update_instance($uid, $data): void
+    public function update_instance(int $uid, array $data): void
     {
         $sql = "UPDATE `localplay_xbmc` SET `host` = ?, `port` = ?, `name` = ?, `user` = ?, `pass` = ? WHERE `id` = ?";
         Dba::query($sql, [$data['host'], $data['port'], $data['name'], $data['user'], $data['pass'], $uid]);
@@ -179,6 +201,10 @@ class AmpacheXbmc extends localplay_controller
      * instance_fields
      * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
      * fields so that we can on-the-fly generate a form
+     * @return array<
+     *     string,
+     *     array{description: string, type: string}
+     * >
      */
     public function instance_fields(): array
     {
@@ -195,6 +221,16 @@ class AmpacheXbmc extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all it's variables
+     * @param string|null $instance
+     * @return array{
+     *     id?: int,
+     *     name?: string,
+     *     owner?: int,
+     *     host?: string,
+     *     port?: int,
+     *     user?: string,
+     *     pass?: string
+     * }
      */
     public function get_instance(?string $instance = ''): array
     {
@@ -202,7 +238,19 @@ class AmpacheXbmc extends localplay_controller
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_xbmc` WHERE `id` = ?" : "SELECT * FROM `localplay_xbmc`";
         $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
-        return Dba::fetch_assoc($db_results);
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return [
+                'id' => (int)$row['id'],
+                'name' => $row['name'],
+                'owner' => (int)$row['owner'],
+                'host' => $row['host'],
+                'port' => (int)$row['port'],
+                'user' => $row['user'],
+                'pass' => $row['pass'],
+            ];
+        }
+
+        return [];
     }
 
     /**
@@ -259,9 +307,9 @@ class AmpacheXbmc extends localplay_controller
     /**
      * delete_track
      * Delete a track from the xbmc playlist
-     * @param $object_id
+     * @param int $object_id
      */
-    public function delete_track($object_id): bool
+    public function delete_track(int $object_id): bool
     {
         if (!$this->_xbmc) {
             return false;

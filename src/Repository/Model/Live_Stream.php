@@ -62,9 +62,8 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     /**
      * Constructor
      * This takes a flagged. id and then pulls in the information for said flag entry
-     * @param int|null $stream_id
      */
-    public function __construct($stream_id = 0)
+    public function __construct(?int $stream_id = 0)
     {
         if (!$stream_id) {
             return;
@@ -95,6 +94,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
 
     /**
      * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
      */
     public function get_keywords(): array
     {
@@ -404,11 +404,12 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * get_transcode_settings
      *
      * This will probably never be implemented
-     * @param string $target
-     * @param string $player
-     * @param array $options
+     * @param string|null $target
+     * @param string|null $player
+     * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
+     * @return array{format?: string, command?: string}
      */
-    public function get_transcode_settings($target = null, $player = null, $options = []): array
+    public function get_transcode_settings(?string $target = null, ?string $player = null, array $options = []): array
     {
         return [];
     }
@@ -422,12 +423,13 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     }
 
     /**
-     * @param int $user_id
-     * @param string $agent
-     * @param array $location
-     * @param int $date
+     * @param array{
+     *      latitude?: float,
+     *      longitude?: float,
+     *      name?: string
+     *  } $location
      */
-    public function set_played($user_id, $agent, $location, $date): bool
+    public function set_played(int $user_id, string $agent, array $location, int $date): bool
     {
         // Do nothing
         unset($user_id, $agent, $location, $date);

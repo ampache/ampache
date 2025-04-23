@@ -77,9 +77,8 @@ class Song_Preview extends database_object implements Media, playable_item
      * Constructor
      *
      * Song Preview class
-     * @param int|null $object_id
      */
-    public function __construct($object_id = 0)
+    public function __construct(?int $object_id = 0)
     {
         if (!$object_id) {
             return;
@@ -118,9 +117,9 @@ class Song_Preview extends database_object implements Media, playable_item
      * insert
      *
      * This inserts the song preview described by the passed array
-     * @param array $results
+     * @param array<string, mixed> $results
      */
-    public static function insert($results): ?int
+    public static function insert(array $results): ?int
     {
         if ((int)$results['disk'] == 0) {
             $results['disk'] = Album::sanitize_disk($results['disk']);
@@ -409,11 +408,12 @@ class Song_Preview extends database_object implements Media, playable_item
      * get_transcode_settings
      *
      * FIXME: Song Preview transcoding is not implemented
-     * @param string $target
-     * @param string $player
-     * @param array $options
+     * @param string|null $target
+     * @param string|null $player
+     * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
+     * @return array{format?: string, command?: string}
      */
-    public function get_transcode_settings($target = null, $player = null, $options = []): array
+    public function get_transcode_settings(?string $target = null, ?string $player = null, array $options = []): array
     {
         return [];
     }
@@ -427,12 +427,13 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @param int $user_id
-     * @param string $agent
-     * @param array $location
-     * @param int $date
+     * @param array{
+     *      latitude?: float,
+     *      longitude?: float,
+     *      name?: string
+     *  } $location
      */
-    public function set_played($user_id, $agent, $location, $date): bool
+    public function set_played(int $user_id, string $agent, array $location, int $date): bool
     {
         // Do nothing
         unset($user_id, $agent, $location, $date);

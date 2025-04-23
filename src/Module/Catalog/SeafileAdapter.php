@@ -213,9 +213,12 @@ class SeafileAdapter
 
     /**
      * @param string $file_path
-     * @return array
+     * @return array{
+     *     path: string,
+     *     filename: string
+     * }
      */
-    public function from_virtual_path($file_path): array
+    public function from_virtual_path(string $file_path): array
     {
         $split = explode('|', $file_path);
 

@@ -69,13 +69,19 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     }
 
     /**
-     * This looks for the art in the meta-tags of the file
-     * itself
+     * This looks for the art in the meta-tags of the file itself
      *
      * @param Art $art
      * @param int $limit
-     * @param array $data
-     *
+     * @param array{
+     *      mb_albumid?: string,
+     *      artist?: string,
+     *      album?: string,
+     *      cover?: ?string,
+     *      file?: string,
+     *      year_filter?: string,
+     *      search_limit?: int,
+     *  } $data
      * @return array
      */
     public function collect(
@@ -119,7 +125,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * @param string $art_type
      * @return array
      */
-    private static function sortArtByPriority($data, $art_type): array
+    private static function sortArtByPriority(array $data, string $art_type): array
     {
         $priorities = ($art_type === 'artist')
             ? self::TAG_ARTIST_ART_PRIORITY
@@ -182,10 +188,9 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Gather all art from tags in given file.
-     * @param string $file
-     * @return array
+     * @return array<int, array{raw: string, mime: string, title: string}>
      */
-    public static function gatherFileArt($file): array
+    public static function gatherFileArt(string $file): array
     {
         try {
             $getID3 = new getID3();
@@ -276,8 +281,9 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Gather tags from files. (rotate through existing images so you don't return a tone of dupes)
+     * @param Song|Video $media
      * @param array $data
-     * @return array
+     * @return array<int, array{raw: string, mime: string, title: string}>
      */
     private function gatherMediaTags(Song|Video $media, array $data): array
     {
@@ -308,10 +314,11 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     /**
      * Gather tags from single song instead of full album
      * (taken from function gather_song_tags with some changes)
+     * @param Art $art
      * @param int $limit
      * @return array
      */
-    public function gatherSongTagsSingle(Art $art, $limit = 5): array
+    public function gatherSongTagsSingle(Art $art, int $limit = 5): array
     {
         // get song object directly from id, not by loop through album
         $song = new Song($art->uid);

@@ -45,9 +45,8 @@ class LocalPlay
      * This must be called with a Localplay type, it then loads the config
      * file for the specified type and attempts to load in the function
      * map, the preferences and the template
-     * @param string $type
      */
-    public function __construct($type)
+    public function __construct(string $type)
     {
         $this->type = $type;
 
@@ -102,10 +101,8 @@ class LocalPlay
      * This function takes the track name and checks to see if 'skip'
      * is supported in the current player, if so it returns a 'skip to'
      * link, otherwise it returns just the text
-     * @param string $name
-     * @param int $object_id
      */
-    public function format_name($name, $object_id): string
+    public function format_name(string $name, int $object_id): string
     {
         return Ajax::text('?page=localplay&action=command&command=skip&id=' . $object_id, scrub_out($name), 'localplay_skip_' . $object_id);
     }
@@ -252,7 +249,6 @@ class LocalPlay
      * repeat
      * This turns the repeat feature of a Localplay method on or
      * off, takes a 0/1 value
-     * @param bool $state
      */
     public function repeat(bool $state): bool
     {
@@ -333,9 +329,8 @@ class LocalPlay
      * This isn't a required function, it sets the volume to a specified value
      * as passed in the variable it is a 0 - 100 scale the controller is
      * responsible for adjusting the scale if necessary
-     * @param float $value
      */
-    public function volume_set($value): bool
+    public function volume_set(float $value): bool
     {
         /* Make sure it's int and 0 - 100 */
         $value = (int)$value;
@@ -492,6 +487,7 @@ class LocalPlay
     /**
      * get_instances
      * This returns the instances of the current type
+     * @return string[]
      */
     public function get_instances(): array
     {
@@ -519,7 +515,19 @@ class LocalPlay
     /**
      * get_instance
      * This returns the specified instance
-     * @return array
+     * @param string|null $instance_id
+     * @return array{
+     *     id?: int,
+     *     name?: string,
+     *     owner?: int,
+     *     url?: string,
+     *     host?: string,
+     *     port?: int,
+     *     user?: string,
+     *     pass?: string,
+     *     password?: string,
+     *     access?: int,
+     * }
      */
     public function get_instance(?string $instance_id): array
     {
@@ -534,7 +542,7 @@ class LocalPlay
      * @param int $uid
      * @param array $data
      */
-    public function update_instance($uid, $data): void
+    public function update_instance(int $uid, array $data): void
     {
         if ($this->_player instanceof localplay_controller) {
             $this->_player->update_instance($uid, $data);
@@ -544,9 +552,9 @@ class LocalPlay
     /**
      * add_instance
      * This adds a new instance for the current controller type
-     * @param array $data
+     * @param array<string, string> $data
      */
-    public function add_instance($data): void
+    public function add_instance(array $data): void
     {
         if ($this->_player instanceof localplay_controller) {
             $this->_player->add_instance($data);
@@ -556,9 +564,8 @@ class LocalPlay
     /**
      * delete_instance
      * This removes an instance (it actually calls the players function)
-     * @param int $uid
      */
-    public function delete_instance($uid): void
+    public function delete_instance(int $uid): void
     {
         if ($this->_player instanceof localplay_controller) {
             $this->_player->delete_instance($uid);
@@ -580,9 +587,8 @@ class LocalPlay
      * delete_track
      * This removes songs from the players playlist it takes a single ID as provided
      * by the get command
-     * @param int $object_id
      */
-    public function delete_track($object_id): bool
+    public function delete_track(int $object_id): bool
     {
         if (
             !$this->_player instanceof localplay_controller ||
@@ -619,6 +625,10 @@ class LocalPlay
      * get_instance_fields
      * This loads the fields from the Localplay
      * player and returns them
+     * @return array<
+     *     string,
+     *     array{description: string, type: string}
+     * >
      */
     public function get_instance_fields(): array
     {
@@ -653,16 +663,15 @@ class LocalPlay
      * get_user_state
      * This function returns a user friendly version
      * of the current player state
-     * @param string|null $state
      */
-    public function get_user_state($state): string
+    public function get_user_state(?string $state): string
     {
         return match ($state) {
             'play' => T_('Now Playing'),
             'stop' => T_('Stopped'),
             'pause' => T_('Paused'),
             default => T_('Unknown'),
-        }; // switch on state
+        };
     }
 
     /**

@@ -91,11 +91,8 @@ class Random
     /**
      * get_single_song
      * This returns a single song pulled based on the passed random method
-     * @param string $random_type
-     * @param User $user
-     * @param int $object_id
      */
-    public static function get_single_song($random_type, $user, $object_id = 0): int
+    public static function get_single_song(string $random_type, User $user, int $object_id = 0): int
     {
         $song_ids = match ($random_type) {
             'artist' => self::get_artist(1, $user),
@@ -112,12 +109,9 @@ class Random
     /**
      * get_default
      * This just randomly picks a song at whim from all catalogs
-     * nothing special here...
-     * @param int $limit
-     * @param User $user
      * @return int[]
      */
-    public static function get_default($limit, $user = null): array
+    public static function get_default(int $limit, ?User $user = null): array
     {
         $results = [];
 
@@ -154,11 +148,9 @@ class Random
      * get_artist
      * This looks at the last artist played and then randomly picks a song from the
      * same artist
-     * @param int $limit
-     * @param User $user
      * @return int[]
      */
-    public static function get_artist($limit, $user = null): array
+    public static function get_artist(int $limit, ?User $user = null): array
     {
         $results = [];
 
@@ -184,7 +176,7 @@ class Random
         }
 
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && $user instanceof User) {
+        if ($rating_filter > 0 && $rating_filter <= 5) {
             $where_sql .= ($where_sql == "")
                 ? sprintf('WHERE `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id)
                 : sprintf('AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id);
@@ -203,11 +195,9 @@ class Random
     /**
      * get_playlist
      * Get a random song from a playlist (that you own)
-     * @param User $user
-     * @param int $playlist_id
      * @return int[]
      */
-    public static function get_playlist($user, $playlist_id = 0): array
+    public static function get_playlist(User $user, int $playlist_id = 0): array
     {
         $results  = [];
         $playlist = new Playlist($playlist_id);
@@ -229,10 +219,9 @@ class Random
     /**
      * get_search
      * Get a random song from a search (that you own)
-     * @param int $search_id
      * @return int[]
      */
-    public static function get_search(User $user, $search_id = 0): array
+    public static function get_search(User $user, int $search_id = 0): array
     {
         $results = [];
         $search  = new Search($search_id, 'song', $user);
@@ -256,9 +245,10 @@ class Random
      * This processes the results of a post from a form and returns an
      * array of song items that were returned from said randomness
      * @param string $type
-     * @param array $data
+     * @param int[] $data
+     * @return int[]
      */
-    public static function advanced($type, $data): array
+    public static function advanced(string $type, array $data): array
     {
         /* Figure out our object limit */
         $limit     = (int)($data['limit'] ?? -1);
@@ -285,9 +275,10 @@ class Random
      * This processes the results of a post from a form and returns an
      * array of song items that were returned from said randomness
      * @param string $type
-     * @param array $results
+     * @param int[] $results
+     * @return int[]
      */
-    public static function get_songs($type, $results): array
+    public static function get_songs(string $type, array $results): array
     {
         switch ($type) {
             case 'song':
@@ -318,8 +309,9 @@ class Random
      * @param string $sql_query
      * @param array $sql_params
      * @param array $data
+     * @return int[]
      */
-    private static function advanced_results($sql_query, $sql_params, $data): array
+    private static function advanced_results(string $sql_query, array $sql_params, array $data): array
     {
         // Run the query generated above so we can while it
         $db_results = Dba::read($sql_query, $sql_params);
@@ -349,7 +341,7 @@ class Random
                 }
 
                 $size_total += $new_size;
-                $results[]  = $row['id'];
+                $results[]  = (int)$row['id'];
 
                 // If we are within 4mb of target then jump ship
                 if (($data['size_limit'] - floor($size_total)) < 4) {
@@ -373,7 +365,7 @@ class Random
                 }
 
                 $time_total += $new_time;
-                $results[]  = $row['id'];
+                $results[]  = (int)$row['id'];
 
                 // If there are less then 2 min of free space return
                 if (($data['length'] - $time_total) < 2) {
@@ -382,7 +374,7 @@ class Random
             } // if length does matter
 
             if (!$size_limit && !$length) {
-                $results[] = (int) $row['id'];
+                $results[] = (int)$row['id'];
             }
         }
 
@@ -395,8 +387,12 @@ class Random
      * @param array $data
      * @param string $type
      * @param string $limit_sql
+     * @return array{
+     *     sql: string,
+     *     parameters: array
+     * }
      */
-    private static function advanced_sql($data, $type, $limit_sql): array
+    private static function advanced_sql(array $data, string $type, string $limit_sql): array
     {
         $search = new Search(0, $type);
         $search->set_rules($data);
@@ -428,7 +424,7 @@ class Random
             case 'album':
             case 'artist':
                 $sql = sprintf('SELECT `%s`.`id`, SUM(`song`.`size`) AS `size`, SUM(`%s`.`time`) AS `time` FROM `%s` ', $type, $type, $type);
-                if (!$search_info || !array_key_exists('join', $search_info) || !array_key_exists('song', $search_info)) {
+                if (!array_key_exists('join', $search_info) || !array_key_exists('song', $search_info['join'])) {
                     $sql .= sprintf('LEFT JOIN `song` ON `song`.`%s`=`%s`.`id` ', $type, $type);
                 }
 
@@ -458,10 +454,8 @@ class Random
     /**
      * get_play_url
      * This returns the special play URL for random play
-     * @param string $object_type
-     * @param int $object_id
      */
-    public static function get_play_url($object_type, $object_id): string
+    public static function get_play_url(string $object_type, int $object_id): string
     {
         $user = Core::get_global('user');
         $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . scrub_out((string)($user?->id ?? '')) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string)$object_id);

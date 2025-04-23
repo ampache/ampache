@@ -80,32 +80,32 @@ class AmpacheExample extends AmpachePlugin
      */
     public function load($user): bool
     {
-        $user->set_preferences();
+        unset($user);
 
         return true;
     }
 
     /**
-     *  display_home() Display something in the home page / index
-     *  display_on_footer() Same as home, except in the page footer
-     *  display_user_field(library_item $libitem = null) This display the module in user page
-     *  display_map(array $points) Used for graphs and charts
-     *  external_share(string $public_url, string $share_name) Send a shared object to an external site
-     *  gather_arts(string $type, array $options, integer $limit) Search for art externally
-     *  get_avatar_url(User $user)
-     *  get_lyrics(Song $song)
-     *  get_location_name(float $latitude float $longitude)
-     *  get_external_metadata(library_item $object, string $object_type): bool
-     *  get_metadata(array $gather_types, array $media_info) Array of object types and array of info for that object
-     *  get_photos(string $search_name)
-     *  get_song_preview(string $track_mbid, string $artist_name, string $title)
-     *  process_wanted(Wanted $wanted)
-     *  save_mediaplay(Song $song)
-     *  save_rating(Rating $rating, integer $new_value)
-     *  set_flag(Song $song, boolean $flagged)
-     *  shortener(string $url)
-     *  stream_control(array $object_ids)
-     *  stream_song_preview(string $file)
+     * display_home() Display something in the home page / index
+     * display_on_footer() Same as home, except in the page footer
+     * display_user_field(library_item $libitem = null) This display the module in user page
+     * display_map(array $points) Used for graphs and charts
+     * external_share(string $public_url, string $share_name) Send a shared object to an external site
+     * gather_arts(string $type, array $options, integer $limit) Search for art externally
+     * get_avatar_url(User $user)
+     * get_lyrics(Song $song)
+     * get_location_name(float $latitude float $longitude)
+     * get_external_metadata(library_item $object, string $object_type): bool
+     * get_metadata(array $gather_types, array $media_info) Array of object types and array of info for that object
+     * get_photos(string $search_name)
+     * get_song_preview(string $track_mbid, string $artist_name, string $title)
+     * process_wanted(Wanted $wanted)
+     * save_mediaplay(Song $song)
+     * save_rating(Rating $rating, integer $new_value)
+     * set_flag(Song $song, boolean $flagged)
+     * shortener(string $url)
+     * stream_control(array $object_ids)
+     * stream_song_preview(string $file)
      */
     public function PLUGIN_FUNCTION(): void
     {
