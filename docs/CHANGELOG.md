@@ -12,7 +12,7 @@ Functionally the code hasn't changed a lot but we are getting stricter to reduce
 
 * Translations 2025-04-16
 * Add direct link alternative sharing to items for public users
-* Cache `album_disk` objects in ObjectCache (Cron)
+* Cache `album_disk` objects in `ObjectCache` (Cron)
 * Plugin
   * Bluesky share plugin
   * Mastodon share plugin
@@ -44,7 +44,7 @@ Functionally the code hasn't changed a lot but we are getting stricter to reduce
   * Default options for `run:updateCatalog`
 * Subsonic
   * Could not set a 0 rating
-  * Current item may be not there for getPlayQueue
+  * Current item may be not there for `getPlayQueue`
 
 ## Ampache 7.4.0
 
