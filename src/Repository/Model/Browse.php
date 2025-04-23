@@ -79,15 +79,9 @@ class Browse extends Query
 
     public ?int $duration = null;
 
-    /**
-     * Constructor.
-     *
-     * @param int|null $browse_id
-     * @param bool $cached
-     */
     public function __construct(
-        $browse_id = 0,
-        $cached = true
+        ?int $browse_id = 0,
+        ?bool $cached = true
     ) {
         parent::__construct($browse_id, $cached);
 
@@ -107,10 +101,9 @@ class Browse extends Query
      * set_sort_order
      *
      * Try to clean up sorts into something valid before sending to the Query
-     * @param string $sort
      * @param array<string> $default
      */
-    public function set_sort_order($sort, $default): void
+    public function set_sort_order(string $sort, array $default): void
     {
         $sort      = array_map('trim', explode(',', $sort));
         $sort_name = $sort[0] ?: $default[0];
@@ -127,9 +120,8 @@ class Browse extends Query
      *
      * Apply additional filters to the Query using ';' separated comma string pairs
      * e.g. 'filter1,value1;filter2,value2'
-     * @param string $cond
      */
-    public function set_conditions($cond): void
+    public function set_conditions(string $cond): void
     {
         foreach ((explode(';', (string)$cond)) as $condition) {
             $filter = (explode(',', (string)$condition));
@@ -143,10 +135,8 @@ class Browse extends Query
      * set_api_filter
      *
      * Do some value checks for api input before attempting to set the query filter
-     * @param string $filter
-     * @param int|string|bool|null $value
      */
-    public function set_api_filter($filter, $value): void
+    public function set_api_filter(string $filter, bool|int|string|null $value): void
     {
         if (!strlen((string)$value)) {
             return;
@@ -258,12 +248,8 @@ class Browse extends Query
      * This takes an array of objects
      * and requires the correct template based on the
      * type that we are currently browsing
-     *
-     * @param array $object_ids
-     * @param bool|array|string $argument
-     * @param bool $skip_cookies
      */
-    public function show_objects($object_ids = [], $argument = false, $skip_cookies = false): void
+    public function show_objects(?array $object_ids = [], bool|array|string $argument = false, ?bool $skip_cookies = false): void
     {
         if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
             $object_ids = $this->get_saved();
@@ -569,11 +555,8 @@ class Browse extends Query
 
     /**
      * This sets the type of object that we want to browse by
-     * @param string $type
-     * @param string $custom_base
-     * @param array $parameters
      */
-    public function set_type($type, $custom_base = '', $parameters = []): void
+    public function set_type(string $type, ?string $custom_base = '', ?array $parameters = []): void
     {
         if (empty($type)) {
             return;
@@ -830,9 +813,6 @@ class Browse extends Query
         return (string)($this->_state['threshold'] ?? '');
     }
 
-    /**
-     * @param string $default
-     */
     public function get_title(string $default): string
     {
         return (string)($this->_state['title'] ?? $default);
