@@ -352,12 +352,9 @@ class Userflag extends database_object
 
     /**
      * show
-     * This takes an id and a type and displays the flag state
-     * enabled.
-     * @param int $object_id
-     * @param string $type
+     * This takes an id and a type and displays the flag statemenabled.
      */
-    public static function show($object_id, $type): string
+    public static function show(int $object_id, string $type): string
     {
         // If user flags aren't enabled don't do anything
         if (!AmpConfig::get('ratings')) {

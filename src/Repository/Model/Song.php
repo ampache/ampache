@@ -161,10 +161,10 @@ class Song extends database_object implements
 
     public ?string $albumartist_mbid = null;
 
-    /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
-    public ?array $tags = null;
-
     public ?int $albumartist = null;
+
+    /** @var null|list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
+    private ?array $tags = null;
 
     /** @var int[] $artists */
     private ?array $artists = null;
@@ -417,11 +417,11 @@ class Song extends database_object implements
             foreach ($tags as $tag) {
                 $tag = trim((string)$tag);
                 if ($tag !== '' && $tag !== '0') {
-                    Tag::add('song', $song_id, $tag, false);
-                    Tag::add('album', $album_id, $tag, false);
+                    Tag::add('song', $song_id, $tag);
+                    Tag::add('album', $album_id, $tag);
                     foreach (array_unique($artists) as $found_artist_id) {
                         if ($found_artist_id > 0) {
-                            Tag::add('artist', $found_artist_id, $tag, false);
+                            Tag::add('artist', $found_artist_id, $tag);
                         }
                     }
                 }

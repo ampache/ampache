@@ -131,10 +131,8 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Create a broadcast
-     * @param string $name
-     * @param string $description
      */
-    public static function create($name, $description = ''): int
+    public static function create(string $name, string $description = ''): int
     {
         if (!empty($name)) {
             $sql    = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";

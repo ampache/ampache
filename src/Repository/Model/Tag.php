@@ -87,9 +87,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * construct_from_name
      * This attempts to construct the tag from a name, rather then the ID
-     * @param string $name
      */
-    public static function construct_from_name($name): Tag
+    public static function construct_from_name(string $name): Tag
     {
         $tag_id = self::tag_exists($name);
 
@@ -100,9 +99,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * build_cache
      * This takes an array of object ids and caches all of their information
      * in a single query, cuts down on the connections
-     * @param array $ids
+     * @param int[]|string[] $ids
      */
-    public static function build_cache($ids): bool
+    public static function build_cache(array $ids): bool
     {
         if (empty($ids)) {
             return false;
@@ -113,7 +112,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('tag', $row['id'], $row);
+            parent::add_to_cache('tag', (int)$row['id'], $row);
         }
 
         return true;
@@ -123,10 +122,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * build_map_cache
      * This builds a cache of the mappings for the specified object, no limit is given
      * @param string $type
-     * @param array $ids
-     * @params array $ids
+     * @param int[]|string[] $ids
+     * @return bool
      */
-    public static function build_map_cache($type, $ids): bool
+    public static function build_map_cache(string $type, array $ids): bool
     {
         if (empty($ids)) {
             return false;
@@ -148,7 +147,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 'id' => $row['tag_id'],
                 'name' => $row['name'],
             ];
-            $tag_map[$row['object_id']]              = [
+
+            $tag_map[$row['object_id']] = [
                 'id' => $row['id'],
                 'tag_id' => $row['tag_id'],
                 'user' => $row['user'],
@@ -176,12 +176,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * add
      * This is a wrapper function, it figures out what we need to add, be it a tag
      * and map, or just the mapping
-     * @param string $type
-     * @param int $object_id
-     * @param string $value
-     * @param bool $user
      */
-    public static function add($type, $object_id, $value, $user = true): int
+    public static function add(string $type, int $object_id, string $value): int
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return 0;
@@ -192,14 +188,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         $cleaned_value = str_replace('Folk, World, & Country', 'Folk World & Country', $value);
-
         if ((string)$cleaned_value === '') {
             return 0;
         }
-
-        $uid = ($user === true)
-            ? (int)(Core::get_global('user')?->getId())
-            : (int)($user);
 
         // Check and see if the tag exists, if not create it, we need the tag id from this
         if (($tag_id = self::tag_exists($cleaned_value)) === 0) {
@@ -214,8 +205,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         // We've got the tag id, let's see if it's already got a map, if not then create the map and return the value
-        if (!self::tag_map_exists($type, $object_id, $tag_id, $uid)) {
-            return self::add_tag_map($type, $object_id, $tag_id, $user);
+        if (!self::tag_map_exists($type, $object_id, $tag_id)) {
+            return self::add_tag_map($type, $object_id, $tag_id);
         }
 
         return 0;
@@ -224,9 +215,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * add_tag
      * This function adds a new tag, for now we're going to limit the tagging a bit
-     * @param string $value
      */
-    public static function add_tag($value): ?int
+    public static function add_tag(string $value): ?int
     {
         if ((string)$value === '') {
             return null;
@@ -316,10 +306,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * merge
      * merges this tag to another one.
-     * @param int $merge_to
-     * @param bool $is_persistent
      */
-    public function merge($merge_to, $is_persistent): void
+    public function merge(int $merge_to, bool $is_persistent): void
     {
         if ($this->id != $merge_to) {
             debug_event(self::class, 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', 5);
@@ -371,9 +359,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * has_merge
      * Get merged tags to this tag.
-     * @param string $name
      */
-    public function has_merge($name): bool
+    public function has_merge(string $name): bool
     {
         $sql        = "SELECT `tag`.`name` FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name` ";
         $db_results = Dba::read($sql, [$this->id]);
@@ -399,17 +386,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * add_tag_map
      * This adds a specific tag to the map for specified object
-     * @param string $type
-     * @param int|string $object_id
-     * @param int|string $tag_id
-     * @param bool|int $user
      */
-    public static function add_tag_map($type, $object_id, $tag_id, $user = true): int
+    public static function add_tag_map(string $type, int|string $object_id, int|string $tag_id): int
     {
-        $uid = ($user === true)
-            ? (int)(Core::get_global('user')?->getId())
-            : (int)$user;
-
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             debug_event(self::class, $type . " is not a library item.", 3);
 
@@ -433,10 +412,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $insert_id = 0;
         foreach ($merges as $tag) {
             $sql = "INSERT IGNORE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) VALUES (?, ?, ?, ?)";
-            Dba::write($sql, [$tag['id'], $uid, $type, $item_id]);
+            Dba::write($sql, [$tag['id'], 0, $type, $item_id]);
 
             $insert_id = (int)Dba::insert_id();
-            parent::add_to_cache('tag_map_' . $type, $insert_id, ['tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $item_id]);
+            parent::add_to_cache('tag_map_' . $type, $insert_id, ['tag_id' => $tag_id, 'user' => 0, 'object_type' => $type, 'object_id' => $item_id]);
 
             switch ($type) {
                 case 'album':
@@ -516,9 +495,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * tag_exists
      * This checks to see if a tag exists, this has nothing to do with objects or maps
-     * @param string $value
      */
-    public static function tag_exists($value): int
+    public static function tag_exists(string $value): int
     {
         if (parent::is_cached('tag_name', $value)) {
             return (int)(parent::get_from_cache('tag_name', $value))[0];
@@ -539,14 +517,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     /**
      * tag_map_exists
-     * This looks to see if the current mapping of the current object of the current tag of the current
-     * user exists, lots of currents... taste good in scones.
-     * @param string $type
-     * @param int $object_id
-     * @param int $tag_id
-     * @param int $user
+     * This looks to see if the current mapping of the current object exists
      */
-    public static function tag_map_exists($type, $object_id, $tag_id, $user): bool
+    public static function tag_map_exists(string $type, int $object_id, int $tag_id): bool
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             debug_event(self::class, 'Requested type is not a library item.', 3);
@@ -555,7 +528,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         $sql        = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` LEFT JOIN `tag_merge` ON `tag`.`id`=`tag_merge`.`tag_id` WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag_merge`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
-        $db_results = Dba::read($sql, [$tag_id, $user, $object_id, $type]);
+        $db_results = Dba::read($sql, [$tag_id, 0, $object_id, $type]);
         $results    = Dba::fetch_assoc($db_results);
 
         if (array_key_exists('id', $results)) {
@@ -568,12 +541,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * get_top_tags
      * This gets the top tags for the specified object using limit
-     * @param string $type
-     * @param int $object_id
-     * @param int $limit
      * @return list<array{id: int, name: string, is_hidden: int, count: int}>
      */
-    public static function get_top_tags($type, $object_id, $limit = 10): array
+    public static function get_top_tags(string $type, int $object_id, ?int $limit = 10): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return [];
@@ -599,10 +569,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * get_object_tags
      * Display all tags that apply to matching target type of the specified id
-     * @param string $type
-     * @param int $object_id
+     * @return list<array{id: int, name: string, user: int}>
      */
-    public static function get_object_tags($type, $object_id = null): array
+    public static function get_object_tags(string $type, ?int $object_id = null): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return [];
@@ -618,7 +587,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $db_results = Dba::read($sql, $params);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row;
+            $results[] = [
+                'id' => (int)$row['id'],
+                'name' => $row['name'],
+                'user' => (int)$row['user'],
+            ];
         }
 
         return $results;
@@ -627,13 +600,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * get_tag_objects
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
-     * @param string $type
-     * @param int $tag_id
-     * @param int $count
-     * @param int $offset
      * @return int[]
      */
-    public static function get_tag_objects($type, $tag_id, $count = 0, $offset = 0): array
+    public static function get_tag_objects(string $type, int $tag_id, int $count = 0, int $offset = 0): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return [];
@@ -671,12 +640,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * get_tag_ids
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
-     * @param string $type
-     * @param string $count
-     * @param string $offset
      * @return int[]
      */
-    public static function get_tag_ids($type, $count = '', $offset = ''): array
+    public static function get_tag_ids(string $type, ?string $count = '', ?string $offset = ''): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return [];
@@ -689,7 +655,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 $limit_sql .= $offset . ', ';
             }
 
-            $limit_sql .= (string)($count);
+            $limit_sql .= $count;
         }
 
         $sql = "SELECT DISTINCT `tag_map`.`tag_id` FROM `tag_map` WHERE `tag_map`.`object_type` = ? ";
@@ -713,12 +679,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * get_tags
      * This is a non-object non type dependent function that just returns tags
      * we've got, it can take filters (this is used by the tag cloud)
-     * @param string $type
-     * @param int $limit
-     * @param string $order
      * @return list<array{id: int, name: string, is_hidden: int, count: int}>
      */
-    public static function get_tags($type = '', $limit = 0, $order = 'count'): array
+    public static function get_tags(?string $type = '', ?int $limit = 0, ?string $order = 'count'): array
     {
         $cacheType = (empty($type)) ? 'all' : $type;
         if (parent::is_cached('tags_list', $cacheType)) {
@@ -785,12 +748,13 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * by the formatting functions of the different objects
      * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
      * @param bool $link
-     * @param string $filter_type
+     * @param string|null $filter_type
+     * @return string
      */
-    public static function get_display(array $tags, $link = false, $filter_type = ''): string
+    public static function get_display(array $tags, ?bool $link = false, ?string $filter_type = ''): string
     {
         //debug_event(self::class, 'Get display tags called...', 5);
-        if (!is_array($tags)) {
+        if (empty($tags)) {
             return '';
         }
 
@@ -818,15 +782,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * update_tag_list
      * Update the tags list based on a comma-separated list
      *  (ex. tag1,tag2,tag3,..)
-     * @param string $tags_comma
-     * @param string $object_type
-     * @param int $object_id
-     * @param bool $overwrite
      */
-    public static function update_tag_list($tags_comma, $object_type, $object_id, $overwrite): bool
+    public static function update_tag_list(string $tags_comma, string $object_type, int $object_id, bool $overwrite): bool
     {
         if (!strlen((string) $tags_comma) > 0) {
-            return self::remove_all_map($object_type, $object_id);
+            return self::remove_all_maps($object_type, $object_id);
         }
 
         debug_event(self::class, sprintf('update_tag_list %s {%d}', $object_type, $object_id), 5);
@@ -874,7 +834,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                     $overwrite
                 ) {
                     debug_event(self::class, 'update_tag_list ' . $object_type . ' delete {' . $ctag->name . '}', 5);
-                    $ctag->remove_map($object_type, $object_id, false);
+                    $ctag->remove_map($object_type, $object_id);
                     $change = true;
                 }
             }
@@ -884,7 +844,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         foreach ($editedTags as $tag_name) {
             if ($tag_name != '') {
                 debug_event(self::class, 'update_tag_list ' . $object_type . ' add {' . $tag_name . '}', 5);
-                self::add($object_type, $object_id, $tag_name, false);
+                self::add($object_type, $object_id, $tag_name);
                 $change = true;
             }
         }
@@ -898,7 +858,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string[]|string $tags
      * @return string[]|string
      */
-    public static function clean_to_existing($tags)
+    public static function clean_to_existing(array|string $tags): array|string
     {
         if (is_array($tags)) {
             $taglist = $tags;
@@ -930,23 +890,15 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * remove_map
      * This will only remove tag maps for the current user
-     * @param string $type
-     * @param int $object_id
-     * @param bool $user
      */
-    public function remove_map($type, $object_id, $user = true): bool
+    public function remove_map(string $type, int $object_id): bool
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return false;
         }
 
-        $uid = 0;
-        if ($user === true) {
-            $uid = (int)(Core::get_global('user')?->getId());
-        }
-
         $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";
-        Dba::write($sql, [$this->id, $type, $object_id, $uid]);
+        Dba::write($sql, [$this->id, $type, $object_id, 0]);
 
         switch ($type) {
             case 'album':
@@ -967,12 +919,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * remove_all_map
+     * remove_all_maps
      * Clear all the tags from an object when there isn't anything there
-     * @param string $object_type
-     * @param int $object_id
      */
-    public static function remove_all_map($object_type, $object_id): bool
+    public static function remove_all_maps(string $object_type, int $object_id): bool
     {
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
             return false;

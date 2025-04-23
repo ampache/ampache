@@ -590,7 +590,7 @@ class Video extends database_object implements
             foreach ($tags as $tag) {
                 $tag = trim((string) $tag);
                 if ($tag !== '' && $tag !== '0') {
-                    Tag::add('video', $video_id, $tag, false);
+                    Tag::add('video', $video_id, $tag);
                 }
             }
         }
