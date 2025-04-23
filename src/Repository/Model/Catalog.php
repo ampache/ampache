@@ -2600,14 +2600,31 @@ abstract class Catalog extends database_object
             }
 
             // check if this thing has been renamed into something else
-            foreach ($results['genre'] as $tagName) {
-                $merged = Tag::construct_from_name($tagName);
-                if ($merged->isNew() === false && $merged->is_hidden) {
-                    foreach ($merged->get_merged_tags() as $merged_tag) {
-                        $new_tag_array[] = $merged_tag['name'];
+            foreach ($results['genre'] as $genreName) {
+                $genre = Tag::construct_from_name($genreName);
+                if ($genre->isNew() === false) {
+                    if ($genre->is_hidden) {
+                        foreach ($genre->get_merged_tags() as $merged_genre) {
+                            $new_song->tags[] = $merged_genre;
+                            $new_tag_array[]  = $merged_genre['name'];
+                        }
+                    } else {
+                        $new_song->tags[] = [
+                            'id' => $genre->getId(),
+                            'name' => $genre->get_fullname() ?? $genreName,
+                            'is_hidden' => 0,
+                            'count' => 0,
+                        ];
+                        $new_tag_array[]  = $genreName;
                     }
                 } else {
-                    $new_tag_array[] = $tagName;
+                    $new_song->tags[] = [
+                        'id' => 0,
+                        'name' => $genreName,
+                        'is_hidden' => 0,
+                        'count' => 0,
+                    ];
+                    $new_tag_array[]  = $genreName;
                 }
             }
         }
@@ -2615,8 +2632,14 @@ abstract class Catalog extends database_object
         $song_tag_array = [];
         $tags           = Tag::get_object_tags('song', $song->id);
         if ($tags) {
-            foreach ($tags as $tag) {
-                $song_tag_array[] = $tag['name'];
+            foreach ($tags as $genre) {
+                $song->tags[]     = [
+                    'id' => $genre['id'],
+                    'name' => $genre['name'],
+                    'is_hidden' => $genre['is_hidden'],
+                    'count' => 0,
+                ];
+                $song_tag_array[] = $genre['name'];
             }
         }
 
@@ -2955,7 +2978,10 @@ abstract class Catalog extends database_object
                 self::migrate('album_disk', $song->album_disk, $new_song->album_disk, $song->id, $song->catalog);
             }
 
-            if ($song_tag_array != $new_tag_array) {
+            if (
+                array_diff($song_tag_array, $new_tag_array) !== [] ||
+                array_diff($new_tag_array, $song_tag_array) !== []
+            ) {
                 // we do still care if there are no tags on your object
                 $tag_comma = ($new_tag_array === [])
                     ? ''
