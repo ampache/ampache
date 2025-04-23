@@ -2593,7 +2593,7 @@ abstract class Catalog extends database_object
         $new_song->r128_album_gain       = (is_null($results['r128_album_gain'])) ? null : (int) $results['r128_album_gain'];
 
         // genre is used in the tag and tag_map tables
-        $tag_array = [];
+        $new_tag_array = [];
         if (!empty($results['genre'])) {
             if (!is_array($results['genre'])) {
                 $results['genre'] = [$results['genre']];
@@ -2604,20 +2604,19 @@ abstract class Catalog extends database_object
                 $merged = Tag::construct_from_name($tagName);
                 if ($merged->isNew() === false && $merged->is_hidden) {
                     foreach ($merged->get_merged_tags() as $merged_tag) {
-                        $tag_array[] = $merged_tag['name'];
+                        $new_tag_array[] = $merged_tag['name'];
                     }
                 } else {
-                    $tag_array[] = $tagName;
+                    $new_tag_array[] = $tagName;
                 }
             }
         }
 
-        $new_song->tags = $tag_array;
-        $song->tags     = [];
+        $song_tag_array = [];
         $tags           = Tag::get_object_tags('song', $song->id);
         if ($tags) {
             foreach ($tags as $tag) {
-                $song->tags[] = $tag['name'];
+                $song_tag_array[] = $tag['name'];
             }
         }
 
@@ -2956,11 +2955,11 @@ abstract class Catalog extends database_object
                 self::migrate('album_disk', $song->album_disk, $new_song->album_disk, $song->id, $song->catalog);
             }
 
-            if ($song->tags != $new_song->tags) {
+            if ($song_tag_array != $new_tag_array) {
                 // we do still care if there are no tags on your object
-                $tag_comma = ($new_song->tags === [])
+                $tag_comma = ($new_tag_array === [])
                     ? ''
-                    : implode(',', $new_song->tags);
+                    : implode(',', $new_tag_array);
                 Tag::update_tag_list($tag_comma, 'song', $song->id, true);
             }
 
@@ -3737,9 +3736,8 @@ abstract class Catalog extends database_object
     /**
      * delete
      * Deletes the catalog and everything associated with it
-     * @param int $catalog_id
      */
-    public static function delete($catalog_id): bool
+    public static function delete(int $catalog_id): bool
     {
         $params  = [$catalog_id];
         $catalog = self::create_from_id($catalog_id);

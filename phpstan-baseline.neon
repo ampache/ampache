@@ -1231,47 +1231,7 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:_header\\(\\) has parameter \\$title with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:header\\(\\) has parameter \\$title with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:keyed_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:playlist_song_tracks_string\\(\\) has parameter \\$playlist_data with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:playlist_song_tracks_string\\(\\) has parameter \\$song with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:songs\\(\\) has parameter \\$full_xml with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:songs\\(\\) has parameter \\$playlist_data with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:songs\\(\\) has parameter \\$songs with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:songs\\(\\) has parameter \\$user with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
 
@@ -5796,27 +5756,12 @@ parameters:
 			path: src/Repository/Model/Song_Preview.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:build_map_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_object_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
 

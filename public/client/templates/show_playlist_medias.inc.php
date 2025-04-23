@@ -43,7 +43,7 @@ $libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
 $playlist_id    = $playlist->id ?? '';
 $web_path       = AmpConfig::get_web_path('/client');
 $seconds        = $browse->duration;
-$duration       = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
+$duration       = ($browse->duration === null) ? '' : floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
 $show_ratings   = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres    = AmpConfig::get('hide_genres');
 $show_parent    = AmpConfig::get('show_playlist_media_parent', false);
