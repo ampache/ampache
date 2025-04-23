@@ -162,7 +162,11 @@ echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
         </tr>
         </thead>
         <tbody>
-<?php foreach ($configuration as $key => $value) {
+<?php unset(
+        $configuration['load_time_begin'],
+        $configuration['phpversion'],
+);
+foreach ($configuration as $key => $value) {
     if (is_array($value)) {
         $string = '';
         foreach ($value as $setting) {
