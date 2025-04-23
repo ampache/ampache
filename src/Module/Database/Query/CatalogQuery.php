@@ -171,8 +171,8 @@ final class CatalogQuery implements QueryInterface
      *
      * Sorting SQL for ORDER BY
      * @param Query $query
-     * @param string $field
-     * @param string $order
+     * @param string|null $field
+     * @param string|null $order
      * @return string
      */
     public function get_sql_sort($query, $field, $order): string
