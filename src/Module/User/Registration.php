@@ -47,8 +47,13 @@ class Registration
      * @param string $website
      * @param string $validation
      */
-    public static function send_confirmation($username, $fullname, $email, $website, $validation): bool
-    {
+    public static function send_confirmation(
+        string $username,
+        string $fullname,
+        string $email,
+        string $website,
+        string $validation
+    ): bool {
         if (!Mailer::is_mail_enabled()) {
             return false;
         }

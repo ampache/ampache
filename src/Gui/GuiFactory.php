@@ -65,8 +65,18 @@ use Ampache\Repository\VideoRepositoryInterface;
 
 final readonly class GuiFactory implements GuiFactoryInterface
 {
-    public function __construct(private ConfigContainerInterface $configContainer, private ModelFactoryInterface $modelFactory, private ZipHandlerInterface $zipHandler, private FunctionCheckerInterface $functionChecker, private AjaxUriRetrieverInterface $ajaxUriRetriever, private PlaylistLoaderInterface $playlistLoader, private VideoRepositoryInterface $videoRepository, private UpdateInfoRepositoryInterface $updateInfoRepository, private UpdateHelperInterface $updateHelper, private UpdaterInterface $updater)
-    {
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+        private ZipHandlerInterface $zipHandler,
+        private FunctionCheckerInterface $functionChecker,
+        private AjaxUriRetrieverInterface $ajaxUriRetriever,
+        private PlaylistLoaderInterface $playlistLoader,
+        private VideoRepositoryInterface $videoRepository,
+        private UpdateInfoRepositoryInterface $updateInfoRepository,
+        private UpdateHelperInterface $updateHelper,
+        private UpdaterInterface $updater
+    ) {
     }
 
     public function createSongViewAdapter(

@@ -48,8 +48,15 @@ use Ampache\Module\Util\ZipHandlerInterface;
 
 final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
 {
-    public function __construct(private ConfigContainerInterface $configContainer, private ModelFactoryInterface $modelFactory, private ZipHandlerInterface $zipHandler, private FunctionCheckerInterface $functionChecker, private GuiGatekeeperInterface $gatekeeper, private Browse $browse, private Album $album)
-    {
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+        private ZipHandlerInterface $zipHandler,
+        private FunctionCheckerInterface $functionChecker,
+        private GuiGatekeeperInterface $gatekeeper,
+        private Browse $browse,
+        private Album $album
+    ) {
     }
 
     public function getId(): int

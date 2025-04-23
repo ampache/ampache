@@ -109,21 +109,15 @@ class Playlist extends playlist_object
     /**
      * get_playlists
      * Returns a list of playlists accessible by the user.
-     * @param int|null $user_id
-     * @param string $playlist_name
-     * @param bool $like
-     * @param bool $includePublic
-     * @param bool $includeHidden
-     * @param bool $userOnly
      * @return int[]
      */
     public static function get_playlists(
-        int    $user_id = null,
-        string $playlist_name = '',
-        bool   $like = true,
-        bool   $includePublic = true,
-        bool   $includeHidden = true,
-        bool   $userOnly = false
+        ?int $user_id = null,
+        ?string $playlist_name = '',
+        ?bool $like = true,
+        ?bool $includePublic = true,
+        ?bool $includeHidden = true,
+        ?bool $userOnly = false
     ): array {
         if (!$user_id) {
             $user    = Core::get_global('user');
