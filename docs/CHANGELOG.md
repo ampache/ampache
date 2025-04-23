@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Ampache 7.4.2
+
+### Fixed
+
+* SQL column for tags using the wrong table
+
 ## Ampache 7.4.1
 
 This release is a small frontend change that has had a lot of backend cleanup.
