@@ -1077,8 +1077,13 @@ class User extends database_object
      * the limit passed. ger recent by default or oldest if $newest is false.
      * @return int[]
      */
-    public function get_recently_played(string $type, int $count, int $offset = 0, bool $newest = true, string $count_type = 'stream'): array
-    {
+    public function get_recently_played(
+        string $type,
+        int $count,
+        int $offset = 0,
+        bool $newest = true,
+        string $count_type = 'stream'
+    ): array {
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
         $limit    = ($offset < 1) ? $count : $offset . "," . $count;
 

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Ampache 7.4.2
+
+### Fixed
+
+* SQL column for tags using the wrong table
+
 ## Ampache 7.4.1
 
 This release is a small frontend change that has had a lot of backend cleanup.
@@ -29,7 +35,7 @@ Functionally the code hasn't changed a lot but we are getting stricter to reduce
 
 ### Fixed
 
-* Speed up dashboard pages for pulic users calling the top_sql query once
+* Speed up dashboard pages for public users calling the top_sql query once
 * RSS compliance for date and atom links
 * Verify chunk count using the chunk and not the count
 * Waveform error when the file is missing

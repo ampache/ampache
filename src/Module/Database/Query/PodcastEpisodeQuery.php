@@ -112,12 +112,8 @@ final class PodcastEpisodeQuery implements QueryInterface
      * get_sql_filter
      *
      * SQL filters for WHERE and required table joins for the selected $filter
-     * @param Query $query
-     * @param string $filter
-     * @param mixed $value
-     * @return string
      */
-    public function get_sql_filter($query, $filter, $value): string
+    public function get_sql_filter(Query $query, string $filter, mixed $value): string
     {
         $filter_sql = '';
         switch ($filter) {
