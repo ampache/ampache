@@ -164,7 +164,7 @@ class Song extends database_object implements
     public ?int $albumartist = null;
 
     /** @var null|list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
-    private ?array $tags = null;
+    public ?array $tags = null;
 
     /** @var int[] $artists */
     private ?array $artists = null;
@@ -1075,7 +1075,9 @@ class Song extends database_object implements
 
             // Represent the value as a string for simpler comparison. For array, ensure to sort similarly old/new values
             if (is_array($media->$key)) {
-                $arr = $media->$key;
+                $arr = ($key === 'tags' && !empty($media->tags))
+                    ? array_column($media->tags, 'name')
+                    : $media->$key;
                 sort($arr);
                 $mediaData = implode(" ", $arr);
             } else {
@@ -1093,7 +1095,9 @@ class Song extends database_object implements
             }
 
             if (is_array($new_media->$key)) {
-                $arr = $new_media->$key;
+                $arr = ($key === 'tags' && !empty($new_media->tags))
+                    ? array_column($new_media->tags, 'name')
+                    : $new_media->$key;
                 sort($arr);
                 $newMediaData = implode(" ", $arr);
             } else {

@@ -569,7 +569,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * get_object_tags
      * Display all tags that apply to matching target type of the specified id
-     * @return list<array{id: int, name: string, user: int}>
+     * @return list<array{id: int, name: string, is_hidden: int, user: int}>
      */
     public static function get_object_tags(string $type, ?int $object_id = null): array
     {
@@ -578,7 +578,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         $params = [$type];
-        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ?";
+        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`is_hidden`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ?";
         if ($object_id !== null) {
             $sql .= " AND `tag_map`.`object_id` = ?";
             $params[] = $object_id;
@@ -590,6 +590,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $results[] = [
                 'id' => (int)$row['id'],
                 'name' => $row['name'],
+                'is_hidden' => (int)$row['is_hidden'],
                 'user' => (int)$row['user'],
             ];
         }

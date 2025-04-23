@@ -56,7 +56,7 @@ class Broadcast extends database_object implements library_item
 
     public ?string $link = null;
 
-    public int $song_position;
+    public int $song_position = 0;
 
     /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
