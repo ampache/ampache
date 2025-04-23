@@ -1052,7 +1052,7 @@ class Xml5_Data
      *
      * @param int[] $activities Activity identifier list
      */
-    public static function timeline($activities): string
+    public static function timeline(array $activities): string
     {
         $string = "";
         foreach ($activities as $activity_id) {

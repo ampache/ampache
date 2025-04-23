@@ -125,7 +125,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * @param string $art_type
      * @return array
      */
-    private static function sortArtByPriority($data, $art_type): array
+    private static function sortArtByPriority(array $data, string $art_type): array
     {
         $priorities = ($art_type === 'artist')
             ? self::TAG_ARTIST_ART_PRIORITY
@@ -188,7 +188,6 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Gather all art from tags in given file.
-     * @param string $file
      * @return array<int, array{raw: string, mime: string, title: string}>
      */
     public static function gatherFileArt(string $file): array
@@ -315,6 +314,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     /**
      * Gather tags from single song instead of full album
      * (taken from function gather_song_tags with some changes)
+     * @param Art $art
+     * @param int $limit
      * @return array
      */
     public function gatherSongTagsSingle(Art $art, int $limit = 5): array
