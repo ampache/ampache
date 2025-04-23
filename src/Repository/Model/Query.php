@@ -130,12 +130,10 @@ class Query
     /**
      * constructor
      * This should be called
-     * @param int|null $query_id
-     * @param bool $cached
      */
     public function __construct(
-        $query_id = 0,
-        $cached = true
+        ?int $query_id = 0,
+        ?bool $cached = true
     ) {
         $sid = session_id();
 
@@ -202,8 +200,9 @@ class Query
      * Attempts to produce a more compact representation for large result
      * sets by collapsing ranges.
      * @param array $data
+     * @return string
      */
-    private function _serialize($data): string
+    private function _serialize(array $data): string
     {
         return json_encode($data) ?: '';
     }
@@ -215,7 +214,7 @@ class Query
      * @param string $data
      * @return mixed
      */
-    private function _unserialize($data)
+    private function _unserialize(string $data): mixed
     {
         return json_decode((string)$data, true);
     }
@@ -223,10 +222,8 @@ class Query
     /**
      * set_filter
      * This saves the filter data we pass it from the ObjectQuery FILTERS array
-     * @param string $key
-     * @param mixed $value
      */
-    public function set_filter($key, $value): bool
+    public function set_filter(string $key, mixed $value): bool
     {
         switch ($key) {
             case 'access':
@@ -362,9 +359,8 @@ class Query
     /**
      * get_filter
      * returns the specified filter value
-     * @return string|int|null
      */
-    public function get_filter(string $key)
+    public function get_filter(string $key): int|string|null
     {
         return $this->_state['filter'][$key] ?? null;
     }
@@ -403,9 +399,8 @@ class Query
     /**
      * set_total
      * This sets the total number of objects
-     * @param int $total
      */
-    public function set_total($total): void
+    public function set_total(int $total): void
     {
         $this->_state['total'] = $total;
     }
@@ -413,11 +408,9 @@ class Query
     /**
      * get_total
      * This returns the total number of objects for this current sort type.
-     * If it's already cached used it. if they pass us an array then use
-     * that.
-     * @param array|null $object_ids
+     * If it's already cached used it. if they pass us an array then use that.
      */
-    public function get_total($object_ids = null): int
+    public function get_total(?array $object_ids = null): int
     {
         // If they pass something then just return that
         if (is_array($object_ids) && !$this->is_simple()) {
@@ -446,9 +439,8 @@ class Query
      * This returns an array of the allowed filters based on the type of
      * object we are working with, this is used to display the 'filter'
      * sidebar stuff.
-     * @param string $type
      */
-    public static function get_allowed_filters($type): array
+    public static function get_allowed_filters(string $type): array
     {
         switch ($type) {
             case 'album':
@@ -515,11 +507,8 @@ class Query
      * This sets the type of object that we want to browse by
      * we do this here so we only have to maintain a single whitelist
      * and if I want to change the location I only have to do it here
-     * @param string $type
-     * @param string $custom_base
-     * @param array $parameters
      */
-    public function set_type($type, $custom_base = '', $parameters = []): void
+    public function set_type(string $type, ?string $custom_base = '', ?array $parameters = []): void
     {
         switch ($type) {
             case 'album':
@@ -630,10 +619,8 @@ class Query
     /**
      * set_sort
      * This sets the current sort(s)
-     * @param string $sort
-     * @param string $order
      */
-    public function set_sort($sort, $order = ''): void
+    public function set_sort(string $sort, ?string $order = ''): void
     {
         // Don't allow pointless sorts
         if (
@@ -678,9 +665,8 @@ class Query
     /**
      * set_offset
      * This sets the current offset of this query
-     * @param int $offset
      */
-    public function set_offset($offset): void
+    public function set_offset(int $offset): void
     {
         $this->_state['offset'] = abs($offset);
     }
@@ -688,27 +674,24 @@ class Query
     /**
      * set_limit
      * This sets the current offset of this query
-     * @param int $limit
      */
-    public function set_limit($limit): void
+    public function set_limit(int $limit): void
     {
         $this->_state['limit'] = abs($limit);
     }
 
     /**
      * set_user_id
-     * @param User $user
      */
-    public function set_user_id($user): void
+    public function set_user_id(User $user): void
     {
         $this->user_id = $user->getId();
     }
 
     /**
      * set_catalog
-     * @param int $catalog_number
      */
-    public function set_catalog($catalog_number): void
+    public function set_catalog(?int $catalog_number): void
     {
         $this->catalog = $catalog_number;
     }
@@ -718,9 +701,8 @@ class Query
      * This appends more information to the select part of the SQL
      * statement, we're going to move to the %%SELECT%% style queries, as I
      * think it's the only way to do this...
-     * @param string $field
      */
-    public function set_select($field): void
+    public function set_select(string $field): void
     {
         $this->_state['select'] = [$field];
     }
@@ -728,13 +710,8 @@ class Query
     /**
      * set_join
      * This sets the joins for the current browse object
-     * @param string $type
-     * @param string $table
-     * @param string $source
-     * @param string $dest
-     * @param int $priority
      */
-    public function set_join($type, $table, $source, $dest, $priority): void
+    public function set_join(string $type, string $table, string $source, string $dest, int $priority): void
     {
         $this->_state['join'][$priority][$table] = sprintf('%s JOIN %s ON %s = %s', $type, $table, $source, $dest);
     }
@@ -742,22 +719,15 @@ class Query
     /**
      * set_join_and
      * This sets the joins for the current browse object and a second option as well
-     * @param string $type
-     * @param string $table
-     * @param string $source1
-     * @param string $dest1
-     * @param string $source2
-     * @param string $dest2
-     * @param int $priority
      */
     public function set_join_and(
-        $type,
-        $table,
-        $source1,
-        $dest1,
-        $source2,
-        $dest2,
-        $priority
+        string $type,
+        string $table,
+        string $source1,
+        string $dest1,
+        string $source2,
+        string $dest2,
+        int $priority
     ): void {
         $this->_state['join'][$priority][$table] = strtoupper((string)$type) . sprintf(' JOIN %s ON %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2);
     }
@@ -765,26 +735,17 @@ class Query
     /**
      * set_join_and_and
      * This sets the joins for the current browse object and a second option as well
-     * @param string $type
-     * @param string $table
-     * @param string $source1
-     * @param string $dest1
-     * @param string $source2
-     * @param string $dest2
-     * @param string $source3
-     * @param string $dest3
-     * @param int $priority
      */
     public function set_join_and_and(
-        $type,
-        $table,
-        $source1,
-        $dest1,
-        $source2,
-        $dest2,
-        $source3,
-        $dest3,
-        $priority
+        string $type,
+        string $table,
+        string $source1,
+        string $dest1,
+        string $source2,
+        string $dest2,
+        string $source3,
+        string $dest3,
+        int $priority
     ): void {
         $this->_state['join'][$priority][$table] = strtoupper((string)$type) . sprintf(' JOIN %s ON %s = %s AND %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2, $source3, $dest3);
     }
@@ -792,11 +753,8 @@ class Query
     /**
      * set_group
      * This sets the "GROUP" part of the query
-     * @param string $column
-     * @param string $value
-     * @param int $priority
      */
-    public function set_group($column, $value, $priority): void
+    public function set_group(string $column, string $value, int $priority): void
     {
         $this->_state['group'][$priority][$column] = $value;
     }
@@ -804,9 +762,8 @@ class Query
     /**
      * set_having
      * This sets the "HAVING" part of the query, we can only have one.
-     * @param string $condition
      */
-    public function set_having($condition): void
+    public function set_having(string $condition): void
     {
         $this->_state['having'] = $condition;
     }
@@ -826,9 +783,8 @@ class Query
      * set_is_simple
      * This sets the current browse object to a 'simple' browse method
      * which means use the base query provided and expand from there
-     * @param bool $value
      */
-    public function set_is_simple($value): void
+    public function set_is_simple(bool $value): void
     {
         $this->_state['simple'] = make_bool($value);
     }
@@ -837,9 +793,8 @@ class Query
      * set_skip_catalog_check
      * This allows you to bypass catalog state checks when you have already checked the parent
      * This will speed up getting sub-items when you are sure it's been checked
-     * @param bool $value
      */
-    public function set_skip_catalog_check($value): void
+    public function set_skip_catalog_check(bool $value): void
     {
         $this->_state['skip_catalog_check'] = make_bool($value);
     }
@@ -857,9 +812,8 @@ class Query
      * This sets true/false if the content of this browse
      * should be static, if they are then content filtering/altering
      * methods will be skipped
-     * @param bool $value
      */
-    public function set_static_content($value): void
+    public function set_static_content(bool $value): void
     {
         $this->_state['static'] = make_bool($value);
     }
@@ -949,11 +903,8 @@ class Query
     /**
      * _set_base_sql
      * This saves the base sql statement we are going to use.
-     * @param bool $force
-     * @param string $custom_base
-     * @param array $parameters
      */
-    private function _set_base_sql($force = false, $custom_base = '', $parameters = []): void
+    private function _set_base_sql(?bool $force = false, ?string $custom_base = '', ?array $parameters = []): void
     {
         // Only allow it to be set once
         if (!empty((string)$this->_state['base']) && !$force) {
@@ -1153,9 +1104,8 @@ class Query
      * This returns the sql statement we are going to use this has to be run
      * every time we get the objects because it depends on the filters and
      * the type of object we are currently browsing.
-     * @param bool $limit
      */
-    private function _get_sql($limit = true): string
+    private function _get_sql(?bool $limit = true): string
     {
         if ($this->_state['custom']) {
             // custom queries are set by base and should not be added to
@@ -1227,10 +1177,8 @@ class Query
      * This takes a filter name and value and if it is possible
      * to filter by this name on this type returns the appropriate sql
      * if not returns nothing
-     * @param string $filter
-     * @param mixed $value
      */
-    private function _sql_filter($filter, $value): string
+    private function _sql_filter(string $filter, mixed $value): string
     {
         if ($this->queryType === null) {
             $this->set_type($this->_state['type']);
@@ -1248,10 +1196,8 @@ class Query
      * to sort the results as best we can, there is also
      * a logic based sort that will come later as that's
      * a lot more complicated
-     * @param string $field
-     * @param string $order
      */
-    private function _sql_sort($field, $order): string
+    private function _sql_sort(?string $field, ?string $order): string
     {
         if ($order != 'DESC') {
             $order = 'ASC';
@@ -1451,9 +1397,8 @@ class Query
     /**
      * Set an additional content div key.
      * This is used to keep div names unique in the html
-     * @param string|int $key
      */
-    public function set_content_div_ak($key): void
+    public function set_content_div_ak(int|string $key): void
     {
         $this->_state['extended_key_name'] = str_replace(", ", "_", (string)$key);
     }
