@@ -70,9 +70,11 @@ $latest_version  = AutoUpdate::get_latest_version(); ?>
 <?php  } ?>
         </ul>
     </div>
-<?php if (AmpConfig::get('autoupdate', false)) {
-    Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
-    <div><?php echo T_('Installed Ampache version'); ?>: <?php echo $current_version; ?></div>
+<?php Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
+    <div><?php echo T_('Installed Ampache version'); ?>: <?php echo ($configuration['structure'] === 'public')
+            ? $current_version
+            : $current_version . ' (' . $configuration['structure'] . ')'; ?></div>
+<?php if (AmpConfig::get('autoupdate', false)) { ?>
     <div><?php echo T_('Latest Ampache version'); ?>: <?php echo $latest_version; ?></div>
     <?php if ((string) AutoUpdate::is_force_git_branch() !== '') { ?>
         <?php echo "<div>" . T_('GitHub Branch') . ': ' . (string)AutoUpdate::is_force_git_branch() . '</div>';
@@ -81,19 +83,15 @@ $latest_version  = AutoUpdate::get_latest_version(); ?>
     <?php if ($current_version !== $latest_version || AutoUpdate::is_update_available()) {
         AutoUpdate::show_new_version();
     }
-} else {
-    Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
-    <div><?php echo T_('Installed Ampache version'); ?>: <?php echo $current_version; ?></div>
-<?php } ?>
+} ?>
     <br />
     <?php Ui::show_box_bottom(); ?>
-
 <?php if (AmpConfig::get('cron_cache', false)) { ?>
     <?php Ui::show_box_top(T_('Ampache Cron'), 'box'); ?>
     <div><?php echo T_('The last cron was completed'); ?>: <?php echo get_datetime($lastCronDate); ?></div>
     <br />
     <?php Ui::show_box_bottom();
-} ?>
+    } ?>
     <?php Ui::show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
     <table class="tabledata striped-rows">
         <colgroup>
