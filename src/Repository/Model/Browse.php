@@ -77,8 +77,7 @@ class Browse extends Query
         'wanted',
     ];
 
-    /** @var int $duration */
-    public $duration;
+    public ?int $duration = null;
 
     /**
      * Constructor.
