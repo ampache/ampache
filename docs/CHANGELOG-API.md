@@ -20,6 +20,9 @@ This is a massive update to the code typing and backend quality without changing
 
 ### Fixed
 
+* ALL
+  * Democratic methods vote array not correct in all cases
+
 ## API 6.6.7
 
 This version is being released for Ampache7 **only**
