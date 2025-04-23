@@ -37,8 +37,12 @@ $environment = $dic->get(EnvironmentInterface::class);
 
 $web_path   = AmpConfig::get_web_path();
 $admin_path = AmpConfig::get_web_path('/admin');
-// don't share the database password
-$configuration['database_password'] = '******';
+// don't share the database password and unset additional variables
+unset(
+    $configuration['database_password'],
+    $configuration['load_time_begin'],
+    $configuration['phpversion'],
+);
 // check your versions
 $current_version = AutoUpdate::get_current_version();
 $latest_version  = AutoUpdate::get_latest_version(); ?>
@@ -162,11 +166,7 @@ echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
         </tr>
         </thead>
         <tbody>
-<?php unset(
-    $configuration['load_time_begin'],
-    $configuration['phpversion'],
-);
-foreach ($configuration as $key => $value) {
+<?php foreach ($configuration as $key => $value) {
     if (is_array($value)) {
         $string = '';
         foreach ($value as $setting) {
