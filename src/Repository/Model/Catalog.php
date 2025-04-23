@@ -2955,7 +2955,10 @@ abstract class Catalog extends database_object
                 self::migrate('album_disk', $song->album_disk, $new_song->album_disk, $song->id, $song->catalog);
             }
 
-            if ($song_tag_array != $new_tag_array) {
+            if (
+                array_diff($song_tag_array, $new_tag_array) !== [] ||
+                array_diff($new_tag_array, $song_tag_array) !== []
+            ) {
                 // we do still care if there are no tags on your object
                 $tag_comma = ($new_tag_array === [])
                     ? ''
