@@ -9,11 +9,11 @@ This is a massive update to the code typing and backend quality without changing
 ### Changed
 
 * ALL
-  * Type parameters properties and arrays for all API versions
+  * Typed parameters, properties and arrays for all API versions
   * Ensure nullable input is allowed to be null in the code
   * Make sure size dimensions for `get_art` calls are valid and split correctly
 * API6
-  * Empty reaults on `list` calls will send an empty response
+  * Empty results on `list` calls will send an empty response
 * API5
   * `playlist_generate` with `flag` not checking value
   * `catalog_file` catch exception on add_file error
