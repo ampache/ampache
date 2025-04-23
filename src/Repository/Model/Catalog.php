@@ -2094,12 +2094,12 @@ abstract class Catalog extends database_object
         }
 
         $searches['video'] = $videos ?? $this->get_video_ids();
-
+        $total_count       = (count($searches['album']) + count($searches['artist']) + count($searches['song']) + count($searches['video']));
         $interactor?->info(
-            'gather_art found ' . count($searches) . ' items missing art',
+            'gather_art found ' . $total_count . ' items missing art',
             true
         );
-        debug_event(self::class, 'gather_art found ' . count($searches) . ' items missing art', 4);
+        debug_event(self::class, 'gather_art found ' . $total_count . ' items missing art', 4);
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
             foreach ($values as $object_id) {
