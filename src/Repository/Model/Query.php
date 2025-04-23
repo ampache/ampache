@@ -1197,7 +1197,7 @@ class Query
      * a logic based sort that will come later as that's
      * a lot more complicated
      */
-    private function _sql_sort(string $field, string $order): string
+    private function _sql_sort(?string $field, ?string $order): string
     {
         if ($order != 'DESC') {
             $order = 'ASC';
