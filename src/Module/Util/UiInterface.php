@@ -63,21 +63,14 @@ interface UiInterface
 
     /**
      * shows a confirmation of an action
-     *
-     * @param string $title The Title of the message
-     * @param string $text The details of the message
-     * @param string $next_url Where to go next
-     * @param int $cancel T/F show a cancel button that uses return_referer()
-     * @param string $form_name
-     * @param bool $visible
      */
     public function showConfirmation(
-        $title,
-        $text,
-        $next_url,
-        $cancel = 0,
-        $form_name = 'confirmation',
-        $visible = true
+        string $title,
+        string $text,
+        string $next_url,
+        ?int $cancel = 0,
+        ?string $form_name = 'confirmation',
+        ?bool $visible = true
     ): void;
 
     /**
