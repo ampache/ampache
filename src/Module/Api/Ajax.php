@@ -55,12 +55,8 @@ class Ajax
      * observe
      * This returns a string with the correct and full ajax 'observe' stuff
      * from jQuery
-     * @param string $source
-     * @param string $method
-     * @param string $action
-     * @param string $confirm
      */
-    public static function observe($source, $method, $action, $confirm = ''): string
+    public static function observe(string $source, string $method, string $action, ?string $confirm = ''): string
     {
         $non_quoted = ['document', 'window'];
 
@@ -91,9 +87,8 @@ class Ajax
     /**
      * url
      * This takes a string and makes an URL
-     * @param string $action
      */
-    public static function url($action): string
+    public static function url(string $action): string
     {
         global $dic;
 
@@ -104,12 +99,12 @@ class Ajax
      * action
      * This takes the action, the source and the post (if passed) and
      * generates the full ajax link
-     * @param string $action
-     * @param string $source
-     * @param string $post
      */
-    public static function action($action, $source, $post = ''): string
-    {
+    public static function action(
+        string $action,
+        string $source,
+        ?string $post = ''
+    ): string {
         $url = self::url($action);
 
         $non_quoted = ['document', 'window'];
@@ -137,22 +132,15 @@ class Ajax
      * button
      * This prints out an img of the specified icon with the specified alt
      * text and then sets up the required ajax for it.
-     * @param string $action
-     * @param string $icon
-     * @param string $alt
-     * @param string $source
-     * @param string $post
-     * @param string $class
-     * @param string $confirm
      */
     public static function button(
-        $action,
-        $icon,
-        $alt,
-        $source = '',
-        $post = '',
-        $class = '',
-        $confirm = ''
+        string $action,
+        string $icon,
+        string $alt,
+        string $source = '',
+        string $post = '',
+        string $class = '',
+        string $confirm = ''
     ): string {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
@@ -178,22 +166,15 @@ class Ajax
      * button_with_text
      * This prints out an img of the specified icon coupled with
      * the text string and then sets up the required ajax for it.
-     * @param string $action
-     * @param string $icon
-     * @param string $text
-     * @param string $source
-     * @param string $post
-     * @param string $class
-     * @param string $confirm
      */
     public static function button_with_text(
-        $action,
-        $icon,
-        $text,
-        $source = '',
-        $post = '',
-        $class = '',
-        $confirm = ''
+        string $action,
+        string $icon,
+        string $text,
+        string $source = '',
+        ?string $post = '',
+        ?string $class = '',
+        ?string $confirm = ''
     ): string {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
@@ -215,15 +196,15 @@ class Ajax
     /**
      * text
      * This prints out the specified text as a link and sets up the required
-     * ajax for the link so it works correctly
-     * @param string $action
-     * @param string $text
-     * @param string $source
-     * @param string $post
-     * @param string $class
+     * ajax for the link so it works correctly=
      */
-    public static function text($action, $text, $source, $post = '', $class = ''): string
-    {
+    public static function text(
+        string $action,
+        string $text,
+        string $source,
+        ?string $post = '',
+        ?string $class = ''
+    ): string {
         // Temporary workaround to avoid sorting on custom base requests
         if (!defined("NO_BROWSE_SORTING") || strpos($source, "sort_") === false) {
             // Avoid duplicate id
@@ -250,9 +231,8 @@ class Ajax
     /**
      * run
      * This runs the specified action no questions asked
-     * @param string $action
      */
-    public static function run($action): void
+    public static function run(string $action): void
     {
         echo "<script><!--\n";
         echo "$action";
@@ -261,11 +241,9 @@ class Ajax
 
     /**
      * set_include_override
-     * This sets the including div override, used only one place. Kind of a
-     * hack.
-     * @param bool $value
+     * This sets the including div override, used only one place. Kind of a hack.
      */
-    public static function set_include_override($value): void
+    public static function set_include_override(bool $value): void
     {
         self::$include_override = make_bool($value);
     }
@@ -274,10 +252,8 @@ class Ajax
      * start_container
      * This checks to see if we're AJAXin'. If we aren't then it echoes out
      * the html needed to start a container that can be replaced by Ajax.
-     * @param string $name
-     * @param string $class
      */
-    public static function start_container($name, $class = ''): bool
+    public static function start_container(string $name, ?string $class = ''): bool
     {
         if (defined('AJAX_INCLUDE') && !self::$include_override) {
             return true;

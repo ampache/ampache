@@ -202,14 +202,7 @@ class Stats
      * insert
      * This inserts a new record for the specified object
      * with the specified information, amazing!
-     * @param string $input_type
-     * @param int $object_id
-     * @param int $user_id
-     * @param string $agent
      * @param array{latitude?: float|string, longitude?: float|string, name?: string,} $location
-     * @param string $count_type
-     * @param int|null $date
-     * @return bool
      */
     public static function insert(
         string $input_type,
@@ -218,7 +211,7 @@ class Stats
         string $agent = '',
         array $location = [],
         string $count_type = 'stream',
-        int $date = null
+        ?int $date = null
     ): bool {
         if (AmpConfig::get('use_auth') && $user_id < 0) {
             debug_event(self::class, 'Invalid user given ' . $user_id, 3);
@@ -692,14 +685,6 @@ class Stats
      * get_top
      * This returns the top X for type Y from the
      * last stats_threshold days
-     * @param string $input_type
-     * @param int $count
-     * @param int $threshold
-     * @param int $offset
-     * @param User|null $user
-     * @param bool $random
-     * @param int $since
-     * @param int $before
      * @return int[]
      */
     public static function get_top(
@@ -1012,13 +997,7 @@ class Stats
 
     /**
      * get_newest
-     * This returns an array of the newest artists/albums/whatever
-     * in this Ampache instance
-     * @param string $input_type
-     * @param int $count
-     * @param int $offset
-     * @param int $catalog_id
-     * @param User|null $user
+     * This returns an array of the newest artists/albums/whatever in this Ampache instance
      * @return int[]
      */
     public static function get_newest(

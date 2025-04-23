@@ -4322,15 +4322,14 @@ abstract class Catalog extends database_object
     /**
      * Get the directory for this file from the catalog and the song info using the sort_pattern
      * takes into account various artists and the alphabet_prefix
-     * @param Song $song
-     * @param string $sort_pattern
-     * @param string|null $base
-     * @param string $various_artist
-     * @param bool $windowsCompat
-     * @return string|null
      */
-    public function sort_find_home(Song $song, string $sort_pattern, ?string $base = null, string $various_artist = "Various Artists", bool $windowsCompat = false): ?string
-    {
+    public function sort_find_home(
+        Song $song,
+        string $sort_pattern,
+        ?string $base = null,
+        string $various_artist = "Various Artists",
+        bool $windowsCompat = false
+    ): ?string {
         $home = '';
         if ($base) {
             $home = rtrim($base, "\/");
