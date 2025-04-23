@@ -29,7 +29,7 @@ Functionally the code hasn't changed a lot but we are getting stricter to reduce
 
 ### Fixed
 
-* Speed up dashboard pages for pulic users calling the top_sql query once
+* Speed up dashboard pages for public users calling the top_sql query once
 * RSS compliance for date and atom links
 * Verify chunk count using the chunk and not the count
 * Waveform error when the file is missing

@@ -578,7 +578,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         $params = [$type];
-        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`is_hidden`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ?";
+        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ?";
         if ($object_id !== null) {
             $sql .= " AND `tag_map`.`object_id` = ?";
             $params[] = $object_id;

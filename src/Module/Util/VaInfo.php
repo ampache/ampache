@@ -141,17 +141,7 @@ final class VaInfo implements VaInfoInterface
      * This function just sets up the class, it doesn't pull the information.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @param UserRepositoryInterface $userRepository
-     * @param ConfigContainerInterface $configContainer
-     * @param LoggerInterface $logger
-     * @param string $file
      * @param string[] $gatherTypes
-     * @param string|null $encoding
-     * @param string|null $encodingId3v1
-     * // TODO: where did this go? param string $encodingId3v2
-     * @param string $dirPattern
-     * @param string $filePattern
-     * @param bool $islocal
      */
     public function __construct(
         UserRepositoryInterface $userRepository,
@@ -161,6 +151,7 @@ final class VaInfo implements VaInfoInterface
         array $gatherTypes = [],
         ?string $encoding = null,
         ?string $encodingId3v1 = null,
+        // TODO: where did this go? param string $encodingId3v2
         string $dirPattern = '',
         string $filePattern = '',
         bool $islocal = true
