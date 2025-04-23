@@ -31,6 +31,16 @@ final class DbCollectorModule implements CollectorModuleInterface
 {
     /**
      * This function retrieves art that's already in the database
+     * @param array{
+     *      mb_albumid?: string,
+     *      artist?: string,
+     *      album?: string,
+     *      cover?: ?string,
+     *      file?: string,
+     *      year_filter?: string,
+     *      search_limit?: int,
+     *  } $data
+     * @return array{db?: bool}
      */
     public function collect(
         Art $art,

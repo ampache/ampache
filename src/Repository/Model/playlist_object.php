@@ -191,6 +191,7 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
      */
     public function get_keywords(): array
     {

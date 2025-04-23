@@ -1647,14 +1647,15 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT " . $size;
         } elseif ($offset > 0) {
             // MySQL doesn't have notation for last row, so we have to use the largest possible BIGINT value
-            // https://dev.mysql.com/doc/refman/5.0/en/select.html  // TODO mysql8 test
+            // https://dev.mysql.com/doc/refman/5.0/en/select.html
             $sql_limit = "LIMIT " . $offset . ", 18446744073709551615";
         }
 
-        $sql        = sprintf('SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `artist`.`album_count` AS `albums` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` %s GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, `artist`.`album_count` ORDER BY `artist`.`name` ', $sql_where) . $sql_limit;
+        $sql        = sprintf('SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `artist`.`album_count`, `artist`.`album_disk_count` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` %s GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, `artist`.`album_count` ORDER BY `artist`.`name` ', $sql_where) . $sql_limit;
         $db_results = Dba::read($sql);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
+            /** @var array{id: int, name: ?string, prefix: ?string, summary: ?string, album_count: int, album_disk_count: int} $row */
             $results[] = Artist::construct_from_array($row);
         }
 
@@ -2585,31 +2586,53 @@ abstract class Catalog extends database_object
         $new_song->r128_album_gain       = (is_null($results['r128_album_gain'])) ? null : (int) $results['r128_album_gain'];
 
         // genre is used in the tag and tag_map tables
-        $tag_array = [];
+        $new_tag_array = [];
         if (!empty($results['genre'])) {
             if (!is_array($results['genre'])) {
                 $results['genre'] = [$results['genre']];
             }
 
             // check if this thing has been renamed into something else
-            foreach ($results['genre'] as $tagName) {
-                $merged = Tag::construct_from_name($tagName);
-                if ($merged->isNew() === false && $merged->is_hidden) {
-                    foreach ($merged->get_merged_tags() as $merged_tag) {
-                        $tag_array[] = $merged_tag['name'];
+            foreach ($results['genre'] as $genreName) {
+                $genre = Tag::construct_from_name($genreName);
+                if ($genre->isNew() === false) {
+                    if ($genre->is_hidden) {
+                        foreach ($genre->get_merged_tags() as $merged_genre) {
+                            $new_song->tags[] = $merged_genre;
+                            $new_tag_array[]  = $merged_genre['name'];
+                        }
+                    } else {
+                        $new_song->tags[] = [
+                            'id' => $genre->getId(),
+                            'name' => $genre->get_fullname() ?? $genreName,
+                            'is_hidden' => 0,
+                            'count' => 0,
+                        ];
+                        $new_tag_array[]  = $genreName;
                     }
                 } else {
-                    $tag_array[] = $tagName;
+                    $new_song->tags[] = [
+                        'id' => 0,
+                        'name' => $genreName,
+                        'is_hidden' => 0,
+                        'count' => 0,
+                    ];
+                    $new_tag_array[]  = $genreName;
                 }
             }
         }
 
-        $new_song->tags = $tag_array;
-        $song->tags     = [];
+        $song_tag_array = [];
         $tags           = Tag::get_object_tags('song', $song->id);
         if ($tags) {
-            foreach ($tags as $tag) {
-                $song->tags[] = $tag['name'];
+            foreach ($tags as $genre) {
+                $song->tags[]     = [
+                    'id' => $genre['id'],
+                    'name' => $genre['name'],
+                    'is_hidden' => $genre['is_hidden'],
+                    'count' => 0,
+                ];
+                $song_tag_array[] = $genre['name'];
             }
         }
 
@@ -2948,11 +2971,14 @@ abstract class Catalog extends database_object
                 self::migrate('album_disk', $song->album_disk, $new_song->album_disk, $song->id, $song->catalog);
             }
 
-            if ($song->tags != $new_song->tags) {
+            if (
+                array_diff($song_tag_array, $new_tag_array) !== [] ||
+                array_diff($new_tag_array, $song_tag_array) !== []
+            ) {
                 // we do still care if there are no tags on your object
-                $tag_comma = ($new_song->tags === [])
+                $tag_comma = ($new_tag_array === [])
                     ? ''
-                    : implode(',', $new_song->tags);
+                    : implode(',', $new_tag_array);
                 Tag::update_tag_list($tag_comma, 'song', $song->id, true);
             }
 
@@ -3729,9 +3755,8 @@ abstract class Catalog extends database_object
     /**
      * delete
      * Deletes the catalog and everything associated with it
-     * @param int $catalog_id
      */
-    public static function delete($catalog_id): bool
+    public static function delete(int $catalog_id): bool
     {
         $params  = [$catalog_id];
         $catalog = self::create_from_id($catalog_id);

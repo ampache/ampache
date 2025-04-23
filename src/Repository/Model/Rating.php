@@ -63,12 +63,10 @@ class Rating extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the rating for
-     * @param int|null $rating_id
-     * @param string $type
      */
     public function __construct(
-        $rating_id,
-        $type
+        ?int $rating_id,
+        string $type
     ) {
         $this->id   = (int)$rating_id;
         $this->type = $type;
@@ -88,10 +86,8 @@ class Rating extends database_object
      * garbage_collection
      *
      * Remove ratings for items that no longer exist.
-     * @param string $object_type
-     * @param int $object_id
      */
-    public static function garbage_collection($object_type = null, $object_id = null): void
+    public static function garbage_collection(?string $object_type = null, ?int $object_id = null): void
     {
         $types = [
             'album_disk',
@@ -133,9 +129,10 @@ class Rating extends database_object
      * single query, saving on connection overhead
      * @param string $type
      * @param list<int|string> $ids
-     * @param int $user_id
+     * @param int|null $user_id
+     * @return bool
      */
-    public static function build_cache($type, $ids, $user_id = null): bool
+    public static function build_cache(string $type, array $ids, ?int $user_id = null): bool
     {
         if (empty($ids)) {
             return false;
@@ -184,9 +181,8 @@ class Rating extends database_object
     /**
      * get_user_rating
      * Get a user's rating. If no userid is passed in, we use the currently logged in user.
-     * @param int $user_id
      */
-    public function get_user_rating($user_id = null): ?int
+    public function get_user_rating(?int $user_id = null): ?int
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -245,11 +241,8 @@ class Rating extends database_object
 
     /**
      * get_highest_sql
-     * Get highest sql
-     * @param string $input_type
-     * @param int $user_id
      */
-    public static function get_highest_sql($input_type, $user_id = null): string
+    public static function get_highest_sql(string $input_type, ?int $user_id = null): string
     {
         $type    = Stats::validate_type($input_type);
         $user_id = (int)($user_id ?? -1);
@@ -283,13 +276,9 @@ class Rating extends database_object
     /**
      * get_highest
      * Get objects with the highest average rating.
-     * @param string $input_type
-     * @param int $count
-     * @param int $offset
-     * @param int $user_id
      * @return int[]
      */
-    public static function get_highest($input_type, $count = 0, $offset = 0, $user_id = null): array
+    public static function get_highest(string $input_type, int $count = 0, int $offset = 0, ?int $user_id = null): array
     {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -323,10 +312,8 @@ class Rating extends database_object
      * set_rating
      * This function sets the rating for the current object.
      * If no user_id is passed in, we use the currently logged in user.
-     * @param int $rating
-     * @param int $user_id
      */
-    public function set_rating($rating, $user_id = null): bool
+    public function set_rating(int $rating, ?int $user_id = null): bool
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -369,12 +356,8 @@ class Rating extends database_object
     /**
      * save_rating
      * Forward rating value to plugins
-     * @param int $object_id
-     * @param string $object_type
-     * @param int $new_rating
-     * @param int $user_id
      */
-    public static function save_rating($object_id, $object_type, $new_rating, $user_id): void
+    public static function save_rating(int $object_id, string $object_type, int $new_rating, int $user_id): void
     {
         $rating = new Rating($object_id, $object_type);
         $user   = new User($user_id);
@@ -395,16 +378,12 @@ class Rating extends database_object
 
     /**
      * get_latest_sql
-     * Get the latest sql
-     * @param string $input_type
-     * @param int $since
-     * @param int $before
      */
     public static function get_latest_sql(
-        $input_type,
+        string $input_type,
         ?User $user = null,
-        $since = 0,
-        $before = 0
+        int $since = 0,
+        int $before = 0
     ): string {
         $type    = Stats::validate_type($input_type);
         $sql     = "SELECT DISTINCT(`rating`.`object_id`) AS `id`, `rating`.`rating`, `rating`.`object_type` AS `type`, MAX(`rating`.`user`) AS `user`, MAX(`rating`.`date`) AS `date` FROM `rating`";
@@ -446,20 +425,15 @@ class Rating extends database_object
     /**
      * get_latest
      * Get the latest user flagged objects
-     * @param string $type
-     * @param int $count
-     * @param int $offset
-     * @param int $since
-     * @param int $before
      * @return int[]
      */
     public static function get_latest(
-        $type,
+        string $type,
         ?User $user = null,
-        $count = 0,
-        $offset = 0,
-        $since = 0,
-        $before = 0
+        int $count = 0,
+        int $offset = 0,
+        int $since = 0,
+        int $before = 0
     ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -491,13 +465,10 @@ class Rating extends database_object
 
     /**
      * show
-     * This takes an id and a type and displays the rating if ratings are
-     * enabled.  If $show_global_rating is true, also show the average from all users.
-     * @param int $object_id
-     * @param string $type
-     * @param bool $show_global_rating
+     * This takes an id and a type and displays the rating if ratings are enabled.
+     * If $show_global_rating is true, also show the average from all users.
      */
-    public static function show($object_id, $type, $show_global_rating = false): string
+    public static function show(int $object_id, string $type, bool $show_global_rating = false): string
     {
         // If ratings aren't enabled don't do anything
         if (!AmpConfig::get('ratings') || !in_array($type, self::RATING_TYPES)) {
@@ -564,12 +535,9 @@ class Rating extends database_object
     }
 
     /**
-     * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * Migrate an object associate stats to a new object\
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id): void
+    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
         $sql = "UPDATE IGNORE `rating` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 

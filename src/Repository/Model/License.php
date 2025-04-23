@@ -35,17 +35,13 @@ use Ampache\Repository\LicenseRepositoryInterface;
  */
 class License extends BaseModel
 {
-    /** @var string|null License title */
     private ?string $name = null;
 
-    /** @var string|null Descriptive text */
     private ?string $description = null;
 
-    /** @var string|null Link to the license page */
-    private ?string $external_link = null;
+    private ?string $external_link = null; // Link to the license page
 
-    /** @var int|null Item order on the license page */
-    private ?int $order = null;
+    private ?int $order = null; // Item order on the license page
 
     public function __construct(private readonly LicenseRepositoryInterface $licenseRepository)
     {

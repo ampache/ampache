@@ -127,10 +127,6 @@ class Xml3_Data
      * single_string
      *
      * This takes two values, first the key second the string
-     *
-     * @param string $key
-     * @param string $string xml data
-     * @return string
      */
     public static function single_string(string $key, string $string = ''): string
     {
@@ -152,7 +148,7 @@ class Xml3_Data
      *
      * @see _header()
      */
-    public static function header($title = null): string
+    public static function header(?string $title = null): string
     {
         return self::_header($title);
     }
@@ -204,8 +200,14 @@ class Xml3_Data
      * playlist_song_tracks_string
      *
      * This returns the formatted 'playlistTrack' string for an xml document
+     * @param null|list<array{
+     *       object_type: LibraryItemEnum,
+     *       object_id: int,
+     *       track_id: int,
+     *       track: int
+     *   }> $playlist_data
      */
-    private static function playlist_song_tracks_string($song, $playlist_data): string
+    private static function playlist_song_tracks_string(Song $song, ?array $playlist_data = []): string
     {
         if (empty($playlist_data)) {
             return "";
@@ -331,7 +333,7 @@ class Xml3_Data
                 $albums = $artist->album_count;
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs(self::getSongRepository()->getByArtist($artist->id), $user, '', false);
+                $songs = self::songs(self::getSongRepository()->getByArtist($artist->id), $user, [], false);
             } else {
                 $songs = $artist->song_count;
             }
@@ -388,7 +390,7 @@ class Xml3_Data
 
             // Handle includes
             if (in_array("songs", $include)) {
-                $songs = self::songs(self::getSongRepository()->getByAlbum($album->id), $user, '', false);
+                $songs = self::songs(self::getSongRepository()->getByAlbum($album->id), $user, [], false);
             } else {
                 $songs = $album->song_count;
             }
@@ -438,8 +440,15 @@ class Xml3_Data
      * songs
      *
      * This returns an xml document from an array of song ids
+     * @param int[]|string[] $songs
+     * @param null|list<array{
+     *      object_type: LibraryItemEnum,
+     *      object_id: int,
+     *      track_id: int,
+     *      track: int
+     *  }> $playlist_data
      */
-    public static function songs($songs, $user, $playlist_data = '', $full_xml = true): string
+    public static function songs(array $songs, User $user, ?array $playlist_data = [], bool $full_xml = true): string
     {
         $string = "<total_count>" . count($songs) . "</total_count>\n";
 
@@ -456,7 +465,7 @@ class Xml3_Data
 
         // Foreach the ids!
         foreach ($songs as $song_id) {
-            $song = new Song($song_id);
+            $song = new Song((int)$song_id);
 
             // If the song id is invalid/null
             if ($song->isNew()) {
@@ -465,8 +474,8 @@ class Xml3_Data
 
             $song->format();
             $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
-            $tag_string            = self::tags_string(Tag::get_top_tags('song', $song_id));
-            $rating                = new Rating($song_id, 'song');
+            $tag_string            = self::tags_string(Tag::get_top_tags('song', $song->id));
+            $rating                = new Rating($song->id, 'song');
             $user_rating           = $rating->get_user_rating($user->getId());
             $art_url               = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
             $songMime              = $song->mime;
@@ -664,7 +673,7 @@ class Xml3_Data
      * this returns a standard header, there are a few types
      * so we allow them to pass a type if they want to
      */
-    private static function _header($title = null): string
+    private static function _header(?string $title = null): string
     {
         switch (self::$type) {
             case 'xspf':

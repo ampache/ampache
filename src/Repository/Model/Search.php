@@ -1967,9 +1967,15 @@ class Search extends playlist_object
      * update
      *
      * This function updates the saved search with the current settings.
-     * @param array|null $data
+     * @param null|array{
+     *     name?: ?string,
+     *     pl_type?: ?string,
+     *     pl_user?: ?int,
+     *     random?: ?int,
+     *     limit?: int
+     * } $data
      */
-    public function update(array $data = null): int
+    public function update(?array $data = null): int
     {
         if ($data !== null) {
             $this->name   = $data['name'] ?? $this->name;

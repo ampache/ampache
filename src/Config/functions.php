@@ -232,7 +232,7 @@ function get_languages(): array
                     T_('Unknown %s'),
                     '(' . $file . ')'
                 ),
-            }; // end switch
+            };
 
             $results[$file] = $name;
         }

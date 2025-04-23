@@ -2,14 +2,17 @@
 
 ## Ampache 7.4.1
 
-Parameter typing and ensuring valid data to functions has been done this release.
+This release is a small frontend change that has had a lot of backend cleanup.
 
-Functionally the code isn't changed but we are now ensuring valid data is getting to the functions.
+Parameter typing and validating data sent to functions has reduced PHPSTAN errors by over 1000 issues!
+
+Functionally the code hasn't changed a lot but we are getting stricter to reduce issues with code changes.
 
 ### Added
 
 * Translations 2025-04-16
 * Add direct link alternative sharing to items for public users
+* Cache `album_disk` objects in `ObjectCache` (Cron)
 * Plugin
   * Bluesky share plugin
   * Mastodon share plugin
@@ -17,19 +20,31 @@ Functionally the code isn't changed but we are now ensuring valid data is gettin
 ### Changed
 
 * Update vite to 6.2.6
+* Replace `GLOB_BRACE` for Linux versions that don't include it
+
+### Removed
+
+* NPM copyfile commands for PrettyPhoto. (It's a repo module now)
+* User details in genre data is always 0 so don't pretend there are uses for the user id
 
 ### Fixed
 
-* Speed up dashboard pages for pulic users calling the top_sql query once
+* Speed up dashboard pages for public users calling the top_sql query once
 * RSS compliance for date and atom links
 * Verify chunk count using the chunk and not the count
 * Waveform error when the file is missing
+* Saved Browse objects may be in int list or structured array
+* Artist row album count use disk/album count based on settings
+* Democratic votes being sent in incorrect array format
+* Media sent to Zip classes may be in structured array
+* MySQL full_group_by for Genre searches
 * Plugins
   * Don't set user preferences when not used in the plugin
 * CLI
   * Default options for `run:updateCatalog`
 * Subsonic
   * Could not set a 0 rating
+  * Current item may be not there for `getPlayQueue`
 
 ## Ampache 7.4.0
 

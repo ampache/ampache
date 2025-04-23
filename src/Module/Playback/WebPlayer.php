@@ -81,7 +81,7 @@ class WebPlayer
      * Get types information for an item.
      * @param Stream_Url $item
      * @param string $force_type
-     * @param array $urlinfo
+     * @param array<string, string> $urlinfo
      * @param string $transcode_cfg
      * @return array{
      *     real: string,
@@ -146,7 +146,10 @@ class WebPlayer
     /**
      * Check if the playlist is a video playlist.
      * @param array<string, string> $urlinfo
-     * @param array<string, string> $types
+     * @param array{
+     *     real: string,
+     *     player: string,
+     * } $types
      * @param string $file_type
      * @param bool $transcode
      * @return array{
@@ -156,39 +159,38 @@ class WebPlayer
      */
     public static function get_media_types(array $urlinfo, array $types, string $file_type, bool $transcode): array
     {
-        $player = $file_type;
-        $real   = ($transcode)
+        $types['real'] = ($transcode)
             ? Stream::get_transcode_format($file_type, null, 'webplayer', $urlinfo['type']) ?? $file_type
             : $file_type;
 
         if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
-            if ($real == "ogg" || $real == "opus") {
-                $player = "oga";
-            } elseif ($real == "mp4") {
-                $player = "m4a";
+            if ($types['real'] == "ogg" || $types['real'] == "opus") {
+                $types['player'] = "oga";
+            } elseif ($types['real'] == "mp4") {
+                $types['player'] = "m4a";
             }
         }
         if ($urlinfo['type'] == 'video') {
-            if ($real == "ogg") {
-                $player = "ogv";
-            } elseif ($real == "webm") {
-                $player = "webmv";
-            } elseif ($real == "mp4") {
-                $player = "m4v";
+            if ($types['real'] == "ogg") {
+                $types['player'] = "ogv";
+            } elseif ($types['real'] == "webm") {
+                $types['player'] = "webmv";
+            } elseif ($types['real'] == "mp4") {
+                $types['player'] = "m4v";
             }
         }
 
-        return [
-            'real' => $real,
-            'player' => $player
-        ];
+        return $types;
     }
 
     /**
      * Check if we can transcode this file type
      * @param string $media_type
      * @param string $file_type
-     * @param array<string, string> $types
+     * @param array{
+     *     real: string,
+     *     player: string,
+     * } $types
      * @param array<string, string> $urlinfo
      * @param string $transcode_cfg
      * @param string $force_type

@@ -80,12 +80,13 @@ interface Media
     public function getYear(): string;
 
     /**
-     * @param int $user_id
-     * @param string $agent
-     * @param array $location
-     * @param int $date
+     * @param array{
+     *      latitude?: float,
+     *      longitude?: float,
+     *      name?: string
+     *  } $location
      */
-    public function set_played($user_id, $agent, $location, $date): bool;
+    public function set_played(int $user_id, string $agent, array $location, int $date): bool;
 
     /**
      * @param int $user

@@ -98,14 +98,11 @@ class Video extends database_object implements
 
     public ?string $link = null;
 
-    /** @var string $type */
-    public $type;
+    public string $type;
 
-    /** @var null|string $f_resolution */
-    public $f_resolution;
+    public ?string $f_resolution = null;
 
-    /** @var null|string $f_display */
-    public $f_display;
+    public ?string $f_display = null;
 
     /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
@@ -118,9 +115,8 @@ class Video extends database_object implements
      * Constructor
      * This pulls the information from the database and returns
      * a constructed object
-     * @param int|null $video_id
      */
-    public function __construct($video_id = 0)
+    public function __construct(?int $video_id = 0)
     {
         if (!$video_id) {
             return;
@@ -153,7 +149,7 @@ class Video extends database_object implements
      * Build a cache based on the array of ids passed, saves lots of little queries
      * @param int[] $ids
      */
-    public static function build_cache($ids): bool
+    public static function build_cache(array $ids): bool
     {
         if (empty($ids)) {
             return false;
@@ -207,6 +203,7 @@ class Video extends database_object implements
 
     /**
      * Get item keywords for metadata searches.
+     * @return array{title: array{important: true, label: string, value: string|null}}
      */
     public function get_keywords(): array
     {
@@ -512,9 +509,8 @@ class Video extends database_object implements
      * type_to_mime
      *
      * Returns the mime type for the specified file extension/type
-     * @param string $type
      */
-    public static function type_to_mime($type): string
+    public static function type_to_mime(string $type): string
     {
         // FIXME: This should really be done the other way around.
         // Store the mime type in the database, and provide a function
@@ -536,6 +532,8 @@ class Video extends database_object implements
 
     /**
      * Insert new video.
+     * @param array<string, mixed> $data
+     * @param array<string, mixed>|null $options
      */
     public static function insert(array $data, ?array $options = []): int
     {
@@ -592,7 +590,7 @@ class Video extends database_object implements
             foreach ($tags as $tag) {
                 $tag = trim((string) $tag);
                 if ($tag !== '' && $tag !== '0') {
-                    Tag::add('video', $video_id, $tag, false);
+                    Tag::add('video', $video_id, $tag);
                 }
             }
         }
@@ -642,10 +640,7 @@ class Video extends database_object implements
         return $this->id;
     }
 
-    /**
-     * @param int $video_id
-     */
-    public static function update_video($video_id, Video $new_video): void
+    public static function update_video(int $video_id, Video $new_video): void
     {
         $update_time  = time();
         $release_date = (is_numeric($new_video->release_date))
@@ -676,10 +671,8 @@ class Video extends database_object implements
 
     /**
      * update_video_counts
-     *
-     * @param int $video_id
      */
-    public static function update_video_counts($video_id): void
+    public static function update_video_counts(int $video_id): void
     {
         if ($video_id > 0) {
             $params = [$video_id];
@@ -708,10 +701,8 @@ class Video extends database_object implements
     /**
      * generate_preview
      * Generate video preview image from a video file
-     * @param int $video_id
-     * @param bool $overwrite
      */
-    public static function generate_preview($video_id, $overwrite = false): void
+    public static function generate_preview(int $video_id, bool $overwrite = false): void
     {
         if ($overwrite || !Art::has_db($video_id, 'video', 'preview')) {
             $artp  = new Art($video_id, 'video', 'preview');
@@ -727,12 +718,13 @@ class Video extends database_object implements
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param int $user_id
-     * @param string $agent
-     * @param array $location
-     * @param int $date
+     * @param array{
+     *      latitude?: float,
+     *      longitude?: float,
+     *      name?: string
+     *  } $location
      */
-    public function set_played($user_id, $agent, $location, $date): bool
+    public function set_played(int $user_id, string $agent, array $location, int $date): bool
     {
         // ignore duplicates or skip the last track
         if (!$this->check_play_history($user_id, $agent, $date)) {
@@ -790,9 +782,8 @@ class Video extends database_object implements
 
     /**
      * Get language name from code.
-     * @param string $code
      */
-    protected function get_language_name($code): string
+    protected function get_language_name(string $code): string
     {
         $languageCodes = [
             "aa" => T_("Afar"),
@@ -986,9 +977,8 @@ class Video extends database_object implements
 
     /**
      * Get subtitle file from language code.
-     * @param string $lang_code
      */
-    public function get_subtitle_file($lang_code): string
+    public function get_subtitle_file(string $lang_code): string
     {
         $subtitle = '';
         if ($lang_code == '__' || $this->get_language_name($lang_code)) {
@@ -1036,10 +1026,8 @@ class Video extends database_object implements
     /**
      * update_utime
      * sets a new update time
-     * @param int $video_id
-     * @param int $time
      */
-    public static function update_utime($video_id, $time = 0): void
+    public static function update_utime(int $video_id, int $time = 0): void
     {
         if (!$time) {
             $time = time();
@@ -1053,11 +1041,11 @@ class Video extends database_object implements
      * update_played
      * sets the played flag
      * @param bool $new_played
-     * @param int $song_id
+     * @param int $video_id
      */
-    public static function update_played($new_played, $song_id): void
+    public static function update_played(bool $new_played, int $video_id): void
     {
-        self::_update_item('played', (($new_played) ? 1 : 0), $song_id, AccessLevelEnum::USER);
+        self::_update_item('played', (($new_played) ? 1 : 0), $video_id, AccessLevelEnum::USER);
     }
 
     /**
@@ -1066,11 +1054,8 @@ class Video extends database_object implements
      * It takes a field, value video id and level. first and foremost it checks the level
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
-     * @param string $field
-     * @param string|int $value
-     * @param int $video_id
      */
-    private static function _update_item($field, $value, $video_id, AccessLevelEnum $level): void
+    private static function _update_item(string $field, int|string $value, int $video_id, AccessLevelEnum $level): void
     {
         /* Check them Rights! */
         if (!Access::check(AccessTypeEnum::INTERFACE, $level)) {
