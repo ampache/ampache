@@ -71,6 +71,7 @@ class SubsonicClient
             'deleteUser',
             'download',
             'getAlbumList',
+            'getArtist',
             'getArtistInfo',
             'getChatMessages',
             'getCoverArt',
