@@ -327,6 +327,10 @@ class Catalog_remote extends Catalog
             $total > $current &&
             $songsFound
         ) {
+            $web_path = AmpConfig::get_web_path();
+            if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
+                $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
+            }
             $start = $current;
             $current += $step;
             try {
@@ -340,9 +344,16 @@ class Catalog_remote extends Catalog
                         ) {
                             continue;
                         }
-                        if ($this->check_remote_song($song->url)) {
+
+                        // Update URLS to the current format for remote catalogs
+                        $old_url = (string)preg_replace('/ssid=.*&/', '', $song->url);
+                        $db_url  = (string)preg_replace('/ssid=&/', 'client=' . urlencode($web_path) . '&', $song->url);
+                        if ($this->check_remote_song([$old_url], $db_url)) {
                             debug_event('remote.catalog', 'Skipping existing song ' . $song->url, 5);
                         } else {
+                            if (!$db_url) {
+                                continue;
+                            }
                             $genres = [];
                             foreach ($song->genre as $genre) {
                                 $genres[] = $genre->name;
@@ -358,8 +369,8 @@ class Catalog_remote extends Catalog
                                 'composer' => $song->composer ?? null,
                                 'comment' => null,
                                 'disk' => $song->disk ?? null,
-                                'file' => preg_replace('/ssid=.*?&/', '', $song->url),
-                                'genre' => $song->genre,
+                                'file' => $db_url,
+                                'genre' => $genres,
                                 'mb_trackid' => $song->mbid ?? null,
                                 'mime' => $song->mime ?? null,
                                 'mode' => $song->mode ?? null,
@@ -553,16 +564,29 @@ class Catalog_remote extends Catalog
      *
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
-     * @param string $song_url
+     * @param string[] $song_urls
      */
-    public function check_remote_song($song_url): ?int
+    public function check_remote_song(array $song_urls, string $db_url): ?int
     {
-        $url = preg_replace('/ssid=.*&/', '', $song_url);
-        if (!$url) {
+        if (empty($song_urls) || $db_url == '') {
             return null;
         }
-        $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
-        $db_results = Dba::read($sql, [$url]);
+
+        // Update old urls to the new format if needed
+        foreach ($song_urls as $old_url) {
+            // Check for old formats and update the URL to the current version
+            $sql = 'SELECT `id` FROM `song` WHERE `file` = ?';
+            $db_results = Dba::read($sql, [$old_url]);
+            if ($results = Dba::fetch_assoc($db_results)) {
+                Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_url, $results['id']]);
+
+                return (int)$results['id'];
+            }
+        }
+
+        // Check current url format
+        $sql = 'SELECT `id` FROM `song` WHERE `file` = ?';
+        $db_results = Dba::read($sql, [$db_url]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];
