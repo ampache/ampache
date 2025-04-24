@@ -232,7 +232,7 @@ class Catalog_subsonic extends Catalog
      */
     public function createClient(): SubsonicClient
     {
-        return (new SubsonicClient($this->username, $this->password, $this->uri, 'Ampache'));
+        return (new SubsonicClient($this->username, $this->password, $this->uri));
     }
 
     /**
