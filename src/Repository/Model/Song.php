@@ -615,8 +615,8 @@ class Song extends database_object implements
 
     /**
      * _get_ext_info
-     * This function gathers information from the song_ext_info table and adds it to the
-     * current object
+     * This function gathers information from the song_ext_info table and adds it to the current object
+     * @return array<string, scalar>
      */
     public function _get_ext_info(string $select = ''): array
     {
@@ -624,7 +624,10 @@ class Song extends database_object implements
             return parent::get_from_cache('song_data', $this->id);
         }
 
-        $columns    = (empty($select)) ? '*' : Dba::escape($select);
+        $columns = (empty($select))
+            ? '`comment`, `lyrics`, `label`, `language`, `waveform`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`, `disksubtitle`'
+            : Dba::escape($select);
+
         $sql        = sprintf('SELECT %s FROM `song_data` WHERE `song_id` = ?', $columns);
         $db_results = Dba::read($sql, [$this->id]);
         if (!$db_results) {
@@ -652,9 +655,7 @@ class Song extends database_object implements
         }
 
         foreach ($info as $key => $value) {
-            if ($key != 'song_id') {
-                $this->$key = $value;
-            }
+            $this->$key = $value;
         }
     }
 
@@ -2110,21 +2111,19 @@ class Song extends database_object implements
         }
 
         $user = Core::get_global('user');
-        if (!$user instanceof User) {
-            return [];
-        }
+        if ($user instanceof User) {
+            foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->_plugin !== null && $plugin->load($user)) {
+                    $lyrics = $plugin->_plugin->get_lyrics($this);
+                    if (!empty($lyrics)) {
+                        // save the lyrics if not set before
+                        if (array_key_exists('text', $lyrics) && !empty($lyrics['text'])) {
+                            self::update_lyrics($lyrics['text'], $this->id);
+                        }
 
-        foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
-            $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null && $plugin->load($user)) {
-                $lyrics = $plugin->_plugin->get_lyrics($this);
-                if (!empty($lyrics)) {
-                    // save the lyrics if not set before
-                    if (array_key_exists('text', $lyrics) && !empty($lyrics['text'])) {
-                        self::update_lyrics($lyrics['text'], $this->id);
+                        return $lyrics;
                     }
-
-                    return $lyrics;
                 }
             }
         }
