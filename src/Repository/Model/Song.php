@@ -654,6 +654,10 @@ class Song extends database_object implements
             return;
         }
 
+        if (isset($info['song_id'])) {
+            unset($info['song_id']);
+        }
+
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
