@@ -47,7 +47,7 @@ class SubsonicClient
         string $username,
         string $password,
         string $serverUrl,
-        string $port = "4040",
+        ?string $port = null,
         string $client = "Ampache"
     ) {
         $this->setServer($serverUrl, $port);
@@ -183,6 +183,8 @@ class SubsonicClient
             $port = $_port;
         } elseif (empty($port)) {
             $port = ($protocol === "https://") ? '443' : '80';
+        } else {
+            $port = '4040';
         }
         $this->_serverUrl  = $server;
         $this->_serverPort = $port;
