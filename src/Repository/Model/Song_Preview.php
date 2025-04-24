@@ -386,9 +386,9 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * get_stream_types
-     * @param $player
+     * @return list<string>
      */
-    public function get_stream_types($player = null): array
+    public function get_stream_types(?string $player = null): array
     {
         return ['native'];
     }

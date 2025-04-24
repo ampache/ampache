@@ -360,9 +360,9 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     /**
      * get_stream_types
      * This is needed by the media interface
-     * @param string $player
+     * @return list<string>
      */
-    public function get_stream_types($player = null): array
+    public function get_stream_types(?string $player = null): array
     {
         return ['native'];
     }

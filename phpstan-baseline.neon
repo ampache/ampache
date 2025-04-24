@@ -76,11 +76,6 @@ parameters:
 			path: src/Config/functions.php
 
 		-
-			message: "#^Function xoutput_from_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, array\\<int, string\\>\\|string given\\.$#"
 			count: 1
 			path: src/Config/functions.php
@@ -901,11 +896,6 @@ parameters:
 			path: src/Module/Api/SubsonicApiApplication.php
 
 		-
-			message: "#^Cannot access offset '' on array\\<string\\>\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_hasNestedArray\\(\\) has parameter \\$properties with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
@@ -1721,11 +1711,6 @@ parameters:
 			path: src/Module/Broadcast/Broadcast_Server.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:create_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:download_metadata\\(\\) has parameter \\$file with no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
@@ -1786,89 +1771,9 @@ parameters:
 			path: src/Module/Catalog/Catalog_beets.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_beets\\:\\:create_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_beets.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_beetsremote\\:\\:checkSong\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_beetsremote.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_beetsremote\\:\\:create_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_beetsremote.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:add_file\\(\\) has parameter \\$dropbox with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:add_file\\(\\) has parameter \\$path with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:add_files\\(\\) has parameter \\$dropbox with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:add_files\\(\\) has parameter \\$path with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:check_remote_file\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:create_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:download\\(\\) has parameter \\$dropbox with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:download\\(\\) has parameter \\$dropboxFile with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:download\\(\\) has parameter \\$maxlen with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:download\\(\\) has parameter \\$path with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:insert_song\\(\\) has parameter \\$dropbox with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:insert_song\\(\\) has parameter \\$path with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:insert_video\\(\\) has parameter \\$dropbox with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:insert_video\\(\\) has parameter \\$path with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
 
 		-
 			message: "#^Parameter \\#2 \\$offset of function substr expects int, int\\<1, max\\>\\|false given\\.$#"
@@ -1881,16 +1786,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_local.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:add_files\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:create_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:\\$songs_to_gather type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
@@ -1899,26 +1794,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:\\$videos_to_gather type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_remote\\:\\:create_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_remote.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:check_remote_song\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:create_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:insertArt\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SeafileAdapter\\:\\:__construct\\(\\) has parameter \\$api_key with no type specified\\.$#"
@@ -2011,27 +1886,7 @@ parameters:
 			path: src/Module/Catalog/SeafileAdapter.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:__call\\(\\) has parameter \\$action with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:__call\\(\\) has parameter \\$arguments with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:__call\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:_querySubsonic\\(\\) has parameter \\$action with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:_querySubsonic\\(\\) has parameter \\$object with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/SubsonicClient.php
 
@@ -2041,47 +1896,7 @@ parameters:
 			path: src/Module/Catalog/SubsonicClient.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:error\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:error\\(\\) has parameter \\$error with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:isCommand\\(\\) has parameter \\$command with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:parameterize\\(\\) has parameter \\$object with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:parameterize\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:parseResponse\\(\\) has parameter \\$response with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:parseResponse\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:querySubsonic\\(\\) has parameter \\$action with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:querySubsonic\\(\\) has parameter \\$object with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/SubsonicClient.php
 
@@ -3856,11 +3671,6 @@ parameters:
 			path: src/Module/Util/Graph.php
 
 		-
-			message: "#^Parameter \\#2 \\$Indexes of method CpChart\\\\BaseDraw\\:\\:writeLabel\\(\\) expects array, int given\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
 			message: "#^Parameter \\#3 \\$Format of method CpChart\\\\Data\\:\\:setAxisDisplay\\(\\) expects array\\|null, string given\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
@@ -5271,16 +5081,6 @@ parameters:
 			path: src/Repository/Model/Live_Stream.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:get_stream_types\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:get_stream_types\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Media.php
-
-		-
 			message: "#^Cannot access property \\$max_ampache on class\\-string\\|object\\.$#"
 			count: 1
 			path: src/Repository/Model/Plugin.php
@@ -5506,11 +5306,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_stream_types\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:has_info\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -5532,11 +5327,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:get_stream_types\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
 
@@ -5647,11 +5437,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:get_release_item_art\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:get_stream_types\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 

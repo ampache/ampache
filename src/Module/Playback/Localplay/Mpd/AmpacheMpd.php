@@ -403,7 +403,6 @@ class AmpacheMpd extends localplay_controller
     /**
      * volume
      * This tells MPD to set the volume to the parameter
-     * @param $volume
      */
     public function volume($volume): bool
     {

@@ -433,9 +433,9 @@ class Video extends database_object implements
 
     /**
      * Get stream types.
-     * @param string $player
+     * @return list<string>
      */
-    public function get_stream_types($player = null): array
+    public function get_stream_types(?string $player = null): array
     {
         return Stream::get_stream_types_for_type($this->type, $player);
     }

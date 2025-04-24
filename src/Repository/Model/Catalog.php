@@ -71,6 +71,7 @@ use Ampache\Repository\WantedRepositoryInterface;
 use DateTime;
 use Exception;
 use Generator;
+use Kunnu\Dropbox\Exceptions\DropboxClientException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RegexIterator;
@@ -1151,7 +1152,26 @@ abstract class Catalog extends database_object
      * create
      *
      * This creates a new catalog entry and associate it to current instance
-     * @param array<string, string|int|null> $data
+     *
+     * @param array{
+     *     name: string,
+     *     path?: string,
+     *     uri?: string,
+     *     type: string,
+     *     rename_pattern: string,
+     *     sort_pattern: string,
+     *     gather_media: string,
+     *     username?: ?string,
+     *     password?: ?string,
+     *     library_name?: string,
+     *     server_uri?: string,
+     *     api_call_delay?: string|int|null,
+     *     beetsdb?: string,
+     *     apikey?: ?string,
+     *     secret?: ?string,
+     *     authtoken?: ?string,
+     *     getchunk?: string|int|null,
+     * } $data
      */
     public static function create(array $data): int
     {
@@ -1191,8 +1211,14 @@ abstract class Catalog extends database_object
 
         self::clear_catalog_cache();
 
-        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $classname */
-        if (!$classname::create_type($insert_id, $data)) {
+        try {
+            /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $classname */
+            $create_type = $classname::create_type($insert_id, $data);
+        } catch (DropboxClientException) {
+            $create_type = false;
+        }
+
+        if (!$create_type) {
             $sql = 'DELETE FROM `catalog` WHERE `id` = ?';
             Dba::write($sql, [$insert_id]);
             $insert_id = 0;

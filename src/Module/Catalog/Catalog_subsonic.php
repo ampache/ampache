@@ -145,9 +145,8 @@ class Catalog_subsonic extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param int $catalog_id
      */
-    public function __construct($catalog_id = null)
+    public function __construct(?int $catalog_id = null)
     {
         if ($catalog_id) {
             $info = $this->get_info($catalog_id, static::DB_TABLENAME);
@@ -164,14 +163,17 @@ class Catalog_subsonic extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param string $catalog_id
-     * @param array $data
+     * @param array{
+     *     uri?: string,
+     *     username?: ?string,
+     *     password?: ?string,
+     * } $data
      */
-    public static function create_type($catalog_id, $data): bool
+    public static function create_type(string $catalog_id, array $data): bool
     {
-        $uri      = rtrim(trim($data['uri']), '/');
-        $username = $data['username'];
-        $password = $data['password'];
+        $uri      = rtrim(trim($data['uri'] ?? ''), '/');
+        $username = $data['username'] ?? '';
+        $password = $data['password'] ?? '';
 
         if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
             AmpError::add('general', T_('Remote Catalog type was selected, but the path is not a URL'));
@@ -335,23 +337,19 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * @param $data
-     * @param int|null $song_Id
+     * @param array<string, mixed> $data
      */
-    public function insertArt($data, $song_Id): bool
+    public function insertArt(array $data, ?int $song_Id): bool
     {
         $subsonic = $this->createClient();
         $song     = new Song($song_Id);
         $art      = new Art($song->album, 'album');
         if (AmpConfig::get('album_art_max_height') && AmpConfig::get('album_art_max_width')) {
-            $size = [
-                'width' => AmpConfig::get('album_art_max_width'),
-                'height' => AmpConfig::get('album_art_max_height')
-            ];
+            $size = (int)max(AmpConfig::get('album_art_max_width'), AmpConfig::get('album_art_max_height'));
         } else {
-            $size = ['width' => 275, 'height' => 275];
+            $size = 275;
         }
-        $image = $subsonic->querySubsonic('getCoverArt', ['id' => $data['coverArt'], $size], true);
+        $image = $subsonic->querySubsonic('getCoverArt', ['id' => (string)$data['coverArt'], 'size' => $size], true);
 
         return (
             is_string($image) &&
@@ -496,12 +494,15 @@ class Catalog_subsonic extends Catalog
      *
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
-     * @param array $song
+     * @param array<string, mixed> $song
      */
-    public function check_remote_song($song): ?int
+    public function check_remote_song(array $song): ?int
     {
-        $url = $song['file'];
+        if (!isset($song['file'])) {
+            return null;
+        }
 
+        $url        = $song['file'];
         $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
         $db_results = Dba::read($sql, [$url]);
 
@@ -522,10 +523,7 @@ class Catalog_subsonic extends Catalog
         return (str_replace($catalog_path . "/", "", $file_path));
     }
 
-    /**
-     * @param string $url
-     */
-    public function url_to_songid($url): int
+    public function url_to_songid(string $url): int
     {
         $song_id = 0;
         preg_match('/\?id=([0-9]*)&/', $url, $matches);

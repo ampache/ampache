@@ -127,9 +127,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Get the parser class like CliHandler or JsonHandler
-     * @return CliHandler|JsonHandler
      */
-    abstract protected function getParser();
+    abstract protected function getParser(): Handler;
 
     /**
      * Check if a song was added before

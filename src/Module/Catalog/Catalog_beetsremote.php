@@ -103,13 +103,14 @@ class Catalog_beetsremote extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param string $catalog_id
-     * @param array $data
+     * @param array{
+     *     uri?: string,
+     * } $data
      */
-    public static function create_type($catalog_id, $data): bool
+    public static function create_type(string $catalog_id, array $data): bool
     {
         // TODO: This Method should be required / provided by parent
-        $uri = $data['uri'];
+        $uri = $data['uri'] ?? '';
 
         if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
             AmpError::add('general', T_('Remote Catalog type was selected, but the path is not a URL'));
