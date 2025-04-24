@@ -332,14 +332,6 @@ class Podcast_Episode extends database_object implements
     }
 
     /**
-     * get_f_artist_link
-     */
-    public function get_f_artist_link(): ?string
-    {
-        return $this->getPodcastLink();
-    }
-
-    /**
      * Get item get_f_album_link.
      */
     public function get_f_album_link(): string

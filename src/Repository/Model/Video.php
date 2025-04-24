@@ -312,14 +312,6 @@ class Video extends database_object implements
     }
 
     /**
-     * get_f_artist_link
-     */
-    public function get_f_artist_link(): ?string
-    {
-        return '';
-    }
-
-    /**
      * Get item get_f_album_link.
      */
     public function get_f_album_link(): string
