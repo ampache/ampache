@@ -347,7 +347,7 @@ class Catalog_remote extends Catalog
 
                         // Update URLS to the current format for remote catalogs
                         $old_url = (string)preg_replace('/ssid=.*&/', '', $song->url);
-                        $db_url  = (string)preg_replace('/ssid=&/', 'client=' . urlencode($web_path) . '&', $song->url);
+                        $db_url  = (string)preg_replace('/ssid=.*&/', 'client=' . urlencode($web_path) . '&', $song->url);
                         if ($this->check_remote_song([$old_url], $db_url)) {
                             debug_event('remote.catalog', 'Skipping existing song ' . $song->url, 5);
                         } else {
