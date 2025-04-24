@@ -276,7 +276,10 @@ class Catalog_subsonic extends Catalog
                                 $data['artist'] = html_entity_decode($song['artist']);
                                 $data['album']  = html_entity_decode($song['album']);
                                 $data['title']  = html_entity_decode($song['title']);
-                                if (is_array($artistInfo) && $artistInfo['success'] ?? false) {
+                                if (
+                                    is_array($artistInfo) &&
+                                    isset($artistInfo['data']['artistInfo']['biography'])
+                                ) {
                                     $data['comment'] = html_entity_decode($artistInfo['data']['artistInfo']['biography']);
                                 }
                                 $data['year']     = $song['year'];
