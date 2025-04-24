@@ -223,9 +223,6 @@ class Playlist extends playlist_object
         return $results;
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
     }

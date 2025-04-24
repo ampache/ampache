@@ -1594,9 +1594,6 @@ class Song extends database_object implements
 
     /**
      * format
-     * This takes the current song object
-     * and does a ton of formatting on it creating f_??? variables on the current
-     * object
      */
     public function format(): void
     {

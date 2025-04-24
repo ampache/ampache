@@ -578,11 +578,6 @@ class Catalog_remote extends Catalog
         return (str_replace($catalog_path . "/", "", $file_path));
     }
 
-    /**
-     * format
-     *
-     * This makes the object human-readable.
-     */
     public function format(): void
     {
     }

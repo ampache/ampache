@@ -536,9 +536,6 @@ class Catalog_subsonic extends Catalog
         return (int)$song_id;
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
     }

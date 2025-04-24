@@ -89,9 +89,6 @@ abstract class playlist_object extends database_object implements library_item
         return $this->getId() === 0;
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
     }

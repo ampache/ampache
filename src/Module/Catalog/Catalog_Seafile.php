@@ -627,9 +627,6 @@ class Catalog_Seafile extends Catalog
         return null;
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
     }

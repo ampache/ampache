@@ -410,9 +410,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         return '';
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
     }

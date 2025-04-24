@@ -705,9 +705,6 @@ class Catalog_dropbox extends Catalog
         return substr($file_path, $path);
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
     }

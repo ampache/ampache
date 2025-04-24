@@ -100,16 +100,16 @@ class Video extends database_object implements
 
     public string $type;
 
-    public ?string $f_resolution = null;
-
-    public ?string $f_display = null;
-
     /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
     private ?string $f_link = null;
 
     private ?bool $has_art = null;
+
+    private ?string $f_resolution = null;
+
+    private ?string $f_display = null;
 
     /**
      * Constructor
@@ -166,19 +166,32 @@ class Video extends database_object implements
         return true;
     }
 
-    /**
-     * format
-     * This formats a video object so that it is human readable
-     */
     public function format(): void
     {
-        if ($this->resolution_x || $this->resolution_y) {
+    }
+
+    /**
+     * get_f_resolution
+     */
+    public function get_f_resolution(): ?string
+    {
+        if (!$this->f_resolution && ($this->resolution_x || $this->resolution_y)) {
             $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
         }
 
-        if ($this->display_x || $this->display_y) {
+        return $this->f_resolution;
+    }
+
+    /**
+     * get_f_display
+     */
+    public function get_f_display(): ?string
+    {
+        if (!$this->f_display && ($this->display_x || $this->display_y)) {
             $this->f_display = $this->display_x . 'x' . $this->display_y;
         }
+
+        return $this->f_display;
     }
 
     /**

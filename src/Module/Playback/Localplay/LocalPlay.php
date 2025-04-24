@@ -63,9 +63,6 @@ class LocalPlay
         return $this->_player instanceof localplay_controller;
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
     }

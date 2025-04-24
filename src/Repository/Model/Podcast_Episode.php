@@ -165,7 +165,6 @@ class Podcast_Episode extends database_object implements
 
     /**
      * format
-     * this function takes the object and formats some values
      */
     public function format(): void
     {

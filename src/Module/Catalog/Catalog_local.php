@@ -1205,9 +1205,6 @@ class Catalog_local extends Catalog
         return (str_replace($catalog_path . "/", "", $file_path));
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
     }

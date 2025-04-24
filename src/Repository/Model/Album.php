@@ -437,9 +437,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * format
-     * This is the format function for this object. It sets cleaned up
-     * album information with the base required
-     * f_link, f_name
      */
     public function format(): void
     {

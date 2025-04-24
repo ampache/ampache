@@ -85,9 +85,6 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
         return $this->getId() === 0;
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
     }
