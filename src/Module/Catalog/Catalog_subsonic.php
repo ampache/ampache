@@ -268,14 +268,14 @@ class Catalog_subsonic extends Catalog
 
                     if (is_array($album) && $album['success']) {
                         foreach ($album['data']['directory']['child'] as $song) {
-                            $artistInfo = $subsonic->querySubsonic('getArtistInfo', ['id' => $song['artistId']]);
+                            $artistInfo  = $subsonic->querySubsonic('getArtistInfo', ['id' => $song['artistId']]);
                             $albumartist = $subsonic->querySubsonic('getArtist', ['id' => $album['data']['directory']['parent']]);
                             if (Catalog::is_audio_file($song['path'])) {
-                                $data           = [];
+                                $data                = [];
                                 $data['albumartist'] = html_entity_decode($albumartist['data']['artist']['name']);
-                                $data['artist'] = html_entity_decode($song['artist']);
-                                $data['album']  = html_entity_decode($song['album']);
-                                $data['title']  = html_entity_decode($song['title']);
+                                $data['artist']      = html_entity_decode($song['artist']);
+                                $data['album']       = html_entity_decode($song['album']);
+                                $data['title']       = html_entity_decode($song['title']);
                                 if (
                                     is_array($artistInfo) &&
                                     isset($artistInfo['data']['artistInfo']['biography'])

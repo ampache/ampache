@@ -1397,6 +1397,54 @@ class Xml_Data
     }
 
     /**
+     * song_tags
+     *
+     * This returns an array of song tags populated from an array of song ids.
+     *
+     * @param list<int|string> $objects
+     * @param User $user
+     * @param bool $full_xml whether to return a full XML document or just the node.
+     * @return string
+     */
+    public static function song_tags(array $objects, User $user, bool $full_xml = true): string
+    {
+        $count = self::$count ?? count($objects);
+        if (($count > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
+        }
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song', $user->id) . "</total_count>\n<md5>" . md5(serialize($objects)) . "</md5>\n" : '';
+
+        Stream::set_session(Core::get_request('auth'));
+
+        foreach ($objects as $song_id) {
+            $song = new Song((int)$song_id);
+            if ($song->isNew()) {
+                continue;
+            }
+            $catalog = Catalog::create_from_id($song->catalog);
+            if (!$catalog) {
+                continue;
+            }
+            $results = $catalog->get_media_tags($song, ['music'], '', '');
+            $string .= "<song_tag id=\"" . $song_id . "\">\n";
+
+            foreach ($results as $tag) {
+                if (is_array($results[$tag])) {
+                    foreach ($results[$tag] as $value) {
+                        $string .= "\t<" . $tag . "><![CDATA[" . $value . "]]></" . $tag . ">\n";
+                    }
+                } else {
+                    $string .= "\t<" . $tag . "><![CDATA[" . $results[$tag] . "]]></" . $tag . ">\n";
+                }
+            }
+
+            $string .= "</song_tag>\n";
+        }
+
+        return self::output_xml($string, $full_xml);
+    }
+
+    /**
      * videos
      *
      * This builds the xml document for displaying video objects
