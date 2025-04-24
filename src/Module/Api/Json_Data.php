@@ -1182,7 +1182,7 @@ class Json_Data
             $catalog_last_add       = $catalog->last_add;
             $catalog_last_clean     = $catalog->last_clean;
             $catalog_last_update    = $catalog->last_update;
-            $catalog_path           = $catalog->f_info;
+            $catalog_path           = $catalog->get_f_info();
             $catalog_rename_pattern = $catalog->rename_pattern;
             $catalog_sort_pattern   = $catalog->sort_pattern;
             // Build this element
@@ -1681,7 +1681,6 @@ class Json_Data
      */
     public static function user(User $user, bool $fullinfo, ?bool $object = true): string
     {
-        $user->format();
         $art_url = Art::url($user->id, 'user', $_REQUEST['auth'] ?? '');
         if ($fullinfo) {
             $JSON = [

@@ -586,8 +586,6 @@ class Xml3_Data
      */
     public static function user(User $user): string
     {
-        $user->format();
-
         $string = "<user id=\"" . $user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n\t<create_date>" . $user->create_date . "</create_date>\n\t<last_seen>" . $user->last_seen . "</last_seen>\n\t<website><![CDATA[" . $user->website . "]]></website>\n\t<state><![CDATA[" . $user->state . "]]></state>\n\t<city><![CDATA[" . $user->city . "]]></city>\n";
         if ($user->fullname_public) {
             $string .= "\t<fullname><![CDATA[" . $user->fullname . "]]></fullname>\n";

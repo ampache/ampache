@@ -710,7 +710,14 @@ class Catalog_dropbox extends Catalog
      */
     public function format(): void
     {
-        $this->f_info = $this->apikey;
+    }
+
+    /**
+     * get_f_info
+     */
+    public function get_f_info(): string
+    {
+        return $this->apikey;
     }
 
     /**

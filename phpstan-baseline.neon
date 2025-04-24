@@ -4786,16 +4786,6 @@ parameters:
 			path: src/Plugin/AmpacheBitly.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:\\$gridview has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:\\$maxitems has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:gather_arts\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheDiscogs.php
@@ -4821,11 +4811,6 @@ parameters:
 			path: src/Plugin/AmpacheDiscogs.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:\\$maxitems has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheFriendsTimeline.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:\\$tracking_id has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheGoogleAnalytics.php
@@ -4841,32 +4826,7 @@ parameters:
 			path: src/Plugin/AmpacheGoogleMaps.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:headphones_call\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$api_host has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$challenge has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$host has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$scheme has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$user_id has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheLastfm.php
 
@@ -4906,41 +4866,6 @@ parameters:
 			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:\\$business has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePaypal.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:\\$currency_code has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePaypal.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:\\$user has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePaypal.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:\\$display has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:\\$playlist has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:\\$smartlist has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpachePersonalFavorites\\:\\:\\$user has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpachePersonalFavorites.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:\\$piwik_url has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpachePiwik.php
@@ -4951,72 +4876,7 @@ parameters:
 			path: src/Plugin/AmpachePiwik.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:\\$feed_url has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRSSView\\:\\:\\$maxitems has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRSSView.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:rule_process\\(\\) has parameter \\$rule_array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$flag_rule has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$star1_rule has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$star2_rule has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$star3_rule has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$star4_rule has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$star5_rule has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheShoutHome\\:\\:\\$maxitems has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheShoutHome.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:stream_control\\(\\) has parameter \\$media_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamBandwidth.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:\\$bandwidth_days has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamBandwidth.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:\\$bandwidth_max has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamBandwidth.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:\\$user_id has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheStreamBandwidth.php
 
@@ -5096,59 +4956,9 @@ parameters:
 			path: src/Plugin/Ampacheflickr.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$api_host has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$api_key has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$challenge has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampachelibrefm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$host has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$scheme has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$secret has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$user_id has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:\\$api_host has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:\\$host has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:\\$scheme has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:\\$token has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\PluginGatherArtsInterface\\:\\:gather_arts\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"

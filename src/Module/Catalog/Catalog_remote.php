@@ -585,7 +585,14 @@ class Catalog_remote extends Catalog
      */
     public function format(): void
     {
-        $this->f_info = $this->uri;
+    }
+
+    /**
+     * get_f_info
+     */
+    public function get_f_info(): string
+    {
+        return $this->uri;
     }
 
     /**

@@ -632,11 +632,18 @@ class Catalog_Seafile extends Catalog
      */
     public function format(): void
     {
+    }
+
+    /**
+     * get_f_info
+     */
+    public function get_f_info(): string
+    {
         if ($this->seafile != null) {
-            $this->f_info = $this->seafile->get_format_string();
-        } else {
-            $this->f_info = "Seafile Catalog";
+            return $this->seafile->get_format_string();
         }
+
+        return "Seafile Catalog";
     }
 
     /**

@@ -608,7 +608,7 @@ class Json4_Data
             $catalog_last_add       = $catalog->get_f_add();
             $catalog_last_clean     = $catalog->get_f_clean();
             $catalog_last_update    = $catalog->get_f_update();
-            $catalog_path           = $catalog->f_info;
+            $catalog_path           = $catalog->get_f_info();
             $catalog_rename_pattern = $catalog->rename_pattern;
             $catalog_sort_pattern   = $catalog->sort_pattern;
             // Build this element
@@ -987,7 +987,6 @@ class Json4_Data
     public static function user(User $user, bool $fullinfo): string
     {
         $JSON = [];
-        $user->format();
         if ($fullinfo) {
             $JSON['user'] = [
                 "id" => (string) $user->getId(),

@@ -768,7 +768,7 @@ class Json5_Data
             $catalog_last_add       = $catalog->last_add;
             $catalog_last_clean     = $catalog->last_clean;
             $catalog_last_update    = $catalog->last_update;
-            $catalog_path           = $catalog->f_info;
+            $catalog_path           = $catalog->get_f_info();
             $catalog_rename_pattern = $catalog->rename_pattern;
             $catalog_sort_pattern   = $catalog->sort_pattern;
             // Build this element
@@ -1167,7 +1167,6 @@ class Json5_Data
      */
     public static function user(User $user, bool $fullinfo, ?bool $object = true): string
     {
-        $user->format();
         if ($fullinfo) {
             $JSON = [
                 "id" => (string) $user->id,

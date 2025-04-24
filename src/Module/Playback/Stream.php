@@ -676,7 +676,6 @@ class Stream
             }
             if (($user_id === 0 || (int)$row['user'] == $user_id) && Catalog::has_access($media->getCatalogId(), (int)$row['user'])) {
                 $client = new User($row['user']);
-                $client->format();
                 if ($client->isNew()) {
                     continue;
                 }

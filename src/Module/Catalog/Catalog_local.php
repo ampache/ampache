@@ -1210,7 +1210,14 @@ class Catalog_local extends Catalog
      */
     public function format(): void
     {
-        $this->f_info = $this->path;
+    }
+
+    /**
+     * get_f_info
+     */
+    public function get_f_info(): string
+    {
+        return $this->path;
     }
 
     /**

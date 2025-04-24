@@ -363,6 +363,9 @@ class Preference extends database_object
         ?bool $applytoall = false,
         ?bool $applytodefault = false
     ): bool {
+        if ($user_id === 0) {
+            return false;
+        }
         $access100 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
         // First prepare
         if (!is_numeric($preference)) {

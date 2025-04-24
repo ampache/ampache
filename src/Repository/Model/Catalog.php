@@ -162,8 +162,6 @@ abstract class Catalog extends database_object
 
     public ?string $link = null;
 
-    public ?string $f_info = null;
-
     private ?string $f_link = null;
 
     /**
@@ -271,6 +269,11 @@ abstract class Catalog extends database_object
      * format
      */
     abstract public function format(): void;
+
+    /**
+     * get_f_info
+     */
+    abstract public function get_f_info(): string;
 
     /**
      * @param Podcast_Episode|Song|Video $media
@@ -2094,7 +2097,7 @@ abstract class Catalog extends database_object
         }
 
         $searches['video'] = $videos ?? $this->get_video_ids();
-        $total_count       = (count($searches['album']) + count($searches['artist']) + count($searches['song']) + count($searches['video']));
+        $total_count       = (count($searches['album']) + count($searches['artist']) + count($searches['song'] ?? []) + count($searches['video']));
         $interactor?->info(
             'gather_art found ' . $total_count . ' items missing art',
             true
