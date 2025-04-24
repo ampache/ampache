@@ -238,10 +238,10 @@ class Song extends database_object implements
 
         $catalog          = $results['catalog'];
         $file             = $results['file'];
-        $title            = Catalog::check_length(Catalog::check_title($results['title'] ?? null, $file));
-        $artist           = Catalog::check_length($results['artist'] ?? null);
-        $album            = Catalog::check_length($results['album'] ?? null);
-        $albumartist      = Catalog::check_length($results['albumartist'] ?? null);
+        $title            = (isset($results['title'])) ? Catalog::check_length(Catalog::check_title($results['title'], $file)) : null;
+        $artist           = (isset($results['artist'])) ? Catalog::check_length($results['artist']) : null;
+        $album            = (isset($results['album'])) ? Catalog::check_length($results['album']) : null;
+        $albumartist      = (isset($results['albumartist'])) ? Catalog::check_length($results['albumartist']) : null;
         $bitrate          = $results['bitrate'] ?? 0;
         $rate             = $results['rate'] ?? 0;
         $mode             = $results['mode'] ?? null;

@@ -3734,7 +3734,7 @@ abstract class Catalog extends database_object
      * Check to make sure the string fits into the database
      * max_length is the maximum number of characters that the (varchar) column can hold
      */
-    public static function check_length(string $string, int $max_length = 255): string
+    public static function check_length(?string $string = null, int $max_length = 255): string
     {
         $string = (string)$string;
         if (false !== $encoding = mb_detect_encoding($string, null, true)) {
