@@ -1428,13 +1428,13 @@ class Xml_Data
             $results = $catalog->get_media_tags($song, ['music'], '', '');
             $string .= "<song_tag id=\"" . $song_id . "\">\n";
 
-            foreach ($results as $tag) {
-                if (is_array($results[$tag])) {
-                    foreach ($results[$tag] as $value) {
-                        $string .= "\t<" . $tag . "><![CDATA[" . $value . "]]></" . $tag . ">\n";
+            foreach ($results as $tag => $value) {
+                if (is_array($value)) {
+                    foreach ($value as $item) {
+                        $string .= "\t<" . $tag . "><![CDATA[" . $item . "]]></" . $tag . ">\n";
                     }
                 } else {
-                    $string .= "\t<" . $tag . "><![CDATA[" . $results[$tag] . "]]></" . $tag . ">\n";
+                    $string .= "\t<" . $tag . "><![CDATA[" . $value . "]]></" . $tag . ">\n";
                 }
             }
 
