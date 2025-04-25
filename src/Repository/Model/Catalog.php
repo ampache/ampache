@@ -2688,7 +2688,7 @@ abstract class Catalog extends database_object
             : self::check_length($results['albumartist']);
         $albumartist ??= null;
 
-        $original_year    = $results['original_year'];
+        $original_year    = (!empty($results['original_year'])) ? (int)$results['original_year'] : null;
         $barcode          = self::check_length($results['barcode'], 64);
         $catalog_number   = self::check_length($results['catalog_number'], 64);
         $version          = self::check_length($results['version'], 64);
