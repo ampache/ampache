@@ -653,7 +653,7 @@ final class VaInfo implements VaInfoInterface
             $info['display_x']     = (!$info['display_x'] && array_key_exists('display_x', $tags)) ? (int)$tags['display_x'] : $info['display_x'];
             $info['display_y']     = (!$info['display_y'] && array_key_exists('display_y', $tags)) ? (int)$tags['display_y'] : $info['display_y'];
             $info['frame_rate']    = (!$info['frame_rate'] && array_key_exists('frame_rate', $tags)) ? (float)$tags['frame_rate'] : $info['frame_rate'];
-            $info['video_bitrate'] = (!$info['video_bitrate'] && array_key_exists('video_bitrate', $tags)) ? Catalog::check_int((int) $tags['video_bitrate'], 4294967294, 0) : $info['video_bitrate'];
+            $info['video_bitrate'] = (!$info['video_bitrate'] && array_key_exists('video_bitrate', $tags)) ? Catalog::check_int((int) $tags['video_bitrate'], PHP_INT_MAX, 0) : $info['video_bitrate'];
             $info['audio_codec']   = (!$info['audio_codec'] && array_key_exists('audio_codec', $tags)) ? trim((string)$tags['audio_codec']) : $info['audio_codec'];
             $info['video_codec']   = (!$info['video_codec'] && array_key_exists('video_codec', $tags)) ? trim((string)$tags['video_codec']) : $info['video_codec'];
             $info['description']   = (!$info['description'] && array_key_exists('description', $tags)) ? trim((string)$tags['description']) : $info['description'];
