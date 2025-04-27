@@ -437,9 +437,6 @@ class Wanted extends database_object
         }
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
     }

@@ -214,13 +214,14 @@ class Catalog_local extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param string $catalog_id
-     * @param array $data
+     * @param array{
+     *     path?: string,
+     * } $data
      */
-    public static function create_type($catalog_id, $data): bool
+    public static function create_type(string $catalog_id, array $data): bool
     {
         // Clean up the path just in case
-        $path = rtrim(rtrim(trim($data['path']), '/'), '\\');
+        $path = rtrim(rtrim(trim($data['path'] ?? ''), '/'), '\\');
 
         if (!self::check_path($path)) {
             AmpError::add('general', T_('Path was not specified'));
@@ -252,11 +253,9 @@ class Catalog_local extends Catalog
      * Recurses through $this->path and pulls out all mp3s and returns the
      * full path in an array. Passes gather_type to determine if we need to
      * check id3 information against the db.
-     * @param string $path
-     * @param array $options
-     * @param int $counter
+     * @param array<string, mixed> $options
      */
-    public function add_files($path, $options, $counter = 0, ?Interactor $interactor = null): int
+    public function add_files(string $path, array $options, int $counter = 0, ?Interactor $interactor = null): int
     {
         // See if we want a non-root path for the add
         if (isset($options['subdirectory'])) {
@@ -345,14 +344,9 @@ class Catalog_local extends Catalog
 
     /**
      * add_file
-     *
-     * @param string $full_file
-     * @param array $options
-     * @param int $counter
-     * @return bool
      * @throws Exception
      */
-    public function add_file($full_file, $options, $counter = 0, ?Interactor $interactor = null): bool
+    public function add_file(string $full_file, array $options, int $counter = 0, ?Interactor $interactor = null): bool
     {
         // Ensure that we've got our cache
         $this->_create_filecache();
@@ -1205,12 +1199,16 @@ class Catalog_local extends Catalog
         return (str_replace($catalog_path . "/", "", $file_path));
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
-        $this->f_info = $this->path;
+    }
+
+    /**
+     * get_f_info
+     */
+    public function get_f_info(): string
+    {
+        return $this->path;
     }
 
     /**

@@ -90,11 +90,11 @@ final class UpdateArt4Method
         }
         // update your object
         if (Catalog::gather_art_item($type, $object_id, $overwrite, true)) {
-            Api4::message('success', 'Gathered new art for: ' . (string) $object_id . ' (' . $type . ')', null, $input['api_format']);
+            Api4::message('success', 'Gathered new art for: ' . $object_id . ' (' . $type . ')', null, $input['api_format']);
 
             return true;
         }
-        Api4::message('error', T_('Failed to update_art for ' . (string) $object_id), '400', $input['api_format']);
+        Api4::message('error', T_('Failed to update_art for ' . $object_id), '400', $input['api_format']);
 
         return true;
     }

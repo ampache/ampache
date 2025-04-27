@@ -363,6 +363,9 @@ class Preference extends database_object
         ?bool $applytoall = false,
         ?bool $applytodefault = false
     ): bool {
+        if ($user_id === 0) {
+            return false;
+        }
         $access100 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
         // First prepare
         if (!is_numeric($preference)) {
@@ -2219,7 +2222,7 @@ class Preference extends database_object
 
         // Load theme settings
         $theme_cfg                 = get_theme($results['theme_name']);
-        $results['theme_css_base'] = $theme_cfg['base'];
+        $results['theme_css_base'] = $theme_cfg['base'] ?? null;
 
         // Default theme color fallback
         if (!isset($results['theme_color'])) {
@@ -2236,7 +2239,9 @@ class Preference extends database_object
         }
 
         if (!isset($results['theme_color'])) {
-            $results['theme_color'] = strtolower((string)$theme_cfg['colors'][0]);
+            $results['theme_color'] = (isset($theme_cfg['colors']))
+                ? strtolower((string)$theme_cfg['colors'][0])
+                : 'dark';
         }
 
         AmpConfig::set_by_array($results, true);

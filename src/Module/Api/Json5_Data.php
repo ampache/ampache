@@ -768,7 +768,7 @@ class Json5_Data
             $catalog_last_add       = $catalog->last_add;
             $catalog_last_clean     = $catalog->last_clean;
             $catalog_last_update    = $catalog->last_update;
-            $catalog_path           = $catalog->f_info;
+            $catalog_path           = $catalog->get_f_info();
             $catalog_rename_pattern = $catalog->rename_pattern;
             $catalog_sort_pattern   = $catalog->sort_pattern;
             // Build this element
@@ -1071,7 +1071,6 @@ class Json5_Data
             if ($video->isNew()) {
                 continue;
             }
-            $video->format();
             $rating      = new Rating($video->id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($video->id, 'video');
@@ -1080,7 +1079,7 @@ class Json5_Data
                 "id" => (string)$video->id,
                 "title" => $video->title,
                 "mime" => $video->mime,
-                "resolution" => $video->f_resolution,
+                "resolution" => $video->get_f_resolution(),
                 "size" => (int)$video->size,
                 "genre" => self::genre_array($video->get_tags()),
                 "time" => (int)$video->time,
@@ -1167,7 +1166,6 @@ class Json5_Data
      */
     public static function user(User $user, bool $fullinfo, ?bool $object = true): string
     {
-        $user->format();
         if ($fullinfo) {
             $JSON = [
                 "id" => (string) $user->id,

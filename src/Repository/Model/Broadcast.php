@@ -165,9 +165,6 @@ class Broadcast extends database_object implements library_item
         return $this->id;
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
     }

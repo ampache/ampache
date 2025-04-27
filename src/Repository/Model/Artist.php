@@ -296,13 +296,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         return $results;
     }
 
-    /**
-     * format
-     * this function takes an array of artist
-     * information and formats the relevant values
-     * so they can be displayed in a table for example
-     * it changes the title into a full link.
-     */
     public function format(): void
     {
     }

@@ -307,7 +307,6 @@ class AmpacheXbmc extends localplay_controller
     /**
      * delete_track
      * Delete a track from the xbmc playlist
-     * @param int $object_id
      */
     public function delete_track(int $object_id): bool
     {
@@ -581,7 +580,6 @@ class AmpacheXbmc extends localplay_controller
     /**
      * volume
      * This tells XBMC to set the volume to the specified amount
-     * @param $volume
      */
     public function volume($volume): bool
     {

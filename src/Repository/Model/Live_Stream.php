@@ -85,9 +85,6 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
         return $this->getId() === 0;
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
     }
@@ -148,14 +145,6 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * Get item f_time or f_time_h.
      */
     public function get_f_time(): string
-    {
-        return '';
-    }
-
-    /**
-     * get_f_artist_link
-     */
-    public function get_f_artist_link(): ?string
     {
         return '';
     }
@@ -371,9 +360,9 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     /**
      * get_stream_types
      * This is needed by the media interface
-     * @param string $player
+     * @return list<string>
      */
-    public function get_stream_types($player = null): array
+    public function get_stream_types(?string $player = null): array
     {
         return ['native'];
     }

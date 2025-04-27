@@ -1403,9 +1403,6 @@ class Search extends playlist_object
         return true;
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
     }

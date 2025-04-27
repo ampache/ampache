@@ -263,6 +263,7 @@ class Dba
      * @param string $query
      * @param list<scalar> $parameter
      * @param bool $finish
+     * @return string|null
      */
     public static function fetch_single_column(
         string $query,

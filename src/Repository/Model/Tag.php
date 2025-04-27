@@ -950,9 +950,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         return true;
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
     }

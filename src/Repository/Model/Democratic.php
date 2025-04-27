@@ -133,10 +133,6 @@ class Democratic extends Tmp_Playlist
         }
     }
 
-    /**
-     * format
-     * This makes the variables pretty so that they can be displayed
-     */
     public function format(): void
     {
     }
