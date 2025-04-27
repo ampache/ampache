@@ -103,11 +103,6 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
         return $this->getId() === 0;
     }
 
-    /**
-     * format
-     *
-     * @deprecated
-     */
     public function format(): void
     {
     }

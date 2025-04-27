@@ -69,8 +69,6 @@ final class ShowEditAction extends AbstractUserAction
             throw new ObjectNotFoundException($userId);
         }
 
-        $user->format();
-
         $this->ui->showHeader();
         $this->ui->show(
             'show_edit_user.inc.php',

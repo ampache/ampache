@@ -238,10 +238,10 @@ class Song extends database_object implements
 
         $catalog          = $results['catalog'];
         $file             = $results['file'];
-        $title            = Catalog::check_length(Catalog::check_title($results['title'] ?? null, $file));
-        $artist           = Catalog::check_length($results['artist'] ?? null);
-        $album            = Catalog::check_length($results['album'] ?? null);
-        $albumartist      = Catalog::check_length($results['albumartist'] ?? null);
+        $title            = (isset($results['title'])) ? Catalog::check_length(Catalog::check_title($results['title'], $file)) : null;
+        $artist           = (isset($results['artist'])) ? Catalog::check_length($results['artist']) : null;
+        $album            = (isset($results['album'])) ? Catalog::check_length($results['album']) : null;
+        $albumartist      = (isset($results['albumartist'])) ? Catalog::check_length($results['albumartist']) : null;
         $bitrate          = $results['bitrate'] ?? 0;
         $rate             = $results['rate'] ?? 0;
         $mode             = $results['mode'] ?? null;
@@ -615,8 +615,8 @@ class Song extends database_object implements
 
     /**
      * _get_ext_info
-     * This function gathers information from the song_ext_info table and adds it to the
-     * current object
+     * This function gathers information from the song_ext_info table and adds it to the current object
+     * @return array<string, scalar>
      */
     public function _get_ext_info(string $select = ''): array
     {
@@ -624,7 +624,10 @@ class Song extends database_object implements
             return parent::get_from_cache('song_data', $this->id);
         }
 
-        $columns    = (empty($select)) ? '*' : Dba::escape($select);
+        $columns = (empty($select))
+            ? '`comment`, `lyrics`, `label`, `language`, `waveform`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`, `disksubtitle`'
+            : Dba::escape($select);
+
         $sql        = sprintf('SELECT %s FROM `song_data` WHERE `song_id` = ?', $columns);
         $db_results = Dba::read($sql, [$this->id]);
         if (!$db_results) {
@@ -651,10 +654,12 @@ class Song extends database_object implements
             return;
         }
 
+        if (isset($info['song_id'])) {
+            unset($info['song_id']);
+        }
+
         foreach ($info as $key => $value) {
-            if ($key != 'song_id') {
-                $this->$key = $value;
-            }
+            $this->$key = $value;
         }
     }
 
@@ -1594,9 +1599,6 @@ class Song extends database_object implements
 
     /**
      * format
-     * This takes the current song object
-     * and does a ton of formatting on it creating f_??? variables on the current
-     * object
      */
     public function format(): void
     {
@@ -2072,9 +2074,9 @@ class Song extends database_object implements
 
     /**
      * Get stream types.
-     * @param string $player
+     * @return list<string>
      */
-    public function get_stream_types($player = null): array
+    public function get_stream_types(?string $player = null): array
     {
         return Stream::get_stream_types_for_type($this->type, $player);
     }
@@ -2113,21 +2115,19 @@ class Song extends database_object implements
         }
 
         $user = Core::get_global('user');
-        if (!$user instanceof User) {
-            return [];
-        }
+        if ($user instanceof User) {
+            foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->_plugin !== null && $plugin->load($user)) {
+                    $lyrics = $plugin->_plugin->get_lyrics($this);
+                    if (!empty($lyrics)) {
+                        // save the lyrics if not set before
+                        if (array_key_exists('text', $lyrics) && !empty($lyrics['text'])) {
+                            self::update_lyrics($lyrics['text'], $this->id);
+                        }
 
-        foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
-            $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null && $plugin->load($user)) {
-                $lyrics = $plugin->_plugin->get_lyrics($this);
-                if (!empty($lyrics)) {
-                    // save the lyrics if not set before
-                    if (array_key_exists('text', $lyrics) && !empty($lyrics['text'])) {
-                        self::update_lyrics($lyrics['text'], $this->id);
+                        return $lyrics;
                     }
-
-                    return $lyrics;
                 }
             }
         }

@@ -97,7 +97,9 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
         ); // strips hard to discern letters, depends on used font type
         $string = substr($string, 0, rand(easy_captcha::CAPTCHA_MIN_CHARS, self::CAPTCHA_MAX_CHARS));
 
-        return ($string);
+        return (empty($string))
+            ? false
+            : $string;
     }
 
     // return GD color

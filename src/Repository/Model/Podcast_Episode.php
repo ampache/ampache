@@ -165,7 +165,6 @@ class Podcast_Episode extends database_object implements
 
     /**
      * format
-     * this function takes the object and formats some values
      */
     public function format(): void
     {
@@ -330,14 +329,6 @@ class Podcast_Episode extends database_object implements
         }
 
         return $this->podcast_link;
-    }
-
-    /**
-     * get_f_artist_link
-     */
-    public function get_f_artist_link(): ?string
-    {
-        return $this->getPodcastLink();
     }
 
     /**
@@ -634,10 +625,9 @@ class Podcast_Episode extends database_object implements
 
     /**
      * Get stream types.
-     * @param null|string $player
      * @return list<string>
      */
-    public function get_stream_types($player = null): array
+    public function get_stream_types(?string $player = null): array
     {
         return Stream::get_stream_types_for_type($this->type, $player);
     }

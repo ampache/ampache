@@ -664,7 +664,6 @@ class Subsonic_Xml_Data
     {
         $xvideos = self::addChildToResultXml($xml, 'videos');
         foreach ($videos as $video) {
-            $video->format();
             self::addVideo($xvideos, $video);
         }
     }

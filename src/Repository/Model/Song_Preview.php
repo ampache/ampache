@@ -236,9 +236,6 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * format
-     * This takes the current song object
-     * and does a ton of formatting on it creating f_??? variables on the current
-     * object
      */
     public function format(): void
     {
@@ -389,9 +386,9 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * get_stream_types
-     * @param $player
+     * @return list<string>
      */
-    public function get_stream_types($player = null): array
+    public function get_stream_types(?string $player = null): array
     {
         return ['native'];
     }

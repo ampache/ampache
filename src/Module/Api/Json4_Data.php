@@ -608,7 +608,7 @@ class Json4_Data
             $catalog_last_add       = $catalog->get_f_add();
             $catalog_last_clean     = $catalog->get_f_clean();
             $catalog_last_update    = $catalog->get_f_update();
-            $catalog_path           = $catalog->f_info;
+            $catalog_path           = $catalog->get_f_info();
             $catalog_rename_pattern = $catalog->rename_pattern;
             $catalog_sort_pattern   = $catalog->sort_pattern;
             // Build this element
@@ -897,7 +897,6 @@ class Json4_Data
             if ($video->isNew()) {
                 continue;
             }
-            $video->format();
             $rating      = new Rating($video->id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($video->id, 'video');
@@ -906,7 +905,7 @@ class Json4_Data
                 "id" => (string)$video->id,
                 "title" => $video->title,
                 "mime" => $video->mime,
-                "resolution" => $video->f_resolution,
+                "resolution" => $video->get_f_resolution(),
                 "size" => (int)$video->size,
                 "tag" => self::tags_array($video->get_tags()),
                 "time" => (int)$video->time,
@@ -987,7 +986,6 @@ class Json4_Data
     public static function user(User $user, bool $fullinfo): string
     {
         $JSON = [];
-        $user->format();
         if ($fullinfo) {
             $JSON['user'] = [
                 "id" => (string) $user->getId(),

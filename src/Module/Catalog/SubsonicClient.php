@@ -47,7 +47,7 @@ class SubsonicClient
         string $username,
         string $password,
         string $serverUrl,
-        string $port = "4040",
+        ?string $port = null,
         string $client = "Ampache"
     ) {
         $this->setServer($serverUrl, $port);
@@ -71,6 +71,7 @@ class SubsonicClient
             'deleteUser',
             'download',
             'getAlbumList',
+            'getArtist',
             'getArtistInfo',
             'getChatMessages',
             'getCoverArt',
@@ -99,34 +100,35 @@ class SubsonicClient
     }
 
     /**
-     * @param $action
-     * @param array $object
+     * @param string $action
+     * @param array<string, int|string> $object
      * @param bool $rawAnswer
      * @return array|bool|object|string
      */
-    public function querySubsonic($action, $object = [], $rawAnswer = false)
+    public function querySubsonic(string $action, array $object = [], ?bool $rawAnswer = false): object|bool|array|string
     {
         return $this->_querySubsonic($action, $object, $rawAnswer);
     }
 
     /**
-     * @param $url
-     * @param array $object
+     * @param string $url
+     * @param array<string, int|string>|null $object
+     * @return string
      */
-    public function parameterize($url, $object = []): string
+    public function parameterize(string $url, ?array $object = []): string
     {
-        $params = array_merge($this->_creds, $object);
+        $params = array_merge($this->_creds, $object ?? []);
 
         return $url . http_build_query($params);
     }
 
     /**
-     * @param $action
-     * @param array $object
+     * @param string $action
+     * @param array<string, int|string>|null $object
      * @param bool $rawAnswer
      * @return array|bool|object|string
      */
-    protected function _querySubsonic($action, $object = [], $rawAnswer = false)
+    protected function _querySubsonic(string $action, ?array $object = [], ?bool $rawAnswer = false): object|bool|array|string
     {
         // Make sure the command is in the list of commands
         if ($this->isCommand($action)) {
@@ -153,17 +155,13 @@ class SubsonicClient
                 }
             }
         } else {
-            return $this->error("Error: Invalid subsonic command: " . $action);
+            return $this->error("Error: Invalid subsonic command: " . $action, $object);
         }
 
         return false;
     }
 
-    /**
-     * @param string $server
-     * @param string $port
-     */
-    public function setServer($server, $port = null): void
+    public function setServer(string $server, ?string $port = null): void
     {
         $protocol = "";
         if (preg_match("/^https\:\/\//", $server)) {
@@ -186,6 +184,8 @@ class SubsonicClient
             $port = $_port;
         } elseif (empty($port)) {
             $port = ($protocol === "https://") ? '443' : '80';
+        } else {
+            $port = '4040';
         }
         $this->_serverUrl  = $server;
         $this->_serverPort = $port;
@@ -200,11 +200,11 @@ class SubsonicClient
     }
 
     /**
-     * @param $error
-     * @param $data
+     * @param string $error
+     * @param array<string, int|string>|null $data
      * @return object
      */
-    protected function error($error, $data = null)
+    protected function error(string $error, ?array $data = null)
     {
         error_log($error . "\n" . print_r($data, true));
 
@@ -212,13 +212,15 @@ class SubsonicClient
     }
 
     /**
-     * @param $response
+     * @param bool|string $response
      * @return array|object
      */
-    protected function parseResponse($response)
+    protected function parseResponse($response): object|array
     {
-        $arr = json_decode($response, true);
-        if ($arr['subsonic-response']) {
+        $arr = (is_string($response))
+            ? json_decode($response, true)
+            : false;
+        if (is_array($arr) && $arr['subsonic-response']) {
             $response = (array)$arr['subsonic-response'];
             $data     = $response;
 
@@ -227,31 +229,24 @@ class SubsonicClient
                 "data" => $data
             ];
         } else {
-            debug_event(self::class, 'parseResponse ERROR: ' . print_r($arr, true), 1);
+            debug_event(self::class, 'parseResponse ERROR: ' . print_r($response, true), 1);
 
             return $this->error("Invalid response from server!");
         }
     }
 
-    /**
-     * @param $command
-     */
-    public function isCommand($command): bool
+    public function isCommand(string $command): bool
     {
         return in_array($command, $this->_commands);
     }
 
     /**
-     * @param $action
-     * @param $arguments
+     * @param string $action
+     * @param array<string, int|string>|null $object
      * @return array|bool|object|string
      */
-    public function __call($action, $arguments)
+    public function __call($action, $object)
     {
-        $object = (count($arguments))
-            ? (array)$arguments[0]
-            : [];
-
-        return $this->_querySubsonic($action, $object);
+        return $this->_querySubsonic($action, $object ?? []);
     }
 }

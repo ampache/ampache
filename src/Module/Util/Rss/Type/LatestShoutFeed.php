@@ -58,7 +58,6 @@ final readonly class LatestShoutFeed extends AbstractGenericRssFeed
                     continue;
                 }
 
-                $user->format();
                 $object->format();
 
                 yield [

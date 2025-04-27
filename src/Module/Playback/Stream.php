@@ -374,7 +374,7 @@ class Stream
         if ($media instanceof Video) {
             $string_map['%RESOLUTION%'] = (isset($options['resolution']))
                 ? $options['resolution']
-                : $media->f_resolution ?? '1280x720';
+                : $media->get_f_resolution() ?? '1280x720';
             $string_map['%QUALITY%'] = (isset($options['quality']))
                 ? (31 * (101 - $options['quality'])) / 100
                 : 10;
@@ -676,7 +676,6 @@ class Stream
             }
             if (($user_id === 0 || (int)$row['user'] == $user_id) && Catalog::has_access($media->getCatalogId(), (int)$row['user'])) {
                 $client = new User($row['user']);
-                $client->format();
                 if ($client->isNew()) {
                     continue;
                 }

@@ -71,6 +71,7 @@ use Ampache\Repository\WantedRepositoryInterface;
 use DateTime;
 use Exception;
 use Generator;
+use Kunnu\Dropbox\Exceptions\DropboxClientException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RegexIterator;
@@ -161,8 +162,6 @@ abstract class Catalog extends database_object
     public ?string $gather_types = '';
 
     public ?string $link = null;
-
-    public ?string $f_info = null;
 
     private ?string $f_link = null;
 
@@ -271,6 +270,11 @@ abstract class Catalog extends database_object
      * format
      */
     abstract public function format(): void;
+
+    /**
+     * get_f_info
+     */
+    abstract public function get_f_info(): string;
 
     /**
      * @param Podcast_Episode|Song|Video $media
@@ -1148,7 +1152,26 @@ abstract class Catalog extends database_object
      * create
      *
      * This creates a new catalog entry and associate it to current instance
-     * @param array<string, string|int|null> $data
+     *
+     * @param array{
+     *     name: string,
+     *     path?: string,
+     *     uri?: string,
+     *     type: string,
+     *     rename_pattern: string,
+     *     sort_pattern: string,
+     *     gather_media: string,
+     *     username?: ?string,
+     *     password?: ?string,
+     *     library_name?: string,
+     *     server_uri?: string,
+     *     api_call_delay?: string|int|null,
+     *     beetsdb?: string,
+     *     apikey?: ?string,
+     *     secret?: ?string,
+     *     authtoken?: ?string,
+     *     getchunk?: string|int|null,
+     * } $data
      */
     public static function create(array $data): int
     {
@@ -1188,8 +1211,14 @@ abstract class Catalog extends database_object
 
         self::clear_catalog_cache();
 
-        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $classname */
-        if (!$classname::create_type($insert_id, $data)) {
+        try {
+            /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $classname */
+            $create_type = $classname::create_type($insert_id, $data);
+        } catch (DropboxClientException) {
+            $create_type = false;
+        }
+
+        if (!$create_type) {
             $sql = 'DELETE FROM `catalog` WHERE `id` = ?';
             Dba::write($sql, [$insert_id]);
             $insert_id = 0;
@@ -2094,12 +2123,12 @@ abstract class Catalog extends database_object
         }
 
         $searches['video'] = $videos ?? $this->get_video_ids();
-
+        $total_count       = (count($searches['album']) + count($searches['artist']) + count($searches['song'] ?? []) + count($searches['video']));
         $interactor?->info(
-            'gather_art found ' . count($searches) . ' items missing art',
+            'gather_art found ' . $total_count . ' items missing art',
             true
         );
-        debug_event(self::class, 'gather_art found ' . count($searches) . ' items missing art', 4);
+        debug_event(self::class, 'gather_art found ' . $total_count . ' items missing art', 4);
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
             foreach ($values as $object_id) {
@@ -2659,7 +2688,7 @@ abstract class Catalog extends database_object
             : self::check_length($results['albumartist']);
         $albumartist ??= null;
 
-        $original_year    = $results['original_year'];
+        $original_year    = (!empty($results['original_year'])) ? (int)$results['original_year'] : null;
         $barcode          = self::check_length($results['barcode'], 64);
         $catalog_number   = self::check_length($results['catalog_number'], 64);
         $version          = self::check_length($results['version'], 64);
@@ -3705,7 +3734,7 @@ abstract class Catalog extends database_object
      * Check to make sure the string fits into the database
      * max_length is the maximum number of characters that the (varchar) column can hold
      */
-    public static function check_length(string $string, int $max_length = 255): string
+    public static function check_length(?string $string = null, int $max_length = 255): string
     {
         $string = (string)$string;
         if (false !== $encoding = mb_detect_encoding($string, null, true)) {

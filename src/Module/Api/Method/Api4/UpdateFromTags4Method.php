@@ -84,7 +84,7 @@ final class UpdateFromTags4Method
         // update your object
         Catalog::update_single_item($type, $object_id, true);
 
-        Api4::message('success', 'Updated tags for: ' . (string) $object_id . ' (' . $type . ')', null, $input['api_format']);
+        Api4::message('success', 'Updated tags for: ' . $object_id . ' (' . $type . ')', null, $input['api_format']);
 
         return true;
     }

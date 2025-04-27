@@ -148,6 +148,7 @@ class Api
         Method\SharesMethod::ACTION => Method\SharesMethod::class,
         Method\SongDeleteMethod::ACTION => Method\SongDeleteMethod::class,
         Method\SongMethod::ACTION => Method\SongMethod::class,
+        Method\SongTagsMethod::ACTION => Method\SongTagsMethod::class,
         Method\SongsMethod::ACTION => Method\SongsMethod::class,
         Method\StatsMethod::ACTION => Method\StatsMethod::class,
         Method\StreamMethod::ACTION => Method\StreamMethod::class,

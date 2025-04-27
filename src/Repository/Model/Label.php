@@ -114,9 +114,6 @@ class Label extends database_object implements library_item
         return Art::has_db($this->id, 'label');
     }
 
-    /**
-     * format
-     */
     public function format(): void
     {
     }
