@@ -207,33 +207,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
-     * _get_extra_info
-     * This pulls the extra information from our tables, this is a 3 table join, which is why we don't normally
-     * do it
-     */
-    private function _get_extra_info(): array
-    {
-        if ($this->isNew()) {
-            return [];
-        }
-
-        if (parent::is_cached('album_extra', $this->id)) {
-            return parent::get_from_cache('album_extra', $this->id);
-        }
-
-        // lookup album artist if missing
-        $this->findAlbumArtist();
-
-        if (AmpConfig::get('show_played_times')) {
-            $results['total_count'] = $this->total_count;
-        }
-
-        parent::add_to_cache('album_extra', $this->id, $results);
-
-        return $results;
-    }
-
-    /**
      * check
      *
      * Searches for an album; if none is found, insert a new one.
@@ -433,11 +406,8 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             return;
         }
 
-        /* Pull the advanced information */
-        $data = $this->_get_extra_info();
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
+        // lookup album artist if missing
+        $this->findAlbumArtist();
     }
 
     /**
@@ -661,6 +631,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * findAlbumArtist
+     * Certain albums may have a single artist and not have any albumartist tags
      */
     public function findAlbumArtist(): ?int
     {
