@@ -1,5 +1,19 @@
 # API CHANGELOG
 
+## API 6.7.0
+
+This version is being released for Ampache7 **only**
+
+### Added
+
+* API6
+  * New Method: song_tags (Read and return all file and enabled plugin tags for the song)
+
+### Fixed
+
+* API6
+  * catalog_add: typing for adding beets catalog
+
 ## API 6.6.8
 
 This version is being released for Ampache7 **only**

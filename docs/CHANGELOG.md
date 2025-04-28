@@ -1,5 +1,41 @@
 # CHANGELOG
 
+## Ampache 7.4.3
+
+### Added
+
+* Show the structure with installed version in Ampache Debug when using a custom structure. (squashed and client)
+* Typing to plugin properties and functions
+* Typing to catalog modules
+* Subsonic remote catalog missing getArtist call
+
+### Changed
+
+* Ampache remote catalog
+  * Use new Api function `song_tags` to pull more data for song import. (If available)
+* Plugin
+  * Allow hiding Catalog Favorites (Highlight) items setting maxitems to `-1`
+
+### Removed
+
+* Remove superfluous format calls for `User`, `Catalog` and `Video` objects
+* Remove `get_f_artist_link` which has been replaced with `get_f_parent_link`
+* Hide some useless data in the Debug page and remove `database_password` entirely
+
+### Fixed
+
+* CSS for edit dialog box input fields had white text on the dark theme
+* Don't rely on format commands to fill empty `album_artist` for files missing album_artist tags
+* Ampache remote catalog
+  * Regex for file url could remove more parameters than required
+  * Update url filename path to make sure it's valid
+* Subsonic remote catalog
+  * Forcing fallback port 4040
+  * Image size was being sent as an array of height and width (You just send one int value)
+  * Use max value of `album_art_max_width` and `album_art_max_height` for image size if set
+* Search
+  * Missing break on Label searches
+
 ## Ampache 7.4.2
 
 ### Fixed
