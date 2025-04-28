@@ -166,10 +166,6 @@ class Video extends database_object implements
         return true;
     }
 
-    public function format(): void
-    {
-    }
-
     /**
      * get_f_resolution
      */

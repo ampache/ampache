@@ -529,9 +529,8 @@ class AmpacheVlc extends localplay_controller
             $url_data = $this->parse_url($entry);
             switch ($url_data['primary_key']) {
                 case 'oid':
-                    $data['oid'] = $url_data['oid'];
-                    $song        = new Song($data['oid']);
-                    $song->format();
+                    $data['oid']  = $url_data['oid'];
+                    $song         = new Song($data['oid']);
                     $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_artist_fullname();
                     $data['link'] = $song->get_f_link();
                     break;

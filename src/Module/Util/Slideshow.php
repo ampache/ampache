@@ -52,7 +52,6 @@ final class Slideshow implements SlideshowInterface
         $images  = [];
         if ($songs !== []) {
             $last_song = $this->modelFactory->createSong((int) $songs[0]['object_id']);
-            $last_song->format();
             $images = $this->getImages($last_song, $user);
         }
 

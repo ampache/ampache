@@ -85,7 +85,6 @@ final class ShowDiskAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $albumDisk->format();
             $this->ui->show(
                 'show_album_disk.inc.php',
                 [

@@ -904,10 +904,6 @@ class User extends database_object
         }
     }
 
-    public function format(): void
-    {
-    }
-
     /**
      * does the item have art?
      */

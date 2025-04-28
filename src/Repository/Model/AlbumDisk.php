@@ -239,13 +239,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     }
 
     /**
-     * format
-     */
-    public function format(): void
-    {
-    }
-
-    /**
      * does the item have art?
      */
     public function has_art(): bool

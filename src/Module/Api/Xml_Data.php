@@ -532,7 +532,7 @@ class Xml_Data
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
                         if ($album->get_artist_fullname() != "") {
                             $album_artist = [
-                                "id" => $album->album_artist,
+                                "id" => $album->findAlbumArtist(),
                                 "name" => $album->get_artist_fullname(),
                                 "prefix" => $album->artist_prefix,
                                 "basename" => $album->artist_name
@@ -656,7 +656,7 @@ class Xml_Data
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
                         if ($album->get_artist_fullname() != "") {
                             $album_artist = [
-                                "id" => $album->album_artist,
+                                "id" => $album->findAlbumArtist(),
                                 "name" => $album->get_artist_fullname(),
                                 "prefix" => $album->artist_prefix,
                                 "basename" => $album->artist_name
@@ -862,7 +862,6 @@ class Xml_Data
             if ($label === null) {
                 continue;
             }
-            $label->format();
 
             $string .= "<license id=\"$label_id\">\n\t<name><![CDATA[" . $label->get_fullname() . "]]></name>\n\t<artists><![CDATA[" . $label->get_artist_count() . "]]></artists>\n\t<summary><![CDATA[" . $label->summary . "]]></summary>\n\t<external_link><![CDATA[" . $label->get_link() . "]]></external_link>\n\t<address><![CDATA[" . $label->address . "]]></address>\n\t<category><![CDATA[" . $label->category . "]]></category>\n\t<email><![CDATA[" . $label->email . "]]></email>\n\t<website><![CDATA[" . $label->website . "]]></website>\n\t<user><![CDATA[" . $label->user . "]]></user>\n</license>\n";
         } // end foreach
@@ -962,7 +961,6 @@ class Xml_Data
             if ($artist->isNew()) {
                 continue;
             }
-            $artist->format();
 
             $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -1011,7 +1009,7 @@ class Xml_Data
             if ($album->isNew()) {
                 continue;
             }
-            $album->format();
+
             $album_artists = [];
             foreach ($album->get_artists() as $artist_id) {
                 $album_artists[] = Artist::get_name_array_by_id($artist_id);
@@ -1297,7 +1295,7 @@ class Xml_Data
             if ($episode->isNew()) {
                 continue;
             }
-            $episode->format();
+
             $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($episode->id, 'podcast_episode');
@@ -1341,7 +1339,7 @@ class Xml_Data
                 continue;
             }
 
-            $song->format();
+            $song->fill_ext_info();
             $song_album   = self::getAlbumRepository()->getNames($song->album);
             $song_artist  = Artist::get_name_array_by_id($song->artist);
             $song_artists = [];
@@ -1504,7 +1502,7 @@ class Xml_Data
             if ($song->isNew()) {
                 continue;
             }
-            $song->format();
+            $song->fill_ext_info();
 
             // FIXME: This is duplicate code and so wrong, functions need to be improved
             $tag         = new Tag((int)($song->get_tags()[0]['id'] ?? 0));

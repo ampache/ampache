@@ -613,7 +613,6 @@ class Upnp_Api
                     case 2:
                         $artist = new Artist((int)$pathreq[1]);
                         if ($artist->isNew() === false) {
-                            $artist->format();
                             $meta = self::_itemArtist($artist, $root . '/artists');
                         }
                         break;
@@ -634,7 +633,6 @@ class Upnp_Api
                     case 2:
                         $album = new Album((int)$pathreq[1]);
                         if ($album->isNew() === false) {
-                            $album->format();
                             $meta = self::_itemAlbum($album, $root . '/albums');
                         }
                         break;
@@ -655,7 +653,7 @@ class Upnp_Api
                     case 2:
                         $song = new Song((int)$pathreq[1]);
                         if ($song->isNew() === false) {
-                            $song->format();
+                            $song->fill_ext_info();
                             $meta = self::_itemSong($song, $root . '/songs');
                         }
                         break;
@@ -676,7 +674,6 @@ class Upnp_Api
                     case 2:
                         $playlist = new Playlist((int)$pathreq[1]);
                         if ($playlist->isNew() === false) {
-                            $playlist->format();
                             $meta = self::_itemPlaylist($playlist, $root . '/playlists');
                         }
                         break;
@@ -697,7 +694,6 @@ class Upnp_Api
                     case 2:
                         $playlist = new Search((int)$pathreq[1], 'song');
                         if ($playlist->isNew() === false) {
-                            $playlist->format();
                             $meta = self::_itemSmartPlaylist($playlist, $root . '/smartplaylists');
                         }
                         break;
@@ -718,7 +714,6 @@ class Upnp_Api
                     case 2:
                         $radio = new Live_Stream((int)$pathreq[1]);
                         if ($radio->isNew() === false) {
-                            $radio->format();
                             $meta = self::_itemLiveStream($radio, $root . '/live_streams');
                         }
                         break;
@@ -745,7 +740,6 @@ class Upnp_Api
                     case 3:
                         $episode = new Podcast_Episode((int)$pathreq[2]);
                         if (isset($episode->id)) {
-                            $episode->format();
                             $meta = self::_itemPodcastEpisode($episode, $root . '/podcasts/' . $pathreq[1]);
                         }
                         break;
@@ -816,7 +810,6 @@ class Upnp_Api
                         $artists              = Catalog::get_artists(null, $count, $start);
                         [$maxCount, $artists] = [$counts['artist'], $artists];
                         foreach ($artists as $artist) {
-                            $artist->format();
                             $mediaItems[] = self::_itemArtist($artist, $parent);
                         }
                         break;
@@ -830,7 +823,7 @@ class Upnp_Api
                                 if ($album->isNew()) {
                                     continue;
                                 }
-                                $album->format();
+
                                 $mediaItems[] = self::_itemAlbum($album, $parent);
                             }
                         }
@@ -847,7 +840,7 @@ class Upnp_Api
                             if ($album->isNew()) {
                                 continue;
                             }
-                            $album->format();
+
                             $mediaItems[] = self::_itemAlbum($album, $parent);
                         }
                         break;
@@ -858,8 +851,10 @@ class Upnp_Api
                             [$maxCount, $song_ids] = self::_slice($song_ids, $start, $count);
                             foreach ($song_ids as $song_id) {
                                 $song = new Song($song_id);
-                                $song->format();
-                                $mediaItems[] = self::_itemSong($song, $parent);
+                                if ($song->isNew() === false) {
+                                    $song->fill_ext_info();
+                                    $mediaItems[] = self::_itemSong($song, $parent);
+                                }
                             }
                         }
                         break;
@@ -877,8 +872,10 @@ class Upnp_Api
                         $songs              = $catalog->get_songs();
                         [$maxCount, $songs] = self::_slice($songs, $start, $count);
                         foreach ($songs as $song) {
-                            $song->format();
-                            $mediaItems[] = self::_itemSong($song, $parent);
+                            if ($song->isNew() === false) {
+                                $song->fill_ext_info();
+                                $mediaItems[] = self::_itemSong($song, $parent);
+                            }
                         }
                     }
                 }
@@ -889,8 +886,7 @@ class Upnp_Api
                         $pl_ids              = Playlist::get_playlists();
                         [$maxCount, $pl_ids] = self::_slice($pl_ids, $start, $count);
                         foreach ($pl_ids as $pl_id) {
-                            $playlist = new Playlist($pl_id);
-                            $playlist->format();
+                            $playlist     = new Playlist($pl_id);
                             $mediaItems[] = self::_itemPlaylist($playlist, $parent);
                         }
                         break;
@@ -902,8 +898,10 @@ class Upnp_Api
                             foreach ($items as $item) {
                                 if ($item['object_type'] == LibraryItemEnum::SONG) {
                                     $song = new Song($item['object_id']);
-                                    $song->format();
-                                    $mediaItems[] = self::_itemSong($song, $parent);
+                                    if ($song->isNew() === false) {
+                                        $song->fill_ext_info();
+                                        $mediaItems[] = self::_itemSong($song, $parent);
+                                    }
                                 }
                             }
                         }
@@ -928,8 +926,10 @@ class Upnp_Api
                             foreach ($items as $item) {
                                 if ($item['object_type'] == LibraryItemEnum::SONG) {
                                     $song = new Song($item['object_id']);
-                                    $song->format();
-                                    $mediaItems[] = self::_itemSong($song, $parent);
+                                    if ($song->isNew() === false) {
+                                        $song->fill_ext_info();
+                                        $mediaItems[] = self::_itemSong($song, $parent);
+                                    }
                                 }
                             }
                         }
@@ -947,8 +947,7 @@ class Upnp_Api
 
                     [$maxCount, $radios] = self::_slice($radios, $start, $count);
                     foreach ($radios as $radio_id) {
-                        $radio = new Live_Stream($radio_id);
-                        $radio->format();
+                        $radio        = new Live_Stream($radio_id);
                         $mediaItems[] = self::_itemLiveStream($radio, $parent);
                     }
                 }
@@ -969,8 +968,7 @@ class Upnp_Api
 
                             [$maxCount, $episodes] = self::_slice($episodes, $start, $count);
                             foreach ($episodes as $episode_id) {
-                                $episode = new Podcast_Episode($episode_id);
-                                $episode->format();
+                                $episode      = new Podcast_Episode($episode_id);
                                 $mediaItems[] = self::_itemPodcastEpisode($episode, $parent);
                             }
                         }
@@ -1032,7 +1030,6 @@ class Upnp_Api
                     case 2:
                         $video = new Video((int)$pathreq[1]);
                         if ($video->isNew() === false) {
-                            $video->format();
                             $meta = self::_itemVideo($video, $root . '/videos');
                         }
                         break;
@@ -1082,7 +1079,6 @@ class Upnp_Api
                     $videos              = Catalog::get_videos();
                     [$maxCount, $videos] = self::_slice($videos, $start, $count);
                     foreach ($videos as $video) {
-                        $video->format();
                         $mediaItems[] = self::_itemVideo($video, $parent);
                     }
                 }
@@ -1398,7 +1394,7 @@ class Upnp_Api
                     if ($artist->isNew()) {
                         continue;
                     }
-                    $artist->format();
+
                     $mediaItems[] = self::_itemArtist($artist, "amp://music/artists");
                 }
                 break;
@@ -1406,9 +1402,11 @@ class Upnp_Api
                 [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $song_id) {
                     $song = new Song($song_id);
-                    $song->format();
-                    $parent       = 'amp://music/albums/' . (string) $song->album;
-                    $mediaItems[] = self::_itemSong($song, $parent);
+                    if ($song->isNew() === false) {
+                        $song->fill_ext_info();
+                        $parent = 'amp://music/albums/' . (string)$song->album;
+                        $mediaItems[] = self::_itemSong($song, $parent);
+                    }
                 }
                 break;
             case 'album':
@@ -1418,7 +1416,7 @@ class Upnp_Api
                     if ($album->isNew()) {
                         continue;
                     }
-                    $album->format();
+
                     //debug_event(self::class, $album->get_fullname(), 5);
                     $mediaItems[] = self::_itemAlbum($album, "amp://music/albums");
                 }
@@ -1426,16 +1424,14 @@ class Upnp_Api
             case 'playlist':
                 [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $pl_id) {
-                    $playlist = new Playlist($pl_id);
-                    $playlist->format();
+                    $playlist     = new Playlist($pl_id);
                     $mediaItems[] = self::_itemPlaylist($playlist, "amp://music/playlists");
                 }
                 break;
             case 'tag':
                 [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $tag_id) {
-                    $tag = new Tag($tag_id);
-                    $tag->format();
+                    $tag          = new Tag($tag_id);
                     $mediaItems[] = self::_itemTag($tag, "amp://music/tags");
                 }
                 break;

@@ -163,27 +163,6 @@ class Podcast_Episode extends database_object implements
         return $this->catalog;
     }
 
-    /**
-     * format
-     */
-    public function format(): void
-    {
-        if ($this->isNew()) {
-            return;
-        }
-
-        // format the file
-        if (
-            $this->file !== null &&
-            $this->file !== '' &&
-            $this->file !== '0'
-        ) {
-            $this->type    = strtolower(pathinfo($this->file, PATHINFO_EXTENSION));
-            $this->mime    = Song::type_to_mime($this->type);
-            $this->enabled = true;
-        }
-    }
-
     public function getCategory(): string
     {
         return scrub_out($this->category);

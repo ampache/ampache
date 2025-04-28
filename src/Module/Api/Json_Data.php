@@ -526,7 +526,7 @@ class Json_Data
             if ($live_stream->isNew()) {
                 continue;
             }
-            $live_stream->format();
+
             $JSON[] = [
                 "id" => (string)$live_stream_id,
                 "name" => $live_stream->get_fullname(),
@@ -619,7 +619,7 @@ class Json_Data
             if ($label === null) {
                 continue;
             }
-            $label->format();
+
             $JSON[] = [
                 "id" => (string)$label_id,
                 "name" => $label->get_fullname(),
@@ -737,7 +737,6 @@ class Json_Data
             if ($artist->isNew()) {
                 continue;
             }
-            $artist->format();
 
             $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -823,7 +822,6 @@ class Json_Data
             if ($album->isNew()) {
                 continue;
             }
-            $album->format();
 
             $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -843,7 +841,7 @@ class Json_Data
             $objArray['basename'] = $album->name;
             if ($album->get_artist_fullname() != "") {
                 $objArray['artist'] = [
-                    "id" => (string)$album->album_artist,
+                    "id" => (string)$album->findAlbumArtist(),
                     "name" => $album->get_artist_fullname(),
                     "prefix" => $album->artist_prefix,
                     "basename" => $album->artist_name
@@ -1324,7 +1322,7 @@ class Json_Data
             if ($episode->isNew()) {
                 continue;
             }
-            $episode->format();
+
             $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($episode->id, 'podcast_episode');
@@ -1412,7 +1410,7 @@ class Json_Data
             if ($song->isNew()) {
                 continue;
             }
-            $song->format();
+            $song->fill_ext_info();
             $rating       = new Rating((int)$song_id, 'song');
             $user_rating  = $rating->get_user_rating($user->getId());
             $flag         = new Userflag((int)$song_id, 'song');
@@ -1734,7 +1732,7 @@ class Json_Data
             if ($song->isNew()) {
                 continue;
             }
-            $song->format();
+            $song->fill_ext_info();
 
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());

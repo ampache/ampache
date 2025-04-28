@@ -85,7 +85,6 @@ final class ShowAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } elseif ($album->getDiskCount() > 1) {
-            $album->format();
             // Multi disk albums
             $this->ui->show(
                 'show_album_group_disks.inc.php',
@@ -99,7 +98,6 @@ final class ShowAction implements ApplicationActionInterface
                 ]
             );
         } else {
-            $album->format();
             // Single disk albums
             $this->ui->show(
                 'show_album.inc.php',

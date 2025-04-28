@@ -1943,7 +1943,6 @@ class Subsonic_Api
                 if ($media === null || $media->isNew()) {
                     continue;
                 }
-                $media->format();
 
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();

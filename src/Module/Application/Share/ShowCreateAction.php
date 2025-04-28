@@ -81,8 +81,6 @@ final class ShowCreateAction implements ApplicationActionInterface
             );
 
             if ($object !== null) {
-                $object->format();
-
                 $this->ui->show(
                     'show_add_share.inc.php',
                     [

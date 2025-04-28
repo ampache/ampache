@@ -187,6 +187,8 @@ class Song extends database_object implements
 
     private ?License $licenseObj = null;
 
+    private bool $song_data_loaded = false;
+
     /**
      * Constructor
      *
@@ -654,6 +656,10 @@ class Song extends database_object implements
      */
     public function fill_ext_info(string $data_filter = ''): void
     {
+        if ($this->isNew() || $this->song_data_loaded) {
+            return;
+        }
+
         $info = $this->_get_ext_info($data_filter);
         if (empty($info)) {
             return;
@@ -666,15 +672,17 @@ class Song extends database_object implements
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
+
+        // don't repeat this process if you've got it all
+        $this->song_data_loaded = ($data_filter === '');
     }
 
     /**
      * type_to_mime
      *
      * Returns the mime type for the specified file extension/type
-     * @param string $type
      */
-    public static function type_to_mime($type): string
+    public static function type_to_mime(string $type): string
     {
         // FIXME: This should really be done the other way around.
         // Store the mime type in the database, and provide a function
@@ -1603,18 +1611,6 @@ class Song extends database_object implements
     }
 
     /**
-     * format
-     */
-    public function format(): void
-    {
-        if ($this->isNew()) {
-            return;
-        }
-
-        $this->fill_ext_info();
-    }
-
-    /**
      * Returns the filename of the media-item
      */
     public function getFileName(): string
@@ -1936,7 +1932,6 @@ class Song extends database_object implements
         }
 
         $album = new Album($this->album);
-        $album->format();
 
         return $album->get_description();
     }

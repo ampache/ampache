@@ -305,7 +305,7 @@ class Xml4_Data
             case 'song':
                 foreach ($objects as $object_id) {
                     $song = new Song((int)$object_id);
-                    $song->format();
+                    $song->fill_ext_info();
                     $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n"
                         . "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_fullname() . "]]></artist>\n"
                         . "\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_fullname() . "]]></album>\n"
@@ -319,7 +319,6 @@ class Xml4_Data
                         if ($playlist->isNew()) {
                             break;
                         }
-                        $playlist->format();
 
                         $playlist_user = ($playlist->type !== 'public')
                             ? $playlist->username
@@ -330,7 +329,6 @@ class Xml4_Data
                         if ($playlist->isNew()) {
                             break;
                         }
-                        $playlist->format();
 
                         $playlist_user  = $playlist->username;
                         $playitem_total = $playlist->get_media_count('song');
@@ -451,7 +449,6 @@ class Xml4_Data
             if ($artist->isNew()) {
                 continue;
             }
-            $artist->format();
 
             $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -504,7 +501,6 @@ class Xml4_Data
             if ($album->isNew()) {
                 continue;
             }
-            $album->format();
 
             $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -697,7 +693,7 @@ class Xml4_Data
             if ($episode->isNew()) {
                 continue;
             }
-            $episode->format();
+
             $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($episode->id, 'podcast_episode');
@@ -738,7 +734,7 @@ class Xml4_Data
                 continue;
             }
 
-            $song->format();
+            $song->fill_ext_info();
             $tag_string  = self::tags_string(Tag::get_top_tags('song', $song->id));
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -835,7 +831,7 @@ class Xml4_Data
             if ($song->isNew()) {
                 continue;
             }
-            $song->format();
+            $song->fill_ext_info();
 
             // FIXME: This is duplicate code and so wrong, functions need to be improved
             $tag         = new Tag((int)($song->get_tags()[0]['id'] ?? 0));

@@ -679,7 +679,7 @@ class Stream
                 if ($client->isNew()) {
                     continue;
                 }
-                $media->format();
+
                 $results[] = [
                     'media' => $media,
                     'client' => $client,

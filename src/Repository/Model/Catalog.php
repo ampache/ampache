@@ -1983,8 +1983,8 @@ abstract class Catalog extends database_object
 
         $inserted = false;
         $options  = [];
-        if (method_exists($libitem, 'format')) {
-            $libitem->format();
+        if (method_exists($libitem, 'fill_ext_info')) {
+            $libitem->fill_ext_info();
         }
 
         if ($libitem->getId() > 0) {
@@ -4299,7 +4299,6 @@ abstract class Catalog extends database_object
                             $song_ids = $catalog->get_song_ids();
                             foreach ($song_ids as $song_id) {
                                 $song = new Song($song_id);
-                                $song->format();
 
                                 $songTagWriter->write($song);
                             }
@@ -4380,7 +4379,6 @@ abstract class Catalog extends database_object
 
         // Do the various check
         $album = new Album($song->album);
-        $album->format();
 
         $song_artist_name  = self::sort_clean_name($song->get_artist_fullname(), '%a', $windowsCompat);
         $album_artist_name = (empty($album->get_artist_fullname()))

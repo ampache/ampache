@@ -35,13 +35,6 @@ namespace Ampache\Repository\Model;
 interface playable_item
 {
     /**
-     * format
-     *
-     * Creates member variables for output
-     */
-    public function format(): void;
-
-    /**
      * get_fullname
      *
      * Get the item full name.
