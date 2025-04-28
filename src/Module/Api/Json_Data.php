@@ -1634,7 +1634,7 @@ class Json_Data
         } // end foreach
 
         if ($object) {
-            $output["song"] = $JSON;
+            $output["song_tag"] = $JSON;
         } else {
             $output = $JSON[0] ?? [];
         }
