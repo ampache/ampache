@@ -1054,6 +1054,7 @@ class Song extends database_object implements
             'mbid',
             'mime',
             'played',
+            'song_data_loaded',
             'total_count',
             'total_skip',
             'type',
