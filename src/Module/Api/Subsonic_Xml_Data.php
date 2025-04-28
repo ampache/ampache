@@ -524,7 +524,7 @@ class Subsonic_Xml_Data
             }
             $tags = Tag::get_object_tags('song', $song->id);
             if (!empty($tags)) {
-                $xsong->addAttribute('genre', (string)($tags[0]['name'] ?? ''));
+                $xsong->addAttribute('genre', implode(', ', array_column($tags, 'name')));
             }
             $xsong->addAttribute('size', (string)$song->size);
             $disk = $song->disk;
@@ -689,7 +689,7 @@ class Subsonic_Xml_Data
         }
         $tags = Tag::get_object_tags('video', (int)$video->id);
         if (!empty($tags)) {
-            $xvideo->addAttribute('genre', (string)$tags[0]['name']);
+            $xvideo->addAttribute('genre', implode(', ', array_column($tags, 'name')));
         }
         $xvideo->addAttribute('size', (string)$video->size);
         $xvideo->addAttribute('suffix', (string)$video->type);
