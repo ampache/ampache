@@ -600,7 +600,7 @@ class Subsonic_Xml_Data
     private static function addDirectory_Album(SimpleXMLElement $xml, string $album_id): void
     {
         $album = new Album(self::_getAmpacheId($album_id));
-        $xdir = self::addChildToResultXml($xml, 'directory');
+        $xdir  = self::addChildToResultXml($xml, 'directory');
         $xdir->addAttribute('id', (string)$album_id);
         if ($album->album_artist) {
             $xdir->addAttribute('parent', (string)self::_getArtistId($album->album_artist));

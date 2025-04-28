@@ -1404,7 +1404,7 @@ class Upnp_Api
                     $song = new Song($song_id);
                     if ($song->isNew() === false) {
                         $song->fill_ext_info();
-                        $parent = 'amp://music/albums/' . (string)$song->album;
+                        $parent       = 'amp://music/albums/' . (string)$song->album;
                         $mediaItems[] = self::_itemSong($song, $parent);
                     }
                 }
