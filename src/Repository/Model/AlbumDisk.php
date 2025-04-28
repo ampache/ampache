@@ -243,13 +243,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      */
     public function format(): void
     {
-        if ($this->isNew()) {
-            return;
-        }
-
-        if (!isset($this->album)) {
-            $this->album = new Album($this->album_id);
-        }
     }
 
     /**
