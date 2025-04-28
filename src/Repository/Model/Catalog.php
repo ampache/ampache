@@ -267,11 +267,6 @@ abstract class Catalog extends database_object
     abstract public function get_rel_path(string $file_path): string;
 
     /**
-     * format
-     */
-    abstract public function format(): void;
-
-    /**
      * get_f_info
      */
     abstract public function get_f_info(): string;

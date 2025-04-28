@@ -633,10 +633,6 @@ class Catalog_Seafile extends Catalog
         return null;
     }
 
-    public function format(): void
-    {
-    }
-
     /**
      * get_f_info
      */

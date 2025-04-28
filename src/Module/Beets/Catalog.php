@@ -409,10 +409,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         return '';
     }
 
-    public function format(): void
-    {
-    }
-
     /**
      * @deprecated inject dependency
      */

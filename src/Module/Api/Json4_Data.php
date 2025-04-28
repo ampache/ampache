@@ -600,7 +600,6 @@ class Json4_Data
             if ($catalog === null) {
                 break;
             }
-            $catalog->format();
             $catalog_name           = $catalog->name;
             $catalog_type           = $catalog->catalog_type;
             $catalog_gather_types   = $catalog->gather_types;
