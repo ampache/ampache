@@ -166,13 +166,6 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
-     * format
-     */
-    public function format(): void
-    {
-    }
-
-    /**
      * Get item keywords for metadata searches.
      * @return array<string, array{important: bool, label: string, value: string}>
      */

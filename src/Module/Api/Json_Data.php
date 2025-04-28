@@ -526,7 +526,7 @@ class Json_Data
             if ($live_stream->isNew()) {
                 continue;
             }
-            $live_stream->format();
+
             $JSON[] = [
                 "id" => (string)$live_stream_id,
                 "name" => $live_stream->get_fullname(),
@@ -619,7 +619,7 @@ class Json_Data
             if ($label === null) {
                 continue;
             }
-            $label->format();
+
             $JSON[] = [
                 "id" => (string)$label_id,
                 "name" => $label->get_fullname(),
@@ -737,7 +737,6 @@ class Json_Data
             if ($artist->isNew()) {
                 continue;
             }
-            $artist->format();
 
             $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -823,7 +822,6 @@ class Json_Data
             if ($album->isNew()) {
                 continue;
             }
-            $album->format();
 
             $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -843,7 +841,7 @@ class Json_Data
             $objArray['basename'] = $album->name;
             if ($album->get_artist_fullname() != "") {
                 $objArray['artist'] = [
-                    "id" => (string)$album->album_artist,
+                    "id" => (string)$album->findAlbumArtist(),
                     "name" => $album->get_artist_fullname(),
                     "prefix" => $album->artist_prefix,
                     "basename" => $album->artist_name
@@ -1174,7 +1172,6 @@ class Json_Data
             if ($catalog === null) {
                 break;
             }
-            $catalog->format();
             $catalog_name           = $catalog->name;
             $catalog_type           = $catalog->catalog_type;
             $catalog_gather_types   = $catalog->gather_types;
@@ -1182,7 +1179,7 @@ class Json_Data
             $catalog_last_add       = $catalog->last_add;
             $catalog_last_clean     = $catalog->last_clean;
             $catalog_last_update    = $catalog->last_update;
-            $catalog_path           = $catalog->f_info;
+            $catalog_path           = $catalog->get_f_info();
             $catalog_rename_pattern = $catalog->rename_pattern;
             $catalog_sort_pattern   = $catalog->sort_pattern;
             // Build this element
@@ -1325,7 +1322,7 @@ class Json_Data
             if ($episode->isNew()) {
                 continue;
             }
-            $episode->format();
+
             $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($episode->id, 'podcast_episode');
@@ -1413,7 +1410,7 @@ class Json_Data
             if ($song->isNew()) {
                 continue;
             }
-            $song->format();
+            $song->fill_ext_info();
             $rating       = new Rating((int)$song_id, 'song');
             $user_rating  = $rating->get_user_rating($user->getId());
             $flag         = new Userflag((int)$song_id, 'song');
@@ -1533,6 +1530,116 @@ class Json_Data
     }
 
     /**
+     * song_tags
+     *
+     * This returns an array of song tags populated from an array of song ids.
+     *
+     * @param list<int|string> $objects
+     * @param User $user
+     * @param bool $encode
+     * @param bool $object (whether to return as a named object array or regular array)
+     * @return string JSON Object "song"
+     */
+    public static function song_tags(array $objects, User $user, bool $encode = true, bool $object = true): string
+    {
+        $count  = self::$count ?? count($objects);
+        $output = [
+            "total_count" => $count,
+            "md5" => md5(serialize($objects)),
+        ];
+
+        Stream::set_session($_REQUEST['auth'] ?? '');
+        $playlist_track = 0;
+
+        if (($count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
+        }
+
+        $JSON = [];
+        foreach ($objects as $song_id) {
+            $song = new Song((int)$song_id);
+            // If the song id is invalid/null
+            if ($song->isNew()) {
+                continue;
+            }
+            $catalog = Catalog::create_from_id($song->catalog);
+            if (!$catalog) {
+                continue;
+            }
+            $results  = $catalog->get_media_tags($song, ['music'], '', '');
+            $objArray = [
+                'albumartist' => $results['albumartist'] ?? null,
+                'album' => $results['album'] ?? null,
+                'artist' => $results['artist'] ?? null,
+                'artists' => $results['artists'] ?? null,
+                'art' => $results['art'] ?? null,
+                'audio_codec' => $results['audio_codec'] ?? null,
+                'barcode' => $results['barcode'] ?? null,
+                'bitrate' => $results['bitrate'] ?? null,
+                'catalog' => $results['catalog'] ?? null,
+                'catalog_number' => $results['catalog_number'] ?? null,
+                'channels' => $results['channels'] ?? null,
+                'comment' => $results['comment'] ?? null,
+                'composer' => $results['composer'] ?? null,
+                'description' => $results['description'] ?? null,
+                'disk' => $results['disk'] ?? null,
+                'disksubtitle' => $results['disksubtitle'] ?? null,
+                'display_x' => $results['display_x'] ?? null,
+                'display_y' => $results['display_y'] ?? null,
+                'encoding' => $results['encoding'] ?? null,
+                'file' => $results['file'] ?? null,
+                'frame_rate' => $results['frame_rate'] ?? null,
+                'genre' => $results['genre'] ?? null,
+                'isrc' => $results['isrc'] ?? null,
+                'language' => $results['language'] ?? null,
+                'lyrics' => $results['lyrics'] ?? null,
+                'mb_albumartistid' => $results['mb_albumartistid'] ?? null,
+                'mb_albumartistid_array' => $results['mb_albumartistid_array'] ?? null,
+                'mb_albumid_group' => $results['mb_albumid_group'] ?? null,
+                'mb_albumid' => $results['mb_albumid'] ?? null,
+                'mb_artistid' => $results['mb_artistid'] ?? null,
+                'mb_artistid_array' => $results['mb_artistid_array'] ?? null,
+                'mb_trackid' => $results['mb_trackid'] ?? null,
+                'mime' => $results['mime'] ?? null,
+                'mode' => $results['mode'] ?? null,
+                'original_name' => $results['original_name'] ?? null,
+                'original_year' => $results['original_year'] ?? null,
+                'publisher' => $results['publisher'] ?? null,
+                'r128_album_gain' => $results['r128_album_gain'] ?? null,
+                'r128_track_gain' => $results['r128_track_gain'] ?? null,
+                'rate' => $results['rate'] ?? null,
+                'rating' => $results['rating'] ?? null,
+                'release_date' => $results['release_date'] ?? null,
+                'release_status' => $results['release_status'] ?? null,
+                'release_type' => $results['release_type'] ?? null,
+                'replaygain_album_gain' => $results['replaygain_album_gain'] ?? null,
+                'replaygain_album_peak' => $results['replaygain_album_peak'] ?? null,
+                'replaygain_track_gain' => $results['replaygain_track_gain'] ?? null,
+                'replaygain_track_peak' => $results['replaygain_track_peak'] ?? null,
+                'size' => $results['size'] ?? null,
+                'version' => $results['version'] ?? null,
+                'summary' => $results['summary'] ?? null,
+                'time' => $results['time'] ?? null,
+                'title' => $results['title'] ?? null,
+                'totaldisks' => $results['totaldisks'] ?? null,
+                'totaltracks' => $results['totaltracks'] ?? null,
+                'track' => $results['track'] ?? null,
+                'year' => $results['year'] ?? null,
+            ];
+
+            $JSON[] = $objArray;
+        } // end foreach
+
+        if ($object) {
+            $output["song_tag"] = $JSON;
+        } else {
+            $output = $JSON[0] ?? [];
+        }
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
      * videos
      *
      * This builds the JSON document for displaying video objects
@@ -1560,7 +1667,6 @@ class Json_Data
             if ($video->isNew()) {
                 continue;
             }
-            $video->format();
             $rating      = new Rating($video->id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($video->id, 'video');
@@ -1569,7 +1675,7 @@ class Json_Data
                 "id" => (string)$video->id,
                 "title" => $video->title,
                 "mime" => $video->mime,
-                "resolution" => $video->f_resolution,
+                "resolution" => $video->get_f_resolution(),
                 "size" => (int)$video->size,
                 "genre" => self::genre_array($video->get_tags()),
                 "time" => (int)$video->time,
@@ -1626,7 +1732,7 @@ class Json_Data
             if ($song->isNew()) {
                 continue;
             }
-            $song->format();
+            $song->fill_ext_info();
 
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -1681,7 +1787,6 @@ class Json_Data
      */
     public static function user(User $user, bool $fullinfo, ?bool $object = true): string
     {
-        $user->format();
         $art_url = Art::url($user->id, 'user', $_REQUEST['auth'] ?? '');
         if ($fullinfo) {
             $JSON = [

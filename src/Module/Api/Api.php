@@ -148,6 +148,7 @@ class Api
         Method\SharesMethod::ACTION => Method\SharesMethod::class,
         Method\SongDeleteMethod::ACTION => Method\SongDeleteMethod::class,
         Method\SongMethod::ACTION => Method\SongMethod::class,
+        Method\SongTagsMethod::ACTION => Method\SongTagsMethod::class,
         Method\SongsMethod::ACTION => Method\SongsMethod::class,
         Method\StatsMethod::ACTION => Method\StatsMethod::class,
         Method\StreamMethod::ACTION => Method\StreamMethod::class,
@@ -185,7 +186,7 @@ class Api
     public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
     public static string $auth_version    = '350001';
-    public static string $version         = '6.6.8'; // AMPACHE_VERSION
+    public static string $version         = '6.7.0'; // AMPACHE_VERSION
     public static string $version_numeric = '668000'; // AMPACHE_VERSION
 
     public static ?Browse $browse = null;

@@ -149,6 +149,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     public function getMedias(): Generator
     {
         foreach ($this->playable->get_medias() as $media_info) {
+            /** @var Song|Podcast_Episode|null $media */
             $media = $this->libraryItemLoader->load(
                 $media_info['object_type'],
                 $media_info['object_id'],
@@ -158,8 +159,6 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
             if ($media === null) {
                 continue;
             }
-            /** @var Song|Podcast_Episode $media */
-            $media->format();
 
             $data = [
                 'title' => (string) $media->get_fullname(),

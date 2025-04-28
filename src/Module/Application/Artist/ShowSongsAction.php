@@ -58,7 +58,6 @@ final class ShowSongsAction implements ApplicationActionInterface
         $artistId = (int) ($request->getQueryParams()['artist'] ?? 0);
 
         $artist = $this->modelFactory->createArtist($artistId);
-        $artist->format();
 
         $this->ui->showHeader();
         $this->ui->show(

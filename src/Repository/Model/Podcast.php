@@ -104,15 +104,6 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     }
 
     /**
-     * format
-     *
-     * @deprecated
-     */
-    public function format(): void
-    {
-    }
-
-    /**
      * does the item have art?
      */
     public function has_art(): bool

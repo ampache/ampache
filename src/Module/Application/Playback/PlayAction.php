@@ -598,7 +598,6 @@ final class PlayAction implements ApplicationActionInterface
 
             return null;
         }
-        $media->format();
 
         if (!User::stream_control([['object_type' => $type, 'object_id' => $media->id]])) {
             throw new AccessDeniedException(

@@ -67,7 +67,6 @@ final class ShowAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $playlist->format();
             $object_ids = $playlist->get_items();
             $this->ui->show(
                 'show_playlist.inc.php',

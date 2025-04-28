@@ -294,7 +294,6 @@ class AmpacheHttpq extends localplay_controller
      * delete_track
      * This must take an ID (as returned by our get function)
      * and delete it from httpQ
-     * @param int $object_id
      */
     public function delete_track(int $object_id): bool
     {
@@ -427,7 +426,6 @@ class AmpacheHttpq extends localplay_controller
      * volume
      * This tells httpQ to set the volume to the specified amount this
      * is 0-100
-     * @param $volume
      */
     public function volume($volume): bool
     {
@@ -490,9 +488,8 @@ class AmpacheHttpq extends localplay_controller
             $url_data = $this->parse_url($entry);
             switch ($url_data['primary_key']) {
                 case 'oid':
-                    $data['oid'] = $url_data['oid'];
-                    $song        = new Song($data['oid']);
-                    $song->format();
+                    $data['oid']  = $url_data['oid'];
+                    $song         = new Song($data['oid']);
                     $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_artist_fullname();
                     $data['link'] = $song->get_f_link();
                     break;
@@ -520,7 +517,6 @@ class AmpacheHttpq extends localplay_controller
                         );
 
                         if ($media !== null) {
-                            $media->format();
                             switch ($row['type']) {
                                 case 'song':
                                     /** @var Song $media */

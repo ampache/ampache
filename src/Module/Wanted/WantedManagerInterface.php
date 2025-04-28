@@ -27,12 +27,13 @@ namespace Ampache\Module\Wanted;
 
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
+use MusicBrainz\Exception;
 
 interface WantedManagerInterface
 {
     /**
      * Delete a wanted release by mbid.
-     * @throws \MusicBrainz\Exception
+     * @throws Exception
      */
     public function delete(string $mbid, ?User $user = null): void;
 

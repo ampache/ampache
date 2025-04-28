@@ -166,14 +166,17 @@ class Catalog_remote extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param string $catalog_id
-     * @param array $data
+     * @param array{
+     *     uri?: string,
+     *     username?: ?string,
+     *     password?: ?string,
+     * } $data
      */
-    public static function create_type($catalog_id, $data): bool
+    public static function create_type(string $catalog_id, array $data): bool
     {
-        $uri      = rtrim(trim($data['uri']), '/');
-        $username = $data['username'];
-        $password = $data['password'];
+        $uri      = rtrim(trim($data['uri'] ?? ''), '/');
+        $username = $data['username'] ?? '';
+        $password = $data['password'] ?? '';
 
         if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
             AmpError::add('general', T_('Remote Catalog type was selected, but the path is not a URL'));
@@ -324,8 +327,13 @@ class Catalog_remote extends Catalog
             $total > $current &&
             $songsFound
         ) {
+            $web_path = AmpConfig::get_web_path();
+            if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
+                $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
+            }
             $start = $current;
             $current += $step;
+            $song_tags = true;
             try {
                 $songs = $remote_handle->send_command('songs', ['offset' => $start, 'limit' => $step]);
                 // Iterate over the songs we retrieved and insert them
@@ -337,43 +345,115 @@ class Catalog_remote extends Catalog
                         ) {
                             continue;
                         }
-                        if ($this->check_remote_song($song->url)) {
+
+                        // Update URLS to the current format for remote catalogs
+                        $old_url = (string)preg_replace('/ssid=[0-9a-z]*&/', '', $song->url);
+                        $db_url  = (string)preg_replace('/ssid=[0-9a-z]*&/', 'client=' . urlencode($web_path) . '&', $song->url);
+                        if ($this->check_remote_song([$old_url], $db_url)) {
                             debug_event('remote.catalog', 'Skipping existing song ' . $song->url, 5);
                         } else {
-                            $genres = [];
-                            foreach ($song->genre as $genre) {
-                                $genres[] = $genre->name;
+                            if (!$db_url) {
+                                continue;
                             }
-                            $data = [
-                                'albumartist' => $song->albumartist->name,
-                                'album' => $song->album->name,
-                                'artist' => $song->artist->name,
-                                'artists' => null,
-                                'bitrate' => $song->bitrate ?? null,
-                                'catalog' => $this->catalog_id,
-                                'channels' => $song->channels ?? null,
-                                'composer' => $song->composer ?? null,
-                                'comment' => null,
-                                'disk' => $song->disk ?? null,
-                                'file' => preg_replace('/ssid=.*?&/', '', $song->url),
-                                'genre' => $song->genre,
-                                'mb_trackid' => $song->mbid ?? null,
-                                'mime' => $song->mime ?? null,
-                                'mode' => $song->mode ?? null,
-                                'publisher' => $song->publisher ?? null,
-                                'r128_album_gain' => null,
-                                'r128_track_gain' => null,
-                                'rate' => $song->bitrate ?? null,
-                                'replaygain_album_gain' => null,
-                                'replaygain_album_peak' => null,
-                                'replaygain_track_gain' => null,
-                                'replaygain_track_peak' => null,
-                                'size' => $song->size ?? null,
-                                'time' => $song->time ?? null,
-                                'title' => $song->title ?? null,
-                                'track' => $song->track ?? null,
-                                'year' => $song->year ?? null
-                            ];
+
+                            $id   = (string)$song->attributes()->id;
+                            $tags = ($song_tags)
+                                ? $remote_handle->send_command('song_tagss', ['filter' => $id])
+                                : false;
+                            // Iterate over the songs we retrieved and insert them
+                            if ($tags instanceof SimpleXMLElement) {
+                                $data = [
+                                    'albumartist' => $tags->albumartist,
+                                    'album' => $tags->album,
+                                    'artist' => $tags->artist,
+                                    'artists' => $tags->artists,
+                                    'art' => $tags->art,
+                                    'audio_codec' => $tags->audio_codec,
+                                    'barcode' => $tags->barcode,
+                                    'bitrate' => $tags->bitrate,
+                                    'catalog' => $this->catalog_id,
+                                    'catalog_number' => $tags->catalog_number,
+                                    'channels' => $tags->channels,
+                                    'comment' => $tags->comment,
+                                    'composer' => $tags->composer,
+                                    'description' => $tags->description,
+                                    'disk' => $tags->disk,
+                                    'disksubtitle' => $tags->disksubtitle,
+                                    'file' => $db_url,
+                                    'genre' => $tags->genre,
+                                    'isrc' => $tags->isrc,
+                                    'language' => $tags->language,
+                                    'lyrics' => $tags->lyrics,
+                                    'mb_albumartistid' => $tags->mb_albumartistid,
+                                    'mb_albumartistid_array' => $tags->mb_albumartistid_array,
+                                    'mb_albumid_group' => $tags->mb_albumid_group,
+                                    'mb_albumid' => $tags->mb_albumid,
+                                    'mb_artistid' => $tags->mb_artistid,
+                                    'mb_artistid_array' => $tags->mb_artistid_array,
+                                    'mb_trackid' => $tags->mb_trackid,
+                                    'mime' => $tags->mime,
+                                    'mode' => $tags->mode,
+                                    'original_name' => $tags->original_name,
+                                    'original_year' => $tags->original_year,
+                                    'publisher' => $tags->publisher,
+                                    'r128_album_gain' => $tags->r128_album_gain,
+                                    'r128_track_gain' => $tags->r128_track_gain,
+                                    'rate' => $tags->rate,
+                                    'rating' => $tags->rating,
+                                    'release_date' => $tags->release_date,
+                                    'release_status' => $tags->release_status,
+                                    'release_type' => $tags->release_type,
+                                    'replaygain_album_gain' => $tags->replaygain_album_gain,
+                                    'replaygain_album_peak' => $tags->replaygain_album_peak,
+                                    'replaygain_track_gain' => $tags->replaygain_track_gain,
+                                    'replaygain_track_peak' => $tags->replaygain_track_peak,
+                                    'size' => $tags->size,
+                                    'version' => $tags->version,
+                                    'summary' => $tags->summary,
+                                    'time' => $tags->time,
+                                    'title' => $tags->title,
+                                    'totaldisks' => $tags->totaldisks,
+                                    'totaltracks' => $tags->totaltracks,
+                                    'track' => $tags->track,
+                                    'year' => $tags->year,
+                                ];
+                            } else {
+                                $song_tags = false;
+                                $genres    = [];
+                                foreach ($song->genre as $genre) {
+                                    $genres[] = $genre->name;
+                                }
+                                $data = [
+                                    'albumartist' => $song->albumartist->name,
+                                    'album' => $song->album->name,
+                                    'artist' => $song->artist->name,
+                                    'artists' => null,
+                                    'bitrate' => $song->bitrate ?? null,
+                                    'catalog' => $this->catalog_id,
+                                    'channels' => $song->channels ?? null,
+                                    'composer' => $song->composer ?? null,
+                                    'comment' => null,
+                                    'disk' => $song->disk ?? null,
+                                    'file' => $db_url,
+                                    'genre' => $genres,
+                                    'mb_trackid' => $song->mbid ?? null,
+                                    'mime' => $song->mime ?? null,
+                                    'mode' => $song->mode ?? null,
+                                    'publisher' => $song->publisher ?? null,
+                                    'r128_album_gain' => null,
+                                    'r128_track_gain' => null,
+                                    'rate' => $song->bitrate ?? null,
+                                    'replaygain_album_gain' => null,
+                                    'replaygain_album_peak' => null,
+                                    'replaygain_track_gain' => null,
+                                    'replaygain_track_peak' => null,
+                                    'size' => $song->size ?? null,
+                                    'time' => $song->time ?? null,
+                                    'title' => $song->title ?? null,
+                                    'track' => $song->track ?? null,
+                                    'year' => $song->year ?? null
+                                ];
+                            }
                             //debug_event('remote.catalog', 'DATA ' . print_r($data, true), 1);
                             if (!Song::insert($data)) {
                                 debug_event('remote.catalog', 'Insert failed for ' . $song->url, 1);
@@ -550,16 +630,29 @@ class Catalog_remote extends Catalog
      *
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
-     * @param string $song_url
+     * @param string[] $song_urls
      */
-    public function check_remote_song($song_url): ?int
+    public function check_remote_song(array $song_urls, string $db_url): ?int
     {
-        $url = preg_replace('/ssid=.*&/', '', $song_url);
-        if (!$url) {
+        if (empty($song_urls) || $db_url == '') {
             return null;
         }
+
+        // Update old urls to the new format if needed
+        foreach ($song_urls as $old_url) {
+            // Check for old formats and update the URL to the current version
+            $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
+            $db_results = Dba::read($sql, [$old_url]);
+            if ($results = Dba::fetch_assoc($db_results)) {
+                Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_url, $results['id']]);
+
+                return (int)$results['id'];
+            }
+        }
+
+        // Check current url format
         $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
-        $db_results = Dba::read($sql, [$url]);
+        $db_results = Dba::read($sql, [$db_url]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];
@@ -579,13 +672,11 @@ class Catalog_remote extends Catalog
     }
 
     /**
-     * format
-     *
-     * This makes the object human-readable.
+     * get_f_info
      */
-    public function format(): void
+    public function get_f_info(): string
     {
-        $this->f_info = $this->uri;
+        return $this->uri;
     }
 
     /**

@@ -127,9 +127,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Get the parser class like CliHandler or JsonHandler
-     * @return CliHandler|JsonHandler
      */
-    abstract protected function getParser();
+    abstract protected function getParser(): Handler;
 
     /**
      * Check if a song was added before
@@ -408,13 +407,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     public function get_rel_path(string $file_path): string
     {
         return '';
-    }
-
-    /**
-     * format
-     */
-    public function format(): void
-    {
     }
 
     /**

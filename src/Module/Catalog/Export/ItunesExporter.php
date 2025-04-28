@@ -61,9 +61,9 @@ final class ItunesExporter implements CatalogExporterInterface
             "       <key>Tracks</key>\n" .
             "       <dict>\n";
 
+        /** @var int $songId */
         foreach ($result as $songId) {
             $song = new Song($songId);
-            $song->format();
 
             $xml                         = [];
             $xml['key']                  = $songId;

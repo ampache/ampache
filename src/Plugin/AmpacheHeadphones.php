@@ -116,10 +116,9 @@ class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInte
     }
 
     /**
-     * @param string $command
-     * @param array $params
+     * @param array<string, null|string> $params
      */
-    protected function headphones_call($command, $params): string
+    protected function headphones_call(string $command, array $params): string
     {
         if (
             (!isset($this->api_url) || ($this->api_url === '' || $this->api_url === '0')) ||

@@ -48,11 +48,11 @@ class AmpachePaypal extends AmpachePlugin implements PluginDisplayUserFieldInter
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $user;
+    private string $username = '';
 
-    private $business;
+    private string $business = '';
 
-    private $currency_code;
+    private string $currency_code = 'USD';
 
     /**
      * Constructor
@@ -102,7 +102,7 @@ class AmpachePaypal extends AmpachePlugin implements PluginDisplayUserFieldInter
      */
     public function display_user_field(?library_item $libitem = null): void
     {
-        $name = ($libitem != null) ? $libitem->get_fullname() : (T_('User') . " `" . $this->user->fullname . "` " . T_('on') . " " . AmpConfig::get('site_title'));
+        $name = ($libitem != null) ? $libitem->get_fullname() : (T_('User') . " `" . $this->username . "` " . T_('on') . " " . AmpConfig::get('site_title'));
         $lang = substr((string) AmpConfig::get('lang', 'en_US'), 0, 2);
         if ($lang === '' || $lang === '0') {
             $lang = 'US';
@@ -127,11 +127,10 @@ class AmpachePaypal extends AmpachePlugin implements PluginDisplayUserFieldInter
      */
     public function load(User $user): bool
     {
-        $this->user = $user;
         $user->set_preferences();
-
         $data = $user->prefs;
 
+        $this->username = (string)$user->get_fullname();
         $this->business = trim((string) $data['paypal_business']);
         if ($this->business === '') {
             debug_event('paypal.plugin', 'No PayPal ID, user field plugin skipped', 3);

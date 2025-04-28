@@ -49,10 +49,6 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private string $api_key;
-
-    private string $secret;
-
     private Discogs $discogs;
 
     /**
@@ -115,7 +111,7 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
         }
 
         if (strlen(trim((string) $data['discogs_api_key'])) !== 0) {
-            $this->api_key = trim((string) $data['discogs_api_key']);
+            $api_key = trim((string) $data['discogs_api_key']);
         } else {
             debug_event(self::class, 'No Discogs api key, metadata plugin skipped', 3);
 
@@ -123,14 +119,14 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
         }
 
         if (strlen(trim((string) $data['discogs_secret_api_key'])) !== 0) {
-            $this->secret = trim((string) $data['discogs_secret_api_key']);
+            $secret = trim((string) $data['discogs_secret_api_key']);
         } else {
             debug_event(self::class, 'No Discogs secret, metadata plugin skipped', 3);
 
             return false;
         }
 
-        $this->discogs = new Discogs($this->api_key, $this->secret);
+        $this->discogs = new Discogs($api_key, $secret);
 
         return true;
     }

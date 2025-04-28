@@ -41,6 +41,7 @@ use Kunnu\Dropbox\DropboxApp;
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxFile;
 use Kunnu\Dropbox\Exceptions\DropboxClientException;
+use Kunnu\Dropbox\Models\ModelInterface;
 use ReflectionException;
 
 /**
@@ -185,9 +186,8 @@ class Catalog_dropbox extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param int $catalog_id
      */
-    public function __construct($catalog_id = null)
+    public function __construct(?int $catalog_id = null)
     {
         if ($catalog_id) {
             $this->id = (int)$catalog_id;
@@ -204,15 +204,21 @@ class Catalog_dropbox extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param string $catalog_id
-     * @param array $data
+     * @param array{
+     *     apikey?: ?string,
+     *     secret?: ?string,
+     *     authtoken?: ?string,
+     *     path?: ?string,
+     *     getchunk?: string|int|null,
+     * } $data
+     * @throws DropboxClientException
      */
-    public static function create_type($catalog_id, $data): bool
+    public static function create_type(string $catalog_id, array $data): bool
     {
-        $apikey    = trim($data['apikey']);
-        $secret    = trim($data['secret']);
-        $authtoken = trim($data['authtoken']);
-        $path      = $data['path'];
+        $apikey    = trim($data['apikey'] ?? '');
+        $secret    = trim($data['secret'] ?? '');
+        $authtoken = trim($data['authtoken'] ?? '');
+        $path      = $data['path'] ?? '';
         $getchunk  = (int)($data['getchunk'] ?? 0);
 
         if (!strlen($apikey) || !strlen($secret) || !strlen($authtoken)) {
@@ -230,10 +236,9 @@ class Catalog_dropbox extends Catalog
         $dropbox = new Dropbox($app);
 
         try {
-            $listFolderContents = $dropbox->listFolder($path);
+            $dropbox->listFolder($path);
         } catch (DropboxClientException $error) {
             AmpError::add('general', T_('Invalid "dropbox-path": ' . $error->getMessage()));
-            $listFolderContents = null;
 
             return false;
         }
@@ -305,10 +310,8 @@ class Catalog_dropbox extends Catalog
      * add_files
      *
      * Recurses through directories and pulls out all media files
-     * @param $dropbox
-     * @param $path
      */
-    public function add_files($dropbox, $path): int
+    public function add_files(Dropbox $dropbox, string $path): int
     {
         debug_event('dropbox.catalog', "List contents for " . $path, 5);
         $listFolderContents = $dropbox->listFolder($path, ['recursive' => true]);
@@ -317,9 +320,9 @@ class Catalog_dropbox extends Catalog
         // Fetch items on the first page
         $items = $listFolderContents->getItems();
         foreach ($items as $item) {
-            if ($item->getDataProperty('.tag') == "file") {
+            if ($item instanceof ModelInterface && $item->getDataProperty('.tag') == "file") {
                 $subpath = $item->getDataProperty('path_display');
-                if ($this->add_file($dropbox, $subpath)) {
+                if (is_string($subpath) && $this->add_file($dropbox, $subpath)) {
                     $songsadded++;
                 }
             }
@@ -346,11 +349,7 @@ class Catalog_dropbox extends Catalog
         return $songsadded;
     }
 
-    /**
-     * @param $dropbox
-     * @param $path
-     */
-    public function add_file($dropbox, $path): bool
+    public function add_file(Dropbox $dropbox, string $path): bool
     {
         $file     = $dropbox->getMetadata($path, ["include_media_info" => true, "include_deleted" => true]);
         $filesize = $file->getDataProperty('size');
@@ -382,12 +381,9 @@ class Catalog_dropbox extends Catalog
      * _insert_local_song
      *
      * Insert a song that isn't already in the database.
-     * @param $dropbox
-     * @param $path
-     * @return bool
      * @throws DropboxClientException|Exception
      */
-    private function insert_song($dropbox, $path): bool
+    private function insert_song(Dropbox $dropbox, string $path): bool
     {
         if ($this->check_remote_file($path)) {
             debug_event('dropbox_catalog', 'Skipping existing song ' . $path, 5);
@@ -444,14 +440,10 @@ class Catalog_dropbox extends Catalog
     /**
      * insert_local_video
      * This inserts a video file into the video file table the tag
-     * information we can get is super sketchy so it's kind of a crap shoot
-     * here
-     * @param $dropbox
-     * @param $path
-     * @return int
+     * information we can get is super sketchy so it's kind of a crap shoot here
      * @throws DropboxClientException|Exception
      */
-    public function insert_video($dropbox, $path): int
+    public function insert_video(Dropbox $dropbox, string $path): int
     {
         if ($this->check_remote_file($path)) {
             debug_event('dropbox_catalog', 'Skipping existing song ' . $path, 5);
@@ -510,17 +502,12 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @param $dropbox
-     * @param $path
-     * @param $maxlen
-     * @param $dropboxFile
-     * @return bool
      * @throws DropboxClientException
      */
-    public function download($dropbox, $path, $maxlen, $dropboxFile = null): bool
+    public function download(Dropbox $dropbox, string $path, ?int $maxlen = null, ?string $dropboxFile = null): bool
     {
         // Path cannot be null
-        if (is_null($path)) {
+        if (empty($path)) {
             throw new DropboxClientException("Path cannot be null.");
         }
 
@@ -539,8 +526,7 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @return int
-     * @throws ReflectionException
+     * @throws ReflectionException|DropboxClientException
      */
     public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
     {
@@ -665,9 +651,8 @@ class Catalog_dropbox extends Catalog
      *
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
-     * @param $file
      */
-    public function check_remote_file($file): ?int
+    public function check_remote_file(string $file): ?int
     {
         $is_audio_file = Catalog::is_audio_file($file);
         if ($is_audio_file) {
@@ -706,11 +691,11 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * format
+     * get_f_info
      */
-    public function format(): void
+    public function get_f_info(): string
     {
-        $this->f_info = $this->apikey;
+        return $this->apikey;
     }
 
     /**
@@ -757,12 +742,11 @@ class Catalog_dropbox extends Catalog
      * This runs through all of the albums and finds art for them
      * This runs through all of the needs art albums and tries
      * to find the art for them from the mp3s
-     * @param int[]|null $songs
-     * @param int[]|null $videos
-     * @return bool
+     * @param Song[]|null $songs
+     * @param Video[]|null $videos
      * @throws DropboxClientException
      */
-    public function gather_art(array $songs = null, $videos = null, ?Interactor $interactor = null): bool
+    public function gather_art(?array $songs = null, ?array $videos = null, ?Interactor $interactor = null): bool
     {
         // Make sure they've actually got methods
         $art_order = AmpConfig::get('art_order');
@@ -791,8 +775,8 @@ class Catalog_dropbox extends Catalog
             $searches['album']  = [];
             $searches['artist'] = [];
             foreach ($songs as $song) {
-                if ($song->isNew() === false) {
-                    $meta    = $dropbox->getMetadata((string)$song->file);
+                if ($song->isNew() === false && !empty($song->file)) {
+                    $meta    = $dropbox->getMetadata($song->file);
                     $outfile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
                     // Download File

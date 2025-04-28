@@ -90,8 +90,6 @@ final class ShowAction implements ApplicationActionInterface
             $label = $this->labelRepository->findById($label_id);
 
             if ($label !== null) {
-                $label->format();
-
                 $this->ui->show(
                     'show_label.inc.php',
                     [
