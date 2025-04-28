@@ -18,7 +18,7 @@
 
 ### Removed
 
-* Remove superfluous format calls for `User`, `Catalog` and `Video` objects
+* Remove superfluous format calls from all `Catalog` and `playable_media` objects
 * Remove `get_f_artist_link` which has been replaced with `get_f_parent_link`
 * Hide some useless data in the Debug page and remove `database_password` entirely
 
@@ -29,6 +29,8 @@
 * Ampache remote catalog
   * Regex for file url could remove more parameters than required
   * Update url filename path to make sure it's valid
+* Subsonic
+  * Send genre string correctly for more than one genre instead of just the first result
 * Subsonic remote catalog
   * Forcing fallback port 4040
   * Image size was being sent as an array of height and width (You just send one int value)
