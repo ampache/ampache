@@ -57,7 +57,6 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
 
         foreach ($ids as $artistid) {
             $artist = new Artist($artistid);
-            $artist->format();
 
             yield [
                 'title' => (string) $artist->get_fullname(),

@@ -63,10 +63,6 @@ class LocalPlay
         return $this->_player instanceof localplay_controller;
     }
 
-    public function format(): void
-    {
-    }
-
     /**
      * _load_player
      * This function attempts to load the player class that Localplay

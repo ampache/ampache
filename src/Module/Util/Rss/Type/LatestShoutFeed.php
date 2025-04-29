@@ -58,8 +58,6 @@ final readonly class LatestShoutFeed extends AbstractGenericRssFeed
                     continue;
                 }
 
-                $object->format();
-
                 yield [
                     'title' => sprintf(T_('%s on %s'), $user->getUsername(), $object->get_fullname()),
                     'link' => $object->get_link(),

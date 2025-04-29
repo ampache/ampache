@@ -398,19 +398,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
-     * format
-     */
-    public function format(): void
-    {
-        if ($this->isNew()) {
-            return;
-        }
-
-        // lookup album artist if missing
-        $this->findAlbumArtist();
-    }
-
-    /**
      * does the item have art?
      */
     public function has_art(): bool

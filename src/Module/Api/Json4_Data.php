@@ -322,7 +322,6 @@ class Json4_Data
             if ($artist->isNew()) {
                 continue;
             }
-            $artist->format();
 
             $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -396,7 +395,6 @@ class Json4_Data
             if ($album->isNew()) {
                 continue;
             }
-            $album->format();
 
             $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -412,7 +410,7 @@ class Json4_Data
 
             if ($album->get_artist_fullname() != "") {
                 $objArray['artist'] = [
-                    "id" => (string)$album->album_artist,
+                    "id" => (string)$album->findAlbumArtist(),
                     "name" => $album->get_artist_fullname()
                 ];
             }
@@ -600,7 +598,6 @@ class Json4_Data
             if ($catalog === null) {
                 break;
             }
-            $catalog->format();
             $catalog_name           = $catalog->name;
             $catalog_type           = $catalog->catalog_type;
             $catalog_gather_types   = $catalog->gather_types;
@@ -722,7 +719,7 @@ class Json4_Data
             if ($episode->isNew()) {
                 continue;
             }
-            $episode->format();
+
             $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($episode->id, 'podcast_episode');
@@ -790,7 +787,7 @@ class Json4_Data
                 continue;
             }
 
-            $song->format();
+            $song->fill_ext_info();
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($song->id, 'song');
@@ -947,7 +944,7 @@ class Json4_Data
             if ($song->isNew()) {
                 continue;
             }
-            $song->format();
+            $song->fill_ext_info();
 
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());

@@ -317,7 +317,6 @@ class Xml3_Data
             if ($artist->isNew()) {
                 continue;
             }
-            $artist->format();
 
             $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -374,7 +373,6 @@ class Xml3_Data
             if ($album->isNew()) {
                 continue;
             }
-            $album->format();
 
             $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -426,7 +424,7 @@ class Xml3_Data
             if ($playlist->isNew()) {
                 continue;
             }
-            $playlist->format();
+
             $item_total = $playlist->get_media_count('song');
 
             // Build this element
@@ -472,7 +470,7 @@ class Xml3_Data
                 continue;
             }
 
-            $song->format();
+            $song->fill_ext_info();
             $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
             $tag_string            = self::tags_string(Tag::get_top_tags('song', $song->id));
             $rating                = new Rating($song->id, 'song');
@@ -558,7 +556,7 @@ class Xml3_Data
             if ($song->isNew()) {
                 continue;
             }
-            $song->format();
+            $song->fill_ext_info();
 
             //FIXME: This is duplicate code and so wrong, functions need to be improved
             $tag         = new Tag((int)($song->get_tags()[0]['id'] ?? 0));

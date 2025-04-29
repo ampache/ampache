@@ -173,8 +173,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                 <?php $count = 0;
                 foreach ($userflags as $userflag) {
                     $item = new Song($userflag);
-                    if ($item->isNew() === false) {
-                        $item->format(); ?>
+                    if ($item->isNew() === false) { ?>
                         <tr>
                             <td class="cel_play">
                                 <span class="cel_play_content">&nbsp;</span>

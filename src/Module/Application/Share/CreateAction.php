@@ -127,7 +127,6 @@ final readonly class CreateAction implements ApplicationActionInterface
                     AmpConfig::get_web_path('/client') . '/stats.php?action=share'
                 );
             } else {
-                $object->format();
                 $message   = T_('Failed to create share');
                 $token     = $this->passwordGenerator->generate_token();
                 $isZipable = $this->zipHandler->isZipable($object_type->value);

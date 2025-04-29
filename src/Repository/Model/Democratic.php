@@ -133,10 +133,6 @@ class Democratic extends Tmp_Playlist
         }
     }
 
-    public function format(): void
-    {
-    }
-
     public function getAccessLevel(): AccessLevelEnum
     {
         return AccessLevelEnum::from($this->level);

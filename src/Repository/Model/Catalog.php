@@ -267,11 +267,6 @@ abstract class Catalog extends database_object
     abstract public function get_rel_path(string $file_path): string;
 
     /**
-     * format
-     */
-    abstract public function format(): void;
-
-    /**
      * get_f_info
      */
     abstract public function get_f_info(): string;
@@ -1330,8 +1325,8 @@ abstract class Catalog extends database_object
 
         if ($update_time > 0) {
             $sql .= ($table === 'album')
-                ? $where_sql . " `song`.`update_time` <= ? "
-                : $where_sql . " `update_time` <= ? ";
+                ? $where_sql . " (`song`.`update_time` IS NULL OR `song`.`update_time` <= ?) "
+                : $where_sql . " (`update_time` IS NULL OR `update_time` <= ?) ";
             $params[] = $update_time;
         }
 
@@ -1988,8 +1983,8 @@ abstract class Catalog extends database_object
 
         $inserted = false;
         $options  = [];
-        if (method_exists($libitem, 'format')) {
-            $libitem->format();
+        if (method_exists($libitem, 'fill_ext_info')) {
+            $libitem->fill_ext_info();
         }
 
         if ($libitem->getId() > 0) {
@@ -2378,6 +2373,14 @@ abstract class Catalog extends database_object
             case 'podcast_episode':
                 $episode = new Podcast_Episode($object_id);
                 self::update_media_from_tags($episode);
+
+                return [
+                    'object_id' => $object_id,
+                    'change' => true
+                ];
+            case 'video':
+                $video = new Video($object_id);
+                self::update_media_from_tags($video);
 
                 return [
                     'object_id' => $object_id,
@@ -3090,7 +3093,7 @@ abstract class Catalog extends database_object
         $new_video->display_x     = $results['display_x'];
         $new_video->display_y     = $results['display_y'];
         $new_video->frame_rate    = $results['frame_rate'];
-        $new_video->video_bitrate = self::check_int($results['video_bitrate'], 4294967294, 0);
+        $new_video->video_bitrate = self::check_int($results['video_bitrate'], PHP_INT_MAX, 0);
         $tags                     = Tag::get_object_tags('video', $video->id);
         $video_tags               = [];
         if ($tags) {
@@ -3764,7 +3767,7 @@ abstract class Catalog extends database_object
      * check_int
      * Check to make sure a number fits into the database
      */
-    public static function check_int(int $my_int, int $max, int $min): int
+    public static function check_int(int|float $my_int, int|float $max, int $min): int
     {
         if ($my_int > $max) {
             return $max;
@@ -4304,7 +4307,6 @@ abstract class Catalog extends database_object
                             $song_ids = $catalog->get_song_ids();
                             foreach ($song_ids as $song_id) {
                                 $song = new Song($song_id);
-                                $song->format();
 
                                 $songTagWriter->write($song);
                             }
@@ -4385,7 +4387,6 @@ abstract class Catalog extends database_object
 
         // Do the various check
         $album = new Album($song->album);
-        $album->format();
 
         $song_artist_name  = self::sort_clean_name($song->get_artist_fullname(), '%a', $windowsCompat);
         $album_artist_name = (empty($album->get_artist_fullname()))

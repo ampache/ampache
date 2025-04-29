@@ -174,10 +174,6 @@ class Catalog_beets extends Catalog
         return $this->beetsdb;
     }
 
-    public function format(): void
-    {
-    }
-
     /**
      * get_f_info
      */

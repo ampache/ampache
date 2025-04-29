@@ -151,11 +151,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
             case 'artist_info':
                 if (AmpConfig::get('lastfm_api_key') && (array_key_exists('artist', $_REQUEST) || array_key_exists('fullname', $_REQUEST))) {
                     if (array_key_exists('artist', $_REQUEST)) {
-                        $artist = new Artist((int)$this->requestParser->getFromRequest('artist'));
-                        if ($artist->isNew() === false) {
-                            $artist->format();
-                        }
-
+                        $artist    = new Artist((int)$this->requestParser->getFromRequest('artist'));
                         $biography = Recommendation::get_artist_info($artist->id);
                     } else {
                         $fullname  = $this->requestParser->getFromRequest('fullname');
@@ -171,8 +167,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'similar_artist':
                 if (AmpConfig::get('show_similar') && array_key_exists('artist', $_REQUEST)) {
-                    $artist = new Artist((int)$this->requestParser->getFromRequest('artist'));
-                    $artist->format();
+                    $artist          = new Artist((int)$this->requestParser->getFromRequest('artist'));
                     $limit_threshold = AmpConfig::get('stats_threshold', 7);
                     $object_ids      = [];
                     $missing_objects = [];

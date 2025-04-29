@@ -85,10 +85,6 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
         return $this->getId() === 0;
     }
 
-    public function format(): void
-    {
-    }
-
     /**
      * Get item keywords for metadata searches.
      * @return array<string, array{important: bool, label: string, value: string}>
