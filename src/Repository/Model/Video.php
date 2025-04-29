@@ -1132,6 +1132,7 @@ class Video extends database_object implements
             'played',
             'tag_id',
             'total_count',
+            'total_skip',
             'type',
             'update_time',
         ];
