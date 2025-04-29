@@ -2378,6 +2378,14 @@ abstract class Catalog extends database_object
                     'object_id' => $object_id,
                     'change' => true
                 ];
+            case 'video':
+                $video = new Video($object_id);
+                self::update_media_from_tags($video);
+
+                return [
+                    'object_id' => $object_id,
+                    'change' => true
+                ];
         }
 
         if (!$api) {
