@@ -531,7 +531,7 @@ final class VaInfo implements VaInfoInterface
 
         // return a default list of items (if you get here this is probably a bad file)
         if (empty($returned_keys)) {
-            debug_event(self::class, "get_tag_type: Couln't find tags, this is probably a bad file", 5);
+            debug_event(self::class, "get_tag_type: Couln't find tags", 5);
             $returned_keys = [
                 'getid3',
                 'filename',
