@@ -101,8 +101,8 @@ final readonly class DefaultAction implements ApplicationActionInterface
         );
 
         if ($libItem instanceof playable_item) {
-            if (method_exists($libItem, 'format')) {
-                $libItem->format();
+            if (method_exists($libItem, 'fill_ext_info')) {
+                $libItem->fill_ext_info();
             }
             $name      = (string)$libItem->get_fullname();
             $media_ids = array_merge($media_ids, $libItem->get_medias());
@@ -224,8 +224,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
                 if ($parent != null) {
                     $className = ObjectTypeToClassNameMapper::map($parent['object_type']->value);
                     /** @var class-string<library_item> $className */
-                    $pobj = new $className($parent['object_id']);
-                    $pobj->format();
+                    $pobj    = new $className($parent['object_id']);
                     $dirname = (string)$pobj->get_fullname();
                 }
                 if (!empty($dirname) && !array_key_exists($dirname, $media_files)) {

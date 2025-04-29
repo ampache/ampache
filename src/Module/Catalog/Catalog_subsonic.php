@@ -271,8 +271,11 @@ class Catalog_subsonic extends Catalog
                             $artistInfo  = $subsonic->querySubsonic('getArtistInfo', ['id' => $song['artistId']]);
                             $albumartist = $subsonic->querySubsonic('getArtist', ['id' => $album['data']['directory']['parent']]);
                             if (Catalog::is_audio_file($song['path'])) {
-                                $data                = [];
-                                $data['albumartist'] = html_entity_decode($albumartist['data']['artist']['name']);
+                                $data = [];
+                                // album_artist isn't included in the song response
+                                if (is_array($albumartist) && $albumartist['success']) {
+                                    $data['albumartist'] = html_entity_decode($albumartist['data']['artist']['name']);
+                                }
                                 $data['artist']      = html_entity_decode($song['artist']);
                                 $data['album']       = html_entity_decode($song['album']);
                                 $data['title']       = html_entity_decode($song['title']);
@@ -290,8 +293,8 @@ class Catalog_subsonic extends Catalog
                                 $data['disk']     = $song['discNumber'];
                                 $data['coverArt'] = $song['coverArt'];
                                 $data['mode']     = 'vbr';
-                                $data['genre']    = (isset($song['genre']))
-                                    ? explode(' ', html_entity_decode($song['genre'])) ?: []
+                                $data['genre']    = (!empty($song['genre']))
+                                    ? explode(',', html_entity_decode($song['genre']))
                                     : [];
                                 $data['file']     = $this->uri . '/rest/stream.view?id=' . $song['id'] . '&filename=' . urlencode($song['path']);
                                 if ($this->check_remote_song($data)) {
@@ -539,10 +542,6 @@ class Catalog_subsonic extends Catalog
         }
 
         return (int)$song_id;
-    }
-
-    public function format(): void
-    {
     }
 
     /**

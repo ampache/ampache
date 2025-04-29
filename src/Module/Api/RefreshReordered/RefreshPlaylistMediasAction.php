@@ -57,7 +57,6 @@ final class RefreshPlaylistMediasAction implements ApplicationActionInterface
         if ($playlist->isNew()) {
             return null;
         }
-        $playlist->format();
 
         $object_ids = $playlist->get_items();
 

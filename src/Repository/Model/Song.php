@@ -187,6 +187,8 @@ class Song extends database_object implements
 
     private ?License $licenseObj = null;
 
+    private bool $song_data_loaded = false;
+
     /**
      * Constructor
      *
@@ -317,7 +319,7 @@ class Song extends database_object implements
 
         if (!isset($results['albumartist_id'])) {
             $albumartist_id = null;
-            if ($albumartist !== '' && $albumartist !== '0') {
+            if ($albumartist !== null && $albumartist !== '' && $albumartist !== '0') {
                 $albumartist_mbid = Catalog::trim_slashed_list($albumartist_mbid);
                 $albumartist_id   = Artist::check($albumartist, $albumartist_mbid);
             }
@@ -326,14 +328,19 @@ class Song extends database_object implements
         }
 
         if (!isset($results['artist_id'])) {
-            $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
-            $artist_id   = (int)Artist::check($artist, $artist_mbid);
+            $artist_id = null;
+            if ($artist !== null && $artist !== '' && $artist !== '0') {
+                $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
+                $artist_id   = (int)Artist::check($artist, $artist_mbid);
+            }
         } else {
             $artist_id = (int)($results['artist_id']);
         }
 
         if (!isset($results['album_id'])) {
-            $album_id = Album::check($catalog, $album, $year, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
+            $album_id = (empty($album))
+                ? 0
+                : Album::check($catalog, $album, $year, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
         } else {
             $album_id = (int)($results['album_id']);
         }
@@ -649,6 +656,10 @@ class Song extends database_object implements
      */
     public function fill_ext_info(string $data_filter = ''): void
     {
+        if ($this->isNew() || $this->song_data_loaded) {
+            return;
+        }
+
         $info = $this->_get_ext_info($data_filter);
         if (empty($info)) {
             return;
@@ -661,15 +672,17 @@ class Song extends database_object implements
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
+
+        // don't repeat this process if you've got it all
+        $this->song_data_loaded = ($data_filter === '');
     }
 
     /**
      * type_to_mime
      *
      * Returns the mime type for the specified file extension/type
-     * @param string $type
      */
-    public static function type_to_mime($type): string
+    public static function type_to_mime(string $type): string
     {
         // FIXME: This should really be done the other way around.
         // Store the mime type in the database, and provide a function
@@ -1041,6 +1054,7 @@ class Song extends database_object implements
             'mbid',
             'mime',
             'played',
+            'song_data_loaded',
             'total_count',
             'total_skip',
             'type',
@@ -1598,18 +1612,6 @@ class Song extends database_object implements
     }
 
     /**
-     * format
-     */
-    public function format(): void
-    {
-        if ($this->isNew()) {
-            return;
-        }
-
-        $this->fill_ext_info();
-    }
-
-    /**
      * Returns the filename of the media-item
      */
     public function getFileName(): string
@@ -1931,7 +1933,6 @@ class Song extends database_object implements
         }
 
         $album = new Album($this->album);
-        $album->format();
 
         return $album->get_description();
     }

@@ -296,10 +296,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         return $results;
     }
 
-    public function format(): void
-    {
-    }
-
     /**
      * does the item have art?
      */
