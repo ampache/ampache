@@ -558,7 +558,7 @@ class Video extends database_object implements
         $disx          = (int) $data['display_x'];
         $disy          = (int) $data['display_y'];
         $frame_rate    = (float) $data['frame_rate'];
-        $video_bitrate = Catalog::check_int($data['video_bitrate'], 4294967294, 0);
+        $video_bitrate = Catalog::check_int($data['video_bitrate'], PHP_INT_MAX, 0);
 
         $sql    = "INSERT INTO `video` (`file`, `catalog`, `title`, `video_codec`, `audio_codec`, `resolution_x`, `resolution_y`, `size`, `time`, `mime`, `release_date`, `addition_time`, `bitrate`, `mode`, `channels`, `display_x`, `display_y`, `frame_rate`, `video_bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = [

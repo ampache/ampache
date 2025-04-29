@@ -3085,7 +3085,7 @@ abstract class Catalog extends database_object
         $new_video->display_x     = $results['display_x'];
         $new_video->display_y     = $results['display_y'];
         $new_video->frame_rate    = $results['frame_rate'];
-        $new_video->video_bitrate = self::check_int($results['video_bitrate'], 4294967294, 0);
+        $new_video->video_bitrate = self::check_int($results['video_bitrate'], PHP_INT_MAX, 0);
         $tags                     = Tag::get_object_tags('video', $video->id);
         $video_tags               = [];
         if ($tags) {
