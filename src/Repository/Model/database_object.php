@@ -61,7 +61,7 @@ abstract class database_object
 
         if (self::is_cached($table, $object_id)) {
             $info = self::get_from_cache($table, $object_id);
-            if (is_array($info)) {
+            if (!empty($info)) {
                 return $info;
             }
         }

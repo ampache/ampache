@@ -62,7 +62,7 @@ $web_path = AmpConfig::get_web_path();
 /** @var Album $album */
 $simple   = $album->get_fullname(true);
 $f_name   = $album->get_fullname(false, true);
-$title    = ($album->album_artist !== null)
+$title    = ($album->findAlbumArtist() !== null)
     ? scrub_out($f_name) . '&nbsp;-&nbsp;' . $album->get_f_parent_link()
     : scrub_out($f_name);
 

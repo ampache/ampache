@@ -322,7 +322,6 @@ class Json4_Data
             if ($artist->isNew()) {
                 continue;
             }
-            $artist->format();
 
             $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -396,7 +395,6 @@ class Json4_Data
             if ($album->isNew()) {
                 continue;
             }
-            $album->format();
 
             $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -412,7 +410,7 @@ class Json4_Data
 
             if ($album->get_artist_fullname() != "") {
                 $objArray['artist'] = [
-                    "id" => (string)$album->album_artist,
+                    "id" => (string)$album->findAlbumArtist(),
                     "name" => $album->get_artist_fullname()
                 ];
             }
@@ -600,7 +598,6 @@ class Json4_Data
             if ($catalog === null) {
                 break;
             }
-            $catalog->format();
             $catalog_name           = $catalog->name;
             $catalog_type           = $catalog->catalog_type;
             $catalog_gather_types   = $catalog->gather_types;
@@ -608,7 +605,7 @@ class Json4_Data
             $catalog_last_add       = $catalog->get_f_add();
             $catalog_last_clean     = $catalog->get_f_clean();
             $catalog_last_update    = $catalog->get_f_update();
-            $catalog_path           = $catalog->f_info;
+            $catalog_path           = $catalog->get_f_info();
             $catalog_rename_pattern = $catalog->rename_pattern;
             $catalog_sort_pattern   = $catalog->sort_pattern;
             // Build this element
@@ -722,7 +719,7 @@ class Json4_Data
             if ($episode->isNew()) {
                 continue;
             }
-            $episode->format();
+
             $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($episode->id, 'podcast_episode');
@@ -790,7 +787,7 @@ class Json4_Data
                 continue;
             }
 
-            $song->format();
+            $song->fill_ext_info();
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($song->id, 'song');
@@ -897,7 +894,6 @@ class Json4_Data
             if ($video->isNew()) {
                 continue;
             }
-            $video->format();
             $rating      = new Rating($video->id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($video->id, 'video');
@@ -906,7 +902,7 @@ class Json4_Data
                 "id" => (string)$video->id,
                 "title" => $video->title,
                 "mime" => $video->mime,
-                "resolution" => $video->f_resolution,
+                "resolution" => $video->get_f_resolution(),
                 "size" => (int)$video->size,
                 "tag" => self::tags_array($video->get_tags()),
                 "time" => (int)$video->time,
@@ -948,7 +944,7 @@ class Json4_Data
             if ($song->isNew()) {
                 continue;
             }
-            $song->format();
+            $song->fill_ext_info();
 
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -987,7 +983,6 @@ class Json4_Data
     public static function user(User $user, bool $fullinfo): string
     {
         $JSON = [];
-        $user->format();
         if ($fullinfo) {
             $JSON['user'] = [
                 "id" => (string) $user->getId(),

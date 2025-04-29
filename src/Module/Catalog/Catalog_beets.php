@@ -105,13 +105,14 @@ class Catalog_beets extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param string $catalog_id
-     * @param array $data
+     * @param array{
+     *     beetsdb?: string,
+     * } $data
      */
-    public static function create_type($catalog_id, $data): bool
+    public static function create_type(string $catalog_id, array $data): bool
     {
         // TODO: This Method should be required / provided by parent
-        $beetsdb = $data['beetsdb'];
+        $beetsdb = $data['beetsdb'] ?? '';
 
         if (preg_match('/^[\s]+$/', $beetsdb)) {
             AmpError::add('general', T_('Beets Catalog was selected, but no Beets DB file was provided'));
@@ -173,8 +174,11 @@ class Catalog_beets extends Catalog
         return $this->beetsdb;
     }
 
-    public function format(): void
+    /**
+     * get_f_info
+     */
+    public function get_f_info(): string
     {
-        $this->f_info = $this->beetsdb;
+        return $this->beetsdb;
     }
 }

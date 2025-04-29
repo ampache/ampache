@@ -41,11 +41,6 @@ class Registration
      * This sends the confirmation e-mail for the specified user
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @param string $username
-     * @param string $fullname
-     * @param string $email
-     * @param string $website
-     * @param string $validation
      */
     public static function send_confirmation(
         string $username,

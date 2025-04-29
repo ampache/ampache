@@ -124,7 +124,6 @@ final class SongSorter implements SongSorterInterface
                         );
                         continue;
                     }
-                    $song->format();
 
                     $interactor->info(
                         T_("Examine File..."),
@@ -176,7 +175,7 @@ final class SongSorter implements SongSorterInterface
                     /* We need to actually do the moving (fake it if we are testing)
                      * Don't try to move it, if it's already the same friggin thing!
                      */
-                    if ($song->file != $fullpath && strlen($fullpath)) {
+                    if ($song->file != $fullpath && strlen($fullpath) !== 0 && $fullpath !== '/.') {
                         /* HINT: filename (File path) */
                         $interactor->info(
                             sprintf(T_('Destin: %s'), $fullpath),

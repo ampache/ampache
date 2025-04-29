@@ -151,9 +151,6 @@ class UpdateFromTagsActionTest extends MockeryTestCase
             ->once()
             ->andReturn($webPath);
 
-        $album->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
         $album->shouldReceive('getCatalogId')
             ->withNoArgs()
             ->once()

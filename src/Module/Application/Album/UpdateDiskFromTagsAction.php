@@ -73,8 +73,6 @@ final class UpdateDiskFromTagsAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $albumDisk->format();
-
         $this->ui->showHeader();
         $this->ui->showBoxTop(T_('Starting Update from Tags'), 'box box_update_items');
         $this->ui->show(

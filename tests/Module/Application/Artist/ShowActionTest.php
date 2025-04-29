@@ -165,9 +165,6 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturn($artist);
 
-        $artist->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
         $artist->shouldReceive('isNew')
             ->withNoArgs()
             ->once()
@@ -239,9 +236,6 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturn($artist);
 
-        $artist->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
         $artist->shouldReceive('isNew')
             ->withNoArgs()
             ->once()

@@ -90,13 +90,6 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * format
-     */
-    public function format(): void
-    {
-    }
-
-    /**
      * does the item have art?
      */
     public function has_art(): bool

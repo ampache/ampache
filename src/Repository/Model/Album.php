@@ -207,44 +207,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
-     * _get_extra_info
-     * This pulls the extra information from our tables, this is a 3 table join, which is why we don't normally
-     * do it
-     */
-    private function _get_extra_info(): array
-    {
-        if ($this->isNew()) {
-            return [];
-        }
-
-        if (parent::is_cached('album_extra', $this->id)) {
-            return parent::get_from_cache('album_extra', $this->id);
-        }
-
-        $results = [];
-        if (
-            !$this->album_artist &&
-            $this->song_artist_count == 1
-        ) {
-            $sql        = "SELECT `artist`.`name` AS `artist_name`, `artist`.`prefix` AS `artist_prefix`, `song`.`artist` AS `album_artist` FROM `song` INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` WHERE `song`.`album` = ? GROUP BY `song`.`album`, `artist`.`prefix`, `artist`.`name`, `song`.`artist`;";
-            $db_results = Dba::read($sql, [$this->id]);
-            $results    = Dba::fetch_assoc($db_results);
-            // overwrite so you can get something
-            $this->album_artist  = $results['album_artist'] ?? null;
-            $this->artist_prefix = $results['artist_prefix'] ?? null;
-            $this->artist_name   = $results['artist_name'] ?? null;
-        }
-
-        if (AmpConfig::get('show_played_times')) {
-            $results['total_count'] = $this->total_count;
-        }
-
-        parent::add_to_cache('album_extra', $this->id, $results);
-
-        return $results;
-    }
-
-    /**
      * check
      *
      * Searches for an album; if none is found, insert a new one.
@@ -433,25 +395,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$version] = $album_id;
 
         return (int)$album_id;
-    }
-
-    /**
-     * format
-     * This is the format function for this object. It sets cleaned up
-     * album information with the base required
-     * f_link, f_name
-     */
-    public function format(): void
-    {
-        if ($this->isNew()) {
-            return;
-        }
-
-        /* Pull the advanced information */
-        $data = $this->_get_extra_info();
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
     }
 
     /**
@@ -674,11 +617,34 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
+     * findAlbumArtist
+     * Certain albums may have a single artist and not have any albumartist tags
+     */
+    public function findAlbumArtist(): ?int
+    {
+        if (
+            !$this->album_artist &&
+            $this->song_artist_count == 1
+        ) {
+            $sql        = "SELECT `artist`.`name` AS `artist_name`, `artist`.`prefix` AS `artist_prefix`, `song`.`artist` AS `album_artist` FROM `song` INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` WHERE `song`.`album` = ? GROUP BY `song`.`album`, `artist`.`prefix`, `artist`.`name`, `song`.`artist`;";
+            $db_results = Dba::read($sql, [$this->id]);
+            $results    = Dba::fetch_assoc($db_results);
+            // overwrite so you can get something
+            $this->album_artist  = $results['album_artist'] ?? null;
+            $this->artist_prefix = $results['artist_prefix'] ?? null;
+            $this->artist_name   = $results['artist_name'] ?? null;
+        }
+
+        return $this->album_artist;
+    }
+
+    /**
      * Get the album artist fullname.
      */
     public function get_artist_fullname(): ?string
     {
         if ($this->f_artist_name === null) {
+            $this->findAlbumArtist();
             if ($this->album_artist === 0) {
                 $this->artist_prefix = '';
                 $this->artist_name   = T_('Various');
@@ -1110,14 +1076,13 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $sql        = "SELECT `id` FROM `album` WHERE `album_artist` IS NULL AND `name` != ?;";
         $db_results = Dba::read($sql, [T_('Unknown (Orphaned)')]);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $album_id = (int) $row['id'];
-
+            $album_id   = (int) $row['id'];
             $artist_id  = 0;
             $sql        = "SELECT MIN(`artist`) AS `artist` FROM `song` WHERE `album` = ? GROUP BY `album` HAVING COUNT(DISTINCT `artist`) = 1 LIMIT 1";
             $db_results = Dba::read($sql, [$album_id]);
 
             // these are albums that only have 1 artist
-            while ($row = Dba::fetch_assoc($db_results)) {
+            if ($row = Dba::fetch_assoc($db_results)) {
                 $artist_id = (int)$row['artist'];
             }
 

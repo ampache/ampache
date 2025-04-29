@@ -35,8 +35,7 @@ use Ampache\Repository\Model\Video;
 /** @var string $agent */
 /** @var string $t_username */
 /** @var string $t_video */
-
-$media->format(); ?>
+?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
         <label><?php echo $t_username; ?></label>

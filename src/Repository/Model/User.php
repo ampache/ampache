@@ -905,13 +905,6 @@ class User extends database_object
     }
 
     /**
-     * format
-     */
-    public function format(): void
-    {
-    }
-
-    /**
      * does the item have art?
      */
     public function has_art(): bool
@@ -1103,7 +1096,7 @@ class User extends database_object
      */
     public function get_fullname(): ?string
     {
-        return ($this->fullname_public)
+        return ($this->fullname_public && !empty($this->fullname))
             ? $this->fullname
             : $this->username;
     }

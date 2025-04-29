@@ -386,7 +386,6 @@ class AmpacheUPnP extends localplay_controller
     /**
      * volume
      * This tells UPnP to set the volume to the specified amount
-     * @param $volume
      */
     public function volume($volume): bool
     {

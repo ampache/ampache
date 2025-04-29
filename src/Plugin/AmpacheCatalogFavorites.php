@@ -57,9 +57,9 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $maxitems;
+    private int $maxitems = 5;
 
-    private $gridview;
+    private bool $gridview = false;
 
     private bool $compact = false;
 
@@ -137,6 +137,9 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
      */
     public function display_home(): void
     {
+        if ($this->maxitems < 0) {
+            return;
+        }
         $userflags = Userflag::get_latest('song', null, $this->maxitems);
         if (
             AmpConfig::get('ratings') &&
@@ -170,8 +173,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                 <?php $count = 0;
                 foreach ($userflags as $userflag) {
                     $item = new Song($userflag);
-                    if ($item->isNew() === false) {
-                        $item->format(); ?>
+                    if ($item->isNew() === false) { ?>
                         <tr>
                             <td class="cel_play">
                                 <span class="cel_play_content">&nbsp;</span>
@@ -334,7 +336,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
         $data = $user->prefs;
 
         $this->maxitems = (int)($data['catalogfav_max_items']);
-        if ($this->maxitems < 1) {
+        if ($this->maxitems === 0) {
             $this->maxitems = 5;
         }
 

@@ -403,7 +403,6 @@ class AmpacheMpd extends localplay_controller
     /**
      * volume
      * This tells MPD to set the volume to the parameter
-     * @param $volume
      */
     public function volume($volume): bool
     {
@@ -485,9 +484,8 @@ class AmpacheMpd extends localplay_controller
 
             switch ($url_key) {
                 case 'oid':
-                    $data['oid'] = (int)$url_data['oid'];
-                    $song        = new Song($data['oid']);
-                    $song->format();
+                    $data['oid']  = (int)$url_data['oid'];
+                    $song         = new Song($data['oid']);
                     $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_artist_fullname();
                     $data['link'] = $song->get_f_link();
                     break;
@@ -513,7 +511,6 @@ class AmpacheMpd extends localplay_controller
                         $className = ObjectTypeToClassNameMapper::map($row['type']);
                         /** @var Song|Live_Stream $media */
                         $media = new $className($row['id']);
-                        $media->format();
                         switch ($row['type']) {
                             case 'song':
                                 /** @var Song $media */

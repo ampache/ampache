@@ -64,13 +64,6 @@ class LocalPlay
     }
 
     /**
-     * format
-     */
-    public function format(): void
-    {
-    }
-
-    /**
      * _load_player
      * This function attempts to load the player class that Localplay
      * Will interface with in order to make all this magical stuff work

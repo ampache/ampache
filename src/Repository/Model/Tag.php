@@ -951,13 +951,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * format
-     */
-    public function format(): void
-    {
-    }
-
-    /**
      * Get item keywords for metadata searches.
      * @return array{tag: array{important: true, label: string, value: string}}
      */

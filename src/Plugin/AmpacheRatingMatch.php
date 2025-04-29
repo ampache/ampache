@@ -60,17 +60,23 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
 
     private User $user;
 
-    private $star1_rule;
+    /** @var string[] $star1_rule */
+    private array $star1_rule = [];
 
-    private $star2_rule;
+    /** @var string[] $star2_rule */
+    private array $star2_rule = [];
 
-    private $star3_rule;
+    /** @var string[] $star3_rule */
+    private array $star3_rule = [];
 
-    private $star4_rule;
+    /** @var string[] $star4_rule */
+    private array $star4_rule = [];
 
-    private $star5_rule;
+    /** @var string[] $star5_rule */
+    private array $star5_rule = [];
 
-    private $flag_rule;
+    /** @var string[] $flag_rule */
+    private array $flag_rule = [];
 
     private bool $write_tags;
 
@@ -176,10 +182,8 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     /**
      * save_rating
      * Rate an artist and album after rating the song
-     * @param Rating $rating
-     * @param int $new_rating
      */
-    public function save_rating($rating, $new_rating): void
+    public function save_rating(Rating $rating, int $new_rating): void
     {
         if ($this->min_stars > 0 && $new_rating >= $this->min_stars) {
             if ($rating->type == 'song') {
@@ -257,25 +261,23 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     /**
      * set_flag
      * If you love a song you probably love the artist and the album right?
-     * @param Song $song
-     * @param bool $flagged
      */
-    public function set_flag($song, $flagged): void
+    public function set_flag(Song $song, bool $flagged): void
     {
         if ($this->match_flags > 0 && $flagged) {
             $album = new Album($song->album);
             // flag the album
             $fAlbum = new Userflag($song->album, 'album');
-            $fAlbum->set_flag($flagged, $this->user->id);
+            $fAlbum->set_flag(true, $this->user->id);
             // and individual disks (if set)
             $fAlbumDisk = new Userflag((int)$song->album_disk, 'album_disk');
-            $fAlbumDisk->set_flag($flagged, $this->user->id);
+            $fAlbumDisk->set_flag(true, $this->user->id);
             // rate all the album artists (If there are more than one)
-            if ($album->album_artist) {
+            if (is_int($album->album_artist) && $album->album_artist > 0) {
                 foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
                     $fArtist = new Userflag($artist_id, 'artist');
                     if (!$fArtist->get_flag($this->user->id)) {
-                        $fArtist->set_flag($flagged, $this->user->id);
+                        $fArtist->set_flag(true, $this->user->id);
                     }
                 }
             }
@@ -348,11 +350,9 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     /**
      * rule_process
      * process the rule array and rate/flag depending on the outcome
-     * @param array $rule_array
-     * @param int $play_count
-     * @param int $skip_count
+     * @param string[] $rule_array
      */
-    public function rule_process($rule_array, $play_count, $skip_count): bool
+    public function rule_process(array $rule_array, int $play_count, int $skip_count): bool
     {
         switch (count($rule_array)) {
             case 1:
