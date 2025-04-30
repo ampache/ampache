@@ -28,15 +28,15 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
- * Add `update_time` to `podcast_episode` table
+ * Set `update_time` to NOT NULL on `song` table
  */
-final class Migration750001 extends AbstractMigration
+final class Migration750003 extends AbstractMigration
 {
-    protected array $changelog = ['Add `update_time` to `podcast_episode` table'];
+    protected array $changelog = ['Set `update_time` to NOT NULL on `song` table'];
 
     public function migrate(): void
     {
-        Dba::write('ALTER TABLE `podcast_episode` DROP COLUMN `update_time`;', [], true);
-        $this->updateDatabase('ALTER TABLE `podcast_episode` ADD COLUMN `update_time` int(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `addition_time`;');
+        Dba::write('UPDATE `song` SET `update_time` = 0 WHERE `update_time` IS NULL;', [], true);
+        $this->updateDatabase('ALTER TABLE `song` CHANGE COLUMN `update_time` `update_time` int(11) UNSIGNED NOT NULL DEFAULT 0;');
     }
 }
