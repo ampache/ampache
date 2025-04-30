@@ -320,8 +320,20 @@ class Catalog_local extends Catalog
 
             /* Create the new path */
             $full_file = $path . $slash_type . $file;
-            if ($this->add_file($full_file, $options, $counter, $interactor)) {
-                $songsadded++;
+            try {
+                if ($this->add_file($full_file, $options, $counter, $interactor)) {
+                    $interactor?->info(
+                        T_('Added') . ' ' . $full_file,
+                        true
+                    );
+                    $songsadded++;
+                }
+            } catch (Exception $error) {
+                $interactor?->info(
+                    T_('Error') . ' ' . $error->getMessage(),
+                    true
+                );
+                debug_event('local.catalog', 'add_file error: ' . $error->getMessage(), 1);
             }
         } // end while reading directory
 
