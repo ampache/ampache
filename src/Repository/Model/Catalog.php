@@ -3125,8 +3125,8 @@ abstract class Catalog extends database_object
 
     public static function update_podcast_episode_from_tags(array $results, Podcast_Episode $podcast_episode): array
     {
-        $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `state` = 'completed' WHERE `id` = ?";
-        Dba::write($sql, [$podcast_episode->file, $results['size'], $results['time'], $results['bitrate'], $results['rate'], $results['mode'], $results['channels'], $podcast_episode->id]);
+        $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `update_time` = ?, `state` = 'completed' WHERE `id` = ?";
+        Dba::write($sql, [$podcast_episode->file, $results['size'], $results['time'], $results['bitrate'], $results['rate'], $results['mode'], $results['channels'], time(), $podcast_episode->id]);
 
         $podcast_episode->size     = $results['size'];
         $podcast_episode->time     = $results['time'];

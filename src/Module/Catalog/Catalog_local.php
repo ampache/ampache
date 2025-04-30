@@ -769,7 +769,6 @@ class Catalog_local extends Catalog
         $count = $chunk * $chunk_size;
         $sql   = match ($tableName) {
             'album' => "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? AND song.update_time < " . $this->last_update . " GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT $count, $chunk_size",
-            'podcast_episode' => "SELECT `podcast_episode`.`id`, `podcast_episode`.`file` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = ? AND `podcast_episode`.`file` IS NOT NULL ORDER BY `podcast_episode`.`podcast`, `podcast_episode`.`pubdate` DESC LIMIT $count, $chunk_size",
             default => "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? AND (`$tableName`.`update_time` IS NULL OR `$tableName`.`update_time` < `catalog`.`last_update`) ORDER BY `$tableName`.`file` DESC LIMIT $count, $chunk_size",
         };
 
@@ -808,7 +807,7 @@ class Catalog_local extends Catalog
                 continue;
             }
 
-            if ($verify_by_time && $tableName !== 'podcast_episode' && $tableName !== 'album') {
+            if ($verify_by_time && $tableName !== 'album') {
                 $file_time = filemtime($row['file']);
                 if ($file_time === false) {
                     debug_event('local.catalog', 'Unable to get file modification time for ' . $row['file'], 3);
