@@ -1769,12 +1769,12 @@ abstract class Catalog extends database_object
             $sql .= "LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'album_artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = " . (int)$catalog_id;
         }
 
-        $sql .= "WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ";
+        $sql .= "WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ? OR REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(`artist`.`name`, '/', ''), '\\', ''), ':', ''), '?', ''), '*', ''), '|', ''), '\"', ''), '<', ''), '>', ''), '#', ''), '%', ''), '\n', '') = ?) ";
         if ((int)$catalog_id > 0) {
             $sql .= "AND `catalog_map`.`object_id` IS NOT NULL";
         }
 
-        $db_results = Dba::read($sql, [$name, $name]);
+        $db_results = Dba::read($sql, [$name, $name, $name]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = [
                 'object_type' => LibraryItemEnum::ARTIST,
