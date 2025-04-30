@@ -667,6 +667,7 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
+        $date        = time();
         $this->count = 0;
         $chunk_size  = 10000;
 
@@ -749,7 +750,7 @@ class Catalog_local extends Catalog
 
         // No limit set OR we set a limit and we didn't find anything so update the last_update time
         if ($limit === 0 || ($update_time > 0 && $total === 0)) {
-            $this->update_last_update(time());
+            $this->update_last_update($date);
         }
 
         return $this->count;
@@ -861,6 +862,7 @@ class Catalog_local extends Catalog
 
             return 0;
         }
+
         $this->count = 0;
 
         $gather_type = $this->gather_types;
