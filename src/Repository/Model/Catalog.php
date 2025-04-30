@@ -244,7 +244,7 @@ abstract class Catalog extends database_object
     /**
      * @return string[]
      */
-    abstract public function check_catalog_proc(): array;
+    abstract public function check_catalog_proc(?Interactor $interactor = null): array;
 
     abstract public function move_catalog_proc(string $new_path): bool;
 

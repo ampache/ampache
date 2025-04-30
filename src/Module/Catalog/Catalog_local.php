@@ -922,7 +922,7 @@ class Catalog_local extends Catalog
                 true
             );
             debug_event('local.catalog', "catalog " . $this->name . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
-            $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
+            $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000, $interactor));
             $chunk++;
             $count++;
         }
@@ -962,7 +962,7 @@ class Catalog_local extends Catalog
      * This is the clean function and is broken into chunks to try to save a little memory
      * @return list<int>
      */
-    private function _clean_chunk(string $media_type, int $chunk, int $chunk_size): array
+    private function _clean_chunk(string $media_type, int $chunk, int $chunk_size, ?Interactor $interactor = null): array
     {
         $dead  = [];
         $count = $chunk * $chunk_size;
@@ -978,6 +978,10 @@ class Catalog_local extends Catalog
                 Ui::update_text('clean_dir_' . $this->catalog_id, scrub_out($file));
             }
             if ($this->clean_file($results['file'], $media_type)) {
+                $interactor?->info(
+                    'File removed: ' . $results['file'],
+                    true
+                );
                 $dead[] = $results['id'];
             }
         }
@@ -990,7 +994,7 @@ class Catalog_local extends Catalog
      * This is the check function and is broken into chunks to try to save a little memory
      * @return list<string>
      */
-    private function _check_chunk(string $media_type, int $chunk, int $chunk_size): array
+    private function _check_chunk(string $media_type, int $chunk, int $chunk_size, ?Interactor $interactor = null): array
     {
         $missing = [];
         $count   = $chunk * $chunk_size;
@@ -1001,9 +1005,17 @@ class Catalog_local extends Catalog
         while ($results = Dba::fetch_assoc($db_results)) {
             $file_info = Core::get_filesize(Core::conv_lc_file($results['file']));
             if ($file_info < 1) {
+                $interactor?->info(
+                    'File not found or empty: ' . $results['file'],
+                    true
+                );
                 debug_event('local.catalog', '_clean_chunk: {' . $results['id'] . '} File not found or empty ' . $results['file'], 5);
                 $missing[] = $results['file'];
             } elseif (!Core::is_readable(Core::conv_lc_file((string)$results['file']))) {
+                $interactor?->info(
+                    $results['file'] . ' is not readable, but does exist',
+                    true
+                );
                 debug_event('local.catalog', "_clean_chunk: " . $results['file'] . ' is not readable, but does exist', 1);
             }
         }
@@ -1325,7 +1337,7 @@ class Catalog_local extends Catalog
     /**
      * @return string[]
      */
-    public function check_catalog_proc(): array
+    public function check_catalog_proc(?Interactor $interactor = null): array
     {
         if (!Core::is_readable($this->path)) {
             // First sanity check; no point in proceeding with an unreadable catalog root.
@@ -1351,7 +1363,7 @@ class Catalog_local extends Catalog
         $chunks = (int)ceil($total / 10000);
         foreach (range(1, $chunks) as $chunk) {
             debug_event('local.catalog', "catalog " . $this->name . " Starting check " . $media_type . " on chunk $chunk/$chunks", 5);
-            $missing = array_merge($missing, $this->_check_chunk($media_type, (int)$chunk, 10000));
+            $missing = array_merge($missing, $this->_check_chunk($media_type, (int)$chunk, 10000, $interactor));
         }
 
         return $missing;
