@@ -3768,7 +3768,7 @@ abstract class Catalog extends database_object
      * check_int
      * Check to make sure a number fits into the database
      */
-    public static function check_int(int|float $my_int, int|float $max, int $min): int
+    public static function check_int(int|float $my_int, int|float $max, int $min): int|float
     {
         if ($my_int > $max) {
             return $max;
