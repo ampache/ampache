@@ -1774,7 +1774,7 @@ abstract class Catalog extends database_object
             $sql .= "AND `catalog_map`.`object_id` IS NOT NULL";
         }
 
-        $db_results = Dba::read($sql, [$name, $name, $name]);
+        $db_results = Dba::read($sql, [$name, $name. '?', $name]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = [
                 'object_type' => LibraryItemEnum::ARTIST,
