@@ -717,10 +717,10 @@ class Catalog_local extends Catalog
         }
 
         $interactor?->info(
-            'found ' . $total . " " . $media_type . " files to update. (last_update: " . $this->last_update . ")",
+            sprintf(T_('File count: %d'), $total) . ' (last_update: ' . $this->last_update . ')',
             true
         );
-        debug_event('local.catalog', 'found ' . $total . " " . $media_type . " files to update. (last_update: " . $this->last_update . ")", 5);
+        debug_event('local.catalog', sprintf(T_('File count: %d'), $total) . ' (last_update: ' . $this->last_update . ')', 5);
         while ($count <= $chunks) {
             $interactor?->info(
                 "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks",
@@ -766,16 +766,10 @@ class Catalog_local extends Catalog
      */
     private function _verify_chunk($tableName, $chunk, $chunk_size): int
     {
-        $verify_by_time = $tableName !== 'podcast_episode' && AmpConfig::get('catalog_verify_by_time', false);
-        $count          = $chunk * $chunk_size;
-        $sql            = match ($tableName) {
-            'album' => ($verify_by_time)
-                ? "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? AND song.update_time < " . $this->last_update . " GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT $count, $chunk_size"
-                : "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC $count, $chunk_size",
-            'podcast_episode' => "SELECT `podcast_episode`.`id`, `podcast_episode`.`file` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = ? AND `podcast_episode`.`file` IS NOT NULL ORDER BY `podcast_episode`.`podcast`, `podcast_episode`.`pubdate` DESC LIMIT $count, $chunk_size",
-            default => ($verify_by_time)
-                ? "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? AND (`$tableName`.`update_time` IS NULL OR `$tableName`.`update_time` < `catalog`.`last_update`) ORDER BY `$tableName`.`file` DESC LIMIT $count, $chunk_size"
-                : "SELECT `$tableName`.`id`, `$tableName`.`file` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? ORDER BY `$tableName`.`file` LIMIT $count, $chunk_size",
+        $count = $chunk * $chunk_size;
+        $sql   = match ($tableName) {
+            'album' => "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? AND (`song`.`update_time` IS NULL OR song.update_time < " . $this->last_update . ") GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC $chunk_size",
+            default => "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? AND (`$tableName`.`update_time` IS NULL OR `$tableName`.`update_time` < `catalog`.`last_update`) ORDER BY `$tableName`.`file` DESC LIMIT $chunk_size",
         };
 
         //debug_event(self::class, '_verify_chunk (' . $chunk . ') ' . $sql. ' ' . print_r($params, true), 5);
@@ -789,6 +783,9 @@ class Catalog_local extends Catalog
             /** @var Song|Album|Video $className */
             $className::build_cache($media_ids);
         }
+
+        // verify files based on modification time
+        $verify_by_time = AmpConfig::get('catalog_verify_by_time', false);
 
         $changed    = 0;
         $db_results = Dba::read($sql, [$this->catalog_id]);
@@ -808,6 +805,32 @@ class Catalog_local extends Catalog
                 AmpError::add('general', sprintf(T_("The file couldn't be read. Does it exist? %s"), $row['file']));
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
                 continue;
+            }
+            if ($verify_by_time && $tableName === 'song') {
+                $file_time = filemtime($row['file']);
+                if ($file_time === false) {
+                    debug_event('local.catalog', 'Unable to get file modification time for ' . $row['file'], 3);
+                    continue;
+                }
+                // check the modification time on the file to see if it's worth checking the tags.
+                if ((int)($row['min_update_time'] ?? 0) > $file_time) {
+                    //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
+                    Song::update_utime($row['id']);
+                    continue;
+                }
+            }
+
+            if ($verify_by_time && $tableName !== 'album') {
+                $file_time = filemtime($row['file']);
+                if ($file_time === false) {
+                    debug_event('local.catalog', 'Unable to get file modification time for ' . $row['file'], 3);
+                    continue;
+                }
+                // check the modification time on the file to see if it's worth checking the tags.
+                if ((int)($row['min_update_time'] ?? 0) > $file_time) {
+                    //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
+                    continue;
+                }
             }
 
             if (self::update_single_item($tableName, $row['id'], true, true)['change']) {
@@ -839,6 +862,7 @@ class Catalog_local extends Catalog
 
             return 0;
         }
+
         $this->count = 0;
 
         $gather_type = $this->gather_types;

@@ -691,7 +691,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * Get parent album artists.
      * @return int[]
      */
-    public static function get_parent_array(int $album_id, int $primary_id, string $object_type = 'album'): array
+    public static function get_parent_array(int $album_id, ?int $primary_id = null, string $object_type = 'album'): array
     {
         $results    = [];
         $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` = ?;";
