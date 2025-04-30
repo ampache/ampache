@@ -806,19 +806,6 @@ class Catalog_local extends Catalog
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
                 continue;
             }
-            if ($verify_by_time && $tableName === 'song') {
-                $file_time = filemtime($row['file']);
-                if ($file_time === false) {
-                    debug_event('local.catalog', 'Unable to get file modification time for ' . $row['file'], 3);
-                    continue;
-                }
-                // check the modification time on the file to see if it's worth checking the tags.
-                if ((int)($row['min_update_time'] ?? 0) > $file_time) {
-                    //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
-                    Song::update_utime($row['id']);
-                    continue;
-                }
-            }
 
             if ($verify_by_time && $tableName !== 'album') {
                 $file_time = filemtime($row['file']);
@@ -829,6 +816,17 @@ class Catalog_local extends Catalog
                 // check the modification time on the file to see if it's worth checking the tags.
                 if ((int)($row['min_update_time'] ?? 0) > $file_time) {
                     //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
+                    switch ($tableName) {
+                        case 'song':
+                            Song::update_utime($row['id']);
+                            break;
+                        case 'video':
+                            Video::update_utime($row['id']);
+                            break;
+                        case 'podcast_episode':
+                            Podcast_Episode::update_utime($row['id']);
+                            break;
+                    }
                     continue;
                 }
             }

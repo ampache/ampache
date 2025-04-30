@@ -498,6 +498,21 @@ class Podcast_Episode extends database_object implements
         return Stats::has_played_history('podcast_episode', $this, $user, $agent, $date);
     }
 
+
+    /**
+     * update_utime
+     * sets a new update time
+     */
+    public static function update_utime(int $episode_id, int $time = 0): void
+    {
+        if (!$time) {
+            $time = time();
+        }
+
+        $sql = "UPDATE `podcast_episode` SET `update_time` = ? WHERE `id` = ?;";
+        Dba::write($sql, [$time, $episode_id]);
+    }
+
     /**
      * update_file
      * sets the file path
