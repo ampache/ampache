@@ -187,7 +187,7 @@ class Api
 
     public static string $auth_version    = '350001';
     public static string $version         = '6.7.0'; // AMPACHE_VERSION
-    public static string $version_numeric = '668000'; // AMPACHE_VERSION
+    public static string $version_numeric = '670000'; // AMPACHE_VERSION
 
     public static ?Browse $browse = null;
 
