@@ -1310,7 +1310,7 @@ abstract class Catalog extends database_object
      *
      * Count and/or Update a table count when adding/removing from the server
      */
-    public static function count_table(string $table, ?int $catalog_id = 0, ?int $limit = 0): int
+    public static function count_table(string $table, ?int $catalog_id = 0, ?int $update_time = 0, ?int $limit = 0): int
     {
         $sql = ($table === 'album')
             ? 'SELECT COUNT(`id`) FROM (SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` '
@@ -1321,6 +1321,13 @@ abstract class Catalog extends database_object
             $sql .= $where_sql . sprintf(" `%s`.`catalog` = ? ", $table);
             $params[]  = $catalog_id;
             $where_sql = 'AND';
+        }
+
+        if ($update_time > 0) {
+            $sql .= ($table === 'album')
+                ? $where_sql . " `song`.`update_time` <= ? "
+                : $where_sql . " `update_time` <= ? ";
+            $params[] = $update_time;
         }
 
         $sql .= ($limit > 0)

@@ -673,23 +673,26 @@ class Catalog_local extends Catalog
 
         $gather_type     = $this->gather_types;
         $verify_by_album = AmpConfig::get('catalog_verify_by_album', false);
+        $update_time     = ($gather_type !== 'podcast' && AmpConfig::get('catalog_verify_by_time', false))
+            ? $this->last_update
+            : 0;
         if (!$verify_by_album && $gather_type == 'music') {
             Song::clear_cache();
             $media_type = 'song';
-            $total      = self::count_table($media_type, $this->catalog_id, $limit);
+            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
         } elseif ($verify_by_album && $gather_type == 'music') {
             $chunk_size = 1000;
             Album::clear_cache();
             $media_type = 'album';
-            $total      = self::count_table($media_type, $this->catalog_id, $limit);
+            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
         } elseif ($gather_type == 'podcast') {
             Podcast_Episode::clear_cache();
             $media_type = 'podcast_episode';
-            $total      = self::count_table($media_type, $this->catalog_id, $limit);
+            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
         } elseif ($gather_type == 'video') {
             Video::clear_cache();
             $media_type = 'video';
-            $total      = self::count_table($media_type, $this->catalog_id, $limit);
+            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
         } else {
             return $this->count;
         }
@@ -758,12 +761,11 @@ class Catalog_local extends Catalog
      */
     private function _verify_chunk($tableName, $chunk, $chunk_size): int
     {
-        $verify_by_time = $tableName !== 'podcast_episode' && AmpConfig::get('catalog_verify_by_time', false);
-        $count          = $chunk * $chunk_size;
-        $sql            = match ($tableName) {
-            'album' => "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC $count, $chunk_size",
+        $count = $chunk * $chunk_size;
+        $sql   = match ($tableName) {
+            'album' => "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? AND song.update_time < " . $this->last_update . " GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT $count, $chunk_size",
             'podcast_episode' => "SELECT `podcast_episode`.`id`, `podcast_episode`.`file` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = ? AND `podcast_episode`.`file` IS NOT NULL ORDER BY `podcast_episode`.`podcast`, `podcast_episode`.`pubdate` DESC LIMIT $count, $chunk_size",
-            default => "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? ORDER BY `$tableName`.`file` DESC LIMIT $count, $chunk_size",
+            default => "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? AND (`$tableName`.`update_time` IS NULL OR `$tableName`.`update_time` < `catalog`.`last_update`) ORDER BY `$tableName`.`file` DESC LIMIT $count, $chunk_size",
         };
 
         //debug_event(self::class, '_verify_chunk (' . $chunk . ') ' . $sql. ' ' . print_r($params, true), 5);
@@ -777,6 +779,9 @@ class Catalog_local extends Catalog
             /** @var Song|Album|Video $className */
             $className::build_cache($media_ids);
         }
+
+        // verify files based on modification time
+        $verify_by_time = AmpConfig::get('catalog_verify_by_time', false);
 
         $changed    = 0;
         $db_results = Dba::read($sql, [$this->catalog_id]);
@@ -797,6 +802,7 @@ class Catalog_local extends Catalog
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
                 continue;
             }
+
             if ($verify_by_time && $tableName !== 'podcast_episode' && $tableName !== 'album') {
                 $file_time = filemtime($row['file']);
                 if ($file_time === false) {
