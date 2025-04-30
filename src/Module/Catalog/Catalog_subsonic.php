@@ -408,7 +408,7 @@ class Catalog_subsonic extends Catalog
     /**
      * @return string[]
      */
-    public function check_catalog_proc(): array
+    public function check_catalog_proc(?Interactor $interactor = null): array
     {
         return [];
     }
