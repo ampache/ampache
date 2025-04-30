@@ -818,6 +818,17 @@ class Catalog_local extends Catalog
                 /* HINT: filename (file path) */
                 AmpError::add('general', sprintf(T_("The file couldn't be read. Does it exist? %s"), $row['file']));
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
+                switch ($tableName) {
+                    case 'song':
+                        Song::update_utime($row['id']);
+                        break;
+                    case 'video':
+                        Video::update_utime($row['id']);
+                        break;
+                    case 'podcast_episode':
+                        Podcast_Episode::update_utime($row['id']);
+                        break;
+                }
                 continue;
             }
 
