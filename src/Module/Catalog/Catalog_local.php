@@ -664,12 +664,14 @@ class Catalog_local extends Catalog
             'Verify starting on ' . $this->name,
             true
         );
-        debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
         $date        = time();
         $this->count = 0;
         $chunk_size  = 10000;
+
+        debug_event('local.catalog', 'Verify starting on ' . $this->name . ' (' . $date . ')', 5);
+        sleep(1);
 
         $last_update     = true;
         $gather_type     = $this->gather_types;
