@@ -83,6 +83,8 @@ class Podcast_Episode extends database_object implements
 
     public int $addition_time;
 
+    public int $update_time;
+
     public int $total_count;
 
     public int $total_skip;
