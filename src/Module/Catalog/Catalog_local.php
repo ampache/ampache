@@ -825,6 +825,17 @@ class Catalog_local extends Catalog
                 $file_time = filemtime($row['file']);
                 if ($file_time === false) {
                     debug_event('local.catalog', 'Unable to get file modification time for ' . $row['file'], 3);
+                    switch ($tableName) {
+                        case 'song':
+                            Song::update_utime($row['id']);
+                            break;
+                        case 'video':
+                            Video::update_utime($row['id']);
+                            break;
+                        case 'podcast_episode':
+                            Podcast_Episode::update_utime($row['id']);
+                            break;
+                    }
                     continue;
                 }
                 // check the modification time on the file to see if it's worth checking the tags.
