@@ -329,10 +329,6 @@ class Catalog_local extends Catalog
             $full_file = $path . $slash_type . $file;
             try {
                 if ($this->add_file($full_file, $options, $counter, $interactor)) {
-                    $interactor?->info(
-                        T_('Added') . ' ' . $full_file,
-                        true
-                    );
                     $songsadded++;
                 }
             } catch (Exception $error) {
@@ -501,7 +497,7 @@ class Catalog_local extends Catalog
                 if (count($this->get_gather_types('music')) > 0) {
                     if ($is_audio_file && $this->_insert_local_song($full_file, $options)) {
                         $interactor?->info(
-                            'Imported song file: ' . $full_file,
+                            T_('Added') . ' ' . $full_file,
                             true
                         );
                         debug_event('local.catalog', 'Imported song file: ' . $full_file, 5);
@@ -517,7 +513,7 @@ class Catalog_local extends Catalog
                 } elseif (count($this->get_gather_types('video')) > 0) {
                     if ($is_video_file && $this->_insert_local_video($full_file, $options)) {
                         $interactor?->info(
-                            'Imported video file: ' . $full_file,
+                            T_('Added') . ' ' . $full_file,
                             true
                         );
                         debug_event('local.catalog', 'Imported video file: ' . $full_file, 5);
