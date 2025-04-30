@@ -527,31 +527,32 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Get item childrens.
+     * @return array{album: list<array{object_type: string, object_id: int}>}
      */
     public function get_childrens(): array
     {
         $medias = [];
         $albums = $this->getAlbumRepository()->getAlbumByArtist($this->id);
-        $type   = 'album';
         foreach ($albums as $album_id) {
-            $medias[] = ['object_type' => $type, 'object_id' => $album_id];
+            $medias[] = ['object_type' => 'album', 'object_id' => $album_id];
         }
 
-        return [$type => $medias];
+        return ['album' => $medias];
     }
 
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         $childrens  = [];
         $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'album' AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?);";
         $db_results = Dba::read($sql, [$this->id, $name, $name]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = [
-                'object_type' => 'album',
+                'object_type' => LibraryItemEnum::ALBUM,
                 'object_id' => $row['id']
             ];
         }

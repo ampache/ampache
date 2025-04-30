@@ -67,14 +67,15 @@ interface playable_item
      * get_childrens
      *
      * Get direct childrens. Return an array of `object_type`, `object_id` childrens.
+     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array;
 
     /**
      * Search for direct children of an object
-     * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array;
+    public function get_children(string $name): array;
 
     /**
      * Get all medias from all childrens. Return an array of `object_type`, `object_id` medias.

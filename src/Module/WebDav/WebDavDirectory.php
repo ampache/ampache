@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\WebDav;
 
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Media;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Sabre\DAV;
@@ -46,7 +47,6 @@ class WebDavDirectory extends DAV\Collection
 
     /**
      * @return list<Node>
-     *
      * @throws NotFound
      */
     public function getChildren(): array
@@ -54,13 +54,9 @@ class WebDavDirectory extends DAV\Collection
         //debug_event(self::class, 'Directory getChildren', 5);
         $children = [];
         $childs   = $this->libitem->get_childrens();
-        foreach ($childs as $key => $child) {
-            if (is_string($key)) {
-                foreach ($child as $schild) {
-                    $children[] = WebDavDirectory::getChildFromArray($schild);
-                }
-            } else {
-                $children[] = WebDavDirectory::getChildFromArray($child);
+        foreach ($childs as $child) {
+            foreach ($child as $schild) {
+                $children[] = WebDavDirectory::getChildFromArray($schild);
             }
         }
 
@@ -69,7 +65,6 @@ class WebDavDirectory extends DAV\Collection
 
     /**
      * @param string $name
-     *
      * @throws NotFound
      */
     public function getChild($name): Node
@@ -86,15 +81,16 @@ class WebDavDirectory extends DAV\Collection
     }
 
     /**
-     * @param array{object_type: string, object_id: int} $array
+     * @param array{object_type: LibraryItemEnum, object_id: int} $array
+     * @throws NotFound
      */
     public static function getChildFromArray(array $array): Node
     {
-        $className = ObjectTypeToClassNameMapper::map($array['object_type']);
+        $className = ObjectTypeToClassNameMapper::map($array['object_type']->value);
         /** @var library_item $libitem */
         $libitem = new $className($array['object_id']);
         if ($libitem->isNew()) {
-            throw new NotFound('The library item `' . $array['object_type'] . '` with id `' . $array['object_id'] . '` could not be found');
+            throw new NotFound('The library item `' . $array['object_type']->value . '` with id `' . $array['object_id'] . '` could not be found');
         }
 
         if ($libitem instanceof Media) {

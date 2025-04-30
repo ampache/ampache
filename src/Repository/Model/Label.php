@@ -114,6 +114,9 @@ class Label extends database_object implements library_item
         return Art::has_db($this->id, 'label');
     }
 
+    /**
+     * @return array{artist: list<array{object_type: string, object_id: int}>}
+     */
     public function get_childrens(): array
     {
         $medias  = [];
@@ -243,8 +246,9 @@ class Label extends database_object implements library_item
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         $search                    = [];
         $search['type']            = "artist";
@@ -256,7 +260,7 @@ class Label extends database_object implements library_item
         $childrens = [];
         foreach ($artists as $artist_id) {
             $childrens[] = [
-                'object_type' => 'artist',
+                'object_type' => LibraryItemEnum::ARTIST,
                 'object_id' => $artist_id
             ];
         }

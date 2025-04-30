@@ -1759,7 +1759,7 @@ abstract class Catalog extends database_object
      * get all artists or artist children of a catalog id (Used for WebDav)
      * @param string $name
      * @param int $catalog_id
-     * @return array{object_type: string, object_id: int}[]
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public static function get_children(string $name, int $catalog_id = 0): array
     {
@@ -1777,7 +1777,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, [$name, $name]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = [
-                'object_type' => 'artist',
+                'object_type' => LibraryItemEnum::ARTIST,
                 'object_id' => (int)$row['id']
             ];
         }

@@ -339,6 +339,9 @@ class Podcast_Episode extends database_object implements
         ];
     }
 
+    /**
+     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     */
     public function get_childrens(): array
     {
         return [];
@@ -347,8 +350,9 @@ class Podcast_Episode extends database_object implements
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
