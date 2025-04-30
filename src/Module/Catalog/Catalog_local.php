@@ -709,10 +709,10 @@ class Catalog_local extends Catalog
         }
 
         $interactor?->info(
-            'found ' . $total . " " . $media_type . " files to update. (last_update: " . $this->last_update . ")",
+            sprintf(T_('File count: %d'), $total) . ' (last_update: ' . $this->last_update . ')',
             true
         );
-        debug_event('local.catalog', 'found ' . $total . " " . $media_type . " files to update. (last_update: " . $this->last_update . ")", 5);
+        debug_event('local.catalog', sprintf(T_('File count: %d'), $total) . ' (last_update: ' . $this->last_update . ')', 5);
         while ($count <= $chunks) {
             $interactor?->info(
                 "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks",
