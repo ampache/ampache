@@ -811,59 +811,58 @@ class Catalog_local extends Catalog
                 Ui::update_text('verify_dir_' . $this->catalog_id, scrub_out($file));
             }
 
-            if (
-                $tableName !== 'album' &&
-                !Core::is_readable(Core::conv_lc_file((string)$row['file']))
-            ) {
-                /* HINT: filename (file path) */
-                AmpError::add('general', sprintf(T_("The file couldn't be read. Does it exist? %s"), $row['file']));
-                debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
-                switch ($tableName) {
-                    case 'song':
-                        Song::update_utime($row['id']);
-                        break;
-                    case 'video':
-                        Video::update_utime($row['id']);
-                        break;
-                    case 'podcast_episode':
-                        Podcast_Episode::update_utime($row['id']);
-                        break;
+            if ($tableName !== 'album') {
+                if (!Core::is_readable(Core::conv_lc_file((string)$row['file']))) {
+                    /* HINT: filename (file path) */
+                    AmpError::add('general', sprintf(T_("The file couldn't be read. Does it exist? %s"), $row['file']));
+                    debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
+                    switch ($tableName) {
+                        case 'song':
+                            Song::update_utime($row['id']);
+                            break;
+                        case 'video':
+                            Video::update_utime($row['id']);
+                            break;
+                        case 'podcast_episode':
+                            Podcast_Episode::update_utime($row['id']);
+                            break;
+                    }
+                    continue;
                 }
-                continue;
-            }
 
-            if ($verify_by_time && $tableName !== 'album') {
-                $file_time = filemtime($row['file']);
-                if ($file_time === false) {
-                    debug_event('local.catalog', 'Unable to get file modification time for ' . $row['file'], 3);
-                    switch ($tableName) {
-                        case 'song':
-                            Song::update_utime($row['id']);
-                            break;
-                        case 'video':
-                            Video::update_utime($row['id']);
-                            break;
-                        case 'podcast_episode':
-                            Podcast_Episode::update_utime($row['id']);
-                            break;
+                if ($verify_by_time) {
+                    $file_time = filemtime($row['file']);
+                    if ($file_time === false) {
+                        debug_event('local.catalog', 'Unable to get file modification time for ' . $row['file'], 3);
+                        switch ($tableName) {
+                            case 'song':
+                                Song::update_utime($row['id']);
+                                break;
+                            case 'video':
+                                Video::update_utime($row['id']);
+                                break;
+                            case 'podcast_episode':
+                                Podcast_Episode::update_utime($row['id']);
+                                break;
+                        }
+                        continue;
                     }
-                    continue;
-                }
-                // check the modification time on the file to see if it's worth checking the tags.
-                if ((int)($row['min_update_time'] ?? 0) > $file_time) {
-                    //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
-                    switch ($tableName) {
-                        case 'song':
-                            Song::update_utime($row['id']);
-                            break;
-                        case 'video':
-                            Video::update_utime($row['id']);
-                            break;
-                        case 'podcast_episode':
-                            Podcast_Episode::update_utime($row['id']);
-                            break;
+                    // check the modification time on the file to see if it's worth checking the tags.
+                    if ((int)($row['min_update_time'] ?? 0) > $file_time) {
+                        //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
+                        switch ($tableName) {
+                            case 'song':
+                                Song::update_utime($row['id']);
+                                break;
+                            case 'video':
+                                Video::update_utime($row['id']);
+                                break;
+                            case 'podcast_episode':
+                                Podcast_Episode::update_utime($row['id']);
+                                break;
+                        }
+                        continue;
                     }
-                    continue;
                 }
             }
 
