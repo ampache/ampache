@@ -115,7 +115,7 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @return array{artist: list<array{object_type: string, object_id: int}>}
+     * @return array{artist: list<array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -123,7 +123,7 @@ class Label extends database_object implements library_item
         $artists = $this->get_artists();
         foreach ($artists as $artist_id) {
             $medias[] = [
-                'object_type' => 'artist',
+                'object_type' => LibraryItemEnum::ARTIST,
                 'object_id' => $artist_id
             ];
         }

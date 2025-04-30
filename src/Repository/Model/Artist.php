@@ -527,14 +527,14 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Get item childrens.
-     * @return array{album: list<array{object_type: string, object_id: int}>}
+     * @return array{album: list<array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
         $medias = [];
         $albums = $this->getAlbumRepository()->getAlbumByArtist($this->id);
         foreach ($albums as $album_id) {
-            $medias[] = ['object_type' => 'album', 'object_id' => $album_id];
+            $medias[] = ['object_type' => LibraryItemEnum::ALBUM, 'object_id' => $album_id];
         }
 
         return ['album' => $medias];
