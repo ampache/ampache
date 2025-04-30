@@ -1325,8 +1325,8 @@ abstract class Catalog extends database_object
 
         if ($update_time > 0) {
             $sql .= ($table === 'album')
-                ? $where_sql . " `song`.`update_time` <= ? "
-                : $where_sql . " `update_time` <= ? ";
+                ? $where_sql . " (`song`.`update_time` IS NULL OR `song`.`update_time` <= ?) "
+                : $where_sql . " (`update_time` IS NULL OR `update_time` <= ?) ";
             $params[] = $update_time;
         }
 
@@ -2378,6 +2378,14 @@ abstract class Catalog extends database_object
                     'object_id' => $object_id,
                     'change' => true
                 ];
+            case 'video':
+                $video = new Video($object_id);
+                self::update_media_from_tags($video);
+
+                return [
+                    'object_id' => $object_id,
+                    'change' => true
+                ];
         }
 
         if (!$api) {
@@ -3085,7 +3093,7 @@ abstract class Catalog extends database_object
         $new_video->display_x     = $results['display_x'];
         $new_video->display_y     = $results['display_y'];
         $new_video->frame_rate    = $results['frame_rate'];
-        $new_video->video_bitrate = self::check_int($results['video_bitrate'], 4294967294, 0);
+        $new_video->video_bitrate = self::check_int($results['video_bitrate'], PHP_INT_MAX, 0);
         $tags                     = Tag::get_object_tags('video', $video->id);
         $video_tags               = [];
         if ($tags) {
