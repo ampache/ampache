@@ -190,16 +190,28 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
         return null;
     }
 
+    /**
+     * @return array{podcast_episode: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     */
     public function get_childrens(): array
     {
-        return ['podcast_episode' => $this->getEpisodeIds()];
+        $results = [];
+        foreach ($this->getEpisodeIds() as $episodeId) {
+            $results[] = [
+                'object_type' => LibraryItemEnum::PODCAST_EPISODE,
+                'object_id' => $episodeId
+            ];
+        }
+
+        return ['podcast_episode' => $results];
     }
 
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 

@@ -257,6 +257,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get item childrens.
+     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -266,8 +267,9 @@ class Broadcast extends database_object implements library_item
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 

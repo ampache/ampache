@@ -53,13 +53,20 @@ use Exception;
  */
 class Catalog_local extends Catalog
 {
-    private string $version     = '000001';
-    private string $type        = 'local';
+    private string $version = '000001';
+
+    private string $type = 'local';
+
     private string $description = 'Local Catalog';
 
     private int $catalog_id;
-    private int $count              = 0;
-    private array $songs_to_gather  = [];
+
+    private int $count = 0;
+
+    /** @var int[] $songs_to_gather */
+    private array $songs_to_gather = [];
+
+    /** @var int[] $videos_to_gather */
     private array $videos_to_gather = [];
 
     public string $path = '';
@@ -320,8 +327,16 @@ class Catalog_local extends Catalog
 
             /* Create the new path */
             $full_file = $path . $slash_type . $file;
-            if ($this->add_file($full_file, $options, $counter, $interactor)) {
-                $songsadded++;
+            try {
+                if ($this->add_file($full_file, $options, $counter, $interactor)) {
+                    $songsadded++;
+                }
+            } catch (Exception $error) {
+                $interactor?->info(
+                    T_('Error') . ' ' . $error->getMessage(),
+                    true
+                );
+                debug_event('local.catalog', 'add_file error: ' . $error->getMessage(), 1);
             }
         } // end while reading directory
 
@@ -482,7 +497,7 @@ class Catalog_local extends Catalog
                 if (count($this->get_gather_types('music')) > 0) {
                     if ($is_audio_file && $this->_insert_local_song($full_file, $options)) {
                         $interactor?->info(
-                            'Imported song file: ' . $full_file,
+                            T_('Added') . ' ' . $full_file,
                             true
                         );
                         debug_event('local.catalog', 'Imported song file: ' . $full_file, 5);
@@ -498,7 +513,7 @@ class Catalog_local extends Catalog
                 } elseif (count($this->get_gather_types('video')) > 0) {
                     if ($is_video_file && $this->_insert_local_video($full_file, $options)) {
                         $interactor?->info(
-                            'Imported video file: ' . $full_file,
+                            T_('Added') . ' ' . $full_file,
                             true
                         );
                         debug_event('local.catalog', 'Imported video file: ' . $full_file, 5);
@@ -664,16 +679,19 @@ class Catalog_local extends Catalog
             'Verify starting on ' . $this->name,
             true
         );
-        debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        $date        = time();
         $this->count = 0;
         $chunk_size  = 10000;
 
+        debug_event('local.catalog', 'Verify starting on ' . $this->name . ' (' . time() . ')', 5);
+        sleep(1);
+
+        $last_update     = true;
         $gather_type     = $this->gather_types;
         $verify_by_album = AmpConfig::get('catalog_verify_by_album', false);
-        $update_time     = ($gather_type !== 'podcast' && AmpConfig::get('catalog_verify_by_time', false))
+        $verify_by_time  = ($gather_type !== 'album' && AmpConfig::get('catalog_verify_by_time', false));
+        $update_time     = ($verify_by_time)
             ? $this->last_update
             : 0;
         if (!$verify_by_album && $gather_type == 'music') {
@@ -696,6 +714,13 @@ class Catalog_local extends Catalog
         } else {
             return $this->count;
         }
+
+        // count with no limit after 0
+        if ($total === 0 && ($update_time > 0 || $limit > 0)) {
+            $last_update = false;
+            $total       = self::count_table($media_type, $this->catalog_id);
+        }
+
         $count  = 1;
         $chunks = 1;
         $chunk  = 0;
@@ -727,7 +752,7 @@ class Catalog_local extends Catalog
                 true
             );
             debug_event('local.catalog', "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks", 5);
-            $this->count += $this->_verify_chunk($media_type, ($chunks - $chunk), $chunk_size);
+            $this->count += $this->_verify_chunk($media_type, ($chunks - $chunk), $chunk_size, $verify_by_time, $last_update);
             $chunk++;
             $count++;
             if ($media_type === 'song') {
@@ -748,9 +773,10 @@ class Catalog_local extends Catalog
             $this->getAlbumRepository()->collectGarbage();
         }
 
+        sleep(1);
         // No limit set OR we set a limit and we didn't find anything so update the last_update time
-        if ($limit === 0 || ($update_time > 0 && $total === 0)) {
-            $this->update_last_update($date);
+        if ($limit === 0 || $last_update === false) {
+            $this->update_last_update(time());
         }
 
         return $this->count;
@@ -763,13 +789,19 @@ class Catalog_local extends Catalog
      * @param string $tableName ('album', 'podcast_episode', 'song', 'video')
      * @param int $chunk
      * @param int $chunk_size
+     * @param bool $verify_by_time
+     * @param bool $last_update
      */
-    private function _verify_chunk($tableName, $chunk, $chunk_size): int
+    private function _verify_chunk($tableName, $chunk, $chunk_size, $verify_by_time, $last_update): int
     {
         $count = $chunk * $chunk_size;
         $sql   = match ($tableName) {
-            'album' => "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? AND (`song`.`update_time` IS NULL OR song.update_time < " . $this->last_update . ") GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC $chunk_size",
-            default => "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? AND (`$tableName`.`update_time` IS NULL OR `$tableName`.`update_time` < `catalog`.`last_update`) ORDER BY `$tableName`.`file` DESC LIMIT $chunk_size",
+            'album' => ($last_update)
+                ? "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? AND song.update_time < " . $this->last_update . " GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC $chunk_size"
+                : "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC $chunk_size",
+            default => ($last_update)
+                ? "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `$tableName`.`file` DESC LIMIT $chunk_size"
+                : "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? ORDER BY `$tableName`.`file` DESC LIMIT $chunk_size",
         };
 
         //debug_event(self::class, '_verify_chunk (' . $chunk . ') ' . $sql. ' ' . print_r($params, true), 5);
@@ -784,9 +816,6 @@ class Catalog_local extends Catalog
             $className::build_cache($media_ids);
         }
 
-        // verify files based on modification time
-        $verify_by_time = AmpConfig::get('catalog_verify_by_time', false);
-
         $changed    = 0;
         $db_results = Dba::read($sql, [$this->catalog_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -797,39 +826,58 @@ class Catalog_local extends Catalog
                 Ui::update_text('verify_dir_' . $this->catalog_id, scrub_out($file));
             }
 
-            if (
-                $tableName !== 'album' &&
-                !Core::is_readable(Core::conv_lc_file((string)$row['file']))
-            ) {
-                /* HINT: filename (file path) */
-                AmpError::add('general', sprintf(T_("The file couldn't be read. Does it exist? %s"), $row['file']));
-                debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
-                continue;
-            }
-            if ($verify_by_time && $tableName === 'song') {
-                $file_time = filemtime($row['file']);
-                if ($file_time === false) {
-                    debug_event('local.catalog', 'Unable to get file modification time for ' . $row['file'], 3);
+            if ($tableName !== 'album') {
+                if (!Core::is_readable(Core::conv_lc_file((string)$row['file']))) {
+                    /* HINT: filename (file path) */
+                    AmpError::add('general', sprintf(T_("The file couldn't be read. Does it exist? %s"), $row['file']));
+                    debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
+                    switch ($tableName) {
+                        case 'song':
+                            Song::update_utime($row['id']);
+                            break;
+                        case 'video':
+                            Video::update_utime($row['id']);
+                            break;
+                        case 'podcast_episode':
+                            Podcast_Episode::update_utime($row['id']);
+                            break;
+                    }
                     continue;
                 }
-                // check the modification time on the file to see if it's worth checking the tags.
-                if ((int)($row['min_update_time'] ?? 0) > $file_time) {
-                    //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
-                    Song::update_utime($row['id']);
-                    continue;
-                }
-            }
 
-            if ($verify_by_time && $tableName !== 'album') {
-                $file_time = filemtime($row['file']);
-                if ($file_time === false) {
-                    debug_event('local.catalog', 'Unable to get file modification time for ' . $row['file'], 3);
-                    continue;
-                }
-                // check the modification time on the file to see if it's worth checking the tags.
-                if ((int)($row['min_update_time'] ?? 0) > $file_time) {
-                    //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
-                    continue;
+                if ($verify_by_time) {
+                    $file_time = filemtime($row['file']);
+                    if ($file_time === false) {
+                        debug_event('local.catalog', 'Unable to get file modification time for ' . $row['file'], 3);
+                        switch ($tableName) {
+                            case 'song':
+                                Song::update_utime($row['id']);
+                                break;
+                            case 'video':
+                                Video::update_utime($row['id']);
+                                break;
+                            case 'podcast_episode':
+                                Podcast_Episode::update_utime($row['id']);
+                                break;
+                        }
+                        continue;
+                    }
+                    // check the modification time on the file to see if it's worth checking the tags.
+                    if ((int)($row['min_update_time'] ?? 0) > $file_time) {
+                        //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
+                        switch ($tableName) {
+                            case 'song':
+                                Song::update_utime($row['id']);
+                                break;
+                            case 'video':
+                                Video::update_utime($row['id']);
+                                break;
+                            case 'podcast_episode':
+                                Podcast_Episode::update_utime($row['id']);
+                                break;
+                        }
+                        continue;
+                    }
                 }
             }
 
@@ -889,7 +937,7 @@ class Catalog_local extends Catalog
                 true
             );
             debug_event('local.catalog', "catalog " . $this->name . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
-            $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
+            $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000, $interactor));
             $chunk++;
             $count++;
         }
@@ -929,7 +977,7 @@ class Catalog_local extends Catalog
      * This is the clean function and is broken into chunks to try to save a little memory
      * @return list<int>
      */
-    private function _clean_chunk(string $media_type, int $chunk, int $chunk_size): array
+    private function _clean_chunk(string $media_type, int $chunk, int $chunk_size, ?Interactor $interactor = null): array
     {
         $dead  = [];
         $count = $chunk * $chunk_size;
@@ -945,6 +993,10 @@ class Catalog_local extends Catalog
                 Ui::update_text('clean_dir_' . $this->catalog_id, scrub_out($file));
             }
             if ($this->clean_file($results['file'], $media_type)) {
+                $interactor?->info(
+                    'File removed: ' . $results['file'],
+                    true
+                );
                 $dead[] = $results['id'];
             }
         }
@@ -957,7 +1009,7 @@ class Catalog_local extends Catalog
      * This is the check function and is broken into chunks to try to save a little memory
      * @return list<string>
      */
-    private function _check_chunk(string $media_type, int $chunk, int $chunk_size): array
+    private function _check_chunk(string $media_type, int $chunk, int $chunk_size, ?Interactor $interactor = null): array
     {
         $missing = [];
         $count   = $chunk * $chunk_size;
@@ -968,9 +1020,17 @@ class Catalog_local extends Catalog
         while ($results = Dba::fetch_assoc($db_results)) {
             $file_info = Core::get_filesize(Core::conv_lc_file($results['file']));
             if ($file_info < 1) {
+                $interactor?->info(
+                    'File not found or empty: ' . $results['file'],
+                    true
+                );
                 debug_event('local.catalog', '_clean_chunk: {' . $results['id'] . '} File not found or empty ' . $results['file'], 5);
                 $missing[] = $results['file'];
             } elseif (!Core::is_readable(Core::conv_lc_file((string)$results['file']))) {
+                $interactor?->info(
+                    $results['file'] . ' is not readable, but does exist',
+                    true
+                );
                 debug_event('local.catalog', "_clean_chunk: " . $results['file'] . ' is not readable, but does exist', 1);
             }
         }
@@ -1292,7 +1352,7 @@ class Catalog_local extends Catalog
     /**
      * @return string[]
      */
-    public function check_catalog_proc(): array
+    public function check_catalog_proc(?Interactor $interactor = null): array
     {
         if (!Core::is_readable($this->path)) {
             // First sanity check; no point in proceeding with an unreadable catalog root.
@@ -1318,7 +1378,7 @@ class Catalog_local extends Catalog
         $chunks = (int)ceil($total / 10000);
         foreach (range(1, $chunks) as $chunk) {
             debug_event('local.catalog', "catalog " . $this->name . " Starting check " . $media_type . " on chunk $chunk/$chunks", 5);
-            $missing = array_merge($missing, $this->_check_chunk($media_type, (int)$chunk, 10000));
+            $missing = array_merge($missing, $this->_check_chunk($media_type, (int)$chunk, 10000, $interactor));
         }
 
         return $missing;

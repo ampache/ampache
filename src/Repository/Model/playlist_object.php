@@ -168,7 +168,12 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return list<array{
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     track?: int,
+     *     track_id?: int
+     * }>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -295,16 +300,22 @@ abstract class playlist_object extends database_object implements library_item
         return null;
     }
 
+    /**
+     * @return array{
+     *     playlist: list<array{object_type: LibraryItemEnum, object_id: int, track: int, track_id: int}>
+     * }
+     */
     public function get_childrens(): array
     {
-        return $this->get_items();
+        return ['playlist' => $this->get_items()];
     }
 
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         debug_event('playlist_object.abstract', 'get_children ' . $name, 5);
 

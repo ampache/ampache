@@ -244,7 +244,7 @@ abstract class Catalog extends database_object
     /**
      * @return string[]
      */
-    abstract public function check_catalog_proc(): array;
+    abstract public function check_catalog_proc(?Interactor $interactor = null): array;
 
     abstract public function move_catalog_proc(string $new_path): bool;
 
@@ -1341,11 +1341,12 @@ abstract class Catalog extends database_object
             return 0;
         }
 
+        $results = (int)($row[0] ?? 0);
         if ($catalog_id === 0) {
-            self::set_update_info($table, (int)$row[0]);
+            self::set_update_info($table, $results);
         }
 
-        return (int)$row[0];
+        return $results;
     }
 
     /**
@@ -1758,7 +1759,7 @@ abstract class Catalog extends database_object
      * get all artists or artist children of a catalog id (Used for WebDav)
      * @param string $name
      * @param int $catalog_id
-     * @return array{object_type: string, object_id: int}[]
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public static function get_children(string $name, int $catalog_id = 0): array
     {
@@ -1768,15 +1769,15 @@ abstract class Catalog extends database_object
             $sql .= "LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'album_artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = " . (int)$catalog_id;
         }
 
-        $sql .= "WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ";
+        $sql .= "WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ? OR REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(`artist`.`name`, ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, '') = ?) ";
         if ((int)$catalog_id > 0) {
             $sql .= "AND `catalog_map`.`object_id` IS NOT NULL";
         }
 
-        $db_results = Dba::read($sql, [$name, $name]);
+        $db_results = Dba::read($sql, [$name, $name, '/', '\\', ':', '?', '*', '|', '"', '<', '>', '#', '%', '\n', $name]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = [
-                'object_type' => 'artist',
+                'object_type' => LibraryItemEnum::ARTIST,
                 'object_id' => (int)$row['id']
             ];
         }
@@ -3767,7 +3768,7 @@ abstract class Catalog extends database_object
      * check_int
      * Check to make sure a number fits into the database
      */
-    public static function check_int(int|float $my_int, int|float $max, int $min): int
+    public static function check_int(int|float $my_int, int|float $max, int $min): int|float
     {
         if ($my_int > $max) {
             return $max;

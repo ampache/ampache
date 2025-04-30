@@ -83,6 +83,8 @@ class Podcast_Episode extends database_object implements
 
     public int $addition_time;
 
+    public int $update_time;
+
     public int $total_count;
 
     public int $total_skip;
@@ -337,6 +339,9 @@ class Podcast_Episode extends database_object implements
         ];
     }
 
+    /**
+     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     */
     public function get_childrens(): array
     {
         return [];
@@ -345,8 +350,9 @@ class Podcast_Episode extends database_object implements
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -496,6 +502,21 @@ class Podcast_Episode extends database_object implements
     public function check_play_history($user, $agent, $date): bool
     {
         return Stats::has_played_history('podcast_episode', $this, $user, $agent, $date);
+    }
+
+
+    /**
+     * update_utime
+     * sets a new update time
+     */
+    public static function update_utime(int $episode_id, int $time = 0): void
+    {
+        if (!$time) {
+            $time = time();
+        }
+
+        $sql = "UPDATE `podcast_episode` SET `update_time` = ? WHERE `id` = ?;";
+        Dba::write($sql, [$time, $episode_id]);
     }
 
     /**

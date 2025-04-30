@@ -116,7 +116,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     T_('Look for missing file media entries'),
                     true
                 );
-                $files = $catalog->check_catalog_proc();
+                $files = $catalog->check_catalog_proc($interactor);
                 foreach ($files as $path) {
                     /* HINT: filename (File path) OR table name (podcast, video, etc) */
                     $interactor->info(

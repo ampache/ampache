@@ -710,26 +710,26 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Get item children.
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array{song: list<array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
-        return $this->get_medias();
+        return ['song' => $this->get_medias()];
     }
 
     /**
      * Search for direct children of an object
      * @param string $name
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         $childrens  = [];
         $sql        = "SELECT DISTINCT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`file` LIKE ?;";
         $db_results = Dba::read($sql, [$this->id, "%" . $name]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = [
-                'object_type' => 'song',
+                'object_type' => LibraryItemEnum::SONG,
                 'object_id' => (int)$row['id']
             ];
         }
