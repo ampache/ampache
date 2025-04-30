@@ -666,11 +666,10 @@ class Catalog_local extends Catalog
         );
         set_time_limit(0);
 
-        $date        = time();
         $this->count = 0;
         $chunk_size  = 10000;
 
-        debug_event('local.catalog', 'Verify starting on ' . $this->name . ' (' . $date . ')', 5);
+        debug_event('local.catalog', 'Verify starting on ' . $this->name . ' (' . time() . ')', 5);
         sleep(1);
 
         $last_update     = true;
@@ -759,9 +758,10 @@ class Catalog_local extends Catalog
             $this->getAlbumRepository()->collectGarbage();
         }
 
+        sleep(1);
         // No limit set OR we set a limit and we didn't find anything so update the last_update time
         if ($limit === 0 || $last_update === false) {
-            $this->update_last_update($date);
+            $this->update_last_update(time());
         }
 
         return $this->count;
