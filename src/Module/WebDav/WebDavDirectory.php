@@ -112,6 +112,6 @@ class WebDavDirectory extends DAV\Collection
 
     public function getName(): string
     {
-        return (string) $this->libitem->get_fullname();
+        return str_replace('/', '', (string) $this->libitem->get_fullname());
     }
 }
