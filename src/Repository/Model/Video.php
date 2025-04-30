@@ -82,7 +82,7 @@ class Video extends database_object implements
 
     public ?int $bitrate = null;
 
-    public ?int $video_bitrate = null;
+    public int|float|null $video_bitrate = null;
 
     public ?int $display_x = null;
 

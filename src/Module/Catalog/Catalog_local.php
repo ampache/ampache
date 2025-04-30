@@ -53,13 +53,20 @@ use Exception;
  */
 class Catalog_local extends Catalog
 {
-    private string $version     = '000001';
-    private string $type        = 'local';
+    private string $version = '000001';
+
+    private string $type = 'local';
+
     private string $description = 'Local Catalog';
 
     private int $catalog_id;
-    private int $count              = 0;
-    private array $songs_to_gather  = [];
+
+    private int $count = 0;
+
+    /** @var int[] $songs_to_gather */
+    private array $songs_to_gather = [];
+
+    /** @var int[] $videos_to_gather */
     private array $videos_to_gather = [];
 
     public string $path = '';

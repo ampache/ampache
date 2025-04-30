@@ -1786,16 +1786,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_local.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:\\$songs_to_gather type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:\\$videos_to_gather type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SeafileAdapter\\:\\:__construct\\(\\) has parameter \\$api_key with no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/SeafileAdapter.php
