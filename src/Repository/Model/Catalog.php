@@ -1341,11 +1341,12 @@ abstract class Catalog extends database_object
             return 0;
         }
 
+        $results = (int)($row[0] ?? 0);
         if ($catalog_id === 0) {
-            self::set_update_info($table, (int)$row[0]);
+            self::set_update_info($table, $results);
         }
 
-        return (int)$row[0];
+        return $results;
     }
 
     /**

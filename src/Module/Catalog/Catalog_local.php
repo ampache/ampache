@@ -671,9 +671,11 @@ class Catalog_local extends Catalog
         $this->count = 0;
         $chunk_size  = 10000;
 
+        $last_update     = true;
         $gather_type     = $this->gather_types;
         $verify_by_album = AmpConfig::get('catalog_verify_by_album', false);
-        $update_time     = ($gather_type !== 'podcast' && AmpConfig::get('catalog_verify_by_time', false))
+        $verify_by_time  = ($gather_type !== 'album' && AmpConfig::get('catalog_verify_by_time', false));
+        $update_time     = ($verify_by_time)
             ? $this->last_update
             : 0;
         if (!$verify_by_album && $gather_type == 'music') {
@@ -696,6 +698,13 @@ class Catalog_local extends Catalog
         } else {
             return $this->count;
         }
+
+        // count with no limit after 0
+        if ($total === 0 && ($update_time > 0 || $limit > 0)) {
+            $last_update = false;
+            $total       = self::count_table($media_type, $this->catalog_id);
+        }
+
         $count  = 1;
         $chunks = 1;
         $chunk  = 0;
@@ -727,7 +736,7 @@ class Catalog_local extends Catalog
                 true
             );
             debug_event('local.catalog', "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks", 5);
-            $this->count += $this->_verify_chunk($media_type, ($chunks - $chunk), $chunk_size);
+            $this->count += $this->_verify_chunk($media_type, ($chunks - $chunk), $chunk_size, $verify_by_time, $last_update);
             $chunk++;
             $count++;
             if ($media_type === 'song') {
@@ -763,13 +772,19 @@ class Catalog_local extends Catalog
      * @param string $tableName ('album', 'podcast_episode', 'song', 'video')
      * @param int $chunk
      * @param int $chunk_size
+     * @param bool $verify_by_time
+     * @param bool $last_update
      */
-    private function _verify_chunk($tableName, $chunk, $chunk_size): int
+    private function _verify_chunk($tableName, $chunk, $chunk_size, $verify_by_time, $last_update): int
     {
         $count = $chunk * $chunk_size;
         $sql   = match ($tableName) {
-            'album' => "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? AND (`song`.`update_time` IS NULL OR song.update_time < " . $this->last_update . ") GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC $chunk_size",
-            default => "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? AND (`$tableName`.`update_time` IS NULL OR `$tableName`.`update_time` < `catalog`.`last_update`) ORDER BY `$tableName`.`file` DESC LIMIT $chunk_size",
+            'album' => ($last_update)
+                ? "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? AND song.update_time < " . $this->last_update . " GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC $chunk_size"
+                : "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC $chunk_size",
+            default => ($last_update)
+                ? "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `$tableName`.`file` DESC LIMIT $chunk_size"
+                : "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? ORDER BY `$tableName`.`file` DESC LIMIT $chunk_size",
         };
 
         //debug_event(self::class, '_verify_chunk (' . $chunk . ') ' . $sql. ' ' . print_r($params, true), 5);
@@ -783,9 +798,6 @@ class Catalog_local extends Catalog
             /** @var Song|Album|Video $className */
             $className::build_cache($media_ids);
         }
-
-        // verify files based on modification time
-        $verify_by_time = AmpConfig::get('catalog_verify_by_time', false);
 
         $changed    = 0;
         $db_results = Dba::read($sql, [$this->catalog_id]);
