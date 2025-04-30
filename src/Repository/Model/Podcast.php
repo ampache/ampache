@@ -202,6 +202,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
                 'object_id' => $episodeId
             ];
         }
+
         return ['podcast_episode' => $results];
     }
 
