@@ -760,7 +760,7 @@ class Catalog_local extends Catalog
         }
 
         // No limit set OR we set a limit and we didn't find anything so update the last_update time
-        if ($limit === 0 || ($update_time > 0 && $total === 0)) {
+        if ($limit === 0 || $last_update === false) {
             $this->update_last_update($date);
         }
 
