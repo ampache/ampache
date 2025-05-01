@@ -62,12 +62,13 @@ final class WebDavApplication
             sprintf('%s/webdav/index.php', $raw_web_path)
         );
 
-        // Error complaining about browser plugin
+        $use_auth = $this->configContainer->isAuthenticationEnabled();
+
         $server->addPlugin(
-            $this->webDavFactory->createBrowserPlugin()
+            $this->webDavFactory->createBrowserPlugin($use_auth)
         );
 
-        if ($this->configContainer->isAuthenticationEnabled()) {
+        if ($use_auth) {
             $server->addPlugin(
                 $this->webDavFactory->createPlugin(
                     $this->webDavFactory->createWebDavAuth()

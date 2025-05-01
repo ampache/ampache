@@ -39,5 +39,5 @@ interface WebDavFactoryInterface
 
     public function createPlugin(?BackendInterface $backend): Plugin;
 
-    public function createBrowserPlugin(): BrowserPlugin;
+    public function createBrowserPlugin(bool $enablePost): BrowserPlugin;
 }

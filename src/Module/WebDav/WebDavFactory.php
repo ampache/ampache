@@ -67,8 +67,9 @@ final class WebDavFactory implements WebDavFactoryInterface
     {
         return new Plugin($backend);
     }
-    public function createBrowserPlugin(): BrowserPlugin
+
+    public function createBrowserPlugin(bool $enablePost): BrowserPlugin
     {
-        return new BrowserPlugin();
+        return new BrowserPlugin($enablePost);
     }
 }
