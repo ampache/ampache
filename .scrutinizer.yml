@@ -1,5 +1,5 @@
 build:
-    image: default-noble
+    image: default-jammy
     environment:
         php:
             version: "8.2"
