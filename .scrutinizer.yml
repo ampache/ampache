@@ -1,4 +1,5 @@
 build:
+    image: default-noble
     environment:
         php:
             version: "8.2"
