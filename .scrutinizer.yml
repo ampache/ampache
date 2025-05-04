@@ -6,12 +6,14 @@ build:
             ini:
                 memory_limit: "-1"
         node: v18.20.4
+    dependencies:
+        override:
+            - command: 'composer install --no-dev --prefer-source --no-interaction'
+            - command: 'npm install'
+            - command: 'npm run build'
     nodes:
         coverage:
             tests:
-                before:
-                    - command: npm install
-                    - command: npm run build
                 override:
                     - command: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-clover build/coverage-clover.xml tests
                       coverage:
