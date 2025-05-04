@@ -8,8 +8,8 @@ build:
         node: v18.20.4
     dependencies:
         override:
-            #- command: 'composer install --no-dev --prefer-source --no-interaction'
-            - command: 'composer install --prefer-source --no-interaction'
+            - command: 'composer install --no-dev --prefer-source --no-interaction'
+            - command: 'composer require --dev phpunit/phpunit'
             - command: 'npm install'
             - command: 'npm run build'
     nodes:
