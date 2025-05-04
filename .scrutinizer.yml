@@ -9,6 +9,9 @@ build:
     nodes:
         coverage:
             tests:
+                before:
+                    - command: npm install
+                    - command: npm run build
                 override:
                     - command: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-clover build/coverage-clover.xml tests
                       coverage:
