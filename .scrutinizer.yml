@@ -19,6 +19,10 @@ build:
                       coverage:
                         file: build/coverage-clover.xml
                         format: clover
+        analysis:
+            tests:
+                override:
+                    - php-scrutinizer-run
 filter:
     excluded_paths:
         - 'public/lib/components/*'
