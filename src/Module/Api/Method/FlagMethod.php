@@ -95,7 +95,6 @@ final class FlagMethod
         ) {
             $type      = 'search';
             $object_id = (int) str_replace('smart_', '', (string)$input['id']);
-
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);

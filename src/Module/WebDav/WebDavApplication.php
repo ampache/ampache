@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\WebDav;
 
 use Ampache\Config\ConfigContainerInterface;
-use Sabre\DAV\Browser\Plugin as BrowserPlugin;
 
 final class WebDavApplication
 {
@@ -63,10 +62,13 @@ final class WebDavApplication
             sprintf('%s/webdav/index.php', $raw_web_path)
         );
 
-        // Error complaining about browser plugin
-        $server->addPlugin(new BrowserPlugin());
+        $use_auth = $this->configContainer->isAuthenticationEnabled();
 
-        if ($this->configContainer->isAuthenticationEnabled()) {
+        $server->addPlugin(
+            $this->webDavFactory->createBrowserPlugin($use_auth)
+        );
+
+        if ($use_auth) {
             $server->addPlugin(
                 $this->webDavFactory->createPlugin(
                     $this->webDavFactory->createWebDavAuth()

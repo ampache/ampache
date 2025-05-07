@@ -343,7 +343,7 @@ class AmpacheXbmc extends localplay_controller
         try {
             $this->stop();
 
-            $clear = $this->_xbmc->Playlist->Clear(
+            $this->_xbmc->Playlist->Clear(
                 ['playlistid' => $this->_playlistId]
             );
 
