@@ -98,8 +98,8 @@ final class TagAction implements ApplicationActionInterface
             $type = $browse->get_content_div();
 
             require_once Ui::find_template('browse_content.inc.php');
-
         }
+
         $browse->store();
 
         $this->ui->showQueryStats();
