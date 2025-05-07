@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-04-30 12:04+1000\n"
+"POT-Creation-Date: 2025-05-08 08:50+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -218,11 +218,12 @@ msgstr ""
 #: ../../public/templates/test_error_page.inc.php:58
 #: ../../src/Config/functions.php:471
 #: ../../src/Module/Application/Admin/User/UpdateUserAction.php:131
+#: ../../src/Module/Catalog/Catalog_local.php:336
 #: ../../src/Module/Cli/AdminResetPreferencesCommand.php:98
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:88
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:181
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:97
-#: ../../src/Repository/Model/Catalog.php:2425
+#: ../../src/Repository/Model/Catalog.php:2426
 msgid "Error"
 msgstr ""
 
@@ -681,7 +682,7 @@ msgstr ""
 #: ../../public/templates/show_recently_skipped.inc.php:174
 #: ../../src/Module/Application/Song/ConfirmDeleteAction.php:95
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:161
-#: ../../src/Repository/Model/Catalog.php:2394
+#: ../../src/Repository/Model/Catalog.php:2395
 msgid "Song"
 msgstr ""
 
@@ -719,7 +720,7 @@ msgstr ""
 #: ../../public/templates/show_add_catalog.inc.php:136
 #: ../../public/templates/show_podcast_episodes.inc.php:61
 #: ../../public/templates/show_podcast_episodes.inc.php:105
-#: ../../src/Repository/Model/Podcast_Episode.php:222
+#: ../../src/Repository/Model/Podcast_Episode.php:224
 #: ../../src/Repository/Model/Podcast.php:127
 #: ../../src/Repository/Model/Search.php:1007
 #: ../../src/Repository/Model/Search.php:1057
@@ -1047,7 +1048,7 @@ msgstr ""
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:258
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:236
 #: ../../src/Gui/Song/SongViewAdapter.php:345
-#: ../../src/Repository/Model/Broadcast.php:366
+#: ../../src/Repository/Model/Broadcast.php:368
 #: ../../src/Repository/Model/Share.php:143
 msgid "Delete"
 msgstr ""
@@ -1210,7 +1211,7 @@ msgstr ""
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:243
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:213
 #: ../../src/Gui/Song/SongViewAdapter.php:296
-#: ../../src/Repository/Model/Broadcast.php:365
+#: ../../src/Repository/Model/Broadcast.php:367
 #: ../../src/Repository/Model/Share.php:142
 msgid "Edit"
 msgstr ""
@@ -1559,7 +1560,7 @@ msgstr ""
 #: ../../public/templates/show_labels.inc.php:93
 #: ../../src/Gui/Song/SongViewAdapter.php:405
 #: ../../src/Gui/Song/SongViewAdapter.php:407
-#: ../../src/Repository/Model/Label.php:204
+#: ../../src/Repository/Model/Label.php:207
 #: ../../src/Repository/Model/Search.php:622
 #: ../../src/Repository/Model/Search.php:1100
 msgid "Label"
@@ -1811,7 +1812,7 @@ msgstr ""
 #: ../../public/templates/show_test.inc.php:67
 #: ../../public/templates/show_user.inc.php:120
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:79
-#: ../../src/Repository/Model/Catalog.php:2394
+#: ../../src/Repository/Model/Catalog.php:2395
 #: ../../src/Repository/Model/Search.php:1019
 #: ../../src/Repository/Model/Search.php:1063
 msgid "Status"
@@ -1871,7 +1872,7 @@ msgstr ""
 #: ../../public/templates/show_edit_playlist_row.inc.php:45
 #: ../../public/templates/show_edit_search_row.inc.php:44
 #: ../../public/templates/show_import_playlist.inc.php:43
-#: ../../src/Repository/Model/playlist_object.php:268
+#: ../../src/Repository/Model/playlist_object.php:273
 msgid "Private"
 msgstr ""
 
@@ -2688,7 +2689,7 @@ msgstr ""
 #: ../../src/Repository/Model/Album.php:247
 #: ../../src/Repository/Model/Album.php:250
 #: ../../src/Repository/Model/Album.php:1077
-#: ../../src/Repository/Model/Artist.php:657
+#: ../../src/Repository/Model/Artist.php:658
 msgid "Unknown (Orphaned)"
 msgstr ""
 
@@ -2939,7 +2940,7 @@ msgstr ""
 #: ../../public/templates/show_video.inc.php:144
 #: ../../src/Gui/Song/SongViewAdapter.php:439
 #: ../../src/Module/Catalog/Catalog_dropbox.php:156
-#: ../../src/Module/Catalog/Catalog_local.php:150
+#: ../../src/Module/Catalog/Catalog_local.php:157
 #: ../../src/Module/Cli/AddCatalogCommand.php:53
 #: ../../src/Module/Cli/UpdateCatalogFolderCommand.php:57
 msgid "Path"
@@ -3230,7 +3231,7 @@ msgstr ""
 #: ../../public/templates/show_videos.inc.php:90
 #: ../../src/Gui/Song/SongViewAdapter.php:358
 #: ../../src/Module/Util/Rss/Type/RecentlyPlayedFeed.php:82
-#: ../../src/Repository/Model/Podcast_Episode.php:227
+#: ../../src/Repository/Model/Podcast_Episode.php:229
 #: ../../src/Repository/Model/Search.php:614
 #: ../../src/Repository/Model/Search.php:871
 #: ../../src/Repository/Model/Song.php:1658
@@ -4374,9 +4375,9 @@ msgstr ""
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:580
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:581
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:582
-#: ../../src/Repository/Model/playlist_object.php:283
+#: ../../src/Repository/Model/playlist_object.php:288
 #: ../../src/Repository/Model/Preference.php:431
-#: ../../src/Repository/Model/Video.php:770
+#: ../../src/Repository/Model/Video.php:771
 msgid "Unknown"
 msgstr ""
 
@@ -5602,6 +5603,8 @@ msgstr ""
 
 #: ../../public/templates/show_video.inc.php:153
 #: ../../src/Gui/Song/SongViewAdapter.php:448
+#: ../../src/Module/Catalog/Catalog_local.php:500
+#: ../../src/Module/Catalog/Catalog_local.php:516
 #: ../../src/Repository/Model/Search.php:712
 #: ../../src/Repository/Model/Search.php:942
 #: ../../src/Repository/Model/Search.php:1045
@@ -7202,13 +7205,13 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:82
-#: ../../src/Module/Catalog/Catalog_local.php:597
+#: ../../src/Module/Catalog/Catalog_local.php:612
 #: ../../src/Module/Cli/HtaccessCommand.php:131
 msgid "Success"
 msgstr ""
 
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:84
-#: ../../src/Module/Catalog/Catalog_local.php:599
+#: ../../src/Module/Catalog/Catalog_local.php:614
 msgid "Failure"
 msgstr ""
 
@@ -7591,97 +7594,97 @@ msgstr ""
 msgid "API Error: cannot connect to Dropbox."
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_local.php:227
-#: ../../src/Module/Catalog/Catalog_local.php:1267
+#: ../../src/Module/Catalog/Catalog_local.php:234
+#: ../../src/Module/Catalog/Catalog_local.php:1327
 msgid "Path was not specified"
 msgstr ""
 
 #. HINT: directory (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:239
+#: ../../src/Module/Catalog/Catalog_local.php:246
 #, php-format
 msgid "This path belongs to an existing local Catalog: %s"
 msgstr ""
 
 #. HINT: directory (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:286
+#: ../../src/Module/Catalog/Catalog_local.php:293
 #, php-format
 msgid "Unable to open: %s"
 msgstr ""
 
 #. HINT: directory (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:299
-#: ../../src/Module/Catalog/Catalog_local.php:391
+#: ../../src/Module/Catalog/Catalog_local.php:306
+#: ../../src/Module/Catalog/Catalog_local.php:406
 #, php-format
 msgid "Unable to change to directory: %s"
 msgstr ""
 
 #. HINT: FullFile
-#: ../../src/Module/Catalog/Catalog_local.php:420
+#: ../../src/Module/Catalog/Catalog_local.php:435
 #, php-format
 msgid "Unable to get the filesize for \"%s\""
 msgstr ""
 
 #. HINT: filename (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:433
-#: ../../src/Module/Catalog/Catalog_local.php:805
+#: ../../src/Module/Catalog/Catalog_local.php:448
+#: ../../src/Module/Catalog/Catalog_local.php:832
 #, php-format
 msgid "The file couldn't be read. Does it exist? %s"
 msgstr ""
 
 #. HINT: FullFile
-#: ../../src/Module/Catalog/Catalog_local.php:460
+#: ../../src/Module/Catalog/Catalog_local.php:475
 #, php-format
 msgid "\"%s\" does not match site charset"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_local.php:639
+#: ../../src/Module/Catalog/Catalog_local.php:654
 msgid "N/A"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_local.php:643
-#: ../../src/Module/Catalog/Catalog_local.php:649
+#: ../../src/Module/Catalog/Catalog_local.php:658
+#: ../../src/Module/Catalog/Catalog_local.php:664
 #: ../../src/Module/Catalog/Catalog_Seafile.php:323
 msgid "Catalog Updated"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_local.php:643
-#: ../../src/Module/Catalog/Catalog_local.php:650
+#: ../../src/Module/Catalog/Catalog_local.php:658
+#: ../../src/Module/Catalog/Catalog_local.php:665
 #, php-format
 msgid "Total Time: [%s] Total Media: [%s] Media Per Second: [%s]"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_local.php:720
-#: ../../src/Module/Catalog/Catalog_local.php:723
+#: ../../src/Module/Catalog/Catalog_local.php:745
+#: ../../src/Module/Catalog/Catalog_local.php:748
 #: ../../src/Module/Catalog/Update/UpdateSingleCatalogFolder.php:103
 #, php-format
 msgid "File count: %d"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_local.php:860
+#: ../../src/Module/Catalog/Catalog_local.php:908
 msgid "Catalog root unreadable, stopping clean"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_local.php:911
+#: ../../src/Module/Catalog/Catalog_local.php:959
 msgid "All files would be removed. Doing nothing"
 msgstr ""
 
 #. HINT: filename (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:997
+#: ../../src/Module/Catalog/Catalog_local.php:1057
 #, php-format
 msgid "File was not found or is 0 Bytes: %s"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_local.php:1275
+#: ../../src/Module/Catalog/Catalog_local.php:1335
 msgid "Specified path is inside an existing catalog"
 msgstr ""
 
 #. HINT: directory (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:1284
+#: ../../src/Module/Catalog/Catalog_local.php:1344
 #, php-format
 msgid "The folder couldn't be read. Does it exist? %s"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_local.php:1299
+#: ../../src/Module/Catalog/Catalog_local.php:1359
 #: ../../src/Module/Catalog/Update/UpdateCatalog.php:106
 #: ../../src/Module/Catalog/Update/UpdateSingleCatalogFile.php:70
 #: ../../src/Module/Catalog/Update/UpdateSingleCatalogFolder.php:72
@@ -7736,7 +7739,7 @@ msgstr ""
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:201
 #: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:84
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:86
-#: ../../src/Repository/Model/Catalog.php:2423
+#: ../../src/Repository/Model/Catalog.php:2424
 #: ../../src/Repository/Model/Search.php:713
 #: ../../src/Repository/Model/Search.php:943
 msgid "Updated"
@@ -8754,7 +8757,7 @@ msgstr ""
 
 #: ../../src/Module/Song/SongSorter.php:108
 #: ../../src/Module/Song/SongSorter.php:193
-#: ../../src/Repository/Model/Catalog.php:3639
+#: ../../src/Repository/Model/Catalog.php:3640
 #, php-format
 msgid "%d file updated."
 msgid_plural "%d files updated."
@@ -9751,20 +9754,20 @@ msgstr ""
 msgid "Reset Art"
 msgstr ""
 
-#: ../../src/Repository/Model/Broadcast.php:365
+#: ../../src/Repository/Model/Broadcast.php:367
 msgid "Broadcast Edit"
 msgstr ""
 
-#: ../../src/Repository/Model/Broadcast.php:376
+#: ../../src/Repository/Model/Broadcast.php:378
 msgid "Broadcast"
 msgstr ""
 
-#: ../../src/Repository/Model/Broadcast.php:391
+#: ../../src/Repository/Model/Broadcast.php:393
 msgid "Unbroadcast"
 msgstr ""
 
 #: ../../src/Repository/Model/Browse.php:409
-#: ../../src/Repository/Model/playlist_object.php:357
+#: ../../src/Repository/Model/playlist_object.php:368
 msgid "Playlist Items"
 msgstr ""
 
@@ -9796,51 +9799,51 @@ msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../src/Repository/Model/Catalog.php:2427
+#: ../../src/Repository/Model/Catalog.php:2428
 msgid "No Update Needed"
 msgstr ""
 
-#: ../../src/Repository/Model/Catalog.php:3605
+#: ../../src/Repository/Model/Catalog.php:3606
 msgid "Catalog Cleaned"
 msgstr ""
 
-#: ../../src/Repository/Model/Catalog.php:3606
+#: ../../src/Repository/Model/Catalog.php:3607
 #, php-format
 msgid "%d file removed."
 msgid_plural "%d files removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../src/Repository/Model/Catalog.php:3638
+#: ../../src/Repository/Model/Catalog.php:3639
 msgid "Catalog Verified"
 msgstr ""
 
-#: ../../src/Repository/Model/Catalog.php:4272
+#: ../../src/Repository/Model/Catalog.php:4273
 msgid ""
 "This subdirectory is not inside an existing Catalog. The update can not be "
 "processed."
 msgstr ""
 
-#: ../../src/Repository/Model/Live_Stream.php:253
-#: ../../src/Repository/Model/Live_Stream.php:302
+#: ../../src/Repository/Model/Live_Stream.php:257
+#: ../../src/Repository/Model/Live_Stream.php:306
 msgid "Name is required"
 msgstr ""
 
-#: ../../src/Repository/Model/Live_Stream.php:270
+#: ../../src/Repository/Model/Live_Stream.php:274
 msgid "URL is invalid, must be mms://, https:// or http://"
 msgstr ""
 
-#: ../../src/Repository/Model/Live_Stream.php:276
-#: ../../src/Repository/Model/Live_Stream.php:323
-#: ../../src/Repository/Model/Live_Stream.php:329
+#: ../../src/Repository/Model/Live_Stream.php:280
+#: ../../src/Repository/Model/Live_Stream.php:327
+#: ../../src/Repository/Model/Live_Stream.php:333
 msgid "URL is invalid, must be http:// or https://"
 msgstr ""
 
-#: ../../src/Repository/Model/Live_Stream.php:306
+#: ../../src/Repository/Model/Live_Stream.php:310
 msgid "Codec is required (e.g. MP3, OGG...)"
 msgstr ""
 
-#: ../../src/Repository/Model/Live_Stream.php:336
+#: ../../src/Repository/Model/Live_Stream.php:340
 msgid "Catalog is invalid"
 msgstr ""
 
@@ -11179,739 +11182,739 @@ msgstr ""
 msgid "User avatar"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:790
+#: ../../src/Repository/Model/Video.php:791
 msgid "Afar"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:791
+#: ../../src/Repository/Model/Video.php:792
 msgid "Abkhazian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:792
+#: ../../src/Repository/Model/Video.php:793
 msgid "Avestan"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:793
+#: ../../src/Repository/Model/Video.php:794
 msgid "Afrikaans"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:794
+#: ../../src/Repository/Model/Video.php:795
 msgid "Akan"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:795
+#: ../../src/Repository/Model/Video.php:796
 msgid "Amharic"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:796
+#: ../../src/Repository/Model/Video.php:797
 msgid "Aragonese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:797
+#: ../../src/Repository/Model/Video.php:798
 msgid "Arabic"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:798
+#: ../../src/Repository/Model/Video.php:799
 msgid "Assamese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:799
+#: ../../src/Repository/Model/Video.php:800
 msgid "Avaric"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:800
+#: ../../src/Repository/Model/Video.php:801
 msgid "Aymara"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:801
+#: ../../src/Repository/Model/Video.php:802
 msgid "Azerbaijani"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:802
+#: ../../src/Repository/Model/Video.php:803
 msgid "Bashkir"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:803
+#: ../../src/Repository/Model/Video.php:804
 msgid "Belarusian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:804
+#: ../../src/Repository/Model/Video.php:805
 msgid "Bulgarian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:805
+#: ../../src/Repository/Model/Video.php:806
 msgid "Bihari"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:806
+#: ../../src/Repository/Model/Video.php:807
 msgid "Bislama"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:807
+#: ../../src/Repository/Model/Video.php:808
 msgid "Bambara"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:808
+#: ../../src/Repository/Model/Video.php:809
 msgid "Bengali"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:809
+#: ../../src/Repository/Model/Video.php:810
 msgid "Tibetan"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:810
+#: ../../src/Repository/Model/Video.php:811
 msgid "Breton"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:811
+#: ../../src/Repository/Model/Video.php:812
 msgid "Bosnian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:812
+#: ../../src/Repository/Model/Video.php:813
 msgid "Catalan"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:813
+#: ../../src/Repository/Model/Video.php:814
 msgid "Chechen"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:814
+#: ../../src/Repository/Model/Video.php:815
 msgid "Chamorro"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:815
+#: ../../src/Repository/Model/Video.php:816
 msgid "Corsican"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:816
+#: ../../src/Repository/Model/Video.php:817
 msgid "Cree"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:817
+#: ../../src/Repository/Model/Video.php:818
 msgid "Czech"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:818
+#: ../../src/Repository/Model/Video.php:819
 msgid "Church Slavic"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:819
+#: ../../src/Repository/Model/Video.php:820
 msgid "Chuvash"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:820
+#: ../../src/Repository/Model/Video.php:821
 msgid "Welsh"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:821
+#: ../../src/Repository/Model/Video.php:822
 msgid "Danish"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:822
+#: ../../src/Repository/Model/Video.php:823
 msgid "German"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:823
+#: ../../src/Repository/Model/Video.php:824
 msgid "Divehi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:824
+#: ../../src/Repository/Model/Video.php:825
 msgid "Dzongkha"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:825
+#: ../../src/Repository/Model/Video.php:826
 msgid "Ewe"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:826
+#: ../../src/Repository/Model/Video.php:827
 msgid "Greek"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:827
+#: ../../src/Repository/Model/Video.php:828
 msgid "English"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:828
+#: ../../src/Repository/Model/Video.php:829
 msgid "Esperanto"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:829
+#: ../../src/Repository/Model/Video.php:830
 msgid "Spanish"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:830
+#: ../../src/Repository/Model/Video.php:831
 msgid "Estonian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:831
+#: ../../src/Repository/Model/Video.php:832
 msgid "Basque"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:832
+#: ../../src/Repository/Model/Video.php:833
 msgid "Persian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:833
+#: ../../src/Repository/Model/Video.php:834
 msgid "Fulah"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:834
+#: ../../src/Repository/Model/Video.php:835
 msgid "Finnish"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:835
+#: ../../src/Repository/Model/Video.php:836
 msgid "Fijian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:836
+#: ../../src/Repository/Model/Video.php:837
 msgid "Faroese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:837
+#: ../../src/Repository/Model/Video.php:838
 msgid "French"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:838
+#: ../../src/Repository/Model/Video.php:839
 msgid "Western Frisian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:839
+#: ../../src/Repository/Model/Video.php:840
 msgid "Irish"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:840
+#: ../../src/Repository/Model/Video.php:841
 msgid "Scottish Gaelic"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:841
+#: ../../src/Repository/Model/Video.php:842
 msgid "Galician"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:842
+#: ../../src/Repository/Model/Video.php:843
 msgid "Guarani"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:843
+#: ../../src/Repository/Model/Video.php:844
 msgid "Gujarati"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:844
+#: ../../src/Repository/Model/Video.php:845
 msgid "Manx"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:845
+#: ../../src/Repository/Model/Video.php:846
 msgid "Hausa"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:846
+#: ../../src/Repository/Model/Video.php:847
 msgid "Hebrew"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:847
+#: ../../src/Repository/Model/Video.php:848
 msgid "Hindi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:848
+#: ../../src/Repository/Model/Video.php:849
 msgid "Hiri Motu"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:849
+#: ../../src/Repository/Model/Video.php:850
 msgid "Croatian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:850
+#: ../../src/Repository/Model/Video.php:851
 msgid "Haitian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:851
+#: ../../src/Repository/Model/Video.php:852
 msgid "Hungarian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:852
+#: ../../src/Repository/Model/Video.php:853
 msgid "Armenian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:853
+#: ../../src/Repository/Model/Video.php:854
 msgid "Herero"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:854
+#: ../../src/Repository/Model/Video.php:855
 msgid "Interlingua (International Auxiliary Language Association)"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:855
+#: ../../src/Repository/Model/Video.php:856
 msgid "Indonesian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:856
+#: ../../src/Repository/Model/Video.php:857
 msgid "Interlingue"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:857
+#: ../../src/Repository/Model/Video.php:858
 msgid "Igbo"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:858
+#: ../../src/Repository/Model/Video.php:859
 msgid "Sichuan Yi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:859
+#: ../../src/Repository/Model/Video.php:860
 msgid "Inupiaq"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:860
+#: ../../src/Repository/Model/Video.php:861
 msgid "Ido"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:861
+#: ../../src/Repository/Model/Video.php:862
 msgid "Icelandic"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:862
+#: ../../src/Repository/Model/Video.php:863
 msgid "Italian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:863
+#: ../../src/Repository/Model/Video.php:864
 msgid "Inuktitut"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:864
+#: ../../src/Repository/Model/Video.php:865
 msgid "Japanese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:865
+#: ../../src/Repository/Model/Video.php:866
 msgid "Javanese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:866
+#: ../../src/Repository/Model/Video.php:867
 msgid "Georgian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:867
+#: ../../src/Repository/Model/Video.php:868
 msgid "Kongo"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:868
+#: ../../src/Repository/Model/Video.php:869
 msgid "Kikuyu"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:869
+#: ../../src/Repository/Model/Video.php:870
 msgid "Kwanyama"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:870
+#: ../../src/Repository/Model/Video.php:871
 msgid "Kazakh"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:871
+#: ../../src/Repository/Model/Video.php:872
 msgid "Kalaallisut"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:872
+#: ../../src/Repository/Model/Video.php:873
 msgid "Khmer"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:873
+#: ../../src/Repository/Model/Video.php:874
 msgid "Kannada"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:874
+#: ../../src/Repository/Model/Video.php:875
 msgid "Korean"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:875
+#: ../../src/Repository/Model/Video.php:876
 msgid "Kanuri"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:876
+#: ../../src/Repository/Model/Video.php:877
 msgid "Kashmiri"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:877
+#: ../../src/Repository/Model/Video.php:878
 msgid "Kurdish"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:878
+#: ../../src/Repository/Model/Video.php:879
 msgid "Komi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:879
+#: ../../src/Repository/Model/Video.php:880
 msgid "Cornish"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:880
+#: ../../src/Repository/Model/Video.php:881
 msgid "Kirghiz"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:881
+#: ../../src/Repository/Model/Video.php:882
 msgid "Latin"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:882
+#: ../../src/Repository/Model/Video.php:883
 msgid "Luxembourgish"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:883
+#: ../../src/Repository/Model/Video.php:884
 msgid "Ganda"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:884
+#: ../../src/Repository/Model/Video.php:885
 msgid "Limburgish"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:885
+#: ../../src/Repository/Model/Video.php:886
 msgid "Lingala"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:886
+#: ../../src/Repository/Model/Video.php:887
 msgid "Lao"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:887
+#: ../../src/Repository/Model/Video.php:888
 msgid "Lithuanian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:888
+#: ../../src/Repository/Model/Video.php:889
 msgid "Luba-Katanga"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:889
+#: ../../src/Repository/Model/Video.php:890
 msgid "Latvian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:890
+#: ../../src/Repository/Model/Video.php:891
 msgid "Malagasy"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:891
+#: ../../src/Repository/Model/Video.php:892
 msgid "Marshallese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:892
+#: ../../src/Repository/Model/Video.php:893
 msgid "Maori"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:893
+#: ../../src/Repository/Model/Video.php:894
 msgid "Macedonian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:894
+#: ../../src/Repository/Model/Video.php:895
 msgid "Malayalam"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:895
+#: ../../src/Repository/Model/Video.php:896
 msgid "Mongolian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:896
+#: ../../src/Repository/Model/Video.php:897
 msgid "Marathi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:897
+#: ../../src/Repository/Model/Video.php:898
 msgid "Malay"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:898
+#: ../../src/Repository/Model/Video.php:899
 msgid "Maltese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:899
+#: ../../src/Repository/Model/Video.php:900
 msgid "Burmese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:900
+#: ../../src/Repository/Model/Video.php:901
 msgid "Nauru"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:901
+#: ../../src/Repository/Model/Video.php:902
 msgid "Norwegian Bokmal"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:902
+#: ../../src/Repository/Model/Video.php:903
 msgid "North Ndebele"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:903
+#: ../../src/Repository/Model/Video.php:904
 msgid "Nepali"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:904
+#: ../../src/Repository/Model/Video.php:905
 msgid "Ndonga"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:905
+#: ../../src/Repository/Model/Video.php:906
 msgid "Dutch"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:906
+#: ../../src/Repository/Model/Video.php:907
 msgid "Norwegian Nynorsk"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:907
+#: ../../src/Repository/Model/Video.php:908
 msgid "Norwegian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:908
+#: ../../src/Repository/Model/Video.php:909
 msgid "South Ndebele"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:909
+#: ../../src/Repository/Model/Video.php:910
 msgid "Navajo"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:910
+#: ../../src/Repository/Model/Video.php:911
 msgid "Chichewa"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:911
+#: ../../src/Repository/Model/Video.php:912
 msgid "Occitan"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:912
+#: ../../src/Repository/Model/Video.php:913
 msgid "Ojibwa"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:913
+#: ../../src/Repository/Model/Video.php:914
 msgid "Oromo"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:914
+#: ../../src/Repository/Model/Video.php:915
 msgid "Oriya"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:915
+#: ../../src/Repository/Model/Video.php:916
 msgid "Ossetian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:916
+#: ../../src/Repository/Model/Video.php:917
 msgid "Panjabi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:917
+#: ../../src/Repository/Model/Video.php:918
 msgid "Pali"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:918
+#: ../../src/Repository/Model/Video.php:919
 msgid "Polish"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:919
+#: ../../src/Repository/Model/Video.php:920
 msgid "Pashto"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:920
+#: ../../src/Repository/Model/Video.php:921
 msgid "Portuguese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:921
+#: ../../src/Repository/Model/Video.php:922
 msgid "Quechua"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:922
+#: ../../src/Repository/Model/Video.php:923
 msgid "Raeto-Romance"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:923
+#: ../../src/Repository/Model/Video.php:924
 msgid "Kirundi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:924
+#: ../../src/Repository/Model/Video.php:925
 msgid "Romanian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:925
+#: ../../src/Repository/Model/Video.php:926
 msgid "Russian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:926
+#: ../../src/Repository/Model/Video.php:927
 msgid "Kinyarwanda"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:927
+#: ../../src/Repository/Model/Video.php:928
 msgid "Sanskrit"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:928
+#: ../../src/Repository/Model/Video.php:929
 msgid "Sardinian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:929
+#: ../../src/Repository/Model/Video.php:930
 msgid "Sindhi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:930
+#: ../../src/Repository/Model/Video.php:931
 msgid "Northern Sami"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:931
+#: ../../src/Repository/Model/Video.php:932
 msgid "Sango"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:932
+#: ../../src/Repository/Model/Video.php:933
 msgid "Sinhala"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:933
+#: ../../src/Repository/Model/Video.php:934
 msgid "Slovak"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:934
+#: ../../src/Repository/Model/Video.php:935
 msgid "Slovenian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:935
+#: ../../src/Repository/Model/Video.php:936
 msgid "Samoan"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:936
+#: ../../src/Repository/Model/Video.php:937
 msgid "Shona"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:937
+#: ../../src/Repository/Model/Video.php:938
 msgid "Somali"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:938
+#: ../../src/Repository/Model/Video.php:939
 msgid "Albanian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:939
+#: ../../src/Repository/Model/Video.php:940
 msgid "Serbian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:940
+#: ../../src/Repository/Model/Video.php:941
 msgid "Swati"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:941
+#: ../../src/Repository/Model/Video.php:942
 msgid "Southern Sotho"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:942
+#: ../../src/Repository/Model/Video.php:943
 msgid "Sundanese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:943
+#: ../../src/Repository/Model/Video.php:944
 msgid "Swedish"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:944
+#: ../../src/Repository/Model/Video.php:945
 msgid "Swahili"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:945
+#: ../../src/Repository/Model/Video.php:946
 msgid "Tamil"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:946
+#: ../../src/Repository/Model/Video.php:947
 msgid "Telugu"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:947
+#: ../../src/Repository/Model/Video.php:948
 msgid "Tajik"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:948
+#: ../../src/Repository/Model/Video.php:949
 msgid "Thai"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:949
+#: ../../src/Repository/Model/Video.php:950
 msgid "Tigrinya"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:950
+#: ../../src/Repository/Model/Video.php:951
 msgid "Turkmen"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:951
+#: ../../src/Repository/Model/Video.php:952
 msgid "Tagalog"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:952
+#: ../../src/Repository/Model/Video.php:953
 msgid "Tswana"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:953
+#: ../../src/Repository/Model/Video.php:954
 msgid "Tonga"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:954
+#: ../../src/Repository/Model/Video.php:955
 msgid "Turkish"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:955
+#: ../../src/Repository/Model/Video.php:956
 msgid "Tsonga"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:956
+#: ../../src/Repository/Model/Video.php:957
 msgid "Tatar"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:957
+#: ../../src/Repository/Model/Video.php:958
 msgid "Twi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:958
+#: ../../src/Repository/Model/Video.php:959
 msgid "Tahitian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:959
+#: ../../src/Repository/Model/Video.php:960
 msgid "Uighur"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:960
+#: ../../src/Repository/Model/Video.php:961
 msgid "Ukrainian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:961
+#: ../../src/Repository/Model/Video.php:962
 msgid "Urdu"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:962
+#: ../../src/Repository/Model/Video.php:963
 msgid "Uzbek"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:963
+#: ../../src/Repository/Model/Video.php:964
 msgid "Venda"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:964
+#: ../../src/Repository/Model/Video.php:965
 msgid "Vietnamese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:965
+#: ../../src/Repository/Model/Video.php:966
 msgid "Volapuk"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:966
+#: ../../src/Repository/Model/Video.php:967
 msgid "Walloon"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:967
+#: ../../src/Repository/Model/Video.php:968
 msgid "Wolof"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:968
+#: ../../src/Repository/Model/Video.php:969
 msgid "Xhosa"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:969
+#: ../../src/Repository/Model/Video.php:970
 msgid "Yiddish"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:970
+#: ../../src/Repository/Model/Video.php:971
 msgid "Yoruba"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:971
+#: ../../src/Repository/Model/Video.php:972
 msgid "Zhuang"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:972
+#: ../../src/Repository/Model/Video.php:973
 msgid "Chinese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:973
+#: ../../src/Repository/Model/Video.php:974
 msgid "Zulu"
 msgstr ""
 
