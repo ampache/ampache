@@ -86,6 +86,7 @@ final class SystemUpdate5Method
 
                 $updated = true;
             } catch (Update\Exception\UpdateException) {
+                // need to return data to the api
             }
         }
         if ($updated) {

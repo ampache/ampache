@@ -343,7 +343,7 @@ class Catalog_dropbox extends Catalog
                         }
                     }
                 }
-            } while ($listFolderContinue->hasMoreItems() == true);
+            } while ($listFolderContinue->hasMoreItems() === true);
         }
 
         return $songsadded;

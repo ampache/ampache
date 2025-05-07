@@ -100,6 +100,7 @@ final class ArrayCacheDriver implements CacheInterface
             try {
                 $this->delete($key);
             } catch (InvalidArgumentException) {
+                // try to delete everything and skip the exception
             }
         }
 
