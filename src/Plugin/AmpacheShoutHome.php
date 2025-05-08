@@ -51,7 +51,7 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $maxitems;
+    private int $maxitems = 5;
 
     private int $order = 0;
 

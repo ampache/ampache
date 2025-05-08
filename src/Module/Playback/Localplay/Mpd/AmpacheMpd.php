@@ -45,8 +45,10 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 class AmpacheMpd extends localplay_controller
 {
-    /* Variables */
-    private string $version     = '000003';
+    public bool $block_clear = false;
+
+    private string $version = '000003';
+
     private string $description = 'Controls an instance of MPD';
 
     private int $_add_count = 0;
@@ -281,11 +283,12 @@ class AmpacheMpd extends localplay_controller
      */
     public function add_url(Stream_Url $url): bool
     {
-        // If we haven't added anything then maybe we should clear the
-        // playlist.
+        // If we haven't added anything then maybe we should clear the playlist.
         if ($this->_add_count < 1) {
             $this->_mpd->RefreshInfo();
-            if ($this->_mpd->status['state'] == mpd::STATE_STOPPED) {
+            if ($this->block_clear === false &&
+                $this->_mpd->status['state'] == mpd::STATE_STOPPED
+            ) {
                 $this->clear_playlist();
             }
         }
@@ -317,6 +320,8 @@ class AmpacheMpd extends localplay_controller
      */
     public function clear_playlist(): bool
     {
+        $this->_add_count = 0;
+
         return $this->_mpd->PLClear() !== false;
     }
 
@@ -403,7 +408,6 @@ class AmpacheMpd extends localplay_controller
     /**
      * volume
      * This tells MPD to set the volume to the parameter
-     * @param $volume
      */
     public function volume($volume): bool
     {
@@ -485,9 +489,8 @@ class AmpacheMpd extends localplay_controller
 
             switch ($url_key) {
                 case 'oid':
-                    $data['oid'] = (int)$url_data['oid'];
-                    $song        = new Song($data['oid']);
-                    $song->format();
+                    $data['oid']  = (int)$url_data['oid'];
+                    $song         = new Song($data['oid']);
                     $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_artist_fullname();
                     $data['link'] = $song->get_f_link();
                     break;
@@ -513,7 +516,6 @@ class AmpacheMpd extends localplay_controller
                         $className = ObjectTypeToClassNameMapper::map($row['type']);
                         /** @var Song|Live_Stream $media */
                         $media = new $className($row['id']);
-                        $media->format();
                         switch ($row['type']) {
                             case 'song':
                                 /** @var Song $media */

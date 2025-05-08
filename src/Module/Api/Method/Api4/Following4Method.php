@@ -76,7 +76,7 @@ final class Following4Method
                 if (!count($results)) {
                     Api4::message('error', 'User `' . $username . '` does not follow anyone.', '400', $input['api_format']);
                 } else {
-                    debug_event(self::class, 'User is following:  ' . (string) count($results), 1);
+                    debug_event(self::class, 'User is following:  ' . count($results), 1);
                     ob_end_clean();
                     switch ($input['api_format']) {
                         case 'json':

@@ -317,7 +317,6 @@ class Xml3_Data
             if ($artist->isNew()) {
                 continue;
             }
-            $artist->format();
 
             $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -374,7 +373,6 @@ class Xml3_Data
             if ($album->isNew()) {
                 continue;
             }
-            $album->format();
 
             $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -426,7 +424,7 @@ class Xml3_Data
             if ($playlist->isNew()) {
                 continue;
             }
-            $playlist->format();
+
             $item_total = $playlist->get_media_count('song');
 
             // Build this element
@@ -472,7 +470,7 @@ class Xml3_Data
                 continue;
             }
 
-            $song->format();
+            $song->fill_ext_info();
             $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
             $tag_string            = self::tags_string(Tag::get_top_tags('song', $song->id));
             $rating                = new Rating($song->id, 'song');
@@ -525,9 +523,8 @@ class Xml3_Data
             if ($video->isNew()) {
                 continue;
             }
-            $video->format();
 
-            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution>" . $video->f_resolution . "</resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->get_tags()) . "\t<url><![CDATA[" . $video->play_url('', 'api') . "]]></url>\n</video>\n";
+            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution>" . $video->get_f_resolution() . "</resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->get_tags()) . "\t<url><![CDATA[" . $video->play_url('', 'api') . "]]></url>\n</video>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);
@@ -559,7 +556,7 @@ class Xml3_Data
             if ($song->isNew()) {
                 continue;
             }
-            $song->format();
+            $song->fill_ext_info();
 
             //FIXME: This is duplicate code and so wrong, functions need to be improved
             $tag         = new Tag((int)($song->get_tags()[0]['id'] ?? 0));
@@ -586,8 +583,6 @@ class Xml3_Data
      */
     public static function user(User $user): string
     {
-        $user->format();
-
         $string = "<user id=\"" . $user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n\t<create_date>" . $user->create_date . "</create_date>\n\t<last_seen>" . $user->last_seen . "</last_seen>\n\t<website><![CDATA[" . $user->website . "]]></website>\n\t<state><![CDATA[" . $user->state . "]]></state>\n\t<city><![CDATA[" . $user->city . "]]></city>\n";
         if ($user->fullname_public) {
             $string .= "\t<fullname><![CDATA[" . $user->fullname . "]]></fullname>\n";

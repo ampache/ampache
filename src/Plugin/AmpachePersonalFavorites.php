@@ -50,13 +50,11 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $display;
+    private bool $display = false;
 
-    private $playlist;
+    private string $playlist = '';
 
-    private $smartlist;
-
-    private $user;
+    private string $smartlist = '';
 
     private int $order = 0;
 
@@ -155,8 +153,6 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
                 echo '">';
                 $count = 0;
                 foreach ($list_array as $item) {
-                    $this->user->format();
-
                     if ($item[0]->isNew() === false) {
                         echo '<tr id="playlist_' . $item[0]->id . '" class="libitem_menu">';
                         echo '<td style="height: 50px;">' . $item[0]->get_f_link() . '</td>';
@@ -211,7 +207,6 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
         $user->set_preferences();
         $data = $user->prefs;
 
-        $this->user      = $user;
         $this->display   = (array_key_exists('personalfav_display', $data) && $data['personalfav_display'] == '1');
         $this->playlist  = $data['personalfav_playlist'] ?? '';
         $this->smartlist = $data['personalfav_smartlist'] ?? '';

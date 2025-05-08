@@ -41,8 +41,6 @@ final class InitializationHandlerGlobals implements InitializationHandlerInterfa
 
     public function init(): void
     {
-        Core::get_global('user')?->format();
-
         if (session_id()) {
             Session::extend(session_id());
             // We only need to create the tmp playlist if we have a session

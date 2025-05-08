@@ -275,7 +275,7 @@ class Json5_Data
             if ($live_stream->isNew()) {
                 continue;
             }
-            $live_stream->format();
+
             $JSON[] = [
                 "id" => (string)$live_stream_id,
                 "name" => $live_stream->get_fullname(),
@@ -346,7 +346,7 @@ class Json5_Data
             if ($label === null) {
                 continue;
             }
-            $label->format();
+
             $JSON[] = [
                 "id" => (string)$label_id,
                 "name" => $label->get_fullname(),
@@ -425,7 +425,6 @@ class Json5_Data
             if ($artist->isNew()) {
                 continue;
             }
-            $artist->format();
 
             $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -500,7 +499,6 @@ class Json5_Data
             if ($album->isNew()) {
                 continue;
             }
-            $album->format();
 
             $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -519,7 +517,7 @@ class Json5_Data
 
             if ($album->get_artist_fullname() != "") {
                 $objArray['artist'] = [
-                    "id" => (string)$album->album_artist,
+                    "id" => (string)$album->findAlbumArtist(),
                     "name" => $album->get_artist_fullname()
                 ];
             }
@@ -760,7 +758,6 @@ class Json5_Data
             if ($catalog === null) {
                 break;
             }
-            $catalog->format();
             $catalog_name           = $catalog->name;
             $catalog_type           = $catalog->catalog_type;
             $catalog_gather_types   = $catalog->gather_types;
@@ -768,7 +765,7 @@ class Json5_Data
             $catalog_last_add       = $catalog->last_add;
             $catalog_last_clean     = $catalog->last_clean;
             $catalog_last_update    = $catalog->last_update;
-            $catalog_path           = $catalog->f_info;
+            $catalog_path           = $catalog->get_f_info();
             $catalog_rename_pattern = $catalog->rename_pattern;
             $catalog_sort_pattern   = $catalog->sort_pattern;
             // Build this element
@@ -885,7 +882,7 @@ class Json5_Data
             if ($episode->isNew()) {
                 continue;
             }
-            $episode->format();
+
             $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($episode->id, 'podcast_episode');
@@ -957,7 +954,7 @@ class Json5_Data
             if ($song->isNew()) {
                 continue;
             }
-            $song->format();
+            $song->fill_ext_info();
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($song->id, 'song');
@@ -1071,7 +1068,6 @@ class Json5_Data
             if ($video->isNew()) {
                 continue;
             }
-            $video->format();
             $rating      = new Rating($video->id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($video->id, 'video');
@@ -1080,7 +1076,7 @@ class Json5_Data
                 "id" => (string)$video->id,
                 "title" => $video->title,
                 "mime" => $video->mime,
-                "resolution" => $video->f_resolution,
+                "resolution" => $video->get_f_resolution(),
                 "size" => (int)$video->size,
                 "genre" => self::genre_array($video->get_tags()),
                 "time" => (int)$video->time,
@@ -1128,7 +1124,7 @@ class Json5_Data
             if ($song->isNew()) {
                 continue;
             }
-            $song->format();
+            $song->fill_ext_info();
 
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -1167,7 +1163,6 @@ class Json5_Data
      */
     public static function user(User $user, bool $fullinfo, ?bool $object = true): string
     {
-        $user->format();
         if ($fullinfo) {
             $JSON = [
                 "id" => (string) $user->id,

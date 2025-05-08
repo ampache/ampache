@@ -68,7 +68,6 @@ if (count($results)) {
         }
 
         $np_user = $item['client'];
-        $np_user->format();
         if (!$np_user->fullname) {
             $np_user->fullname = "Ampache User";
         }

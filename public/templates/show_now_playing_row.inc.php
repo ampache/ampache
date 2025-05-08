@@ -96,7 +96,6 @@ echo '<div>' . $np_user->get_f_avatar('f_avatar_medium') . '</div>'; ?>
               : new AlbumDisk($media->album_disk);
       }
 if ($playing->isNew() === false) {
-    $playing->format();
     $playing->display_art(1);
 } ?>
   </div>

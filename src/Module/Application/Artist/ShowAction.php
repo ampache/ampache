@@ -86,7 +86,6 @@ final class ShowAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $artist->format();
             if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true) {
                 $objectType = 'album';
             } else {

@@ -94,6 +94,14 @@ input[type=submit]:focus:active {
     color: #fff;
 }
 
+.edit_dialog_content input:focus,
+.edit_dialog_content select:focus {
+    color: #555;
+    background: #fff;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #ffc763;
+}
+
 .playlistdialogstyle.ui-dialog .ui-dialog-content,
 .sharedialogstyle.ui-dialog .ui-dialog-content,
 .playlistdialogstyle.ui-widget-content a,

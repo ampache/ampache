@@ -50,13 +50,13 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $token;
+    private string $token = '';
 
-    private $api_host;
+    private string $api_host = 'api.listenbrainz.org';
 
-    private $scheme = 'https';
+    private string $scheme = 'https';
 
-    private $host   = 'listenbrainz.org';
+    private string $host = 'listenbrainz.org';
 
     /**
      * Constructor
@@ -171,7 +171,7 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
         debug_event('listenbrainz.plugin', 'Submission content: ' . $json, 5);
         $response = $this->post_json_url('/1/submit-listens', $json) ?: '';
 
-        if (!strpos($response, "ok")) {
+        if (!$response || !strpos($response, "ok")) {
             debug_event('listenbrainz.plugin', "Submission Failed", 5);
 
             return false;
@@ -185,11 +185,8 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
     /**
      * post_json_url
      * This is a generic poster for HTTP requests
-     * @param string $url
-     * @param string $content
-     * @return string|false
      */
-    private function post_json_url($url, $content)
+    private function post_json_url(string $url, string $content): ?string
     {
         $opts = [
             'http' => [
@@ -206,16 +203,14 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
         $context = stream_context_create($opts);
         $target  = $this->scheme . '://' . $this->api_host . $url;
 
-        return file_get_contents($target, false, $context);
+        return file_get_contents($target, false, $context) ?: null;
     }
 
     /**
      * set_flag
      * This takes care of spreading your love on ListenBrainz
-     * @param Song $song
-     * @param bool $flagged
      */
-    public function set_flag($song, $flagged): void
+    public function set_flag(Song $song, bool $flagged): void
     {
     }
 

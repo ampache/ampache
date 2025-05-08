@@ -125,7 +125,6 @@ final class SongTagWriter implements SongTagWriterInterface
             return;
         }
 
-        $song->format();
         if ($fileformat == 'mp3') {
             $songMeta  = $this->getId3Metadata($song);
             $txxxData  = $result['id3v2']['comments']['text'] ?? [];
@@ -450,7 +449,6 @@ final class SongTagWriter implements SongTagWriterInterface
     private function getVorbisMetadata(
         Song $song
     ): array {
-        $song->format();
         $meta = [];
 
         $meta['date']                = $song->year;
@@ -474,7 +472,6 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['genre'] = implode(', ', $meta['genre']);
 
         $album = new Album($song->album);
-        $album->format();
 
         $meta['musicbrainz_albumartistid']  = $song->get_album_mbid();
         $meta['musicbrainz_releasegroupid'] = $album->mbid_group;
@@ -565,8 +562,7 @@ final class SongTagWriter implements SongTagWriterInterface
         }
         $meta['genre'] = implode(', ', $meta['genre']);
 
-        $album = new Album($song->album);
-        $album->format();
+        $album                 = new Album($song->album);
         $meta['original_year'] = $album->original_year; //TORY
 
         $meta['text'] = [];

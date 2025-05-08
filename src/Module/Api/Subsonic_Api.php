@@ -397,8 +397,7 @@ class Subsonic_Api
             'boolean' => true, // replace true and false string with boolean values
         ];
         $options        = array_merge($defaults, $input_options);
-        $namespaces     = $xml->getDocNamespaces();
-        $namespaces[''] = null; // add base (empty) namespace
+        $namespaces     = $xml->getDocNamespaces() ?: [];
         // get attributes from all namespaces
         $attributesArray = [];
         foreach ($namespaces as $prefix => $namespace) {
@@ -1944,7 +1943,6 @@ class Subsonic_Api
                 if ($media === null || $media->isNew()) {
                     continue;
                 }
-                $media->format();
 
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
@@ -2381,6 +2379,7 @@ class Subsonic_Api
                 }
                 break;
             case 'set':
+                /** @noinspection PhpMissingBreakStatementInspection */
                 $localplay->delete_all();
                 // Intentional break fall-through
             case 'add':

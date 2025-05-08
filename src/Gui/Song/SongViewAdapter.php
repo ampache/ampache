@@ -352,6 +352,7 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
 
     public function getProperties(): array
     {
+        $this->song->fill_ext_info();
         $songprops = [];
 
         $songprops[T_('Title')]        = scrub_out($this->song->title);

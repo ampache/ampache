@@ -239,23 +239,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     }
 
     /**
-     * format
-     * This is the format function for this object. It sets cleaned up
-     * album information with the base required
-     * f_link, f_name
-     */
-    public function format(): void
-    {
-        if ($this->isNew()) {
-            return;
-        }
-
-        if (!isset($this->album)) {
-            $this->album = new Album($this->album_id);
-        }
-    }
-
-    /**
      * does the item have art?
      */
     public function has_art(): bool
@@ -476,18 +459,19 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     /**
      * Get item children.
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array{song: list<array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
-        return $this->get_medias();
+        return ['song' => $this->get_medias()];
     }
 
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 

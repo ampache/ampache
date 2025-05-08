@@ -20,40 +20,23 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Wanted;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Wanted;
-use MusicBrainz\Exception;
+use Ampache\Module\System\Dba;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-interface WantedManagerInterface
+/**
+ * Add `update_time` to `podcast_episode` table
+ */
+final class Migration750001 extends AbstractMigration
 {
-    /**
-     * Delete a wanted release by mbid.
-     * @throws Exception
-     */
-    public function delete(string $mbid, ?User $user = null): void;
+    protected array $changelog = ['Add `update_time` to `podcast_episode` table'];
 
-    /**
-     * Accept a wanted request.
-     */
-    public function accept(
-        Wanted $wanted,
-        User $user
-    ): void;
-
-    /**
-     * Add a new wanted release.
-     */
-    public function add(
-        User $user,
-        string $mbid,
-        ?int $artist,
-        ?string $artist_mbid,
-        string $name,
-        int $year
-    ): void;
+    public function migrate(): void
+    {
+        Dba::write('ALTER TABLE `podcast_episode` DROP COLUMN `update_time`;', [], true);
+        $this->updateDatabase('ALTER TABLE `podcast_episode` ADD COLUMN `update_time` int(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `addition_time`;');
+    }
 }

@@ -56,9 +56,8 @@ class Plugin
 
     /**
      * has_info
-     * @param string $cname
      */
-    private function has_info($cname): void
+    private function has_info(string $cname): void
     {
         $controller = PluginEnum::LIST[strtolower($cname)] ?? null;
         if ($controller === null) {

@@ -49,8 +49,7 @@ if ($browse->is_show_header()) {
                 $catalog = Catalog::create_from_id($catalog_id);
                 if ($catalog === null) {
                     continue;
-                }
-                $catalog->format(); ?>
+                } ?>
         <tr id="catalog_<?php echo $catalog->id; ?>">
             <?php require Ui::find_template('show_catalog_row.inc.php'); ?>
         </tr>

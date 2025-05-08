@@ -82,7 +82,6 @@ final class ShowPlaylistAction implements ApplicationActionInterface
         }
 
         $democratic->set_parent();
-        $democratic->format();
 
         $browse = $this->modelFactory->createBrowse((int)$this->requestParser->getFromRequest('browse_id'));
 

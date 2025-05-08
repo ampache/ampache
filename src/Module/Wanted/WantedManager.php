@@ -34,6 +34,7 @@ use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
 use Ampache\Repository\WantedRepositoryInterface;
+use MusicBrainz\Exception;
 use MusicBrainz\MusicBrainz;
 
 final readonly class WantedManager implements WantedManagerInterface
@@ -47,7 +48,7 @@ final readonly class WantedManager implements WantedManagerInterface
 
     /**
      * Delete a wanted release by mbid.
-     * @throws \MusicBrainz\Exception
+     * @throws Exception
      */
     public function delete(
         string $mbid,

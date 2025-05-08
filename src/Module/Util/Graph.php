@@ -610,7 +610,7 @@ class Graph
         $myPicture->drawLineChart();
 
         /* Write a label over the chart */
-        $myPicture->writeLabel("Inbound", 720);
+        $myPicture->writeLabel("Inbound", [720]);
 
         /* Write the chart legend */
         $myPicture->drawLegend(280, 20, ["Style" => LEGEND_NOBORDER, "Mode" => LEGEND_HORIZONTAL]);

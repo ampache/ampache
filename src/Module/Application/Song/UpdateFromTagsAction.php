@@ -73,8 +73,6 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $song->format();
-
         $this->ui->showHeader();
         $this->ui->show(
             'show_update_items.inc.php',

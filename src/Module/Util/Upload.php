@@ -301,7 +301,7 @@ class Upload
         if (Core::is_readable($targetfile)) {
             debug_event(self::class, 'File `' . $targetfile . '` already exists.', 3);
             $ext        = pathinfo($targetfile, PATHINFO_EXTENSION);
-            $targetfile = str_replace(('.' . $ext), '_' . ((string) time() . '.' . $ext), $targetfile);
+            $targetfile = str_replace(('.' . $ext), '_' . (time() . '.' . $ext), $targetfile);
             if (Core::is_readable($targetfile)) {
                 debug_event(self::class, 'File `' . $targetfile . '` already exists.', 1);
 

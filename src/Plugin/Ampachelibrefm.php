@@ -51,19 +51,19 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $user_id;
+    private int $user_id = 0;
 
     private $challenge;
 
-    private $api_key;
+    private string $api_key  = '';
 
-    private $secret;
+    private string $secret  = '';
 
-    private $scheme   = 'https';
+    private string $scheme = 'https';
 
-    private $host     = 'libre.fm';
+    private string $host = 'libre.fm';
 
-    private $api_host = 'libre.fm';
+    private string $api_host = 'libre.fm';
 
     /**
      * Constructor
@@ -179,10 +179,8 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
     /**
      * set_flag
      * This takes care of spreading your love on Libre.fm
-     * @param Song $song
-     * @param bool $flagged
      */
-    public function set_flag($song, $flagged): void
+    public function set_flag(Song $song, bool $flagged): void
     {
         // Make sure there's actually a session before we keep going
         if (!$this->challenge) {
