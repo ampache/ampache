@@ -1090,13 +1090,13 @@ No functional changes from 4.2.0
 **API versions will follow release version and no longer use builds in the integer versions (e.g. 420000)**
 API 5.0.0-release will be the first Ampache release to match the release string.
 
-#### Added
+### Added
 
 * JSON API now available!
   * Call xml as normal:
-    * [<http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=420000>]
+    * [http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=420000]
   * Call the JSON server:
-    * [<http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=420000>]
+    * [http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=420000]
   * Example XML and JSON responses available [here](https://github.com/ampache/python3-ampache/tree/master/docs)
 * NEW API functions
   * get_similar: send artist or song id to get related objects from last.fm
@@ -1120,7 +1120,7 @@ API 5.0.0-release will be the first Ampache release to match the release string.
   * catalog: get a catalog by id
   * catalog_file: clean, add, verify using the file path (good for scripting)
 
-#### Changed
+### Changed
 
 * Bump API version to 420000 (4.2.0)
 * All calls that return songs now include ```<playlisttrack>``` which can be used to identify track order.
@@ -1143,7 +1143,7 @@ API 5.0.0-release will be the first Ampache release to match the release string.
 * Genre in songs is depreciated and will be removed in API 5.0.0.
   * Use tag instead of genre, tag provides a genre ID as well as the name.
 
-#### Fixed
+### Fixed
 
 * Extra text in catalog API calls
 * Don't fail the API calls when the database needs updating
@@ -1152,11 +1152,11 @@ API 5.0.0-release will be the first Ampache release to match the release string.
 
 Bump API version to 400004 (4.0.0 build 004)
 
-#### Added
+### Added
 
 * Add Api::check_access to warn when you can't access a function
 
-#### Fixed
+### Fixed
 
 * Fix parameters using 0
 * Get the correct total_count in xml when you set a limit
@@ -1166,11 +1166,11 @@ Bump API version to 400004 (4.0.0 build 004)
 
 Bump API version to 400003 (4.0.0 build 003)
 
-#### Added
+### Added
 
-* user_numeric searches also available in the API. ([<http://ampache.org/api/api-xml-methods>])
+* user_numeric searches also available in the API. ([http://ampache.org/api/api-xml-methods])
 
-#### Changed
+### Changed
 
 * Api::playlist - filter mandatory
 * Api::playlist_edit - filter mandatory. name and type now optional
@@ -1179,11 +1179,11 @@ Bump API version to 400003 (4.0.0 build 003)
 * Do not limit smartlists based on item count (return everything you can access)
 * Api/Database - Add last_count for search table to speed up access in API
 
-#### Removed
+### Removed
 
 * Artist::check - Remove MBID from Various Artist objects
 
-#### Fixed
+### Fixed
 
 * Fix Song::update_song for label
 * Fix Api issues relating to playlist access
@@ -1192,9 +1192,9 @@ Bump API version to 400003 (4.0.0 build 003)
 
 * Bump API version to 400002 (4.0.0 build 001)
 
-#### Added
+### Added
 
-* Documented the Ampache API [<http://ampache.org/api/api-xml-methods>]
+* Documented the Ampache API [http://ampache.org/api/api-xml-methods]
 * Include smartlists in the API playlist calls.
 * Authentication: allow sha256 encrypted apikey for auth
   * You must send an encrypted api key in the following fashion. (Hash key joined with username)
@@ -1218,7 +1218,7 @@ Bump API version to 400003 (4.0.0 build 003)
 * update_artist_info: Update artist information and fetch similar artists from last.fm
 * playlist_generate: Get a list of song xml, indexes or id's based on some simple search criteria. care of @4phun
 
-#### Changed
+### Changed
 
 * Authentication: Require a handshake and generate unique sessions at all times
 * advanced_search
