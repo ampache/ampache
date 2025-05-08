@@ -88,11 +88,11 @@ final class Localplay5Method
 
         $result = false;
         $status = false;
-        switch ($input['command']) {
+        switch (strtolower($input['command'])) {
             case 'add':
                 // for add commands get the object details
                 $object_id = (int)($input['oid'] ?? 0);
-                $type      = LibraryItemEnum::tryFrom((string) ($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
+                $type      = LibraryItemEnum::tryFrom((string) strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
 
                 if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
                     Api5::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);

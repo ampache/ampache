@@ -281,8 +281,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function add_url(Stream_Url $url): bool
     {
-        // If we haven't added anything then maybe we should clear the
-        // playlist.
+        // If we haven't added anything then maybe we should clear the playlist.
         if ($this->_add_count < 1) {
             $this->_mpd->RefreshInfo();
             if ($this->_mpd->status['state'] == mpd::STATE_STOPPED) {
@@ -317,6 +316,8 @@ class AmpacheMpd extends localplay_controller
      */
     public function clear_playlist(): bool
     {
+        $this->_add_count = 0;
+
         return $this->_mpd->PLClear() !== false;
     }
 
