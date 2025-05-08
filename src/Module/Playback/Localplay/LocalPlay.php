@@ -577,6 +577,17 @@ class LocalPlay
     }
 
     /**
+     * set_block_clear
+     * This stops the mpd system clearing the list when the player is stopped
+     */
+    public function set_block_clear(bool $bool): void
+    {
+        if (isset($this->_player->block_clear)) {
+            $this->_player->block_clear = $bool;
+        }
+    }
+
+    /**
      * delete_track
      * This removes songs from the players playlist it takes a single ID as provided
      * by the get command

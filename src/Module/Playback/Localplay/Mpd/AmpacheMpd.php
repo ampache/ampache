@@ -45,8 +45,10 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 class AmpacheMpd extends localplay_controller
 {
-    /* Variables */
-    private string $version     = '000003';
+    public bool $block_clear = false;
+
+    private string $version = '000003';
+
     private string $description = 'Controls an instance of MPD';
 
     private int $_add_count = 0;
@@ -284,7 +286,9 @@ class AmpacheMpd extends localplay_controller
         // If we haven't added anything then maybe we should clear the playlist.
         if ($this->_add_count < 1) {
             $this->_mpd->RefreshInfo();
-            if ($this->_mpd->status['state'] == mpd::STATE_STOPPED) {
+            if ($this->block_clear === false &&
+                $this->_mpd->status['state'] == mpd::STATE_STOPPED
+            ) {
                 $this->clear_playlist();
             }
         }

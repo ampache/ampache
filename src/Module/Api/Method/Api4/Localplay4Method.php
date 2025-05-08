@@ -90,9 +90,14 @@ final class Localplay4Method
 
                     return false;
                 }
+
                 $clear = (int)($input['clear'] ?? 0);
+                if ($localplay->type === 'mpd') {
+                    $localplay->set_block_clear(make_bool((string)$clear));
+                }
+
                 // clear before the add
-                if ($clear == 1) {
+                if ($clear === 1) {
                     $localplay->delete_all();
                 }
                 $media = [
