@@ -9,6 +9,12 @@ This version is being released for Ampache7 **only**
 * API6
   * New Method: song_tags (Read and return all file and enabled plugin tags for the song)
 
+### Changed
+
+* ALL
+  * localplay will not clear mpd playlists when stopped if `clear=0`
+  * Ensure lowercase parameters are set on localplay calls
+
 ### Fixed
 
 * API6
