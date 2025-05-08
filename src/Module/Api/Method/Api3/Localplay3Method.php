@@ -64,7 +64,7 @@ final class Localplay3Method
             return false;
         }
 
-        switch ($input['command']) {
+        switch (strtolower($input['command'])) {
             case 'next':
                 $result = $localplay->next();
                 break;

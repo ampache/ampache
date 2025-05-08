@@ -89,20 +89,25 @@ final class LocalplayMethod
 
         $result = false;
         $status = false;
-        switch ($input['command']) {
+        switch (strtolower($input['command'])) {
             case 'add':
                 // for add commands get the object details
                 $object_id = (int)($input['oid'] ?? 0);
-                $type      = LibraryItemEnum::tryFrom((string) ($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
+                $type      = LibraryItemEnum::tryFrom((string) strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
 
                 if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
                     Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
                     return false;
                 }
+
                 $clear = (int)($input['clear'] ?? 0);
+                if ($localplay->type === 'mpd') {
+                    $localplay->set_block_clear(make_bool((string)$clear));
+                }
+
                 // clear before the add
-                if ($clear == 1) {
+                if ($clear === 1) {
                     $localplay->delete_all();
                 }
                 $media = [
