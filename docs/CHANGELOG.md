@@ -2,6 +2,10 @@
 
 ## Ampache 7.5.0
 
+There are problems where the image table could duplicate itself when duplicating album art
+
+Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions
+
 ### Added
 
 * WebDav Browser plugin, allowing direct browsing of your server
@@ -12,13 +16,14 @@
   * Add print text for find missing and clean actions
 * Subsonic remote catalog
   * Missing `getArtist` call
-* Database 750007
+* Database 750008
   * Add `update_time` to `podcast_episode` table
   * Set `update_time` to NOT NULL on `video` table
   * Set `update_time` to NOT NULL on `song` table
   * Fix 0 `width` and `height` columns using `size` for the `image` table
   * Delete duplicates in the `image` table
   * Apply a unique constraint to the `image` table
+  * Delete duplicate original images in the `image` table
 
 ### Changed
 
