@@ -41,6 +41,6 @@ final class Migration750004 extends AbstractMigration
         // Fix 0 width and height images (string sizes like original will still need a fix)
         $this->updateDatabase('UPDATE `image`SET `width` = CAST(SUBSTRING_INDEX(size, \'x\', 1) AS UNSIGNED), `height` = CAST(SUBSTRING_INDEX(size, \'x\', -1) AS UNSIGNED) WHERE `width` = 0 AND `height` = 0 AND `size` REGEXP \'^[0-9]+x[0-9]+$\';');
         // Delete duplicates
-        $this->updateDatabase('DELETE FROM `image` WHERE `id` NOT IN (SELECT MIN(`id`) FROM `image` GROUP BY `width`, `height`, `mime`, `size`, `object_type`, `object_id`, `kind`);');
+        $this->updateDatabase('DELETE `image` FROM `image` LEFT JOIN (SELECT MIN(`id`) AS `id` FROM `image` GROUP BY `width`, `height`, `mime`, `size`, `object_type`, `object_id`, `kind`) AS `keep` ON `image`.`id` = `keep`.`id` WHERE `keep`.`id` IS NULL;');
     }
 }
