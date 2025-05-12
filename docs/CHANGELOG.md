@@ -12,10 +12,13 @@
   * Add print text for find missing and clean actions
 * Subsonic remote catalog
   * Missing `getArtist` call
-* Database 750003
+* Database 750007
   * Add `update_time` to `podcast_episode` table
   * Set `update_time` to NOT NULL on `video` table
   * Set `update_time` to NOT NULL on `song` table
+  * Fix 0 `width` and `height` columns using `size` for the `image` table
+  * Delete duplicates in the `image` table
+  * Apply a unique constraint to the `image` table
 
 ### Changed
 
@@ -35,6 +38,7 @@
 ### Fixed
 
 * Scrutinizer builds
+* Missing `width` and `height` from `image` duplication
 * Skipping files based on modification time when updating catalogs
 * Verify will now correctly reduce numbers based on the last_update time and fetch all when the update list is empty
 * When a file is unable to be verified set `update_time` to denote a check was made
