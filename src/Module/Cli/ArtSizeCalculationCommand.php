@@ -50,6 +50,10 @@ final class ArtSizeCalculationCommand extends Command
         parent::__construct('run:calculateArtSize', T_('Run art size calculation'));
 
         $this->configContainer = $configContainer;
+
+        $this
+            ->option('-f|--fix', T_('Fix database issues'), 'boolval', false)
+            ->usage('<bold>  run:calculateArtSize</end> <comment> ## ' . T_('Run art size calculation') . '<eol/>');
     }
 
     public function execute(): void
@@ -59,6 +63,7 @@ final class ArtSizeCalculationCommand extends Command
         }
 
         $interactor = $this->io();
+        $fix        = $this->values()['fix'] === true;
         $interactor->white(
             T_('Started art size calculation'),
             true
@@ -67,7 +72,9 @@ final class ArtSizeCalculationCommand extends Command
         $inDisk   = $this->configContainer->get('album_art_store_disk');
         $localDir = $this->configContainer->get('local_metadata_dir');
 
-        $sql        = "SELECT `image`, `id`, `object_id`, `object_type`, `size` FROM `image`";
+        $sql = ($fix)
+            ? "SELECT `image`, `id`, `object_id`, `object_type`, `size` FROM `image` WHERE (`height` = 0 AND `width` = 0) OR (`width` IS NULL AND `height` IS NULL)"
+            : "SELECT `image`, `id`, `object_id`, `object_type`, `size` FROM `image`";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -81,10 +88,8 @@ final class ArtSizeCalculationCommand extends Command
             $art_id     = $row['id'];
             $dimensions = Core::image_dimensions($source);
             if ($dimensions['width'] > 0 && $dimensions['height'] > 0) {
-                $width  = $dimensions['width'];
-                $height = $dimensions['height'];
-                $sql    = "UPDATE `image` SET `width` = ?, `height` = ? WHERE `id` = ?";
-                Dba::write($sql, [$width, $height, $art_id]);
+                $sql = "UPDATE `image` SET `width` = ?, `height` = ? WHERE `id` = ?";
+                Dba::write($sql, [$dimensions['width'], $dimensions['height'], $art_id]);
             }
         }
 
