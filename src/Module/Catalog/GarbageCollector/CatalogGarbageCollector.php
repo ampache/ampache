@@ -119,7 +119,6 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         $this->useractivityRepository->collectGarbage();
         $this->userRepository->collectGarbage();
         Playlist::garbage_collection();
-        //Tmp_Playlist::garbage_collection();
         $this->shoutRepository->collectGarbage();
         Tag::garbage_collection();
         Catalog::clear_catalog_cache();
