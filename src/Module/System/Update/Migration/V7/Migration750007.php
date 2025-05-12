@@ -29,13 +29,12 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 /**
  * The image table is not forcing unique values and can have a lot of duplicates
  */
-final class Migration750004 extends AbstractMigration
+final class Migration750007 extends AbstractMigration
 {
-    protected array $changelog = ['Fix 0 `width` and `height` columns using `size` for the `image` table'];
+    protected array $changelog = ['Apply a unique constraint to the `image` table'];
 
     public function migrate(): void
     {
-        // Fix 0 width and height images (string sizes like original will still need a fix)
-        $this->updateDatabase('UPDATE `image`SET `width` = CAST(SUBSTRING_INDEX(size, \'x\', 1) AS UNSIGNED), `height` = CAST(SUBSTRING_INDEX(size, \'x\', -1) AS UNSIGNED) WHERE `width` = 0 AND `height` = 0 AND `size` REGEXP \'^[0-9]+x[0-9]+$\';');
+        $this->updateDatabase('ALTER TABLE `image` ADD UNIQUE INDEX `unique_image` (`width`, `height`, `mime`, `size`, `object_type`, `object_id`, `kind`);');
     }
 }

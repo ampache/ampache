@@ -29,14 +29,12 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 /**
  * The image table is not forcing unique values and can have a lot of duplicates
  */
-final class Migration750005 extends AbstractMigration
+final class Migration750006 extends AbstractMigration
 {
-    protected array $changelog = [
-        'Apply a unique constraint to the `image` table',
-    ];
+    protected array $changelog = ['Delete duplicates in the `image` table'];
 
     public function migrate(): void
     {
-        $this->updateDatabase('ALTER TABLE `image` ADD UNIQUE INDEX `unique_image` (`width`, `height`, `mime`, `size`, `object_type`, `object_id`, `kind`);');
+        $this->updateDatabase('DELETE `image` FROM `image` LEFT JOIN (SELECT MIN(`id`) AS `id` FROM `image` GROUP BY `width`, `height`, `mime`, `size`, `object_type`, `object_id`, `kind`) AS `keep` ON `image`.`id` = `keep`.`id` WHERE `keep`.`id` IS NULL;');
     }
 }
