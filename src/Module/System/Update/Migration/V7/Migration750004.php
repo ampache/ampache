@@ -36,6 +36,6 @@ final class Migration750004 extends AbstractMigration
     public function migrate(): void
     {
         // Fix 0 width and height images (string sizes like original will still need a fix)
-        $this->updateDatabase('UPDATE `image`SET `width` = CAST(SUBSTRING_INDEX(size, \'x\', 1) AS UNSIGNED), `height` = CAST(SUBSTRING_INDEX(size, \'x\', -1) AS UNSIGNED) WHERE `width` = 0 AND `height` = 0 AND `size` REGEXP \'^[0-9]+x[0-9]+$\';');
+        $this->updateDatabase('UPDATE `image`SET `width` = CAST(SUBSTRING_INDEX(size, \'x\', 1) AS UNSIGNED), `height` = CAST(SUBSTRING_INDEX(size, \'x\', -1) AS UNSIGNED) WHERE `width` = 0 AND `height` = 0 AND `size` `size` LIKE \'%_x_%\';');
     }
 }
