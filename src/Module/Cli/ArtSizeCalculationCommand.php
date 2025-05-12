@@ -83,8 +83,8 @@ final class ArtSizeCalculationCommand extends Command
             if ($dimensions['width'] > 0 && $dimensions['height'] > 0) {
                 $width  = $dimensions['width'];
                 $height = $dimensions['height'];
-                $sql    = "UPDATE `image` SET `width`=" . $width . ", `height`=" . $height . " WHERE `id`='" . $art_id . "'";
-                Dba::write($sql);
+                $sql    = "UPDATE `image` SET `width` = ?, `height` = ? WHERE `id` = ?";
+                Dba::write($sql, [$width, $height, $art_id]);
             }
         }
 
