@@ -470,13 +470,13 @@ class Art extends database_object
         }
 
         // Insert it!
-        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "REPLACE INTO `image` (`image`, `width`, `height`, `mime`, `size`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, [
             $source,
-            $mime,
-            $sizetext,
             $width,
             $height,
+            $mime,
+            $sizetext,
             $this->type,
             $this->uid,
             $this->kind,
@@ -754,13 +754,13 @@ class Art extends database_object
             $source = null;
         }
 
-        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "REPLACE INTO `image` (`image`, `width`, `height`, `mime`, `size`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, [
             $source,
-            $mime,
-            $sizetext,
             $width,
             $height,
+            $mime,
+            $sizetext,
             $this->type,
             $this->uid,
             $this->kind,
@@ -1162,7 +1162,7 @@ class Art extends database_object
             }
         }
 
-        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `mime`, `size`, ? AS `object_type`, ? AS `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
+        $sql = "INSERT IGNORE INTO `image` (`image`, `width`, `height`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `width`, `height`, `mime`, `size`, ? AS `object_type`, ? AS `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
 
         if (Dba::write($sql, [$write_type, $new_object_id, $object_type, $old_object_id])) {
             debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_type:' . $write_type . ' new_id:' . $new_object_id, 5);

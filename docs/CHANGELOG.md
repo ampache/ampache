@@ -1,16 +1,29 @@
 # CHANGELOG
 
-## Ampache 7.4.3
+## Ampache 7.5.0
 
 ### Added
 
+* WebDav Browser plugin, allowing direct browsing of your server
 * Show the structure with installed version in Ampache Debug when using a custom structure. (squashed and client)
 * Typing to plugin properties and functions
 * Typing to catalog modules
-* Subsonic remote catalog missing getArtist call
+* CLI
+  * Add print text for find missing and clean actions
+* Subsonic remote catalog
+  * Missing `getArtist` call
+* Database 750007
+  * Add `update_time` to `podcast_episode` table
+  * Set `update_time` to NOT NULL on `video` table
+  * Set `update_time` to NOT NULL on `song` table
+  * Fix 0 `width` and `height` columns using `size` for the `image` table
+  * Delete duplicates in the `image` table
+  * Apply a unique constraint to the `image` table
 
 ### Changed
 
+* Config `catalog_verify_by_time` checks file mod time only
+* Update vite to 6.2.7
 * Ampache remote catalog
   * Use new Api function `song_tags` to pull more data for song import. (If available)
 * Plugin
@@ -24,8 +37,23 @@
 
 ### Fixed
 
+* Scrutinizer builds
+* Missing `width` and `height` from `image` duplication
+* Skipping files based on modification time when updating catalogs
+* Verify will now correctly reduce numbers based on the last_update time and fetch all when the update list is empty
+* When a file is unable to be verified set `update_time` to denote a check was made
+* Update Video files from tags didn't do anything
+* Use `findAlbumArtist` to make sure tags are filled when missing Album Artist tags
+* Don't rely on format for Album Artist property when missing
 * CSS for edit dialog box input fields had white text on the dark theme
 * Don't rely on format commands to fill empty `album_artist` for files missing album_artist tags
+* Beets catalog sending the id instead of the artist name to insert function
+* WebDav
+  * Deprecated exec function
+  * Listing children has been simplified and fixed up for all media types
+  * Errors for artist names with `/` creating empty objects
+* CLI
+  * Missing `find` in default argument list check
 * Ampache remote catalog
   * Regex for file url could remove more parameters than required
   * Update url filename path to make sure it's valid
