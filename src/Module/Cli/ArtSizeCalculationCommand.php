@@ -80,8 +80,20 @@ final class ArtSizeCalculationCommand extends Command
         while ($row = Dba::fetch_assoc($db_results)) {
             $folder = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], 'default');
             if ($inDisk && $localDir && $folder) {
-                $path   = $folder . 'art-' . $row['size']. '.' . (str_replace("image/", "", $row['mime']) ?? 'jpg');
-                $source = Art::get_from_source(['file' => $path], $row['object_type']);
+                $ext    = (str_replace("image/", "", $row['mime']) ?? 'jpg');
+                $path   = $folder . 'art-' . $row['size']. '.' . $ext;
+                $source = Art::get_from_source(
+                    ['file' => $path],
+                    $row['object_type']
+                );
+                // try jpg on jpeg as well just in case we had weirdness with the insert
+                if ($source === '' && $ext === 'jpeg') {
+                    $source = Art::get_from_source(
+                        ['file' => $folder . 'art-' . $row['size']. '.jpg'],
+                        $row['object_type']
+                    );
+                }
+
                 if ($source === '') {
                     $interactor->warn(
                         sprintf(T_('Missing: %s'), $path),
