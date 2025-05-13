@@ -64,7 +64,7 @@ final class ArtSizeCalculationCommand extends Command
 
         $interactor = $this->io();
         $fix        = $this->values()['fix'] === true;
-        $interactor->white(
+        $interactor->ok(
             T_('Started art size calculation'),
             true
         );
@@ -100,8 +100,8 @@ final class ArtSizeCalculationCommand extends Command
             }
         }
 
-        $interactor->white(
-            T_('Finished art size calculation'),
+        $interactor->ok(
+            "\n" . T_('Finished art size calculation'),
             true
         );
     }
