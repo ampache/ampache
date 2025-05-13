@@ -64,6 +64,7 @@ Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions for
   * Errors for artist names with `/` creating empty objects
 * CLI
   * Missing `find` in default argument list check
+  * run:calculateArtSize would only look for jpg files on disk
 * Search
   * Song search SQL joins for playlist name may not be in correct order
 * Ampache remote catalog
