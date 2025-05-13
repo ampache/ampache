@@ -535,9 +535,8 @@ final class SongSearch implements SearchInterface
                     } else {
                         $where[] = "`playlist`.`name` $operator_sql ?";
                     }
-                    $parameters[]          = $input;
-                    $join['playlist']      = true;
-                    $join['playlist_data'] = true;
+                    $parameters[]     = $input;
+                    $join['playlist'] = true;
                     break;
                 case 'playlist':
                     $where[]      = "`song`.`id` $operator_sql IN (SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = 'song')";
@@ -690,11 +689,8 @@ final class SongSearch implements SearchInterface
         if (array_key_exists('song_data', $join)) {
             $table['song_data'] = "LEFT JOIN `song_data` ON `song`.`id` = `song_data`.`song_id`";
         }
-        if (array_key_exists('playlist_data', $join)) {
-            $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type`='song'";
-            if (array_key_exists('playlist', $join)) {
-                $table['playlist'] = "LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id`";
-            }
+        if (array_key_exists('playlist', $join)) {
+            $table['playlist'] = "LEFT JOIN `playlist_data` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type`='song' LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id`";
         }
         if ($join['catalog']) {
             $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `song`.`catalog`";
