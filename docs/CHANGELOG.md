@@ -4,7 +4,9 @@
 
 There are problems where the image table could duplicate itself when duplicating album art
 
-Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions
+Database updates will remove the duplicates and enforce unique values on the table to stop this
+
+Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions for remaining art
 
 ### Added
 
@@ -13,7 +15,9 @@ Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions
 * Typing to plugin properties and functions
 * Typing to catalog modules
 * CLI
+  * Add `-f|--fix` parameter to run:calculateArtSize to look for bad files only
   * Add print text for find missing and clean actions
+  * Add Interactor to Catalog check actions
 * Subsonic remote catalog
   * Missing `getArtist` call
 * Database 750008
@@ -39,6 +43,7 @@ Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions
 * Remove superfluous format calls from all `Catalog` and `playable_media` objects
 * Remove `get_f_artist_link` which has been replaced with `get_f_parent_link`
 * Hide some useless data in the Debug page and remove `database_password` entirely
+* Remove Tmp_Playlist garbage collection from Catalog garbage collection
 
 ### Fixed
 
@@ -59,11 +64,15 @@ Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions
   * Errors for artist names with `/` creating empty objects
 * CLI
   * Missing `find` in default argument list check
+  * run:calculateArtSize would only look for jpg files on disk
+* Search
+  * Song search SQL joins for playlist name may not be in correct order
 * Ampache remote catalog
   * Regex for file url could remove more parameters than required
   * Update url filename path to make sure it's valid
 * Subsonic
   * Send genre string correctly for more than one genre instead of just the first result
+  * Check for Album Artist using `findAlbumArtist`
 * Subsonic remote catalog
   * Forcing fallback port 4040
   * Image size was being sent as an array of height and width (You just send one int value)
