@@ -546,9 +546,9 @@ class AmpacheVlc extends localplay_controller
                 default:
                     // If we don't know it, look up by filename
                     $filename = Dba::escape($entry);
-                    $sql      = "SELECT `name` FROM `live_stream` WHERE `url`='$filename' ";
+                    $sql      = "SELECT `name` FROM `live_stream` WHERE `url` = ? ";
 
-                    $db_results = Dba::read($sql);
+                    $db_results = Dba::read($sql, [$filename]);
                     if ($row = Dba::fetch_assoc($db_results)) {
                         // if stream is known just send name
                         $data['name'] = htmlspecialchars(substr($row['name'], 0, 50));

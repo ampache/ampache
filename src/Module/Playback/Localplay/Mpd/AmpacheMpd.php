@@ -155,9 +155,8 @@ class AmpacheMpd extends localplay_controller
      */
     public function delete_instance(int $uid): void
     {
-        $uid = Dba::escape($uid);
-        $sql = "DELETE FROM `localplay_mpd` WHERE `id`='$uid'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `localplay_mpd` WHERE `id` = ?";
+        Dba::write($sql, [$uid]);
     }
 
     /**
@@ -509,9 +508,9 @@ class AmpacheMpd extends localplay_controller
                 default:
                     // If we don't know it, look up by filename
                     $filename = Dba::escape($entry['file']);
-                    $sql      = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
+                    $sql      = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE ? UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url` = ? ";
 
-                    $db_results = Dba::read($sql);
+                    $db_results = Dba::read($sql, ['%' . $filename, $filename]);
                     if ($row = Dba::fetch_assoc($db_results)) {
                         $className = ObjectTypeToClassNameMapper::map($row['type']);
                         /** @var Song|Live_Stream $media */

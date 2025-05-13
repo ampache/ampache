@@ -153,9 +153,8 @@ class AmpacheHttpq extends localplay_controller
      */
     public function delete_instance(int $uid): void
     {
-        $uid = Dba::escape($uid);
-        $sql = "DELETE FROM `localplay_httpq` WHERE `id`='$uid'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `localplay_httpq` WHERE `id` = ?";
+        Dba::write($sql, [$uid]);
     }
 
     /**
@@ -505,10 +504,10 @@ class AmpacheHttpq extends localplay_controller
                 default:
                     // If we don't know it, look up by filename
                     $filename          = Dba::escape($url_data['file']);
-                    $sql               = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
+                    $sql               = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE ? UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url` = ?;";
                     $libraryItemLoader = $this->getLibraryItemLoader();
 
-                    $db_results = Dba::read($sql);
+                    $db_results = Dba::read($sql, ['%' . $filename, $filename]);
                     if ($row = Dba::fetch_assoc($db_results)) {
                         $media = $libraryItemLoader->load(
                             LibraryItemEnum::from($row['type']),
