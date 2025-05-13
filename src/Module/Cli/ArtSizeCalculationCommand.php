@@ -73,14 +73,21 @@ final class ArtSizeCalculationCommand extends Command
         $localDir = $this->configContainer->get('local_metadata_dir');
 
         $sql = ($fix)
-            ? "SELECT `image`, `id`, `object_id`, `object_type`, `size` FROM `image` WHERE (`height` = 0 AND `width` = 0) OR (`width` IS NULL AND `height` IS NULL)"
-            : "SELECT `image`, `id`, `object_id`, `object_type`, `size` FROM `image`";
+            ? "SELECT `id`, `image`, `mime`, `size`, `object_id`, `object_type` FROM `image` WHERE (`height` = 0 AND `width` = 0) OR (`width` IS NULL AND `height` IS NULL)"
+            : "SELECT `id`, `image`, `mime`, `size`, `object_id`, `object_type` FROM `image`";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $folder = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], 'default');
             if ($inDisk && $localDir && $folder) {
-                $source = Art::get_from_source(['file' => $folder . 'art-' . $row['size'] . '.jpg'], $row['object_type']);
+                $path   = $folder . 'art-' . $row['size'] . (str_replace("image/", "", $row['mime']) ?? 'jpg');
+                $source = Art::get_from_source(['file' => $path], $row['object_type']);
+                if ($source === '') {
+                    $interactor->warn(
+                        sprintf(T_('Missing: %s'), $path),
+                        true
+                    );
+                }
             } else {
                 $source = $row['image'];
             }
