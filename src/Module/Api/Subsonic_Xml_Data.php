@@ -419,7 +419,7 @@ class Subsonic_Xml_Data
         $sub_id = (string)self::_getAlbumId($album->id);
         $xalbum = self::addChildToResultXml($xml, htmlspecialchars($elementName));
         $xalbum->addAttribute('id', $sub_id);
-        if ($album->album_artist) {
+        if ($album->findAlbumArtist()) {
             $xalbum->addAttribute('parent', (string)self::_getArtistId($album->album_artist));
         }
         $f_name = (string)self::_checkName($album->get_fullname());
@@ -435,7 +435,7 @@ class Subsonic_Xml_Data
         $xalbum->addAttribute('created', date("c", (int)$album->addition_time));
         $xalbum->addAttribute('duration', (string) $album->time);
         $xalbum->addAttribute('playCount', (string)$album->total_count);
-        if ($album->album_artist) {
+        if ($album->findAlbumArtist()) {
             $xalbum->addAttribute('artistId', (string)self::_getArtistId($album->album_artist));
         }
         $xalbum->addAttribute('artist', (string) self::_checkName($album->get_artist_fullname()));
@@ -602,7 +602,7 @@ class Subsonic_Xml_Data
         $album = new Album(self::_getAmpacheId($album_id));
         $xdir  = self::addChildToResultXml($xml, 'directory');
         $xdir->addAttribute('id', (string)$album_id);
-        if ($album->album_artist) {
+        if ($album->findAlbumArtist()) {
             $xdir->addAttribute('parent', (string)self::_getArtistId($album->album_artist));
         } else {
             $xdir->addAttribute('parent', (string)$album->catalog);
