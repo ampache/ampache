@@ -81,7 +81,7 @@ final class ArtSizeCalculationCommand extends Command
             $folder = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], 'default');
             if ($inDisk && $localDir && $folder) {
                 $ext    = (str_replace("image/", "", $row['mime']) ?? 'jpg');
-                $path   = $folder . 'art-' . $row['size']. '.' . $ext;
+                $path   = $folder . 'art-' . $row['size'] . '.' . $ext;
                 $source = Art::get_from_source(
                     ['file' => $path],
                     $row['object_type']
@@ -89,7 +89,7 @@ final class ArtSizeCalculationCommand extends Command
                 // try jpg on jpeg as well just in case we had weirdness with the insert
                 if ($source === '' && $ext === 'jpeg') {
                     $source = Art::get_from_source(
-                        ['file' => $folder . 'art-' . $row['size']. '.jpg'],
+                        ['file' => $folder . 'art-' . $row['size'] . '.jpg'],
                         $row['object_type']
                     );
                 }
