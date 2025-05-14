@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V7;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,7 @@ final class Migration750007 extends AbstractMigration
 
     public function migrate(): void
     {
+        Dba::write("ALTER TABLE `image` DROP KEY `unique_image`;", [], true);
         $this->updateDatabase('ALTER TABLE `image` ADD UNIQUE INDEX `unique_image` (`width`, `height`, `mime`, `size`, `object_type`, `object_id`, `kind`);');
     }
 }
