@@ -1,10 +1,11 @@
-version: '3'
+name: ampache
 
 services:
   ampache:
     build:
       context: .
       dockerfile: docker/Dockerfilephp82
+    container_name: ampache
     restart: on-failure
     ports:
       - "8084:80"
@@ -14,3 +15,5 @@ services:
       - ./:/var/www/html
       - ./docker/log:/var/log/ampache
       - ./docker/media:/media
+    environment:
+      DISABLE_INOTIFYWAIT_CLEAN: ${DISABLE_INOTIFYWAIT_CLEAN-0}
