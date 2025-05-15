@@ -208,7 +208,11 @@ class SubsonicClient
     {
         error_log($error . "\n" . print_r($data, true));
 
-        return (object)["success" => false, "error" => $error, "data" => $data];
+        return (object)[
+            'success' => false,
+            'error' => $error,
+            'data' => $data
+        ];
     }
 
     /**
