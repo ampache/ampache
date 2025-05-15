@@ -112,7 +112,7 @@ if (AmpConfig::get('external_links_musicbrainz')) {
     <?php
         $name = '[' . scrub_out($album->get_artist_fullname()) . '] ' . scrub_out($f_name);
 $thumb        = Ui::is_grid_view('album') ? 11 : 32;
-Art::display('album', $album->id, $name, $thumb); ?>
+Art::display('album', $album->id, $name, $thumb, null, true, false); ?>
 </div>
 <?php if (User::is_registered()) {
     if (AmpConfig::get('ratings')) { ?>

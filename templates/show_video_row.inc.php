@@ -65,7 +65,7 @@ $web_path = AmpConfig::get_web_path(); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php $art_showed = false;
 if ($libitem->get_default_art_kind() == 'preview') {
-    $art_showed = Art::display('video', $libitem->id, (string)$libitem->get_fullname(), 9, $libitem->get_link(), false, 'preview');
+    $art_showed = Art::display('video', $libitem->id, (string)$libitem->get_fullname(), 9, $libitem->get_link(), false, true, 'preview');
 }
 if (!$art_showed) {
     $thumb = ($browse->is_grid_view()) ? 7 : 6;

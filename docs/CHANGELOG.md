@@ -15,6 +15,7 @@ Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions for
 * Typing to plugin properties and functions
 * Typing to catalog modules
 * CLI
+  * Print query error messages when running `admin:updateDatabase`
   * Add `-f|--fix` parameter to run:calculateArtSize to look for bad files only
   * Add print text for find missing and clean actions
   * Add Interactor to Catalog check actions
@@ -47,6 +48,8 @@ Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions for
 
 ### Fixed
 
+* Art display was forcing thumbnail images on object pages
+* Art thumbnail was always set and would not show the original image
 * Scrutinizer builds
 * Missing `width` and `height` from `image` duplication
 * Skipping files based on modification time when updating catalogs

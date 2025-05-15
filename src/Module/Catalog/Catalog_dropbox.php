@@ -351,7 +351,13 @@ class Catalog_dropbox extends Catalog
 
     public function add_file(Dropbox $dropbox, string $path): bool
     {
-        $file     = $dropbox->getMetadata($path, ["include_media_info" => true, "include_deleted" => true]);
+        $file     = $dropbox->getMetadata(
+            $path,
+            [
+                'include_media_info' => true,
+                'include_deleted' => true
+            ]
+        );
         $filesize = $file->getDataProperty('size');
         if ($filesize > 0) {
             $is_audio_file = Catalog::is_audio_file($path);
