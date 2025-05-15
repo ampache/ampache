@@ -53,7 +53,7 @@ Ui::show_box_top((string)$podcast->get_fullname(), 'info-box'); ?>
 <div class="item_right_info">
     <?php
     $thumb = Ui::is_grid_view('podcast') ? 11 : 32;
-Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $thumb); ?>
+Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $thumb, null, true, false); ?>
 </div>
 <?php if ($podcast->get_description()) { ?>
 <div id="item_summary">
