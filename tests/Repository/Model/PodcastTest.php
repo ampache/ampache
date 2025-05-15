@@ -55,13 +55,6 @@ class PodcastTest extends TestCase
         );
     }
 
-    public function testFormatDoesNothing(): void
-    {
-        static::expectNotToPerformAssertions();
-
-        $this->subject->format();
-    }
-
     public function testGetKeywordsReturnsKeywords(): void
     {
         $title = 'some-title';

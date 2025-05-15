@@ -50,7 +50,7 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $user_id;
+    private int $user_id = 0;
 
     private $challenge;
 
@@ -58,11 +58,11 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
 
     private ?string $secret = null;
 
-    private $scheme   = 'http';
+    private string $scheme = 'http';
 
-    private $host     = 'www.last.fm';
+    private string $host = 'www.last.fm';
 
-    private $api_host = 'ws.audioscrobbler.com';
+    private string $api_host = 'ws.audioscrobbler.com';
 
     /**
      * Constructor
@@ -183,10 +183,8 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
     /**
      * set_flag
      * This takes care of spreading your love on Last.fm
-     * @param Song $song
-     * @param bool $flagged
      */
-    public function set_flag($song, $flagged): void
+    public function set_flag(Song $song, bool $flagged): void
     {
         if (!$this->api_key) {
             return;

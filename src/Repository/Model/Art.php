@@ -289,7 +289,10 @@ class Art extends database_object
 
         // If there is no thumb and we want thumbs
         if (!$this->thumb && AmpConfig::get('resize_images')) {
-            $size = ['width' => 275, 'height' => 275];
+            $size = [
+                'width' => 275,
+                'height' => 275
+            ];
             $data = $this->generate_thumb($this->raw, $size, $this->raw_mime);
             // If it works save it!
             if ($data !== []) {
@@ -470,13 +473,13 @@ class Art extends database_object
         }
 
         // Insert it!
-        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "REPLACE INTO `image` (`image`, `width`, `height`, `mime`, `size`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, [
             $source,
-            $mime,
-            $sizetext,
             $width,
             $height,
+            $mime,
+            $sizetext,
             $this->type,
             $this->uid,
             $this->kind,
@@ -754,13 +757,13 @@ class Art extends database_object
             $source = null;
         }
 
-        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "REPLACE INTO `image` (`image`, `width`, `height`, `mime`, `size`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, [
             $source,
-            $mime,
-            $sizetext,
             $width,
             $height,
+            $mime,
+            $sizetext,
             $this->type,
             $this->uid,
             $this->kind,
@@ -1162,7 +1165,7 @@ class Art extends database_object
             }
         }
 
-        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `mime`, `size`, ? AS `object_type`, ? AS `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
+        $sql = "INSERT IGNORE INTO `image` (`image`, `width`, `height`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `width`, `height`, `mime`, `size`, ? AS `object_type`, ? AS `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
 
         if (Dba::write($sql, [$write_type, $new_object_id, $object_type, $old_object_id])) {
             debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_type:' . $write_type . ' new_id:' . $new_object_id, 5);
@@ -1335,6 +1338,7 @@ class Art extends database_object
         int     $thumb,
         ?string $link = null,
         bool    $show_default = true,
+        bool    $thumb_link   = true,
         string  $kind = 'default'
     ): bool {
         if (!self::is_valid_type($object_type)) {
@@ -1350,7 +1354,10 @@ class Art extends database_object
         $size        = self::get_thumb_size($thumb);
         $prettyPhoto = ($link === null);
         if ($link === null) {
-            $link = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&thumb=" . $thumb;
+            $link = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
+            if ($thumb_link) {
+                $link .= "&thumb=" . $thumb;
+            }
             if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
                 $link .= "&auth=" . session_id();
             }
@@ -1367,7 +1374,10 @@ class Art extends database_object
         }
 
         echo ">";
-        $imgurl = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&thumb=" . $thumb;
+        $imgurl = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
+        if ($thumb_link) {
+            $imgurl .= "&thumb=" . $thumb;
+        }
         if ($kind != 'default') {
             $imgurl .= '&kind=' . $kind;
         }

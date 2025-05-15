@@ -904,12 +904,9 @@ function xoutput_headers(): void
 }
 
 /**
- * @param array $array
- * @param bool $callback
- * @param string $type
- * @return mixed|string
+ * @param array<string|int, mixed> $array
  */
-function xoutput_from_array($array, $callback = false, $type = '')
+function xoutput_from_array(array $array, bool $callback = false, string $type = ''): string
 {
     $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
     if ($output == 'xml') {
@@ -917,7 +914,7 @@ function xoutput_from_array($array, $callback = false, $type = '')
     } elseif ($output == 'raw') {
         $outputnode = Core::get_request('xoutputnode');
 
-        return $array[$outputnode];
+        return (string)($array[$outputnode] ?? '');
     } else {
         return json_encode($array) ?: '';
     }
@@ -1060,15 +1057,14 @@ function get_themes(): array
 /**
  * get_theme
  * get a single theme and read the config file then return the results
- * @param string $name
- * @return array|bool|false|mixed|null
+ * @return array<string, mixed>|null
  */
-function get_theme($name)
+function get_theme(string $name): ?array
 {
     static $_mapcache = [];
 
     if (strlen((string) $name) < 1) {
-        return false;
+        return null;
     }
 
     $name = strtolower((string) $name);

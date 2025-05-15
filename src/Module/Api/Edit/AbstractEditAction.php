@@ -105,8 +105,8 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         );
         /** @var library_item $libitem */
         $libitem = new $className($object_id);
-        if (method_exists($libitem, 'format')) {
-            $libitem->format();
+        if (method_exists($libitem, 'fill_ext_info')) {
+            $libitem->fill_ext_info();
         }
 
         $level = AccessLevelEnum::CONTENT_MANAGER;

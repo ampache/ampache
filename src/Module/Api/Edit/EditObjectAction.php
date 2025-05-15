@@ -160,8 +160,8 @@ final class EditObjectAction extends AbstractEditAction
             }
         } else {
             // @todo: is it really necessary to call format before updating the object?
-            if (method_exists($libitem, 'format')) {
-                $libitem->format();
+            if (method_exists($libitem, 'fill_ext_info')) {
+                $libitem->fill_ext_info();
             }
             $libitem->update($_POST);
         }

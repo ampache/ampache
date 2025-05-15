@@ -120,7 +120,6 @@ final class PlaylistExporter implements PlaylistExporterInterface
         $dirname = rtrim($dirname, "/");
 
         foreach ($items as $item) {
-            $item->format();
             $name = (string)$item->get_fullname();
             // We don't know about file system encoding / specificity
             // For now, we only keep simple characters to be sure it will work everywhere

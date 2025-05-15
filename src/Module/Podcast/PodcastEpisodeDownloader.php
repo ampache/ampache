@@ -32,6 +32,7 @@ use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
 use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
@@ -144,8 +145,10 @@ final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterfac
 
             // file is null until it's downloaded
             if (empty($episode->file)) {
-                $episode->file = $destinationFilePath;
-                $episode->type = $extension ?? '';
+                $episode->file    = $destinationFilePath;
+                $episode->type    = $extension ?? '';
+                $episode->mime    = Song::type_to_mime($episode->type);
+                $episode->enabled = true;
                 Podcast_Episode::update_file($destinationFilePath, $episodeId);
             }
             Catalog::update_media_from_tags($episode);

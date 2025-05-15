@@ -23,6 +23,7 @@
 
 namespace Ampache\Module\Database;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Database\Exception\InsertIdInvalidException;
 use PDOStatement;
@@ -42,6 +43,7 @@ interface DatabaseConnectionInterface
         string $sql,
         array $params = [],
         bool $silent = false,
+        ?Interactor $interactor = null,
     ): PDOStatement;
 
     /**

@@ -91,8 +91,7 @@ if (empty($object_ids) && isset($democratic->base_playlist)) {
         $media = new $className($item['object_id']);
         if ($media->isNew()) {
             continue;
-        }
-        $media->format(); ?>
+        } ?>
 <tr>
     <td class="cel_action">
     <?php if ($democratic->has_vote($item['object_id'], $item['object_type']->value)) {

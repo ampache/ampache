@@ -57,7 +57,6 @@ final readonly class LatestSongFeed extends AbstractGenericRssFeed
 
         foreach ($ids as $songid) {
             $song = new Song($songid);
-            $song->format();
 
             yield [
                 'title' => (string) $song->get_fullname(),

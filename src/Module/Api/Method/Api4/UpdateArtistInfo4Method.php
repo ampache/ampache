@@ -79,11 +79,11 @@ final class UpdateArtistInfo4Method
             array_key_exists('id', $info) && $info['id'] !== null ||
             count($like) > 0
         ) {
-            Api4::message('success', 'Updated artist info: ' . (string)$object_id, null, $input['api_format']);
+            Api4::message('success', 'Updated artist info: ' . $object_id, null, $input['api_format']);
 
             return true;
         }
-        Api4::message('error', T_('Failed to update_artist_info or recommendations for ' . (string)$object_id), '400', $input['api_format']);
+        Api4::message('error', T_('Failed to update_artist_info or recommendations for ' . $object_id), '400', $input['api_format']);
 
         return true;
     }

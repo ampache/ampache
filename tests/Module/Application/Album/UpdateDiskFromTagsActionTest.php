@@ -109,8 +109,6 @@ class UpdateDiskFromTagsActionTest extends TestCase
             ->willReturn(true);
 
         $albumDisk->expects(static::once())
-            ->method('format');
-        $albumDisk->expects(static::once())
             ->method('getCatalogId')
             ->willReturn($catalogId);
 

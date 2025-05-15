@@ -296,7 +296,7 @@ class Subsonic_Xml_Data
         if ($artist->isNew()) {
             return;
         }
-        $artist->format();
+
         $sub_id  = (string)self::_getArtistId($artist->id);
         $xartist = self::addChildToResultXml($xml, 'artist');
         $xartist->addAttribute('id', $sub_id);
@@ -415,12 +415,13 @@ class Subsonic_Xml_Data
         if ($album->isNew()) {
             return;
         }
-        $album->format();
+
         $sub_id = (string)self::_getAlbumId($album->id);
         $xalbum = self::addChildToResultXml($xml, htmlspecialchars($elementName));
         $xalbum->addAttribute('id', $sub_id);
-        if ($album->album_artist) {
-            $xalbum->addAttribute('parent', (string)self::_getArtistId($album->album_artist));
+        $album_artist = $album->findAlbumArtist();
+        if ($album_artist) {
+            $xalbum->addAttribute('parent', (string)self::_getArtistId($album_artist));
         }
         $f_name = (string)self::_checkName($album->get_fullname());
         $xalbum->addAttribute('album', $f_name);
@@ -435,8 +436,8 @@ class Subsonic_Xml_Data
         $xalbum->addAttribute('created', date("c", (int)$album->addition_time));
         $xalbum->addAttribute('duration', (string) $album->time);
         $xalbum->addAttribute('playCount', (string)$album->total_count);
-        if ($album->album_artist) {
-            $xalbum->addAttribute('artistId', (string)self::_getArtistId($album->album_artist));
+        if ($album_artist) {
+            $xalbum->addAttribute('artistId', (string)self::_getArtistId($album_artist));
         }
         $xalbum->addAttribute('artist', (string) self::_checkName($album->get_artist_fullname()));
         // original year (fall back to regular year)
@@ -496,8 +497,6 @@ class Subsonic_Xml_Data
             $xsong->addAttribute('type', 'music');
             $xsong->addAttribute('albumId', $subParent);
             $xsong->addAttribute('album', (string)self::_checkName($song->get_album_fullname()));
-            // $artist = new Artist($song->artist);
-            // $artist->format();
             $xsong->addAttribute('artistId', ($song->artist) ? (string)self::_getArtistId($song->artist) : '');
             $xsong->addAttribute('artist', (string)self::_checkName($song->get_artist_fullname()));
             if ($song->has_art()) {
@@ -524,7 +523,7 @@ class Subsonic_Xml_Data
             }
             $tags = Tag::get_object_tags('song', $song->id);
             if (!empty($tags)) {
-                $xsong->addAttribute('genre', (string)($tags[0]['name'] ?? ''));
+                $xsong->addAttribute('genre', implode(',', array_column($tags, 'name')));
             }
             $xsong->addAttribute('size', (string)$song->size);
             $disk = $song->disk;
@@ -602,11 +601,11 @@ class Subsonic_Xml_Data
     private static function addDirectory_Album(SimpleXMLElement $xml, string $album_id): void
     {
         $album = new Album(self::_getAmpacheId($album_id));
-        $album->format();
-        $xdir = self::addChildToResultXml($xml, 'directory');
+        $xdir  = self::addChildToResultXml($xml, 'directory');
         $xdir->addAttribute('id', (string)$album_id);
-        if ($album->album_artist) {
-            $xdir->addAttribute('parent', (string)self::_getArtistId($album->album_artist));
+        $album_artist = $album->findAlbumArtist();
+        if ($album_artist) {
+            $xdir->addAttribute('parent', (string)self::_getArtistId($album_artist));
         } else {
             $xdir->addAttribute('parent', (string)$album->catalog);
         }
@@ -664,7 +663,6 @@ class Subsonic_Xml_Data
     {
         $xvideos = self::addChildToResultXml($xml, 'videos');
         foreach ($videos as $video) {
-            $video->format();
             self::addVideo($xvideos, $video);
         }
     }
@@ -690,7 +688,7 @@ class Subsonic_Xml_Data
         }
         $tags = Tag::get_object_tags('video', (int)$video->id);
         if (!empty($tags)) {
-            $xvideo->addAttribute('genre', (string)$tags[0]['name']);
+            $xvideo->addAttribute('genre', implode(',', array_column($tags, 'name')));
         }
         $xvideo->addAttribute('size', (string)$video->size);
         $xvideo->addAttribute('suffix', (string)$video->type);
@@ -1350,7 +1348,6 @@ class Subsonic_Xml_Data
     {
         $xpodcasts = self::addChildToResultXml($xml, 'podcasts');
         foreach ($podcasts as $podcast) {
-            $podcast->format();
             $sub_id   = (string)self::_getPodcastId($podcast->getId());
             $xchannel = self::addChildToResultXml($xpodcasts, 'channel');
             $xchannel->addAttribute('id', $sub_id);
@@ -1381,7 +1378,6 @@ class Subsonic_Xml_Data
     {
         $xpodcasts = self::addChildToResultXml($xml, 'newestPodcasts');
         foreach ($episodes as $episode) {
-            $episode->format();
             self::addPodcastEpisode($xpodcasts, $episode);
         }
     }
@@ -1427,7 +1423,6 @@ class Subsonic_Xml_Data
      */
     private static function addPodcastEpisode(SimpleXMLElement $xml, Podcast_Episode $episode, string $elementName = 'episode'): void
     {
-        $episode->format();
         $sub_id    = (string)self::_getPodcastEpisodeId($episode->id);
         $subParent = (string)self::_getPodcastId($episode->podcast);
         $xepisode  = self::addChildToResultXml($xml, htmlspecialchars($elementName));

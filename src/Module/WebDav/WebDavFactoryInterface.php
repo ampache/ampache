@@ -25,6 +25,7 @@ namespace Ampache\Module\WebDav;
 
 use Sabre\DAV\Auth\Backend\BackendInterface;
 use Sabre\DAV\Auth\Plugin;
+use Sabre\DAV\Browser\Plugin as BrowserPlugin;
 use Sabre\DAV\ICollection;
 use Sabre\DAV\Server;
 
@@ -37,4 +38,6 @@ interface WebDavFactoryInterface
     public function createServer(ICollection $node): Server;
 
     public function createPlugin(?BackendInterface $backend): Plugin;
+
+    public function createBrowserPlugin(bool $enablePost): BrowserPlugin;
 }

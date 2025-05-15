@@ -83,6 +83,8 @@ class Podcast_Episode extends database_object implements
 
     public int $addition_time;
 
+    public int $update_time;
+
     public int $total_count;
 
     public int $total_skip;
@@ -161,28 +163,6 @@ class Podcast_Episode extends database_object implements
     public function getCatalogId(): int
     {
         return $this->catalog;
-    }
-
-    /**
-     * format
-     * this function takes the object and formats some values
-     */
-    public function format(): void
-    {
-        if ($this->isNew()) {
-            return;
-        }
-
-        // format the file
-        if (
-            $this->file !== null &&
-            $this->file !== '' &&
-            $this->file !== '0'
-        ) {
-            $this->type    = strtolower(pathinfo($this->file, PATHINFO_EXTENSION));
-            $this->mime    = Song::type_to_mime($this->type);
-            $this->enabled = true;
-        }
     }
 
     public function getCategory(): string
@@ -333,14 +313,6 @@ class Podcast_Episode extends database_object implements
     }
 
     /**
-     * get_f_artist_link
-     */
-    public function get_f_artist_link(): ?string
-    {
-        return $this->getPodcastLink();
-    }
-
-    /**
      * Get item get_f_album_link.
      */
     public function get_f_album_link(): string
@@ -367,6 +339,9 @@ class Podcast_Episode extends database_object implements
         ];
     }
 
+    /**
+     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     */
     public function get_childrens(): array
     {
         return [];
@@ -375,8 +350,9 @@ class Podcast_Episode extends database_object implements
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -528,6 +504,21 @@ class Podcast_Episode extends database_object implements
         return Stats::has_played_history('podcast_episode', $this, $user, $agent, $date);
     }
 
+
+    /**
+     * update_utime
+     * sets a new update time
+     */
+    public static function update_utime(int $episode_id, int $time = 0): void
+    {
+        if (!$time) {
+            $time = time();
+        }
+
+        $sql = "UPDATE `podcast_episode` SET `update_time` = ? WHERE `id` = ?;";
+        Dba::write($sql, [$time, $episode_id]);
+    }
+
     /**
      * update_file
      * sets the file path
@@ -634,10 +625,9 @@ class Podcast_Episode extends database_object implements
 
     /**
      * Get stream types.
-     * @param null|string $player
      * @return list<string>
      */
-    public function get_stream_types($player = null): array
+    public function get_stream_types(?string $player = null): array
     {
         return Stream::get_stream_types_for_type($this->type, $player);
     }

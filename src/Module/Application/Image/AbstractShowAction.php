@@ -98,9 +98,6 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             $_GET['thumb'] = null;
         }
 
-        /* Decide what size this image is */
-        $thumb = (int)filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
-        $size  = Art::get_thumb_size($thumb);
         $kind  = (array_key_exists('kind', $_GET) && $_GET['kind'] == 'preview')
             ? 'preview'
             : 'default';
@@ -157,7 +154,9 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 $image = file_get_contents($defaultimg);
             } else {
                 $thumb_data = [];
-                if (array_key_exists('thumb', $_GET)) {
+                $thumb      = (int)filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
+                if (array_key_exists('thumb', $_GET) && $thumb > 0) {
+                    $size       = Art::get_thumb_size($thumb);
                     $thumb_data = $art->get_thumb($size);
                     $etag .= '-' . $thumb;
                 }

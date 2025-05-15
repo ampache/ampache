@@ -48,7 +48,7 @@ if (!empty($videos)) {
         <div id="video_<?php echo $video_id; ?>" class="art_album libitem_menu">
             <?php $art_showed = false;
         if ($video->get_default_art_kind() == 'preview') {
-            $art_showed = Art::display('video', $video->id, $video->getFileName(), 9, $video->get_link(), false, 'preview');
+            $art_showed = Art::display('video', $video->id, $video->getFileName(), 9, $video->get_link(), false, true, 'preview');
         }
         if (!$art_showed) {
             $thumb = Ui::is_grid_view('video') ? 6 : 7;

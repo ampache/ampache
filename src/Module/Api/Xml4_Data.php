@@ -305,7 +305,7 @@ class Xml4_Data
             case 'song':
                 foreach ($objects as $object_id) {
                     $song = new Song((int)$object_id);
-                    $song->format();
+                    $song->fill_ext_info();
                     $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n"
                         . "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_fullname() . "]]></artist>\n"
                         . "\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_fullname() . "]]></album>\n"
@@ -319,7 +319,6 @@ class Xml4_Data
                         if ($playlist->isNew()) {
                             break;
                         }
-                        $playlist->format();
 
                         $playlist_user = ($playlist->type !== 'public')
                             ? $playlist->username
@@ -330,7 +329,6 @@ class Xml4_Data
                         if ($playlist->isNew()) {
                             break;
                         }
-                        $playlist->format();
 
                         $playlist_user  = $playlist->username;
                         $playitem_total = $playlist->get_media_count('song');
@@ -451,7 +449,6 @@ class Xml4_Data
             if ($artist->isNew()) {
                 continue;
             }
-            $artist->format();
 
             $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -504,7 +501,6 @@ class Xml4_Data
             if ($album->isNew()) {
                 continue;
             }
-            $album->format();
 
             $rating      = new Rating($album->id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -628,8 +624,7 @@ class Xml4_Data
             if ($catalog === null) {
                 break;
             }
-            $catalog->format();
-            $string .= "<catalog id=\"$catalog_id\">\n\t<name><![CDATA[" . $catalog->name . "]]></name>\n\t<type><![CDATA[" . $catalog->catalog_type . "]]></type>\n\t<gather_types><![CDATA[" . $catalog->gather_types . "]]></gather_types>\n\t<enabled>" . $catalog->enabled . "</enabled>\n\t<last_add><![CDATA[" . $catalog->get_f_add() . "]]></last_add>\n\t<last_clean><![CDATA[" . $catalog->get_f_clean() . "]]></last_clean>\n\t<last_update><![CDATA[" . $catalog->get_f_update() . "]]></last_update>\n\t<path><![CDATA[" . $catalog->f_info . "]]></path>\n\t<rename_pattern><![CDATA[" . $catalog->rename_pattern . "]]></rename_pattern>\n\t<sort_pattern><![CDATA[" . $catalog->sort_pattern . "]]></sort_pattern>\n</catalog>\n";
+            $string .= "<catalog id=\"$catalog_id\">\n\t<name><![CDATA[" . $catalog->name . "]]></name>\n\t<type><![CDATA[" . $catalog->catalog_type . "]]></type>\n\t<gather_types><![CDATA[" . $catalog->gather_types . "]]></gather_types>\n\t<enabled>" . $catalog->enabled . "</enabled>\n\t<last_add><![CDATA[" . $catalog->get_f_add() . "]]></last_add>\n\t<last_clean><![CDATA[" . $catalog->get_f_clean() . "]]></last_clean>\n\t<last_update><![CDATA[" . $catalog->get_f_update() . "]]></last_update>\n\t<path><![CDATA[" . $catalog->get_f_info() . "]]></path>\n\t<rename_pattern><![CDATA[" . $catalog->rename_pattern . "]]></rename_pattern>\n\t<sort_pattern><![CDATA[" . $catalog->sort_pattern . "]]></sort_pattern>\n</catalog>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);
@@ -698,7 +693,7 @@ class Xml4_Data
             if ($episode->isNew()) {
                 continue;
             }
-            $episode->format();
+
             $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($episode->id, 'podcast_episode');
@@ -739,7 +734,7 @@ class Xml4_Data
                 continue;
             }
 
-            $song->format();
+            $song->fill_ext_info();
             $tag_string  = self::tags_string(Tag::get_top_tags('song', $song->id));
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -799,13 +794,12 @@ class Xml4_Data
             if ($video->isNew()) {
                 continue;
             }
-            $video->format();
             $rating      = new Rating($video->id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($video->id, 'video');
             $art_url     = Art::url($video->id, 'video', Core::get_request('auth'));
 
-            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->f_resolution . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n</video>\n";
+            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->get_f_resolution() . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n</video>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);
@@ -837,7 +831,7 @@ class Xml4_Data
             if ($song->isNew()) {
                 continue;
             }
-            $song->format();
+            $song->fill_ext_info();
 
             // FIXME: This is duplicate code and so wrong, functions need to be improved
             $tag         = new Tag((int)($song->get_tags()[0]['id'] ?? 0));
@@ -863,7 +857,6 @@ class Xml4_Data
      */
     public static function user(User $user, bool $fullinfo): string
     {
-        $user->format();
         $string = "<user id=\"" . (string) $user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n";
         if ($fullinfo) {
             $string .= "\t<auth><![CDATA[" . $user->apikey . "]]></auth>\n\t<email><![CDATA[" . $user->email . "]]></email>\n\t<access><![CDATA[" . (string) $user->access . "]]></access>\n\t<fullname_public><![CDATA[" . (string) $user->fullname_public . "]]></fullname_public>\n\t<validation><![CDATA[" . $user->validation . "]]></validation>\n\t<disabled><![CDATA[" . (string) $user->disabled . "]]></disabled>\n";

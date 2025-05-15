@@ -224,13 +224,6 @@ class Playlist extends playlist_object
     }
 
     /**
-     * format
-     */
-    public function format(): void
-    {
-    }
-
-    /**
      * get_items
      * This returns an array of playlist medias that are in this playlist.
      * Because the same media can be on the same playlist twice they are
@@ -535,9 +528,6 @@ class Playlist extends playlist_object
         if (isset($data['last_duration']) && $data['last_duration'] != $this->last_duration) {
             $this->_set_last($data['last_duration'], 'last_duration');
         }
-
-        // reformat after an update
-        $this->format();
 
         return $this->id;
     }

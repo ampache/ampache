@@ -1,5 +1,88 @@
 # CHANGELOG
 
+## Ampache 7.5.0
+
+There are problems where the image table could duplicate itself when duplicating album art
+
+Database updates will remove the duplicates and enforce unique values on the table to stop this
+
+Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions for remaining art
+
+### Added
+
+* WebDav Browser plugin, allowing direct browsing of your server
+* Show the structure with installed version in Ampache Debug when using a custom structure. (squashed and client)
+* Typing to plugin properties and functions
+* Typing to catalog modules
+* CLI
+  * Print query error messages when running `admin:updateDatabase`
+  * Add `-f|--fix` parameter to run:calculateArtSize to look for bad files only
+  * Add print text for find missing and clean actions
+  * Add Interactor to Catalog check actions
+* Subsonic remote catalog
+  * Missing `getArtist` call
+* Database 750008
+  * Add `update_time` to `podcast_episode` table
+  * Set `update_time` to NOT NULL on `video` table
+  * Set `update_time` to NOT NULL on `song` table
+  * Fix 0 `width` and `height` columns using `size` for the `image` table
+  * Delete duplicates in the `image` table
+  * Apply a unique constraint to the `image` table
+  * Delete duplicate original images in the `image` table
+
+### Changed
+
+* Config `catalog_verify_by_time` checks file mod time only
+* Update vite to 6.2.7
+* Ampache remote catalog
+  * Use new Api function `song_tags` to pull more data for song import. (If available)
+* Plugin
+  * Allow hiding Catalog Favorites (Highlight) items setting maxitems to `-1`
+
+### Removed
+
+* Remove superfluous format calls from all `Catalog` and `playable_media` objects
+* Remove `get_f_artist_link` which has been replaced with `get_f_parent_link`
+* Hide some useless data in the Debug page and remove `database_password` entirely
+* Remove Tmp_Playlist garbage collection from Catalog garbage collection
+
+### Fixed
+
+* Art display was forcing thumbnail images on object pages
+* Art thumbnail was always set and would not show the original image
+* Scrutinizer builds
+* Missing `width` and `height` from `image` duplication
+* Skipping files based on modification time when updating catalogs
+* Verify will now correctly reduce numbers based on the last_update time and fetch all when the update list is empty
+* When a file is unable to be verified set `update_time` to denote a check was made
+* Update Video files from tags didn't do anything
+* Use `findAlbumArtist` to make sure tags are filled when missing Album Artist tags
+* Don't rely on format for Album Artist property when missing
+* CSS for edit dialog box input fields had white text on the dark theme
+* Don't rely on format commands to fill empty `album_artist` for files missing album_artist tags
+* Beets catalog sending the id instead of the artist name to insert function
+* WebDav
+  * Deprecated exec function
+  * Listing children has been simplified and fixed up for all media types
+  * Errors for artist names with `/` creating empty objects
+* CLI
+  * Missing `find` in default argument list check
+  * run:calculateArtSize would only look for jpg files on disk
+* Search
+  * Song search SQL joins for playlist name may not be in correct order
+* Ampache remote catalog
+  * Regex for file url could remove more parameters than required
+  * Update url filename path to make sure it's valid
+* Subsonic
+  * Send genre string correctly for more than one genre instead of just the first result
+  * Check for Album Artist using `findAlbumArtist`
+* Subsonic remote catalog
+  * Forcing fallback port 4040
+  * Image size was being sent as an array of height and width (You just send one int value)
+  * Use max value of `album_art_max_width` and `album_art_max_height` for image size if set
+* Search
+  * Missing break on Label searches
+
 ## Ampache 7.4.2
 
 ### Fixed

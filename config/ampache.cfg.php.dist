@@ -362,7 +362,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; Ignore files that match this pattern
 ; You can specify any file extension you want in here separating them with a |
 ; DEFAULT: None
-; catalog_ignore_pattern = "\(HTOA\)"
+;catalog_ignore_pattern = "\(HTOA\)"
 
 ; Catalog disable
 ; This defines if catalog can be disabled without removing database entries

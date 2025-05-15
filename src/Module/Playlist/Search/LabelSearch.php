@@ -93,6 +93,7 @@ final class LabelSearch implements SearchInterface
                 case 'id':
                     $where[]      = "`label`.`$rule[0]` $operator_sql ?";
                     $parameters[] = $input;
+                    break;
                 default:
                     debug_event(self::class, 'ERROR! rule not found: ' . $rule[0], 3);
                     break;

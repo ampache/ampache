@@ -181,16 +181,22 @@ class Catalog_Seafile extends Catalog
      * create_type
      *
      * This creates a new catalog type entry for a catalog
-     * @param string $catalog_id
-     * @param array $data
+     *
+     * @param array{
+     *     server_uri?: string,
+     *     library_name?: ?string,
+     *     api_call_delay?: string|int|null,
+     *     username?: ?string,
+     *     password?: ?string,
+     * } $data
      */
-    public static function create_type($catalog_id, $data): bool
+    public static function create_type(string $catalog_id, array $data): bool
     {
-        $server_uri     = rtrim(trim($data['server_uri']), '/');
-        $library_name   = trim($data['library_name']);
-        $api_call_delay = trim($data['api_call_delay']);
-        $username       = trim($data['username']);
-        $password       = trim($data['password']);
+        $server_uri     = rtrim(trim($data['server_uri'] ?? ''), '/');
+        $library_name   = trim($data['library_name'] ?? '');
+        $api_call_delay = trim((string)($data['api_call_delay'] ?? ''));
+        $username       = trim($data['username'] ?? '');
+        $password       = trim($data['password'] ?? '');
 
         if (!strlen($server_uri)) {
             AmpError::add('general', T_('Seafile server URL is required'));
@@ -587,7 +593,7 @@ class Catalog_Seafile extends Catalog
     /**
      * @return string[]
      */
-    public function check_catalog_proc(): array
+    public function check_catalog_proc(?Interactor $interactor = null): array
     {
         return [];
     }
@@ -628,15 +634,15 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * format
+     * get_f_info
      */
-    public function format(): void
+    public function get_f_info(): string
     {
         if ($this->seafile != null) {
-            $this->f_info = $this->seafile->get_format_string();
-        } else {
-            $this->f_info = "Seafile Catalog";
+            return $this->seafile->get_format_string();
         }
+
+        return "Seafile Catalog";
     }
 
     /**

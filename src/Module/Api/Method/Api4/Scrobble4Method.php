@@ -121,7 +121,7 @@ final class Scrobble4Method
 
                 return false;
             }
-            debug_event(self::class, 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+            debug_event(self::class, 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . time(), 5);
 
             // internal scrobbling (user_activity and object_count tables)
             $item->set_played($user_id, $agent, [], $date);

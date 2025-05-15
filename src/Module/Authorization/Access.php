@@ -67,13 +67,7 @@ class Access
      */
     public $enabled;
 
-    /**
-     * constructor
-     *
-     * Takes an ID of the access_id dealie :)
-     * @param int|null $access_id
-     */
-    public function __construct($access_id)
+    public function __construct(?int $access_id)
     {
         if (!$access_id) {
             return;
@@ -89,9 +83,8 @@ class Access
      * has_info
      *
      * Gets the vars for $this out of the database.
-     * @param int $access_id
      */
-    private function has_info($access_id): bool
+    private function has_info(int $access_id): bool
     {
         $sql        = 'SELECT * FROM `access_list` WHERE `id` = ?';
         $db_results = Dba::read($sql, [$access_id]);
@@ -129,10 +122,9 @@ class Access
      *
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
      * always used.
-     * @param int|null $user_id
      * @deprecated See PrivilegeChecker::check
      */
-    public static function check(AccessTypeEnum $type, AccessLevelEnum $level, $user_id = null): bool
+    public static function check(AccessTypeEnum $type, AccessLevelEnum $level, ?int $user_id = null): bool
     {
         global $dic;
 

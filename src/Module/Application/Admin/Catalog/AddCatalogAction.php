@@ -89,7 +89,53 @@ final class AddCatalogAction extends AbstractCatalogAction
 
         // If an error hasn't occurred
         if (!AmpError::occurred()) {
-            $catalog_id = Catalog::create($_POST);
+            // mandatory catalog information
+            $data = [
+                'name' => $_POST['name'],
+                'type' => $_POST['type'],
+                'rename_pattern' => $_POST['rename_pattern'],
+                'sort_pattern' => $_POST['sort_pattern'],
+                'gather_media' => $_POST['gather_media'],
+            ];
+
+            // optional data depending on the catalog type
+            if (array_key_exists('path', $_POST)) {
+                $data['path'] = $_POST['path'];
+            }
+            if (array_key_exists('uri', $_POST)) {
+                $data['uri'] = $_POST['uri'];
+            }
+            if (array_key_exists('username', $_POST)) {
+                $data['username'] = $_POST['username'];
+            }
+            if (array_key_exists('password', $_POST)) {
+                $data['password'] = $_POST['password'];
+            }
+            if (array_key_exists('library_name', $_POST)) {
+                $data['library_name'] = $_POST['library_name'];
+            }
+            if (array_key_exists('server_uri', $_POST)) {
+                $data['server_uri'] = $_POST['server_uri'];
+            }
+            if (array_key_exists('api_call_delay', $_POST)) {
+                $data['api_call_delay'] = $_POST['api_call_delay'];
+            }
+            if (array_key_exists('beetsdb', $_POST)) {
+                $data['beetsdb'] = $_POST['beetsdb'];
+            }
+            if (array_key_exists('apikey', $_POST)) {
+                $data['apikey'] = $_POST['apikey'];
+            }
+            if (array_key_exists('secret', $_POST)) {
+                $data['secret'] = $_POST['secret'];
+            }
+            if (array_key_exists('authtoken', $_POST)) {
+                $data['authtoken'] = $_POST['authtoken'];
+            }
+            if (array_key_exists('getchunk', $_POST)) {
+                $data['getchunk'] = $_POST['getchunk'];
+            }
+            $catalog_id = Catalog::create($data);
 
             if (!$catalog_id) {
                 $this->ui->show('show_add_catalog.inc.php');
