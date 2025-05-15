@@ -98,7 +98,13 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
 
         $thumb = ($this->browse->is_grid_view()) ? 11 : 1;
 
-        Art::display('album', $albumId, $name, $thumb, $this->configContainer->getWebPath('/client') . '/albums.php?action=show_disk&album_disk=' . $this->albumDisk->getId());
+        Art::display(
+            'album',
+            $albumId,
+            $name,
+            $thumb,
+            $this->configContainer->getWebPath('/client') . '/albums.php?action=show_disk&album_disk=' . $this->albumDisk->getId()
+        );
 
         return '';
     }

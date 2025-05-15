@@ -80,7 +80,9 @@ final class ArtSizeCalculationCommand extends Command
         while ($row = Dba::fetch_assoc($db_results)) {
             $folder = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], 'default');
             if ($inDisk && $localDir && $folder) {
-                $ext    = (str_replace("image/", "", $row['mime']) ?? 'jpg');
+                $ext = (!empty($row['mime']))
+                    ? str_replace("image/", "", $row['mime'])
+                    : 'jpg';
                 $path   = $folder . 'art-' . $row['size'] . '.' . $ext;
                 $source = Art::get_from_source(
                     ['file' => $path],

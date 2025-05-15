@@ -26,6 +26,7 @@ namespace Ampache\Module\System\Update\Migration;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Preference;
 use ArrayIterator;
 use Traversable;
@@ -80,6 +81,7 @@ abstract class AbstractMigration implements MigrationInterface
      * Performs database migrations
      *
      * @param array<mixed> $params
+     * @throws DatabaseException
      */
     protected function updateDatabase(string $sql, array $params = []): void
     {
@@ -87,7 +89,7 @@ abstract class AbstractMigration implements MigrationInterface
             $sql . ' ' . json_encode($params),
             true
         );
-        $this->connection->query($sql, $params);
+        $this->connection->query($sql, $params, false, $this->interactor);
     }
 
     /**

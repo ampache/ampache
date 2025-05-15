@@ -117,7 +117,12 @@ class Json4_Data
      */
     public static function error(string $code, string $string): string
     {
-        return json_encode(["error" => ["code" => $code, "message" => $string]], JSON_PRETTY_PRINT) ?: '';
+        return json_encode([
+            "error" => [
+                "code" => $code,
+                "message" => $string
+            ]
+        ], JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -955,8 +960,14 @@ class Json4_Data
             $JSON[] = [
                 "id" => (string)$song->id,
                 "title" => $song->title,
-                "artist" => ["id" => (string)$song->artist, "name" => $song->get_artist_fullname()],
-                "album" => ["id" => (string)$song->album, "name" => $song->get_album_fullname()],
+                "artist" => [
+                    "id" => (string)$song->artist,
+                    "name" => $song->get_artist_fullname()
+                ],
+                "album" => [
+                    "id" => (string)$song->album,
+                    "name" => $song->get_album_fullname()
+                ],
                 "tag" => self::tags_array($song->get_tags()),
                 "track" => (int)$song->track,
                 "time" => (int)$song->time,

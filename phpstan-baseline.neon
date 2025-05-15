@@ -86,16 +86,6 @@ parameters:
 			path: src/Gui/Playlist/NewPlaylistDialogAdapterInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Gui\\\\Song\\\\SongViewAdapter\\:\\:getProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Gui/Song/SongViewAdapter.php
-
-		-
-			message: "#^Method Ampache\\\\Gui\\\\Song\\\\SongViewAdapterInterface\\:\\:getProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Gui/Song/SongViewAdapterInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Gui\\\\TalView\\:\\:setContext\\(\\) has parameter \\$context with no type specified\\.$#"
 			count: 1
 			path: src/Gui/TalView.php
@@ -5359,4 +5349,3 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:gather_art\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php
-

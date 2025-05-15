@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\System;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use PDO;
 use PDOException;
@@ -50,9 +51,10 @@ class Dba
      * @param string $sql
      * @param array $params
      * @param bool $silent
+     * @param Interactor|null $interactor
      * @return PDOStatement|false
      */
-    public static function query($sql, $params = [], $silent = false)
+    public static function query($sql, $params = [], $silent = false, $interactor = null)
     {
         // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
         //debug_event(self::class, $sql . ' ' . json_encode($params), 5);
@@ -65,6 +67,13 @@ class Dba
         do {
             $stmt = self::_query($sql, $params, $silent);
         } while (!$stmt && $tries++ < 3);
+
+        if ($stmt === false) {
+            $interactor?->error(
+                self::error(),
+                true
+            );
+        }
 
         return $stmt;
     }

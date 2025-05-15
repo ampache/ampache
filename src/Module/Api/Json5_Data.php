@@ -1135,8 +1135,14 @@ class Json5_Data
             $JSON[] = [
                 "id" => (string)$song->id,
                 "title" => $song->get_fullname(),
-                "artist" => ["id" => (string)$song->artist, "name" => $song->get_artist_fullname()],
-                "album" => ["id" => (string)$song->album, "name" => $song->get_album_fullname()],
+                "artist" => [
+                    "id" => (string)$song->artist,
+                    "name" => $song->get_artist_fullname()
+                ],
+                "album" => [
+                    "id" => (string)$song->album,
+                    "name" => $song->get_album_fullname()
+                ],
                 "genre" => self::genre_array($song->get_tags()),
                 "track" => (int)$song->track,
                 "time" => (int)$song->time,
