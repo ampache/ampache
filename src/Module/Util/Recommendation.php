@@ -232,9 +232,7 @@ class Recommendation
                 if ($xml->similartracks) {
                     $catalog_disable = AmpConfig::get('catalog_disable');
                     foreach ($xml->similartracks->children() as $child) {
-                        $song_name = $child->name;
-                        $local_id  = null;
-
+                        $song_name   = $child->name;
                         $artist_name = $child->artist->name;
                         $searchname  = Catalog::trim_prefix((string)$artist_name);
                         $s_name      = $searchname['string'];
