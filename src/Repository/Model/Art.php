@@ -238,7 +238,7 @@ class Art extends database_object
      */
     public function has_db_info(string $size = 'original', bool $fallback = false): bool
     {
-        $sql         = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
+        $sql         = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ? AND `kind` = ?";
         $db_results  = Dba::read($sql, [$this->object_type, $this->object_id, $size, $this->kind]);
         $default_art = false;
 
