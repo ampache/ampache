@@ -291,7 +291,7 @@ class Art extends database_object
             if (AmpConfig::get('album_art_store_disk')) {
                 $this->thumb      = (string)self::read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
                 $this->thumb_mime = $results['mime'];
-            } elseif ($results['size'] == '275x275') {
+            } else {
                 $this->thumb      = $results['image'];
                 $this->thumb_mime = $results['mime'];
             }
