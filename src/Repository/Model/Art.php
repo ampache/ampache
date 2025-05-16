@@ -65,7 +65,7 @@ class Art extends database_object
         'webp',
     ];
 
-    public int $id;
+    public ?int $id = 0;
 
     public string $object_type;
 
@@ -80,6 +80,8 @@ class Art extends database_object
     public ?string $thumb = null;
 
     public ?string $thumb_mime = null;
+
+    private bool $fallback = false;
 
     /**
      * Constructor
@@ -231,56 +233,30 @@ class Art extends database_object
     }
 
     /**
-     * has_db_info
-     * This pulls the information out from the database, depending
-     * on if we want to resize and if there is not a thumbnail go
-     * ahead and try to resize
+     * get_image
+     * fill the default image raw, mime and thumb details
      */
-    public function has_db_info(string $size = 'original', bool $fallback = false): bool
+    public function get_image(bool $fallback = false): bool
     {
-        $sql         = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ? AND `kind` = ?";
-        $db_results  = Dba::read($sql, [$this->object_type, $this->object_id, $size, $this->kind]);
-        $default_art = false;
+        $sql         = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = 'original' AND `kind` = ?";
+        $db_results  = Dba::read($sql, [$this->object_type, $this->object_id, $this->kind]);
 
-        while ($results = Dba::fetch_assoc($db_results)) {
-            if ($results['size'] == 'original') {
-                if (AmpConfig::get('album_art_store_disk')) {
-                    $this->raw = (string)self::read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
-                } else {
-                    $this->raw = $results['image'];
-                }
-
-                $this->raw_mime = $results['mime'];
-                $this->id       = (int)$results['id'];
-
-                // this is expected for some odd reason
-                $thumb            = $this->get_thumb(['width' => 275, 'height' => 275]);
-                $this->thumb      = $thumb['thumb'] ?? null;
-                $this->thumb_mime = $thumb['thumb_mime'] ?? null;
-            } elseif (AmpConfig::get('resize_images')) {
-                if (!empty($this->thumb)) {
-                    // @see https://github.com/ampache/ampache/issues/3386
-                    continue;
-                }
-
-                if (AmpConfig::get('album_art_store_disk')) {
-                    $this->thumb      = (string)self::read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
-                    $this->thumb_mime = $results['mime'];
-                } elseif ($results['size'] == '275x275') {
-                    $this->thumb      = $results['image'];
-                    $this->thumb_mime = $results['mime'];
-                }
-
-                $this->raw_mime = $results['mime'];
-                $this->id       = (int)$results['id'];
+        if ($results = Dba::fetch_assoc($db_results)) {
+            if (AmpConfig::get('album_art_store_disk')) {
+                $this->raw = (string)self::read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
+            } else {
+                $this->raw = $results['image'];
             }
+
+            $this->raw_mime = $results['mime'];
+            $this->id       = (int)$results['id'];
         }
 
         // return a default image if fallback is requested
         if (!$this->raw && $fallback) {
             $this->raw      = $this->get_blankalbum();
             $this->raw_mime = 'image/png';
-            $default_art    = true;
+            $this->fallback = true;
         }
 
         // If we get nothing return false
@@ -288,27 +264,76 @@ class Art extends database_object
             return false;
         }
 
-        // If there is no thumb and we want thumbs
-        if (!$this->thumb && AmpConfig::get('resize_images')) {
-            $size = [
-                'width' => 275,
-                'height' => 275
-            ];
-            $data = $this->generate_thumb($this->raw, $size, $this->raw_mime);
-            // If it works save it!
-            if ($data !== []) {
-                if (!$default_art) {
-                    $this->save_thumb($data['thumb'], $data['thumb_mime'], $size);
-                }
-
-                $this->thumb      = $data['thumb'];
-                $this->thumb_mime = $data['thumb_mime'];
-            } else {
-                debug_event(self::class, 'Art id {' . $this->id . '} Unable to generate thumbnail for ' . $this->object_type . ': ' . $this->object_id, 1);
-            }
-        } // if no thumb, but art and we want to resize
-
         return true;
+    }
+
+    /**
+     * has_db_info
+     * This pulls the information out from the database, depending
+     * on if we want to resize and if there is not a thumbnail go
+     * ahead and try to resize
+     */
+    public function has_db_info(string $size = 'original', bool $fallback = false): bool
+    {
+        $has_image = $this->get_image($fallback);
+        if ($size === 'original') {
+            return $has_image;
+        }
+
+        // If you don't have a source image you can't get a thumbnail
+        if (!$this->raw) {
+            return false;
+        }
+
+        // Thumbnails might already be in the database
+        $sql        = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ? AND `kind` = ?";
+        $db_results = Dba::read($sql, [$this->object_type, $this->object_id, $size, $this->kind]);
+        if ($results = Dba::fetch_assoc($db_results)) {
+            if (AmpConfig::get('album_art_store_disk')) {
+                $this->thumb      = (string)self::read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
+                $this->thumb_mime = $results['mime'];
+            } elseif ($results['size'] == '275x275') {
+                $this->thumb      = $results['image'];
+                $this->thumb_mime = $results['mime'];
+            }
+
+            $this->id = (int)$results['id'];
+        }
+
+        // If there is no thumb in the database and we want one we have to generate it
+        if (!$this->thumb && AmpConfig::get('resize_images')) {
+            if (preg_match('/^[0-9]+x[0-9]+$/', $size)) {
+                $dimensions           = explode('x', $size);
+                $thumb_size           = [];
+                $thumb_size['width']  = (int) $dimensions[0];
+                $thumb_size['height'] = (int) $dimensions[1];
+            } else {
+                $thumb_size = [
+                    'width' => 275,
+                    'height' => 275
+                ];
+            }
+
+            $data = $this->generate_thumb($this->raw, $thumb_size, $this->raw_mime);
+
+            // thumb wasn't generated
+            if ($data === []) {
+                debug_event(self::class, 'Art id {' . $this->id . '} Unable to generate thumbnail for ' . $this->object_type . ': ' . $this->object_id, 1);
+
+                return false;
+            }
+
+            if (!$this->fallback) {
+                $this->save_thumb($data['thumb'], $data['thumb_mime'], $thumb_size);
+            }
+
+            $this->thumb      = $data['thumb'];
+            $this->thumb_mime = $data['thumb_mime'];
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
