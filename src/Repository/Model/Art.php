@@ -251,6 +251,12 @@ class Art extends database_object
                 }
 
                 $this->raw_mime = $results['mime'];
+                $this->id       = (int)$results['id'];
+
+                // this is expected for some odd reason
+                $thumb = $this->get_thumb([275, 275]);
+                $this->thumb      = $thumb['thumb'] ?? null;
+                $this->thumb_mime = $thumb['thumb_mime'] ?? null;
             } elseif (AmpConfig::get('resize_images')) {
                 if (!empty($this->thumb)) {
                     // @see https://github.com/ampache/ampache/issues/3386
@@ -264,9 +270,8 @@ class Art extends database_object
                 }
 
                 $this->raw_mime = $results['mime'];
+                $this->id       = (int)$results['id'];
             }
-
-            $this->id = (int)$results['id'];
         }
 
         // return a default image if fallback is requested

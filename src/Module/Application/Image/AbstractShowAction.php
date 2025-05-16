@@ -137,7 +137,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             $art = new Art($objectId, $type, $kind);
             $art->has_db_info();
 
-            $etag = $art->id;
+            $etag = $art->id ?? null;
             if (!$art->raw_mime) {
                 $rootimg = sprintf(
                     '%s/../../../../public/%s/images/',
