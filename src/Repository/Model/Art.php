@@ -254,7 +254,7 @@ class Art extends database_object
                 $this->id       = (int)$results['id'];
 
                 // this is expected for some odd reason
-                $thumb = $this->get_thumb([275, 275]);
+                $thumb = $this->get_thumb(['width' => 275, 'height' =>275]);
                 $this->thumb      = $thumb['thumb'] ?? null;
                 $this->thumb_mime = $thumb['thumb_mime'] ?? null;
             } elseif (AmpConfig::get('resize_images')) {
