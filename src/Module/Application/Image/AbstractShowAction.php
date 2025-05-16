@@ -137,7 +137,9 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             $art = new Art($objectId, $type, $kind);
             $art->has_db_info();
 
-            $etag = $art->id ?? null;
+            $thumb = (int)filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
+            // tag art by size or thumb type
+            $etag  = $art->id ?? ($objectId . $type . $kind . ($thumb > 0) ? '' : '-original');
             if (!$art->raw_mime) {
                 $rootimg = sprintf(
                     '%s/../../../../public/%s/images/',
@@ -154,7 +156,6 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 $image = file_get_contents($defaultimg);
             } else {
                 $thumb_data = [];
-                $thumb      = (int)filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
                 if (array_key_exists('thumb', $_GET) && $thumb > 0) {
                     $size       = Art::get_thumb_size($thumb);
                     $thumb_data = $art->get_thumb($size);
