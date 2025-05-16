@@ -275,9 +275,8 @@ class Art extends database_object
      */
     public function has_db_info(string $size = 'original', bool $fallback = false): bool
     {
-        $has_image = $this->get_image($fallback);
         if ($size === 'original') {
-            return $has_image;
+            return $this->get_image($fallback);
         }
 
         // If you don't have a source image you can't get a thumbnail
@@ -301,7 +300,11 @@ class Art extends database_object
         }
 
         // If there is no thumb in the database and we want one we have to generate it
-        if (!$this->thumb && AmpConfig::get('resize_images')) {
+        if (
+            !$this->thumb &&
+            AmpConfig::get('resize_images') &&
+            $this->get_image($fallback)
+        ) {
             if (preg_match('/^[0-9]+x[0-9]+$/', $size)) {
                 $dimensions           = explode('x', $size);
                 $thumb_size           = [];
