@@ -279,29 +279,21 @@ class Art extends database_object
             return $this->get_image($fallback);
         }
 
-        // If you don't have a source image you can't get a thumbnail
-        if (!$this->raw) {
-            return false;
-        }
-
         // Thumbnails might already be in the database
         $sql        = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ? AND `kind` = ?";
         $db_results = Dba::read($sql, [$this->object_type, $this->object_id, $size, $this->kind]);
         if ($results = Dba::fetch_assoc($db_results)) {
-            if (AmpConfig::get('album_art_store_disk')) {
-                $this->thumb      = (string)self::read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
-                $this->thumb_mime = $results['mime'];
-            } else {
-                $this->thumb      = $results['image'];
-                $this->thumb_mime = $results['mime'];
-            }
+            $this->id         = (int)$results['id'];
+            $this->thumb_mime = $results['mime'];
+            $this->thumb      = (AmpConfig::get('album_art_store_disk'))
+                ? (string)self::read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime'])
+                : $results['image'];
 
-            $this->id = (int)$results['id'];
+            return true;
         }
 
         // If there is no thumb in the database and we want one we have to generate it
         if (
-            !$this->thumb &&
             AmpConfig::get('resize_images') &&
             $this->get_image($fallback)
         ) {
