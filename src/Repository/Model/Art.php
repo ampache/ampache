@@ -254,7 +254,7 @@ class Art extends database_object
                 $this->id       = (int)$results['id'];
 
                 // this is expected for some odd reason
-                $thumb = $this->get_thumb(['width' => 275, 'height' =>275]);
+                $thumb            = $this->get_thumb(['width' => 275, 'height' => 275]);
                 $this->thumb      = $thumb['thumb'] ?? null;
                 $this->thumb_mime = $thumb['thumb_mime'] ?? null;
             } elseif (AmpConfig::get('resize_images')) {
@@ -264,9 +264,11 @@ class Art extends database_object
                 }
 
                 if (AmpConfig::get('album_art_store_disk')) {
-                    $this->thumb = (string)self::read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
+                    $this->thumb      = (string)self::read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
+                    $this->thumb_mime = $results['mime'];
                 } elseif ($results['size'] == '275x275') {
-                    $this->thumb = $results['image'];
+                    $this->thumb      = $results['image'];
+                    $this->thumb_mime = $results['mime'];
                 }
 
                 $this->raw_mime = $results['mime'];
