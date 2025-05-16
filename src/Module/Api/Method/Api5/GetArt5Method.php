@@ -52,6 +52,7 @@ final class GetArt5Method
      * id       = (string) $object_id
      * type     = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
      * fallback = (integer) 0,1, if true return default art ('blankalbum.png') //optional
+     * size     = (string) 'original' or size in '200x200' format //optional
      *
      * @param array{
      *     id: string,
@@ -73,7 +74,7 @@ final class GetArt5Method
         }
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
-        $size      = $input['size'] ?? false;
+        $size      = $input['size'] ?? 'original';
         $fallback  = (array_key_exists('fallback', $input) && (int)$input['fallback'] == 1);
 
         // confirm the correct data
@@ -108,7 +109,7 @@ final class GetArt5Method
             $art       = new Art($song->album, 'album');
         }
 
-        if ($art->has_db_info($fallback)) {
+        if ($art->has_db_info($size, $fallback)) {
             header('Access-Control-Allow-Origin: *');
             if (
                 $size &&

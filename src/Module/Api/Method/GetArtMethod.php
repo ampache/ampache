@@ -75,7 +75,7 @@ final class GetArtMethod
         }
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
-        $size      = $input['size'] ?? false;
+        $size      = $input['size'] ?? 'original';
         $fallback  = (array_key_exists('fallback', $input) && (int)$input['fallback'] == 1);
 
         // confirm the correct data
@@ -110,7 +110,7 @@ final class GetArtMethod
             $art       = new Art($song->album, 'album');
         }
 
-        if ($art->has_db_info($fallback)) {
+        if ($art->has_db_info($size, $fallback)) {
             header('Access-Control-Allow-Origin: *');
             if (
                 $size &&

@@ -71,7 +71,7 @@ final class GetArt4Method
         }
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
-        $size      = $input['size'] ?? false;
+        $size      = $input['size'] ?? 'original';
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'search', 'podcast'])) {
@@ -105,7 +105,7 @@ final class GetArt4Method
             $art       = new Art($song->album, 'album');
         }
 
-        if ($art->has_db_info()) {
+        if ($art->has_db_info($size)) {
             header('Access-Control-Allow-Origin: *');
             if (
                 $size &&
