@@ -121,6 +121,11 @@ final class GetArtMethod
                 $dim           = [];
                 $dim['width']  = (int) $dimensions[0];
                 $dim['height'] = (int) $dimensions[1];
+                if ($dim['width'] === 0 || $dim['height'] === 0) {
+                    Api::error(sprintf('Bad Request: %s', $size), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+
+                    return false;
+                }
 
                 $thumb = $art->get_thumb($dim);
                 if (!empty($thumb)) {
