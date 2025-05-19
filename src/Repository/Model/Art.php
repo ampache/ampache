@@ -864,65 +864,39 @@ class Art extends database_object
             return [];
         }
 
-        // Check and make sure we can resize what you've asked us to
-        if (($type == 'jpg' || $type == 'jpeg' || $type == 'jpg?v=2') && !(imagetypes() & IMG_JPG)) {
-            debug_event(self::class, 'PHP-GD Does not support JPGs - unable to resize', 1);
-
-            return [];
-        }
-
-        if ($type == 'png' && !imagetypes() & IMG_PNG) {
-            debug_event(self::class, 'PHP-GD Does not support PNGs - unable to resize', 1);
-
-            return [];
-        }
-
-        if ($type == 'gif' && !imagetypes() & IMG_GIF) {
-            debug_event(self::class, 'PHP-GD Does not support GIFs - unable to resize', 1);
-
-            return [];
-        }
-
-        if ($type == 'bmp' && !imagetypes() & IMG_WBMP) {
-            debug_event(self::class, 'PHP-GD Does not support BMPs - unable to resize', 1);
-
-            return [];
-        }
-
         $source = imagecreatefromstring($image);
-
         if (!$source) {
             debug_event(self::class, 'Failed to create Image from string - Source Image is damaged / malformed', 2);
 
             return [];
         }
 
-        $source_size = ['height' => imagesy($source), 'width' => imagesx($source)];
+        $src_width  = imagesx($source);
+        $src_height = imagesy($source);
+        $dst_width  = (int)$size['width'];
+        $dst_height = (int)$size['height'];
 
-        // Create a new blank image of the correct size
-        $thumbnail = imagecreatetruecolor((int) $size['width'], (int) $size['height']);
+        // Calculate aspect ratios
+        $src_ratio = $src_width / $src_height;
+        $dst_ratio = $dst_width / $dst_height;
 
-        if ($source_size['width'] > $source_size['height']) {
-            // landscape
-            $new_height = $size['height'];
-            $new_width  = floor($source_size['width'] * ($new_height / $source_size['height']));
-            $crop_x     = ceil(($source_size['width'] - $source_size['height']) / 2);
-            $crop_y     = 0;
-        } elseif ($source_size['height'] > $source_size['width']) {
-            // portrait
-            $new_width  = $size['width'];
-            $new_height = floor($source_size['height'] * ($new_width / $source_size['width']));
-            $crop_x     = 0;
-            $crop_y     = ceil(($source_size['height'] - $source_size['width']) / 3); // assuming most portrait images would have faces closer to the top
+        if ($src_ratio > $dst_ratio) {
+            // Source is wider than destination, crop width
+            $new_height = $src_height;
+            $new_width  = (int)($src_height * $dst_ratio);
+            $src_x      = (int)(($src_width - $new_width) / 2);
+            $src_y      = 0;
         } else {
-            // square
-            $new_width  = $size['width'];
-            $new_height = $size['height'];
-            $crop_x     = 0;
-            $crop_y     = 0;
+            // Source is taller than destination, crop height
+            $new_width  = $src_width;
+            $new_height = (int)($src_width / $dst_ratio);
+            $src_x      = 0;
+            $src_y      = (int)(($src_height - $new_height) / 2);
         }
 
-        if (!imagecopyresampled($thumbnail, $source, 0, 0, (int)$crop_x, (int)$crop_y, (int)$new_width, (int)$new_height, $source_size['width'], $source_size['height'])) {
+        $thumbnail = imagecreatetruecolor($dst_width, $dst_height);
+
+        if (!imagecopyresampled($thumbnail, $source, 0, 0, $src_x, $src_y, $dst_width, $dst_height, $new_width, $new_height)) {
             debug_event(self::class, 'Unable to create resized image', 1);
             imagedestroy($source);
             imagedestroy($thumbnail);
@@ -960,7 +934,7 @@ class Art extends database_object
                 break;
             default:
                 $mime_type = null;
-        } // resized
+        }
 
         if ($mime_type === null) {
             debug_event(self::class, 'Error: No mime type found using: ' . $mime, 2);
