@@ -117,9 +117,9 @@ final class GetArt4Method
                     $art->raw      = $art->thumb;
                 } elseif (AmpConfig::get('resize_images')) {
                     // resize the image if requested
-                    $dimensions = explode('x', $size);
-                    $dim = [];
-                    $dim['width'] = (int)$dimensions[0];
+                    $dimensions    = explode('x', $size);
+                    $dim           = [];
+                    $dim['width']  = (int)$dimensions[0];
                     $dim['height'] = (int)$dimensions[1];
                     if ($dim['width'] === 0 || $dim['height'] === 0) {
                         // art not found
