@@ -140,7 +140,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             [$filename, $objectId, $type] = $itemConfig;
 
             $art      = new Art($objectId, $type, $kind);
-            $has_info = $art->has_db_info($size);
+            $has_info = $art->has_db_info($size ?: 'original');
             if (!$has_info) {
                 // show a fallback image
                 $rootimg = sprintf(

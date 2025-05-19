@@ -321,7 +321,6 @@ class Art extends database_object
             AmpConfig::get('resize_images') &&
             $this->get_image($fallback)
         ) {
-
             $data = $this->generate_thumb($this->raw, $thumb_size, $this->raw_mime);
 
             // thumb wasn't generated
