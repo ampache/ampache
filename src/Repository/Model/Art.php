@@ -452,9 +452,9 @@ class Art extends database_object
                     : 'mime';
                 $new_pic       = [
                     'data' => $source,
+                    'description' => $description,
                     'mime' => $mime,
                     'picturetypeid' => $picturetypeid,
-                    'description' => $description
                 ];
 
                 if (is_null($apics)) {
@@ -469,7 +469,7 @@ class Art extends database_object
                                     'data' => $apics[0]['data'],
                                     'description' => $apics[0]['description'],
                                     'mime' => $apics[0]['mime'],
-                                    'picturetypeid' => $apics[0]['picturetypeid']
+                                    'picturetypeid' => $apics[0]['picturetypeid'],
                                 ];
                             }
                             break;
@@ -485,9 +485,9 @@ class Art extends database_object
                                 $apicsId                             = ($idx == 0) ? 1 : 0;
                                 $ndata['attached_picture'][$apicsId] = [
                                     'data' => $apics[$apicsId]['data'],
+                                    'description' => $apics[$apicsId]['description'],
                                     'mime' => $apics[$apicsId][$apic_mimetype],
                                     'picturetypeid' => $apics[$apicsId][$apic_typeid],
-                                    'description' => $apics[$apicsId]['description']
                                 ];
                             }
                             break;
@@ -523,19 +523,18 @@ class Art extends database_object
 
     /**
      * check_for_duplicate
-     * @param array $apics
-     * @param array $ndata
-     * @param array $new_pic
-     * @param string $apic_typeid
+     * @param array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}> $apics
+     * @param array<string, array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}>> $ndata
+     * @param array{data: string, description: null|string, mime: null|string, picturetypeid: int} $new_pic
      */
-    private function check_for_duplicate($apics, &$ndata, $new_pic, $apic_typeid): ?int
+    private function check_for_duplicate(array $apics, array &$ndata, array $new_pic, string $apic_typeid): ?int
     {
         $idx = null;
         $cnt = count($apics);
         for ($i = 0; $i < $cnt; ++$i) {
             if ($new_pic['picturetypeid'] == $apics[$i][$apic_typeid]) {
-                $ndata['attached_picture'][$i]['description']   = $new_pic['description'];
                 $ndata['attached_picture'][$i]['data']          = $new_pic['data'];
+                $ndata['attached_picture'][$i]['description']   = $new_pic['description'];
                 $ndata['attached_picture'][$i]['mime']          = $new_pic['mime'];
                 $ndata['attached_picture'][$i]['picturetypeid'] = $new_pic['picturetypeid'];
                 $idx                                            = $i;
@@ -1233,6 +1232,7 @@ class Art extends database_object
     /**
      * Get thumb size from thumb type.
      * @return array{width: int, height: int}
+     * @deprecated use size parameter for art display
      */
     public static function get_thumb_size(int $thumb): array
     {

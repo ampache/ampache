@@ -4791,21 +4791,6 @@ parameters:
 			path: src/Repository/Model/AlbumDisk.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:check_for_duplicate\\(\\) has parameter \\$apics with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:check_for_duplicate\\(\\) has parameter \\$ndata with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:check_for_duplicate\\(\\) has parameter \\$new_pic with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:gather_metadata_plugin\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php

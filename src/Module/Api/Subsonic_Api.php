@@ -1746,10 +1746,10 @@ class Subsonic_Api
         // we have the art so lets show it
         header("Access-Control-Allow-Origin: *");
         if (is_int($size) && AmpConfig::get('resize_images')) {
-            $dim           = [];
-            $dim['width']  = $size;
-            $dim['height'] = $size;
-            $thumb         = $art->get_thumb($dim);
+            $out_size           = [];
+            $out_size['width']  = $size;
+            $out_size['height'] = $size;
+            $thumb              = $art->get_thumb($out_size);
             if (!empty($thumb)) {
                 header('Content-type: ' . $thumb['thumb_mime']);
                 header('Content-Length: ' . strlen((string) $thumb['thumb']));

@@ -117,18 +117,18 @@ final class GetArt4Method
                     $art->raw      = $art->thumb;
                 } elseif (AmpConfig::get('resize_images')) {
                     // resize the image if requested
-                    $dimensions    = explode('x', $size);
-                    $dim           = [];
-                    $dim['width']  = (int)$dimensions[0];
-                    $dim['height'] = (int)$dimensions[1];
-                    if ($dim['width'] === 0 || $dim['height'] === 0) {
+                    $dimensions     = explode('x', $size);
+                    $size           = [];
+                    $size['width']  = (int)$dimensions[0];
+                    $size['height'] = (int)$dimensions[1];
+                    if ($size['width'] === 0 || $size['height'] === 0) {
                         // art not found
                         http_response_code(404);
 
                         return false;
                     }
 
-                    $thumb = $art->get_thumb($dim);
+                    $thumb = $art->get_thumb($size);
                     if (!empty($thumb)) {
                         header('Content-type: ' . $thumb['thumb_mime']);
                         header('Content-Length: ' . strlen((string)$thumb['thumb']));
