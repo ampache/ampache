@@ -1335,6 +1335,7 @@ class Art extends database_object
     /**
      * Display item art.
      * @see Art::show()
+     * @deprecated
      */
     public static function display(
         string  $object_type,
@@ -1470,7 +1471,7 @@ class Art extends database_object
 
         $web_path    = AmpConfig::get_web_path();
         $prettyPhoto = ($link === null);
-        $out_size    = $size['width'] . 'x' . $size['height'];
+        $out_size    = ($size['width'] * 2) . 'x' . ($size['height'] * 2);
         if ($link === null) {
             $link = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
             if ($thumb_link) {
