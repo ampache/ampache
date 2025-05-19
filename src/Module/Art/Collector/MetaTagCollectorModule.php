@@ -93,11 +93,11 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             $limit = 5;
         }
 
-        if ($art->type == 'video') {
+        if ($art->object_type == 'video') {
             $data = $this->gatherVideoTags($art);
-        } elseif ($art->type == 'album' || $art->type == 'artist') {
+        } elseif ($art->object_type == 'album' || $art->object_type == 'artist') {
             $data = $this->gatherSongTags($art, $limit);
-        } elseif (($art->type == 'song') && (AmpConfig::get('gather_song_art', false))) {
+        } elseif (($art->object_type == 'song') && (AmpConfig::get('gather_song_art', false))) {
             $data = $this->gatherSongTagsSingle($art, $limit);
         } else {
             $data = [];
@@ -145,7 +145,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      */
     private function gatherVideoTags(Art $art): array
     {
-        $video = new Video($art->uid);
+        $video = new Video($art->object_id);
 
         return $this->gatherMediaTags($video, []);
     }
@@ -159,10 +159,10 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     private function gatherSongTags(Art $art, int $limit = 5): array
     {
         // We need the filenames
-        if ($art->type == 'album') {
-            $songs = $this->songRepository->getByAlbum($art->uid);
+        if ($art->object_type == 'album') {
+            $songs = $this->songRepository->getByAlbum($art->object_id);
         } else {
-            $songs = $this->songRepository->getByArtist($art->uid);
+            $songs = $this->songRepository->getByArtist($art->object_id);
         }
 
         $data = [];
@@ -177,7 +177,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             }
         }
 
-        $data = self::sortArtByPriority($data, $art->type);
+        $data = self::sortArtByPriority($data, $art->object_type);
 
         if ($limit && count($data) >= $limit) {
             $data = array_slice($data, 0, $limit);
@@ -321,10 +321,10 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     public function gatherSongTagsSingle(Art $art, int $limit = 5): array
     {
         // get song object directly from id, not by loop through album
-        $song = new Song($art->uid);
+        $song = new Song($art->object_id);
         $data = $this->gatherMediaTags($song, []);
 
-        $data = self::sortArtByPriority($data, $art->type);
+        $data = self::sortArtByPriority($data, $art->object_type);
 
         if ($limit && count($data) >= $limit) {
             $data = array_slice($data, 0, $limit);

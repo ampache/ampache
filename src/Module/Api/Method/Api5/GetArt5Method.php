@@ -52,6 +52,7 @@ final class GetArt5Method
      * id       = (string) $object_id
      * type     = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
      * fallback = (integer) 0,1, if true return default art ('blankalbum.png') //optional
+     * size     = (string) 'original' or size in '200x200' format //optional
      *
      * @param array{
      *     id: string,
@@ -73,7 +74,7 @@ final class GetArt5Method
         }
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
-        $size      = $input['size'] ?? false;
+        $size      = $input['size'] ?? 'original';
         $fallback  = (array_key_exists('fallback', $input) && (int)$input['fallback'] == 1);
 
         // confirm the correct data
@@ -108,24 +109,43 @@ final class GetArt5Method
             $art       = new Art($song->album, 'album');
         }
 
-        if ($art->has_db_info($fallback)) {
+        if ($art->has_db_info($size, $fallback)) {
             header('Access-Control-Allow-Origin: *');
             if (
                 $size &&
-                preg_match('/^[0-9]+x[0-9]+$/', $size) &&
-                AmpConfig::get('resize_images')
+                preg_match('/^[0-9]+x[0-9]+$/', $size)
             ) {
-                $dimensions    = explode('x', $size);
-                $dim           = [];
-                $dim['width']  = (int) $dimensions[0];
-                $dim['height'] = (int) $dimensions[1];
-                $thumb         = $art->get_thumb($dim);
-                if (!empty($thumb)) {
-                    header('Content-type: ' . $thumb['thumb_mime']);
-                    header('Content-Length: ' . strlen((string) $thumb['thumb']));
-                    echo $thumb['thumb'];
+                if ($art->thumb && $art->thumb_mime) {
+                    // found the thumb by looking up the size
+                    $art->raw_mime = $art->thumb_mime;
+                    $art->raw      = $art->thumb;
+                } elseif (AmpConfig::get('resize_images')) {
+                    // resize the image if requested
+                    $dimensions    = explode('x', $size);
+                    $dim           = [];
+                    $dim['width']  = (int)$dimensions[0];
+                    $dim['height'] = (int)$dimensions[1];
+                    if ($dim['width'] === 0 || $dim['height'] === 0) {
+                        // art not found
+                        http_response_code(404);
 
-                    return true;
+                        return false;
+                    }
+
+                    $thumb = $art->get_thumb($dim);
+                    if (!empty($thumb)) {
+                        header('Content-type: ' . $thumb['thumb_mime']);
+                        header('Content-Length: ' . strlen((string)$thumb['thumb']));
+                        echo $thumb['thumb'];
+                        Session::extend($input['auth'], AccessTypeEnum::API->value);
+
+                        return true;
+                    }
+
+                    // art not found
+                    http_response_code(404);
+
+                    return false;
                 }
             }
 

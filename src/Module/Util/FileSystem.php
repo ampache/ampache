@@ -269,7 +269,7 @@ class FileSystem
      * @return array{status: string}
      * @throws Exception
      */
-    public function remove($fs_id): array
+    public function remove(string $fs_id): array
     {
         $dir = $this->path($fs_id);
         if ($dir === $this->base) {
