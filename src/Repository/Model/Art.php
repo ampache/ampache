@@ -1361,7 +1361,7 @@ class Art extends database_object
         // double the image output size for display scaling
         $out_size = (AmpConfig::get('upscale_images', true))
             ? ($size['width'] * 2) . 'x' . ($size['height'] * 2)
-            : $size['width'] . 'x' . $size['height'] * 2;
+            : $size['width'] . 'x' . $size['height'];
 
         $web_path    = AmpConfig::get_web_path();
         $prettyPhoto = ($link === null);
