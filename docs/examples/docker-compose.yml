@@ -1,0 +1,15 @@
+name: ampache
+
+services:
+  ampache:
+    image: ampache/ampache:develop
+    container_name: ampache
+    restart: unless-stopped
+    ports:
+      - 8082:80
+    volumes:
+      - ./config:/var/www/config
+      - ./log:/var/log/ampache
+      - /mnt/music:/mnt/music
+    environment:
+      DISABLE_INOTIFYWAIT_CLEAN: ${DISABLE_INOTIFYWAIT_CLEAN-0}

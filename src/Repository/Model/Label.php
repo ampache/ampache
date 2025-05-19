@@ -387,7 +387,7 @@ class Label extends database_object implements library_item
     /**
      * get_display
      * This returns a csv formatted version of the labels that we are given
-     * @param array<int, string> $labels
+     * @param string[] $labels
      * @param bool $link
      * @return string
      */

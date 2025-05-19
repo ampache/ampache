@@ -55,7 +55,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Array of all songs
-     * @var array
+     * @var string[]
      */
     protected $songs = [];
 
@@ -350,7 +350,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Get all songs from the DB into a array
-     * @return array array(id => file)
+     * @return string[] (id => file)
      */
     public function getAllSongfiles(): array
     {
@@ -359,7 +359,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
         $files = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $files[$row['id']] = $row['file'];
+            $files[(int)$row['id']] = (string)$row['file'];
         }
 
         return $files;

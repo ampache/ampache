@@ -47,7 +47,7 @@ final readonly class LabelRepository implements LabelRepositoryInterface
     }
 
     /**
-     * @return array<int, string>
+     * @return string[]
      */
     public function getByArtist(int $artistId): array
     {
@@ -68,7 +68,7 @@ final readonly class LabelRepository implements LabelRepositoryInterface
     /**
      * Return the list of all available labels
      *
-     * @return array<int, string>
+     * @return string[]
      */
     public function getAll(): array
     {

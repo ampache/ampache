@@ -75,7 +75,7 @@ final class GetArtMethod
         }
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
-        $size      = $input['size'] ?? false;
+        $size      = $input['size'] ?? 'original';
         $fallback  = (array_key_exists('fallback', $input) && (int)$input['fallback'] == 1);
 
         // confirm the correct data
@@ -110,25 +110,43 @@ final class GetArtMethod
             $art       = new Art($song->album, 'album');
         }
 
-        if ($art->has_db_info($fallback)) {
+        if ($art->has_db_info($size, $fallback)) {
             header('Access-Control-Allow-Origin: *');
             if (
                 $size &&
-                preg_match('/^[0-9]+x[0-9]+$/', $size) &&
-                AmpConfig::get('resize_images')
+                preg_match('/^[0-9]+x[0-9]+$/', $size)
             ) {
-                $dimensions    = explode('x', $size);
-                $dim           = [];
-                $dim['width']  = (int) $dimensions[0];
-                $dim['height'] = (int) $dimensions[1];
+                if ($art->thumb && $art->thumb_mime) {
+                    // found the thumb by looking up the size
+                    $art->raw_mime = $art->thumb_mime;
+                    $art->raw      = $art->thumb;
+                } elseif (AmpConfig::get('resize_images')) {
+                    // resize the image if requested
+                    $dimensions    = explode('x', $size);
+                    $dim           = [];
+                    $dim['width']  = (int)$dimensions[0];
+                    $dim['height'] = (int)$dimensions[1];
+                    if ($dim['width'] === 0 || $dim['height'] === 0) {
+                        // art not found
+                        http_response_code(404);
 
-                $thumb = $art->get_thumb($dim);
-                if (!empty($thumb)) {
-                    header('Content-type: ' . $thumb['thumb_mime']);
-                    header('Content-Length: ' . strlen((string) $thumb['thumb']));
-                    echo $thumb['thumb'];
+                        return false;
+                    }
 
-                    return true;
+                    $thumb = $art->get_thumb($dim);
+                    if (!empty($thumb)) {
+                        header('Content-type: ' . $thumb['thumb_mime']);
+                        header('Content-Length: ' . strlen((string)$thumb['thumb']));
+                        echo $thumb['thumb'];
+                        Session::extend($input['auth'], AccessTypeEnum::API->value);
+
+                        return true;
+                    }
+
+                    // art not found
+                    http_response_code(404);
+
+                    return false;
                 }
             }
 

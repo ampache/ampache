@@ -228,7 +228,7 @@ final class SongTagWriter implements SongTagWriterInterface
 
         $art = new Art($song->artist, 'artist');
         if ($art->has_db_info()) {
-            $image   = $art->get(true);
+            $image   = $art->get();
             $new_pic = [
                 'data' => $image,
                 'mime' => $art->raw_mime,
@@ -247,7 +247,7 @@ final class SongTagWriter implements SongTagWriterInterface
         }
         $art = new Art($song->album, 'album');
         if ($art->has_db_info()) {
-            $image   = $art->get(true);
+            $image   = $art->get();
             $new_pic = [
                 'data' => $image,
                 'mime' => $art->raw_mime,
@@ -375,7 +375,7 @@ final class SongTagWriter implements SongTagWriterInterface
             }
             $art = new Art($song->artist, 'artist');
             if ($art->has_db_info()) {
-                $image   = $art->get(true);
+                $image   = $art->get();
                 $new_pic = [
                     'data' => $image,
                     'picturetypeid' => 8,
@@ -392,7 +392,7 @@ final class SongTagWriter implements SongTagWriterInterface
             }
             $art = new Art($song->album, 'album');
             if ($art->has_db_info()) {
-                $image   = $art->get(true);
+                $image   = $art->get();
                 $new_pic = [
                     'data' => $image,
                     'picturetypeid' => 3,
