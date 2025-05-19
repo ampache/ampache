@@ -279,9 +279,31 @@ class Art extends database_object
             return $this->get_image($fallback);
         }
 
+        if (preg_match('/^[0-9]+x[0-9]+$/', $size)) {
+            $dimensions           = explode('x', $size);
+            $width                = (int)$dimensions[0];
+            $height               = (int)$dimensions[1];
+            $thumb_size           = [];
+            $thumb_size['width']  = $width;
+            $thumb_size['height'] = $height;
+        } else {
+            $width      = 0;
+            $height     = 0;
+            $thumb_size = [
+                'width' => 275,
+                'height' => 275
+            ];
+        }
+
         // Thumbnails might already be in the database
-        $sql        = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ? AND `kind` = ?";
-        $db_results = Dba::read($sql, [$this->object_type, $this->object_id, $size, $this->kind]);
+        if ($width > 0 && $height > 0) {
+            $sql    = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND (`size` = ? OR (`size` = 'original' AND `width` = ? AND `height` = ?)) AND `kind` = ?";
+            $params = [$this->object_type, $this->object_id, $size, $width, $height, $this->kind];
+        } else {
+            $sql    = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ? AND `kind` = ?";
+            $params = [$this->object_type, $this->object_id, $size, $this->kind];
+        }
+        $db_results = Dba::read($sql, $params);
         if ($results = Dba::fetch_assoc($db_results)) {
             $this->id         = (int)$results['id'];
             $this->thumb_mime = $results['mime'];
@@ -299,17 +321,6 @@ class Art extends database_object
             AmpConfig::get('resize_images') &&
             $this->get_image($fallback)
         ) {
-            if (preg_match('/^[0-9]+x[0-9]+$/', $size)) {
-                $dimensions           = explode('x', $size);
-                $thumb_size           = [];
-                $thumb_size['width']  = (int) $dimensions[0];
-                $thumb_size['height'] = (int) $dimensions[1];
-            } else {
-                $thumb_size = [
-                    'width' => 275,
-                    'height' => 275
-                ];
-            }
 
             $data = $this->generate_thumb($this->raw, $thumb_size, $this->raw_mime);
 
