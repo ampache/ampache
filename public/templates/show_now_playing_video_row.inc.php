@@ -57,10 +57,10 @@ use Ampache\Repository\Model\Video;
     <div class="np_cell cel_video">
         <?php $art_showed = false;
 if ($media->get_default_art_kind() == 'preview') {
-    $art_showed = Art::display('video', $media->id, (string)$media->getFileName(), 9, $media->get_link(), false, true, 'preview');
+    $art_showed = Art::display('video', $media->id, (string)$media->getFileName(), ['width' => 150, 'height' => 84], $media->get_link(), false, true, 'preview');
 }
 if (!$art_showed) {
-    Art::display('video', $media->id, (string)$media->getFileName(), 6, $media->get_link());
+    Art::display('video', $media->id, (string)$media->getFileName(), ['width' => 100, 'height' => 150], $media->get_link());
 } ?>
     </div>
 </div>

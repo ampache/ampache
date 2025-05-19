@@ -191,7 +191,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                             </td>
                             <td class="cel_cover">
                                 <div style="max-width: 80px;">
-                                    <?php $item->display_art(3); ?>
+                                    <?php $item->display_art(['width' => 80, 'height' => 80]); ?>
                                 </div>
                             </td>
                             <td class="cel_song"><?php echo $item->get_f_link(); ?></td>
@@ -304,7 +304,9 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                         }
 
                         echo '<td class=grid_cover>';
-                        $thumb = ($this->gridview) ? 12 : 1; // default to 100x100
+                        $thumb = ($this->gridview)
+                            ? ['width' => 150, 'height' => 150]
+                            : ['width' => 100, 'height' => 100]; // default to 100x100
                         $item->display_art($thumb, true);
                         echo '</td>';
 

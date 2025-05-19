@@ -109,10 +109,11 @@ if (AmpConfig::get('external_links_musicbrainz')) {
     }
 } ?>
     </div>
-    <?php
-        $name = '[' . scrub_out($album->get_artist_fullname()) . '] ' . scrub_out($f_name);
-$thumb        = Ui::is_grid_view('album') ? 11 : 32;
-Art::display('album', $album->id, $name, $thumb, null, true, false); ?>
+<?php $name = '[' . scrub_out($album->get_artist_fullname()) . '] ' . scrub_out($f_name);
+$size       = Ui::is_grid_view('album')
+    ? ['width' => 150, 'height' => 150]
+    : ['width' => 384, 'height' => 384];
+Art::display('album', $album->id, $name, $size, null, true, false); ?>
 </div>
 <?php if (User::is_registered()) {
     if (AmpConfig::get('ratings')) { ?>

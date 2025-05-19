@@ -95,7 +95,7 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
             ? ['width' => 150, 'height' => 150]
             : ['width' => 100, 'height' => 100];
 
-        Art::show(
+        Art::display(
             'album',
             $albumId,
             $name,

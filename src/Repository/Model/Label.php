@@ -99,13 +99,12 @@ class Label extends database_object implements library_item
 
     /**
      * display_art
-     * @param int $thumb
-     * @param bool $force
+     * @param array{width: int, height: int} $size
      */
-    public function display_art($thumb = 2, $force = false): void
+    public function display_art(array $size, bool $force = false): void
     {
         if ($this->has_art() || $force) {
-            Art::display('label', $this->id, (string)$this->get_fullname(), $thumb, $this->get_link());
+            Art::display('label', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
         }
     }
 

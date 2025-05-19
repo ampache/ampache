@@ -410,10 +410,9 @@ class Podcast_Episode extends database_object implements
 
     /**
      * display_art
-     * @param int $thumb
-     * @param bool $force
+     * @param array{width: int, height: int} $size
      */
-    public function display_art($thumb = 2, $force = false): void
+    public function display_art(array $size, bool $force = false): void
     {
         $episode_id = null;
         $type       = null;
@@ -427,7 +426,7 @@ class Podcast_Episode extends database_object implements
         }
 
         if ($episode_id !== null && $type !== null) {
-            Art::display($type, $episode_id, (string)$this->get_fullname(), $thumb, $this->get_link());
+            Art::display($type, $episode_id, (string)$this->get_fullname(), $size, $this->get_link());
         }
     }
 
