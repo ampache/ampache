@@ -1333,7 +1333,8 @@ class Art extends database_object
     }
 
     /**
-     * Display an item art.
+     * Display item art.
+     * @see Art::show()
      */
     public static function display(
         string  $object_type,
@@ -1397,6 +1398,115 @@ class Art extends database_object
         // For @2x output
         $size['height'] /= 2;
         $size['width'] /= 2;
+
+        echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
+
+        $item_art_play = ($size['height'] == 150)
+            ? "<div class=\"item_art_play_150\">"
+            : "<div class=\"item_art_play\">";
+        // don't put the play icon on really large images.
+        if ($size['height'] >= 150 && $size['height'] <= 300) {
+            echo $item_art_play;
+            echo Ajax::text(
+                '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'',
+                '<span class="item_art_play_icon" title="' . T_('Play') . '" />',
+                'directplay_art_' . $object_type . '_' . $object_id
+            );
+            echo "</div>";
+        }
+
+        if ($prettyPhoto) {
+            $user      = Core::get_global('user');
+            $className = ObjectTypeToClassNameMapper::map($object_type);
+            /** @var class-string<library_item> $className */
+            $libitem = new $className($object_id);
+            echo "<div class=\"item_art_actions\">";
+            if (
+                $user instanceof User &&
+                ($user->has_access(AccessLevelEnum::CONTENT_MANAGER) || $user->has_access(AccessLevelEnum::USER) && $user->id == $libitem->get_user_owner())
+            ) {
+                echo "<a href=\"javascript:NavigateTo('" . $web_path . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
+                echo Ui::get_material_symbol('edit', T_('Edit/Find Art'));
+                echo "</a>";
+                echo "<a href=\"javascript:NavigateTo('" . $web_path . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
+                echo Ui::get_material_symbol('close', T_('Reset Art'));
+                echo "</a>";
+            }
+
+            echo "</div>";
+        }
+
+        echo "</a>\n";
+        echo "</div>";
+
+        return true;
+    }
+
+    /**
+     * Display item art.
+     * This function requires you to call the explicit size of the thumbnail
+     * This removes the ambiguity of Art::display() by requiring a thumbnail size array
+     * @param array{width: int, height: int} $size
+     */
+    public static function show(
+        string $object_type,
+        int $object_id,
+        string $name,
+        array $size,
+        ?string $link = null,
+        bool $show_default = true,
+        bool $thumb_link = true,
+        string $kind = 'default'
+    ): bool {
+        if (!self::is_valid_type($object_type)) {
+            return false;
+        }
+
+        $has_db = self::has_db($object_id, $object_type, $kind);
+        // Don't show any image if not available
+        if (!$show_default && !$has_db) {
+            return false;
+        }
+
+        $web_path    = AmpConfig::get_web_path();
+        $prettyPhoto = ($link === null);
+        $out_size    = $size['width'] . 'x' . $size['height'];
+        if ($link === null) {
+            $link = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
+            if ($thumb_link) {
+                $link .= "&size=" . $out_size;
+            }
+            if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
+                $link .= "&auth=" . session_id();
+            }
+
+            if ($kind != 'default') {
+                $link .= '&kind=' . $kind;
+            }
+        }
+
+        echo "<div class=\"item_art\">";
+        echo "<a href=\"" . $link . "\" title=\"" . $name . "\"";
+        if ($prettyPhoto) {
+            echo " rel=\"prettyPhoto\"";
+        }
+
+        echo ">";
+        $imgurl = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
+        if ($thumb_link) {
+            $imgurl .= "&size=" . $out_size;
+        }
+        if ($kind != 'default') {
+            $imgurl .= '&kind=' . $kind;
+        }
+
+        // This to keep browser cache feature but force a refresh in case image just changed
+        if ($has_db) {
+            $art = new Art($object_id, $object_type);
+            if ($art->has_db_info($out_size)) {
+                $imgurl .= '&fooid=' . $art->id;
+            }
+        }
 
         echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
 
