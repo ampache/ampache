@@ -884,6 +884,13 @@ class Art extends database_object
 
         $src_width  = imagesx($source);
         $src_height = imagesy($source);
+        if (!$src_width || !$src_height) {
+            debug_event(self::class, 'Failed to get image dimensions', 1);
+            imagedestroy($source);
+
+            return [];
+        }
+
         $dst_width  = (int)$size['width'];
         $dst_height = (int)$size['height'];
 
@@ -902,7 +909,11 @@ class Art extends database_object
             $new_width  = $src_width;
             $new_height = (int)($src_width / $dst_ratio);
             $src_x      = 0;
-            $src_y      = (int)(($src_height - $new_height) / 2);
+
+            // Instead of being dead center attempt to be a little bit above to allow for faces in images
+            $center_y   = (int)(($src_height - $new_height) / 2);
+            $max_offset = (int)($new_height * 0.35);
+            $src_y      = max(0, $center_y - $max_offset);
         }
 
         $thumbnail = imagecreatetruecolor($dst_width, $dst_height);
