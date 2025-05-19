@@ -289,7 +289,9 @@ class Art extends database_object
                 ? (string)self::read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime'])
                 : $results['image'];
 
-            return true;
+            if (!empty($this->thumb)) {
+                return true;
+            }
         }
 
         // If there is no thumb in the database and we want one we have to generate it
