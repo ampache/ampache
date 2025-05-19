@@ -18,6 +18,8 @@ Art is a big focus on this release, many issues with the data and thumbnail gene
 * Show the structure with installed version in Ampache Debug when using a custom structure. (squashed and client)
 * Typing to plugin properties and functions
 * Typing to catalog modules
+* Config version 81
+  * Add option `upscale_images` that allows you to disable image upscaling
 * CLI
   * Print query error messages when running `admin:updateDatabase`
   * Add `-f|--fix` parameter to run:calculateArtSize to look for bad files only
