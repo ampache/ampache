@@ -1358,9 +1358,13 @@ class Art extends database_object
             return false;
         }
 
+        // double the image output size for display scaling
+        $out_size = (AmpConfig::get('upscale_images', true))
+            ? ($size['width'] * 2) . 'x' . ($size['height'] * 2)
+            : $size['width'] . 'x' . $size['height'] * 2;
+
         $web_path    = AmpConfig::get_web_path();
         $prettyPhoto = ($link === null);
-        $out_size    = ($size['width'] * 2) . 'x' . ($size['height'] * 2); // double the image output size for display scaling
         if ($link === null) {
             $link = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
             if ($thumb_link) {
