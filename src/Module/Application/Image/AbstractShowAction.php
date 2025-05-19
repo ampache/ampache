@@ -96,8 +96,13 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
         // If we aren't resizing just trash thumb
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RESIZE_IMAGES) === false) {
             $_GET['thumb'] = null;
+            $_GET['size']  = null;
         }
 
+        $thumb = (int)filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
+        $size  = ($thumb === 0)
+            ? filter_input(INPUT_GET, 'size', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE) ?? 'original'
+            : 'original';
         $kind  = (array_key_exists('kind', $_GET) && $_GET['kind'] == 'preview')
             ? 'preview'
             : 'default';
@@ -135,7 +140,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             [$filename, $objectId, $type] = $itemConfig;
 
             $art      = new Art($objectId, $type, $kind);
-            $has_info = $art->has_db_info();
+            $has_info = $art->has_db_info($size);
             if (!$has_info) {
                 // show a fallback image
                 $rootimg = sprintf(
@@ -157,8 +162,16 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                     ? $art->id
                     : $objectId . $type . $kind;
                 $thumb_data = [];
-                $thumb      = (int)filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
-                if (array_key_exists('thumb', $_GET) && $thumb > 0) {
+                if (
+                    $size &&
+                    preg_match('/^[0-9]+x[0-9]+$/', $size)
+                ) {
+                    if ($art->thumb && $art->thumb_mime) {
+                        // found the thumb by looking up the size
+                        $art->raw_mime = $art->thumb_mime;
+                        $art->raw      = $art->thumb;
+                    }
+                } elseif (array_key_exists('thumb', $_GET) && $thumb > 0) {
                     $size       = Art::get_thumb_size($thumb);
                     $thumb_data = $art->get_thumb($size);
                     $etag .= '-' . $thumb;
