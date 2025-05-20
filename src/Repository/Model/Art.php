@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Plugin\AmpacheDiscogs;
 use Ampache\Plugin\AmpacheMusicBrainz;
 use Ampache\Plugin\AmpacheTheaudiodb;
@@ -882,15 +883,8 @@ class Art extends database_object
             return [];
         }
 
-        $src_width  = imagesx($source);
-        $src_height = imagesy($source);
-        if (!$src_width || !$src_height) {
-            debug_event(self::class, 'Failed to get image dimensions', 1);
-            imagedestroy($source);
-
-            return [];
-        }
-
+        $src_width  = (int)imagesx($source);
+        $src_height = (int)imagesy($source);
         $dst_width  = (int)$size['width'];
         $dst_height = (int)$size['height'];
 
@@ -1454,6 +1448,63 @@ class Art extends database_object
         echo "</div>";
 
         return true;
+    }
+
+    /**
+     * show the art file to the browser
+     * return 404 on error or missing files
+     */
+    public function show(string $size, bool $fallback): bool
+    {
+        if ($this->has_db_info($size, $fallback)) {
+            header('Access-Control-Allow-Origin: *');
+            if (
+                $size &&
+                preg_match('/^[0-9]+x[0-9]+$/', $size)
+            ) {
+                if ($this->thumb && $this->thumb_mime) {
+                    // found the thumb by looking up the size
+                    $this->raw_mime = $this->thumb_mime;
+                    $this->raw      = $this->thumb;
+                } elseif (AmpConfig::get('resize_images')) {
+                    // resize the image if requested
+                    $dimensions     = explode('x', $size);
+                    $size           = [];
+                    $size['width']  = (int)$dimensions[0];
+                    $size['height'] = (int)$dimensions[1];
+                    if ($size['width'] === 0 || $size['height'] === 0) {
+                        // art not found
+                        http_response_code(404);
+
+                        return false;
+                    }
+
+                    $thumb = $this->get_thumb($size);
+                    if (!empty($thumb)) {
+                        header('Content-type: ' . $thumb['thumb_mime']);
+                        header('Content-Length: ' . strlen((string)$thumb['thumb']));
+                        echo $thumb['thumb'];
+
+                        return true;
+                    }
+
+                    // art not found
+                    http_response_code(404);
+
+                    return false;
+                }
+            }
+
+            header('Content-type: ' . $this->raw_mime);
+            header('Content-Length: ' . strlen((string) $this->raw));
+            echo $this->raw;
+
+            return true;
+        }
+        // art not found
+        http_response_code(404);
+
+        return false;
     }
 
     /**
