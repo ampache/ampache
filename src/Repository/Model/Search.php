@@ -1976,6 +1976,7 @@ class Search extends playlist_object
             return 0;
         }
 
+        $collaborate = $this->collaborate;
         if ($data !== null) {
             $this->name        = $data['name'] ?? $this->name;
             $this->type        = $data['pl_type'] ?? $this->type;
@@ -1984,24 +1985,25 @@ class Search extends playlist_object
             $this->limit       = $data['limit'] ?? $this->limit;
             $new_list          = (isset($data['collaborate'])) ? $data['collaborate'] : [];
             $collaborate       = (!empty($new_list)) ? implode(',', $new_list) : '';
-            $this->collaborate = ($collaborate != $this->collaborate) ? $collaborate : $this->collaborate;
         }
 
         $this->username = User::get_username((int)$this->user);
 
-        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ?, `last_update` = ? WHERE `id` = ?";
-        Dba::write($sql, [$this->name, $this->type, $this->user, $this->username, json_encode($this->rules), $this->logic_operator, (int)$this->random, $this->limit, time(), $this->id]);
-
-        // update collaborate mapping for searches
-        if (!empty($new_list)) {
+        // mapping used for searching, browses and queries
+        if ($collaborate != $this->collaborate) {
+            $this->collaborate = $collaborate;
             $sql = "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $this->collaborate . ");";
             Dba::write($sql, ['smart_' . $this->id]);
 
-            foreach ($new_list as $user_id) {
+            // update collaborate mapping for searches
+            foreach (explode(',', $this->collaborate) as $user_id) {
                 $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);";
                 Dba::write($sql, ['smart_' . $this->id, $user_id]);
             }
         }
+
+        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ?, `last_update` = ? WHERE `id` = ?";
+        Dba::write($sql, [$this->name, $this->type, $this->user, $this->username, json_encode($this->rules), $this->logic_operator, (int)$this->random, $this->limit, time(), $this->id]);
 
         return $this->id;
     }
