@@ -580,7 +580,9 @@ class Playlist extends playlist_object
             $this->collaborate = $collaborate;
         }
 
-        $sql = "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";
+        $sql = (empty($collaborate))
+            ? "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;"
+            : "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";
         Dba::write($sql, [$this->id]);
 
         foreach ($new_list as $user_id) {
