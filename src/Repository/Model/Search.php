@@ -1465,8 +1465,9 @@ class Search extends playlist_object
      * get_subsearch
      *
      * get SQL for an item subsearch
+     * @return array{sql: string, parameters: array<int, mixed>}
      */
-    public function get_subsearch($table): array
+    public function get_subsearch(string $table): array
     {
         $sqltbl = $this->to_sql();
         $sql    = sprintf('SELECT DISTINCT(`%s`.`id`) FROM `%s` ', $table, $table) . $sqltbl['table_sql'];
@@ -1964,28 +1965,48 @@ class Search extends playlist_object
      *     name?: ?string,
      *     pl_type?: ?string,
      *     pl_user?: ?int,
+     *     collaborate?: null|list<string>,
      *     random?: ?int,
      *     limit?: int
      * } $data
      */
     public function update(?array $data = null): int
     {
-        if ($data !== null) {
-            $this->name   = $data['name'] ?? $this->name;
-            $this->type   = $data['pl_type'] ?? $this->type;
-            $this->user   = $data['pl_user'] ?? $this->user;
-            $this->random = $data['random'] ?? $this->random;
-            $this->limit  = $data['limit'] ?? $this->limit;
-        }
-
-        $this->username = User::get_username((int)$this->user);
-
         if ($this->isNew()) {
             return 0;
         }
 
-        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ?, `last_update` = ? WHERE `id` = ?";
-        Dba::write($sql, [$this->name, $this->type, $this->user, $this->username, json_encode($this->rules), $this->logic_operator, (int)$this->random, $this->limit, time(), $this->id]);
+        $collaborate = $this->collaborate;
+        if ($data !== null) {
+            $this->name        = $data['name'] ?? $this->name;
+            $this->type        = $data['pl_type'] ?? $this->type;
+            $this->user        = $data['pl_user'] ?? $this->user;
+            $this->random      = $data['random'] ?? $this->random;
+            $this->limit       = $data['limit'] ?? $this->limit;
+            $new_list          = (isset($data['collaborate'])) ? $data['collaborate'] : [];
+            $collaborate       = (!empty($new_list)) ? implode(',', $new_list) : '';
+        }
+
+        $this->username = User::get_username((int)$this->user);
+
+        // mapping used for searching, browses and queries
+        if ($collaborate != $this->collaborate) {
+            $this->collaborate = $collaborate;
+            $sql               = (empty($collaborate))
+                ? "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;"
+                : "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $this->collaborate . ");";
+            Dba::write($sql, ['smart_' . $this->id]);
+
+            if (!empty($this->collaborate)) {
+                foreach (explode(',', $this->collaborate) as $user_id) {
+                    $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);";
+                    Dba::write($sql, ['smart_' . $this->id, $user_id]);
+                }
+            }
+        }
+
+        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ?, `last_update` = ?, `collaborate` = ? WHERE `id` = ?";
+        Dba::write($sql, [$this->name, $this->type, $this->user, $this->username, json_encode($this->rules), $this->logic_operator, (int)$this->random, $this->limit, time(), $this->collaborate, $this->id]);
 
         return $this->id;
     }

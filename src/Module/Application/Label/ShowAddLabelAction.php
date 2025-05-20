@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Label;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -53,6 +54,10 @@ final class ShowAddLabelAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
+            throw new AccessDeniedException('Access Denied: label features are not enabled.');
+        }
+
         $this->ui->showHeader();
 
         if (

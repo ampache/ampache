@@ -428,7 +428,12 @@ final class SongTagWriter implements SongTagWriterInterface
         return null;
     }
 
-    public function check_for_duplicate($apics, $new_pic, &$ndata, $apic_typeid): ?int
+    /**
+     * @param array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}> $apics
+     * @param array<string, array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}>> $ndata
+     * @param array{data: string, description: null|string, mime: null|string, picturetypeid: int, encodingid: int} $new_pic
+     */
+    public function check_for_duplicate(array $apics, array $new_pic, array &$ndata, string $apic_typeid): ?int
     {
         $idx = null;
         $cnt = count($apics);

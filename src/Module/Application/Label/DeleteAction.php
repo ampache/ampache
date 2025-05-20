@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Label;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -57,6 +58,10 @@ final class DeleteAction implements ApplicationActionInterface
             $this->ui->showFooter();
 
             return null;
+        }
+
+        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
+            throw new AccessDeniedException('Access Denied: label features are not enabled.');
         }
 
         $labelId = (int) ($request->getQueryParams()['label_id'] ?? 0);
