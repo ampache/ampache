@@ -893,9 +893,17 @@ class Art extends database_object
 
         if ($src_ratio > $dst_ratio) {
             // Source is wider than destination, crop width
+            if ($src_ratio > $dst_ratio * 1.4) {
+                // Source is more than 30% wider, crop 30% off each side
+                $crop_margin = (int)($src_width * 0.2);
+                $new_width   = $src_width - 2 * $crop_margin;
+                $src_x       = $crop_margin;
+            } else {
+                // Source is just wider, no crop
+                $new_width = $src_width;
+                $src_x     = 0;
+            }
             $new_height = $src_height;
-            $new_width  = (int)($src_height * $dst_ratio);
-            $src_x      = (int)(($src_width - $new_width) / 2);
             $src_y      = 0;
         } else {
             // Source is taller than destination, crop height
