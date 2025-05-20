@@ -3461,6 +3461,7 @@ abstract class Catalog extends database_object
 
     /**
      * get_gather_types
+     * @return string[]
      */
     public function get_gather_types(string $media_type = ''): array
     {
@@ -3954,7 +3955,7 @@ abstract class Catalog extends database_object
     /**
      * Update the catalog map for a single item
      */
-    public static function update_map($catalog, $object_type, $object_id): void
+    public static function update_map(int $catalog, string $object_type, int $object_id): void
     {
         debug_event(self::class, sprintf('update_map %s: {%s}', $object_type, $object_id), 5);
         if ($object_type == 'artist') {

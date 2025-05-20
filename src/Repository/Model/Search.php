@@ -1465,8 +1465,9 @@ class Search extends playlist_object
      * get_subsearch
      *
      * get SQL for an item subsearch
+     * @return array{sql: string, parameters: array<int, mixed>}
      */
-    public function get_subsearch($table): array
+    public function get_subsearch(string $table): array
     {
         $sqltbl = $this->to_sql();
         $sql    = sprintf('SELECT DISTINCT(`%s`.`id`) FROM `%s` ', $table, $table) . $sqltbl['table_sql'];

@@ -546,12 +546,10 @@ final class SongSearch implements SearchInterface
                     //debug_event(self::class, '_get_sql_song: SUBSEARCH ' . $input, 5);
                     $subsearch = new Search((int)$input, 'song', $search->search_user);
                     $results   = $subsearch->get_subsearch('song');
-                    if (!empty($results)) {
-                        $subsearch_count++;
-                        $where[] = "`song`.`id` $operator_sql IN (SELECT * FROM (" . $results['sql'] . ") AS sp_" . $subsearch_count . ")";
-                        foreach ($results['parameters'] as $parameter) {
-                            $parameters[] = $parameter;
-                        }
+                    $subsearch_count++;
+                    $where[] = "`song`.`id` $operator_sql IN (SELECT * FROM (" . $results['sql'] . ") AS sp_" . $subsearch_count . ")";
+                    foreach ($results['parameters'] as $parameter) {
+                        $parameters[] = $parameter;
                     }
                     break;
                 case 'added':
