@@ -1992,7 +1992,7 @@ class Search extends playlist_object
         // mapping used for searching, browses and queries
         if ($collaborate != $this->collaborate) {
             $this->collaborate = $collaborate;
-            $sql = (empty($collaborate))
+            $sql               = (empty($collaborate))
                 ? "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;"
                 : "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $this->collaborate . ");";
             Dba::write($sql, ['smart_' . $this->id]);

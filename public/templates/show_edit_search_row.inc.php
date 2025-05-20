@@ -78,15 +78,15 @@ if (!empty($users)) {
                 </td>
                 <td>
                     <?php $ids = explode(',', (string)$libitem->collaborate);
-                    $options   = [];
-                    $users     = User::getValidArray();
-                    if (!empty($users)) {
-                        foreach ($users as $user_id => $user_name) {
-                            $selected  = (in_array($user_id, $ids)) ? ' selected="selected"' : '';
-                            $options[] = '<option value="' . $user_id . '"' . $selected . '>' . scrub_out($user_name) . '</option>';
-                        }
-                        echo '<select multiple size="5" name="collaborate[]" style="height: 90px;">' . implode("\n", $options) . '</select>';
-                    } ?>
+$options                       = [];
+$users                         = User::getValidArray();
+if (!empty($users)) {
+    foreach ($users as $user_id => $user_name) {
+        $selected  = (in_array($user_id, $ids)) ? ' selected="selected"' : '';
+        $options[] = '<option value="' . $user_id . '"' . $selected . '>' . scrub_out($user_name) . '</option>';
+    }
+    echo '<select multiple size="5" name="collaborate[]" style="height: 90px;">' . implode("\n", $options) . '</select>';
+} ?>
                 </td>
             </tr>
         </table>
