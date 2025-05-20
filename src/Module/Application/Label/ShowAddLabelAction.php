@@ -61,8 +61,8 @@ final class ShowAddLabelAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === true ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === true &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)
         ) {
             $this->ui->show('show_add_label.inc.php');
         } else {

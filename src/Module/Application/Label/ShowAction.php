@@ -123,8 +123,8 @@ final class ShowAction implements ApplicationActionInterface
 
         // if you didn't set a label_id or name, show the add label form
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === true &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) === true
         ) {
             $this->ui->show(
                 'show_add_label.inc.php'
@@ -143,7 +143,7 @@ final class ShowAction implements ApplicationActionInterface
         int $userId,
         Label $label
     ): bool {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) === true) {
             if ($label->user !== null && $userId == $label->user) {
                 return true;
             }
