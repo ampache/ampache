@@ -1965,6 +1965,7 @@ class Search extends playlist_object
      *     name?: ?string,
      *     pl_type?: ?string,
      *     pl_user?: ?int,
+     *     collaborate?: null|list<string>,
      *     random?: ?int,
      *     limit?: int
      * } $data
@@ -1972,11 +1973,12 @@ class Search extends playlist_object
     public function update(?array $data = null): int
     {
         if ($data !== null) {
-            $this->name   = $data['name'] ?? $this->name;
-            $this->type   = $data['pl_type'] ?? $this->type;
-            $this->user   = $data['pl_user'] ?? $this->user;
-            $this->random = $data['random'] ?? $this->random;
-            $this->limit  = $data['limit'] ?? $this->limit;
+            $this->name        = $data['name'] ?? $this->name;
+            $this->type        = $data['pl_type'] ?? $this->type;
+            $this->user        = $data['pl_user'] ?? $this->user;
+            $this->random      = $data['random'] ?? $this->random;
+            $this->limit       = $data['limit'] ?? $this->limit;
+            $this->collaborate = $data['collaborate'] ?? $this->collaborate;
         }
 
         $this->username = User::get_username((int)$this->user);

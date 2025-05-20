@@ -39,8 +39,6 @@ class Playlist extends playlist_object
 {
     protected const DB_TABLENAME = 'playlist';
 
-    public ?string $collaborate = '';
-
     /**
      * @var array<int, array{
      *     object_type: LibraryItemEnum,

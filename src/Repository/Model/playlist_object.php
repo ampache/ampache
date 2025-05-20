@@ -47,6 +47,8 @@ abstract class playlist_object extends database_object implements library_item
 
     public ?string $username = null;
 
+    public ?string $collaborate = '';
+
     public ?string $type = null;
 
     public ?string $link = null;
@@ -107,17 +109,11 @@ abstract class playlist_object extends database_object implements library_item
      * has_collaborate
      * This function returns true or false if the current user
      * has access to collaborate (Add/remove items) for this playlist
-     * @param User|null $user
      */
-    public function has_collaborate($user = null): bool
+    public function has_collaborate(?User $user = null): bool
     {
         if ($this->has_access($user)) {
             return true;
-        }
-
-        // only playlists have collaborative users
-        if ($this instanceof Search) {
-            return false;
         }
 
         $user = ($user instanceof User)
@@ -139,9 +135,8 @@ abstract class playlist_object extends database_object implements library_item
      * has_access
      * This function returns true or false if the current user
      * has access to this playlist
-     * @param User|null $user
      */
-    public function has_access($user = null): bool
+    public function has_access(?User $user = null): bool
     {
         if (
             $user instanceof User &&
