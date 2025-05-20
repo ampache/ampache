@@ -160,7 +160,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 // show the original image or thumbnail
                 $etag = ($art->id > 0)
                     ? $art->id
-                    : $objectId . $type . $kind;
+                    : null;
                 $thumb_data = [];
                 if (
                     $size &&
@@ -174,7 +174,9 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 } elseif (array_key_exists('thumb', $_GET) && $thumb > 0) {
                     $size       = Art::get_thumb_size($thumb);
                     $thumb_data = $art->get_thumb($size);
-                    $etag .= '-' . $thumb;
+                    if ($art->id > 0) {
+                        $etag .= '-' . $thumb;
+                    }
                 }
 
                 $mime  = (array_key_exists('thumb_mime', $thumb_data))
