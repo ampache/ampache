@@ -823,10 +823,9 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * display_art
-     * @param int $thumb
-     * @param bool $force
+     * @param array{width: int, height: int} $size
      */
-    public function display_art($thumb = 2, $force = false): void
+    public function display_art(array $size, bool $force = false): void
     {
         $album_id = null;
         $type     = null;
@@ -843,7 +842,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $title = ($this->get_artist_fullname() != "")
                 ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
                 : $this->get_fullname();
-            Art::display($type, $album_id, $title, $thumb, $this->get_link());
+            Art::display($type, $album_id, $title, $size, $this->get_link());
         }
     }
 

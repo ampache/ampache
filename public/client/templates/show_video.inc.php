@@ -46,7 +46,7 @@ $fullname = $video->get_fullname() ?? '';
 Ui::show_box_top($fullname, 'box box_video_details'); ?>
 <div class="item_right_info">
 <?php
-$gart = Art::display('video', $video->id, $fullname, 7, null, true, false); ?>
+$gart = Art::display('video', $video->id, $fullname, ['width' => 200, 'height' => 300], null, true, false); ?>
 <?php if (AmpConfig::get('encode_srt')) { ?>
 <div class="subtitles">
 <?php echo T_('Subtitle'); ?>:

@@ -37,7 +37,7 @@ use Ampache\Module\Util\Ui;
 $name     = scrub_out((string)$libitem->get_fullname());
 $web_path = AmpConfig::get_web_path('/client'); ?>
 <td class="<?php echo $cel_cover; ?>">
-    <?php Art::display('label', $libitem->id, $name, 1, $web_path . '/labels.php?action=show&label=' . $libitem->id); ?>
+    <?php Art::display('label', $libitem->id, $name, ['width' => 100, 'height' => 100], $web_path . '/labels.php?action=show&label=' . $libitem->id); ?>
 </td>
 <td class="cel_label"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_category"><?php echo $libitem->category; ?></td>

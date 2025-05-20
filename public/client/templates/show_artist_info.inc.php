@@ -31,8 +31,10 @@ use Ampache\Repository\Model\Artist;
 ?>
 <div class="item_info">
     <?php if ($artist instanceof Artist) {
-        $thumb = (empty(trim($biography['summary'] ?? ''))) ? 32 : 2;
-        Art::display('artist', $artist->id, scrub_out($artist->get_fullname() ?? $artist->name), $thumb, null, true, false);
+        $size = (empty(trim($biography['summary'] ?? '')))
+            ? ['width' => 384, 'height' => 384]
+            : ['width' => 128, 'height' => 128];
+        Art::display('artist', $artist->id, scrub_out($artist->get_fullname() ?? $artist->name), $size, null, true, false);
     } ?>
     <div class="item_properties">
         <?php $dcol = [];

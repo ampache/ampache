@@ -56,8 +56,10 @@ $web_path = AmpConfig::get_web_path('/client');
 ob_end_clean();
 Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</div>', 'info-box'); ?>
 <div class="item_right_info">
-<?php $thumb = Ui::is_grid_view('playlist') ? 11 : 32;
-$playlist->display_art($thumb, false, false); ?>
+<?php $size = Ui::is_grid_view('playlist')
+    ? ['width' => 150, 'height' => 150]
+    : ['width' => 384, 'height' => 384];
+$playlist->display_art($size, false, false); ?>
 </div>
 <?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
 <span id="rating_<?php echo $playlist->id; ?>_playlist">
