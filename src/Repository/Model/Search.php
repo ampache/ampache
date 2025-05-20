@@ -1978,7 +1978,12 @@ class Search extends playlist_object
             $this->user        = $data['pl_user'] ?? $this->user;
             $this->random      = $data['random'] ?? $this->random;
             $this->limit       = $data['limit'] ?? $this->limit;
-            $this->collaborate = $data['collaborate'] ?? $this->collaborate;
+            $new_list          = [];
+            if (!empty($data['collaborate']) && implode(',', $data['collaborate']) != $this->collaborate) {
+                $new_list          = $data['collaborate'];
+                $collaborate       = implode(',', $new_list);
+                $this->collaborate = $collaborate;
+            }
         }
 
         $this->username = User::get_username((int)$this->user);
@@ -1991,12 +1996,8 @@ class Search extends playlist_object
         Dba::write($sql, [$this->name, $this->type, $this->user, $this->username, json_encode($this->rules), $this->logic_operator, (int)$this->random, $this->limit, time(), $this->id]);
 
         // update collaborate mapping for searches
-        if (isset($data['collaborate']) && $data['collaborate'] != $this->collaborate) {
-            $new_list    = $data['collaborate'];
-            $collaborate = implode(',', $new_list);
-            $this->collaborate = $collaborate;
-
-            $sql = "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";
+        if (!empty($new_list)) {
+            $sql = "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $this->collaborate . ");";
             Dba::write($sql, ['smart_' . $this->id]);
 
             foreach ($new_list as $user_id) {
