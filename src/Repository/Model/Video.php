@@ -401,13 +401,12 @@ class Video extends database_object implements
 
     /**
      * display_art
-     * @param int $thumb
-     * @param bool $force
+     * @param array{width: int, height: int} $size
      */
-    public function display_art($thumb = 2, $force = false): void
+    public function display_art(array $size, bool $force = false): void
     {
         if (Art::has_db($this->id, 'video') || $force) {
-            Art::display('video', $this->id, (string)$this->get_fullname(), $thumb, $this->get_link());
+            Art::display('video', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
         }
     }
 

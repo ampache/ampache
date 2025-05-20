@@ -452,9 +452,9 @@ class Art extends database_object
                     : 'mime';
                 $new_pic       = [
                     'data' => $source,
+                    'description' => $description,
                     'mime' => $mime,
                     'picturetypeid' => $picturetypeid,
-                    'description' => $description
                 ];
 
                 if (is_null($apics)) {
@@ -469,7 +469,7 @@ class Art extends database_object
                                     'data' => $apics[0]['data'],
                                     'description' => $apics[0]['description'],
                                     'mime' => $apics[0]['mime'],
-                                    'picturetypeid' => $apics[0]['picturetypeid']
+                                    'picturetypeid' => $apics[0]['picturetypeid'],
                                 ];
                             }
                             break;
@@ -485,9 +485,9 @@ class Art extends database_object
                                 $apicsId                             = ($idx == 0) ? 1 : 0;
                                 $ndata['attached_picture'][$apicsId] = [
                                     'data' => $apics[$apicsId]['data'],
+                                    'description' => $apics[$apicsId]['description'],
                                     'mime' => $apics[$apicsId][$apic_mimetype],
                                     'picturetypeid' => $apics[$apicsId][$apic_typeid],
-                                    'description' => $apics[$apicsId]['description']
                                 ];
                             }
                             break;
@@ -523,19 +523,18 @@ class Art extends database_object
 
     /**
      * check_for_duplicate
-     * @param array $apics
-     * @param array $ndata
-     * @param array $new_pic
-     * @param string $apic_typeid
+     * @param array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}> $apics
+     * @param array<string, array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}>> $ndata
+     * @param array{data: string, description: null|string, mime: null|string, picturetypeid: int} $new_pic
      */
-    private function check_for_duplicate($apics, &$ndata, $new_pic, $apic_typeid): ?int
+    private function check_for_duplicate(array $apics, array &$ndata, array $new_pic, string $apic_typeid): ?int
     {
         $idx = null;
         $cnt = count($apics);
         for ($i = 0; $i < $cnt; ++$i) {
             if ($new_pic['picturetypeid'] == $apics[$i][$apic_typeid]) {
-                $ndata['attached_picture'][$i]['description']   = $new_pic['description'];
                 $ndata['attached_picture'][$i]['data']          = $new_pic['data'];
+                $ndata['attached_picture'][$i]['description']   = $new_pic['description'];
                 $ndata['attached_picture'][$i]['mime']          = $new_pic['mime'];
                 $ndata['attached_picture'][$i]['picturetypeid'] = $new_pic['picturetypeid'];
                 $idx                                            = $i;
@@ -885,6 +884,13 @@ class Art extends database_object
 
         $src_width  = imagesx($source);
         $src_height = imagesy($source);
+        if (!$src_width || !$src_height) {
+            debug_event(self::class, 'Failed to get image dimensions', 1);
+            imagedestroy($source);
+
+            return [];
+        }
+
         $dst_width  = (int)$size['width'];
         $dst_height = (int)$size['height'];
 
@@ -903,7 +909,11 @@ class Art extends database_object
             $new_width  = $src_width;
             $new_height = (int)($src_width / $dst_ratio);
             $src_x      = 0;
-            $src_y      = (int)(($src_height - $new_height) / 2);
+
+            // Instead of being dead center attempt to be a little bit above to allow for faces in images
+            $center_y   = (int)(($src_height - $new_height) / 2);
+            $max_offset = (int)($new_height * 0.35);
+            $src_y      = max(0, $center_y - $max_offset);
         }
 
         $thumbnail = imagecreatetruecolor($dst_width, $dst_height);
@@ -1233,6 +1243,7 @@ class Art extends database_object
     /**
      * Get thumb size from thumb type.
      * @return array{width: int, height: int}
+     * @deprecated use size parameter for art display
      */
     public static function get_thumb_size(int $thumb): array
     {
@@ -1333,34 +1344,42 @@ class Art extends database_object
     }
 
     /**
-     * Display an item art.
+     * Display item art.
+     * This function requires you to call the explicit size of the thumbnail
+     * This removes the ambiguity of Art::display() by requiring a thumbnail size array
+     * @param array{width: int, height: int} $size
      */
     public static function display(
-        string  $object_type,
-        int     $object_id,
-        string  $name,
-        int     $thumb,
+        string $object_type,
+        int $object_id,
+        string $name,
+        array $size,
         ?string $link = null,
-        bool    $show_default = true,
-        bool    $thumb_link   = true,
-        string  $kind = 'default'
+        bool $show_default = true,
+        bool $thumb_link = true,
+        string $kind = 'default'
     ): bool {
         if (!self::is_valid_type($object_type)) {
             return false;
         }
 
+        $has_db = self::has_db($object_id, $object_type, $kind);
         // Don't show any image if not available
-        if (!$show_default && !self::has_db($object_id, $object_type, $kind)) {
+        if (!$show_default && !$has_db) {
             return false;
         }
 
+        // double the image output size for display scaling
+        $out_size = (AmpConfig::get('upscale_images', true))
+            ? ($size['width'] * 2) . 'x' . ($size['height'] * 2)
+            : $size['width'] . 'x' . $size['height'];
+
         $web_path    = AmpConfig::get_web_path();
-        $size        = self::get_thumb_size($thumb);
         $prettyPhoto = ($link === null);
         if ($link === null) {
             $link = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
             if ($thumb_link) {
-                $link .= "&thumb=" . $thumb;
+                $link .= "&size=" . $out_size;
             }
             if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
                 $link .= "&auth=" . session_id();
@@ -1380,23 +1399,19 @@ class Art extends database_object
         echo ">";
         $imgurl = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
         if ($thumb_link) {
-            $imgurl .= "&thumb=" . $thumb;
+            $imgurl .= "&size=" . $out_size;
         }
         if ($kind != 'default') {
             $imgurl .= '&kind=' . $kind;
         }
 
         // This to keep browser cache feature but force a refresh in case image just changed
-        if (self::has_db($object_id, $object_type)) {
+        if ($has_db) {
             $art = new Art($object_id, $object_type);
-            if ($art->has_db_info()) {
+            if ($art->has_db_info($out_size)) {
                 $imgurl .= '&fooid=' . $art->id;
             }
         }
-
-        // For @2x output
-        $size['height'] /= 2;
-        $size['width'] /= 2;
 
         echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
 

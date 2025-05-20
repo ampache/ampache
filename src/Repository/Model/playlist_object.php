@@ -342,18 +342,16 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * display_art
-     * @param int $thumb
-     * @param bool $force
-     * @param bool $link
+     * @param array{width: int, height: int} $size
      */
-    public function display_art($thumb = 2, $force = false, $link = true): void
+    public function display_art(array $size, bool $force = false, bool $link = true): void
     {
         if (AmpConfig::get('playlist_art') || $force) {
             $add_link  = ($link) ? $this->get_link() : null;
             $list_type = ($this instanceof Search)
                 ? 'search'
                 : 'playlist';
-            Art::display($list_type, $this->id, (string)$this->get_fullname(), $thumb, $add_link);
+            Art::display($list_type, $this->id, (string)$this->get_fullname(), $size, $add_link);
         }
     }
 

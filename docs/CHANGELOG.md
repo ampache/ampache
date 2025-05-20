@@ -8,12 +8,18 @@ Database updates will remove the duplicates and enforce unique values on the tab
 
 Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions for remaining art
 
+Art is a big focus on this release, many issues with the data and thumbnail generation have been fixed
+
 ### Added
 
+* Add a size parameter to `image.php` art URL's
+* Add example `update_docker_compose.sh` to pull and update your container when updates are available
 * WebDav Browser plugin, allowing direct browsing of your server
 * Show the structure with installed version in Ampache Debug when using a custom structure. (squashed and client)
 * Typing to plugin properties and functions
 * Typing to catalog modules
+* Config version 81
+  * Add option `upscale_images` that allows you to disable image upscaling
 * CLI
   * Print query error messages when running `admin:updateDatabase`
   * Add `-f|--fix` parameter to run:calculateArtSize to look for bad files only
@@ -32,8 +38,10 @@ Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions for
 
 ### Changed
 
+* Update composer packages
 * Config `catalog_verify_by_time` checks file mod time only
 * Update vite to 6.2.7
+* Update `docker-compose.yml` for newer versions
 * Ampache remote catalog
   * Use new Api function `song_tags` to pull more data for song import. (If available)
 * Plugin
@@ -48,8 +56,12 @@ Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions for
 
 ### Fixed
 
+* Art scaling and resizing did not center the art causing black bars depending on the scale
 * Art display was forcing thumbnail images on object pages
+* Don't fetch all the art when you can just get the original image
 * Art thumbnail was always set and would not show the original image
+* Base all thumb generation on the original file
+* Don't generate and save thumbnails when they match original art size
 * Scrutinizer builds
 * Missing `width` and `height` from `image` duplication
 * Skipping files based on modification time when updating catalogs
@@ -61,6 +73,7 @@ Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions for
 * CSS for edit dialog box input fields had white text on the dark theme
 * Don't rely on format commands to fill empty `album_artist` for files missing album_artist tags
 * Beets catalog sending the id instead of the artist name to insert function
+* Unset variable warning for Upnp broadcast from web page
 * WebDav
   * Deprecated exec function
   * Listing children has been simplified and fixed up for all media types
