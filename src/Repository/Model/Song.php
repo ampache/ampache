@@ -1843,10 +1843,9 @@ class Song extends database_object implements
 
     /**
      * Get parent song artists.
-     * @param int $object_id
      * @return int[]
      */
-    public static function get_parent_array($object_id, $type = 'artist'): array
+    public static function get_parent_array(int $object_id, ?string $type = 'artist'): array
     {
         $results = [];
         if (!$object_id) {

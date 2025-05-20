@@ -54,6 +54,7 @@ use Ampache\Repository\Model\User;
                     <?php
                     $options = [];
 if (!empty($users)) {
+    /** @var string[] $users */
     foreach ($users as $user_id => $username) {
         $selected  = ($user_id == $libitem->user) ? ' selected="selected"' : '';
         $options[] = '<option value="' . $user_id . '"' . $selected . '>' . scrub_out($username) . '</option>';

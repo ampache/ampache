@@ -57,6 +57,13 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
         $result = Dba::query($sql, $params, $silent, $interactor);
 
         if ($result === false) {
+            if (!$silent) {
+                $interactor?->error(
+                    'ERROR_query ' . $sql . ' ' . print_r($params, true),
+                    true
+                );
+            }
+
             throw new QueryFailedException();
         }
 

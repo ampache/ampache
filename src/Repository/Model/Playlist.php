@@ -39,8 +39,6 @@ class Playlist extends playlist_object
 {
     protected const DB_TABLENAME = 'playlist';
 
-    public ?string $collaborate = '';
-
     /**
      * @var array<int, array{
      *     object_type: LibraryItemEnum,
@@ -517,8 +515,10 @@ class Playlist extends playlist_object
             $this->_update_user($data['pl_user']);
         }
 
-        if (isset($data['collaborate']) && $data['collaborate'] != $this->collaborate) {
-            $this->_update_collaborate($data['collaborate']);
+        $new_list    = (!empty($data['collaborate'])) ? $data['collaborate'] : [];
+        $collaborate = (!empty($new_list)) ? implode(',', $new_list) : '';
+        if (is_array($new_list) && $collaborate != $this->collaborate) {
+            $this->_update_collaborate($new_list);
         }
 
         if (isset($data['last_count']) && $data['last_count'] != $this->last_count) {
@@ -580,7 +580,9 @@ class Playlist extends playlist_object
             $this->collaborate = $collaborate;
         }
 
-        $sql = "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";
+        $sql = (empty($collaborate))
+            ? "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;"
+            : "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";
         Dba::write($sql, [$this->id]);
 
         foreach ($new_list as $user_id) {

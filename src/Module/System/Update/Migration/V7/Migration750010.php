@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -18,34 +20,25 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Util;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-use Curl\Curl;
+use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-interface UtilityFactoryInterface
+/**
+ * Add `collaborate` to the playlist table to allow other users to add songs to the list
+ */
+final class Migration750010 extends AbstractMigration
 {
-    public function createMailer(): MailerInterface;
+    protected array $changelog = ['Alter `playlist_id` on the user_playlist_map table to allow search collaboration'];
 
-    /**
-     * Returns a new VaInfo instance
-     *
-     * @param string[] $gatherTypes
-     */
-    public function createVaInfo(
-        string $file,
-        array $gatherTypes = [],
-        ?string $encoding = null,
-        ?string $encodingId3v1 = null,
-        string $dirPattern = '',
-        string $filePattern = '',
-        bool $isLocal = true
-    ): VaInfo;
+    public function migrate(): void
+    {
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
 
-    /**
-     * Returns a new Curl instance
-     */
-    public function createCurl(): Curl;
+        $this->updateDatabase("ALTER TABLE `user_playlist_map` MODIFY COLUMN `playlist_id` varchar(16) CHARACTER SET $charset COLLATE $collation DEFAULT NULL;");
+    }
 }

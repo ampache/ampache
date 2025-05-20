@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
@@ -74,7 +73,7 @@ final class GetArt5Method
         }
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
-        $size      = $input['size'] ?? 'original';
+        $size      = (string)($input['size'] ?? 'original');
         $fallback  = (array_key_exists('fallback', $input) && (int)$input['fallback'] == 1);
 
         // confirm the correct data
@@ -109,56 +108,8 @@ final class GetArt5Method
             $art       = new Art($song->album, 'album');
         }
 
-        if ($art->has_db_info($size, $fallback)) {
-            header('Access-Control-Allow-Origin: *');
-            if (
-                $size &&
-                preg_match('/^[0-9]+x[0-9]+$/', $size)
-            ) {
-                if ($art->thumb && $art->thumb_mime) {
-                    // found the thumb by looking up the size
-                    $art->raw_mime = $art->thumb_mime;
-                    $art->raw      = $art->thumb;
-                } elseif (AmpConfig::get('resize_images')) {
-                    // resize the image if requested
-                    $dimensions     = explode('x', $size);
-                    $size           = [];
-                    $size['width']  = (int)$dimensions[0];
-                    $size['height'] = (int)$dimensions[1];
-                    if ($size['width'] === 0 || $size['height'] === 0) {
-                        // art not found
-                        http_response_code(404);
+        Session::extend($input['auth'], AccessTypeEnum::API->value);
 
-                        return false;
-                    }
-
-                    $thumb = $art->get_thumb($size);
-                    if (!empty($thumb)) {
-                        header('Content-type: ' . $thumb['thumb_mime']);
-                        header('Content-Length: ' . strlen((string)$thumb['thumb']));
-                        echo $thumb['thumb'];
-                        Session::extend($input['auth'], AccessTypeEnum::API->value);
-
-                        return true;
-                    }
-
-                    // art not found
-                    http_response_code(404);
-
-                    return false;
-                }
-            }
-
-            header('Content-type: ' . $art->raw_mime);
-            header('Content-Length: ' . strlen((string) $art->raw));
-            echo $art->raw;
-            Session::extend($input['auth'], AccessTypeEnum::API->value);
-
-            return true;
-        }
-        // art not found
-        http_response_code(404);
-
-        return false;
+        return $art->show($size, $fallback);
     }
 }

@@ -373,9 +373,12 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         }
 
         $album_id = Dba::insert_id();
+        if (!$album_id) {
+            return 0;
+        }
         debug_event(self::class, sprintf('check album: created {%s}', $album_id), 4);
         // map the new id
-        Catalog::update_map($catalog_id, 'album', $album_id);
+        Catalog::update_map($catalog_id, 'album', (int)$album_id);
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && AmpConfig::get('wanted')) {
             $user = Core::get_global('user');

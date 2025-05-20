@@ -28,6 +28,9 @@ namespace Ampache\Module\Application\Label;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -59,20 +62,32 @@ final class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
+        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
+            throw new AccessDeniedException('Access Denied: label features are not enabled.');
+        }
+
         $labelId = (int) ($request->getQueryParams()['label_id'] ?? 0);
 
         $this->ui->showHeader();
-        $this->ui->showConfirmation(
-            T_('Are You Sure?'),
-            T_('This Label will be deleted'),
-            sprintf(
-                '%s/labels.php?action=confirm_delete&label_id=%s',
-                $this->configContainer->getWebPath('/client'),
-                $labelId
-            ),
-            1,
-            'delete_label'
-        );
+
+        if (
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === true &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)
+        ) {
+            $this->ui->showConfirmation(
+                T_('Are You Sure?'),
+                T_('This Label will be deleted'),
+                sprintf(
+                    '%s/labels.php?action=confirm_delete&label_id=%s',
+                    $this->configContainer->getWebPath('/client'),
+                    $labelId
+                ),
+                1,
+                'delete_label'
+            );
+        } else {
+            throw new AccessDeniedException();
+        }
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

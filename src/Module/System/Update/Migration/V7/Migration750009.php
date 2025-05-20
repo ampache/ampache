@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -18,34 +20,24 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Util;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-use Curl\Curl;
+use Ampache\Module\System\Dba;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-interface UtilityFactoryInterface
+/**
+ * Add `collaborate` to the playlist table to allow other users to add songs to the list
+ */
+final class Migration750009 extends AbstractMigration
 {
-    public function createMailer(): MailerInterface;
+    protected array $changelog = ['Add `collaborate` to the search table to allow other users to see private lists'];
 
-    /**
-     * Returns a new VaInfo instance
-     *
-     * @param string[] $gatherTypes
-     */
-    public function createVaInfo(
-        string $file,
-        array $gatherTypes = [],
-        ?string $encoding = null,
-        ?string $encodingId3v1 = null,
-        string $dirPattern = '',
-        string $filePattern = '',
-        bool $isLocal = true
-    ): VaInfo;
-
-    /**
-     * Returns a new Curl instance
-     */
-    public function createCurl(): Curl;
+    public function migrate(): void
+    {
+        if (!Dba::read('SELECT `collaborate` FROM `search` LIMIT 1;', [], true)) {
+            $this->updateDatabase("ALTER TABLE `search` ADD COLUMN `collaborate` varchar(255) NULL;");
+        }
+    }
 }

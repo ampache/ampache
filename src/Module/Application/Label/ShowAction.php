@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Label;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Label;
@@ -70,53 +71,66 @@ final class ShowAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
+            throw new AccessDeniedException('Access Denied: label features are not enabled.');
+        }
+
         $this->ui->showHeader();
 
-        $label_id = (int)($request->getQueryParams()['label'] ?? 0);
-        if (!$label_id) {
-            $name = $_REQUEST['name'] ?? null;
-            if ($name !== null) {
-                $label_id = $this->labelRepository->lookup((string) $name);
-            }
+        $input = $request->getQueryParams();
+
+        // lookup by ID
+        $label_id = (isset($input['label'])) ? (int)$input['label'] : null;
+        $label    = (is_int($label_id))
+            ? $this->labelRepository->findById($label_id)
+            : null;
+        // lookup by name if ID didn't work
+        $label_name = (isset($input['name'])) ? urldecode((string)$input['name']) : null;
+        if (!$label && $label_name !== null) {
+            $label_id = $this->labelRepository->lookup($label_name);
+            $label    = ($label_id > 0)
+                ? $this->labelRepository->findById($label_id)
+                : null;
         }
-        if ($label_id < 1) {
+
+        if ($label_id !== null && $label === null) {
             $this->logger->warning(
                 'Requested a label that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');
             $this->ui->showFooter();
-        } else {
-            $label = $this->labelRepository->findById($label_id);
 
-            if ($label !== null) {
-                $this->ui->show(
-                    'show_label.inc.php',
-                    [
-                        'label' => $label,
-                        'object_ids' => $label->get_artists(),
-                        'object_type' => 'artist',
-                        'isLabelEditable' => $this->isEditable(
-                            $gatekeeper->getUserId(),
-                            $label
-                        )
-                    ]
-                );
+            return null;
+        } elseif ($label instanceof Label) {
+            $this->ui->show(
+                'show_label.inc.php',
+                [
+                    'label' => $label,
+                    'object_ids' => $label->get_artists(),
+                    'object_type' => 'artist',
+                    'isLabelEditable' => $this->isEditable(
+                        $gatekeeper->getUserId(),
+                        $label
+                    )
+                ]
+            );
 
-                $this->ui->showFooter();
-            }
+            $this->ui->showFooter();
 
             return null;
         }
+
+        // if you didn't set a label_id or name, show the add label form
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === true &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) === true
         ) {
             $this->ui->show(
                 'show_add_label.inc.php'
             );
         } else {
-            echo T_('The Label cannot be found');
+            throw new AccessDeniedException();
         }
 
         $this->ui->showQueryStats();
@@ -129,7 +143,7 @@ final class ShowAction implements ApplicationActionInterface
         int $userId,
         Label $label
     ): bool {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) === true) {
             if ($label->user !== null && $userId == $label->user) {
                 return true;
             }

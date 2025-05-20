@@ -29,18 +29,21 @@ use Ampache\Module\System\Session;
 
 class UPnPDevice
 {
-    private $_settings = [
+    /** @var array{
+     *     descriptionURL: string,
+     *     host: string,
+     *     controlURLs: array<string, string>,
+     *     eventURLs: array<string, string>
+     * }
+     */
+    private array $_settings = [
         "descriptionURL" => "",
         "host" => "",
         "controlURLs" => [],
         "eventURLs" => []
     ];
 
-    /**
-     * UPnPDevice constructor.
-     * @param string $descriptionUrl
-     */
-    public function __construct($descriptionUrl)
+    public function __construct(string $descriptionUrl)
     {
         if (!$this->restoreDescriptionUrl($descriptionUrl)) {
             $this->parseDescriptionUrl($descriptionUrl);
