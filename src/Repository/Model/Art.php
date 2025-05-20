@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Plugin\AmpacheDiscogs;
 use Ampache\Plugin\AmpacheMusicBrainz;
 use Ampache\Plugin\AmpacheTheaudiodb;
