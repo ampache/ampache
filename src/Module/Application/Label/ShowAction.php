@@ -71,6 +71,10 @@ final class ShowAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
+            throw new AccessDeniedException('Access Denied: label features are not enabled.');
+        }
+
         $this->ui->showHeader();
 
         $input = $request->getQueryParams();

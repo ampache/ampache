@@ -71,6 +71,10 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
+        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
+            throw new AccessDeniedException('Access Denied: label features are not enabled.');
+        }
+
         $body    = $request->getQueryParams();
         $labelId = (int)($body['label_id'] ?? 0);
 
