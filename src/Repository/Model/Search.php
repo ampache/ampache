@@ -1990,6 +1990,21 @@ class Search extends playlist_object
         $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ?, `last_update` = ? WHERE `id` = ?";
         Dba::write($sql, [$this->name, $this->type, $this->user, $this->username, json_encode($this->rules), $this->logic_operator, (int)$this->random, $this->limit, time(), $this->id]);
 
+        // update collaborate mapping for searches
+        if (isset($data['collaborate']) && $data['collaborate'] != $this->collaborate) {
+            $new_list    = $data['collaborate'];
+            $collaborate = implode(',', $new_list);
+            $this->collaborate = $collaborate;
+
+            $sql = "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";
+            Dba::write($sql, ['smart_' . $this->id]);
+
+            foreach ($new_list as $user_id) {
+                $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);";
+                Dba::write($sql, ['smart_' . $this->id, $user_id]);
+            }
+        }
+
         return $this->id;
     }
 
