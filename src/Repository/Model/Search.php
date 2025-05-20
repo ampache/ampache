@@ -1972,25 +1972,22 @@ class Search extends playlist_object
      */
     public function update(?array $data = null): int
     {
+        if ($this->isNew()) {
+            return 0;
+        }
+
         if ($data !== null) {
             $this->name        = $data['name'] ?? $this->name;
             $this->type        = $data['pl_type'] ?? $this->type;
             $this->user        = $data['pl_user'] ?? $this->user;
             $this->random      = $data['random'] ?? $this->random;
             $this->limit       = $data['limit'] ?? $this->limit;
-            $new_list          = [];
-            if (!empty($data['collaborate']) && implode(',', $data['collaborate']) != $this->collaborate) {
-                $new_list          = $data['collaborate'];
-                $collaborate       = implode(',', $new_list);
-                $this->collaborate = $collaborate;
-            }
+            $new_list          = (isset($data['collaborate'])) ? $data['collaborate'] : [];
+            $collaborate       = (!empty($new_list)) ? implode(',', $new_list) : '';
+            $this->collaborate = ($collaborate != $this->collaborate) ? $collaborate : $this->collaborate;
         }
 
         $this->username = User::get_username((int)$this->user);
-
-        if ($this->isNew()) {
-            return 0;
-        }
 
         $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ?, `last_update` = ? WHERE `id` = ?";
         Dba::write($sql, [$this->name, $this->type, $this->user, $this->username, json_encode($this->rules), $this->logic_operator, (int)$this->random, $this->limit, time(), $this->id]);
