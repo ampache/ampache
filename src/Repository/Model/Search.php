@@ -1997,10 +1997,11 @@ class Search extends playlist_object
                 : "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $this->collaborate . ");";
             Dba::write($sql, ['smart_' . $this->id]);
 
-            // update collaborate mapping for searches
-            foreach (explode(',', $this->collaborate) as $user_id) {
-                $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);";
-                Dba::write($sql, ['smart_' . $this->id, $user_id]);
+            if (!empty($this->collaborate)) {
+                foreach (explode(',', $this->collaborate) as $user_id) {
+                    $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);";
+                    Dba::write($sql, ['smart_' . $this->id, $user_id]);
+                }
             }
         }
 

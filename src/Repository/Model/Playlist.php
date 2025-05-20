@@ -515,10 +515,10 @@ class Playlist extends playlist_object
             $this->_update_user($data['pl_user']);
         }
 
-        $new_list    = (isset($data['collaborate'])) ? $data['collaborate'] : [];
+        $new_list    = (!empty($data['collaborate'])) ? $data['collaborate'] : [];
         $collaborate = (!empty($new_list)) ? implode(',', $new_list) : '';
-        if ($collaborate != $this->collaborate) {
-            $this->_update_collaborate($data['collaborate']);
+        if (is_array($new_list) && $collaborate != $this->collaborate) {
+            $this->_update_collaborate($new_list);
         }
 
         if (isset($data['last_count']) && $data['last_count'] != $this->last_count) {
