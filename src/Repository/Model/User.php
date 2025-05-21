@@ -808,9 +808,13 @@ class User extends database_object
         }
 
         // Forbid username or fullname to have an URL (usually spambot)
+        $name_filter = AmpConfig::get('user_name_filter');
         if (
-            preg_match('/https?:\/\//i', $username) ||
-            preg_match('/https?:\/\//i', $fullname)
+            $name_filter &&
+            (
+                preg_match('/' . $name_filter . '/i', $username) ||
+                preg_match('/' . $name_filter . '/i', $fullname)
+            )
         ) {
             debug_event(self::class, 'Checking for spambot: look like spambot to me. Won\'t create user. ' . json_encode(['username' => $username,'fullname' => $fullname,'ip' => Core::get_user_ip()]), 1);
 
@@ -818,7 +822,11 @@ class User extends database_object
         }
 
         // Forbid website with markdown syntax => (usually spambot)
-        if (preg_match('/\[url=http/i', $website)) {
+        $site_filter = AmpConfig::get('user_website_filter');
+        if (
+            $site_filter &&
+            preg_match('/' . $site_filter . '/i', $website)
+        ) {
             debug_event(self::class, 'Checking for spambot: look like spambot to me. Won\'t create user. ' . json_encode(['website' => $website, 'ip' => Core::get_user_ip() ]), 1);
 
             return 0;
