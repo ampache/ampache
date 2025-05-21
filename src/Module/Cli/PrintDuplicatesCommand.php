@@ -28,6 +28,7 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Song;
 
 final class PrintDuplicatesCommand extends Command
 {
@@ -107,8 +108,12 @@ final class PrintDuplicatesCommand extends Command
                 default => null,
             };
 
+            if ($allowedKeys === null) {
+                continue;
+            }
+
             // songs are missing some data
-            if ($type === 'song') {
+            if ($object instanceof Song) {
                 $object->get_album_fullname();
                 $object->get_artist_fullname();
             }
@@ -133,7 +138,7 @@ final class PrintDuplicatesCommand extends Command
             }
 
             // print in a tsv format
-            print_r(implode("\t", array_map(fn ($v) => is_scalar($v) ? $v : json_encode($v), $row)) . "\n");
+            print_r(implode("\t", $row) . "\n");
         }
 
         print_r("\n" . T_('Done') . "\n");
