@@ -1141,8 +1141,13 @@ registration_display_fields = "fullname,website"
 ; DEFAULT: "fullname"
 registration_mandatory_fields = "fullname"
 
-user_name_filter = "/https?:\/\/"
-user_website_filter = "\[url=http"
+; User create field validation
+; Regex filters for username, fullname and website validation
+; If you run a site with public registration you may  want to
+; filter these fields for spam or other unwanted content.
+; DEFAULT: none
+;user_name_filter = "/https?:\/\/"
+;user_website_filter = "\[url=http"
 
 ;#########################################################
 ; These options control the dynamic downsampling based   #
