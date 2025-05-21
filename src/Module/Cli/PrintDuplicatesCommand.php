@@ -29,7 +29,7 @@ use Ahc\Cli\Input\Command;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Search;
 
-final class FindDuplicatesCommand extends Command
+final class PrintDuplicatesCommand extends Command
 {
     private ModelFactoryInterface $modelFactory;
 
@@ -45,13 +45,13 @@ final class FindDuplicatesCommand extends Command
     public function __construct(
         ModelFactoryInterface $modelFactory
     ) {
-        parent::__construct('find:duplicates', T_('Possible Duplicate'));
+        parent::__construct('print:duplicates', T_('Possible Duplicate'));
 
         $this->modelFactory = $modelFactory;
 
         $this
             ->option('-t|--type', T_('Object Type'), 'strval', 'album')
-            ->usage('<bold>  find:duplicates</end> ## ' . T_('Possible Duplicate Albums') . '<eol/>');
+            ->usage('<bold>  print:duplicates</end> ## ' . T_('Possible Duplicate Albums') . '<eol/>');
     }
 
     public function execute(): void
