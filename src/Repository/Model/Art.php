@@ -1372,10 +1372,20 @@ class Art extends database_object
             return false;
         }
 
-        $has_db = self::has_db($object_id, $object_type, $kind);
+        $art    = new Art($object_id, $object_type, $kind);
+        $has_db = $art->has_db_info();
         // Don't show any image if not available
         if (!$show_default && !$has_db) {
             return false;
+        }
+
+        // Expand wide art slightly if it's larger than the desired thumbnail size
+        if (!$thumb_link) {
+            $src_ratio = $art->width / $art->height;
+            $dst_ratio = $size['width'] / $size['height'];
+            if ($src_ratio > $dst_ratio) {
+                $size['width'] = (int)($size['width'] * 1.25);
+            }
         }
 
         // double the image output size for display scaling
