@@ -816,7 +816,7 @@ class User extends database_object
                 preg_match('/' . $name_filter . '/i', $fullname)
             )
         ) {
-            debug_event(self::class, 'Checking for spambot: look like spambot to me. Won\'t create user. ' . json_encode(['username' => $username,'fullname' => $fullname,'ip' => Core::get_user_ip()]), 1);
+            debug_event(self::class, 'Checking for spambot: matched regex (' . $name_filter . '). Won\'t create user. ' . json_encode(['username' => $username,'fullname' => $fullname,'ip' => Core::get_user_ip()]), 1);
 
             return 0;
         }
@@ -827,7 +827,7 @@ class User extends database_object
             $site_filter &&
             preg_match('/' . $site_filter . '/i', $website)
         ) {
-            debug_event(self::class, 'Checking for spambot: look like spambot to me. Won\'t create user. ' . json_encode(['website' => $website, 'ip' => Core::get_user_ip() ]), 1);
+            debug_event(self::class, 'Checking for spambot: matched regex (' . $site_filter . '). Won\'t create user. ' . json_encode(['website' => $website, 'ip' => Core::get_user_ip() ]), 1);
 
             return 0;
         }
