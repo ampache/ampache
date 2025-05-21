@@ -87,9 +87,32 @@ final class PrintDuplicatesCommand extends Command
             true
         );
 
+        // Use the properties of each type as column headers
+        $printedHeader = false;
+
         foreach ($query['results'] as $duplicate) {
-            $interactor->info(
-                "\n" . T_('Possible Duplicate') . ': ' . print_r($duplicate, true),
+            $object = match ($type) {
+                'album' => $this->modelFactory->createAlbum($duplicate),
+                'album_disk' => $this->modelFactory->createAlbumDisk($duplicate),
+                'artist', 'album_artist', 'song_artist' => $this->modelFactory->createArtist($duplicate),
+                'song' => $this->modelFactory->createSong($duplicate),
+                default => null,
+            };
+
+            if ($object === null) {
+                continue;
+            }
+
+            $props = get_object_vars($object);
+
+            if (!$printedHeader) {
+                $interactor->info(implode("\t", array_keys($props)), true);
+                $printedHeader = true;
+            }
+
+            // print in a tsv format
+            $interactor->write(
+                implode("\t", array_map(fn($v) => is_scalar($v) ? $v : json_encode($v), $props)),
                 true
             );
         }
