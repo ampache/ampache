@@ -71,6 +71,10 @@ class Art extends database_object
 
     public int $object_id;
 
+    public int $width = 0;
+
+    public int $height = 0;
+
     public string $raw = '';
 
     public string $raw_mime = '';
@@ -238,7 +242,7 @@ class Art extends database_object
      */
     public function get_image(bool $fallback = false): bool
     {
-        $sql         = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = 'original' AND `kind` = ?";
+        $sql         = "SELECT `id`, `image`, `width`, `height`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = 'original' AND `kind` = ?";
         $db_results  = Dba::read($sql, [$this->object_type, $this->object_id, $this->kind]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -250,6 +254,8 @@ class Art extends database_object
 
             $this->raw_mime = $results['mime'];
             $this->id       = (int)$results['id'];
+            $this->width    = (int)$results['width'];
+            $this->height   = (int)$results['height'];
         }
 
         // return a default image if fallback is requested
@@ -297,15 +303,17 @@ class Art extends database_object
 
         // Thumbnails might already be in the database
         if ($width > 0 && $height > 0) {
-            $sql    = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND (`size` = ? OR (`size` = 'original' AND `width` = ? AND `height` = ?)) AND `kind` = ?";
+            $sql    = "SELECT `id`, `image`, `width`, `height`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND (`size` = ? OR (`size` = 'original' AND `width` = ? AND `height` = ?)) AND `kind` = ?";
             $params = [$this->object_type, $this->object_id, $size, $width, $height, $this->kind];
         } else {
-            $sql    = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ? AND `kind` = ?";
+            $sql    = "SELECT `id`, `image`, `width`, `height`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ? AND `kind` = ?";
             $params = [$this->object_type, $this->object_id, $size, $this->kind];
         }
         $db_results = Dba::read($sql, $params);
         if ($results = Dba::fetch_assoc($db_results)) {
             $this->id         = (int)$results['id'];
+            $this->width      = (int)$results['width'];
+            $this->height     = (int)$results['height'];
             $this->thumb_mime = $results['mime'];
             $this->thumb      = (AmpConfig::get('album_art_store_disk'))
                 ? (string)self::read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime'])
