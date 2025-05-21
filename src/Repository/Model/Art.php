@@ -112,6 +112,14 @@ class Art extends database_object
         return $this->id ?: 0;
     }
 
+    private static function _hasGD(): bool
+    {
+        return (
+            AmpConfig::get('resize_images') &&
+            ((extension_loaded('gd') || extension_loaded('gd2')) && function_exists('gd_info'))
+        );
+    }
+
     public static function is_valid_type(?string $type = null): bool
     {
         if (!$type) {
@@ -283,8 +291,7 @@ class Art extends database_object
     {
         if (
             $size === 'original' ||
-            !AmpConfig::get('resize_images') ||
-            (extension_loaded('gd') === false || extension_loaded('gd2') === false)
+            !self::_hasGD()
         ) {
             return $this->get_image($fallback);
         }
@@ -878,7 +885,7 @@ class Art extends database_object
             return [];
         }
 
-        if (!function_exists('gd_info')) {
+        if (!self::_hasGD()) {
             debug_event(self::class, 'PHP-GD Not found - unable to resize art', 1);
 
             return [];
@@ -1102,7 +1109,8 @@ class Art extends database_object
 
         $key = $type . $uid;
 
-        if (parent::is_cached('art', $key . '275x275') && AmpConfig::get('resize_images')) {
+        $has_gd = self::_hasGD();
+        if ($has_gd && parent::is_cached('art', $key . '275x275')) {
             $row  = parent::get_from_cache('art', $key . '275x275');
             $mime = $row['mime'];
         }
@@ -1120,7 +1128,7 @@ class Art extends database_object
                 parent::add_to_cache('art', $key . $row['size'], $row);
                 if ($row['size'] == 'original') {
                     $mime = $row['mime'];
-                } elseif ($row['size'] == '275x275' && AmpConfig::get('resize_images')) {
+                } elseif ($has_gd && $row['size'] == '275x275') {
                     $thumb_mime = $row['mime'];
                 }
             }
@@ -1492,7 +1500,7 @@ class Art extends database_object
                     // found the thumb by looking up the size
                     $this->raw_mime = $this->thumb_mime;
                     $this->raw      = $this->thumb;
-                } elseif (AmpConfig::get('resize_images')) {
+                } elseif (self::_hasGD()) {
                     // resize the image if requested
                     $dimensions     = explode('x', $size);
                     $size           = [];

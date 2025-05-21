@@ -172,6 +172,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                         $art->raw      = $art->thumb;
                     }
                 } elseif (array_key_exists('thumb', $_GET) && $thumb > 0) {
+                    // thumbs should be avoided but can still be used
                     $size       = Art::get_thumb_size($thumb);
                     $thumb_data = $art->get_thumb($size);
                     if ($art->id > 0) {
