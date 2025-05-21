@@ -807,6 +807,26 @@ class User extends database_object
             return 0;
         }
 
+        // Forbid username or fullname to have an URL => usually spambot
+        foreach (['http://', 'https://'] as $nope) {
+            foreach ([$username, $fullname] as $pp) {
+                $pos = stripos($pp, $nope);
+                debug_event(self::class, 'Checking for spambot ' . json_encode(['checking' => $pp, 'value' => $nope, 'result' => $pos]), 3);
+                if ($pos !== false) {
+                    debug_event(self::class, 'Checking for spambot: look like spambot to me. Won\'t create user. ' . json_encode(['username' => $username,'fullname' => $fullname, 'ip' => Core::get_user_ip() ]), 1);
+
+                    return 0;
+                }
+            }
+        }
+        // Forbid website with markdown syntax => usually spambot
+        $pos = stripos($website, '[url=http');
+        if ($pos !== false) {
+            debug_event(self::class, 'Checking for spambot: look like spambot to me. Won\'t create user. ' . json_encode(['website' => $website, 'ip' => Core::get_user_ip() ]), 1);
+
+            return 0;
+        }
+
         $website = rtrim((string)$website, "/");
         if (!$encrypted) {
             $password = hash('sha256', $password);
