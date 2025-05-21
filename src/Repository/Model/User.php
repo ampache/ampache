@@ -807,6 +807,31 @@ class User extends database_object
             return 0;
         }
 
+        // Forbid username or fullname to have an URL (usually spambot)
+        $name_filter = AmpConfig::get('user_name_filter');
+        if (
+            $name_filter &&
+            (
+                preg_match('/' . $name_filter . '/i', $username) ||
+                preg_match('/' . $name_filter . '/i', $fullname)
+            )
+        ) {
+            debug_event(self::class, 'Checking for spambot: matched regex (' . $name_filter . '). Won\'t create user. ' . json_encode(['username' => $username,'fullname' => $fullname,'ip' => Core::get_user_ip()]), 1);
+
+            return 0;
+        }
+
+        // Forbid website with markdown syntax (usually spambot)
+        $site_filter = AmpConfig::get('user_website_filter');
+        if (
+            $site_filter &&
+            preg_match('/' . $site_filter . '/i', $website)
+        ) {
+            debug_event(self::class, 'Checking for spambot: matched regex (' . $site_filter . '). Won\'t create user. ' . json_encode(['website' => $website, 'ip' => Core::get_user_ip() ]), 1);
+
+            return 0;
+        }
+
         $website = rtrim((string)$website, "/");
         if (!$encrypted) {
             $password = hash('sha256', $password);
