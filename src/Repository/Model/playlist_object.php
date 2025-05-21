@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
@@ -81,6 +82,14 @@ abstract class playlist_object extends database_object implements library_item
      */
     abstract public function get_items(): array;
 
+    abstract public function set_last(int $count, string $column): void;
+
+    /**
+     * update_item
+     * This is the generic update function, it does the escaping and error checking
+     */
+    abstract public function update_item(string $field, int|string $value): bool;
+
     public function getId(): int
     {
         return (int)($this->id ?? 0);
@@ -89,6 +98,96 @@ abstract class playlist_object extends database_object implements library_item
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    /**
+     * update
+     * This function takes a key'd array of data and runs updates
+     * @param null|array{
+     *     name?: ?string,
+     *     pl_type?: ?string,
+     *     pl_user?: ?int,
+     *     collaborate?: null|list<string>,
+     *     last_count?: ?int,
+     *     last_duration?: ?int,
+     *     random?: ?int,
+     *     limit?: int,
+     * } $data
+     */
+    public function update(?array $data = null): int
+    {
+        if ($this->isNew() || $data === null) {
+            return 0;
+        }
+
+        if (isset($data['name']) && $data['name'] != $this->name) {
+            $this->update_item('name', $data['name']);
+        }
+
+        if (isset($data['pl_type']) && $data['pl_type'] != $this->type) {
+            $this->update_item('type', $data['pl_type']);
+        }
+
+        if (isset($data['pl_user']) && $data['pl_user'] != $this->user) {
+            $this->user     = (int)$data['pl_user'];
+            $this->username = User::get_username($this->user);
+            $this->update_item('user', $data['pl_user']);
+            $this->update_item('username', $this->username);
+        }
+
+        if ($this instanceof Search) {
+            $random = $data['random'] ?? 0;
+            if ($random != $this->random) {
+                $this->update_item('random', $random);
+            }
+
+            $limit = $data['limit'] ?? 0;
+            if ($limit != $this->limit) {
+                $this->update_item('limit', $limit);
+            }
+        }
+
+        $new_list    = (!empty($data['collaborate'])) ? $data['collaborate'] : [];
+        $collaborate = (!empty($new_list)) ? implode(',', $new_list) : '';
+        if (is_array($new_list) && $collaborate != $this->collaborate) {
+            $playlist_id = ($this instanceof Search)
+                ? 'smart_' . $this->id
+                : $this->id;
+            $this->_update_collaborate($new_list, $playlist_id);
+        }
+
+        if (isset($data['last_count']) && $data['last_count'] != $this->last_count) {
+            $this->set_last($data['last_count'], 'last_count');
+        }
+
+        if (isset($data['last_duration']) && $data['last_duration'] != $this->last_duration) {
+            $this->set_last($data['last_duration'], 'last_duration');
+        }
+
+        return $this->id;
+    }
+
+    /**
+     * _update_collaborate
+     * This updates playlist collaborators, it calls the generic update_item function
+     * @param string[] $new_list
+     */
+    private function _update_collaborate(array $new_list, int|string $playlist_id): void
+    {
+        $collaborate = implode(',', $new_list);
+        if ($this->update_item('collaborate', $collaborate)) {
+            $this->collaborate = $collaborate;
+
+            $sql = (empty($collaborate))
+                ? "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;"
+                : "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";
+            Dba::write($sql, [$playlist_id]);
+
+            foreach ($new_list as $user_id) {
+                $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);";
+                Dba::write($sql, [$playlist_id, $user_id]);
+            }
+        }
     }
 
     /**

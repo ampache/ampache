@@ -67,7 +67,6 @@ final class AddLabelAction implements ApplicationActionInterface
         // Must be at least a content manager or edit upload enabled
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) === false ||
             !$this->requestParser->verifyForm('add_label')
         ) {
             throw new AccessDeniedException();
