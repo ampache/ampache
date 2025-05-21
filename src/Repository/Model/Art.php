@@ -281,7 +281,11 @@ class Art extends database_object
      */
     public function has_db_info(string $size = 'original', bool $fallback = false): bool
     {
-        if ($size === 'original') {
+        if (
+            $size === 'original' ||
+            !AmpConfig::get('resize_images') ||
+            (extension_loaded('gd') === false || extension_loaded('gd2') === false)
+        ) {
             return $this->get_image($fallback);
         }
 
@@ -325,10 +329,7 @@ class Art extends database_object
         }
 
         // If there is no thumb in the database and we want one we have to generate it
-        if (
-            AmpConfig::get('resize_images') &&
-            $this->get_image($fallback)
-        ) {
+        if ($this->get_image($fallback)) {
             $data = $this->generate_thumb($this->raw, $thumb_size, $this->raw_mime);
 
             // thumb wasn't generated

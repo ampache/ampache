@@ -109,10 +109,7 @@ if (AmpConfig::get('external_links_musicbrainz')) {
 } ?>
     </div>
 <?php $name = '[' . scrub_out($albumDisk->get_artist_fullname()) . '] ' . scrub_out($f_name);
-$size       = Ui::is_grid_view('album')
-    ? ['width' => 150, 'height' => 150]
-    : ['width' => 384, 'height' => 384];
-Art::display('album', $albumDisk->album_id, $name, $size, null, true, false); ?>
+Art::display('album', $albumDisk->album_id, $name, ['width' => 384, 'height' => 384], null, true, false); ?>
 </div>
 <?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
     <span id="rating_<?php echo $albumDisk->id; ?>_album_disk">
