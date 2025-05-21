@@ -10,6 +10,8 @@ Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions for
 
 Art is a big focus on this release, many issues with the data and thumbnail generation have been fixed
 
+WebDav has been cleaned up with output path name validaiton and now supports your using your web browser
+
 ### Added
 
 * Add PHP8.4 to GitHub QA actions
@@ -33,7 +35,7 @@ Art is a big focus on this release, many issues with the data and thumbnail gene
   * Add Interactor to Catalog check actions
   * Add Interactor to cli database query errors
 * Search
-  * Allow collaboartion with smartlists
+  * Allow collaboration with smartlists
   * Add collaborate check to access queries
 * Subsonic remote catalog
   * Missing `getArtist` call
@@ -59,7 +61,7 @@ Art is a big focus on this release, many issues with the data and thumbnail gene
 * Ampache remote catalog
   * Use new Api function `song_tags` to pull more data for song import. (If available)
 * Plugin
-  * Allow hiding Catalog Favorites (Highlight) items setting maxitems to `-1`
+  * Allow hiding Catalog Favorites (Highlight) items setting `maxitems` to `-1`
 
 ### Removed
 
@@ -105,13 +107,13 @@ Art is a big focus on this release, many issues with the data and thumbnail gene
   * Limit and random would not update if unset
   * Playlist collaborate mapping being incorrectly joined in PlaylistSearch queries
 * Ampache remote catalog
-  * Regex for file url could remove more parameters than required
-  * Update url filename path to make sure it's valid
+  * Regex for file URL could remove more parameters than required
+  * Update URL filename path to make sure it's valid
 * Subsonic
   * Send genre string correctly for more than one genre instead of just the first result
   * Check for Album Artist using `findAlbumArtist`
 * Subsonic remote catalog
-  * Forcing fallback port 4040
+  * Stop forcing fallback port 4040
   * Image size was being sent as an array of height and width (You just send one int value)
   * Use max value of `album_art_max_width` and `album_art_max_height` for image size if set
 * Search
