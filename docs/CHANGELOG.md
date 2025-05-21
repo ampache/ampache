@@ -12,6 +12,7 @@ Art is a big focus on this release, many issues with the data and thumbnail gene
 
 ### Added
 
+* Add PHP8.4 to GitHub QA actions
 * Add a size parameter to `image.php` art URL's
 * Add width and height properties to Art objects
 * Add example `update_docker_compose.sh` to pull and update your container when updates are available
@@ -20,8 +21,10 @@ Art is a big focus on this release, many issues with the data and thumbnail gene
 * Typing to plugin properties and functions
 * Typing to catalog modules
 * Add options for sharing private smart lists with users using the Collaborate feature
-* Config version 81
+* Config version 82
   * Add option `upscale_images` that allows you to disable image upscaling
+  * Add `user_name_filter` to allow regex validation of usernames when creating a user
+  * Add `user_website_filter` to allow regex validation of websites when creating a user
 * CLI
   * New command `bin/cli print:duplicates` (Print a tab separated list of possible duplicates)
   * Print query error messages when running `admin:updateDatabase`
