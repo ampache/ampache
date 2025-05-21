@@ -821,7 +821,7 @@ class User extends database_object
             return 0;
         }
 
-        // Forbid website with markdown syntax => (usually spambot)
+        // Forbid website with markdown syntax (usually spambot)
         $site_filter = AmpConfig::get('user_website_filter');
         if (
             $site_filter &&
