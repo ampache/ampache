@@ -13,11 +13,13 @@ Art is a big focus on this release, many issues with the data and thumbnail gene
 ### Added
 
 * Add a size parameter to `image.php` art URL's
+* Add width and height properties to Art objects
 * Add example `update_docker_compose.sh` to pull and update your container when updates are available
 * WebDav Browser plugin, allowing direct browsing of your server
 * Show the structure with installed version in Ampache Debug when using a custom structure. (squashed and client)
 * Typing to plugin properties and functions
 * Typing to catalog modules
+* Add options for sharing private smart lists with users using the Collaborate feature
 * Config version 81
   * Add option `upscale_images` that allows you to disable image upscaling
 * CLI
@@ -25,9 +27,13 @@ Art is a big focus on this release, many issues with the data and thumbnail gene
   * Add `-f|--fix` parameter to run:calculateArtSize to look for bad files only
   * Add print text for find missing and clean actions
   * Add Interactor to Catalog check actions
+  * Add Interactor to cli database query errors
+* Search
+  * Allow collaboartion with smartlists
+  * Add collaborate check to access queries
 * Subsonic remote catalog
   * Missing `getArtist` call
-* Database 750008
+* Database 750010
   * Add `update_time` to `podcast_episode` table
   * Set `update_time` to NOT NULL on `video` table
   * Set `update_time` to NOT NULL on `song` table
@@ -35,9 +41,13 @@ Art is a big focus on this release, many issues with the data and thumbnail gene
   * Delete duplicates in the `image` table
   * Apply a unique constraint to the `image` table
   * Delete duplicate original images in the `image` table
+  * Add `collaborate` to the search table to allow other users to see private lists
+  * Alter `playlist_id` on the user_playlist_map table to allow search collaboration
 
 ### Changed
 
+* Deprecate thumb parameter for image links
+* Widen images that are larger than the squares on main object pages (e.g. Artist)
 * Update composer packages
 * Config `catalog_verify_by_time` checks file mod time only
 * Update vite to 6.2.7
@@ -74,6 +84,9 @@ Art is a big focus on this release, many issues with the data and thumbnail gene
 * Don't rely on format commands to fill empty `album_artist` for files missing album_artist tags
 * Beets catalog sending the id instead of the artist name to insert function
 * Unset variable warning for Upnp broadcast from web page
+* Delete empty playlist collaborate changes
+* Label pages were not checking config or user correctly allowing public entries (that failed)
+* Show Label action had many logic errors and missing returns
 * WebDav
   * Deprecated exec function
   * Listing children has been simplified and fixed up for all media types
@@ -83,6 +96,8 @@ Art is a big focus on this release, many issues with the data and thumbnail gene
   * run:calculateArtSize would only look for jpg files on disk
 * Search
   * Song search SQL joins for playlist name may not be in correct order
+  * Limit and random would not update if unset
+  * Playlist collaborate mapping being incorrectly joined in PlaylistSearch queries
 * Ampache remote catalog
   * Regex for file url could remove more parameters than required
   * Update url filename path to make sure it's valid
