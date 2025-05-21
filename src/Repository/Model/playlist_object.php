@@ -138,7 +138,7 @@ abstract class playlist_object extends database_object implements library_item
         if ($this instanceof Search) {
             $random = $data['random'] ?? 0;
             if ($random != $this->random) {
-                $this->update_item('random', $data['random']);
+                $this->update_item('random', $random);
             }
 
             $limit = $data['limit'] ?? 0;
