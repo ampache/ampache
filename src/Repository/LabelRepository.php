@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Label;
 use DateTimeInterface;
 use PDO;
@@ -136,7 +137,11 @@ final readonly class LabelRepository implements LabelRepositoryInterface
      */
     public function collectGarbage(): void
     {
-        $this->connection->query('DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
-        $this->connection->query('DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL');
+        try {
+            $this->connection->query('DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
+            $this->connection->query('DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL');
+        } catch (DatabaseException) {
+            debug_event(self::class, 'collectGarbage error', 5);
+        };
     }
 }

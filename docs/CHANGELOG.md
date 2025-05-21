@@ -23,6 +23,7 @@ Art is a big focus on this release, many issues with the data and thumbnail gene
 * Config version 81
   * Add option `upscale_images` that allows you to disable image upscaling
 * CLI
+  * New command `bin/cli print:duplicates` (Print a tab separated list of possible duplicates)
   * Print query error messages when running `admin:updateDatabase`
   * Add `-f|--fix` parameter to run:calculateArtSize to look for bad files only
   * Add print text for find missing and clean actions
@@ -87,6 +88,8 @@ Art is a big focus on this release, many issues with the data and thumbnail gene
 * Delete empty playlist collaborate changes
 * Label pages were not checking config or user correctly allowing public entries (that failed)
 * Show Label action had many logic errors and missing returns
+* Grid status checking on object page art may show small art in the wrong place
+* Ignore query errors on garbage collection (probable table locks, etc)
 * WebDav
   * Deprecated exec function
   * Listing children has been simplified and fixed up for all media types

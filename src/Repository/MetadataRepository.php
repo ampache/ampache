@@ -50,7 +50,11 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
      */
     public function collectGarbage(): void
     {
-        $this->connection->query('DELETE FROM `metadata` USING `metadata` LEFT JOIN `song` ON `song`.`id` = `metadata`.`object_id` WHERE `song`.`id` IS NULL;');
+        try {
+            $this->connection->query('DELETE FROM `metadata` USING `metadata` LEFT JOIN `song` ON `song`.`id` = `metadata`.`object_id` WHERE `song`.`id` IS NULL;');
+        } catch (DatabaseException) {
+            debug_event(self::class, 'collectGarbage error', 5);
+        };
     }
 
     /**
