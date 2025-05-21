@@ -115,10 +115,7 @@ if (AmpConfig::get('external_links_musicbrainz')) {
     <?php
     if ($album->name != T_('Unknown (Orphaned)')) {
         $name = '[' . $f_album_name . '] ' . scrub_out($f_name);
-        $size = Ui::is_grid_view('album')
-            ? ['width' => 150, 'height' => 150]
-            : ['width' => 384, 'height' => 384];
-        Art::display('album', $album->id, $name, $size, null, true, false);
+        Art::display('album', $album->id, $name, ['width' => 384, 'height' => 384], null, true, false);
     } ?>
 </div>
 <?php if (User::is_registered()) {
