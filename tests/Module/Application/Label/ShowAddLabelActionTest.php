@@ -67,11 +67,11 @@ class ShowAddLabelActionTest extends MockeryTestCase
                 AccessLevelEnum::CONTENT_MANAGER
             )
             ->once()
-            ->andReturnFalse();
+            ->andReturnTrue();
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
-            ->once()
+            ->with(ConfigurationKeyEnum::LABEL)
+            ->twice()
             ->andReturnTrue();
 
         $this->ui->shouldReceive('showHeader')
@@ -106,9 +106,9 @@ class ShowAddLabelActionTest extends MockeryTestCase
             ->andReturnFalse();
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
+            ->with(ConfigurationKeyEnum::LABEL)
             ->once()
-            ->andReturnFalse();
+            ->andReturnTrue();
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()

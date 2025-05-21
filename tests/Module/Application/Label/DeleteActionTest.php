@@ -28,6 +28,8 @@ namespace Ampache\Module\Application\Label;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
@@ -96,6 +98,19 @@ class DeleteActionTest extends MockeryTestCase
             ->with(ConfigurationKeyEnum::DEMO_MODE)
             ->once()
             ->andReturnFalse();
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::CONTENT_MANAGER
+            )
+            ->once()
+            ->andReturnTrue();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::LABEL)
+            ->twice()
+            ->andReturnTrue();
+
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
             ->once()
