@@ -27,6 +27,7 @@ namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -81,14 +82,18 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
      */
     public function collectGarbage(): void
     {
-        debug_event(self::class, 'collectGarbage', 5);
-        $this->connection->query('DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = \'album\' AND `artist_map`.`object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);');
-        $this->connection->query('DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = \'album\' AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `album`);');
-        $this->connection->query('DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = \'song\' AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `song`);');
-        $this->connection->query('DELETE FROM `artist_map` WHERE `artist_map`.`artist_id` NOT IN (SELECT `id` FROM `artist`);');
+        try {
+            debug_event(self::class, 'collectGarbage', 5);
+            $this->connection->query('DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = ? AND `artist_map`.`object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);', ['album']);
+            $this->connection->query('DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = ? AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `album`);', ['album']);
+            $this->connection->query('DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = ? AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `song`);', ['song']);
+            $this->connection->query('DELETE FROM `artist_map` WHERE `artist_map`.`artist_id` NOT IN (SELECT `id` FROM `artist`);');
 
-        // delete the artists
-        $this->connection->query('DELETE FROM `artist` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `artist` LEFT JOIN (SELECT DISTINCT `song`.`artist` AS `artist_id` FROM `song` UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id` FROM `album` UNION SELECT DISTINCT `wanted`.`artist` AS `artist_id` FROM `wanted` UNION SELECT DISTINCT `artist_id` FROM `artist_map`) AS `artist_map` ON `artist_map`.`artist_id` = `artist`.`id` WHERE `artist_map`.`artist_id` IS NULL) AS `null_artist`);');
+            // delete the artists
+            $this->connection->query('DELETE FROM `artist` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `artist` LEFT JOIN (SELECT DISTINCT `song`.`artist` AS `artist_id` FROM `song` UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id` FROM `album` UNION SELECT DISTINCT `wanted`.`artist` AS `artist_id` FROM `wanted` UNION SELECT DISTINCT `artist_id` FROM `artist_map`) AS `artist_map` ON `artist_map`.`artist_id` = `artist`.`id` WHERE `artist_map`.`artist_id` IS NULL) AS `null_artist`);');
+        } catch (DatabaseException) {
+            debug_event(self::class, 'collectGarbage error', 5);
+        };
     }
 
     /**
