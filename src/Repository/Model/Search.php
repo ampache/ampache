@@ -1496,10 +1496,7 @@ class Search extends playlist_object
         ];
     }
 
-    /**
-     * set_last
-     */
-    private function set_last(int $count, string $column): void
+    public function set_last(int $count, string $column): void
     {
         if (in_array($column, ['last_count', 'last_duration'])) {
             $sql = "UPDATE `search` SET `" . Dba::escape($column) . "` = ? WHERE `id` = ?";
@@ -1958,57 +1955,18 @@ class Search extends playlist_object
     }
 
     /**
-     * update
-     *
-     * This function updates the saved search with the current settings.
-     * @param null|array{
-     *     name?: ?string,
-     *     pl_type?: ?string,
-     *     pl_user?: ?int,
-     *     collaborate?: null|list<string>,
-     *     random?: ?int,
-     *     limit?: int
-     * } $data
+     * update_item
+     * This is the generic update function, it does the escaping and error checking
      */
-    public function update(?array $data = null): int
+    public function update_item(string $field, int|string|null $value): bool
     {
-        if ($this->isNew()) {
-            return 0;
+        if (Core::get_global('user')?->getId() != $this->user && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
+            return false;
         }
 
-        $collaborate = $this->collaborate;
-        if ($data !== null) {
-            $this->name        = $data['name'] ?? $this->name;
-            $this->type        = $data['pl_type'] ?? $this->type;
-            $this->user        = $data['pl_user'] ?? $this->user;
-            $this->random      = $data['random'] ?? $this->random;
-            $this->limit       = $data['limit'] ?? $this->limit;
-            $new_list          = (isset($data['collaborate'])) ? $data['collaborate'] : [];
-            $collaborate       = (!empty($new_list)) ? implode(',', $new_list) : '';
-        }
+        $sql = sprintf('UPDATE `search` SET `%s` = ? WHERE `id` = ?', $field);
 
-        $this->username = User::get_username((int)$this->user);
-
-        // mapping used for searching, browses and queries
-        if ($collaborate != $this->collaborate) {
-            $this->collaborate = $collaborate;
-            $sql               = (empty($collaborate))
-                ? "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;"
-                : "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $this->collaborate . ");";
-            Dba::write($sql, ['smart_' . $this->id]);
-
-            if (!empty($this->collaborate)) {
-                foreach (explode(',', $this->collaborate) as $user_id) {
-                    $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);";
-                    Dba::write($sql, ['smart_' . $this->id, $user_id]);
-                }
-            }
-        }
-
-        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ?, `last_update` = ?, `collaborate` = ? WHERE `id` = ?";
-        Dba::write($sql, [$this->name, $this->type, $this->user, $this->username, json_encode($this->rules), $this->logic_operator, (int)$this->random, $this->limit, time(), $this->collaborate, $this->id]);
-
-        return $this->id;
+        return (Dba::write($sql, [$value, $this->id]) !== false);
     }
 
     /**
