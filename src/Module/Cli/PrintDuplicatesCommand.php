@@ -65,6 +65,8 @@ final class PrintDuplicatesCommand extends Command
                 "\n" . T_('Invalid Request') . ': ' . $type,
                 true
             );
+
+            return;
         }
 
         $user = $this->modelFactory->createUser(-1);
@@ -82,11 +84,6 @@ final class PrintDuplicatesCommand extends Command
         $search_sql = Search::prepare($data, $user);
         $query      = Search::query($search_sql);
 
-        $interactor->info(
-            "\n" . T_('Found') . ' ' . $query['count'],
-            true
-        );
-
         // Use the properties of each type as column headers
         $printedHeader = false;
 
@@ -103,23 +100,42 @@ final class PrintDuplicatesCommand extends Command
                 continue;
             }
 
+            $allowedKeys = match ($type) {
+                'album', 'album_disk' => ['prefix', 'name', 'mbid', 'year', 'disk_count', 'mbid_group', 'release_type', 'album_artist', 'original_year', 'barcode', 'catalog_number', 'version', 'release_status'],
+                'artist', ['prefix', 'name', 'mbid'],
+                'song' => ['prefix', 'name', 'mbid', 'f_album_full', 'artist_full_name'],
+                default => null,
+            };
+
+            // songs are missing some data
+            if ($type === 'song') {
+                $object->get_album_fullname();
+                $object->get_artist_fullname();
+            }
+
             $props = get_object_vars($object);
+            $props = array_intersect_key($props, array_flip($allowedKeys));
 
             if (!$printedHeader) {
-                $interactor->info(implode("\t", array_keys($props)), true);
+                if ($type === 'song') {
+                    print_r(implode("\t", ['prefix', 'name', 'mbid', 'album', 'song_artist']) . "\n");
+                } else {
+                    print_r(implode("\t", $allowedKeys) . "\n");
+                }
                 $printedHeader = true;
             }
 
+            // Print each row in allowedKeys order
+            $row = [];
+            foreach ($allowedKeys as $key) {
+                $value = $props[$key] ?? '';
+                $row[] = is_scalar($value) ? $value : json_encode($value);
+            }
+
             // print in a tsv format
-            $interactor->write(
-                implode("\t", array_map(fn($v) => is_scalar($v) ? $v : json_encode($v), $props)),
-                true
-            );
+            print_r(implode("\t", array_map(fn ($v) => is_scalar($v) ? $v : json_encode($v), $row)) . "\n");
         }
 
-        $interactor->white(
-            T_('Done'),
-            true
-        );
+        print_r("\n" . T_('Done') . "\n");
     }
 }
