@@ -71,8 +71,7 @@ final class DeleteAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === true &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === true
         ) {
             $this->ui->showConfirmation(
                 T_('Are You Sure?'),

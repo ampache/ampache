@@ -108,7 +108,7 @@ class DeleteActionTest extends MockeryTestCase
             ->andReturnTrue();
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::LABEL)
-            ->twice()
+            ->once()
             ->andReturnTrue();
 
         $this->configContainer->shouldReceive('getWebPath')

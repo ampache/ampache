@@ -71,7 +71,7 @@ class ShowAddLabelActionTest extends MockeryTestCase
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::LABEL)
-            ->twice()
+            ->once()
             ->andReturnTrue();
 
         $this->ui->shouldReceive('showHeader')
