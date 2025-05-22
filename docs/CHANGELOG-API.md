@@ -22,6 +22,9 @@ This version is being released for Ampache7 **only**
   * get_art: Correctly size and scale art responses
 * API6
   * catalog_add: typing for adding beets catalog
+  * live_stream_create: possible double false returns
+  * live_stream_edit: possible double false returns
+  * lost_password: possible double false returns
 
 ## API 6.6.8
 

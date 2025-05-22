@@ -114,6 +114,8 @@ final class CatalogActionMethod
             Api::message('successfully started: ' . $task, $input['api_format']);
         } else {
             Api::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+
+            return false;
         }
 
         return true;
