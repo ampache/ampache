@@ -50,11 +50,11 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $user_id;
+    private int $user_id = 0;
 
-    private $bandwidth_days;
+    private int $bandwidth_days = 30;
 
-    private $bandwidth_max;
+    private int $bandwidth_max = 1024;
 
     /**
      * Constructor

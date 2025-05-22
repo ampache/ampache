@@ -35,8 +35,10 @@ use Ampache\Repository\Model\Live_Stream;
 
 <?php Ui::show_box_top((string)$radio->get_fullname(), 'box box_live_stream_details'); ?>
 <div class="item_right_info">
-    <?php $thumb = Ui::is_grid_view('live_stream') ? 11 : 2;
-Art::display('live_stream', $radio->id, (string)$radio->get_fullname(), $thumb); ?>
+    <?php $size = Ui::is_grid_view('live_stream')
+        ? ['width' => 150, 'height' => 150]
+        : ['width' => 128, 'height' => 128];
+Art::display('live_stream', $radio->id, (string)$radio->get_fullname(), $size, null, true, false); ?>
 </div>
 <dl class="media_details">
 <dt><?php echo T_('Action'); ?></dt>

@@ -146,8 +146,6 @@ class ShowEditActionTest extends TestCase
             ->willReturn($user);
 
         $user->expects(static::once())
-            ->method('format');
-        $user->expects(static::once())
             ->method('isNew')
             ->willReturn(false);
 

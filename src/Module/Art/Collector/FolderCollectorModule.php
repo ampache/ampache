@@ -93,18 +93,18 @@ final class FolderCollectorModule implements CollectorModuleInterface
         $artist_art_folder  = $this->configContainer->get('artist_art_folder');
 
         $dirs = [];
-        if ($art->type == 'album') {
-            $media = new Album($art->uid);
+        if ($art->object_type == 'album') {
+            $media = new Album($art->object_id);
             $songs = $this->songRepository->getByAlbum((int) $media->id);
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
                 $dirs[] = Core::conv_lc_file(dirname((string)$song->file));
             }
-        } elseif ($art->type == 'video') {
-            $media  = new Video($art->uid);
+        } elseif ($art->object_type == 'video') {
+            $media  = new Video($art->object_id);
             $dirs[] = Core::conv_lc_file(dirname($media->file));
-        } elseif ($art->type == 'artist') {
-            $media              = new Artist($art->uid);
+        } elseif ($art->object_type == 'artist') {
+            $media              = new Artist($art->object_id);
             $preferred_filename = str_replace(['<', '>', '\\', '/'], '_', (string)$media->get_fullname());
             if ($artist_art_folder) {
                 $dirs[] = Core::conv_lc_file($artist_art_folder);
@@ -126,7 +126,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
             }
 
             $this->logger->notice(
-                "gather_folder: Opening $dir and checking for " . $art->type . " Art",
+                "gather_folder: Opening $dir and checking for " . $art->object_type . " Art",
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
@@ -137,7 +137,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
                 AmpError::add('general', T_('Unable to open') . ' ' . $dir);
 
                 $this->logger->warning(
-                    "gather_folder: Opening $dir and checking for " . $art->type . " Art",
+                    "gather_folder: Opening $dir and checking for " . $art->object_type . " Art",
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
                 continue;
@@ -160,7 +160,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
                 // Make sure it's got something in it
                 if (!Core::get_filesize($full_filename)) {
                     $this->logger->debug(
-                        "gather_folder: Opening $dir and checking for " . $art->type . " Art",
+                        "gather_folder: Opening $dir and checking for " . $art->object_type . " Art",
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     continue;
@@ -196,7 +196,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
                     ];
                     break;
                 }
-                if ($art->type !== 'artist') {
+                if ($art->object_type !== 'artist') {
                     $this->logger->debug(
                         "gather_folder: Found image file: $file",
                         [LegacyLogger::CONTEXT_TYPE => self::class]

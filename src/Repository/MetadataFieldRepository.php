@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\MetadataField;
 use Generator;
 use PDO;
@@ -46,7 +47,11 @@ final readonly class MetadataFieldRepository implements MetadataFieldRepositoryI
      */
     public function collectGarbage(): void
     {
-        $this->connection->query('DELETE FROM `metadata_field` USING `metadata_field` LEFT JOIN `metadata` ON `metadata`.`field` = `metadata_field`.`id` WHERE `metadata`.`id` IS NULL;');
+        try {
+            $this->connection->query('DELETE FROM `metadata_field` USING `metadata_field` LEFT JOIN `metadata` ON `metadata`.`field` = `metadata_field`.`id` WHERE `metadata`.`id` IS NULL;');
+        } catch (DatabaseException) {
+            debug_event(self::class, 'collectGarbage error', 5);
+        };
     }
 
     /**

@@ -68,7 +68,7 @@ class OAuthUtil
      * Has to do some unescaping and can filter out any non-oauth parameters if needed (default behaviour)
      * May 28th, 2010 - method updated to tjerk.meesters for a speed improvement.
      * see http://code.google.com/p/oauth/issues/detail?id=163
-     * @param $header
+     * @param string $header
      * @param bool $oauth_parameters
      * @return array
      */

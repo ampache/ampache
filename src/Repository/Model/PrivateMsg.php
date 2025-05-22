@@ -83,8 +83,6 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
             return '';
         }
 
-        $to_user->format();
-
         return $to_user->get_f_link();
     }
 

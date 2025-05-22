@@ -266,6 +266,7 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
                 case '.':
                     break;
                 case '..':
+                    /** @noinspection PhpMissingBreakStatementInspection */
                     if ($ncomp--) {
                         array_pop($path);
                         break;

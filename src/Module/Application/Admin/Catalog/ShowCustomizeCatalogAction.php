@@ -65,8 +65,6 @@ final class ShowCustomizeCatalogAction implements ApplicationActionInterface
             return null;
         }
 
-        $catalog->format();
-
         $this->ui->show(
             'show_edit_catalog.inc.php',
             ['catalog' => $catalog]

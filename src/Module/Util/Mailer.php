@@ -147,7 +147,7 @@ final class Mailer implements MailerInterface
      * @param string $filter
      * @return array<int, array{id: string, fullname: string, email: string}>
      */
-    public static function get_users($filter): array
+    public static function get_users(string $filter): array
     {
         $params = [];
         switch ($filter) {

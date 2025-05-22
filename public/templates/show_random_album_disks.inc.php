@@ -46,12 +46,12 @@ if (!empty($albumDisks)) {
         $show_play = true; ?>
     <div class="random_album">
         <div id="album_<?php echo $album_disk_id; ?>" class="art_album libitem_menu">
-            <?php $thumb = 1;
+            <?php $size = ['width' => 100, 'height' => 100];
         if (Ui::is_grid_view('album')) {
-            $thumb     = 11;
+            $size      = ['width' => 150, 'height' => 150];
             $show_play = false;
         }
-        $albumDisk->display_art($thumb, true); ?>
+        $albumDisk->display_art($size, true); ?>
         </div>
         <?php if ($show_play) { ?>
         <div class="play_album">

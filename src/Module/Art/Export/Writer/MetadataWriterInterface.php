@@ -28,7 +28,7 @@ use Ampache\Repository\Model\Art;
 interface MetadataWriterInterface
 {
     public function write(
-        Art $Art,
+        Art $art,
         string $dirName,
         string $fileName
     ): void;

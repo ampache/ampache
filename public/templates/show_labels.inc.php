@@ -42,7 +42,7 @@ $is_table = !$browse->is_grid_view();
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
 $css_class = ($is_table) ? '' : ' gridview';
-if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) || AmpConfig::get('upload_allow_edit')) { ?>
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) && AmpConfig::get('label')) { ?>
 <div id="information_actions">
     <ul>
         <li>

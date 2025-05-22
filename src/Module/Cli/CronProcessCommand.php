@@ -127,7 +127,6 @@ final class CronProcessCommand extends Command
          * Ampache\Model\Userflag::garbage_collection();
          * Ampache\Model\Useractivity::garbage_collection();
          * Playlist::garbage_collection();
-         * Ampache\Model\Tmp_Playlist::garbage_collection(); FIXME Duplicated with Session
          * Shoutbox::garbage_collection();
          * Tag::garbage_collection();
          * Metadata::garbage_collection();
@@ -142,7 +141,7 @@ final class CronProcessCommand extends Command
          * Query::garbage_collection();
          * Stream_Playlist::garbage_collection();
          * Ampache\Model\Song_Preview::garbage_collection();
-         * Ampache\Model\Tmp_Playlist::garbage_collection(); FIXME Duplicated with Catalog
+         * Ampache\Model\Tmp_Playlist::garbage_collection();
          */
         Session::garbage_collection();
         debug_event(self::class, 'finished Session::garbage_collection()', 5);

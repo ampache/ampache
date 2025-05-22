@@ -149,9 +149,9 @@ final class ArtCleanup implements ArtCleanupInterface
     public function deleteForArt(Art $art): void
     {
         if ($this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK)) {
-            Art::delete_from_dir($art->type, $art->uid, $art->kind);
+            Art::delete_from_dir($art->object_type, $art->object_id, $art->kind);
         }
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ?";
-        Dba::write($sql, [$art->uid, $art->type, $art->kind]);
+        Dba::write($sql, [$art->object_id, $art->object_type, $art->kind]);
     }
 }

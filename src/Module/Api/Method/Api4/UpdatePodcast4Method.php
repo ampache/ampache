@@ -71,10 +71,10 @@ final class UpdatePodcast4Method
 
         if ($podcast !== null) {
             if (self::getPodcastSyncer()->sync($podcast, true)) {
-                Api4::message('success', 'Synced episodes for podcast: ' . (string) $object_id, null, $input['api_format']);
+                Api4::message('success', 'Synced episodes for podcast: ' . $object_id, null, $input['api_format']);
                 Session::extend($input['auth'], AccessTypeEnum::API->value);
             } else {
-                Api4::message('error', T_('Failed to sync episodes for podcast: ' . (string) $object_id), '400', $input['api_format']);
+                Api4::message('error', T_('Failed to sync episodes for podcast: ' . $object_id), '400', $input['api_format']);
             }
         } else {
             Api4::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['api_format']);

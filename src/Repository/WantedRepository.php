@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
@@ -202,7 +203,11 @@ final readonly class WantedRepository implements WantedRepositoryInterface
      */
     public function collectGarbage(): void
     {
-        $this->connection->query('DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
+        try {
+            $this->connection->query('DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
+        } catch (DatabaseException) {
+            debug_event(self::class, 'collectGarbage error', 5);
+        };
     }
 
     /**

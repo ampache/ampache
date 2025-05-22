@@ -397,8 +397,7 @@ class Subsonic_Api
             'boolean' => true, // replace true and false string with boolean values
         ];
         $options        = array_merge($defaults, $input_options);
-        $namespaces     = $xml->getDocNamespaces();
-        $namespaces[''] = null; // add base (empty) namespace
+        $namespaces     = $xml->getDocNamespaces() ?: [];
         // get attributes from all namespaces
         $attributesArray = [];
         foreach ($namespaces as $prefix => $namespace) {
@@ -1694,7 +1693,7 @@ class Subsonic_Api
         if (!is_string($sub_id)) {
             return;
         }
-        $size = $input['size'] ?? false;
+        $size = (isset($input['size']) && is_numeric($input['size'])) ? (int)$input['size'] : 'original';
         $type = Subsonic_Xml_Data::_getAmpacheType($sub_id);
         if ($type == "") {
             self::_setHeader((string)($input['f'] ?? 'xml'));
@@ -1737,7 +1736,7 @@ class Subsonic_Api
                 $art  = new Art($song->album, "album");
             }
         }
-        if (!$art || $art->get(false, true) == '') {
+        if (!$art || !$art->has_db_info('original', true)) {
             self::_setHeader((string)($input['f'] ?? 'xml'));
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getcoverart');
             self::_apiOutput($input, $response);
@@ -1746,11 +1745,11 @@ class Subsonic_Api
         }
         // we have the art so lets show it
         header("Access-Control-Allow-Origin: *");
-        if ($size && AmpConfig::get('resize_images')) {
-            $dim           = [];
-            $dim['width']  = $size;
-            $dim['height'] = $size;
-            $thumb         = $art->get_thumb($dim);
+        if (is_int($size) && AmpConfig::get('resize_images')) {
+            $out_size           = [];
+            $out_size['width']  = $size;
+            $out_size['height'] = $size;
+            $thumb              = $art->get_thumb($out_size);
             if (!empty($thumb)) {
                 header('Content-type: ' . $thumb['thumb_mime']);
                 header('Content-Length: ' . strlen((string) $thumb['thumb']));
@@ -1759,7 +1758,7 @@ class Subsonic_Api
                 return;
             }
         }
-        $image = $art->get(true, true);
+        $image = $art->get('original', true);
         header('Content-type: ' . $art->raw_mime);
         header('Content-Length: ' . strlen((string) $image));
         echo $image;
@@ -1944,7 +1943,6 @@ class Subsonic_Api
                 if ($media === null || $media->isNew()) {
                     continue;
                 }
-                $media->format();
 
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
@@ -2381,6 +2379,7 @@ class Subsonic_Api
                 }
                 break;
             case 'set':
+                /** @noinspection PhpMissingBreakStatementInspection */
                 $localplay->delete_all();
                 // Intentional break fall-through
             case 'add':

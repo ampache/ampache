@@ -2902,6 +2902,30 @@ Delete an existing song. (if you are allowed to)
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/song_delete.json)
 
+### song_tags
+
+Get the full song file tags using VaInfo
+
+This is used to get tags for remote catalogs to allow maximum data to be returned
+
+| Input    | Type   | Description           | Optional |
+|----------|--------|-----------------------|---------:|
+| 'filter' | string | UID of song to fetch  |       NO |
+
+* return object
+
+```JSON
+"song_tag": ""
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/song_tags.json)
+
 ### stats
 
 Get some items based on some simple search types and filters. (Random by default)
@@ -3446,6 +3470,7 @@ Get an art image.
 |--------|---------|------------------------------------------------------------|---------:|
 | 'id'   | string  | $object_id                                                 |       NO |
 | 'type' | string  | `song`, `artist`, `album`, `playlist`, `search`, `podcast` |       NO |
+| 'size' | string  | width x height ('640x480')                                 |      YES |
 
 * return image (HTTP 200 OK)
 * throws (HTTP 400 Bad Request)

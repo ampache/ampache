@@ -81,9 +81,6 @@ class ShowPlaylistActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn(false);
-        $search->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
         $search->shouldReceive('get_items')
             ->withNoArgs()
             ->once()

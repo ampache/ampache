@@ -48,11 +48,13 @@ if (!empty($videos)) {
         <div id="video_<?php echo $video_id; ?>" class="art_album libitem_menu">
             <?php $art_showed = false;
         if ($video->get_default_art_kind() == 'preview') {
-            $art_showed = Art::display('video', $video->id, $video->getFileName(), 9, $video->get_link(), false, 'preview');
+            $art_showed = Art::display('video', $video->id, $video->getFileName(), ['width' => 150, 'height' => 84], $video->get_link(), false, true, 'preview');
         }
         if (!$art_showed) {
-            $thumb = Ui::is_grid_view('video') ? 6 : 7;
-            Art::display('video', $video->id, $video->getFileName(), $thumb, $video->get_link());
+            $size = Ui::is_grid_view('video')
+                ? ['width' => 100, 'height' => 150]
+                : ['width' => 200, 'height' => 300];
+            Art::display('video', $video->id, $video->getFileName(), $size, $video->get_link());
         } ?>
         </div>
         <div class="play_video">

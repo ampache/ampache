@@ -374,7 +374,7 @@ class Stream
         if ($media instanceof Video) {
             $string_map['%RESOLUTION%'] = (isset($options['resolution']))
                 ? $options['resolution']
-                : $media->f_resolution ?? '1280x720';
+                : $media->get_f_resolution() ?? '1280x720';
             $string_map['%QUALITY%'] = (isset($options['quality']))
                 ? (31 * (101 - $options['quality'])) / 100
                 : 10;
@@ -648,7 +648,8 @@ class Stream
      */
     public static function get_now_playing(int $user_id = 0): array
     {
-        $sql = "SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` LEFT JOIN `session` ON `session`.`id` = `np`.`id` ";
+        $sql    = "SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` LEFT JOIN `session` ON `session`.`id` = `np`.`id` ";
+        $params = [];
 
         if (AmpConfig::get('now_playing_per_user')) {
             $sql .= "INNER JOIN (SELECT MAX(`insertion`) AS `max_insertion`, `user` FROM `now_playing` GROUP BY `user`) `np2` ON `np`.`user` = `np2`.`user` AND `np`.`insertion` = `np2`.`max_insertion` ";
@@ -659,13 +660,14 @@ class Stream
             // We need to check only for users which have allowed view of personal info
             if (Core::get_global('user') instanceof User) {
                 $current_user = Core::get_global('user')->getId();
-                $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`name`='allow_personal_info_now' AND `value`='1') OR `user`='$current_user'))) ";
+                $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`name`='allow_personal_info_now' AND `value`='1') OR `user` = ?))) ";
+                $params[] = $current_user;
             }
         }
         $sql .= "ORDER BY `np`.`expire` DESC";
         //debug_event(self::class, 'get_now_playing ' . $sql, 5);
 
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, $params);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $className = ObjectTypeToClassNameMapper::map($row['object_type']);
@@ -676,11 +678,10 @@ class Stream
             }
             if (($user_id === 0 || (int)$row['user'] == $user_id) && Catalog::has_access($media->getCatalogId(), (int)$row['user'])) {
                 $client = new User($row['user']);
-                $client->format();
                 if ($client->isNew()) {
                     continue;
                 }
-                $media->format();
+
                 $results[] = [
                     'media' => $media,
                     'client' => $client,

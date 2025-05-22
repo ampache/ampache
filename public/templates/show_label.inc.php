@@ -78,7 +78,7 @@ if (AmpConfig::get('external_links_discogs')) {
     </div>
     <div id="artist_biography">
         <div class="item_info">
-            <?php Art::display('label', $label->id, $f_name, 2); ?>
+            <?php Art::display('label', $label->id, $f_name, ['width' => 128, 'height' => 128], null, true, false); ?>
             <div class="item_properties">
                 <?php echo scrub_out($label->address); ?>
             </div>

@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 80
+config_version = 82
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -362,7 +362,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; Ignore files that match this pattern
 ; You can specify any file extension you want in here separating them with a |
 ; DEFAULT: None
-; catalog_ignore_pattern = "\(HTOA\)"
+;catalog_ignore_pattern = "\(HTOA\)"
 
 ; Catalog disable
 ; This defines if catalog can be disabled without removing database entries
@@ -673,6 +673,13 @@ album_art_min_height = 30
 ; If you have high-quality album art and a small upload cap
 ; DEFAULT: "false"
 ;resize_images = "true"
+
+; Upscale Images * Requires PHP-GD *
+; Disable this option to prevent upscaling of images.
+; By default Ampache will scale images to display size * 2
+; This is useful for high DPI displays but does increase load times
+; DEFAULT: "true"
+;upscale_images = "false"
 
 ; Playlist Cover Art
 ; Set this to true if you want Ampache to generate
@@ -1133,6 +1140,14 @@ registration_display_fields = "fullname,website"
 ; POSSIBLE VALUES: fullname,website,state,city
 ; DEFAULT: "fullname"
 registration_mandatory_fields = "fullname"
+
+; User create field validation
+; Regex filters for username, fullname and website validation
+; If you run a site with public registration you may  want to
+; filter these fields for spam or other unwanted content.
+; DEFAULT: none
+;user_name_filter = "/https?:\/\/"
+;user_website_filter = "\[url=http"
 
 ;#########################################################
 ; These options control the dynamic downsampling based   #

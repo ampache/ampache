@@ -76,6 +76,7 @@ final class UpdateCatalogCommand extends Command
             empty($values['add']) &&
             empty($values['art']) &&
             empty($values['verify']) &&
+            empty($values['find']) &&
             empty($values['update']) &&
             empty($values['import']) &&
             empty($values['optimize']) &&

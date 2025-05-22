@@ -58,7 +58,6 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                     break;
                 }
 
-                $playlist->format();
                 if ($playlist->has_collaborate()) {
                     $playlist->delete_track($_REQUEST['track_id']);
                     // This could have performance issues

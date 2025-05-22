@@ -56,8 +56,10 @@ $object_type = 'live_stream'; ?>
     </div>
 </td>
 <td class="<?php echo $cel_cover; ?>">
-    <?php $thumb = ($browse->is_grid_view()) ? 11 : 1;
-$libitem->display_art($thumb); ?>
+    <?php $size = ($browse->is_grid_view())
+        ? ['width' => 150, 'height' => 150]
+        : ['width' => 100, 'height' => 100];
+$libitem->display_art($size); ?>
 </td>
 <td class="cel_streamname"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">

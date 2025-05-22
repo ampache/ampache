@@ -153,9 +153,8 @@ class AmpacheHttpq extends localplay_controller
      */
     public function delete_instance(int $uid): void
     {
-        $uid = Dba::escape($uid);
-        $sql = "DELETE FROM `localplay_httpq` WHERE `id`='$uid'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `localplay_httpq` WHERE `id` = ?";
+        Dba::write($sql, [$uid]);
     }
 
     /**
@@ -294,7 +293,6 @@ class AmpacheHttpq extends localplay_controller
      * delete_track
      * This must take an ID (as returned by our get function)
      * and delete it from httpQ
-     * @param int $object_id
      */
     public function delete_track(int $object_id): bool
     {
@@ -427,7 +425,6 @@ class AmpacheHttpq extends localplay_controller
      * volume
      * This tells httpQ to set the volume to the specified amount this
      * is 0-100
-     * @param $volume
      */
     public function volume($volume): bool
     {
@@ -490,9 +487,8 @@ class AmpacheHttpq extends localplay_controller
             $url_data = $this->parse_url($entry);
             switch ($url_data['primary_key']) {
                 case 'oid':
-                    $data['oid'] = $url_data['oid'];
-                    $song        = new Song($data['oid']);
-                    $song->format();
+                    $data['oid']  = $url_data['oid'];
+                    $song         = new Song($data['oid']);
                     $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_artist_fullname();
                     $data['link'] = $song->get_f_link();
                     break;
@@ -508,10 +504,10 @@ class AmpacheHttpq extends localplay_controller
                 default:
                     // If we don't know it, look up by filename
                     $filename          = Dba::escape($url_data['file']);
-                    $sql               = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
+                    $sql               = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE ? UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url` = ?;";
                     $libraryItemLoader = $this->getLibraryItemLoader();
 
-                    $db_results = Dba::read($sql);
+                    $db_results = Dba::read($sql, ['%' . $filename, $filename]);
                     if ($row = Dba::fetch_assoc($db_results)) {
                         $media = $libraryItemLoader->load(
                             LibraryItemEnum::from($row['type']),
@@ -520,7 +516,6 @@ class AmpacheHttpq extends localplay_controller
                         );
 
                         if ($media !== null) {
-                            $media->format();
                             switch ($row['type']) {
                                 case 'song':
                                     /** @var Song $media */

@@ -534,6 +534,8 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                     }
 
                     break;
+                default:
+                    return false;
             }
 
             if (!empty($data)) {

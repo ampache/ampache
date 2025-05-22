@@ -30,15 +30,15 @@ use Ampache\Repository\Model\Art;
 final class MetadataWriter implements MetadataWriterInterface
 {
     public function write(
-        Art $Art,
+        Art $art,
         string $dirName,
         string $fileName
     ): void {
         $meta_file = $dirName;
-        $string    = $Art->raw;
+        $string    = $art->raw;
 
         $meta_handle = fopen($meta_file, 'w');
-        if ($meta_handle) {
+        if ($meta_handle && $string) {
             fwrite($meta_handle, $string);
             fclose($meta_handle);
         }

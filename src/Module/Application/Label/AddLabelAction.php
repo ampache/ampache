@@ -60,10 +60,13 @@ final class AddLabelAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
+            throw new AccessDeniedException('Access Denied: label features are not enabled.');
+        }
+
         // Must be at least a content manager or edit upload enabled
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false ||
             !$this->requestParser->verifyForm('add_label')
         ) {
             throw new AccessDeniedException();

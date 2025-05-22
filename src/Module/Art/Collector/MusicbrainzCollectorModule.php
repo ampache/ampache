@@ -72,7 +72,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
         $images    = [];
         $num_found = 0;
 
-        if ($art->type != 'album') {
+        if ($art->object_type != 'album') {
             return $images;
         }
 

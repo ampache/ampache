@@ -71,6 +71,7 @@ use Ampache\Repository\WantedRepositoryInterface;
 use DateTime;
 use Exception;
 use Generator;
+use Kunnu\Dropbox\Exceptions\DropboxClientException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RegexIterator;
@@ -162,8 +163,6 @@ abstract class Catalog extends database_object
 
     public ?string $link = null;
 
-    public ?string $f_info = null;
-
     private ?string $f_link = null;
 
     /**
@@ -245,7 +244,7 @@ abstract class Catalog extends database_object
     /**
      * @return string[]
      */
-    abstract public function check_catalog_proc(): array;
+    abstract public function check_catalog_proc(?Interactor $interactor = null): array;
 
     abstract public function move_catalog_proc(string $new_path): bool;
 
@@ -268,9 +267,9 @@ abstract class Catalog extends database_object
     abstract public function get_rel_path(string $file_path): string;
 
     /**
-     * format
+     * get_f_info
      */
-    abstract public function format(): void;
+    abstract public function get_f_info(): string;
 
     /**
      * @param Podcast_Episode|Song|Video $media
@@ -1148,7 +1147,26 @@ abstract class Catalog extends database_object
      * create
      *
      * This creates a new catalog entry and associate it to current instance
-     * @param array<string, string|int|null> $data
+     *
+     * @param array{
+     *     name: string,
+     *     path?: string,
+     *     uri?: string,
+     *     type: string,
+     *     rename_pattern: string,
+     *     sort_pattern: string,
+     *     gather_media: string,
+     *     username?: ?string,
+     *     password?: ?string,
+     *     library_name?: string,
+     *     server_uri?: string,
+     *     api_call_delay?: string|int|null,
+     *     beetsdb?: string,
+     *     apikey?: ?string,
+     *     secret?: ?string,
+     *     authtoken?: ?string,
+     *     getchunk?: string|int|null,
+     * } $data
      */
     public static function create(array $data): int
     {
@@ -1188,8 +1206,14 @@ abstract class Catalog extends database_object
 
         self::clear_catalog_cache();
 
-        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $classname */
-        if (!$classname::create_type($insert_id, $data)) {
+        try {
+            /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $classname */
+            $create_type = $classname::create_type($insert_id, $data);
+        } catch (DropboxClientException) {
+            $create_type = false;
+        }
+
+        if (!$create_type) {
             $sql = 'DELETE FROM `catalog` WHERE `id` = ?';
             Dba::write($sql, [$insert_id]);
             $insert_id = 0;
@@ -1317,11 +1341,12 @@ abstract class Catalog extends database_object
             return 0;
         }
 
+        $results = (int)($row[0] ?? 0);
         if ($catalog_id === 0) {
-            self::set_update_info($table, (int)$row[0]);
+            self::set_update_info($table, $results);
         }
 
-        return (int)$row[0];
+        return $results;
     }
 
     /**
@@ -1734,7 +1759,7 @@ abstract class Catalog extends database_object
      * get all artists or artist children of a catalog id (Used for WebDav)
      * @param string $name
      * @param int $catalog_id
-     * @return array{object_type: string, object_id: int}[]
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public static function get_children(string $name, int $catalog_id = 0): array
     {
@@ -1744,15 +1769,15 @@ abstract class Catalog extends database_object
             $sql .= "LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'album_artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = " . (int)$catalog_id;
         }
 
-        $sql .= "WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ";
+        $sql .= "WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ? OR REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(`artist`.`name`, ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, '') = ?) ";
         if ((int)$catalog_id > 0) {
             $sql .= "AND `catalog_map`.`object_id` IS NOT NULL";
         }
 
-        $db_results = Dba::read($sql, [$name, $name]);
+        $db_results = Dba::read($sql, [$name, $name, '/', '\\', ':', '?', '*', '|', '"', '<', '>', '#', '%', '\n', $name]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = [
-                'object_type' => 'artist',
+                'object_type' => LibraryItemEnum::ARTIST,
                 'object_id' => (int)$row['id']
             ];
         }
@@ -1959,8 +1984,8 @@ abstract class Catalog extends database_object
 
         $inserted = false;
         $options  = [];
-        if (method_exists($libitem, 'format')) {
-            $libitem->format();
+        if (method_exists($libitem, 'fill_ext_info')) {
+            $libitem->fill_ext_info();
         }
 
         if ($libitem->getId() > 0) {
@@ -2094,12 +2119,12 @@ abstract class Catalog extends database_object
         }
 
         $searches['video'] = $videos ?? $this->get_video_ids();
-
+        $total_count       = (count($searches['album']) + count($searches['artist']) + count($searches['song'] ?? []) + count($searches['video']));
         $interactor?->info(
-            'gather_art found ' . count($searches) . ' items missing art',
+            'gather_art found ' . $total_count . ' items missing art',
             true
         );
-        debug_event(self::class, 'gather_art found ' . count($searches) . ' items missing art', 4);
+        debug_event(self::class, 'gather_art found ' . $total_count . ' items missing art', 4);
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
             foreach ($values as $object_id) {
@@ -2349,6 +2374,14 @@ abstract class Catalog extends database_object
             case 'podcast_episode':
                 $episode = new Podcast_Episode($object_id);
                 self::update_media_from_tags($episode);
+
+                return [
+                    'object_id' => $object_id,
+                    'change' => true
+                ];
+            case 'video':
+                $video = new Video($object_id);
+                self::update_media_from_tags($video);
 
                 return [
                     'object_id' => $object_id,
@@ -2659,7 +2692,7 @@ abstract class Catalog extends database_object
             : self::check_length($results['albumartist']);
         $albumartist ??= null;
 
-        $original_year    = $results['original_year'];
+        $original_year    = (!empty($results['original_year'])) ? (int)$results['original_year'] : null;
         $barcode          = self::check_length($results['barcode'], 64);
         $catalog_number   = self::check_length($results['catalog_number'], 64);
         $version          = self::check_length($results['version'], 64);
@@ -3061,7 +3094,7 @@ abstract class Catalog extends database_object
         $new_video->display_x     = $results['display_x'];
         $new_video->display_y     = $results['display_y'];
         $new_video->frame_rate    = $results['frame_rate'];
-        $new_video->video_bitrate = self::check_int($results['video_bitrate'], 4294967294, 0);
+        $new_video->video_bitrate = self::check_int($results['video_bitrate'], PHP_INT_MAX, 0);
         $tags                     = Tag::get_object_tags('video', $video->id);
         $video_tags               = [];
         if ($tags) {
@@ -3093,8 +3126,8 @@ abstract class Catalog extends database_object
 
     public static function update_podcast_episode_from_tags(array $results, Podcast_Episode $podcast_episode): array
     {
-        $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `state` = 'completed' WHERE `id` = ?";
-        Dba::write($sql, [$podcast_episode->file, $results['size'], $results['time'], $results['bitrate'], $results['rate'], $results['mode'], $results['channels'], $podcast_episode->id]);
+        $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `update_time` = ?, `state` = 'completed' WHERE `id` = ?";
+        Dba::write($sql, [$podcast_episode->file, $results['size'], $results['time'], $results['bitrate'], $results['rate'], $results['mode'], $results['channels'], time(), $podcast_episode->id]);
 
         $podcast_episode->size     = $results['size'];
         $podcast_episode->time     = $results['time'];
@@ -3428,6 +3461,7 @@ abstract class Catalog extends database_object
 
     /**
      * get_gather_types
+     * @return string[]
      */
     public function get_gather_types(string $media_type = ''): array
     {
@@ -3705,7 +3739,7 @@ abstract class Catalog extends database_object
      * Check to make sure the string fits into the database
      * max_length is the maximum number of characters that the (varchar) column can hold
      */
-    public static function check_length(string $string, int $max_length = 255): string
+    public static function check_length(?string $string = null, int $max_length = 255): string
     {
         $string = (string)$string;
         if (false !== $encoding = mb_detect_encoding($string, null, true)) {
@@ -3735,7 +3769,7 @@ abstract class Catalog extends database_object
      * check_int
      * Check to make sure a number fits into the database
      */
-    public static function check_int(int $my_int, int $max, int $min): int
+    public static function check_int(int|float $my_int, int|float $max, int $min): int|float
     {
         if ($my_int > $max) {
             return $max;
@@ -3921,7 +3955,7 @@ abstract class Catalog extends database_object
     /**
      * Update the catalog map for a single item
      */
-    public static function update_map($catalog, $object_type, $object_id): void
+    public static function update_map(int $catalog, string $object_type, int $object_id): void
     {
         debug_event(self::class, sprintf('update_map %s: {%s}', $object_type, $object_id), 5);
         if ($object_type == 'artist') {
@@ -4275,7 +4309,6 @@ abstract class Catalog extends database_object
                             $song_ids = $catalog->get_song_ids();
                             foreach ($song_ids as $song_id) {
                                 $song = new Song($song_id);
-                                $song->format();
 
                                 $songTagWriter->write($song);
                             }
@@ -4356,7 +4389,6 @@ abstract class Catalog extends database_object
 
         // Do the various check
         $album = new Album($song->album);
-        $album->format();
 
         $song_artist_name  = self::sort_clean_name($song->get_artist_fullname(), '%a', $windowsCompat);
         $album_artist_name = (empty($album->get_artist_fullname()))

@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
@@ -46,6 +47,8 @@ abstract class playlist_object extends database_object implements library_item
     public ?int $user = null;
 
     public ?string $username = null;
+
+    public ?string $collaborate = '';
 
     public ?string $type = null;
 
@@ -79,6 +82,14 @@ abstract class playlist_object extends database_object implements library_item
      */
     abstract public function get_items(): array;
 
+    abstract public function set_last(int $count, string $column): void;
+
+    /**
+     * update_item
+     * This is the generic update function, it does the escaping and error checking
+     */
+    abstract public function update_item(string $field, int|string $value): bool;
+
     public function getId(): int
     {
         return (int)($this->id ?? 0);
@@ -90,10 +101,93 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * format
+     * update
+     * This function takes a key'd array of data and runs updates
+     * @param null|array{
+     *     name?: ?string,
+     *     pl_type?: ?string,
+     *     pl_user?: ?int,
+     *     collaborate?: null|list<string>,
+     *     last_count?: ?int,
+     *     last_duration?: ?int,
+     *     random?: ?int,
+     *     limit?: int,
+     * } $data
      */
-    public function format(): void
+    public function update(?array $data = null): int
     {
+        if ($this->isNew() || $data === null) {
+            return 0;
+        }
+
+        if (isset($data['name']) && $data['name'] != $this->name) {
+            $this->update_item('name', $data['name']);
+        }
+
+        if (isset($data['pl_type']) && $data['pl_type'] != $this->type) {
+            $this->update_item('type', $data['pl_type']);
+        }
+
+        if (isset($data['pl_user']) && $data['pl_user'] != $this->user) {
+            $this->user     = (int)$data['pl_user'];
+            $this->username = User::get_username($this->user);
+            $this->update_item('user', $data['pl_user']);
+            $this->update_item('username', $this->username);
+        }
+
+        if ($this instanceof Search) {
+            $random = $data['random'] ?? 0;
+            if ($random != $this->random) {
+                $this->update_item('random', $random);
+            }
+
+            $limit = $data['limit'] ?? 0;
+            if ($limit != $this->limit) {
+                $this->update_item('limit', $limit);
+            }
+        }
+
+        $new_list    = (!empty($data['collaborate'])) ? $data['collaborate'] : [];
+        $collaborate = (!empty($new_list)) ? implode(',', $new_list) : '';
+        if (is_array($new_list) && $collaborate != $this->collaborate) {
+            $playlist_id = ($this instanceof Search)
+                ? 'smart_' . $this->id
+                : $this->id;
+            $this->_update_collaborate($new_list, $playlist_id);
+        }
+
+        if (isset($data['last_count']) && $data['last_count'] != $this->last_count) {
+            $this->set_last($data['last_count'], 'last_count');
+        }
+
+        if (isset($data['last_duration']) && $data['last_duration'] != $this->last_duration) {
+            $this->set_last($data['last_duration'], 'last_duration');
+        }
+
+        return $this->id;
+    }
+
+    /**
+     * _update_collaborate
+     * This updates playlist collaborators, it calls the generic update_item function
+     * @param string[] $new_list
+     */
+    private function _update_collaborate(array $new_list, int|string $playlist_id): void
+    {
+        $collaborate = implode(',', $new_list);
+        if ($this->update_item('collaborate', $collaborate)) {
+            $this->collaborate = $collaborate;
+
+            $sql = (empty($collaborate))
+                ? "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;"
+                : "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";
+            Dba::write($sql, [$playlist_id]);
+
+            foreach ($new_list as $user_id) {
+                $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);";
+                Dba::write($sql, [$playlist_id, $user_id]);
+            }
+        }
     }
 
     /**
@@ -114,17 +208,11 @@ abstract class playlist_object extends database_object implements library_item
      * has_collaborate
      * This function returns true or false if the current user
      * has access to collaborate (Add/remove items) for this playlist
-     * @param User|null $user
      */
-    public function has_collaborate($user = null): bool
+    public function has_collaborate(?User $user = null): bool
     {
         if ($this->has_access($user)) {
             return true;
-        }
-
-        // only playlists have collaborative users
-        if ($this instanceof Search) {
-            return false;
         }
 
         $user = ($user instanceof User)
@@ -146,9 +234,8 @@ abstract class playlist_object extends database_object implements library_item
      * has_access
      * This function returns true or false if the current user
      * has access to this playlist
-     * @param User|null $user
      */
-    public function has_access($user = null): bool
+    public function has_access(?User $user = null): bool
     {
         if (
             $user instanceof User &&
@@ -175,7 +262,12 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return list<array{
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     track?: int,
+     *     track_id?: int
+     * }>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -302,16 +394,22 @@ abstract class playlist_object extends database_object implements library_item
         return null;
     }
 
+    /**
+     * @return array{
+     *     playlist: list<array{object_type: LibraryItemEnum, object_id: int, track: int, track_id: int}>
+     * }
+     */
     public function get_childrens(): array
     {
-        return $this->get_items();
+        return ['playlist' => $this->get_items()];
     }
 
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         debug_event('playlist_object.abstract', 'get_children ' . $name, 5);
 
@@ -338,25 +436,23 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * display_art
-     * @param int $thumb
-     * @param bool $force
-     * @param bool $link
+     * @param array{width: int, height: int} $size
      */
-    public function display_art($thumb = 2, $force = false, $link = true): void
+    public function display_art(array $size, bool $force = false, bool $link = true): void
     {
         if (AmpConfig::get('playlist_art') || $force) {
             $add_link  = ($link) ? $this->get_link() : null;
             $list_type = ($this instanceof Search)
                 ? 'search'
                 : 'playlist';
-            Art::display($list_type, $this->id, (string)$this->get_fullname(), $thumb, $add_link);
+            Art::display($list_type, $this->id, (string)$this->get_fullname(), $size, $add_link);
         }
     }
 
     /**
      * gather_art
      */
-    public function gather_art($limit): array
+    public function gather_art(int $limit): array
     {
         $medias   = $this->get_medias();
         $count    = 0;

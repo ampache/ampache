@@ -46,7 +46,7 @@ $fullname = $video->get_fullname() ?? '';
 Ui::show_box_top($fullname, 'box box_video_details'); ?>
 <div class="item_right_info">
 <?php
-$gart = Art::display('video', $video->id, $fullname, 7); ?>
+$gart = Art::display('video', $video->id, $fullname, ['width' => 200, 'height' => 300], null, true, false); ?>
 <?php if (AmpConfig::get('encode_srt')) { ?>
 <div class="subtitles">
 <?php echo T_('Subtitle'); ?>:
@@ -133,8 +133,8 @@ if (get_class($video) != Video::class) {
 }
 $videoprops[T_('Release Date')]  = scrub_out(($video->release_date) ? get_datetime((int) $video->release_date, 'short', 'none') : '');
 $videoprops[T_('Codec')]         = scrub_out($video->video_codec . ' / ' . $video->audio_codec);
-$videoprops[T_('Resolution')]    = scrub_out($video->f_resolution);
-$videoprops[T_('Display')]       = scrub_out($video->f_display);
+$videoprops[T_('Resolution')]    = scrub_out($video->get_f_resolution());
+$videoprops[T_('Display')]       = scrub_out($video->get_f_display());
 $videoprops[T_('Audio Bitrate')] = scrub_out((int) ($video->bitrate / 1024) . "-" . strtoupper((string) $video->mode));
 $videoprops[T_('Video Bitrate')] = scrub_out((string)($video->video_bitrate / 1024));
 $videoprops[T_('Frame Rate')]    = scrub_out(($video->frame_rate) ? $video->frame_rate . ' fps' : '');

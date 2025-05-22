@@ -133,14 +133,6 @@ class Democratic extends Tmp_Playlist
         }
     }
 
-    /**
-     * format
-     * This makes the variables pretty so that they can be displayed
-     */
-    public function format(): void
-    {
-    }
-
     public function getAccessLevel(): AccessLevelEnum
     {
         return AccessLevelEnum::from($this->level);
@@ -169,7 +161,7 @@ class Democratic extends Tmp_Playlist
      * This returns the current users current playlist, or if specified
      * this current playlist of the user
      */
-    public static function get_current_playlist($user = false): Democratic
+    public static function get_current_playlist(?User $user = null): Democratic
     {
         if (!$user) {
             $user = Core::get_global('user');

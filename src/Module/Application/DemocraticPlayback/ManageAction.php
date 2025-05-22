@@ -68,7 +68,6 @@ final class ManageAction implements ApplicationActionInterface
 
         $democratic = Democratic::get_current_playlist();
         $democratic->set_parent();
-        $democratic->format();
 
         // Show the create page
         require_once Ui::find_template('show_edit_democratic.inc.php');

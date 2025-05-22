@@ -95,12 +95,10 @@ final class ShareCreator implements ShareCreatorInterface
                 $playlist    = new Playlist($object_id);
                 $description = 'Playlist - ' . $playlist->name;
             } elseif ($object_type === LibraryItemEnum::ALBUM) {
-                $album = new Album($object_id);
-                $album->format();
+                $album       = new Album($object_id);
                 $description = $album->get_fullname() . ' (' . $album->get_artist_fullname() . ')';
             } elseif ($object_type === LibraryItemEnum::ALBUM_DISK) {
-                $albumdisk = new AlbumDisk($object_id);
-                $albumdisk->format();
+                $albumdisk   = new AlbumDisk($object_id);
                 $description = $albumdisk->get_fullname() . ' (' . $albumdisk->get_artist_fullname() . ')';
             }
         }

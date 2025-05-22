@@ -31,14 +31,14 @@ interface LabelRepositoryInterface
     public function findById(int $labelId): ?Label;
 
     /**
-     * @return array<int, string>
+     * @return string[]
      */
     public function getByArtist(int $artistId): array;
 
     /**
      * Return the list of all available labels
      *
-     * @return array<int, string>
+     * @return string[]
      */
     public function getAll(): array;
 

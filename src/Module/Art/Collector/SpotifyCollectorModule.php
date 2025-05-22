@@ -105,13 +105,13 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
         }
         $filter = [];
         $query1 = '';
-        $types  = $art->type . 's';
+        $types  = $art->object_type . 's';
         $this->spotifyWebAPI->setAccessToken($accessToken);
         $getType = 'getAlbum';
 
         if (
             isset($data['artist']) &&
-            $art->type == 'artist'
+            $art->object_type == 'artist'
         ) {
             $this->logger->debug(
                 'gather_spotify artist: ' . $data['artist'],
@@ -119,7 +119,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
             );
             $query   = $data['artist'];
             $getType = 'getArtist';
-        } elseif ($art->type == 'album') {
+        } elseif ($art->object_type == 'album') {
             $album_str  = $data['album'] ?? '';
             $artist_str = $data['artist'] ?? '';
             $logString  = sprintf('gather_spotify album: %s, artist: %s', $album_str, $artist_str);
@@ -163,7 +163,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
         }
 
         try {
-            $response = $this->spotifyWebAPI->search($query, $art->type, ['limit' => $limit]);
+            $response = $this->spotifyWebAPI->search($query, $art->object_type, ['limit' => $limit]);
         } catch (SpotifyWebAPIException $error) {
             if ($error->hasExpiredToken()) {
                 $session = new SpotifySession($clientId, $clientSecret);
@@ -176,7 +176,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
                 sleep($retryAfter);
             }
             try {
-                $response = $this->spotifyWebAPI->search($query, $art->type, ['limit' => $limit]);
+                $response = $this->spotifyWebAPI->search($query, $art->object_type, ['limit' => $limit]);
             } catch (SpotifyWebAPIException $error) {
                 $response = null;
             }

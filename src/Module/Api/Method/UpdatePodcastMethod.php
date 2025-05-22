@@ -82,6 +82,8 @@ final class UpdatePodcastMethod
             }
         } else {
             Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+
+            return false;
         }
 
         return true;

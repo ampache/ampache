@@ -99,13 +99,12 @@ class Label extends database_object implements library_item
 
     /**
      * display_art
-     * @param int $thumb
-     * @param bool $force
+     * @param array{width: int, height: int} $size
      */
-    public function display_art($thumb = 2, $force = false): void
+    public function display_art(array $size, bool $force = false): void
     {
         if ($this->has_art() || $force) {
-            Art::display('label', $this->id, (string)$this->get_fullname(), $thumb, $this->get_link());
+            Art::display('label', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
         }
     }
 
@@ -115,19 +114,15 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * format
+     * @return array{artist: list<array{object_type: LibraryItemEnum, object_id: int}>}
      */
-    public function format(): void
-    {
-    }
-
     public function get_childrens(): array
     {
         $medias  = [];
         $artists = $this->get_artists();
         foreach ($artists as $artist_id) {
             $medias[] = [
-                'object_type' => 'artist',
+                'object_type' => LibraryItemEnum::ARTIST,
                 'object_id' => $artist_id
             ];
         }
@@ -250,8 +245,9 @@ class Label extends database_object implements library_item
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         $search                    = [];
         $search['type']            = "artist";
@@ -263,7 +259,7 @@ class Label extends database_object implements library_item
         $childrens = [];
         foreach ($artists as $artist_id) {
             $childrens[] = [
-                'object_type' => 'artist',
+                'object_type' => LibraryItemEnum::ARTIST,
                 'object_id' => $artist_id
             ];
         }
@@ -390,7 +386,7 @@ class Label extends database_object implements library_item
     /**
      * get_display
      * This returns a csv formatted version of the labels that we are given
-     * @param array<int, string> $labels
+     * @param string[] $labels
      * @param bool $link
      * @return string
      */

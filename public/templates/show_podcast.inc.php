@@ -51,9 +51,10 @@ $browse->set_skip_catalog_check(true);
 $web_path = AmpConfig::get_web_path();
 Ui::show_box_top((string)$podcast->get_fullname(), 'info-box'); ?>
 <div class="item_right_info">
-    <?php
-    $thumb = Ui::is_grid_view('podcast') ? 11 : 32;
-Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $thumb); ?>
+<?php $size = Ui::is_grid_view('album')
+    ? ['width' => 150, 'height' => 150]
+    : ['width' => 384, 'height' => 384];
+Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $size, null, true, false); ?>
 </div>
 <?php if ($podcast->get_description()) { ?>
 <div id="item_summary">

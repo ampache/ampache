@@ -269,15 +269,14 @@ class VlcPlayer
 
     /**
      * extract the full state from the xml file and send to status in vlccontroller for further parsing.
-     * @return array|false
      */
-    public function fullstate()
+    public function fullstate(): ?array
     {
         $args = [];
 
         $results = $this->sendCommand('status.xml', $args);
         if ($results === null) {
-            return false;
+            return [];
         }
 
         return $results;

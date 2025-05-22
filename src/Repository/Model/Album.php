@@ -207,44 +207,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
-     * _get_extra_info
-     * This pulls the extra information from our tables, this is a 3 table join, which is why we don't normally
-     * do it
-     */
-    private function _get_extra_info(): array
-    {
-        if ($this->isNew()) {
-            return [];
-        }
-
-        if (parent::is_cached('album_extra', $this->id)) {
-            return parent::get_from_cache('album_extra', $this->id);
-        }
-
-        $results = [];
-        if (
-            !$this->album_artist &&
-            $this->song_artist_count == 1
-        ) {
-            $sql        = "SELECT `artist`.`name` AS `artist_name`, `artist`.`prefix` AS `artist_prefix`, `song`.`artist` AS `album_artist` FROM `song` INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` WHERE `song`.`album` = ? GROUP BY `song`.`album`, `artist`.`prefix`, `artist`.`name`, `song`.`artist`;";
-            $db_results = Dba::read($sql, [$this->id]);
-            $results    = Dba::fetch_assoc($db_results);
-            // overwrite so you can get something
-            $this->album_artist  = $results['album_artist'] ?? null;
-            $this->artist_prefix = $results['artist_prefix'] ?? null;
-            $this->artist_name   = $results['artist_name'] ?? null;
-        }
-
-        if (AmpConfig::get('show_played_times')) {
-            $results['total_count'] = $this->total_count;
-        }
-
-        parent::add_to_cache('album_extra', $this->id, $results);
-
-        return $results;
-    }
-
-    /**
      * check
      *
      * Searches for an album; if none is found, insert a new one.
@@ -411,9 +373,12 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         }
 
         $album_id = Dba::insert_id();
+        if (!$album_id) {
+            return 0;
+        }
         debug_event(self::class, sprintf('check album: created {%s}', $album_id), 4);
         // map the new id
-        Catalog::update_map($catalog_id, 'album', $album_id);
+        Catalog::update_map($catalog_id, 'album', (int)$album_id);
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && AmpConfig::get('wanted')) {
             $user = Core::get_global('user');
@@ -433,25 +398,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$version] = $album_id;
 
         return (int)$album_id;
-    }
-
-    /**
-     * format
-     * This is the format function for this object. It sets cleaned up
-     * album information with the base required
-     * f_link, f_name
-     */
-    public function format(): void
-    {
-        if ($this->isNew()) {
-            return;
-        }
-
-        /* Pull the advanced information */
-        $data = $this->_get_extra_info();
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
     }
 
     /**
@@ -674,11 +620,34 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
+     * findAlbumArtist
+     * Certain albums may have a single artist and not have any albumartist tags
+     */
+    public function findAlbumArtist(): ?int
+    {
+        if (
+            !$this->album_artist &&
+            $this->song_artist_count == 1
+        ) {
+            $sql        = "SELECT `artist`.`name` AS `artist_name`, `artist`.`prefix` AS `artist_prefix`, `song`.`artist` AS `album_artist` FROM `song` INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` WHERE `song`.`album` = ? GROUP BY `song`.`album`, `artist`.`prefix`, `artist`.`name`, `song`.`artist`;";
+            $db_results = Dba::read($sql, [$this->id]);
+            $results    = Dba::fetch_assoc($db_results);
+            // overwrite so you can get something
+            $this->album_artist  = $results['album_artist'] ?? null;
+            $this->artist_prefix = $results['artist_prefix'] ?? null;
+            $this->artist_name   = $results['artist_name'] ?? null;
+        }
+
+        return $this->album_artist;
+    }
+
+    /**
      * Get the album artist fullname.
      */
     public function get_artist_fullname(): ?string
     {
         if ($this->f_artist_name === null) {
+            $this->findAlbumArtist();
             if ($this->album_artist === 0) {
                 $this->artist_prefix = '';
                 $this->artist_name   = T_('Various');
@@ -725,7 +694,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * Get parent album artists.
      * @return int[]
      */
-    public static function get_parent_array(int $album_id, int $primary_id, string $object_type = 'album'): array
+    public static function get_parent_array(int $album_id, ?int $primary_id = null, string $object_type = 'album'): array
     {
         $results    = [];
         $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` = ?;";
@@ -744,26 +713,26 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Get item children.
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array{song: list<array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
-        return $this->get_medias();
+        return ['song' => $this->get_medias()];
     }
 
     /**
      * Search for direct children of an object
      * @param string $name
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         $childrens  = [];
         $sql        = "SELECT DISTINCT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`file` LIKE ?;";
         $db_results = Dba::read($sql, [$this->id, "%" . $name]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = [
-                'object_type' => 'song',
+                'object_type' => LibraryItemEnum::SONG,
                 'object_id' => (int)$row['id']
             ];
         }
@@ -857,10 +826,9 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * display_art
-     * @param int $thumb
-     * @param bool $force
+     * @param array{width: int, height: int} $size
      */
-    public function display_art($thumb = 2, $force = false): void
+    public function display_art(array $size, bool $force = false): void
     {
         $album_id = null;
         $type     = null;
@@ -877,7 +845,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $title = ($this->get_artist_fullname() != "")
                 ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
                 : $this->get_fullname();
-            Art::display($type, $album_id, $title, $thumb, $this->get_link());
+            Art::display($type, $album_id, $title, $size, $this->get_link());
         }
     }
 
@@ -1110,14 +1078,13 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $sql        = "SELECT `id` FROM `album` WHERE `album_artist` IS NULL AND `name` != ?;";
         $db_results = Dba::read($sql, [T_('Unknown (Orphaned)')]);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $album_id = (int) $row['id'];
-
+            $album_id   = (int) $row['id'];
             $artist_id  = 0;
             $sql        = "SELECT MIN(`artist`) AS `artist` FROM `song` WHERE `album` = ? GROUP BY `album` HAVING COUNT(DISTINCT `artist`) = 1 LIMIT 1";
             $db_results = Dba::read($sql, [$album_id]);
 
             // these are albums that only have 1 artist
-            while ($row = Dba::fetch_assoc($db_results)) {
+            if ($row = Dba::fetch_assoc($db_results)) {
                 $artist_id = (int)$row['artist'];
             }
 

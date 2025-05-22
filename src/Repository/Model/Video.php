@@ -82,7 +82,7 @@ class Video extends database_object implements
 
     public ?int $bitrate = null;
 
-    public ?int $video_bitrate = null;
+    public int|float|null $video_bitrate = null;
 
     public ?int $display_x = null;
 
@@ -100,16 +100,16 @@ class Video extends database_object implements
 
     public string $type;
 
-    public ?string $f_resolution = null;
-
-    public ?string $f_display = null;
-
     /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
     private ?string $f_link = null;
 
     private ?bool $has_art = null;
+
+    private ?string $f_resolution = null;
+
+    private ?string $f_display = null;
 
     /**
      * Constructor
@@ -167,18 +167,27 @@ class Video extends database_object implements
     }
 
     /**
-     * format
-     * This formats a video object so that it is human readable
+     * get_f_resolution
      */
-    public function format(): void
+    public function get_f_resolution(): ?string
     {
-        if ($this->resolution_x || $this->resolution_y) {
+        if (!$this->f_resolution && ($this->resolution_x || $this->resolution_y)) {
             $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
         }
 
-        if ($this->display_x || $this->display_y) {
+        return $this->f_resolution;
+    }
+
+    /**
+     * get_f_display
+     */
+    public function get_f_display(): ?string
+    {
+        if (!$this->f_display && ($this->display_x || $this->display_y)) {
             $this->f_display = $this->display_x . 'x' . $this->display_y;
         }
+
+        return $this->f_display;
     }
 
     /**
@@ -299,14 +308,6 @@ class Video extends database_object implements
     }
 
     /**
-     * get_f_artist_link
-     */
-    public function get_f_artist_link(): ?string
-    {
-        return '';
-    }
-
-    /**
      * Get item get_f_album_link.
      */
     public function get_f_album_link(): string
@@ -332,7 +333,7 @@ class Video extends database_object implements
     }
 
     /**
-     * Get item childrens.
+     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -342,8 +343,9 @@ class Video extends database_object implements
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -399,13 +401,12 @@ class Video extends database_object implements
 
     /**
      * display_art
-     * @param int $thumb
-     * @param bool $force
+     * @param array{width: int, height: int} $size
      */
-    public function display_art($thumb = 2, $force = false): void
+    public function display_art(array $size, bool $force = false): void
     {
         if (Art::has_db($this->id, 'video') || $force) {
-            Art::display('video', $this->id, (string)$this->get_fullname(), $thumb, $this->get_link());
+            Art::display('video', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
         }
     }
 
@@ -428,9 +429,9 @@ class Video extends database_object implements
 
     /**
      * Get stream types.
-     * @param string $player
+     * @return list<string>
      */
-    public function get_stream_types($player = null): array
+    public function get_stream_types(?string $player = null): array
     {
         return Stream::get_stream_types_for_type($this->type, $player);
     }
@@ -557,7 +558,7 @@ class Video extends database_object implements
         $disx          = (int) $data['display_x'];
         $disy          = (int) $data['display_y'];
         $frame_rate    = (float) $data['frame_rate'];
-        $video_bitrate = Catalog::check_int($data['video_bitrate'], 4294967294, 0);
+        $video_bitrate = Catalog::check_int($data['video_bitrate'], PHP_INT_MAX, 0);
 
         $sql    = "INSERT INTO `video` (`file`, `catalog`, `title`, `video_codec`, `audio_codec`, `resolution_x`, `resolution_y`, `size`, `time`, `mime`, `release_date`, `addition_time`, `bitrate`, `mode`, `channels`, `display_x`, `display_y`, `frame_rate`, `video_bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = [
@@ -1131,6 +1132,7 @@ class Video extends database_object implements
             'played',
             'tag_id',
             'total_count',
+            'total_skip',
             'type',
             'update_time',
         ];

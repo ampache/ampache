@@ -1376,7 +1376,7 @@ class Ui implements UiInterface
     /**
      * This shows the preference box for the preferences pages.
      *
-     * @var array<string, mixed> $preferences
+     * @param array<string, mixed> $preferences
      */
     public function showPreferenceBox(array $preferences): void
     {

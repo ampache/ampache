@@ -65,6 +65,8 @@ final class LostPasswordMethod
     {
         if (!Mailer::is_mail_enabled()) {
             Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+
+            return false;
         }
 
         if (AmpConfig::get('simple_user_mode')) {

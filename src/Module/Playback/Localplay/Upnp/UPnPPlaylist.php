@@ -30,16 +30,18 @@ use Ampache\Module\System\Session;
 
 class UPnPPlaylist
 {
-    private $_deviceGUID;
-    private $_songs   = [];
-    private $_current = 0;
+    private string $_deviceGUID;
+
+    /** @var array<int, array{name: string, link: string}> $_songs */
+    private array $_songs = [];
+
+    private int $_current = 0;
 
     /**
      * UPnPPlaylist constructor.
      * Playlist is its own for each UPnP device
-     * @param $deviceGUID
      */
-    public function __construct($deviceGUID)
+    public function __construct(string $deviceGUID)
     {
         $this->_deviceGUID = $deviceGUID;
         $this->PlayListRead();
@@ -48,11 +50,7 @@ class UPnPPlaylist
         }
     }
 
-    /**
-     * @param string $name
-     * @param $link
-     */
-    public function Add($name, $link): void
+    public function Add(string $name, string $link): void
     {
         $this->_songs[] = ['name' => $name, 'link' => $link];
         $this->PlayListSave();
@@ -74,13 +72,16 @@ class UPnPPlaylist
         $this->PlayListSave();
     }
 
+    /**
+     * @return array<int, array{name: string, link: string}>
+     */
     public function AllItems(): array
     {
         return $this->_songs;
     }
 
     /**
-     * @return array
+     * @return array{name?: string, link?: string}
      */
     public function CurrentItem(): array
     {
@@ -111,14 +112,14 @@ class UPnPPlaylist
     }
 
     /**
-     * @return int|null
+     * @return null|array{name: string, link: string}
      */
-    public function NextItem(): ?int
+    public function NextItem(): ?array
     {
         if ($this->_current < count($this->_songs) - 1) {
             $nxt = $this->_current + 1;
 
-            return $this->_songs[$nxt];
+            return $this->_songs[$nxt] ?? null;
         }
 
         return null;

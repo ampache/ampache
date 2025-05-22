@@ -65,11 +65,13 @@ $web_path = AmpConfig::get_web_path(); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php $art_showed = false;
 if ($libitem->get_default_art_kind() == 'preview') {
-    $art_showed = Art::display('video', $libitem->id, (string)$libitem->get_fullname(), 9, $libitem->get_link(), false, 'preview');
+    $art_showed = Art::display('video', $libitem->id, (string)$libitem->get_fullname(), ['width' => 150, 'height' => 84], $libitem->get_link(), false, true, 'preview');
 }
 if (!$art_showed) {
-    $thumb = ($browse->is_grid_view()) ? 7 : 6;
-    Art::display('video', $libitem->id, (string)$libitem->get_fullname(), $thumb, $libitem->get_link());
+    $size = ($browse->is_grid_view())
+        ? ['width' => 200, 'height' => 300]
+        : ['width' => 100, 'height' => 150];
+    Art::display('video', $libitem->id, (string)$libitem->get_fullname(), $size, $libitem->get_link());
 } ?>
 </td>
 <td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
@@ -86,7 +88,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
 </td>
 <td class="cel_release_date"><?php echo ($libitem->release_date) ? get_datetime((int) $libitem->release_date, 'short', 'none') : ''; ?></td>
 <td class="cel_codec"><?php echo $libitem->video_codec . ' / ' . $libitem->audio_codec; ?></td>
-<td class="cel_resolution"><?php echo $libitem->f_resolution; ?></td>
+<td class="cel_resolution"><?php echo $libitem->get_f_resolution(); ?></td>
 <td class="cel_length"><?php echo floor($libitem->time / 60) . ' ' . T_('minutes'); ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
 <td class="<?php echo $cel_counter; ?>"><?php echo $libitem->total_count; ?></td>

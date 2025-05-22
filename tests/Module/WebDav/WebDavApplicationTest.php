@@ -31,6 +31,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Sabre\DAV\Auth\Backend\BackendInterface;
 use Sabre\DAV\Auth\Plugin;
+use Sabre\DAV\Browser\Plugin as BrowserPlugin;
 use Sabre\DAV\ICollection;
 use Sabre\DAV\Server;
 
@@ -72,6 +73,7 @@ class WebDavApplicationTest extends MockeryTestCase
         $catalog = Mockery::mock(ICollection::class);
         $server  = Mockery::mock(Server::class);
         $plugin  = Mockery::mock(Plugin::class);
+        $browser = Mockery::mock(BrowserPlugin::class);
         $auth    = Mockery::mock(BackendInterface::class);
 
         $raw_web_path = '/';
@@ -101,6 +103,9 @@ class WebDavApplicationTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn($auth);
+        $this->webDavFactory->shouldReceive('createBrowserPlugin')
+            ->once()
+            ->andReturn($browser);
         $this->webDavFactory->shouldReceive('createPlugin')
             ->with($auth)
             ->once()
@@ -109,10 +114,14 @@ class WebDavApplicationTest extends MockeryTestCase
         $server->shouldReceive('setBaseUri')
             ->with('/webdav/index.php')
             ->once();
+
+        $server->shouldReceive('addPlugin')
+            ->with($browser)
+            ->once();
         $server->shouldReceive('addPlugin')
             ->with($plugin)
             ->once();
-        $server->shouldReceive('exec')
+        $server->shouldReceive('start')
             ->withNoArgs()
             ->once();
 
