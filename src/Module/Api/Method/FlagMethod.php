@@ -118,6 +118,8 @@ final class FlagMethod
                 return true;
             }
             Api::error('flag failed ' . $object_id, ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+
+            return false;
         }
 
         return true;
