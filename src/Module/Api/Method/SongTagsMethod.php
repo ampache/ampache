@@ -42,7 +42,7 @@ final class SongTagsMethod
 
     /**
      * song_tags
-     * MINIMUM_API_VERSION=380001
+     * MINIMUM_API_VERSION=7.5.0
      *
      * Get the full song file tags using VaInfo
      * This is used to get tags for remote catalogs to allow maximum data to be returned
