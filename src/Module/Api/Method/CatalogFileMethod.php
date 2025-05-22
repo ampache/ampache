@@ -176,6 +176,8 @@ final class CatalogFileMethod
             Api::message('successfully started: ' . $output_task . ' for ' . $file, $input['api_format']);
         } else {
             Api::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+
+            return false;
         }
 
         return true;
