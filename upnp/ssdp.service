@@ -16,7 +16,7 @@ KillMode=process
 Restart=on-failure
 RestartSec=60s
 StandardOutput=null #If you don't want to make tons of logs you can set it null if you sent a file or some other options it will send all php output to this one.
-StandardError=/var/log/ampache_ssdp_error.log
+StandardError=/var/log/ampache/ssdp_error.log
 
 [Install]
 WantedBy=default.target

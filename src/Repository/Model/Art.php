@@ -248,7 +248,7 @@ class Art extends database_object
      * get_image
      * fill the default image raw, mime and thumb details
      */
-    public function get_image(bool $fallback = false): bool
+    public function get_image(bool $fallback = false, ?string $size = null): bool
     {
         $sql         = "SELECT `id`, `image`, `width`, `height`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = 'original' AND `kind` = ?";
         $db_results  = Dba::read($sql, [$this->object_type, $this->object_id, $this->kind]);
@@ -268,11 +268,9 @@ class Art extends database_object
 
         // return a default image if fallback is requested
         if (!$this->raw && $fallback) {
-            $this->raw      = $this->get_blankalbum();
+            $this->raw      = $this->get_blankalbum($size);
             $this->raw_mime = 'image/png';
             $this->fallback = true;
-            $this->width    = 1400;
-            $this->height   = 1400;
         }
 
         // If we get nothing return false
@@ -295,7 +293,7 @@ class Art extends database_object
             $size === 'original' ||
             !self::_hasGD()
         ) {
-            return $this->get_image($fallback);
+            return $this->get_image($fallback, $size);
         }
 
         if (preg_match('/^[0-9]+x[0-9]+$/', $size)) {
@@ -338,7 +336,7 @@ class Art extends database_object
         }
 
         // If there is no thumb in the database and we want one we have to generate it
-        if ($this->get_image($fallback)) {
+        if ($this->get_image($fallback, $size)) {
             $data = $this->generate_thumb($this->raw, $thumb_size, $this->raw_mime);
 
             // thumb wasn't generated
@@ -679,9 +677,35 @@ class Art extends database_object
         return true;
     }
 
-    private function get_blankalbum(): string
+    private function get_blankalbum(?string $size = null): string
     {
-        $path = __DIR__ . '/../../../images/blankalbum.png';
+        switch ($size) {
+            case '128x128':
+                $path         = __DIR__ . '/../../../images/blankalbum_128x128.png';
+                $this->width  = 128;
+                $this->height = 128;
+                break;
+            case '256x256':
+                $path         = __DIR__ . '/../../../images/blankalbum_256x256.png';
+                $this->width  = 256;
+                $this->height = 256;
+                break;
+            case '384x384':
+                $path         = __DIR__ . '/../../../images/blankalbum_384x384.png';
+                $this->width  = 384;
+                $this->height = 384;
+                break;
+            case '768x768':
+                $path         = __DIR__ . '/../../../images/blankalbum_768x768.png';
+                $this->width  = 768;
+                $this->height = 768;
+                break;
+            default:
+                $path         = __DIR__ . '/../../../images/blankalbum.png';
+                $this->width  = 1400;
+                $this->height = 1400;
+        }
+
         if (!Core::is_readable($path)) {
             debug_event(self::class, 'read_from_images ' . $path . ' cannot be read.', 1);
 
@@ -911,28 +935,17 @@ class Art extends database_object
 
         if ($src_ratio > $dst_ratio) {
             // Source is wider than destination, crop width
-            if ($src_ratio > $dst_ratio * 1.4) {
-                // Source is more than 30% wider, crop 30% off each side
-                $crop_margin = (int)($src_width * 0.2);
-                $new_width   = $src_width - 2 * $crop_margin;
-                $src_x       = $crop_margin;
-            } else {
-                // Source is just wider, no crop
-                $new_width = $src_width;
-                $src_x     = 0;
-            }
             $new_height = $src_height;
+            $new_width  = (int)($src_height * $dst_ratio);
+            $src_x      = (int)(($src_width - $new_width) / 2);
             $src_y      = 0;
         } else {
-            // Source is taller than destination, crop height
-            $new_width  = $src_width;
-            $new_height = (int)($src_width / $dst_ratio);
-            $src_x      = 0;
-
-            // Instead of being dead center attempt to be a little bit above to allow for faces in images
-            $center_y   = (int)(($src_height - $new_height) / 2);
-            $max_offset = (int)($new_height * 0.35);
-            $src_y      = max(0, $center_y - $max_offset);
+            // Source is taller than destination, crop height, with upward bias
+            $new_width     = $src_width;
+            $new_height    = (int)($src_width / $dst_ratio);
+            $src_x         = 0;
+            $center_offset = ($src_height - $new_height) / 2;
+            $src_y         = (int)($center_offset * 0.8);
         }
 
         $thumbnail = imagecreatetruecolor($dst_width, $dst_height);
