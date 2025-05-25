@@ -145,9 +145,8 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             if (!$has_info) {
                 // show a fallback image
                 $rootimg = sprintf(
-                    '%s/../../../../public/%s/images/',
-                    __DIR__,
-                    $this->configContainer->getThemePath()
+                    '%s/../../../../public/images/',
+                    __DIR__
                 );
 
                 $mime       = 'image/png';
