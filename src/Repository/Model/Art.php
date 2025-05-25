@@ -1425,10 +1425,7 @@ class Art extends database_object
         }
 
         echo ">";
-        $imgurl = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
-        if ($thumb_link) {
-            $imgurl .= "&size=" . $out_size;
-        }
+        $imgurl = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&size=" . $out_size;
         if ($kind != 'default') {
             $imgurl .= '&kind=' . $kind;
         }
