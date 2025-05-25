@@ -1391,7 +1391,7 @@ class Art extends database_object
         }
 
         // Expand wide art slightly if it's larger than the desired thumbnail size
-        if (!$thumb_link) {
+        if (!$thumb_link && $art->width && $art->height) {
             $src_ratio = $art->width / $art->height;
             $dst_ratio = $size['width'] / $size['height'];
             if ($src_ratio > $dst_ratio) {
