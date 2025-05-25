@@ -271,6 +271,8 @@ class Art extends database_object
             $this->raw      = $this->get_blankalbum();
             $this->raw_mime = 'image/png';
             $this->fallback = true;
+            $this->width    = 1400;
+            $this->height   = 1400;
         }
 
         // If we get nothing return false
@@ -1389,7 +1391,7 @@ class Art extends database_object
         }
 
         // Expand wide art slightly if it's larger than the desired thumbnail size
-        if (!$thumb_link) {
+        if (!$thumb_link && $art->width && $art->height) {
             $src_ratio = $art->width / $art->height;
             $dst_ratio = $size['width'] / $size['height'];
             if ($src_ratio > $dst_ratio) {
@@ -1425,10 +1427,7 @@ class Art extends database_object
         }
 
         echo ">";
-        $imgurl = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
-        if ($thumb_link) {
-            $imgurl .= "&size=" . $out_size;
-        }
+        $imgurl = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&size=" . $out_size;
         if ($kind != 'default') {
             $imgurl .= '&kind=' . $kind;
         }
