@@ -935,28 +935,17 @@ class Art extends database_object
 
         if ($src_ratio > $dst_ratio) {
             // Source is wider than destination, crop width
-            if ($src_ratio > $dst_ratio * 1.4) {
-                // Source is more than 30% wider, crop 30% off each side
-                $crop_margin = (int)($src_width * 0.2);
-                $new_width   = $src_width - 2 * $crop_margin;
-                $src_x       = $crop_margin;
-            } else {
-                // Source is just wider, no crop
-                $new_width = $src_width;
-                $src_x     = 0;
-            }
             $new_height = $src_height;
+            $new_width  = (int)($src_height * $dst_ratio);
+            $src_x      = (int)(($src_width - $new_width) / 2);
             $src_y      = 0;
         } else {
-            // Source is taller than destination, crop height
-            $new_width  = $src_width;
-            $new_height = (int)($src_width / $dst_ratio);
-            $src_x      = 0;
-
-            // Instead of being dead center attempt to be a little bit above to allow for faces in images
-            $center_y   = (int)(($src_height - $new_height) / 2);
-            $max_offset = (int)($new_height * 0.35);
-            $src_y      = max(0, $center_y - $max_offset);
+            // Source is taller than destination, crop height, with upward bias
+            $new_width     = $src_width;
+            $new_height    = (int)($src_width / $dst_ratio);
+            $src_x         = 0;
+            $center_offset = ($src_height - $new_height) / 2;
+            $src_y         = (int)($center_offset * 0.8);
         }
 
         $thumbnail = imagecreatetruecolor($dst_width, $dst_height);
