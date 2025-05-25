@@ -271,6 +271,8 @@ class Art extends database_object
             $this->raw      = $this->get_blankalbum();
             $this->raw_mime = 'image/png';
             $this->fallback = true;
+            $this->width    = 1400;
+            $this->height   = 1400;
         }
 
         // If we get nothing return false
