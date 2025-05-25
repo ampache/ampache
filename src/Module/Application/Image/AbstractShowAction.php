@@ -141,6 +141,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
 
             $art      = new Art($objectId, $type, $kind);
             $has_info = $art->has_db_info($size ?: 'original');
+            $has_size = $size && preg_match('/^[0-9]+x[0-9]+$/', $size);
             if (!$has_info) {
                 // show a fallback image
                 $rootimg = sprintf(
@@ -152,7 +153,9 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 $mime       = 'image/png';
                 $defaultimg = $this->configContainer->get('custom_blankalbum');
                 if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
-                    $defaultimg = $rootimg . "blankalbum.png";
+                    $defaultimg = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))
+                        ? $rootimg . "blankalbum_" . $size . ".png"
+                        : $rootimg . "blankalbum.png";
                 }
                 $etag  = "EmptyMediaAlbum";
                 $image = file_get_contents($defaultimg);
@@ -162,10 +165,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                     ? $art->id
                     : null;
                 $thumb_data = [];
-                if (
-                    $size &&
-                    preg_match('/^[0-9]+x[0-9]+$/', $size)
-                ) {
+                if ($has_size) {
                     if ($art->thumb && $art->thumb_mime) {
                         // found the thumb by looking up the size
                         $art->raw_mime = $art->thumb_mime;
