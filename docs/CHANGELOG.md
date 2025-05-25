@@ -10,7 +10,7 @@ Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions for
 
 Art is a big focus on this release, many issues with the data and thumbnail generation have been fixed
 
-WebDav has been cleaned up with output path name validaiton and now supports your using your web browser
+WebDav has been cleaned up with output path name validation and now supports your using your web browser
 
 ### Added
 
