@@ -1267,7 +1267,11 @@ class Art extends database_object
         if (array_key_exists('art', $meta)) {
             $url      = $meta['art'];
             $ures     = pathinfo((string) $url);
-            $images[] = ['url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name];
+            $images[] = [
+                'url' => $url,
+                'mime' => 'image/' . ($ures['extension'] ?? 'jpg'),
+                'title' => $plugin->name
+            ];
         }
 
         return $images;
