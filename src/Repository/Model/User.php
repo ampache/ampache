@@ -1222,9 +1222,9 @@ class User extends database_object
 
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
-            $avatar['url'] .= '&thumb=4';
-            $avatar['url_mini'] .= '&thumb=5';
-            $avatar['url_medium'] .= '&thumb=3';
+            $avatar['url'] .= '&size=150x150';
+            $avatar['url_mini'] .= '&size=32x32';
+            $avatar['url_medium'] .= '&size=80x80';
         } else {
             $user = Core::get_global('user');
             if ($user instanceof User) {
