@@ -12,6 +12,8 @@ Art is a big focus on this release, many issues with the data and thumbnail gene
 
 WebDav has been cleaned up with output path name validation and now supports your using your web browser
 
+The rewrite rules for User art have been fixed. Recreate your rules with `bin/installer htaccess`
+
 ### Added
 
 * Add PHP8.4 to GitHub QA actions
@@ -23,6 +25,7 @@ WebDav has been cleaned up with output path name validation and now supports you
 * Typing to plugin properties and functions
 * Typing to catalog modules
 * Add options for sharing private smart lists with users using the Collaborate feature
+* Additional art files for default album art matching common sizes
 * Config version 82
   * Add option `upscale_images` that allows you to disable image upscaling
   * Add `user_name_filter` to allow regex validation of usernames when creating a user
@@ -54,10 +57,11 @@ WebDav has been cleaned up with output path name validation and now supports you
 
 * Deprecate thumb parameter for image links
 * Widen images that are larger than the squares on main object pages (e.g. Artist)
-* Update composer packages
+* Update composer and NPM packages
 * Config `catalog_verify_by_time` checks file mod time only
 * Update vite to 6.2.7
 * Update `docker-compose.yml` for newer versions
+* Update Upnp `ssdp.service` so it works on newer Systemd versions
 * Ampache remote catalog
   * Use new Api function `song_tags` to pull more data for song import. (If available)
 * Plugin
@@ -76,6 +80,7 @@ WebDav has been cleaned up with output path name validation and now supports you
 * Art display was forcing thumbnail images on object pages
 * Don't fetch all the art when you can just get the original image
 * Art thumbnail was always set and would not show the original image
+* Rewrite rules for User objects
 * Base all thumb generation on the original file
 * Don't generate and save thumbnails when they match original art size
 * Scrutinizer builds
