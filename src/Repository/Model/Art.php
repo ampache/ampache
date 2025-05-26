@@ -1178,7 +1178,7 @@ class Art extends database_object
                     : '';
             $url = AmpConfig::get_web_path() . '/image.php?' . $actionStr . 'object_id=' . $uid . '&object_type=' . scrub_out($type);
             if ($thumb !== null) {
-                $url .= '&thumb=' . $thumb;
+                $url .= '&thumb=' . $thumb; // @todo convert thumb links to size links after a period of timie to allow conversion of rules
             }
 
             if ($extension !== '' && $extension !== '0') {
