@@ -840,6 +840,11 @@ class Art extends database_object
             $this->kind,
         ]);
 
+        $art_id = Dba::insert_id() ?: null;
+        if (is_string($art_id)) {
+            $this->id = (int)$art_id;
+        }
+
         return true;
     }
 
