@@ -334,7 +334,12 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $results = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = ['id' => $row['id'], 'name' => $row['name'], 'is_hidden' => $row['is_hidden'], 'count' => $row['count']];
+            $results[$row['id']] = [
+                'id' => $row['id'],
+                'name' => $row['name'],
+                'is_hidden' => $row['is_hidden'],
+                'count' => $row['count']
+            ];
         }
 
         return $results;
@@ -415,7 +420,16 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             Dba::write($sql, [$tag['id'], 0, $type, $item_id]);
 
             $insert_id = (int)Dba::insert_id();
-            parent::add_to_cache('tag_map_' . $type, $insert_id, ['tag_id' => $tag_id, 'user' => 0, 'object_type' => $type, 'object_id' => $item_id]);
+            parent::add_to_cache(
+                'tag_map_' . $type,
+                $insert_id,
+                [
+                    'tag_id' => $tag_id,
+                    'user' => 0,
+                    'object_type' => $type,
+                    'object_id' => $item_id
+                ]
+            );
 
             switch ($type) {
                 case 'album':
@@ -560,7 +574,12 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $db_results = Dba::read($sql, [$type, $object_id]);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = ['id' => $row['id'], 'name' => $row['name'], 'is_hidden' => $row['is_hidden'], 'count' => $row['count']];
+            $results[] = [
+                'id' => $row['id'],
+                'name' => $row['name'],
+                'is_hidden' => $row['is_hidden'],
+                'count' => $row['count']
+            ];
         }
 
         return $results;
