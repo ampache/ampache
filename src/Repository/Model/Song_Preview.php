@@ -65,11 +65,9 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public string $type;
 
-    public $f_artist_link;
+    private ?string $f_album = null;
 
-    public $f_album_link;
-
-    public $f_album;
+    private ?string $f_album_link = null;
 
     private ?string $f_link = null;
 
@@ -78,7 +76,7 @@ class Song_Preview extends database_object implements Media, playable_item
      *
      * Song Preview class
      */
-    public function __construct(?int $object_id = 0)
+    public function __construct(?int $object_id = 0, ?string $album_name = null)
     {
         if (!$object_id) {
             return;
@@ -100,6 +98,10 @@ class Song_Preview extends database_object implements Media, playable_item
                 ? strtolower($data['extension'])
                 : 'mp3';
             $this->mime = Song::type_to_mime($this->type);
+        }
+
+        if ($album_name) {
+            $this->f_album = $album_name;
         }
     }
 
@@ -154,9 +156,9 @@ class Song_Preview extends database_object implements Media, playable_item
      * This attempts to reduce queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point.
-     * @param array $song_ids
+     * @param list<int> $song_ids
      */
-    public static function build_cache($song_ids): bool
+    public static function build_cache(array $song_ids): bool
     {
         if (empty($song_ids)) {
             return false;
@@ -186,9 +188,8 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * has_info
-     * @param int|null $preview_id
      */
-    private function has_info($preview_id = 0): array
+    private function has_info(?int $preview_id = 0): array
     {
         if ($preview_id === null) {
             return [];
@@ -232,25 +233,6 @@ class Song_Preview extends database_object implements Media, playable_item
 
             return $wartist['name'] ?? '';
         }
-    }
-
-    /**
-     * format
-     * This takes the current song object
-     * and does a ton of formatting on it creating f_??? variables on the current
-     * object
-     */
-    public function format(): void
-    {
-        if ($this->artist) {
-            $this->f_artist_link = "<a href=\"" . AmpConfig::get_web_path() . "/artists.php?action=show&artist=" . $this->artist . "\" title=\"" . scrub_out($this->get_artist_fullname()) . "\"> " . scrub_out($this->get_artist_fullname()) . "</a>";
-        } else {
-            $wartist             = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
-            $this->f_artist_link = $wartist['link'] ?? '';
-        }
-
-        // Format the title
-        $this->f_album_link = "<a href=\"" . AmpConfig::get_web_path() . "/albums.php?action=show_missing&mbid=" . $this->album_mbid . "&;artist=" . $this->artist . "\" title=\"" . $this->f_album . "\">" . $this->f_album . "</a>";
     }
 
     /**
@@ -302,6 +284,18 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
+     * Get item get_f_album_link.
+     */
+    public function get_f_album_link(): ?string
+    {
+        if ($this->f_album_link === null && $this->f_album !== null) {
+            $this->f_album_link = "<a href=\"" . AmpConfig::get_web_path() . "/albums.php?action=show_missing&mbid=" . $this->album_mbid . "&;artist=" . $this->artist . "\" title=\"" . $this->f_album . "\">" . $this->f_album . "</a>";
+        }
+
+        return $this->f_album_link;
+    }
+
+    /**
      * Get item f_time or f_time_h.
      */
     public function get_f_time(): string
@@ -319,6 +313,9 @@ class Song_Preview extends database_object implements Media, playable_item
         return null;
     }
 
+    /**
+     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     */
     public function get_childrens(): array
     {
         return [];
@@ -327,8 +324,9 @@ class Song_Preview extends database_object implements Media, playable_item
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -389,9 +387,9 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * get_stream_types
-     * @param $player
+     * @return list<string>
      */
-    public function get_stream_types($player = null): array
+    public function get_stream_types(?string $player = null): array
     {
         return ['native'];
     }

@@ -86,13 +86,6 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     }
 
     /**
-     * format
-     */
-    public function format(): void
-    {
-    }
-
-    /**
      * Get item keywords for metadata searches.
      * @return array<string, array{important: bool, label: string, value: string}>
      */
@@ -153,14 +146,6 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     }
 
     /**
-     * get_f_artist_link
-     */
-    public function get_f_artist_link(): ?string
-    {
-        return '';
-    }
-
-    /**
      * Get item get_f_album_link.
      */
     public function get_f_album_link(): string
@@ -185,6 +170,9 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
         return null;
     }
 
+    /**
+     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     */
     public function get_childrens(): array
     {
         return [];
@@ -193,8 +181,9 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -241,13 +230,12 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
 
     /**
      * display_art
-     * @param int $thumb
-     * @param bool $force
+     * @param array{width: int, height: int} $size
      */
-    public function display_art($thumb = 2, $force = false): void
+    public function display_art(array $size, bool $force = false): void
     {
         if ($this->has_art() || $force) {
-            Art::display('live_stream', $this->id, (string)$this->get_fullname(), $thumb, $this->get_link());
+            Art::display('live_stream', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
         }
     }
 
@@ -371,9 +359,9 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     /**
      * get_stream_types
      * This is needed by the media interface
-     * @param string $player
+     * @return list<string>
      */
-    public function get_stream_types($player = null): array
+    public function get_stream_types(?string $player = null): array
     {
         return ['native'];
     }

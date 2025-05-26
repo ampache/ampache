@@ -56,6 +56,11 @@ final class UtilityFactory implements UtilityFactoryInterface
         return new Mailer();
     }
 
+    /**
+     * Returns a new VaInfo instance
+     *
+     * @param string[] $gatherTypes
+     */
     public function createVaInfo(
         string $file,
         array $gatherTypes = [],

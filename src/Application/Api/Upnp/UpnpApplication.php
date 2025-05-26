@@ -41,7 +41,7 @@ final class UpnpApplication implements ApplicationInterface
         }
 
         $htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
-        if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
+        if (($_GET['btnSend'] ?? false) || ($_GET['btnSendAuto'] ?? false)) {
             $msIP = 1;
             Upnp_Api::sddpSend($msIP);
         }
@@ -81,7 +81,7 @@ final class UpnpApplication implements ApplicationInterface
         </form>
         <br />
         <?php
-        if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
+        if (($_GET['btnSend'] ?? false) || ($_GET['btnSendAuto'] ?? false)) {
             echo 'SSDP sent at ' . date('H:i:s') . '.';
         }
         ?>

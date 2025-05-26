@@ -46,12 +46,10 @@ Ui::show_box_top(T_('Manage')); ?>
     <?php
         foreach ($playlists as $democratic_id) {
             $democratic = new Democratic($democratic_id);
-            $democratic->format();
-            $playlist = new Playlist($democratic->base_playlist);
+            $playlist   = new Playlist($democratic->base_playlist);
             if ($playlist->isNew()) {
                 continue;
-            }
-            $playlist->format(); ?>
+            } ?>
     <tr>
         <td><?php echo scrub_out($democratic->name); ?></td>
         <td><?php echo $playlist->get_f_link(); ?></td>

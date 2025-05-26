@@ -31,6 +31,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
@@ -54,7 +55,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Array of all songs
-     * @var array
+     * @var string[]
      */
     protected $songs = [];
 
@@ -127,9 +128,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Get the parser class like CliHandler or JsonHandler
-     * @return CliHandler|JsonHandler
      */
-    abstract protected function getParser();
+    abstract protected function getParser(): Handler;
 
     /**
      * Check if a song was added before
@@ -178,7 +178,10 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if ($this->checkSong($song)) {
             debug_event(self::class, 'Skipping existing song ' . $song['file'], 5);
         } else {
-            $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['mbid'] ?? null, $song['mb_releasegroupid'] ?? null, $song['album_artist'] ?? null, $song['release_type'] ?? null, $song['release_status'] ?? null, $song['original_year'] ?? null, $song['barcode'] ?? null, $song['catalog_number'] ?? null, $song['version'] ?? null);
+            $album_artist_id  = (isset($song['album_artist']))
+                ? Artist::check($song['album_artist'], $song['mb_albumartistid'] ?? null)
+                : null;
+            $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['mbid'] ?? null, $song['mb_releasegroupid'] ?? null, $album_artist_id, $song['release_type'] ?? null, $song['release_status'] ?? null, $song['original_year'] ?? null, $song['barcode'] ?? null, $song['catalog_number'] ?? null, $song['version'] ?? null);
             $song['album_id'] = $album_id;
             $songId           = $this->insertSong($song);
             if (
@@ -284,7 +287,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * @return string[]
      */
-    public function check_catalog_proc(): array
+    public function check_catalog_proc(?Interactor $interactor = null): array
     {
         return [];
     }
@@ -347,7 +350,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Get all songs from the DB into a array
-     * @return array array(id => file)
+     * @return string[] (id => file)
      */
     public function getAllSongfiles(): array
     {
@@ -356,7 +359,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
         $files = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $files[$row['id']] = $row['file'];
+            $files[(int)$row['id']] = (string)$row['file'];
         }
 
         return $files;
@@ -408,13 +411,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     public function get_rel_path(string $file_path): string
     {
         return '';
-    }
-
-    /**
-     * format
-     */
-    public function format(): void
-    {
     }
 
     /**

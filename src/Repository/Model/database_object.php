@@ -46,10 +46,8 @@ abstract class database_object
     /**
      * get_info
      * retrieves the info from the database and puts it in the cache
-     * @param int $object_id
-     * @param string $table_name
      */
-    public function get_info($object_id, $table_name = ''): array
+    public function get_info(int $object_id, ?string $table_name = ''): array
     {
         $table     = $this->getTableName($table_name);
         $object_id = (int)$object_id;
@@ -61,7 +59,7 @@ abstract class database_object
 
         if (self::is_cached($table, $object_id)) {
             $info = self::get_from_cache($table, $object_id);
-            if (is_array($info)) {
+            if (!empty($info)) {
                 return $info;
             }
         }
@@ -84,7 +82,7 @@ abstract class database_object
     /**
      * getTableName
      */
-    private function getTableName($table_name): ?string
+    private function getTableName(?string $table_name = null): ?string
     {
         if (!$table_name) {
             $table_name = static::DB_TABLENAME;

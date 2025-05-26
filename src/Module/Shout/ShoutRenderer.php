@@ -67,7 +67,7 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
             $details &&
             Art::has_db($shoutObjectId, $shoutObjectType)
         ) {
-            $html .= "<div class='shoutbox-img'><img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . $webPath . "/image.php?object_id=" . $shoutObjectId . "&object_type=" . $shoutObjectType . "&thumb=1\" /></div>";
+            $html .= "<div class='shoutbox-img'><img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . $webPath . "/image.php?object_id=" . $shoutObjectId . "&object_type=" . $shoutObjectType . "&size=150x150\" /></div>";
         }
         $html .= "<div class='shoutbox-info'>";
         if ($details) {

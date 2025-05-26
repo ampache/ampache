@@ -62,7 +62,13 @@ final class WebDavApplication
             sprintf('%s/webdav/index.php', $raw_web_path)
         );
 
-        if ($this->configContainer->isAuthenticationEnabled()) {
+        $use_auth = $this->configContainer->isAuthenticationEnabled();
+
+        $server->addPlugin(
+            $this->webDavFactory->createBrowserPlugin($use_auth)
+        );
+
+        if ($use_auth) {
             $server->addPlugin(
                 $this->webDavFactory->createPlugin(
                     $this->webDavFactory->createWebDavAuth()
@@ -70,6 +76,6 @@ final class WebDavApplication
             );
         }
 
-        $server->exec();
+        $server->start();
     }
 }

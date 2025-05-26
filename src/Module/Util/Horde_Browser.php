@@ -119,9 +119,9 @@ class Horde_Browser
     /**
      * Features.
      *
-     * @var array
+     * @var array<string, bool|float|int|string>
      */
-    private $_features = [
+    private array $_features = [
         'frames' => true,
         'html' => true,
         'images' => true,
@@ -133,9 +133,9 @@ class Horde_Browser
     /**
      * Quirks.
      *
-     * @var array
+     * @var array<string, bool>
      */
-    private $_quirks = [];
+    private array $_quirks = [];
 
     /**
      * Creates a browser instance (Constructor).

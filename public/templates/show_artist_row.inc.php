@@ -67,8 +67,10 @@ $web_path   = AmpConfig::get_web_path(); ?>
 </td>
 <?php $name = scrub_out((string)$libitem->get_fullname()); ?>
 <td class="<?php echo $cel_cover; ?>">
-    <?php $thumb = (isset($browse) && $browse->is_grid_view()) ? 11 : 1;
-Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?action=show&artist=' . $libitem->id); ?>
+    <?php $size = (isset($browse) && $browse->is_grid_view())
+        ? ['width' => 150, 'height' => 150]
+        : ['width' => 100, 'height' => 100];
+Art::display('artist', $libitem->id, $name, $size, $web_path . '/artists.php?action=show&artist=' . $libitem->id); ?>
 </td>
 <td class="<?php echo $cel_artist; ?>"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">

@@ -420,7 +420,7 @@ class Wanted extends database_object
 
                                 $insert_id = Song_Preview::insert($song);
                                 if ($insert_id) {
-                                    $this->songs[] = new Song_Preview($insert_id);
+                                    $this->songs[] = new Song_Preview($insert_id, $this->name);
                                 }
                             }
                         }
@@ -430,18 +430,6 @@ class Wanted extends database_object
         } catch (Exception) {
             $this->songs = [];
         }
-
-        foreach ($this->songs as $song) {
-            $song->f_album = $this->name;
-            $song->format();
-        }
-    }
-
-    /**
-     * format
-     */
-    public function format(): void
-    {
     }
 
     /**

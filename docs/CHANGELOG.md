@@ -1,5 +1,129 @@
 # CHANGELOG
 
+## Ampache 7.5.0
+
+There are problems where the image table could duplicate itself when duplicating album art
+
+Database updates will remove the duplicates and enforce unique values on the table to stop this
+
+Run `bin/cli run:calculateArtSize` to fix up any odd or incorrect dimensions for remaining art
+
+Art is a big focus on this release, many issues with the data and thumbnail generation have been fixed
+
+WebDav has been cleaned up with output path name validation and now supports your using your web browser
+
+The rewrite rules for User art have been fixed. Recreate your rules with `bin/installer htaccess`
+
+### Added
+
+* Add PHP8.4 to GitHub QA actions
+* Add a size parameter to `image.php` art URL's
+* Add width and height properties to Art objects
+* Add example `update_docker_compose.sh` to pull and update your container when updates are available
+* WebDav Browser plugin, allowing direct browsing of your server
+* Show the structure with installed version in Ampache Debug when using a custom structure. (squashed and client)
+* Typing to plugin properties and functions
+* Typing to catalog modules
+* Add options for sharing private smart lists with users using the Collaborate feature
+* Additional art files for default album art matching common sizes
+* Config version 82
+  * Add option `upscale_images` that allows you to disable image upscaling
+  * Add `user_name_filter` to allow regex validation of usernames when creating a user
+  * Add `user_website_filter` to allow regex validation of websites when creating a user
+* CLI
+  * New command `bin/cli print:duplicates` (Print a tab separated list of possible duplicates)
+  * Print query error messages when running `admin:updateDatabase`
+  * Add `-f|--fix` parameter to run:calculateArtSize to look for bad files only
+  * Add print text for find missing and clean actions
+  * Add Interactor to Catalog check actions
+  * Add Interactor to cli database query errors
+* Search
+  * Allow collaboration with smartlists
+  * Add collaborate check to access queries
+* Subsonic remote catalog
+  * Missing `getArtist` call
+* Database 750010
+  * Add `update_time` to `podcast_episode` table
+  * Set `update_time` to NOT NULL on `video` table
+  * Set `update_time` to NOT NULL on `song` table
+  * Fix 0 `width` and `height` columns using `size` for the `image` table
+  * Delete duplicates in the `image` table
+  * Apply a unique constraint to the `image` table
+  * Delete duplicate original images in the `image` table
+  * Add `collaborate` to the search table to allow other users to see private lists
+  * Alter `playlist_id` on the user_playlist_map table to allow search collaboration
+
+### Changed
+
+* Deprecate thumb parameter for image links
+* Widen images that are larger than the squares on main object pages (e.g. Artist)
+* Update composer and NPM packages
+* Config `catalog_verify_by_time` checks file mod time only
+* Update vite to 6.2.7
+* Update `docker-compose.yml` for newer versions
+* Update Upnp `ssdp.service` so it works on newer Systemd versions
+* Ampache remote catalog
+  * Use new Api function `song_tags` to pull more data for song import. (If available)
+* Plugin
+  * Allow hiding Catalog Favorites (Highlight) items setting `maxitems` to `-1`
+
+### Removed
+
+* Remove superfluous format calls from all `Catalog` and `playable_media` objects
+* Remove `get_f_artist_link` which has been replaced with `get_f_parent_link`
+* Hide some useless data in the Debug page and remove `database_password` entirely
+* Remove Tmp_Playlist garbage collection from Catalog garbage collection
+
+### Fixed
+
+* Art scaling and resizing did not center the art causing black bars depending on the scale
+* Art display was forcing thumbnail images on object pages
+* Don't fetch all the art when you can just get the original image
+* Art thumbnail was always set and would not show the original image
+* Rewrite rules for User objects
+* Base all thumb generation on the original file
+* Don't generate and save thumbnails when they match original art size
+* Scrutinizer builds
+* Missing `width` and `height` from `image` duplication
+* Skipping files based on modification time when updating catalogs
+* Verify will now correctly reduce numbers based on the last_update time and fetch all when the update list is empty
+* When a file is unable to be verified set `update_time` to denote a check was made
+* Update Video files from tags didn't do anything
+* Use `findAlbumArtist` to make sure tags are filled when missing Album Artist tags
+* Don't rely on format for Album Artist property when missing
+* CSS for edit dialog box input fields had white text on the dark theme
+* Don't rely on format commands to fill empty `album_artist` for files missing album_artist tags
+* Beets catalog sending the id instead of the artist name to insert function
+* Unset variable warning for Upnp broadcast from web page
+* Delete empty playlist collaborate changes
+* Label pages were not checking config or user correctly allowing public entries (that failed)
+* Show Label action had many logic errors and missing returns
+* Grid status checking on object page art may show small art in the wrong place
+* Ignore query errors on garbage collection (probable table locks, etc)
+* WebDav
+  * Deprecated exec function
+  * Listing children has been simplified and fixed up for all media types
+  * Errors for artist names with `/` creating empty objects
+* CLI
+  * Missing `find` in default argument list check
+  * run:calculateArtSize would only look for jpg files on disk
+* Search
+  * Song search SQL joins for playlist name may not be in correct order
+  * Limit and random would not update if unset
+  * Playlist collaborate mapping being incorrectly joined in PlaylistSearch queries
+* Ampache remote catalog
+  * Regex for file URL could remove more parameters than required
+  * Update URL filename path to make sure it's valid
+* Subsonic
+  * Send genre string correctly for more than one genre instead of just the first result
+  * Check for Album Artist using `findAlbumArtist`
+* Subsonic remote catalog
+  * Stop forcing fallback port 4040
+  * Image size was being sent as an array of height and width (You just send one int value)
+  * Use max value of `album_art_max_width` and `album_art_max_height` for image size if set
+* Search
+  * Missing break on Label searches
+
 ## Ampache 7.4.2
 
 ### Fixed

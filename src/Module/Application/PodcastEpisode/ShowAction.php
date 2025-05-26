@@ -84,7 +84,6 @@ final class ShowAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $episode->format();
             $this->ui->show(
                 'show_podcast_episode.inc.php',
                 ['episode' => $episode]

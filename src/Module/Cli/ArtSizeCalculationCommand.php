@@ -50,6 +50,10 @@ final class ArtSizeCalculationCommand extends Command
         parent::__construct('run:calculateArtSize', T_('Run art size calculation'));
 
         $this->configContainer = $configContainer;
+
+        $this
+            ->option('-f|--fix', T_('Fix database issues'), 'boolval', false)
+            ->usage('<bold>  run:calculateArtSize</end> <comment> ## ' . T_('Run art size calculation') . '<eol/>');
     }
 
     public function execute(): void
@@ -59,7 +63,8 @@ final class ArtSizeCalculationCommand extends Command
         }
 
         $interactor = $this->io();
-        $interactor->white(
+        $fix        = $this->values()['fix'] === true;
+        $interactor->ok(
             T_('Started art size calculation'),
             true
         );
@@ -67,13 +72,36 @@ final class ArtSizeCalculationCommand extends Command
         $inDisk   = $this->configContainer->get('album_art_store_disk');
         $localDir = $this->configContainer->get('local_metadata_dir');
 
-        $sql        = "SELECT `image`, `id`, `object_id`, `object_type`, `size` FROM `image`";
+        $sql = ($fix)
+            ? "SELECT `id`, `image`, `mime`, `size`, `object_id`, `object_type` FROM `image` WHERE (`height` = 0 AND `width` = 0) OR (`width` IS NULL AND `height` IS NULL)"
+            : "SELECT `id`, `image`, `mime`, `size`, `object_id`, `object_type` FROM `image`";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $folder = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], 'default');
             if ($inDisk && $localDir && $folder) {
-                $source = Art::get_from_source(['file' => $folder . 'art-' . $row['size'] . '.jpg'], $row['object_type']);
+                $ext = (!empty($row['mime']))
+                    ? str_replace("image/", "", $row['mime'])
+                    : 'jpg';
+                $path   = $folder . 'art-' . $row['size'] . '.' . $ext;
+                $source = Art::get_from_source(
+                    ['file' => $path],
+                    $row['object_type']
+                );
+                // try jpg on jpeg as well just in case we had weirdness with the insert
+                if ($source === '' && $ext === 'jpeg') {
+                    $source = Art::get_from_source(
+                        ['file' => $folder . 'art-' . $row['size'] . '.jpg'],
+                        $row['object_type']
+                    );
+                }
+
+                if ($source === '') {
+                    $interactor->warn(
+                        sprintf(T_('Missing: %s'), $path),
+                        true
+                    );
+                }
             } else {
                 $source = $row['image'];
             }
@@ -81,15 +109,13 @@ final class ArtSizeCalculationCommand extends Command
             $art_id     = $row['id'];
             $dimensions = Core::image_dimensions($source);
             if ($dimensions['width'] > 0 && $dimensions['height'] > 0) {
-                $width  = $dimensions['width'];
-                $height = $dimensions['height'];
-                $sql    = "UPDATE `image` SET `width`=" . $width . ", `height`=" . $height . " WHERE `id`='" . $art_id . "'";
-                Dba::write($sql);
+                $sql = "UPDATE `image` SET `width` = ?, `height` = ? WHERE `id` = ?";
+                Dba::write($sql, [$dimensions['width'], $dimensions['height'], $art_id]);
             }
         }
 
-        $interactor->white(
-            T_('Finished art size calculation'),
+        $interactor->ok(
+            "\n" . T_('Finished art size calculation'),
             true
         );
     }

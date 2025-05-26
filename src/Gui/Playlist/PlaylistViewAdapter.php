@@ -81,7 +81,7 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function getArt(): void
     {
-        $this->playlist->display_art(2, true);
+        $this->playlist->display_art(['width' => 128, 'height' => 128], true);
     }
 
     public function canAutoplayNext(): bool

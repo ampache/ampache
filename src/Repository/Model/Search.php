@@ -1404,13 +1404,6 @@ class Search extends playlist_object
     }
 
     /**
-     * format
-     */
-    public function format(): void
-    {
-    }
-
-    /**
      * get_items
      *
      * Return an array of the items output by our search
@@ -1472,8 +1465,9 @@ class Search extends playlist_object
      * get_subsearch
      *
      * get SQL for an item subsearch
+     * @return array{sql: string, parameters: array<int, mixed>}
      */
-    public function get_subsearch($table): array
+    public function get_subsearch(string $table): array
     {
         $sqltbl = $this->to_sql();
         $sql    = sprintf('SELECT DISTINCT(`%s`.`id`) FROM `%s` ', $table, $table) . $sqltbl['table_sql'];
@@ -1502,10 +1496,7 @@ class Search extends playlist_object
         ];
     }
 
-    /**
-     * set_last
-     */
-    private function set_last(int $count, string $column): void
+    public function set_last(int $count, string $column): void
     {
         if (in_array($column, ['last_count', 'last_duration'])) {
             $sql = "UPDATE `search` SET `" . Dba::escape($column) . "` = ? WHERE `id` = ?";
@@ -1964,39 +1955,18 @@ class Search extends playlist_object
     }
 
     /**
-     * update
-     *
-     * This function updates the saved search with the current settings.
-     * @param null|array{
-     *     name?: ?string,
-     *     pl_type?: ?string,
-     *     pl_user?: ?int,
-     *     random?: ?int,
-     *     limit?: int
-     * } $data
+     * update_item
+     * This is the generic update function, it does the escaping and error checking
      */
-    public function update(?array $data = null): int
+    public function update_item(string $field, int|string|null $value): bool
     {
-        if ($data !== null) {
-            $this->name   = $data['name'] ?? $this->name;
-            $this->type   = $data['pl_type'] ?? $this->type;
-            $this->user   = $data['pl_user'] ?? $this->user;
-            $this->random = $data['random'] ?? $this->random;
-            $this->limit  = $data['limit'] ?? $this->limit;
+        if (Core::get_global('user')?->getId() != $this->user && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
+            return false;
         }
 
-        $this->username = User::get_username((int)$this->user);
+        $sql = sprintf('UPDATE `search` SET `%s` = ? WHERE `id` = ?', $field);
 
-        if ($this->isNew()) {
-            return 0;
-        }
-
-        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ?, `last_update` = ? WHERE `id` = ?";
-        Dba::write($sql, [$this->name, $this->type, $this->user, $this->username, json_encode($this->rules), $this->logic_operator, (int)$this->random, $this->limit, time(), $this->id]);
-        // reformat after an update
-        $this->format();
-
-        return $this->id;
+        return (Dba::write($sql, [$value, $this->id]) !== false);
     }
 
     /**

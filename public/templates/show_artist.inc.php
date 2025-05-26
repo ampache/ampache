@@ -106,8 +106,7 @@ if (AmpConfig::get('external_links_musicbrainz')) {
             <?php echo T_('Loading...'); ?>
         </div>
 <?php } else {
-    $thumb = 32;
-    Art::display('artist', $artist->id, $title, $thumb);
+    Art::display('artist', $artist->id, $title, ['width' => 384, 'height' => 384], null, true, false);
 } ?>
 </div>
 <?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>

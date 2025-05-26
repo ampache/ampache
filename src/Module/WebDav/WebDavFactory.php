@@ -28,6 +28,7 @@ namespace Ampache\Module\WebDav;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Sabre\DAV\Auth\Backend\BackendInterface;
 use Sabre\DAV\Auth\Plugin;
+use Sabre\DAV\Browser\Plugin as BrowserPlugin;
 use Sabre\DAV\Exception;
 use Sabre\DAV\ICollection;
 use Sabre\DAV\Server;
@@ -65,5 +66,10 @@ final class WebDavFactory implements WebDavFactoryInterface
     public function createPlugin(?BackendInterface $backend): Plugin
     {
         return new Plugin($backend);
+    }
+
+    public function createBrowserPlugin(bool $enablePost): BrowserPlugin
+    {
+        return new BrowserPlugin($enablePost);
     }
 }

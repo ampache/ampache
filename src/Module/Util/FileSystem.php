@@ -32,11 +32,9 @@ class FileSystem
     protected ?string $base = null;
 
     /**
-     * @param $path
-     * @return string
      * @throws Exception
      */
-    protected function real($path): string
+    protected function real(string $path): string
     {
         $temp = realpath($path);
         if (!$temp) {
@@ -150,11 +148,10 @@ class FileSystem
     }
 
     /**
-     * @param $fs_id
-     * @return array
+     * @return array{type: string, content: string}
      * @throws Exception
      */
-    public function data($fs_id): array
+    public function data(string $fs_id): array
     {
         if (strpos($fs_id, ":")) {
             $fs_id = array_map([$this, 'id'], explode(':', $fs_id));
@@ -269,7 +266,7 @@ class FileSystem
      * @return array{status: string}
      * @throws Exception
      */
-    public function remove($fs_id): array
+    public function remove(string $fs_id): array
     {
         $dir = $this->path($fs_id);
         if ($dir === $this->base) {

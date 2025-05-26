@@ -125,7 +125,6 @@ final class SongTagWriter implements SongTagWriterInterface
             return;
         }
 
-        $song->format();
         if ($fileformat == 'mp3') {
             $songMeta  = $this->getId3Metadata($song);
             $txxxData  = $result['id3v2']['comments']['text'] ?? [];
@@ -229,7 +228,7 @@ final class SongTagWriter implements SongTagWriterInterface
 
         $art = new Art($song->artist, 'artist');
         if ($art->has_db_info()) {
-            $image   = $art->get(true);
+            $image   = $art->get();
             $new_pic = [
                 'data' => $image,
                 'mime' => $art->raw_mime,
@@ -248,7 +247,7 @@ final class SongTagWriter implements SongTagWriterInterface
         }
         $art = new Art($song->album, 'album');
         if ($art->has_db_info()) {
-            $image   = $art->get(true);
+            $image   = $art->get();
             $new_pic = [
                 'data' => $image,
                 'mime' => $art->raw_mime,
@@ -376,7 +375,7 @@ final class SongTagWriter implements SongTagWriterInterface
             }
             $art = new Art($song->artist, 'artist');
             if ($art->has_db_info()) {
-                $image   = $art->get(true);
+                $image   = $art->get();
                 $new_pic = [
                     'data' => $image,
                     'picturetypeid' => 8,
@@ -393,7 +392,7 @@ final class SongTagWriter implements SongTagWriterInterface
             }
             $art = new Art($song->album, 'album');
             if ($art->has_db_info()) {
-                $image   = $art->get(true);
+                $image   = $art->get();
                 $new_pic = [
                     'data' => $image,
                     'picturetypeid' => 3,
@@ -429,7 +428,12 @@ final class SongTagWriter implements SongTagWriterInterface
         return null;
     }
 
-    public function check_for_duplicate($apics, $new_pic, &$ndata, $apic_typeid): ?int
+    /**
+     * @param array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}> $apics
+     * @param array<string, array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}>> $ndata
+     * @param array{data: string, description: null|string, mime: null|string, picturetypeid: int, encodingid: int} $new_pic
+     */
+    public function check_for_duplicate(array $apics, array $new_pic, array &$ndata, string $apic_typeid): ?int
     {
         $idx = null;
         $cnt = count($apics);
@@ -450,7 +454,6 @@ final class SongTagWriter implements SongTagWriterInterface
     private function getVorbisMetadata(
         Song $song
     ): array {
-        $song->format();
         $meta = [];
 
         $meta['date']                = $song->year;
@@ -474,7 +477,6 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['genre'] = implode(', ', $meta['genre']);
 
         $album = new Album($song->album);
-        $album->format();
 
         $meta['musicbrainz_albumartistid']  = $song->get_album_mbid();
         $meta['musicbrainz_releasegroupid'] = $album->mbid_group;
@@ -565,8 +567,7 @@ final class SongTagWriter implements SongTagWriterInterface
         }
         $meta['genre'] = implode(', ', $meta['genre']);
 
-        $album = new Album($song->album);
-        $album->format();
+        $album                 = new Album($song->album);
         $meta['original_year'] = $album->original_year; //TORY
 
         $meta['text'] = [];

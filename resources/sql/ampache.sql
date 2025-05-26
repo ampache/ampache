@@ -18,9 +18,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.9
--- Generation Time: Apr 03, 2025 at 12:03 AM
--- Server version: 10.11.6-MariaDB-0+deb12u1-log
--- PHP Version: 8.3.17
+-- Generation Time: May 21, 2025 at 08:06 AM
+-- Server version: 11.8.1-MariaDB-4
+-- PHP Version: 8.3.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -485,6 +485,7 @@ CREATE TABLE IF NOT EXISTS `image` (
   `object_id` int(11) UNSIGNED NOT NULL,
   `kind` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_image` (`width`,`height`,`mime`,`size`,`object_type`,`object_id`,`kind`),
   KEY `object_type` (`object_type`),
   KEY `object_id` (`object_id`),
   KEY `object_type_size_kind_IDX` (`object_type`,`size`,`kind`) USING BTREE,
@@ -845,6 +846,7 @@ CREATE TABLE IF NOT EXISTS `podcast_episode` (
   `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
   `pubdate` int(11) UNSIGNED NOT NULL,
   `addition_time` int(11) UNSIGNED NOT NULL,
+  `update_time` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0,
@@ -1128,6 +1130,7 @@ CREATE TABLE IF NOT EXISTS `search` (
   `last_count` int(11) DEFAULT NULL,
   `last_duration` int(11) DEFAULT NULL,
   `username` varchar(128) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `collaborate` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1135,22 +1138,22 @@ CREATE TABLE IF NOT EXISTS `search` (
 -- Dumping data for table `search`
 --
 
-INSERT INTO `search` (`id`, `user`, `type`, `date`, `last_update`, `rules`, `name`, `logic_operator`, `random`, `limit`, `last_count`, `last_duration`, `username`) VALUES
-(5, -1, 'public', 0, 0, '[[\"artistrating\",\"equal\",\"5\",null]]', 'Artist 5*', 'AND', 0, 0, NULL, NULL, 'System'),
-(6, -1, 'public', 0, 0, '[[\"artistrating\",\"equal\",\"4\",null]]', 'Artist 4*', 'AND', 0, 0, NULL, NULL, 'System'),
-(7, -1, 'public', 0, 0, '[[\"artistrating\",\"equal\",\"3\",null]]', 'Artist 3*', 'AND', 0, 0, NULL, NULL, 'System'),
-(8, -1, 'public', 0, 0, '[[\"artistrating\",\"equal\",\"2\",null]]', 'Artist 2*', 'AND', 0, 0, NULL, NULL, 'System'),
-(9, -1, 'public', 0, 0, '[[\"artistrating\",\"equal\",\"1\",null]]', 'Artist 1*', 'AND', 0, 0, NULL, NULL, 'System'),
-(10, -1, 'public', 0, 0, '[[\"albumrating\",\"equal\",\"5\",null]]', 'Album 5*', 'AND', 0, 0, NULL, NULL, 'System'),
-(11, -1, 'public', 0, 0, '[[\"albumrating\",\"equal\",\"4\",null]]', 'Album 4*', 'AND', 0, 0, NULL, NULL, 'System'),
-(12, -1, 'public', 0, 0, '[[\"albumrating\",\"equal\",\"3\",null]]', 'Album 3*', 'AND', 0, 0, NULL, NULL, 'System'),
-(13, -1, 'public', 0, 0, '[[\"albumrating\",\"equal\",\"2\",null]]', 'Album 2*', 'AND', 0, 0, NULL, NULL, 'System'),
-(14, -1, 'public', 0, 0, '[[\"albumrating\",\"equal\",\"1\",null]]', 'Album 1*', 'AND', 0, 0, NULL, NULL, 'System'),
-(15, -1, 'public', 0, 0, '[[\"myrating\",\"equal\",\"5\",null]]', 'Song 5*', 'AND', 0, 0, NULL, NULL, 'System'),
-(16, -1, 'public', 0, 0, '[[\"myrating\",\"equal\",\"4\",null]]', 'Song 4*', 'AND', 0, 0, NULL, NULL, 'System'),
-(17, -1, 'public', 0, 0, '[[\"myrating\",\"equal\",\"3\",null]]', 'Song 3*', 'AND', 0, 0, NULL, NULL, 'System'),
-(18, -1, 'public', 0, 0, '[[\"myrating\",\"equal\",\"2\",null]]', 'Song 2*', 'AND', 0, 0, NULL, NULL, 'System'),
-(19, -1, 'public', 0, 0, '[[\"myrating\",\"equal\",\"1\",null]]', 'Song 1*', 'AND', 0, 0, NULL, NULL, 'System');
+INSERT INTO `search` (`id`, `user`, `type`, `date`, `last_update`, `rules`, `name`, `logic_operator`, `random`, `limit`, `last_count`, `last_duration`, `username`, `collaborate`) VALUES
+(5, -1, 'public', 0, 0, '[[\"artistrating\",\"equal\",\"5\",null]]', 'Artist 5*', 'AND', 0, 0, NULL, NULL, 'System', NULL),
+(6, -1, 'public', 0, 0, '[[\"artistrating\",\"equal\",\"4\",null]]', 'Artist 4*', 'AND', 0, 0, NULL, NULL, 'System', NULL),
+(7, -1, 'public', 0, 0, '[[\"artistrating\",\"equal\",\"3\",null]]', 'Artist 3*', 'AND', 0, 0, NULL, NULL, 'System', NULL),
+(8, -1, 'public', 0, 0, '[[\"artistrating\",\"equal\",\"2\",null]]', 'Artist 2*', 'AND', 0, 0, NULL, NULL, 'System', NULL),
+(9, -1, 'public', 0, 0, '[[\"artistrating\",\"equal\",\"1\",null]]', 'Artist 1*', 'AND', 0, 0, NULL, NULL, 'System', NULL),
+(10, -1, 'public', 0, 0, '[[\"albumrating\",\"equal\",\"5\",null]]', 'Album 5*', 'AND', 0, 0, NULL, NULL, 'System', NULL),
+(11, -1, 'public', 0, 0, '[[\"albumrating\",\"equal\",\"4\",null]]', 'Album 4*', 'AND', 0, 0, NULL, NULL, 'System', NULL),
+(12, -1, 'public', 0, 0, '[[\"albumrating\",\"equal\",\"3\",null]]', 'Album 3*', 'AND', 0, 0, NULL, NULL, 'System', NULL),
+(13, -1, 'public', 0, 0, '[[\"albumrating\",\"equal\",\"2\",null]]', 'Album 2*', 'AND', 0, 0, NULL, NULL, 'System', NULL),
+(14, -1, 'public', 0, 0, '[[\"albumrating\",\"equal\",\"1\",null]]', 'Album 1*', 'AND', 0, 0, NULL, NULL, 'System', NULL),
+(15, -1, 'public', 0, 0, '[[\"myrating\",\"equal\",\"5\",null]]', 'Song 5*', 'AND', 0, 0, NULL, NULL, 'System', NULL),
+(16, -1, 'public', 0, 0, '[[\"myrating\",\"equal\",\"4\",null]]', 'Song 4*', 'AND', 0, 0, NULL, NULL, 'System', NULL),
+(17, -1, 'public', 0, 0, '[[\"myrating\",\"equal\",\"3\",null]]', 'Song 3*', 'AND', 0, 0, NULL, NULL, 'System', NULL),
+(18, -1, 'public', 0, 0, '[[\"myrating\",\"equal\",\"2\",null]]', 'Song 2*', 'AND', 0, 0, NULL, NULL, 'System', NULL),
+(19, -1, 'public', 0, 0, '[[\"myrating\",\"equal\",\"1\",null]]', 'Song 1*', 'AND', 0, 0, NULL, NULL, 'System', NULL);
 
 -- --------------------------------------------------------
 
@@ -1256,7 +1259,7 @@ CREATE TABLE IF NOT EXISTS `song` (
   `mbid` varchar(36) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `played` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
-  `update_time` int(11) UNSIGNED DEFAULT 0,
+  `update_time` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `addition_time` int(11) UNSIGNED DEFAULT 0,
   `user_upload` int(11) DEFAULT NULL,
   `license` int(11) DEFAULT NULL,
@@ -1363,7 +1366,7 @@ CREATE TABLE IF NOT EXISTS `tag` (
   `video` int(11) UNSIGNED NOT NULL DEFAULT 0,
   UNIQUE KEY `name` (`name`),
   KEY `map_id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1464,7 +1467,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '740001'),
+('db_version', '750010'),
 ('Plugin_Last.FM', '000005'),
 ('Plugin_Home Dashboard', '2');
 
@@ -1599,7 +1602,7 @@ CREATE TABLE IF NOT EXISTS `user_playlist` (
 
 DROP TABLE IF EXISTS `user_playlist_map`;
 CREATE TABLE IF NOT EXISTS `user_playlist_map` (
-  `playlist_id` int(11) UNSIGNED NOT NULL,
+  `playlist_id` varchar(16) DEFAULT NULL,
   `user_id` int(11) UNSIGNED NOT NULL,
   UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1874,7 +1877,7 @@ CREATE TABLE IF NOT EXISTS `video` (
   `size` bigint(20) UNSIGNED NOT NULL,
   `mime` varchar(255) DEFAULT NULL,
   `addition_time` int(11) UNSIGNED NOT NULL,
-  `update_time` int(11) UNSIGNED DEFAULT NULL,
+  `update_time` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `enabled` tinyint(1) NOT NULL DEFAULT 1,
   `played` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `release_date` int(11) DEFAULT NULL,

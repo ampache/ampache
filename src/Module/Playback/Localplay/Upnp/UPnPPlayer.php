@@ -40,17 +40,26 @@ use SimpleXMLElement;
  */
 class UPnPPlayer
 {
-    /** @var UPnPPlaylist $object */
-    private $_playlist = null;
+    private ?UPnPPlaylist $_playlist = null;
 
-    /** @var UPnPDevice $object */
-    private $_device;
+    private ?UPnPDevice $_device = null;
 
-    /** @var string $_description_url */
-    private $_description_url;
+    private string $_description_url = "http://localhost";
 
-    // 0 - stopped, 1 - playing
-    private $_intState = 0;
+    private int $_intState = 0; // 0 - stopped, 1 - playing
+
+    private bool $_shuffle = false; // 0 - stopped, 1 - playing
+
+    public function __construct(
+        string $name = "noname",
+        string $description_url = "http://localhost"
+    ) {
+        debug_event(self::class, 'constructor: ' . $name . ' | ' . $description_url, 5);
+
+        $this->_description_url = $description_url;
+
+        $this->ReadIndState();
+    }
 
     /**
      * Lazy initialization for UPNP device property
@@ -79,31 +88,12 @@ class UPnPPlayer
     }
 
     /**
-     * UPnPPlayer
-     * This is the constructor,
-     * @param string $name
-     * @param string $description_url
-     */
-    public function __construct(
-        $name = "noname",
-        $description_url = "http://localhost"
-    ) {
-        debug_event(self::class, 'constructor: ' . $name . ' | ' . $description_url, 5);
-
-        $this->_description_url = $description_url;
-
-        $this->ReadIndState();
-    }
-
-    /**
      * add
      * append a song to the playlist
-     * $name    Name to be shown in the playlist
-     * $link    URL of the song
-     * @param string $name
-     * @param $link
+     * $name Name to be shown in the playlist
+     * $link URL of the song
      */
-    public function PlayListAdd($name, $link): bool
+    public function PlayListAdd(string $name, string $link): bool
     {
         $this->Playlist()->Add($name, $link);
 
@@ -113,9 +103,8 @@ class UPnPPlayer
     /**
      * delete_pos
      * This deletes a specific track
-     * @param $track
      */
-    public function PlaylistRemove($track): bool
+    public function PlaylistRemove(int $track): bool
     {
         $this->Playlist()->RemoveTrack($track);
 
@@ -143,7 +132,7 @@ class UPnPPlayer
     }
 
     /**
-     * @return array
+     * @return array{name?: string, link?: string}
      */
     public function GetCurrentItem(): array
     {
@@ -231,8 +220,7 @@ class UPnPPlayer
         $songUrl = $song['link'];
         $songId  = (int)preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', $songUrl);
 
-        $song = new Song($songId);
-        $song->format();
+        $song     = new Song($songId);
         $songItem = Upnp_Api::_itemSong($song, '');
         $domDIDL  = Upnp_Api::createDIDL($songItem, '');
         $xmlDIDL  = $domDIDL->saveXML();
@@ -247,7 +235,7 @@ class UPnPPlayer
     /**
      * CallAsyncURL
      */
-    private function CallAsyncURL($url): void
+    private function CallAsyncURL(string $url): void
     {
         $curl = curl_init();
         if ($curl) {
@@ -261,6 +249,15 @@ class UPnPPlayer
 
     /**
      * play
+     * play a random song
+     */
+    public function PlayShuffle(bool $state): bool
+    {
+        return $this->_shuffle = $state;
+    }
+
+    /**
+     * play
      * play the current song
      */
     public function Play(): bool
@@ -269,7 +266,13 @@ class UPnPPlayer
 
         $this->SetIntState(1);
 
-        $currentSongArgs = $this->prepareURIRequest($this->Playlist()->CurrentItem(), "Current") ?? [];
+        if ($this->_shuffle) {
+            $items = $this->Playlist()->AllItems();
+            $item  = $items[array_rand($items)];
+        } else {
+            $item = $this->Playlist()->CurrentItem();
+        }
+        $currentSongArgs = $this->prepareURIRequest($item, "Current") ?? [];
         $response        = $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
 
         $args = [

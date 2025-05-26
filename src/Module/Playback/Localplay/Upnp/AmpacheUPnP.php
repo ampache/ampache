@@ -47,8 +47,7 @@ class AmpacheUPnP extends localplay_controller
 
     private string $_description = 'Controls a UPnP instance';
 
-    /** @var UPnPPlayer $object */
-    private $_upnp;
+    private ?UPnPPlayer $_upnp = null;
 
     /**
      * get_description
@@ -386,7 +385,6 @@ class AmpacheUPnP extends localplay_controller
     /**
      * volume
      * This tells UPnP to set the volume to the specified amount
-     * @param $volume
      */
     public function volume($volume): bool
     {

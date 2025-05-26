@@ -96,11 +96,13 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
         // If we aren't resizing just trash thumb
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RESIZE_IMAGES) === false) {
             $_GET['thumb'] = null;
+            $_GET['size']  = null;
         }
 
-        /* Decide what size this image is */
         $thumb = (int)filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
-        $size  = Art::get_thumb_size($thumb);
+        $size  = ($thumb === 0)
+            ? filter_input(INPUT_GET, 'size', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE) ?? 'original'
+            : 'original';
         $kind  = (array_key_exists('kind', $_GET) && $_GET['kind'] == 'preview')
             ? 'preview'
             : 'default';
@@ -137,29 +139,44 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
 
             [$filename, $objectId, $type] = $itemConfig;
 
-            $art = new Art($objectId, $type, $kind);
-            $art->has_db_info();
-
-            $etag = $art->id;
-            if (!$art->raw_mime) {
+            $art      = new Art($objectId, $type, $kind);
+            $has_info = $art->has_db_info($size ?: 'original');
+            $has_size = $size && preg_match('/^[0-9]+x[0-9]+$/', $size);
+            if (!$has_info) {
+                // show a fallback image
                 $rootimg = sprintf(
-                    '%s/../../../../public/%s/images/',
-                    __DIR__,
-                    $this->configContainer->getThemePath()
+                    '%s/../../../../public/images/',
+                    __DIR__
                 );
 
                 $mime       = 'image/png';
                 $defaultimg = $this->configContainer->get('custom_blankalbum');
                 if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
-                    $defaultimg = $rootimg . "blankalbum.png";
+                    $defaultimg = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))
+                        ? $rootimg . "blankalbum_" . $size . ".png"
+                        : $rootimg . "blankalbum.png";
                 }
                 $etag  = "EmptyMediaAlbum";
                 $image = file_get_contents($defaultimg);
             } else {
+                // show the original image or thumbnail
+                $etag = ($art->id > 0)
+                    ? $art->id
+                    : null;
                 $thumb_data = [];
-                if (array_key_exists('thumb', $_GET)) {
+                if ($has_size) {
+                    if ($art->thumb && $art->thumb_mime) {
+                        // found the thumb by looking up the size
+                        $art->raw_mime = $art->thumb_mime;
+                        $art->raw      = $art->thumb;
+                    }
+                } elseif (array_key_exists('thumb', $_GET) && $thumb > 0) {
+                    // thumbs should be avoided but can still be used
+                    $size       = Art::get_thumb_size($thumb);
                     $thumb_data = $art->get_thumb($size);
-                    $etag .= '-' . $thumb;
+                    if ($art->id > 0) {
+                        $etag .= '-' . $thumb;
+                    }
                 }
 
                 $mime  = (array_key_exists('thumb_mime', $thumb_data))

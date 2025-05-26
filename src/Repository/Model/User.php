@@ -807,6 +807,31 @@ class User extends database_object
             return 0;
         }
 
+        // Forbid username or fullname to have an URL (usually spambot)
+        $name_filter = AmpConfig::get('user_name_filter');
+        if (
+            $name_filter &&
+            (
+                preg_match('/' . $name_filter . '/i', $username) ||
+                preg_match('/' . $name_filter . '/i', $fullname)
+            )
+        ) {
+            debug_event(self::class, 'Checking for spambot: matched regex (' . $name_filter . '). Won\'t create user. ' . json_encode(['username' => $username,'fullname' => $fullname,'ip' => Core::get_user_ip()]), 1);
+
+            return 0;
+        }
+
+        // Forbid website with markdown syntax (usually spambot)
+        $site_filter = AmpConfig::get('user_website_filter');
+        if (
+            $site_filter &&
+            preg_match('/' . $site_filter . '/i', $website)
+        ) {
+            debug_event(self::class, 'Checking for spambot: matched regex (' . $site_filter . '). Won\'t create user. ' . json_encode(['website' => $website, 'ip' => Core::get_user_ip() ]), 1);
+
+            return 0;
+        }
+
         $website = rtrim((string)$website, "/");
         if (!$encrypted) {
             $password = hash('sha256', $password);
@@ -902,13 +927,6 @@ class User extends database_object
         if ($db_results) {
             unset($_SESSION['userdata']['password']);
         }
-    }
-
-    /**
-     * format
-     */
-    public function format(): void
-    {
     }
 
     /**
@@ -1103,7 +1121,7 @@ class User extends database_object
      */
     public function get_fullname(): ?string
     {
-        return ($this->fullname_public)
+        return ($this->fullname_public && !empty($this->fullname))
             ? $this->fullname
             : $this->username;
     }
@@ -1204,9 +1222,15 @@ class User extends database_object
 
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
-            $avatar['url'] .= '&thumb=4';
-            $avatar['url_mini'] .= '&thumb=5';
-            $avatar['url_medium'] .= '&thumb=3';
+            if (AmpConfig::get('upscale_images', true)) {
+                $avatar['url'] .= '&size=300x300';
+                $avatar['url_mini'] .= '&size=64x64';
+                $avatar['url_medium'] .= '&size=160x160';
+            } else {
+                $avatar['url'] .= '&size=150x150';
+                $avatar['url_mini'] .= '&size=32x32';
+                $avatar['url_medium'] .= '&size=80x80';
+            }
         } else {
             $user = Core::get_global('user');
             if ($user instanceof User) {

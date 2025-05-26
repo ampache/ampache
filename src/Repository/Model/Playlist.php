@@ -39,8 +39,6 @@ class Playlist extends playlist_object
 {
     protected const DB_TABLENAME = 'playlist';
 
-    public ?string $collaborate = '';
-
     /**
      * @var array<int, array{
      *     object_type: LibraryItemEnum,
@@ -221,13 +219,6 @@ class Playlist extends playlist_object
         parent::add_to_cache($key, $user_id, $results);
 
         return $results;
-    }
-
-    /**
-     * format
-     */
-    public function format(): void
-    {
     }
 
     /**
@@ -499,126 +490,25 @@ class Playlist extends playlist_object
     }
 
     /**
-     * update
-     * This function takes a key'd array of data and runs updates
-     * @param array{
-     *     name?: ?string,
-     *     pl_type?: ?string,
-     *     pl_user?: ?int,
-     *     collaborate?: null|list<string>,
-     *     last_count?: ?int,
-     *     last_duration?: ?int,
-     * } $data
-     */
-    public function update(array $data): int
-    {
-        if (isset($data['name']) && $data['name'] != $this->name) {
-            $this->_update_name($data['name']);
-        }
-
-        if (isset($data['pl_type']) && $data['pl_type'] != $this->type) {
-            $this->_update_type($data['pl_type']);
-        }
-
-        if (isset($data['pl_user']) && $data['pl_user'] != $this->user) {
-            $this->_update_user($data['pl_user']);
-        }
-
-        if (isset($data['collaborate']) && $data['collaborate'] != $this->collaborate) {
-            $this->_update_collaborate($data['collaborate']);
-        }
-
-        if (isset($data['last_count']) && $data['last_count'] != $this->last_count) {
-            $this->_set_last($data['last_count'], 'last_count');
-        }
-
-        if (isset($data['last_duration']) && $data['last_duration'] != $this->last_duration) {
-            $this->_set_last($data['last_duration'], 'last_duration');
-        }
-
-        // reformat after an update
-        $this->format();
-
-        return $this->id;
-    }
-
-    /**
-     * update_type
-     * This updates the playlist type, it calls the generic update_item function
-     */
-    private function _update_type(string $new_type): void
-    {
-        if ($this->_update_item('type', $new_type)) {
-            $this->type = $new_type;
-        }
-    }
-
-    /**
-     * update_user
-     * This updates the playlist type, it calls the generic update_item function
-     */
-    private function _update_user(int $new_user): void
-    {
-        if ($this->_update_item('user', $new_user)) {
-            $this->user     = $new_user;
-            $this->username = User::get_username($new_user);
-            $sql            = "UPDATE `playlist` SET `user` = ?, `username` = ? WHERE `playlist`.`user` = ?;";
-            Dba::write($sql, [$this->user, $this->username, $this->user]);
-        }
-    }
-
-    /**
-     * update_name
-     * This updates the playlist name, it calls the generic update_item function
-     */
-    private function _update_name(string $new_name): void
-    {
-        if ($this->_update_item('name', $new_name)) {
-            $this->name = $new_name;
-        }
-    }
-
-    /**
-     * _update_collaborate
-     * This updates playlist collaborators, it calls the generic update_item function
-     * @param string[] $new_list
-     */
-    private function _update_collaborate(array $new_list): void
-    {
-        $collaborate = implode(',', $new_list);
-        if ($this->_update_item('collaborate', $collaborate)) {
-            $this->collaborate = $collaborate;
-        }
-
-        $sql = "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";
-        Dba::write($sql, [$this->id]);
-
-        foreach ($new_list as $user_id) {
-            $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);";
-            Dba::write($sql, [$this->id, $user_id]);
-        }
-    }
-
-    /**
      * _update_last
      * This updates the playlist last update, it calls the generic update_item function
      */
     private function _update_last(): void
     {
         $last_update = time();
-        if ($this->_update_item('last_update', $last_update)) {
+        if ($this->update_item('last_update', $last_update)) {
             $this->last_update = $last_update;
         }
 
-        $this->_set_last($this->get_total_duration(), 'last_duration');
-        $this->_set_last($this->get_media_count(), 'last_count');
+        $this->set_last($this->get_total_duration(), 'last_duration');
+        $this->set_last($this->get_media_count(), 'last_count');
     }
 
     /**
-     * _update_item
+     * update_item
      * This is the generic update function, it does the escaping and error checking
      */
-    private function _update_item(string $field, int|string $value): bool
+    public function update_item(string $field, int|string|null $value): bool
     {
         if (Core::get_global('user')?->getId() != $this->user && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
             return false;
@@ -802,10 +692,7 @@ class Playlist extends playlist_object
         $this->items = $this->get_items();
     }
 
-    /**
-     * set_last
-     */
-    private function _set_last(int $count, string $column): void
+    public function set_last(int $count, string $column): void
     {
         if (
             $this->id &&

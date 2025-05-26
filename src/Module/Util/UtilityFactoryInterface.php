@@ -29,6 +29,11 @@ interface UtilityFactoryInterface
 {
     public function createMailer(): MailerInterface;
 
+    /**
+     * Returns a new VaInfo instance
+     *
+     * @param string[] $gatherTypes
+     */
     public function createVaInfo(
         string $file,
         array $gatherTypes = [],

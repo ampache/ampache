@@ -79,10 +79,6 @@ class ShowAllSongsActionTest extends MockeryTestCase
             ->once()
             ->andReturn($artist);
 
-        $artist->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
-
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();

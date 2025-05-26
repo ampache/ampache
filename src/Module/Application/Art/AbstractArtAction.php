@@ -60,8 +60,6 @@ abstract class AbstractArtAction implements ApplicationActionInterface
             return null;
         }
 
-        $item->format();
-
         return $item;
     }
 }

@@ -350,8 +350,12 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         return Catalog::can_remove($this->song);
     }
 
+    /**
+     * @return array<string, float|int|string|null>
+     */
     public function getProperties(): array
     {
+        $this->song->fill_ext_info();
         $songprops = [];
 
         $songprops[T_('Title')]        = scrub_out($this->song->title);

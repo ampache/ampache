@@ -334,7 +334,12 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $results = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = ['id' => $row['id'], 'name' => $row['name'], 'is_hidden' => $row['is_hidden'], 'count' => $row['count']];
+            $results[$row['id']] = [
+                'id' => $row['id'],
+                'name' => $row['name'],
+                'is_hidden' => $row['is_hidden'],
+                'count' => $row['count']
+            ];
         }
 
         return $results;
@@ -415,7 +420,16 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             Dba::write($sql, [$tag['id'], 0, $type, $item_id]);
 
             $insert_id = (int)Dba::insert_id();
-            parent::add_to_cache('tag_map_' . $type, $insert_id, ['tag_id' => $tag_id, 'user' => 0, 'object_type' => $type, 'object_id' => $item_id]);
+            parent::add_to_cache(
+                'tag_map_' . $type,
+                $insert_id,
+                [
+                    'tag_id' => $tag_id,
+                    'user' => 0,
+                    'object_type' => $type,
+                    'object_id' => $item_id
+                ]
+            );
 
             switch ($type) {
                 case 'album':
@@ -560,7 +574,12 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $db_results = Dba::read($sql, [$type, $object_id]);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = ['id' => $row['id'], 'name' => $row['name'], 'is_hidden' => $row['is_hidden'], 'count' => $row['count']];
+            $results[] = [
+                'id' => $row['id'],
+                'name' => $row['name'],
+                'is_hidden' => $row['is_hidden'],
+                'count' => $row['count']
+            ];
         }
 
         return $results;
@@ -951,13 +970,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * format
-     */
-    public function format(): void
-    {
-    }
-
-    /**
      * Get item keywords for metadata searches.
      * @return array{tag: array{important: true, label: string, value: string}}
      */
@@ -1021,6 +1033,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         return null;
     }
 
+    /**
+     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     */
     public function get_childrens(): array
     {
         return [];
@@ -1029,8 +1044,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -1076,13 +1092,12 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     /**
      * display_art
-     * @param int $thumb
-     * @param bool $force
+     * @param array{width: int, height: int} $size
      */
-    public function display_art($thumb = 2, $force = false): void
+    public function display_art(array $size, bool $force = false): void
     {
         if ($this->has_art() || $force) {
-            Art::display('tag', $this->id, (string)$this->get_fullname(), $thumb);
+            Art::display('tag', $this->id, (string)$this->get_fullname(), $size);
         }
     }
 

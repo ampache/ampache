@@ -95,7 +95,6 @@ final class FlagMethod
         ) {
             $type      = 'search';
             $object_id = (int) str_replace('smart_', '', (string)$input['id']);
-
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);
@@ -119,6 +118,8 @@ final class FlagMethod
                 return true;
             }
             Api::error('flag failed ' . $object_id, ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+
+            return false;
         }
 
         return true;

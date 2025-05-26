@@ -64,13 +64,6 @@ class LocalPlay
     }
 
     /**
-     * format
-     */
-    public function format(): void
-    {
-    }
-
-    /**
      * _load_player
      * This function attempts to load the player class that Localplay
      * Will interface with in order to make all this magical stuff work
@@ -580,6 +573,17 @@ class LocalPlay
     {
         if ($this->_player instanceof localplay_controller) {
             $this->_player->set_active_instance($uid);
+        }
+    }
+
+    /**
+     * set_block_clear
+     * This stops the mpd system clearing the list when the player is stopped
+     */
+    public function set_block_clear(bool $bool): void
+    {
+        if (isset($this->_player->block_clear)) {
+            $this->_player->block_clear = $bool;
         }
     }
 

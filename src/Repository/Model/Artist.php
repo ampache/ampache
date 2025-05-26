@@ -297,17 +297,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     }
 
     /**
-     * format
-     * this function takes an array of artist
-     * information and formats the relevant values
-     * so they can be displayed in a table for example
-     * it changes the title into a full link.
-     */
-    public function format(): void
-    {
-    }
-
-    /**
      * does the item have art?
      */
     public function has_art(): bool
@@ -538,31 +527,32 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Get item childrens.
+     * @return array{album: list<array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
         $medias = [];
         $albums = $this->getAlbumRepository()->getAlbumByArtist($this->id);
-        $type   = 'album';
         foreach ($albums as $album_id) {
-            $medias[] = ['object_type' => $type, 'object_id' => $album_id];
+            $medias[] = ['object_type' => LibraryItemEnum::ALBUM, 'object_id' => $album_id];
         }
 
-        return [$type => $medias];
+        return ['album' => $medias];
     }
 
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         $childrens  = [];
         $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'album' AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?);";
         $db_results = Dba::read($sql, [$this->id, $name, $name]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = [
-                'object_type' => 'album',
+                'object_type' => LibraryItemEnum::ALBUM,
                 'object_id' => $row['id']
             ];
         }
@@ -622,10 +612,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * display_art
-     * @param int $thumb
-     * @param bool $force
+     * @param array{width: int, height: int} $size
      */
-    public function display_art($thumb = 2, $force = false): void
+    public function display_art(array $size, bool $force = false): void
     {
         $artist_id = null;
         $type      = null;
@@ -636,7 +625,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         }
 
         if ($artist_id !== null && $type !== null) {
-            Art::display($type, $artist_id, (string)$this->get_fullname(), $thumb, $this->get_link());
+            Art::display($type, $artist_id, (string)$this->get_fullname(), $size, $this->get_link());
         }
     }
 

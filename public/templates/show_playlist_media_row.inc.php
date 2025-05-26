@@ -58,7 +58,9 @@ use Ampache\Module\Util\Ui;
 
 // Don't show disabled medias to normal users
 if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
-    $thumb = (isset($browse) && $browse->is_grid_view()) ? 11 : 3;
+    $thumb = (isset($browse) && $browse->is_grid_view())
+        ? ['width' => 150, 'height' => 150]
+        : ['width' => 80, 'height' => 80];
     $link  = ($extended_links && !empty($libitem->get_f_parent_link()))
         ? $libitem->get_f_link() . '&nbsp;-&nbsp;' . $libitem->get_f_parent_link()
         : $libitem->get_f_link(); ?>

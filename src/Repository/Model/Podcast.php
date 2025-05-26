@@ -104,15 +104,6 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     }
 
     /**
-     * format
-     *
-     * @deprecated
-     */
-    public function format(): void
-    {
-    }
-
-    /**
      * does the item have art?
      */
     public function has_art(): bool
@@ -199,16 +190,28 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
         return null;
     }
 
+    /**
+     * @return array{podcast_episode: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     */
     public function get_childrens(): array
     {
-        return ['podcast_episode' => $this->getEpisodeIds()];
+        $results = [];
+        foreach ($this->getEpisodeIds() as $episodeId) {
+            $results[] = [
+                'object_type' => LibraryItemEnum::PODCAST_EPISODE,
+                'object_id' => $episodeId
+            ];
+        }
+
+        return ['podcast_episode' => $results];
     }
 
     /**
      * Search for direct children of an object
      * @param string $name
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_children($name): array
+    public function get_children(string $name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
@@ -502,13 +505,12 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 
     /**
      * display_art
-     * @param int $thumb
-     * @param bool $force
+     * @param array{width: int, height: int} $size
      */
-    public function display_art($thumb = 2, $force = false): void
+    public function display_art(array $size, bool $force = false): void
     {
         if (Art::has_db($this->id, 'podcast') || $force) {
-            Art::display('podcast', $this->id, (string)$this->get_fullname(), $thumb, $this->get_link());
+            Art::display('podcast', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
         }
     }
 

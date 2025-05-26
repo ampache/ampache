@@ -83,7 +83,7 @@ final class ArtCollector implements ArtCollectorInterface
         // Define vars
         $results = [];
 
-        $type = $options['type'] ?? $art->type;
+        $type = $options['type'] ?? $art->object_type;
 
         if ($options === []) {
             $this->logger->warning(
@@ -125,7 +125,7 @@ final class ArtCollector implements ArtCollectorInterface
                 "Method used: playlist",
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
-            $playlist = new Playlist($art->uid);
+            $playlist = new Playlist($art->object_id);
 
             return $playlist->gather_art($limit);
         }

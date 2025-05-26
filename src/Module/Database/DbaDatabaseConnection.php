@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Database;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Database\Exception\InsertIdInvalidException;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Module\System\Dba;
@@ -51,10 +52,18 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
         string $sql,
         array $params = [],
         bool $silent = false,
+        ?Interactor $interactor = null,
     ): PDOStatement {
-        $result = Dba::query($sql, $params, $silent);
+        $result = Dba::query($sql, $params, $silent, $interactor);
 
         if ($result === false) {
+            if (!$silent) {
+                $interactor?->error(
+                    'ERROR_query ' . $sql . ' ' . print_r($params, true),
+                    true
+                );
+            }
+
             throw new QueryFailedException();
         }
 

@@ -95,5 +95,8 @@ interface SongViewAdapterInterface
 
     public function canBeDeleted(): bool;
 
+    /**
+     * @return array<string, float|int|string|null>
+     */
     public function getProperties(): array;
 }

@@ -178,13 +178,6 @@ class ShowSongActionTest extends MockeryTestCase
             ->once()
             ->andReturn(false);
 
-        $song->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
-        $song->shouldReceive('fill_ext_info')
-            ->withNoArgs()
-            ->once();
-
         $this->ui->shouldReceive('showBoxTop')
             ->with(
                 $title,
