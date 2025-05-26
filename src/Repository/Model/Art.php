@@ -1165,6 +1165,7 @@ class Art extends database_object
                 $extension = 'jpg';
             }
 
+            // e.g. https://demo.ampache.dev/play/art/{sessionid}/artist/1240/thumb2.png
             $url = AmpConfig::get_web_path() . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . $uid . '/thumb';
             if ($thumb !== null) {
                 $url .= $thumb;
