@@ -1440,6 +1440,9 @@ class Art extends database_object
             if ($kind != 'default') {
                 $link .= '&kind=' . $kind;
             }
+            if ($has_db) {
+                $link .= '&fooid=' . $art->id;
+            }
         }
 
         echo "<div class=\"item_art\">";
@@ -1456,7 +1459,6 @@ class Art extends database_object
 
         // This to keep browser cache feature but force a refresh in case image just changed
         if ($has_db) {
-            $art = new Art($object_id, $object_type);
             if ($art->has_db_info($out_size)) {
                 $imgurl .= '&fooid=' . $art->id;
             }
