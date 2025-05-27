@@ -953,6 +953,9 @@ class Art extends database_object
                 $center_offset = ($src_height - $new_height) / 2;
                 $src_y         = (int)($center_offset * 0.8);
             }
+        } else {
+            $src_x         = 0;
+            $center_offset = $src_height / 2;
         }
 
         $thumbnail = imagecreatetruecolor($dst_width, $dst_height);
