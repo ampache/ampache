@@ -286,6 +286,10 @@ input[type=submit]:focus:active {
     color: #ff9d00;
 }
 
+topmenu_item:hover {
+    border: 2px solid #ff9d00;
+}
+
 .image-topmenu-album,
 .image-topmenu-artist,
 .image-topmenu-favorite,
