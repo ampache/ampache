@@ -839,7 +839,7 @@ class Stats
      *     activity_id: int
      * }>
      */
-    public static function get_recently_played(?int $user_id, string $count_type = 'stream', string $object_type = null, bool $user_only = false): array
+    public static function get_recently_played(?int $user_id, string $count_type = 'stream', ?string $object_type = null, bool $user_only = false): array
     {
         $limit         = AmpConfig::get('popular_threshold', 10);
         $geolocation   = AmpConfig::get('geolocation', false);
