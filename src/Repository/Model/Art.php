@@ -941,8 +941,8 @@ class Art extends database_object
         if ($difference > 1.1 && $difference < 0.9) {
             if ($difference > 1.1) {
                 // Source is wider than destination, crop width
-                $new_height = $src_height;
                 $new_width  = (int)($src_height * $dst_ratio);
+                $new_height = $src_height;
                 $src_x      = (int)(($src_width - $new_width) / 2);
                 $src_y      = 0;
             } else {
@@ -954,6 +954,8 @@ class Art extends database_object
                 $src_y         = (int)($center_offset * 0.8);
             }
         } else {
+            $new_width     = $src_width;
+            $new_height    = $src_height;
             $src_x         = 0;
             $center_offset = ($src_height - $new_height) / 2;
             $src_y         = (int)($center_offset * 0.8);
