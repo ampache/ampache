@@ -561,7 +561,7 @@ final class VaInfo implements VaInfoInterface
      * @param string|null $filename
      * @return array<string, mixed>
      */
-    public static function clean_tag_info(array $results, array $keys, string $filename = null): array
+    public static function clean_tag_info(array $results, array $keys, ?string $filename = null): array
     {
         $info         = self::DEFAULT_INFO;
         $info['file'] = $filename;

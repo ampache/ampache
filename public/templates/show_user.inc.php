@@ -64,7 +64,10 @@ Ui::show_box_top(scrub_out($client->get_fullname())); ?>
 <div class="user_avatar">
     <?php echo $client->get_f_avatar('f_avatar');
     echo "<br /><br />";
-    if (AmpConfig::get('sociable')) {
+    if (
+        $current_user instanceof User &&
+        AmpConfig::get('sociable')
+    ) {
         echo $userFollowStateRenderer->render(
             $client,
             $current_user

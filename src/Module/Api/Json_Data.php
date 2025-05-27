@@ -169,7 +169,7 @@ class Json_Data
      *
      * @param string|null $type object type
      */
-    public static function empty(string $type = null): string
+    public static function empty(?string $type = null): string
     {
         if (empty($type)) {
             return json_encode([], JSON_PRETTY_PRINT) ?: '';

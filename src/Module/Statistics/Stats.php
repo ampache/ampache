@@ -571,13 +571,13 @@ class Stats
      */
     public static function get_top_sql(
         string $input_type,
-        int    $threshold,
+        int $threshold,
         string $count_type = 'stream',
-        ?User  $user = null,
-        bool   $random = false,
-        int    $since = 0,
-        int    $before = 0,
-        bool   $addAdditionalColumns = false
+        ?User $user = null,
+        bool $random = false,
+        int $since = 0,
+        int $before = 0,
+        bool $addAdditionalColumns = false
     ): string {
         $type           = self::validate_type($input_type);
         $date           = $since ?: time() - (86400 * (int)$threshold);
