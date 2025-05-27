@@ -286,7 +286,7 @@ input[type=submit]:focus:active {
     color: #ff9d00;
 }
 
-topmenu_item:hover {
+.topmenu_item:hover {
     border: 2px solid #ff9d00;
 }
 
