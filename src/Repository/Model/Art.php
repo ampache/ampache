@@ -955,7 +955,8 @@ class Art extends database_object
             }
         } else {
             $src_x         = 0;
-            $center_offset = $src_height / 2;
+            $center_offset = ($src_height - $new_height) / 2;
+            $src_y         = (int)($center_offset * 0.8);
         }
 
         $thumbnail = imagecreatetruecolor($dst_width, $dst_height);
