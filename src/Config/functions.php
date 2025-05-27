@@ -507,7 +507,7 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
         case E_COMPILE_ERROR:
             $error_name = 'Zend run-time Error';
             break;
-        case E_STRICT:
+        case E_ALL:
             $error_name = "Strict Error";
             break;
         default:
