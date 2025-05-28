@@ -42,7 +42,7 @@ $user_id   = $user_id ?? -1;
 $user_only = (isset($user_only) && $user_only);
 $show_user = (!$user_only && $user_id > 0);
 $user_str  = ($user_only)
-    ? '&user_only=1'
+    ? '&user_only=1&user_id=' . $user_id
     : '';
 $rss_link  = (AmpConfig::get('use_rss'))
     ? '&nbsp' . Ui::getRssLink(RssFeedTypeEnum::RECENTLY_PLAYED, $user)
