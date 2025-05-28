@@ -1426,8 +1426,8 @@ class Art extends database_object
             $src_ratio  = $art->width / $art->height;
             $dst_ratio  = $size['width'] / $size['height'];
             $difference = $src_ratio - $dst_ratio;
-            if ($difference > 0.3 || $difference < -0.3) {
-                $size['width'] = (int)($size['height'] * $dst_ratio);
+            if ($difference > 0.3) {
+                $size['width'] = (int)($size['height'] * (min($src_ratio, 1.5)));
             }
         }
 
