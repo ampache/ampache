@@ -258,9 +258,6 @@ a.tag_size4 { text-decoration: none; }
     display: inline-block;
 }
 
-.topmenu_item:hover {
-    border: 2px solid #ff9d00;
-}
 
 .topmenu_item a {
     display: block;

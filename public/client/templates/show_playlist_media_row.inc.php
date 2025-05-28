@@ -92,7 +92,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=' . $object_type . '&id=' . $libitem->getId(), 'new_window', $t_add_to_temp, 'playlist_add_' . $libitem->getId());
     if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
-            <a id="<?php echo 'add_playlist_' . $libitem->getId(); ?>" onclick="showPlaylistDialog(event, '<?php echo $object_type; ?>', '<?php echo $libitem->getId(); ?>')">
+            <a id="<?php echo 'add_to_playlist_' . $libitem->getId(); ?>" onclick="showPlaylistDialog(event, '<?php echo $object_type; ?>', '<?php echo $libitem->getId(); ?>')">
                 <?php echo Ui::get_material_symbol('playlist_add', $t_add_to_list); ?>
             </a>
         <?php } ?>

@@ -162,7 +162,7 @@ class Xml4_Data
      * @param string|null $title
      * @see _header()
      */
-    public static function header(string $title = null): string
+    public static function header(?string $title = null): string
     {
         return self::_header($title);
     }
@@ -945,7 +945,7 @@ class Xml4_Data
      * this returns a standard header, there are a few types
      * so we allow them to pass a type if they want to
      */
-    private static function _header(string $title = null): string
+    private static function _header(?string $title = null): string
     {
         switch (self::$type) {
             case 'xspf':

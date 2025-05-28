@@ -18,7 +18,7 @@
                 <tal:block tal:replace="structure ALBUMDISK/getAddToTemporaryPlaylistButton">ADD TO TEMPORARY PLAYLIST</tal:block>
                 <tal:block tal:replace="structure ALBUMDISK/getRandomToTemporaryPlaylistButton">RANDOM TO TEMPORARY PLAYLIST</tal:block>
                 <a
-                        id="add_playlist_${ALBUMDISK/getId}"
+                        id="add_to_playlist_${ALBUMDISK/getId}"
                         onclick="showPlaylistDialog(event, 'album_disk', '${ALBUMDISK/getId}')"
                         tal:content="structure ALBUMDISK/getAddToPlaylistIcon"
                 >ADD TO PLAYLIST</a>

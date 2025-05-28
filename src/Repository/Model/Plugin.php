@@ -42,7 +42,7 @@ class Plugin
      * This constructor loads the Plugin config file which defines how to
      * install/uninstall the plugin from Ampache's database
      */
-    public function __construct(string $name = null)
+    public function __construct(?string $name = null)
     {
         if (!$name) {
             $this->_plugin = null;

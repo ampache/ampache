@@ -366,7 +366,7 @@ class Subsonic_Api
         // saving xml can fail
         if (!$output) {
             $output = "<subsonic-response status=\"failed\" " . "version=\"1.16.1\" " . "type=\"ampache\" " . "serverVersion=\"" . Api::$version . "\" " . "openSubsonic=\"1\" " . ">" .
-                "<error code=\"0\" message=\"Error creating response.\"/>" .
+                "<error code=\"" . Subsonic_Xml_Data::SSERROR_GENERIC . "\" message=\"Error creating response.\"/>" .
                 "</subsonic-response>";
         }
         echo $output;
