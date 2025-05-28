@@ -12,6 +12,7 @@
 
 ### Fixed
 
+* Recently played and skip not showing the right user after a refresh
 * Playlist name being filtered twice in new playlist dialog
 * jQuery was adding items to the temp playlist when loading the `add_to_playlist` dialog
 * CSS missing for Top Menu text and Light theme text was not visible
