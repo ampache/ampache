@@ -145,7 +145,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             if (!$has_info) {
                 // show a fallback image
                 $rootimg = sprintf(
-                    '%s/../../../../%s/images/',
+                    '%s/../../../../images/',
                     __DIR__
                 );
 
