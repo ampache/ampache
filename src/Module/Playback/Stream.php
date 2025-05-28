@@ -593,12 +593,12 @@ class Stream
      * This will insert the Now Playing data.
      */
     public static function insert_now_playing(
-        int    $object_id,
-        int    $uid,
-        int    $length,
+        int $object_id,
+        int $uid,
+        int $length,
         string $sid,
         string $type,
-        ?int   $previous = null
+        ?int $previous = null
     ): void {
         if (!$previous) {
             $previous = time();

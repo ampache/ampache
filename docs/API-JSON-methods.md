@@ -3476,6 +3476,30 @@ Get an art image.
 * throws (HTTP 400 Bad Request)
 * throws (HTTP 404 Not Found)
 
+**NOTE** Art was called using thumb parameters which do not make size obvious.Here is a conversion table to convert any links you have created previously
+
+| Thumb | Width | Height |
+|-------|-------|--------|
+| 1     | 200   | 200    |
+| 2     | 256   | 256    |
+| 22    | 512   | 512    |
+| 32    | 768   | 768    |
+| 3     | 160   | 160    |
+| 5     | 64    | 64     |
+| 6     | 200   | 300    |
+| 34    | 68    | 68     |
+| 64    | 128   | 128    |
+| 174   | 348   | 348    |
+| 300   | 400   | 600    |
+| 7     | 400   | 600    |
+| 8     | 940   | 400    |
+| 9     | 300   | 168    |
+| 10    | 48    | 48     |
+| 4     | 300   | 300    |
+| 11    | 300   | 300    |
+| 12    | 300   | 300    |
+| 999   | 400   | 400    |
+
 ### stream
 
 Streams a given media file. Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.

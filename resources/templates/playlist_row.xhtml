@@ -19,7 +19,7 @@
                 <tal:block tal:replace="structure PLAYLIST/getAddToTemporaryPlaylistButton">ADD TO TEMPORARY PLAYLIST</tal:block>
                 <tal:block tal:replace="structure PLAYLIST/getRandomToTemporaryPlaylistButton">RANDOM TO TEMPORARY PLAYLIST</tal:block>
                 <a
-                        id="add_playlist_${PLAYLIST/getId}"
+                        id="add_to_playlist_${PLAYLIST/getId}"
                         onclick="showPlaylistDialog(event, 'playlist', '${PLAYLIST/getId}')"
                         tal:content="structure PLAYLIST/getAddToPlaylistIcon"
                 >ADD TO PLAYLIST</a>

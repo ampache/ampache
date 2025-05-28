@@ -280,9 +280,18 @@ input[type=submit]:focus:active {
     border-color: #bbb;
 }
 
+.topmenu_item span {
+    color: #1990db;
+}
+
+.topmenu_item:hover {
+    border: 2px solid #1990db;
+}
+
 .image-topmenu-album,
 .image-topmenu-artist,
 .image-topmenu-favorite,
+.image-topmenu-home,
 .image-topmenu-logout,
 .image-topmenu-playlist,
 .image-topmenu-radio,
@@ -295,6 +304,7 @@ input[type=submit]:focus:active {
 .image-topmenu-album:hover,
 .image-topmenu-artist:hover,
 .image-topmenu-favorite:hover,
+.image-topmenu-home:hover,
 .image-topmenu-logout:hover,
 .image-topmenu-playlist:hover,
 .image-topmenu-radio:hover,

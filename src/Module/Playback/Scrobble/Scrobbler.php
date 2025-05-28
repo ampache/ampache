@@ -162,7 +162,7 @@ class Scrobbler
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
      */
-    public function get_session_key(string $token = null): ?SimpleXMLElement
+    public function get_session_key(?string $token = null): ?SimpleXMLElement
     {
         if ($token !== null) {
             $vars = [
