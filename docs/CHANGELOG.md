@@ -12,11 +12,13 @@
 
 ### Fixed
 
+* Playlist name being filtered twice in new playlist dialog
 * jQuery was adding items to the temp playlist when loading the `add_to_playlist` dialog
 * CSS missing for Top Menu text and Light theme text was not visible
 * Code deprecations found for PHP8.4
 * Resize output art based on ratio for display instead of a flat conversion
 * Don't resize art for small ratio differences
+* Catch vite `Manifest->getEntrypoint` exception
 
 ## Ampache 7.5.0
 
