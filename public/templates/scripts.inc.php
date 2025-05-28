@@ -34,8 +34,12 @@ $environment       = $dic->get(EnvironmentInterface::class);
 $manifest          = __DIR__ . '/../dist/.vite/manifest.json';
 $entrypoint        = false;
 if (file_exists($manifest)) {
-    $vm         = new Manifest($manifest, "");
-    $entrypoint = $vm->getEntrypoint("src/js/main.js", false);
+    try {
+        $vm         = new Manifest($manifest, "");
+        $entrypoint = $vm->getEntrypoint("src/js/main.js", false);
+    } catch (Exception $error) {
+        debug_event('scripts.inc', 'Vite manifest error: ' . $error->getMessage(), 5);
+    }
 }
 ?>
 
