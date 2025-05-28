@@ -41,11 +41,11 @@ use Ampache\Repository\Model\Video;
 /** @var User $user */
 
 $ajax_page = $ajax_page ?? 'index';
-$user_id   = $user_id ?? -1;
+$user_id   = $user_id ?? $user->id ?? -1;
 $user_only = (isset($user_only) && $user_only);
 $show_user = (!$user_only && $user_id > 0);
 $user_str  = ($user_only)
-    ? '&user_only=1'
+    ? '&user_only=1&user_id=' . $user_id
     : '';
 $refresh   = "&nbsp" . Ajax::button('?page=index&action=refresh_index' . $user_str, 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
 $web_path  = AmpConfig::get_web_path('/client');
