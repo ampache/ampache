@@ -41,7 +41,7 @@ use Ampache\Repository\Model\Video;
 /** @var User $user */
 
 $ajax_page = $ajax_page ?? 'index';
-$user_id   = $user_id ?? -1;
+$user_id   = $user_id ?? $user->id ?? -1;
 $user_only = (isset($user_only) && $user_only);
 $show_user = (!$user_only && $user_id > 0);
 $user_str  = ($user_only)
