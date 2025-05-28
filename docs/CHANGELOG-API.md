@@ -1,5 +1,14 @@
 # API CHANGELOG
 
+## API 6.7.1
+
+This version is being released for Ampache7 **only**
+
+### Added
+
+* API6
+  * get_art: Extend `type` parameter to include 'label', 'live_stream', 'search', 'user', 'video'
+
 ## API 6.7.0
 
 This version is being released for Ampache7 **only**

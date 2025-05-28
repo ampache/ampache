@@ -571,13 +571,13 @@ class Stats
      */
     public static function get_top_sql(
         string $input_type,
-        int    $threshold,
+        int $threshold,
         string $count_type = 'stream',
-        ?User  $user = null,
-        bool   $random = false,
-        int    $since = 0,
-        int    $before = 0,
-        bool   $addAdditionalColumns = false
+        ?User $user = null,
+        bool $random = false,
+        int $since = 0,
+        int $before = 0,
+        bool $addAdditionalColumns = false
     ): string {
         $type           = self::validate_type($input_type);
         $date           = $since ?: time() - (86400 * (int)$threshold);
@@ -839,7 +839,7 @@ class Stats
      *     activity_id: int
      * }>
      */
-    public static function get_recently_played(?int $user_id, string $count_type = 'stream', string $object_type = null, bool $user_only = false): array
+    public static function get_recently_played(?int $user_id, string $count_type = 'stream', ?string $object_type = null, bool $user_only = false): array
     {
         $limit         = AmpConfig::get('popular_threshold', 10);
         $geolocation   = AmpConfig::get('geolocation', false);

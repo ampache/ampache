@@ -19,7 +19,7 @@
             <tal:block tal:replace="structure SONG/getTemporaryPlaylistButton">TEMPORARY PLAYLIST BUTTON</tal:block>
             <tal:block tal:condition="SONG/canEditPlaylist">
                 <a
-                        id="add_playlist_${SONG/getId}"
+                        id="add_to_playlist_${SONG/getId}"
                         onclick="showPlaylistDialog(event, 'song', '${SONG/getId}')"
                         tal:content="structure SONG/getAddToPlaylistIcon"
                 >PLAYLIST ICON</a>

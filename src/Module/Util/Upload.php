@@ -338,7 +338,7 @@ class Upload
     /**
      * get_root
      */
-    public static function get_root(Catalog $catalog = null, ?string $username = null): string
+    public static function get_root(?Catalog $catalog = null, ?string $username = null): string
     {
         if ($catalog == null) {
             $catalog_id = AmpConfig::get('upload_catalog');

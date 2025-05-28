@@ -935,19 +935,27 @@ class Art extends database_object
         $dst_height = (int)$size['height'];
 
         // Calculate aspect ratios
-        $src_ratio = $src_width / $src_height;
-        $dst_ratio = $dst_width / $dst_height;
-
-        if ($src_ratio > $dst_ratio) {
-            // Source is wider than destination, crop width
-            $new_height = $src_height;
-            $new_width  = (int)($src_height * $dst_ratio);
-            $src_x      = (int)(($src_width - $new_width) / 2);
-            $src_y      = 0;
+        $src_ratio  = $src_width / $src_height;
+        $dst_ratio  = $dst_width / $dst_height;
+        $difference = $src_ratio - $dst_ratio;
+        if ($difference > 0.3 || $difference < -0.3) {
+            if ($difference > 0.3) {
+                // Source is wider than destination, crop width
+                $new_width  = (int)($src_height * $dst_ratio);
+                $new_height = $src_height;
+                $src_x      = (int)(($src_width - $new_width) / 2);
+                $src_y      = 0;
+            } else {
+                // Source is taller than destination, crop height, with upward bias
+                $new_width     = $src_width;
+                $new_height    = (int)($src_width / $dst_ratio);
+                $src_x         = 0;
+                $center_offset = ($src_height - $new_height) / 2;
+                $src_y         = (int)($center_offset * 0.8);
+            }
         } else {
-            // Source is taller than destination, crop height, with upward bias
             $new_width     = $src_width;
-            $new_height    = (int)($src_width / $dst_ratio);
+            $new_height    = $src_height;
             $src_x         = 0;
             $center_offset = ($src_height - $new_height) / 2;
             $src_y         = (int)($center_offset * 0.8);
@@ -1415,10 +1423,11 @@ class Art extends database_object
 
         // Expand wide art slightly if it's larger than the desired thumbnail size
         if (!$thumb_link && $art->width && $art->height) {
-            $src_ratio = $art->width / $art->height;
-            $dst_ratio = $size['width'] / $size['height'];
-            if ($src_ratio > $dst_ratio) {
-                $size['width'] = (int)($size['width'] * 1.25);
+            $src_ratio  = $art->width / $art->height;
+            $dst_ratio  = $size['width'] / $size['height'];
+            $difference = $src_ratio - $dst_ratio;
+            if ($difference > 0.3) {
+                $size['width'] = (int)($size['height'] * (min($src_ratio, 1.5)));
             }
         }
 

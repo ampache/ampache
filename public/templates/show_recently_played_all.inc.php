@@ -41,11 +41,11 @@ use Ampache\Repository\Model\Video;
 /** @var User $user */
 
 $ajax_page = $ajax_page ?? 'index';
-$user_id   = $user_id ?? -1;
+$user_id   = $user_id ?? $user->id ?? -1;
 $user_only = (isset($user_only) && $user_only);
 $show_user = (!$user_only && $user_id > 0);
 $user_str  = ($user_only)
-    ? '&user_only=1'
+    ? '&user_only=1&user_id=' . $user_id
     : '';
 $refresh   = "&nbsp" . Ajax::button('?page=index&action=refresh_index' . $user_str, 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
 $web_path  = AmpConfig::get_web_path();
@@ -142,7 +142,7 @@ foreach ($data as $row) {
                 <td class="cel_add">
                 <span class="cel_item_add">
                     <?php echo Ajax::button('?action=basket&type=' . $row['object_type'] . '&id=' . $media->getId(), 'new_window', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $media->getId()); ?>
-                    <a id="<?php echo 'add_playlist_' . $count . '_' . $media->getId(); ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $media->getId(); ?>')">
+                    <a id="<?php echo 'add_to_playlist_' . $count . '_' . $media->getId(); ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $media->getId(); ?>')">
                         <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
                     </a>
                 </span>

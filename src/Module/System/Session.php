@@ -624,28 +624,8 @@ final class Session implements SessionInterface
         // enforce strict cookies. you don't need these elsewhere
         ini_set('session.cookie_samesite', 'Lax');
 
-        session_set_save_handler(
-            static function (): bool {
-                return true;
-            },
-            static function (): bool {
-                return true;
-            },
-            static function ($key) {
-                return self::_read($key, 'value');
-            },
-            static function ($key, $value): bool {
-                return self::write($key, $value);
-            },
-            static function ($key): bool {
-                return self::destroy($key);
-            },
-            static function (): bool {
-                self::garbage_collection();
-
-                return true;
-            }
-        );
+        $handler = new AmpacheSessionHandler();
+        session_set_save_handler($handler, true);
 
         // Make sure session_write_close is called during the early part of
         // shutdown, to avoid issues with object destruction.

@@ -178,7 +178,7 @@ if ($show_playlist_add) {
             <?php echo Ajax::button_with_text('?action=basket&type=album_random&id=' . $album->id, 'shuffle', $randtotemp, 'play_random_' . $album->id); ?>
         </li>
         <li>
-            <a id="<?php echo 'add_playlist_' . $album->id; ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id; ?>')">
+            <a id="<?php echo 'add_to_playlist_' . $album->id; ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id; ?>')">
                 <?php echo Ui::get_material_symbol('playlist_add', $addtoexist);
     echo $addtoexist; ?>
             </a>

@@ -37,11 +37,11 @@ use Ampache\Repository\Model\User;
 /** @var User $user */
 
 $ajax_page = $ajax_page ?? 'stats';
-$user_id   = $user_id ?? -1;
+$user_id   = $user_id ?? $user->id ?? -1;
 $user_only = (isset($user_only) && $user_only);
 $show_user = (!$user_only && $user_id > 0);
 $user_str  = ($user_only)
-    ? '&user_only=1'
+    ? '&user_only=1&user_id=' . $user_id
     : '';
 $refresh   = "&nbsp" . Ajax::button('?page=stats&action=refresh_skipped' . $user_str, 'refresh', T_('Refresh'), 'refresh_skipped', 'box box_recently_played');
 $web_path  = AmpConfig::get_web_path();
@@ -130,7 +130,7 @@ foreach ($data as $row) {
                 <td class="cel_add">
                 <span class="cel_item_add">
                     <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'new_window', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $song->id); ?>
-                    <a id="<?php echo 'add_playlist_' . $count . '_' . $song->id; ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id; ?>')">
+                    <a id="<?php echo 'add_to_playlist_' . $count . '_' . $song->id; ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id; ?>')">
                         <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
                     </a>
                 </span>

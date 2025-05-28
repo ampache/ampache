@@ -389,7 +389,7 @@ class User extends database_object
      * get_user_data
      * This updates some background data for user specific function
      */
-    public static function get_user_data(int $user_id, string $key = null, int|string $default = null): array
+    public static function get_user_data(int $user_id, ?string $key = null, int|string|null $default = null): array
     {
         $sql    = "SELECT `key`, `value` FROM `user_data` WHERE `user` = ?";
         $params = [$user_id];
