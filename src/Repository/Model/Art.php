@@ -938,8 +938,8 @@ class Art extends database_object
         $src_ratio  = $src_width / $src_height;
         $dst_ratio  = $dst_width / $dst_height;
         $difference = $src_ratio - $dst_ratio;
-        if ($difference > 1.1 && $difference < 0.9) {
-            if ($difference > 1.1) {
+        if ($difference > 0.3 || $difference < -0.3) {
+            if ($difference > 0.3) {
                 // Source is wider than destination, crop width
                 $new_width  = (int)($src_height * $dst_ratio);
                 $new_height = $src_height;
@@ -1426,8 +1426,8 @@ class Art extends database_object
             $src_ratio  = $art->width / $art->height;
             $dst_ratio  = $size['width'] / $size['height'];
             $difference = $src_ratio - $dst_ratio;
-            if ($difference > 1.1) {
-                $size['width'] = (int)($art->height * $dst_ratio);
+            if ($difference > 0.3) {
+                $size['width'] = (int)($size['height'] * (min($src_ratio, 1.5)));
             }
         }
 
