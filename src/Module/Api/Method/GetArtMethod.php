@@ -50,9 +50,9 @@ final class GetArtMethod
      * Get an art image.
      *
      * id       = (string) $object_id
-     * type     = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
+     * type     = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast', 'user')
      * fallback = (integer) 0,1, if true return default art ('blankalbum.png') //optional
-     * size     = (string) width x height ('640x480') //optional
+     * size     = (string) width x height ('640x480', 'original') //optional
      *
      * @param array{
      *     id: string,
@@ -78,7 +78,7 @@ final class GetArtMethod
         $fallback  = (array_key_exists('fallback', $input) && (int)$input['fallback'] == 1);
 
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'search', 'podcast'])) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'search', 'podcast', 'user'])) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
