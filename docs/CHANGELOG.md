@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## Ampache 7.5.1
+
+### Added
+
+* Documentation to convert thumb parameters to size strings
+
+### Changed
+
+* Move the session handler to a SessionHandlerInterface class (PHP8.4 deprecated)
+
+### Fixed
+
+* jQuery was adding items to the temp playlist when loading the `add_to_playlist` dialog
+* CSS missing for Top Menu text and Light theme text was not visible
+* Code deprecations found for PHP8.4
+* Resize output art based on ratio for display instead of a flat conversion
+* Don't resize art for small ratio differences
+
 ## Ampache 7.5.0
 
 There are problems where the image table could duplicate itself when duplicating album art
@@ -1529,7 +1547,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Only allow one password reset from 'Lost Password' per hour
 * Only reset the password from 'Lost Password' when the e-mail is successfully sent
 * Composer
-  * Updated jquery to 3.5
+  * Updated jQuery to 3.5
   * Updated php-cs-fixer to 3.10+
 * CLI
   * Moved catalog map and update functions out of run:updateCatalog clean, add and verify commands (use -t|--garbage to put them back)
@@ -1632,7 +1650,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 ### Added
 
-* Fork https://github.com/scaron/prettyphoto and add jquery3 support
+* Fork https://github.com/scaron/prettyphoto and add jQuery3 support
 * Added an empty example plugin to the docs folder AmpacheExample.php
 * CLI
   * New cli command `bin/cli show:version` (Print the Ampache version number)
