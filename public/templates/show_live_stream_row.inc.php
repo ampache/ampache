@@ -66,7 +66,7 @@ $libitem->display_art($size); ?>
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->id);
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
-            <a id="<?php echo 'add_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, '<?php echo 'live_stream'; ?>', '<?php echo $libitem->id; ?>')">
+            <a id="<?php echo 'add_to_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, '<?php echo 'live_stream'; ?>', '<?php echo $libitem->id; ?>')">
                 <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
             </a>
         <?php } ?>

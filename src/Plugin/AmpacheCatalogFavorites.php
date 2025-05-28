@@ -198,7 +198,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                             <td class="cel_add">
                                 <span class="cel_item_add">
                                     <?php echo Ajax::button('?action=basket&type=song&id=' . $item->id, 'new_window', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $item->id); ?>
-                                    <a id="<?php echo 'add_playlist_' . $count . '_' . $item->id; ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $item->id; ?>')">
+                                    <a id="<?php echo 'add_to_playlist_' . $count . '_' . $item->id; ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $item->id; ?>')">
                                         <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
                                     </a>
                                 </span>
