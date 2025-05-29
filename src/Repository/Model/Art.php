@@ -1429,6 +1429,9 @@ class Art extends database_object
             if ($difference > 0.3) {
                 $size['width'] = (int)($size['height'] * (min($src_ratio, 1.5)));
             }
+            if ($difference < -0.1) {
+                $size['width'] = (int)($size['height'] * (min($src_ratio, 0.8)));
+            }
         }
 
         // double the image output size for display scaling
