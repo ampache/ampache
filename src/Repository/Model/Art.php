@@ -1427,10 +1427,13 @@ class Art extends database_object
             $dst_ratio  = $size['width'] / $size['height'];
             $difference = $src_ratio - $dst_ratio;
             if ($difference > 0.3) {
+                // keep original height and widen a bit
                 $size['width'] = (int)($size['height'] * (min($src_ratio, 1.5)));
             }
             if ($difference < -0.1) {
-                $size['width'] = (int)($size['height'] * (min($src_ratio, 0.8)));
+                // extend the height a little bit and thin it out
+                $size['height'] = (int)($size['height'] * (min(($art->height / $art->width), 1.1)));
+                $size['width']  = (int)($size['height'] * (min($src_ratio, 0.8)));
             }
         }
 
