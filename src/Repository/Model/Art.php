@@ -1486,7 +1486,7 @@ class Art extends database_object
             ? "<div class=\"item_art_play_150\">"
             : "<div class=\"item_art_play\">";
         // don't put the play icon on really large images.
-        if ($size['height'] >= 150 && $size['height'] <= 300) {
+        if ($size['width'] == 150 && $size['height'] == 150) {
             echo $item_art_play;
             echo Ajax::text(
                 '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'',
