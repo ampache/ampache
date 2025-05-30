@@ -120,7 +120,16 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
-                $request = Requests::get($url, [], Core::requests_options());
+                try {
+                    $request = Requests::get($url, [], Core::requests_options());
+                } catch (WpOrg\Requests\Exception $error) {
+                    $this->logger->warning(
+                        "gather_musicbrainz exception: " . $error->getMessage(),
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
+                    continue;
+                }
+
                 if ($request->status_code == 200) {
                     $num_found++;
 
