@@ -2214,7 +2214,7 @@ class Preference extends database_object
         // Default theme if we don't get anything from their
         // preferences because we're going to want at least something otherwise
         // the page is going to be really ugly
-        if (!isset($results['theme_name'])) {
+        if (empty($results['theme_name'])) {
             $results['theme_name'] = 'reborn';
         }
 
