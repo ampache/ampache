@@ -1455,7 +1455,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, [$this->id, $this->id, $this->id, $this->id]);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int)$row['playlist'];
         }
 
         return array_reverse($results);
@@ -1999,14 +1999,9 @@ abstract class Catalog extends database_object
      */
     public static function gather_art_item(string $type, int $object_id, bool $db_art_first = false, bool $api = false): bool
     {
-        // Should be more generic !
-        if ($type == 'video') {
-            $libitem = new Video($object_id);
-        } else {
-            $className = ObjectTypeToClassNameMapper::map($type);
-            /** @var library_item $libitem */
-            $libitem = new $className($object_id);
-        }
+        $className = ObjectTypeToClassNameMapper::map($type);
+        /** @var library_item $libitem */
+        $libitem = new $className($object_id);
 
         $inserted = false;
         $options  = [];
@@ -2147,7 +2142,7 @@ abstract class Catalog extends database_object
         }
 
         $searches['video'] = $videos ?? $this->get_video_ids();
-        $total_count       = (count($searches['album']) + count($searches['artist']) + count($searches['song'] ?? []) + count($searches['playlist'] ?? []) + count($searches['video']));
+        $total_count       = (count($searches['album']) + count($searches['artist']) + count($searches['song'] ?? []) + count($searches['playlist']) + count($searches['video']));
         $interactor?->info(
             'gather_art found ' . $total_count . ' items missing art',
             true

@@ -126,7 +126,10 @@ class Art extends database_object
             return false;
         }
 
-        return (InterfaceImplementationChecker::is_library_item($type) || $type == 'user');
+        return (
+            InterfaceImplementationChecker::is_library_item($type) ||
+            $type == 'user'
+        );
     }
 
     /**
