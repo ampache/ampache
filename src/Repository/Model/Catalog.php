@@ -2109,15 +2109,15 @@ abstract class Catalog extends database_object
         $search_count = 0;
         $searches     = [];
         if ($songs == null) {
-            $searches['album']  = $this->get_album_ids('art');
-            $searches['artist'] = $this->get_artist_ids('art');
+            $searches['album']    = $this->get_album_ids('art');
+            $searches['artist']   = $this->get_artist_ids('art');
             $searches['playlist'] = $this->get_playlist_ids('art');
             if ($gather_song_art) {
                 $searches['song'] = $this->get_song_ids();
             }
         } else {
-            $searches['album']  = [];
-            $searches['artist'] = [];
+            $searches['album']    = [];
+            $searches['artist']   = [];
             $searches['playlist'] = [];
             if ($gather_song_art) {
                 $searches['song'] = [];
