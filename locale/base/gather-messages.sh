@@ -175,9 +175,9 @@ generate_pot_utds() {
                 "\n\n"\
                 "#######################################################################" >> $tdstxt
 
-        mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT id FROM preference" |
+        mysql --skip-ssl -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT id FROM preference" |
         while read dbprefid; do
-            dbprefdesc=$(mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT description FROM preference where id=$dbprefid")
+            dbprefdesc=$(mysql --skip-ssl -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT description FROM preference where id=$dbprefid")
             dbprefdescchk=$(grep "\"$dbprefdesc\"" $potfile)
             if [ ! -z "$dbprefdesc" ]; then
                 if [ ! "$dbprefdescchk" ]; then
@@ -195,9 +195,9 @@ generate_pot_utds() {
 
         echo "Done for preference description"
 
-        mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT id FROM preference" |
+        mysql --skip-ssl -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT id FROM preference" |
         while read dbprefid; do
-            dbprefdesc=$(mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT subcategory FROM preference where id=$dbprefid AND subcategory IS NOT NULL")
+            dbprefdesc=$(mysql --skip-ssl -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT subcategory FROM preference where id=$dbprefid AND subcategory IS NOT NULL")
             dbprefdescchk=$(grep "\"$dbprefdesc\"" $potfile $tdstxt)
             if [ ! -z "$dbprefdesc" ]; then
                 if [ ! "$dbprefdescchk" ]; then
