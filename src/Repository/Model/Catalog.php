@@ -1423,10 +1423,36 @@ abstract class Catalog extends database_object
 
         $sql = 'SELECT `album`.`id` FROM `album` WHERE `album`.`catalog` = ?';
         if ($filter === 'art') {
-            $sql = "SELECT `album`.`id` FROM `album` LEFT JOIN `image` ON `album`.`id` = `image`.`object_id` AND `object_type` = 'album' WHERE `album`.`catalog` = ? AND `image`.`object_id` IS NULL";
+            $sql = "SELECT `album`.`id` FROM `album` LEFT JOIN `image` ON `album`.`id` = `image`.`object_id` AND `object_type` = 'album' AND `image`.`size` = 'original' WHERE `album`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
 
         $db_results = Dba::read($sql, [$this->id]);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return array_reverse($results);
+    }
+
+    /**
+     * get_playlist_ids
+     *
+     * This returns an array of ids of albums that have songs in this
+     * catalog's
+     * @param string $filter
+     * @return int[]
+     */
+    public function get_playlist_ids(string $filter = ''): array
+    {
+        $results = [];
+
+        $sql = "SELECT DISTINCT `playlist_data`.`playlist` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `live_stream` ON `live_stream`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'live_stream' LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'podcast_episode' LEFT JOIN `video` ON `video`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'video' WHERE `song`.`catalog` = ? OR `live_stream`.`catalog` = ? OR `podcast_episode`.`catalog` = ? OR `video`.`catalog` = ?;"
+        if ($filter === 'art') {
+            $sql = "SELECT DISTINCT `playlist_data`.`playlist` FROM `playlist_data` LEFT JOIN `image` ON `playlist_data`.`playlist` = `image`.`object_id` AND `image`.`object_type` = 'playlist' AND `image`.`size` = 'original' LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `live_stream` ON `live_stream`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'live_stream' LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'podcast_episode' LEFT JOIN `video` ON `video`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'video' WHERE (`song`.`catalog` = ? OR `live_stream`.`catalog` = ? OR `podcast_episode`.`catalog` = ? OR `video`.`catalog` = ?)  AND `image`.`object_id` IS NULL;";
+        }
+
+        $db_results = Dba::read($sql, [$this->id, $this->id, $this->id, $this->id]);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
@@ -1628,7 +1654,7 @@ abstract class Catalog extends database_object
 
         $sql = 'SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` WHERE `song`.`catalog` = ?';
         if ($filter === 'art') {
-            $sql = "SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` LEFT JOIN `image` ON `song`.`artist` = `image`.`object_id` AND `object_type` = 'artist' WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
+            $sql = "SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` LEFT JOIN `image` ON `song`.`artist` = `image`.`object_id` AND `object_type` = 'artist' AND `image`.`size` = 'original' WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
 
         if ($filter === 'info') {
@@ -2090,12 +2116,14 @@ abstract class Catalog extends database_object
         if ($songs == null) {
             $searches['album']  = $this->get_album_ids('art');
             $searches['artist'] = $this->get_artist_ids('art');
+            $searches['playlist'] = $this->get_playlist_ids('art');
             if ($gather_song_art) {
                 $searches['song'] = $this->get_song_ids();
             }
         } else {
             $searches['album']  = [];
             $searches['artist'] = [];
+            $searches['playlist'] = [];
             if ($gather_song_art) {
                 $searches['song'] = [];
             }
@@ -2119,7 +2147,7 @@ abstract class Catalog extends database_object
         }
 
         $searches['video'] = $videos ?? $this->get_video_ids();
-        $total_count       = (count($searches['album']) + count($searches['artist']) + count($searches['song'] ?? []) + count($searches['video']));
+        $total_count       = (count($searches['album']) + count($searches['artist']) + count($searches['song'] ?? []) + count($searches['playlist'] ?? []) + count($searches['video']));
         $interactor?->info(
             'gather_art found ' . $total_count . ' items missing art',
             true
