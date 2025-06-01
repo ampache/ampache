@@ -127,7 +127,7 @@ final class ApiHandler implements ApiHandlerInterface
         $api_version = (int)Preference::get_by_user($userId, 'api_force_version');
         if (!in_array($api_version, Api::API_VERSIONS)) {
             $api_session = Session::get_api_version($input['auth']);
-            $api_version = ($is_public || $header_auth)
+            $api_version = ($is_public)
                 ? (int)substr($version, 0, 1)
                 : $api_session;
             // Downgrade version 7 calls to 6. (You shouldn't use 7 but let it slide if you do.)
