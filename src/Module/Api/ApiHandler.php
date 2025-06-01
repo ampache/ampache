@@ -179,7 +179,6 @@ final class ApiHandler implements ApiHandlerInterface
         ) {
             $data             = [];
             $data['username'] = $user->username;
-            $data['type']     = 'header';
             $data['value']    = $api_version;
             if ($is_handshake || $is_ping) {
                 // for a handshake there needs to be a valid auth response (ping when sent needs one)
@@ -187,9 +186,11 @@ final class ApiHandler implements ApiHandlerInterface
                     $input['auth'] !== md5((string)$user->username) &&
                     !Session::read($input['auth'])
                 ) {
+                    $data['type']  = 'api';
                     $input['auth'] = Session::create($data);
                 }
             } else {
+                $data['type']   = 'header';
                 $data['apikey'] = md5((string)$user->username);
                 // Session might not exist or has expired
                 if (!Session::read($data['apikey'])) {
