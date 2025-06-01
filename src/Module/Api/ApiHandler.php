@@ -183,8 +183,8 @@ final class ApiHandler implements ApiHandlerInterface
             $data['username'] = $user->username;
             $data['type']     = 'header';
             $data['value']    = $api_version;
-            if ($is_handshake) {
-                // for a handshake there needs to be a valid auth response
+            if ($is_handshake || $is_ping) {
+                // for a handshake there needs to be a valid auth response (ping when sent needs one)
                 if (
                     $input['auth'] !== md5((string)$user->username) &&
                     !Session::read($input['auth'])
