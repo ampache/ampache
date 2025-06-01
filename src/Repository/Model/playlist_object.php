@@ -480,10 +480,10 @@ abstract class playlist_object extends database_object implements library_item
                 if ($art->has_db_info()) {
                     $link     = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type']->value;
                     $images[] = ['url' => $link, 'mime' => $art->raw_mime, 'title' => $title];
+
+                    ++$count;
                 }
             }
-
-            ++$count;
         }
 
         return $images;

@@ -397,7 +397,8 @@ class Subsonic_Api
             'boolean' => true, // replace true and false string with boolean values
         ];
         $options        = array_merge($defaults, $input_options);
-        $namespaces     = $xml->getDocNamespaces() ?: [];
+        $namespaces     = $xml->getDocNamespaces();
+        $namespaces[''] = null; // add base (empty) namespace
         // get attributes from all namespaces
         $attributesArray = [];
         foreach ($namespaces as $prefix => $namespace) {

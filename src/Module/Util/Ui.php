@@ -105,7 +105,7 @@ class Ui implements UiInterface
      */
     public static function find_template(string $template, bool $extern = false): string
     {
-        $path      = AmpConfig::get('theme_path') . '/templates/' . $template;
+        $path      = AmpConfig::get('theme_path', '/themes/reborn') . '/templates/' . $template;
         $realpath  = __DIR__ . '/../../../public/client/' . $path;
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         if (($extension != 'php' || AmpConfig::get('allow_php_themes')) && file_exists($realpath) && is_file($realpath)) {
@@ -692,10 +692,10 @@ class Ui implements UiInterface
             return AmpConfig::get('custom_logo');
         }
         if ($color !== null) {
-            return AmpConfig::get_web_path('/client') . AmpConfig::get('theme_path') . '/images/ampache-' . $color . '.png';
+            return AmpConfig::get_web_path('/client') . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ampache-' . $color . '.png';
         }
 
-        return AmpConfig::get_web_path('/client') . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color', 'dark') . '.png';
+        return AmpConfig::get_web_path('/client') . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ampache-' . AmpConfig::get('theme_color', 'dark') . '.png';
     }
 
     /**
