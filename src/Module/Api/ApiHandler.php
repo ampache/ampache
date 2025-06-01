@@ -185,7 +185,12 @@ final class ApiHandler implements ApiHandlerInterface
             $data['value']    = $api_version;
             if ($is_handshake) {
                 // for a handshake there needs to be a valid auth response
-                $input['auth'] = Session::create($data);
+                if (
+                    $input['auth'] !== md5((string)$user->username) &&
+                    !Session::read($input['auth'])
+                ) {
+                    $input['auth'] = Session::create($data);
+                }
             } else {
                 $data['apikey'] = md5((string)$user->username);
                 // Session might not exist or has expired
@@ -197,6 +202,7 @@ final class ApiHandler implements ApiHandlerInterface
                 // Continue with the new session string to hide your header token
                 $input['auth'] = $data['apikey'];
             }
+
             if (in_array($api_version, Api::API_VERSIONS)) {
                 Session::write($input['auth'], $api_version, $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PERPETUAL_API_SESSION));
             }
