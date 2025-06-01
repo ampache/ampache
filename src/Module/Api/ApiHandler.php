@@ -109,9 +109,7 @@ final class ApiHandler implements ApiHandlerInterface
         $input        = $request->getQueryParams();
         $header_auth  = false;
         if (!isset($input['auth'])) {
-            if (!$is_public || $is_ping) {
-                $header_auth = true;
-            }
+            $header_auth   = true;
             $input['auth'] = $gatekeeper->getAuth();
         }
 
