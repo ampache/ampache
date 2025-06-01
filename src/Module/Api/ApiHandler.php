@@ -109,9 +109,7 @@ final class ApiHandler implements ApiHandlerInterface
         $input        = $request->getQueryParams();
         $header_auth  = false;
         if (!isset($input['auth'])) {
-            if (!$is_public || $is_ping) {
-                $header_auth = true;
-            }
+            $header_auth   = true;
             $input['auth'] = $gatekeeper->getAuth();
         }
 
@@ -127,7 +125,7 @@ final class ApiHandler implements ApiHandlerInterface
         $api_version = (int)Preference::get_by_user($userId, 'api_force_version');
         if (!in_array($api_version, Api::API_VERSIONS)) {
             $api_session = Session::get_api_version($input['auth']);
-            $api_version = ($is_public || $header_auth)
+            $api_version = ($is_public)
                 ? (int)substr($version, 0, 1)
                 : $api_session;
             // Downgrade version 7 calls to 6. (You shouldn't use 7 but let it slide if you do.)
@@ -170,27 +168,45 @@ final class ApiHandler implements ApiHandlerInterface
         // send the version to API calls (this is used to determine return data for api4/api5)
         $input['api_version'] = $api_version;
 
-        // Create a simplified session for header authenticated sessions
+        /*
+         * Create a simplified session for header authenticated sessions
+         * If you are sending a handshake, then return a valid auth session.
+         * If you are doing anything else, you hide the session behind an MD5 hash of the username
+         */
         if (
             $header_auth &&
             $user instanceof User
         ) {
             $data             = [];
             $data['username'] = $user->username;
-            $data['type']     = 'header';
-            $data['apikey']   = md5((string)$user->username);
             $data['value']    = $api_version;
-            // Session might not exist or has expired
-            if (!Session::read($data['apikey'])) {
-                Session::destroy($data['apikey']);
-                Session::create($data);
+            if ($is_handshake || $is_ping) {
+                // for a handshake there needs to be a valid auth response (ping when sent needs one)
+                if (
+                    $input['auth'] !== md5((string)$user->username) &&
+                    !Session::read($input['auth'])
+                ) {
+                    $data['type']  = 'api';
+                    $input['auth'] = Session::create($data);
+                }
+            } else {
+                $data['type']   = 'header';
+                $data['apikey'] = md5((string)$user->username);
+                // Session might not exist or has expired
+                if (!Session::read($data['apikey'])) {
+                    Session::destroy($data['apikey']);
+                    Session::create($data);
+                }
+
+                // Continue with the new session string to hide your header token
+                $input['auth'] = $data['apikey'];
             }
+
             if (in_array($api_version, Api::API_VERSIONS)) {
-                Session::write($data['apikey'], $api_version, $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PERPETUAL_API_SESSION));
+                Session::write($input['auth'], $api_version, $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PERPETUAL_API_SESSION));
             }
-            // Continue with the new session string to hide your header token
-            $input['auth'] = $data['apikey'];
         }
+
         // If it's not a handshake then we can allow it to take up lots of time
         if (!$is_handshake) {
             set_time_limit(0);
