@@ -110,10 +110,10 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 $user_id    = $user->id;
                 $ajax_page  = 'stats';
                 if (AmpConfig::get('home_recently_played_all')) {
-                    $data = Stats::get_recently_played($user_id, 'stream', null, $user_only);
+                    $data = Stats::get_recently_played($user_id, 'stream', null, (bool)$user_only);
                     require_once Ui::find_template('show_recently_played_all.inc.php');
                 } else {
-                    $data = Stats::get_recently_played($user_id, 'stream', 'song', $user_only);
+                    $data = Stats::get_recently_played($user_id, 'stream', 'song', (bool)$user_only);
                     Song::build_cache(array_keys($data));
                     require Ui::find_template('show_recently_played.inc.php');
                 }
