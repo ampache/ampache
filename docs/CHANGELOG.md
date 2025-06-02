@@ -19,7 +19,6 @@
 
 ### Fixed
 
-* 
 * Deprecated warnings for `idleberg/vite-manifest`
 * Webplayer would disappear when selecting new art from the list of found images
 * Only increment the found art count when you have added art to the array
