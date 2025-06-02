@@ -1168,7 +1168,10 @@ class Art extends database_object
         $mime      = $thumb_mime ?? ($mime ?? null);
         $extension = self::extension($mime);
 
-        if (AmpConfig::get('stream_beautiful_url')) {
+        if (
+            $type !== 'user' &&
+            AmpConfig::get('stream_beautiful_url')
+        ) {
             if (
                 $extension === '' ||
                 $extension === '0'
