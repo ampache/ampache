@@ -5,6 +5,7 @@
 ### Added
 
 * Translations 2025-05-30
+* Add rewrite rule to `public/.htaccess.dist` to redirect user art calls to the right spot
 * Add playlists to the gather art process and find playlists missing art
 * Database 751001
   * Translate database descriptions to en_US for translation on output
@@ -25,6 +26,8 @@
 * Only check for original art when identifying missing art with Album and Video objects
 * Make sure a theme path is always set to ensure template and image paths exist
 * Catch exception on MusicBrainz art collection timeout
+* Set cache etag for blankalbum sizes
+* Unset cache etag on thumb calls
 * Subsonic
   * JSON generation not working due to fixing a hack. (put the hack back)
 
