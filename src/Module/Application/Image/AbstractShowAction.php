@@ -177,7 +177,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                     $size       = Art::get_thumb_size($thumb);
                     $thumb_data = $art->get_thumb($size);
                     if ($art->id > 0) {
-                        $etag .= '-' . $thumb;
+                        $etag = null;
                     }
                 }
 
