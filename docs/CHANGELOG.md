@@ -12,6 +12,7 @@
 ### Changed
 
 * Update composer packages
+* Update node packages
 * Translate database preference descriptions on output instead of inside the database
 * Extend thin images slightly on object pages like wide ones
 * Revert to using `locale/base/translatable-database-strings.txt` for database preferences
