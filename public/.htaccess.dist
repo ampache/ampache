@@ -33,5 +33,6 @@
 
     RewriteCond %{REQUEST_URI} ^/image\.php$ [NC]
     RewriteCond %{QUERY_STRING} (^|&)object_type=user(&|$) [NC]
+    RewriteCond %{QUERY_STRING} !(^|&)action=show_user_avatar(&|$) [NC]
     RewriteRule ^image\.php$ /image.php?action=show_user_avatar&%{QUERY_STRING} [R=302,L]
 </IfModule>
