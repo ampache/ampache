@@ -876,6 +876,11 @@ parameters:
 			path: src/Module/Api/SubsonicApiApplication.php
 
 		-
+			message: "#^Cannot access offset '' on array\\<string\\>\\|false\\.$#"
+			count: 1
+			path: src/Module/Api/Subsonic_Api.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_hasNestedArray\\(\\) has parameter \\$properties with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
