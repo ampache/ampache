@@ -104,16 +104,16 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
-                $user_only  = (isset($_REQUEST['user_id']))
+                $user_id = (isset($_REQUEST['user_id']))
                     ? (int)$this->requestParser->getFromRequest('user_id')
                     : $user->id ?? -1;
-                $user_id    = $user->id;
+                $user_only  = isset($_REQUEST['user_only']);
                 $ajax_page  = 'stats';
                 if (AmpConfig::get('home_recently_played_all')) {
-                    $data = Stats::get_recently_played($user_id, 'stream', null, (bool)$user_only);
+                    $data = Stats::get_recently_played($user_id, 'stream', null, $user_only);
                     require_once Ui::find_template('show_recently_played_all.inc.php');
                 } else {
-                    $data = Stats::get_recently_played($user_id, 'stream', 'song', (bool)$user_only);
+                    $data = Stats::get_recently_played($user_id, 'stream', 'song', $user_only);
                     Song::build_cache(array_keys($data));
                     require Ui::find_template('show_recently_played.inc.php');
                 }
@@ -133,7 +133,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
-                $user_id    = (isset($_REQUEST['user_id']))
+                $user_id = (isset($_REQUEST['user_id']))
                     ? (int)$this->requestParser->getFromRequest('user_id')
                     : $user->id ?? -1;
                 $user_only  = isset($_REQUEST['user_only']);

@@ -28,11 +28,11 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Ampache\Repository\Model\Preference;
 
 /**
- * Add `collaborate` to the playlist table to allow other users to add songs to the list
+ * Translate database descriptions to en_US for translation on output
  */
 final class Migration751001 extends AbstractMigration
 {
-    protected array $changelog = ['Translating database descriptions to en_US for translation on output'];
+    protected array $changelog = ['Translate database descriptions to en_US for translation on output'];
 
     public function migrate(): void
     {
