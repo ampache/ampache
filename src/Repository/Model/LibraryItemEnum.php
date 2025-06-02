@@ -43,4 +43,5 @@ enum LibraryItemEnum: string
     case TAG_HIDDEN      = 'tag_hidden';
     case TAG             = 'tag';
     case VIDEO           = 'video';
+    case USER            = 'user';
 }

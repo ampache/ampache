@@ -78,6 +78,7 @@ final readonly class LibraryItemLoader implements LibraryItemLoaderInterface
             LibraryItemEnum::SONG_PREVIEW => new Song_Preview($objectId),
             LibraryItemEnum::TAG_HIDDEN, LibraryItemEnum::TAG => new Tag($objectId),
             LibraryItemEnum::VIDEO => new Video($objectId),
+            LibraryItemEnum::USER => new User($objectId),
         };
 
         if (!($object?->isNew())) {
