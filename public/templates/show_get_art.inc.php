@@ -39,7 +39,7 @@ $art_order = AmpConfig::get('art_order', []);
 $art_type  = ($object_type == 'artist') ? T_('Artist Art Search') : T_('Cover Art Search');
 $web_path  = AmpConfig::get_web_path();
 $ajax_str  = ((AmpConfig::get('ajax_load')) ? '#' : '');
-$find_art  = '/' . $ajax_str . 'arts.php?action=find_art';
+$find_art  = '/arts.php?action=find_art';
 Ui::show_box_top($art_type, 'box box_get_albumart'); ?>
 <form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo $web_path . $find_art; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>&artist_name=<?php echo urlencode(Core::get_request('artist_name')); ?>&album_name=<?php echo urlencode(Core::get_request('album_name')); ?>&cover=<?php echo urlencode(Core::get_request('cover')); ?>" style="Display:inline;">
     <table class="gatherart">
