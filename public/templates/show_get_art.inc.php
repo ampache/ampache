@@ -131,7 +131,7 @@ Ui::show_box_top($art_type, 'box box_get_albumart'); ?>
           </tr>
         </table>
     <div class="formValidation">
-        <input type="hidden" name="action" value="find_art" />
+        <input type="hidden" id="action" name="action" value="find_art" />
         <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
         <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
         <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
@@ -144,7 +144,7 @@ Ui::show_box_top($art_type, 'box box_get_albumart'); ?>
         }
 ?>
         <input type="button" value="<?php echo T_('Cancel'); ?>" onClick="NavigateTo('<?php echo $cancelurl; ?>');" />
-        <input type="submit" value="<?php echo T_('Get Art'); ?>" />
+        <input type="submit" value="<?php echo T_('Get Art'); ?>" onClick="$('#action').val('find_art');" />
     </div>
 </form>
 <?php Ui::show_box_bottom(); ?>
