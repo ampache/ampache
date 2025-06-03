@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Preference;
 /**
  * Delete `custom_blankmovie` preference. (Movies don't exist now)
  */
-final class Migration751001 extends AbstractMigration
+final class Migration752001 extends AbstractMigration
 {
     protected array $changelog = ['Delete `custom_blankmovie` preference. (Movies don\'t exist now)'];
 
