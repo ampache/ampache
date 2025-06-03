@@ -117,13 +117,13 @@ final class FindArtAction extends AbstractArtAction
                     $this->ui->showContinue(
                         T_('No Problem'),
                         T_('Art has been added'),
-                        $burl
+                        $item->get_link()
                     );
                 } else {
                     $this->ui->showContinue(
                         T_('There Was a Problem'),
                         T_('Art file failed to insert, check the dimensions are correct.'),
-                        $burl
+                        $item->get_link()
                     );
                 }
 
