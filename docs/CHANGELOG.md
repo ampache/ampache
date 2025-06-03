@@ -1,5 +1,36 @@
 # CHANGELOG
 
+## Ampache 7.5.2
+
+### Added
+
+* Translations 2025-05-30
+* Add rewrite rule to `public/.htaccess.dist` to redirect user art calls to the right spot
+* Add playlists to the gather art process and find playlists missing art
+* Database 751001
+  * Translate database descriptions to en_US for translation on output
+
+### Changed
+
+* Update composer packages
+* Update node packages
+* Translate database preference descriptions on output instead of inside the database
+* Extend thin images slightly on object pages like wide ones
+* Revert to using `locale/base/translatable-database-strings.txt` for database preferences
+
+### Fixed
+
+* Deprecated warnings for `idleberg/vite-manifest`
+* Webplayer would disappear when selecting new art from the list of found images
+* Only increment the found art count when you have added art to the array
+* Only check for original art when identifying missing art with Album and Video objects
+* Make sure a theme path is always set to ensure template and image paths exist
+* Catch exception on MusicBrainz art collection timeout
+* Set cache etag for blankalbum sizes
+* Unset cache etag on thumb calls
+* Subsonic
+  * JSON generation not working due to fixing a hack. (put the hack back)
+
 ## Ampache 7.5.1
 
 ### Added

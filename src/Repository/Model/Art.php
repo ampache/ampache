@@ -126,7 +126,10 @@ class Art extends database_object
             return false;
         }
 
-        return (InterfaceImplementationChecker::is_library_item($type) || $type == 'user');
+        return (
+            InterfaceImplementationChecker::is_library_item($type) ||
+            $type == 'user'
+        );
     }
 
     /**
@@ -1165,7 +1168,10 @@ class Art extends database_object
         $mime      = $thumb_mime ?? ($mime ?? null);
         $extension = self::extension($mime);
 
-        if (AmpConfig::get('stream_beautiful_url')) {
+        if (
+            $type !== 'user' &&
+            AmpConfig::get('stream_beautiful_url')
+        ) {
             if (
                 $extension === '' ||
                 $extension === '0'
@@ -1427,7 +1433,13 @@ class Art extends database_object
             $dst_ratio  = $size['width'] / $size['height'];
             $difference = $src_ratio - $dst_ratio;
             if ($difference > 0.3) {
+                // keep original height and widen a bit
                 $size['width'] = (int)($size['height'] * (min($src_ratio, 1.5)));
+            }
+            if ($difference < -0.1) {
+                // extend the height a little bit and thin it out
+                $size['height'] = (int)($size['height'] * (min(($art->height / $art->width), 1.1)));
+                $size['width']  = (int)($size['height'] * (min($src_ratio, 0.8)));
             }
         }
 
@@ -1480,7 +1492,7 @@ class Art extends database_object
             ? "<div class=\"item_art_play_150\">"
             : "<div class=\"item_art_play\">";
         // don't put the play icon on really large images.
-        if ($size['height'] >= 150 && $size['height'] <= 300) {
+        if ($size['width'] == 150 && $size['height'] == 150) {
             echo $item_art_play;
             echo Ajax::text(
                 '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'',

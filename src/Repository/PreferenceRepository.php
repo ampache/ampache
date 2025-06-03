@@ -125,7 +125,7 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
                 'id' => (int) $row['id'],
                 'name' => $row['name'],
                 'level' => (int) $row['level'],
-                'description' => $row['description'],
+                'description' => T_($row['description']),
                 'value' => $row['value'],
                 'type' => $row['type'],
                 'category' => $row['category'],

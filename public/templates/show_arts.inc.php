@@ -37,7 +37,10 @@ use Ampache\Module\Util\Ui;
 $total_images = count($images);
 $rows         = floor($total_images / 5);
 $count        = 0;
-$web_path     = AmpConfig::get_web_path(); ?>
+$web_path     = AmpConfig::get_web_path();
+$select_art   = (AmpConfig::get('ajax_load'))
+    ? '/#arts.php?action=select_art'
+    : '/arts.php?action=select_art'; ?>
 <?php Ui::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
 <table class="table-data">
 <tr>
@@ -66,7 +69,7 @@ while ($count <= $rows) {
                 <p>
                 <?php if (is_array($dimensions) && (!(int) $dimensions['width'] == 0 || !(int) $dimensions['height'] == 0)) { ?>
                 [<?php echo (int) ($dimensions['width']); ?>x<?php echo (int) ($dimensions['height']); ?>]
-                [<a href="<?php echo $web_path; ?>/arts.php?action=select_art&image=<?php echo $key; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>"><?php echo T_('Select'); ?></a>]
+                [<a href="<?php echo $web_path . $select_art; ?>&image=<?php echo $key; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>"><?php echo T_('Select'); ?></a>]
                 <?php
                 } else { ?>
                 <span class="error"><?php echo T_('Invalid'); ?></span>

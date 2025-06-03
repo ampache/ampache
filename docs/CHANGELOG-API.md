@@ -1,5 +1,14 @@
 # API CHANGELOG
 
+## API 6.7.2
+
+This version is being released for Ampache7 **only**
+
+### Changed
+
+* Header auth using a bearer token will return valid sessions on handshake and ping
+* Header auth for other methods will hide the session behind an MD5 hash of the username (previous behaviour)
+
 ## API 6.7.1
 
 This version is being released for Ampache7 **only**

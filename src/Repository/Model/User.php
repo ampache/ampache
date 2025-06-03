@@ -297,7 +297,7 @@ class User extends database_object
             $type_array[$type][$row['name']] = [
                 'name' => $row['name'],
                 'level' => $row['level'],
-                'description' => $row['description'],
+                'description' => T_($row['description']),
                 'value' => $row['value'],
                 'subcategory' => $row['subcategory'],
             ];
