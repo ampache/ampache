@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
+use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -47,6 +48,8 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\PrivateMessageRepositoryInterface;
+use DateTime;
 use DOMDocument;
 use SimpleXMLElement;
 use WpOrg\Requests\Requests;
@@ -474,6 +477,27 @@ class OpenSubsonic_Api
     }
 
     /**
+     * _responseOutput
+     * @param array<string, mixed> $input
+     */
+    private static function _responseOutput(array $input, string $function): void
+    {
+        $format = (string)($input['f'] ?? 'xml');
+        switch ($format) {
+            case 'json':
+                self::_jsonOutput(OpenSubsonic_Json_Data::addResponse($function));
+                break;
+            case 'jsonp':
+                $callback = (string)($input['callback'] ?? 'jsonp');
+                self::_jsonpOutput(OpenSubsonic_Json_Data::addResponse($function), $callback);
+                break;
+            default:
+                self::_xmlOutput(OpenSubsonic_Xml_Data::addResponse($function));
+                break;
+        }
+    }
+
+    /**
      * error
      * @param array<string, mixed> $input
      */
@@ -482,50 +506,153 @@ class OpenSubsonic_Api
         self::_errorOutput($input, $errorCode, $function);
     }
 
-    ///**
-    // * addChatMessage
-    // *
-    // * Adds a message to the chat log.
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function addChatMessage(array $input, User $user): void
-    //{
-    //}
-    //
-    ///**
-    // * changePassword
-    // *
-    // * Changes the password of an existing user on the server.
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function changePassword(array $input, User $user): void
-    //{
-    //}
-    //
-    ///**
-    // * createBookmark
-    // *
-    // * Creates or updates a bookmark.
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function createBookmark(array $input, User $user): void
-    //{
-    //}
-    //
-    ///**
-    // * createInternetRadioStation
-    // *
-    // * Adds a new internet radio station.
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function createInternetRadioStation(array $input, User $user): void
-    //{
-    //}
-    //
+    /**
+     * addChatMessage
+     *
+     * Adds a message to the chat log.
+     * https://opensubsonic.netlify.app/docs/endpoints/addchatmessage/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function addchatmessage(array $input, User $user): void
+    {
+        $message = self::_check_parameter($input, 'message', __FUNCTION__);
+        if (!$message) {
+            return;
+        }
+
+        if (!AmpConfig::get('sociable')) {
+            self::_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
+
+            return;
+        }
+
+        self::getPrivateMessageRepository()->create(null, $user, '', trim($message));
+
+        self::_responseOutput($input, __FUNCTION__);
+    }
+
+    /**
+     * changePassword
+     *
+     * Changes the password of an existing user on the server.
+     * https://opensubsonic.netlify.app/docs/endpoints/changepassword/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function changepassword(array $input, User $user): void
+    {
+        $username = self::_check_parameter($input, 'username', __FUNCTION__);
+        if (!$username) {
+            return;
+        }
+
+        $inp_pass = self::_check_parameter($input, 'password', __FUNCTION__);
+        if (!$inp_pass) {
+            return;
+        }
+
+        $password = self::_decryptPassword($inp_pass);
+        if ($user->username == $username || $user->access === 100) {
+            $update_user = User::get_from_username((string) $username);
+            if ($update_user instanceof User && !AmpConfig::get('simple_user_mode')) {
+                $update_user->update_password($password);
+                self::_responseOutput($input, __FUNCTION__);
+            } else {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
+
+    /**
+     * createBookmark
+     *
+     * Creates or updates a bookmark.
+     * https://opensubsonic.netlify.app/docs/endpoints/createbookmark/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function createbookmark(array $input, User $user): void
+    {
+        $object_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$object_id) {
+            return;
+        }
+
+        $position = self::_check_parameter($input, 'position', __FUNCTION__);
+        if (!$position) {
+            return;
+        }
+
+        $comment   = $input['comment'] ?? '';
+        $object_id = self::_getAmpacheId((string)$object_id);
+        $type      = self::_getAmpacheType((string)$object_id);
+
+        if (!empty($object_id) && !empty($type)) {
+            $bookmark = new Bookmark($object_id, $type);
+            if ($bookmark->isNew()) {
+                Bookmark::create(
+                    [
+                        'object_id' => $object_id,
+                        'object_type' => $type,
+                        'comment' => $comment,
+                        'position' => $position
+                    ],
+                    $user->id,
+                    time()
+                );
+            } else {
+                self::getBookmarkRepository()->update($bookmark->getId(), (int)$position, new DateTime());
+            }
+            self::_responseOutput($input, __FUNCTION__);
+        } else {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+        }
+    }
+
+    /**
+     * createInternetRadioStation
+     *
+     * Adds a new internet radio station.
+     * https://opensubsonic.netlify.app/docs/endpoints/createinternetradiostation/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function createinternetradiostation(array $input, User $user): void
+    {
+        $url = self::_check_parameter($input, 'streamUrl', __FUNCTION__);
+        if (!$url) {
+            return;
+        }
+
+        $name = self::_check_parameter($input, 'name', __FUNCTION__);
+        if (!$name) {
+            return;
+        }
+
+        $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?: '';
+        $catalogs = User::get_user_catalogs($user->id, 'music');
+        if (AmpConfig::get('live_stream') && $user->access >= 75) {
+            $data = [
+                "name" => $name,
+                "url" => $url,
+                "codec" => 'mp3',
+                "catalog" => $catalogs[0],
+                "site_url" => $site_url
+            ];
+            if (!Live_Stream::create($data)) {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+                return;
+            }
+            self::_responseOutput($input, __FUNCTION__);
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
+
     ///**
     // * createPlaylist
     // *
@@ -830,6 +957,7 @@ class OpenSubsonic_Api
     //{
     //}
     //
+
     /**
      * getCoverArt
      *
@@ -1272,19 +1400,7 @@ class OpenSubsonic_Api
     {
         unset($user);
 
-        $format = (string)($input['f'] ?? 'xml');
-        switch ($format) {
-            case 'json':
-                self::_jsonOutput(OpenSubsonic_Json_Data::addResponse(__FUNCTION__));
-                break;
-            case 'jsonp':
-                $callback = (string)($input['callback'] ?? 'jsonp');
-                self::_jsonpOutput(OpenSubsonic_Json_Data::addResponse(__FUNCTION__), $callback);
-                break;
-            default:
-                self::_xmlOutput(OpenSubsonic_Xml_Data::addResponse(__FUNCTION__));
-                break;
-        }
+        self::_responseOutput($input, __FUNCTION__);
     }
 
     ///**
@@ -1494,4 +1610,24 @@ class OpenSubsonic_Api
     //public static function updateUser(array $input, User $user): void
     //{
     //}
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPrivateMessageRepository(): PrivateMessageRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PrivateMessageRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getBookmarkRepository(): BookmarkRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(BookmarkRepositoryInterface::class);
+    }
 }
