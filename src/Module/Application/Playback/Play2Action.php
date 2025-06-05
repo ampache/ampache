@@ -185,7 +185,7 @@ final class Play2Action implements ApplicationActionInterface
             $random  = (int)filter_input(INPUT_GET, 'random', FILTER_SANITIZE_NUMBER_INT);
 
             // run_custom_play_action... whatever that is
-            $cpaction = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
+            $cpaction = (int)filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
         }
         $this->logger->debug('Called for action: {' . $this->requestParser->getFromRequest('action') . '}', [LegacyLogger::CONTEXT_TYPE => self::class]);
         //$this->logger->debug('REQUEST: ' . print_r($_REQUEST, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
