@@ -177,7 +177,15 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         Preference::init();
 
         // Get the list of possible methods for the Ampache API
-        $methods = array_diff(get_class_methods(Subsonic_Api::class), Subsonic_Api::SYSTEM_LIST);
+        $subsonic_legacy =  AmpConfig::get('subsonic_legacy', true); // force this for the moment to always use subsonic
+        // OpenSubsonic API by default
+        $os_methods = ($subsonic_legacy)
+            ? []
+            : array_diff(get_class_methods(OpenSubsonic_Api::class), OpenSubsonic_Api::SYSTEM_LIST);
+        // allow fallback to a pure Subsonic 1.16.1 API
+        $methods = ($subsonic_legacy)
+            ? array_diff(get_class_methods(Subsonic_Api::class), Subsonic_Api::SYSTEM_LIST)
+            : [];
 
         // We do not use $_GET because of multiple parameters with the same name
         $query_string = (string)($_SERVER['QUERY_STRING'] ?? '');
@@ -237,8 +245,20 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         //$this->logger->debug(print_r(apache_request_headers(), true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
         // Call your function if it's valid
-        if (in_array(strtolower($action), $methods)) {
-            /** @see Subsonic_Api */
+        if (
+            $os_methods !== [] &&
+            in_array(strtolower($action), $os_methods) &&
+            method_exists(OpenSubsonic_Api::class, $action)
+        ) {
+            call_user_func([OpenSubsonic_Api::class, $action], $input, $user);
+
+            return;
+        }
+        if (
+            $methods !== [] &&
+            in_array(strtolower($action), $methods) &&
+            method_exists(Subsonic_Api::class, $action)
+        ) {
             call_user_func([Subsonic_Api::class, $action], $input, $user);
 
             // We only allow a single function to be called, and we assume it's cleaned up!
