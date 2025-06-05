@@ -34,13 +34,13 @@ use Ampache\Module\Util\Ui;
 /** @var string $object_type */
 /** @var string $burl */
 
+$web_path = AmpConfig::get_web_path('/client');
+
 $total_images = count($images);
 $rows         = floor($total_images / 5);
 $count        = 0;
-$web_path     = AmpConfig::get_web_path('/client');
-$select_art   = (AmpConfig::get('ajax_load'))
-    ? '/#arts.php?action=select_art'
-    : '/arts.php?action=select_art'; ?>
+$ajax_str     = ((AmpConfig::get('ajax_load')) ? '#' : '');
+$select_art   = '/' . $ajax_str . 'arts.php?action=select_art'; ?>
 <?php Ui::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
 <table class="table-data">
 <tr>

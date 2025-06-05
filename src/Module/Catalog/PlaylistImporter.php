@@ -55,11 +55,12 @@ final class PlaylistImporter
             $files = self::parse_xspf($data);
         }
 
-        $songs    = [];
-        $import   = [];
-        $pinfo    = pathinfo($playlist_file);
-        $track    = 1;
         $web_path = AmpConfig::get_web_path('/client');
+
+        $songs  = [];
+        $import = [];
+        $pinfo  = pathinfo($playlist_file);
+        $track  = 1;
         if (isset($files)) {
             foreach ($files as $file) {
                 $found    = false;

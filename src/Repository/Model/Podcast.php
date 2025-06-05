@@ -145,7 +145,8 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get_web_path('/client');
+            $web_path = AmpConfig::get_web_path('/client');
+
             $this->link = $web_path . '/podcast.php?action=show&podcast=' . $this->id;
         }
 

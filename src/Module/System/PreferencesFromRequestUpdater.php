@@ -51,7 +51,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
         // allow replacing empty values when not set on your tab
         $null_allowed = match ($_REQUEST['tab'] ?? null) {
             'plugins' => ['personalfav_playlist', 'personalfav_smartlist'],
-            'interface' => ['custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo', 'custom_blankalbum', 'custom_blankmovie'],
+            'interface' => ['custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo', 'custom_blankalbum'],
             default => [],
         };
 
@@ -85,7 +85,6 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             // Some preferences require some extra checks to be performed
             switch ($name) {
                 case 'custom_blankalbum':
-                case 'custom_blankmovie':
                 case 'custom_favicon':
                 case 'custom_login_background':
                 case 'custom_login_logo':

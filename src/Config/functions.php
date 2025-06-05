@@ -294,7 +294,9 @@ if (!function_exists('getallheaders')) {
 function check_http_referer(): bool
 {
     $referer  = Core::get_server('HTTP_REFERER');
+
     $web_path = AmpConfig::get_web_path();
+
     if (
         empty($referer) &&
         empty($web_path)
@@ -944,7 +946,8 @@ function show_now_playing(): void
     Stream::garbage_collection();
 
     $web_path = AmpConfig::get_web_path('/client');
-    $results  = Stream::get_now_playing();
+
+    $results = Stream::get_now_playing();
     require_once Ui::find_template('show_now_playing.inc.php');
 }
 

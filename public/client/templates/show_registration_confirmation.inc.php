@@ -29,9 +29,10 @@ use Ampache\Module\Util\Ui;
 
 /** @var AddUserAction $this */
 
+$web_path = AmpConfig::get_web_path('/client');
+
 $t_ampache         = T_('Ampache');
 $htmllang          = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
-$web_path          = AmpConfig::get_web_path('/client');
 $_SESSION['login'] = true; ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">

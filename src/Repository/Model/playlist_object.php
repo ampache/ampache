@@ -145,6 +145,8 @@ abstract class playlist_object extends database_object implements library_item
             if ($limit != $this->limit) {
                 $this->update_item('limit', $limit);
             }
+
+            $this->update_item('rules', json_encode($this->rules));
         }
 
         $new_list    = (!empty($data['collaborate'])) ? $data['collaborate'] : [];
@@ -318,7 +320,8 @@ abstract class playlist_object extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get_web_path('/client');
+            $web_path = AmpConfig::get_web_path('/client');
+
             $this->link = ($this instanceof Search)
                 ? $web_path . '/smartplaylist.php?action=show&playlist_id=' . $this->id
                 : $web_path . '/playlist.php?action=show&playlist_id=' . $this->id;
@@ -454,11 +457,12 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function gather_art(int $limit): array
     {
-        $medias   = $this->get_medias();
-        $count    = 0;
-        $images   = [];
-        $title    = T_('Playlist Items');
         $web_path = AmpConfig::get_web_path('/client');
+
+        $medias = $this->get_medias();
+        $count  = 0;
+        $images = [];
+        $title  = T_('Playlist Items');
         shuffle($medias);
         foreach ($medias as $media) {
             if ($count >= $limit) {

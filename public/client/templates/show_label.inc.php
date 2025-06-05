@@ -39,6 +39,8 @@ use Ampache\Module\Util\Ui;
 /** @var string $object_type */
 /** @var bool $isLabelEditable */
 
+$web_path = AmpConfig::get_web_path('/client');
+
 $browse = new Browse();
 $browse->set_type($object_type);
 $browse->set_use_filters(false);
@@ -50,7 +52,6 @@ if (array_key_exists('argument', $_REQUEST)) {
 }
 $f_name     = (string)$label->get_fullname();
 $url_f_name = rawurlencode($f_name);
-$web_path   = AmpConfig::get_web_path('/client');
 Ui::show_box_top($f_name, 'info-box');
 if ($label->website) {
     echo "<a href=\"" . scrub_out($label->website) . "\">" . scrub_out($label->website) . "</a><br />";

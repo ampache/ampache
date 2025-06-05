@@ -1133,7 +1133,8 @@ class User extends database_object
     {
         // don't do anything if it's formatted
         if ($this->link === null && $this->id > 0) {
-            $web_path   = AmpConfig::get_web_path('/client');
+            $web_path = AmpConfig::get_web_path('/client');
+
             $this->link = $web_path . '/stats.php?action=show_user&user_id=' . $this->id;
         }
 

@@ -398,8 +398,10 @@ class Plugin
      */
     public static function show_update_available(): void
     {
-        $web_path   = AmpConfig::get_web_path('/client');
+        $web_path = AmpConfig::get_web_path('/client');
+
         $admin_path = AmpConfig::get_web_path('/admin');
+
         echo '<div id="autoupdate">';
         echo '<span>' . T_('Update available') . '</span> ' . T_('You have Plugins that need an update!');
         echo '<br />';

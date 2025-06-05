@@ -36,8 +36,9 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 
+$web_path = AmpConfig::get_web_path('/client');
+
 $democratic = Democratic::get_current_playlist();
-$web_path   = AmpConfig::get_web_path('/client');
 $use_search = AmpConfig::get('demo_use_search');
 $access100  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $showAlbum  = AmpConfig::get('album_group');

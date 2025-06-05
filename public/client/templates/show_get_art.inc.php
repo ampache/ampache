@@ -33,13 +33,16 @@ use Ampache\Module\Util\Ui;
 /** @var string $object_type */
 /** @var string $burl */
 
+$web_path = AmpConfig::get_web_path('/client');
+
 $keywords  = $item->get_keywords();
 $limit     = AmpConfig::get('art_search_limit', ArtCollector::ART_SEARCH_LIMIT);
 $art_order = AmpConfig::get('art_order', []);
 $art_type  = ($object_type == 'artist') ? T_('Artist Art Search') : T_('Cover Art Search');
-$web_path  = AmpConfig::get_web_path('/client');
+$ajax_str  = ((AmpConfig::get('ajax_load')) ? '#' : '');
+$find_art  = '/arts.php?action=find_art';
 Ui::show_box_top($art_type, 'box box_get_albumart'); ?>
-<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo $web_path; ?>/arts.php?action=find_art&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>&artist_name=<?php echo urlencode(Core::get_request('artist_name')); ?>&album_name=<?php echo urlencode(Core::get_request('album_name')); ?>&cover=<?php echo urlencode(Core::get_request('cover')); ?>" style="Display:inline;">
+<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo $web_path . $find_art; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>&artist_name=<?php echo urlencode(Core::get_request('artist_name')); ?>&album_name=<?php echo urlencode(Core::get_request('album_name')); ?>&cover=<?php echo urlencode(Core::get_request('cover')); ?>" style="Display:inline;">
     <table class="gatherart">
         <?php
         foreach ($keywords as $key => $word) {
@@ -129,20 +132,20 @@ Ui::show_box_top($art_type, 'box box_get_albumart'); ?>
           </tr>
         </table>
     <div class="formValidation">
-        <input type="hidden" name="action" value="find_art" />
+        <input type="hidden" id="action" name="action" value="find_art" />
         <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
         <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
         <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
         <?php if (AmpConfig::get('ajax_load')) {
             $cancelurl = ((string) $web_path == '')
                 ? $burl
-                : ($web_path . '/' . $burl);
+                : ($web_path . '/' . $ajax_str . $burl);
         } else {
             $cancelurl = (string) $burl;
         }
 ?>
         <input type="button" value="<?php echo T_('Cancel'); ?>" onClick="NavigateTo('<?php echo $cancelurl; ?>');" />
-        <input type="submit" value="<?php echo T_('Get Art'); ?>" />
+        <input type="submit" value="<?php echo T_('Get Art'); ?>" onClick="$('#action').val('find_art');" />
     </div>
 </form>
 <?php Ui::show_box_bottom(); ?>

@@ -25,8 +25,9 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 
+$web_path = AmpConfig::get_web_path('/client');
+
 $char_set    = AmpConfig::get('site_charset', 'UTF-8');
-$web_path    = AmpConfig::get_web_path('/client');
 $favicon     = AmpConfig::get('custom_favicon', false) ?: $web_path . "/favicon.ico";
 $short_name  = scrub_out(AmpConfig::get('site_title'));
 $description = scrub_out(T_('Search Ampache'));

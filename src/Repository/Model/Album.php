@@ -493,7 +493,8 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get_web_path('/client');
+            $web_path = AmpConfig::get_web_path('/client');
+
             $this->link = $web_path . '/albums.php?action=show&album=' . $this->id;
         }
 
@@ -544,8 +545,9 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             if ($this->album_artist === 0) {
                 $this->f_artist_link = sprintf('<span title="%d ', $this->artist_count) . T_('Artists') . "\">" . T_('Various') . "</span>";
             } elseif ($this->album_artist !== null) {
+                $web_path = AmpConfig::get_web_path('/client');
+
                 $this->f_artist_link = '';
-                $web_path            = AmpConfig::get_web_path('/client');
                 if (!$this->album_artists) {
                     $this->get_artists();
                 }
