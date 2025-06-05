@@ -145,48 +145,48 @@ class OpenSubsonic_Json_Data
 
         switch ($code) {
             case OpenSubsonic_Api::SSERROR_MISSINGPARAM:
-                $error['error']['code']    = OpenSubsonic_Api::SSERROR_MISSINGPARAM;
-                $error['error']['message'] = "Required parameter is missing.";
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_MISSINGPARAM;
+                $error['subsonic-response']['error']['message'] = "Required parameter is missing.";
                 break;
             case OpenSubsonic_Api::SSERROR_APIVERSION_CLIENT:
-                $error['error']['code']    = OpenSubsonic_Api::SSERROR_APIVERSION_CLIENT;
-                $error['error']['message'] = "Incompatible Subsonic REST protocol version. Client must upgrade.";
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_APIVERSION_CLIENT;
+                $error['subsonic-response']['error']['message'] = "Incompatible Subsonic REST protocol version. Client must upgrade.";
                 break;
             case OpenSubsonic_Api::SSERROR_APIVERSION_SERVER:
-                $error['error']['code']    = OpenSubsonic_Api::SSERROR_APIVERSION_SERVER;
-                $error['error']['message'] = "Incompatible Subsonic REST protocol version. Server must upgrade.";
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_APIVERSION_SERVER;
+                $error['subsonic-response']['error']['message'] = "Incompatible Subsonic REST protocol version. Server must upgrade.";
                 break;
             case OpenSubsonic_Api::SSERROR_BADAUTH:
-                $error['error']['code']    = OpenSubsonic_Api::SSERROR_BADAUTH;
-                $error['error']['message'] = "Wrong username or password.";
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_BADAUTH;
+                $error['subsonic-response']['error']['message'] = "Wrong username or password.";
                 break;
             case OpenSubsonic_Api::SSERROR_TOKENAUTHNOTSUPPORTED:
-                $error['error']['code']    = OpenSubsonic_Api::SSERROR_TOKENAUTHNOTSUPPORTED;
-                $error['error']['message'] = "Token authentication not supported.";
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_TOKENAUTHNOTSUPPORTED;
+                $error['subsonic-response']['error']['message'] = "Token authentication not supported.";
                 break;
             case OpenSubsonic_Api::SSERROR_UNAUTHORIZED:
-                $error['error']['code']    = OpenSubsonic_Api::SSERROR_UNAUTHORIZED;
-                $error['error']['message'] = "User is not authorized for the given operation.";
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_UNAUTHORIZED;
+                $error['subsonic-response']['error']['message'] = "User is not authorized for the given operation.";
                 break;
             case OpenSubsonic_Api::SSERROR_TRIAL:
-                $error['error']['code']    = OpenSubsonic_Api::SSERROR_TRIAL;
-                $error['error']['message'] = "The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details.";
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_TRIAL;
+                $error['subsonic-response']['error']['message'] = "The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details.";
                 break;
             case OpenSubsonic_Api::SSERROR_DATA_NOTFOUND:
-                $error['error']['code']    = OpenSubsonic_Api::SSERROR_DATA_NOTFOUND;
-                $error['error']['message'] = "The requested data was not found.";
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_DATA_NOTFOUND;
+                $error['subsonic-response']['error']['message'] = "The requested data was not found.";
                 break;
             case OpenSubsonic_Api::SSERROR_AUTHMETHODNOTSUPPORTED:
-                $error['error']['code']    = OpenSubsonic_Api::SSERROR_AUTHMETHODNOTSUPPORTED;
-                $error['error']['message'] = "Provided authentication mechanism not supported.";
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_AUTHMETHODNOTSUPPORTED;
+                $error['subsonic-response']['error']['message'] = "Provided authentication mechanism not supported.";
                 break;
             case OpenSubsonic_Api::SSERROR_AUTHMETHODCONFLICT:
-                $error['error']['code']    = OpenSubsonic_Api::SSERROR_AUTHMETHODCONFLICT;
-                $error['error']['message'] = "Multiple conflicting authentication mechanisms provided.";
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_AUTHMETHODCONFLICT;
+                $error['subsonic-response']['error']['message'] = "Multiple conflicting authentication mechanisms provided.";
                 break;
             case OpenSubsonic_Api::SSERROR_BADAPIKEY:
-                $error['error']['code']    = OpenSubsonic_Api::SSERROR_BADAPIKEY;
-                $error['error']['message'] = "Invalid API key.";
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_BADAPIKEY;
+                $error['subsonic-response']['error']['message'] = "Invalid API key.";
                 break;
         }
 
