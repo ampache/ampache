@@ -100,6 +100,7 @@ class OpenSubsonic_Api
         '_updatePlaylist',
         '_xml2json',
         '_xmlOutput',
+        'error',
     ];
 
     public const int SSERROR_GENERIC                = 0; // A generic error.
@@ -472,6 +473,15 @@ class OpenSubsonic_Api
         }
     }
 
+    /**
+     * error
+     * @param array<string, mixed> $input
+     */
+    public static function error(array $input, int $errorCode, string $function): void
+    {
+        self::_errorOutput($input, $errorCode, $function);
+    }
+
     ///**
     // * addChatMessage
     // *
@@ -827,7 +837,7 @@ class OpenSubsonic_Api
      * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getCoverArt(array $input, User $user): void
+    public static function getcoverart(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
