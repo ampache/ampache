@@ -33,11 +33,12 @@ use Ampache\Module\Util\Ui;
 /** @var string $object_type */
 /** @var string $burl */
 
+$web_path = AmpConfig::get_web_path();
+
 $keywords  = $item->get_keywords();
 $limit     = AmpConfig::get('art_search_limit', ArtCollector::ART_SEARCH_LIMIT);
 $art_order = AmpConfig::get('art_order', []);
 $art_type  = ($object_type == 'artist') ? T_('Artist Art Search') : T_('Cover Art Search');
-$web_path  = AmpConfig::get_web_path();
 $ajax_str  = ((AmpConfig::get('ajax_load')) ? '#' : '');
 $find_art  = '/arts.php?action=find_art';
 Ui::show_box_top($art_type, 'box box_get_albumart'); ?>

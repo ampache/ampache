@@ -29,11 +29,10 @@ use Ampache\Repository\Model\Song;
 
 /** @var list<array{id: null|int, mbid: string, name: string}> $artists */
 /** @var list<array{id: int}> $songs */
-?>
 
-<?php
 $web_path = AmpConfig::get_web_path();
-$wanted   = AmpConfig::get('wanted');
+
+$wanted = AmpConfig::get('wanted');
 if ($artists) { ?>
 <div class="np_group similars">
     <div class="np_cell cel_similar">
