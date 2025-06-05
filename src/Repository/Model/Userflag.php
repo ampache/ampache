@@ -277,9 +277,7 @@ class Userflag extends database_object
             $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `user_flag`.`object_id` AND `user_flag`.`object_type` = 'artist'";
         }
 
-        $sql .= ($user !== null)
-            ? " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user->getId() . "'"
-            : " WHERE `user_flag`.`object_type` = '" . $type . "'";
+        $sql .= " WHERE `user_flag`.`object_type` = '" . $type . "'";
         if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
@@ -305,7 +303,7 @@ class Userflag extends database_object
 
         //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
 
-        return $sql . " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `count` DESC, `date` DESC ";
+        return $sql . " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `date` DESC ";
     }
 
     /**

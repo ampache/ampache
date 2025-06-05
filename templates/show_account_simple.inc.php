@@ -34,8 +34,11 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 
 /** @var User $client */
-$web_path       = AmpConfig::get_web_path();
-$admin_path     = AmpConfig::get_web_path('/admin');
+
+$web_path = AmpConfig::get_web_path();
+
+$admin_path = AmpConfig::get_web_path('/admin');
+
 $access100      = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
 <?php echo AmpError::display('general'); ?>

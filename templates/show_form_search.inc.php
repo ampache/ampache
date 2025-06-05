@@ -34,13 +34,14 @@ use Ampache\Repository\VideoRepositoryInterface;
 
 global $dic;
 
+$web_path = AmpConfig::get_web_path();
+
 // POST = clicked on Search, REQUEST = coming from a link
 $data = (!empty($_POST))
     ? $_POST
     : $_REQUEST;
 
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
-$web_path        = AmpConfig::get_web_path();
 $limit           = $data['limit'] ?? 0;
 $limit1          = ($limit == 1) ? 'selected="selected"' : '';
 $limit5          = ($limit == 5) ? 'selected="selected"' : '';

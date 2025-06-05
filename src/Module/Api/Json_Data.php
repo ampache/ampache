@@ -876,6 +876,7 @@ class Json_Data
             $objArray['rating']        = $user_rating;
             $objArray['averagerating'] = $rating->get_average_rating();
             $objArray['mbid']          = $album->mbid;
+            $objArray['mbid_group']    = $album->mbid_group;
 
             $JSON[] = $objArray;
         } // end foreach

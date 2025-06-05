@@ -62,7 +62,8 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'search':
-                $web_path    = AmpConfig::get_web_path();
+                $web_path = AmpConfig::get_web_path();
+
                 $album_group = ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP));
                 $search      = htmlspecialchars_decode(($_REQUEST['search'] ?? ''));
                 $target      = $_REQUEST['target'] ?? '';
