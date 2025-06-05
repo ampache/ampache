@@ -1448,7 +1448,8 @@ class Art extends database_object
             ? ($size['width'] * 2) . 'x' . ($size['height'] * 2)
             : $size['width'] . 'x' . $size['height'];
 
-        $web_path    = AmpConfig::get_web_path();
+        $web_path = AmpConfig::get_web_path();
+
         $prettyPhoto = ($link === null);
         if ($link === null) {
             $link = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;

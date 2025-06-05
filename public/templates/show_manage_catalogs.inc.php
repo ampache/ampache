@@ -25,7 +25,8 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 
-$web_path   = AmpConfig::get_web_path();
+$web_path = AmpConfig::get_web_path();
+
 $admin_path = AmpConfig::get_web_path('/admin'); ?>
 <div id="information_actions" style="height: 200px; width: 600px;">
     <ul style="float: left;">

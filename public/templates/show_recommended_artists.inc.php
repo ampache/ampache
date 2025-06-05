@@ -103,6 +103,7 @@ foreach ($object_ids as $artist_id) {
         <?php
 }
 $web_path = AmpConfig::get_web_path();
+
 /* Foreach through every missing artist that has been passed to us */
 foreach ($missing_objects as $missing) { ?>
         <tr id="missing_artist_<?php echo $missing['mbid']; ?>">
