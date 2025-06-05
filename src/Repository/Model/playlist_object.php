@@ -145,6 +145,8 @@ abstract class playlist_object extends database_object implements library_item
             if ($limit != $this->limit) {
                 $this->update_item('limit', $limit);
             }
+
+            $this->update_item('rules', json_encode($this->rules));
         }
 
         $new_list    = (!empty($data['collaborate'])) ? $data['collaborate'] : [];
