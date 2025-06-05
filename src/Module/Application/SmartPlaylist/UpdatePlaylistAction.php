@@ -61,7 +61,7 @@ final class UpdatePlaylistAction implements ApplicationActionInterface
             $playlist->has_access()
         ) {
             $playlist->set_rules($data);
-            $playlist->update();
+            $playlist->update($data);
         } else {
             throw new AccessDeniedException();
         }
