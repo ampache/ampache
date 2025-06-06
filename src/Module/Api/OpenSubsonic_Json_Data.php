@@ -298,7 +298,7 @@ class OpenSubsonic_Json_Data
         }
 
         if ($video->enabled) {
-            $sub_id    = OpenSubsonic_Api::_getSongId($video->id);
+            $sub_id    = OpenSubsonic_Api::_getVideoId($video->id);
             $subParent = OpenSubsonic_Api::_getCatalogId($video->catalog);
 
             // set the elementName if missing
@@ -486,7 +486,7 @@ class OpenSubsonic_Json_Data
             return $response;
         }
 
-        $sub_id       = OpenSubsonic_Api::_getSongId($album->id);
+        $sub_id       = OpenSubsonic_Api::_getAlbumId($album->id);
         $album_artist = $album->findAlbumArtist();
         $subParent    = ($album_artist) ? OpenSubsonic_Api::_getArtistId($album_artist) : false;
         $f_name       = (string)$album->get_fullname();
