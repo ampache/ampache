@@ -130,7 +130,7 @@ class OpenSubsonic_Json_Data
         if ($songs) {
             $allsongs = $playlist->get_songs();
             foreach ($allsongs as $song_id) {
-                self::addChild($json, $song_id, 'song', 'entry');
+                $json = self::addChild($json, $song_id, 'song', 'entry');
             }
         }
 
@@ -164,7 +164,7 @@ class OpenSubsonic_Json_Data
             $json['duration']  = (string)$duration;
             $json['coverArt']  = $sub_id;
             foreach ($allitems as $item) {
-                self::addChild($json, (int)$item['object_id'], $item['object_type']->value, 'entry');
+                $json = self::addChild($json, (int)$item['object_id'], $item['object_type']->value, 'entry');
             }
         } else {
             $json['songCount'] = (string)$search->last_count;
