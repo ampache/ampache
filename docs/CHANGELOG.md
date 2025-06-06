@@ -25,6 +25,9 @@
 
 * Search
   * Updated rules were not presisted in `update_playlist`
+* Subsonic
+  * Double output when missing parameters for some calls
+  * Check getAlbumList & getAlbumList2 calls for `genre` when type is `byGenre`
 
 ## Ampache 7.5.2
 
