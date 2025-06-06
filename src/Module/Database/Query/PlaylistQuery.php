@@ -180,7 +180,7 @@ final class PlaylistQuery implements QueryInterface
         switch ($field) {
             case 'name':
             case 'title':
-                $sql = "`playlist`.`name`";
+                $sql = "`playlist`.`name`, `playlist`.`id`";
                 break;
             case 'date':
             case 'id':
