@@ -749,7 +749,7 @@ class OpenSubsonic_Api
      * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function createPlaylist(array $input, User $user): void
+    public static function createplaylist(array $input, User $user): void
     {
         $playlistId = $input['playlistId'] ?? null;
         $name       = $input['name'] ?? '';
@@ -795,7 +795,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function createPodcastChannel(array $input, User $user): void
+    //public static function createpodcastchannel(array $input, User $user): void
     //{
     //}
 
@@ -807,7 +807,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function createShare(array $input, User $user): void
+    //public static function createshare(array $input, User $user): void
     //{
     //}
 
@@ -819,7 +819,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function createUser(array $input, User $user): void
+    //public static function createuser(array $input, User $user): void
     //{
     //}
 
@@ -831,7 +831,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function deleteBookmark(array $input, User $user): void
+    //public static function deletebookmark(array $input, User $user): void
     //{
     //}
 
@@ -843,7 +843,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function deleteInternetRadioStation(array $input, User $user): void
+    //public static function deleteinternetradiostation(array $input, User $user): void
     //{
     //}
 
@@ -855,7 +855,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function deletePlaylist(array $input, User $user): void
+    //public static function deleteplaylist(array $input, User $user): void
     //{
     //}
 
@@ -867,7 +867,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function deletePodcastChannel(array $input, User $user): void
+    //public static function deletepodcastchannel(array $input, User $user): void
     //{
     //}
 
@@ -879,7 +879,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function deletePodcastEpisode(array $input, User $user): void
+    //public static function deletepodcastepisode(array $input, User $user): void
     //{
     //}
 
@@ -891,7 +891,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function deleteShare(array $input, User $user): void
+    //public static function deleteshare(array $input, User $user): void
     //{
     //}
 
@@ -903,7 +903,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function deleteUser(array $input, User $user): void
+    //public static function deleteuser(array $input, User $user): void
     //{
     //}
 
@@ -945,7 +945,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function downloadPodcastEpisode(array $input, User $user): void
+    //public static function downloadpodcastepisode(array $input, User $user): void
     //{
     //}
 
@@ -957,7 +957,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getAlbum(array $input, User $user): void
+    //public static function getalbum(array $input, User $user): void
     //{
     //}
 
@@ -969,7 +969,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getAlbumInfo(array $input, User $user): void
+    //public static function getalbuminfo(array $input, User $user): void
     //{
     //}
 
@@ -981,7 +981,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getAlbumInfo2(array $input, User $user): void
+    //public static function getalbuminfo2(array $input, User $user): void
     //{
     //}
 
@@ -993,7 +993,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getAlbumList(array $input, User $user): void
+    //public static function getalbumlist(array $input, User $user): void
     //{
     //}
 
@@ -1005,7 +1005,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getAlbumList2(array $input, User $user): void
+    //public static function getalbumlist2(array $input, User $user): void
     //{
     //}
 
@@ -1017,7 +1017,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getArtist(array $input, User $user): void
+    //public static function getartist(array $input, User $user): void
     //{
     //}
 
@@ -1029,7 +1029,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getArtistInfo(array $input, User $user): void
+    //public static function getartistinfo(array $input, User $user): void
     //{
     //}
 
@@ -1041,7 +1041,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getArtistInfo2(array $input, User $user): void
+    //public static function getartistinfo2(array $input, User $user): void
     //{
     //}
 
@@ -1053,7 +1053,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getArtists(array $input, User $user): void
+    //public static function getartists(array $input, User $user): void
     //{
     //}
 
@@ -1065,7 +1065,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getAvatar(array $input, User $user): void
+    //public static function getavatar(array $input, User $user): void
     //{
     //}
 
@@ -1077,7 +1077,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getBookmarks(array $input, User $user): void
+    //public static function getbookmarks(array $input, User $user): void
     //{
     //}
 
@@ -1089,7 +1089,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getCaptions(array $input, User $user): void
+    //public static function getcaptions(array $input, User $user): void
     //{
     //}
 
@@ -1101,7 +1101,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getChatMessages(array $input, User $user): void
+    //public static function getchatmessages(array $input, User $user): void
     //{
     //}
 
@@ -1193,7 +1193,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getGenres(array $input, User $user): void
+    //public static function getgenres(array $input, User $user): void
     //{
     //}
 
@@ -1205,7 +1205,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getIndexes(array $input, User $user): void
+    //public static function getindexes(array $input, User $user): void
     //{
     //}
 
@@ -1217,7 +1217,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getInternetRadioStations(array $input, User $user): void
+    //public static function getinternetradiostations(array $input, User $user): void
     //{
     //}
 
@@ -1229,7 +1229,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getLicense(array $input, User $user): void
+    //public static function getlicense(array $input, User $user): void
     //{
     //}
 
@@ -1241,7 +1241,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getLyrics(array $input, User $user): void
+    //public static function getlyrics(array $input, User $user): void
     //{
     //}
 
@@ -1253,7 +1253,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getLyricsBySongId(array $input, User $user): void
+    //public static function getlyricsbysongid(array $input, User $user): void
     //{
     //}
 
@@ -1265,7 +1265,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getMusicDirectory(array $input, User $user): void
+    //public static function getmusicdirectory(array $input, User $user): void
     //{
     //}
 
@@ -1277,7 +1277,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getMusicFolders(array $input, User $user): void
+    //public static function getmusicfolders(array $input, User $user): void
     //{
     //}
 
@@ -1289,7 +1289,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getNewestPodcasts(array $input, User $user): void
+    //public static function getnewestpodcasts(array $input, User $user): void
     //{
     //}
 
@@ -1301,7 +1301,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getNowPlaying(array $input, User $user): void
+    //public static function getnowplaying(array $input, User $user): void
     //{
     //}
 
@@ -1313,7 +1313,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getOpenSubsonicExtensions(array $input, User $user): void
+    //public static function getopensubsonicextensions(array $input, User $user): void
     //{
     //}
 
@@ -1325,7 +1325,7 @@ class OpenSubsonic_Api
      * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getPlaylist(array $input, User $user): void
+    public static function getplaylist(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
         if (!$sub_id) {
@@ -1359,13 +1359,13 @@ class OpenSubsonic_Api
      * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getPlaylists(array $input, User $user): void
+    public static function getplaylists(array $input, User $user): void
     {
         $user = (isset($input['username']))
             ? User::get_from_username($input['username']) ?? $user
             : $user;
-        $user_id  = $user->id ?? 0;
-        $response = Subsonic_Xml_Data::addSubsonicResponse('getplaylists');
+
+        $user_id = $user->id ?? 0;
 
         $browse = Api::getBrowse($user);
         $browse->set_type('playlist_search');
@@ -1402,7 +1402,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getPlayQueue(array $input, User $user): void
+    //public static function getplayqueue(array $input, User $user): void
     //{
     //}
 
@@ -1414,7 +1414,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getPodcastEpisode(array $input, User $user): void
+    //public static function getpodcastepisode(array $input, User $user): void
     //{
     //}
 
@@ -1426,7 +1426,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getPodcasts(array $input, User $user): void
+    //public static function getpodcasts(array $input, User $user): void
     //{
     //}
 
@@ -1438,7 +1438,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getRandomSongs(array $input, User $user): void
+    //public static function getrandomsongs(array $input, User $user): void
     //{
     //}
 
@@ -1450,7 +1450,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getScanStatus(array $input, User $user): void
+    //public static function getscanstatus(array $input, User $user): void
     //{
     //}
 
@@ -1462,7 +1462,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getShares(array $input, User $user): void
+    //public static function getshares(array $input, User $user): void
     //{
     //}
 
@@ -1474,7 +1474,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getSimilarSongs(array $input, User $user): void
+    //public static function getsimilarsongs(array $input, User $user): void
     //{
     //}
 
@@ -1486,7 +1486,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getSimilarSongs2(array $input, User $user): void
+    //public static function getsimilarsongs2(array $input, User $user): void
     //{
     //}
 
@@ -1498,7 +1498,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getSong(array $input, User $user): void
+    //public static function getsong(array $input, User $user): void
     //{
     //}
 
@@ -1510,7 +1510,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getSongsByGenre(array $input, User $user): void
+    //public static function getsongbygenre(array $input, User $user): void
     //{
     //}
 
@@ -1522,7 +1522,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getStarred(array $input, User $user): void
+    //public static function getstarred(array $input, User $user): void
     //{
     //}
 
@@ -1534,7 +1534,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getStarred2(array $input, User $user): void
+    //public static function getstarred2(array $input, User $user): void
     //{
     //}
 
@@ -1546,7 +1546,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getTopSongs(array $input, User $user): void
+    //public static function gettopsongs(array $input, User $user): void
     //{
     //}
 
@@ -1558,7 +1558,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getUser(array $input, User $user): void
+    //public static function geuser(array $input, User $user): void
     //{
     //}
 
@@ -1570,7 +1570,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getUsers(array $input, User $user): void
+    //public static function getusers(array $input, User $user): void
     //{
     //}
 
@@ -1582,7 +1582,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getVideoInfo(array $input, User $user): void
+    //public static function getvideoinfo(array $input, User $user): void
     //{
     //}
 
@@ -1594,7 +1594,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function getVideos(array $input, User $user): void
+    //public static function getvideos(array $input, User $user): void
     //{
     //}
 
@@ -1618,7 +1618,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function jukeboxControl(array $input, User $user): void
+    //public static function jukeboxcontrol(array $input, User $user): void
     //{
     //}
 
@@ -1645,7 +1645,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function refreshPodcasts(array $input, User $user): void
+    //public static function refreshpodcasts(array $input, User $user): void
     //{
     //}
 
@@ -1657,7 +1657,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function savePlayQueue(array $input, User $user): void
+    //public static function saveplayqueue(array $input, User $user): void
     //{
     //}
 
@@ -1717,7 +1717,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function setRating(array $input, User $user): void
+    //public static function setrating(array $input, User $user): void
     //{
     //}
 
@@ -1741,7 +1741,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function startScan(array $input, User $user): void
+    //public static function startscan(array $input, User $user): void
     //{
     //}
 
@@ -1797,7 +1797,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function tokenInfo(array $input, User $user): void
+    //public static function tokeninfo(array $input, User $user): void
     //{
     //}
 
@@ -1821,7 +1821,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function updateInternetRadioStation(array $input, User $user): void
+    //public static function updateinternetradiostation(array $input, User $user): void
     //{
     //}
 
@@ -1833,7 +1833,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function updatePlaylist(array $input, User $user): void
+    //public static function updateplaylist(array $input, User $user): void
     //{
     //}
 
@@ -1845,7 +1845,7 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function updateShare(array $input, User $user): void
+    //public static function updateshare(array $input, User $user): void
     //{
     //}
 
@@ -1857,14 +1857,14 @@ class OpenSubsonic_Api
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
-    //public static function updateUser(array $input, User $user): void
+    //public static function updateuser(array $input, User $user): void
     //{
     //}
 
     /**
      * @deprecated inject dependency
      */
-    private static function getPrivateMessageRepository(): PrivateMessageRepositoryInterface
+    private static function getprivateMessageRepository(): PrivateMessageRepositoryInterface
     {
         global $dic;
 

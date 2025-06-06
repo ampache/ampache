@@ -52,12 +52,12 @@ class OpenSubsonic_Json_Data
      * _createResponse
      * @return array{'subsonic-response': array{'status': string, 'version': string, 'type': string, 'serverVersion': string, 'openSubsonic': bool}}
      */
-    private static function _createResponse(string $status = 'ok'): array
+    private static function _createResponse(): array
     {
 
         return [
             'subsonic-response' => [
-                'status' => $status,
+                'status' => 'ok',
                 'version' => OpenSubsonic_Api::API_VERSION,
                 'type' => 'ampache',
                 'serverVersion' => Api::$version,
