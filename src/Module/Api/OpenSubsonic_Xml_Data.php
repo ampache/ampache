@@ -344,7 +344,7 @@ class OpenSubsonic_Xml_Data
         if ($albums) {
             foreach ($allalbums as $album_id) {
                 $album = new Album($album_id);
-                self::addAlbum($xartist, $album);
+                self::addAlbumID3($xartist, $album);
             }
         }
     }
@@ -389,7 +389,7 @@ class OpenSubsonic_Xml_Data
      *     has_art: int
      * } $artist
      */
-    private static function addArtistArray(SimpleXMLElement $xml, $artist): void
+    private static function addArtistArray(SimpleXMLElement $xml, array $artist): void
     {
         $sub_id  = OpenSubsonic_Api::_getArtistId($artist['id']);
         $xartist = self::addChildToResultXml($xml, 'artist');
@@ -404,7 +404,7 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addAlbumList
-     * @param SimpleXMLElement $xml
+     * https://opensubsonic.netlify.app/docs/responses/albumList/
      * @param int[] $albums
      */
     public static function addAlbumList(SimpleXMLElement $xml, array $albums): void
@@ -412,13 +412,13 @@ class OpenSubsonic_Xml_Data
         $xlist = self::addChildToResultXml($xml, htmlspecialchars('albumList'));
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
-            self::addAlbum($xlist, $album);
+            self::addAlbumID3($xlist, $album);
         }
     }
 
     /**
      * addAlbumList2
-     * @param SimpleXMLElement $xml
+     * https://opensubsonic.netlify.app/docs/responses/albumList2/
      * @param int[] $albums
      */
     public static function addAlbumList2(SimpleXMLElement $xml, array $albums): void
@@ -426,14 +426,17 @@ class OpenSubsonic_Xml_Data
         $xlist = self::addChildToResultXml($xml, htmlspecialchars('albumList2'));
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
-            self::addAlbum($xlist, $album);
+            self::addAlbumID3($xlist, $album);
         }
     }
 
     /**
-     * addAlbum
+     * addAlbumID3
+     *
+     *  An album from ID3 tags.
+     *  https://opensubsonic.netlify.app/docs/responses/albumid3/
      */
-    public static function addAlbum(SimpleXMLElement $xml, Album $album, bool $songs = false, string $elementName = "album"): SimpleXMLElement
+    public static function addAlbumID3(SimpleXMLElement $xml, Album $album, bool $songs = false, string $elementName = "album"): SimpleXMLElement
     {
         if ($album->isNew()) {
             return $xml;
@@ -618,7 +621,7 @@ class OpenSubsonic_Xml_Data
         foreach ($allalbums as $album_id) {
             $album = new Album($album_id);
             // TODO addChild || use addChildArray
-            self::addAlbum($xdir, $album, false, "child");
+            self::addAlbumID3($xdir, $album, false, "child");
         }
     }
 
@@ -975,7 +978,7 @@ class OpenSubsonic_Xml_Data
         }
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
-            self::addAlbum($xresult, $album);
+            self::addAlbumID3($xresult, $album);
         }
         foreach ($songs as $song_id) {
             self::addSong($xresult, $song_id);
@@ -998,7 +1001,7 @@ class OpenSubsonic_Xml_Data
         }
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
-            self::addAlbum($xresult, $album);
+            self::addAlbumID3($xresult, $album);
         }
         foreach ($songs as $song_id) {
             self::addSong($xresult, $song_id);
@@ -1023,7 +1026,7 @@ class OpenSubsonic_Xml_Data
 
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
-            self::addAlbum($xstarred, $album);
+            self::addAlbumID3($xstarred, $album);
         }
 
         foreach ($songs as $song_id) {
@@ -1049,7 +1052,7 @@ class OpenSubsonic_Xml_Data
 
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
-            self::addAlbum($xstarred, $album);
+            self::addAlbumID3($xstarred, $album);
         }
 
         foreach ($songs as $song_id) {

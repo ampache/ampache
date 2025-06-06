@@ -26,11 +26,15 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -50,7 +54,9 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 use DateTime;
 use DOMDocument;
 use SimpleXMLElement;
@@ -836,77 +842,199 @@ class OpenSubsonic_Api
     //{
     //}
 
-    ///**
-    // * deleteInternetRadioStation
-    // *
-    // * Deletes an existing internet radio station.
-    // * https://opensubsonic.netlify.app/docs/endpoints/deleteinternetradiostation/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function deleteinternetradiostation(array $input, User $user): void
-    //{
-    //}
+    /**
+     * deleteInternetRadioStation
+     *
+     * Deletes an existing internet radio station.
+     * https://opensubsonic.netlify.app/docs/endpoints/deleteinternetradiostation/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function deleteinternetradiostation(array $input, User $user): void
+    {
+        $stream_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$stream_id) {
+            return;
+        }
 
-    ///**
-    // * deletePlaylist
-    // *
-    // * Deletes a saved playlist.
-    // * https://opensubsonic.netlify.app/docs/endpoints/deleteplaylist/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function deleteplaylist(array $input, User $user): void
-    //{
-    //}
+        $liveStreamRepository = self::getLiveStreamRepository();
 
-    ///**
-    // * deletePodcastChannel
-    // *
-    // * Deletes a Podcast channel.
-    // * https://opensubsonic.netlify.app/docs/endpoints/deletepodcastchannel/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function deletepodcastchannel(array $input, User $user): void
-    //{
-    //}
+        if (AmpConfig::get('live_stream') && $user->access >= AccessLevelEnum::MANAGER->value) {
+            $liveStream = $liveStreamRepository->findById((int) $stream_id);
 
-    ///**
-    // * deletePodcastEpisode
-    // *
-    // * Deletes a Podcast episode.
-    // * https://opensubsonic.netlify.app/docs/endpoints/deletepodcastepisode/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function deletepodcastepisode(array $input, User $user): void
-    //{
-    //}
+            if ($liveStream === null) {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            } else {
+                $liveStreamRepository->delete($liveStream);
 
-    ///**
-    // * deleteShare
-    // *
-    // * Deletes an existing share.
-    // * https://opensubsonic.netlify.app/docs/endpoints/deleteshare/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function deleteshare(array $input, User $user): void
-    //{
-    //}
+                self::_responseOutput($input, __FUNCTION__);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+        }
+    }
 
-    ///**
-    // * deleteUser
-    // *
-    // * Deletes an existing user on the server.
-    // * https://opensubsonic.netlify.app/docs/endpoints/deleteuser/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function deleteuser(array $input, User $user): void
-    //{
-    //}
+    /**
+     * deletePlaylist
+     *
+     * Deletes a saved playlist.
+     * https://opensubsonic.netlify.app/docs/endpoints/deleteplaylist/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function deleteplaylist(array $input, User $user): void
+    {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
+
+        $playlist = self::_getAmpacheObject($sub_id);
+        if (
+            (!($playlist instanceof Playlist || $playlist instanceof Search)) ||
+            $playlist->isNew()
+        ) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        if (!$playlist->has_access($user)) {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+
+            return;
+        }
+
+        $playlist->delete();
+
+        self::_responseOutput($input, __FUNCTION__);
+    }
+
+    /**
+     * deletePodcastChannel
+     *
+     * Deletes a Podcast channel.
+     * https://opensubsonic.netlify.app/docs/endpoints/deletepodcastchannel/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function deletepodcastchannel(array $input, User $user): void
+    {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
+
+        if (AmpConfig::get(ConfigurationKeyEnum::PODCAST) && $user->access >= AccessLevelEnum::MANAGER->value) {
+            $podcast_id = self::_getAmpacheId($sub_id);
+            $podcast    = ($podcast_id)
+                ? self::getPodcastRepository()->findById($podcast_id)
+                : null;
+            if ($podcast === null) {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            } else {
+                self::getPodcastDeleter()->delete($podcast);
+
+                self::_responseOutput($input, __FUNCTION__);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
+
+    /**
+     * deletePodcastEpisode
+     *
+     * Deletes a Podcast episode.
+     * https://opensubsonic.netlify.app/docs/endpoints/deletepodcastepisode/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function deletepodcastepisode(array $input, User $user): void
+    {
+        $episode_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$episode_id) {
+            return;
+        }
+
+        if (AmpConfig::get('podcast') && $user->access >= 75) {
+            $episode = new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($episode_id));
+            if ($episode->isNew()) {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            } elseif ($episode->remove()) {
+                Catalog::count_table('podcast_episode');
+
+                self::_responseOutput($input, __FUNCTION__);
+            } else {
+                self::_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
+
+    /**
+     * deleteShare
+     *
+     * Deletes an existing share.
+     * https://opensubsonic.netlify.app/docs/endpoints/deleteshare/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function deleteshare(array $input, User $user): void
+    {
+        $share_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$share_id) {
+            return;
+        }
+
+        if (AmpConfig::get('share')) {
+            $shareRepository = self::getShareRepository();
+
+            $share = $shareRepository->findById((int) $share_id);
+            if (
+                $share === null ||
+                !$share->isAccessible($user)
+            ) {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            } else {
+                $shareRepository->delete($share);
+
+                self::_responseOutput($input, __FUNCTION__);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
+
+    /**
+     * deleteUser
+     *
+     * Deletes an existing user on the server.
+     * https://opensubsonic.netlify.app/docs/endpoints/deleteuser/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function deleteuser(array $input, User $user): void
+    {
+        $username = self::_check_parameter($input, 'username', __FUNCTION__);
+        if (!$username) {
+            return;
+        }
+
+        if ($user->access === 100) {
+            $update_user = User::get_from_username((string)$username);
+            if ($update_user instanceof User) {
+                $update_user->delete();
+
+                self::_responseOutput($input, __FUNCTION__);
+            } else {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
 
     /**
      * download
@@ -954,7 +1082,7 @@ class OpenSubsonic_Api
         }
 
         if (AmpConfig::get('podcast') && $user->access >= 75) {
-            $episode = new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($episode_id));
+            $episode = new Podcast_Episode(self::_getAmpacheId($episode_id));
             if ($episode->isNew()) {
                 self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             } else {
@@ -993,7 +1121,7 @@ class OpenSubsonic_Api
         $format   = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addAlbum($response, $album, true);
+            $response = OpenSubsonic_Xml_Data::addAlbumID3($response, $album, true);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
             $response = OpenSubsonic_Json_Data::addAlbumID3($response, $album, true);
@@ -1669,7 +1797,7 @@ class OpenSubsonic_Api
      * ping
      *
      * Used to test connectivity with the server.
-     *  https://opensubsonic.netlify.app/docs/endpoints/ping/
+     * https://opensubsonic.netlify.app/docs/endpoints/ping/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1932,5 +2060,45 @@ class OpenSubsonic_Api
         global $dic;
 
         return $dic->get(PodcastSyncerInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getLiveStreamRepository(): LiveStreamRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LiveStreamRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastDeleter(): PodcastDeleterInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastDeleterInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
     }
 }
