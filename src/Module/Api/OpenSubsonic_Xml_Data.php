@@ -772,7 +772,7 @@ class OpenSubsonic_Xml_Data
                 }
             }
 
-            return self::addPlaylist($xplaylists, $playlist);
+            self::addPlaylist($xplaylists, $playlist);
         }
 
         return $xml;
