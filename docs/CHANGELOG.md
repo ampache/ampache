@@ -1,5 +1,31 @@
 # CHANGELOG
 
+## Ampache 7.5.3
+
+### Added
+
+* Database 752001
+  * Delete `custom_blankmovie` preference. (Movies don't exist now)
+
+### Changed
+
+* User Favorites are sorted by recent date and not count
+* Clean up `get_web_path` spacing to avoid constantly merging changes in other branches
+* Browse
+  * Sort `playlist` and `search` objects by `name` and `id` to make sure dupes are ordered the same way
+* Subsonic
+  * getAlbumList type `starred` sorted by recent date
+
+### Removed
+
+* Preference and references to `custom_blankmovie` which doesn't exist now
+* Correct AJAX urls when using `clear_art` and `show_art_dlg` actions
+
+### Fixed
+
+* Search
+  * Updated rules were not presisted in `update_playlist`
+
 ## Ampache 7.5.2
 
 ### Added
