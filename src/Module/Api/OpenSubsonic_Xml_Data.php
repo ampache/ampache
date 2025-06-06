@@ -330,7 +330,7 @@ class OpenSubsonic_Xml_Data
         }
 
         if ($artist->has_art()) {
-            $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
+            $xartist->addAttribute('coverArt', $sub_id);
         }
 
         if ($extra) {
@@ -373,7 +373,7 @@ class OpenSubsonic_Xml_Data
         $xchild->addAttribute('title', $child['f_name']);
         $xchild->addAttribute('artist', $child['f_name']);
         if (array_key_exists('has_art', $child) && !empty($child['has_art'])) {
-            $xchild->addAttribute('coverArt', 'ar-' . $sub_id);
+            $xchild->addAttribute('coverArt', $sub_id);
         }
     }
 
@@ -396,7 +396,7 @@ class OpenSubsonic_Xml_Data
         $xartist->addAttribute('id', $sub_id);
         $xartist->addAttribute('name', $artist['f_name']);
         if (array_key_exists('has_art', $artist) && !empty($artist['has_art'])) {
-            $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
+            $xartist->addAttribute('coverArt', $sub_id);
         }
         $xartist->addAttribute('albumCount', (string)$artist['album_count']);
         self::_setIfStarred($xartist, 'artist', $artist['id']);
@@ -433,10 +433,10 @@ class OpenSubsonic_Xml_Data
     /**
      * addAlbum
      */
-    public static function addAlbum(SimpleXMLElement $xml, Album $album, bool $songs = false, string $elementName = "album"): void
+    public static function addAlbum(SimpleXMLElement $xml, Album $album, bool $songs = false, string $elementName = "album"): SimpleXMLElement
     {
         if ($album->isNew()) {
-            return;
+            return $xml;
         }
 
         $sub_id = OpenSubsonic_Api::_getAlbumId($album->id);
@@ -471,10 +471,9 @@ class OpenSubsonic_Xml_Data
         if ($year > 0) {
             $xalbum->addAttribute('year', (string)$year);
         }
-        if (count($album->get_tags()) > 0) {
-            $tag_values = array_values($album->get_tags());
-            $tag        = array_shift($tag_values);
-            $xalbum->addAttribute('genre', (string)$tag['name']);
+        $tags = Tag::get_object_tags('album', $album->id);
+        if (!empty($tags)) {
+            $xalbum->addAttribute('genre', implode(',', array_column($tags, 'name')));
         }
 
         $rating      = new Rating($album->id, "album");
@@ -494,6 +493,8 @@ class OpenSubsonic_Xml_Data
                 self::addSong($xalbum, $song_id);
             }
         }
+
+        return $xml;
     }
 
     /**
@@ -749,6 +750,9 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addPlaylists
+     * return playlists object with nested playlist items
+     * https://opensubsonic.netlify.app/docs/responses/playlists/
+     * https://opensubsonic.netlify.app/docs/responses/playlist/
      * @param int[]|string[] $playlists
      */
     public static function addPlaylists(SimpleXMLElement $xml, ?User $user, array $playlists): SimpleXMLElement
@@ -780,6 +784,7 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addPlaylist
+     * https://opensubsonic.netlify.app/docs/responses/playlist/
      */
     public static function addPlaylist(SimpleXMLElement $xml, Playlist|Search $playlist, bool $songs = false): SimpleXMLElement
     {
@@ -1388,7 +1393,7 @@ class OpenSubsonic_Xml_Data
             $xchannel->addAttribute('title', (string)$podcast->get_fullname());
             $xchannel->addAttribute('description', $podcast->get_description());
             if ($podcast->has_art()) {
-                $xchannel->addAttribute('coverArt', 'pod-' . $sub_id);
+                $xchannel->addAttribute('coverArt', $sub_id);
             }
             $xchannel->addAttribute('status', 'completed');
             if ($includeEpisodes) {

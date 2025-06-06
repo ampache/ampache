@@ -28,6 +28,7 @@ namespace Ampache\Module\Api;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\Model\Album;
@@ -426,10 +427,10 @@ class OpenSubsonic_Api
         }
 
         if ($songsIdToAdd_count > 0) {
-            for ($i = 0; $i < $songsIdToAdd_count; ++$i) {
-                $ampacheId = self::_getAmpacheId((string)$songsIdToAdd[$i]);
+            for ($count = 0; $count < $songsIdToAdd_count; ++$count) {
+                $ampacheId = self::_getAmpacheId((string)$songsIdToAdd[$count]);
                 if ($ampacheId) {
-                    $songsIdToAdd[$i] = $ampacheId;
+                    $songsIdToAdd[$count] = $ampacheId;
                 }
             }
             $playlist->add_songs($songsIdToAdd);
@@ -557,7 +558,7 @@ class OpenSubsonic_Api
      *
      * Output a response or a default success response if no response is provided.
      * @param array<string, mixed> $input
-     * @param array{'subsonic-response': array<string, mixed>}|SimpleXMLElement $response
+     * @param array{'subsonic-response': array<string, mixed>}|SimpleXMLElement|null $response
      */
     private static function _responseOutput(array $input, string $function, array|SimpleXMLElement|null $response = null): void
     {
@@ -776,7 +777,7 @@ class OpenSubsonic_Api
                     $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, true);
                 } else {
                     $response = self::_addJsonResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, true);
+                    $response = OpenSubsonic_Json_Data::addplaylist($response, $playlist, true);
                 }
                 self::_responseOutput($input, __FUNCTION__, $response);
             } else {
@@ -937,29 +938,68 @@ class OpenSubsonic_Api
         self::_follow_stream($object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken));
     }
 
-    ///**
-    // * downloadPodcastEpisode
-    // *
-    // * Request the server to start downloading a given Podcast episode.
-    // * https://opensubsonic.netlify.app/docs/endpoints/downloadpodcastepisode/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function downloadpodcastepisode(array $input, User $user): void
-    //{
-    //}
+    /**
+     * downloadPodcastEpisode
+     *
+     * Request the server to start downloading a given Podcast episode.
+     * https://opensubsonic.netlify.app/docs/endpoints/downloadpodcastepisode/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function downloadpodcastepisode(array $input, User $user): void
+    {
+        $episode_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$episode_id) {
+            return;
+        }
 
-    ///**
-    // * getAlbum
-    // *
-    // * Returns details for an album.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getalbum/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getalbum(array $input, User $user): void
-    //{
-    //}
+        if (AmpConfig::get('podcast') && $user->access >= 75) {
+            $episode = new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($episode_id));
+            if ($episode->isNew()) {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            } else {
+                self::getPodcastSyncer()->syncEpisode($episode);
+
+                self::_responseOutput($input, __FUNCTION__);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
+
+    /**
+     * getAlbum
+     *
+     * Returns details for an album.
+     * https://opensubsonic.netlify.app/docs/endpoints/getalbum/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getalbum(array $input, User $user): void
+    {
+        unset($user);
+        $albumid = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$albumid) {
+            return;
+        }
+
+        $album = self::_getAmpacheObject($albumid);
+        if (!$album || !$album instanceof Album || $album->isNew()) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $format   = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addAlbum($response, $album, true);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addAlbumID3($response, $album, true);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     ///**
     // * getAlbumInfo
@@ -1333,7 +1373,10 @@ class OpenSubsonic_Api
         }
 
         $playlist = self::_getAmpacheObject($sub_id);
-        if (!($playlist instanceof Playlist || $playlist instanceof Search)) {
+        if (
+            (!($playlist instanceof Playlist || $playlist instanceof Search)) ||
+            $playlist->isNew()
+        ) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -1879,5 +1922,15 @@ class OpenSubsonic_Api
         global $dic;
 
         return $dic->get(BookmarkRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastSyncer(): PodcastSyncerInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastSyncerInterface::class);
     }
 }

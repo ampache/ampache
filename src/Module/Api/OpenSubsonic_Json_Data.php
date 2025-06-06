@@ -27,6 +27,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
@@ -40,6 +41,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
+use Ampache\Repository\Model\Video;
 
 /**
  * OpenSubsonic_Json_Data Class
@@ -101,7 +103,7 @@ class OpenSubsonic_Json_Data
     }
 
     /**
-     * addPlaylist_Playlist
+     * _addPlaylist_Playlist
      * @return array<string, mixed>
      */
     private static function _addPlaylist_Playlist(Playlist $playlist, bool $songs = false): array
@@ -110,7 +112,7 @@ class OpenSubsonic_Json_Data
         $songcount = $playlist->get_media_count('song');
         $duration  = ($songcount > 0) ? $playlist->get_total_duration() : 0;
 
-        $JSON = [
+        $json = [
             'id' => $sub_id,
             'name' => (string)$playlist->get_fullname(),
             'owner' => (string)$playlist->username,
@@ -122,28 +124,28 @@ class OpenSubsonic_Json_Data
         ];
 
         if ($playlist->has_art()) {
-            $JSON['coverArt'] = $sub_id;
+            $json['coverArt'] = $sub_id;
         }
 
         if ($songs) {
             $allsongs = $playlist->get_songs();
             foreach ($allsongs as $song_id) {
-                self::addChild($JSON, $song_id, 'entry');
+                self::addChild($json, $song_id, 'song', 'entry');
             }
         }
 
-        return $JSON;
+        return $json;
     }
 
     /**
-     * addPlaylist_Search
+     * _addPlaylist_Search
      * @return array<string, mixed>
      */
     private static function _addPlaylist_Search(Search $search, bool $songs = false): array
     {
         $sub_id = OpenSubsonic_Api::_getSmartPlaylistId($search->id);
 
-        $JSON = [
+        $json = [
             'id' => $sub_id,
             'name' => (string)$search->get_fullname(),
             'owner' => (string)$search->username,
@@ -158,19 +160,216 @@ class OpenSubsonic_Json_Data
                 ? Search::get_total_duration($allitems)
                 : 0;
 
-            $JSON['songCount'] = (string)count($allitems);
-            $JSON['duration']  = (string)$duration;
-            $JSON['coverArt']  = $sub_id;
+            $json['songCount'] = (string)count($allitems);
+            $json['duration']  = (string)$duration;
+            $json['coverArt']  = $sub_id;
             foreach ($allitems as $item) {
-                self::addChild($JSON, (int)$item['object_id'], 'entry');
+                self::addChild($json, (int)$item['object_id'], $item['object_type']->value, 'entry');
             }
         } else {
-            $JSON['songCount'] = (string)$search->last_count;
-            $JSON['duration']  = (string)$search->last_duration;
-            $JSON['coverArt']  = $sub_id;
+            $json['songCount'] = (string)$search->last_count;
+            $json['duration']  = (string)$search->last_duration;
+            $json['coverArt']  = $sub_id;
         }
 
-        return $JSON;
+        return $json;
+    }
+
+    /**
+     * _addSong
+     *
+     * Child media.
+     * https://opensubsonic.netlify.app/docs/responses/child/
+     * @param array<string, mixed> $response
+     * @return array<string, mixed>
+     */
+    public static function _addSong(array $response, int $object_id, string $elementName): array
+    {
+        $song = new Song($object_id);
+        if ($song->isNew()) {
+            return $response;
+        }
+
+        // Don't create entries for disabled songs
+        if ($song->enabled) {
+            $sub_id    = OpenSubsonic_Api::_getSongId($song->id);
+            $subParent = OpenSubsonic_Api::_getAlbumId($song->album);
+
+            // set the elementName if missing
+            if (!isset($response[$elementName])) {
+                $response[$elementName] = [];
+            }
+
+            $json = [
+                'id' => $sub_id,
+                'parent' => $subParent,
+                'title' => (string)$song->title,
+                'isDir' => 'false',
+                'isVideo' => 'false',
+                'type' => 'music',
+                'albumId' => $subParent,
+                'album' => (string)$song->get_album_fullname(),
+                'artistId' => ($song->artist) ? OpenSubsonic_Api::_getArtistId($song->artist) : '',
+                'artist' => (string)$song->get_artist_fullname(),
+            ];
+
+            if ($song->has_art()) {
+                $art_id            = (AmpConfig::get('show_song_art', false)) ? $sub_id : $subParent;
+                $json['coverArt']  = $art_id;
+            }
+
+            $json['duration'] = (string)$song->time;
+            $json['bitrate']  = (string)((int)($song->bitrate / 1024));
+
+            $rating      = new Rating($song->id, "song");
+            $user_rating = ($rating->get_user_rating() ?? 0);
+            if ($user_rating > 0) {
+                $json['userRating'] = (string)ceil($user_rating);
+            }
+
+            $avg_rating = $rating->get_average_rating();
+            if ($avg_rating > 0) {
+                $json['averageRating'] = (string)$avg_rating;
+            }
+
+            $starred = new Userflag($object_id, 'song');
+            $result  = $starred->get_flag(null, true);
+            if (is_array($result)) {
+                $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
+            }
+
+            if ($song->track > 0) {
+                $json['track'] = (string)$song->track;
+            }
+
+            if ($song->year > 0) {
+                $json['year'] = (string)$song->year;
+            }
+
+            $tags = Tag::get_object_tags('song', $song->id);
+            if (!empty($tags)) {
+                $json['genre'] = implode(',', array_column($tags, 'name'));
+            }
+
+            $json['size'] = (string)$song->size;
+
+            $disk = $song->disk;
+            if ($disk > 0) {
+                $json['discNumber'] = (string)$disk;
+            }
+
+            $json['suffix']      = $song->type;
+            $json['contentType'] = (string)$song->mime;
+            // Always return the original filename, not the transcoded one
+            $json['path'] = (string)$song->file;
+
+            if (AmpConfig::get('transcode', 'default') != 'never') {
+                $cache_path     = (string)AmpConfig::get('cache_path', '');
+                $cache_target   = (string)AmpConfig::get('cache_target', '');
+                $file_target    = Catalog::get_cache_path($song->getId(), $song->getCatalogId(), $cache_path, $cache_target);
+                $transcode_type = ($file_target !== null && is_file($file_target))
+                    ? $cache_target
+                    : Stream::get_transcode_format($song->type, null, 'api');
+
+                if (!empty($transcode_type) && $song->type !== $transcode_type) {
+                    // Set transcoding information
+                    $json['transcodedSuffix']      = $transcode_type;
+                    $json['transcodedContentType'] = Song::type_to_mime($transcode_type);
+                }
+            }
+
+            $response[$elementName][] = $json;
+        }
+
+        return $response;
+    }
+
+    /**
+     * _addVideo
+     *  https://opensubsonic.netlify.app/docs/responses/child/
+     * @param array<string, mixed> $response
+     * @return array<string, mixed>
+     */
+    private static function _addVideo(array $response, int $object_id, string $elementName): array
+    {
+        $video = new Video($object_id);
+        if ($video->isNew()) {
+            return $response;
+        }
+
+        if ($video->enabled) {
+            $sub_id    = OpenSubsonic_Api::_getSongId($video->id);
+            $subParent = OpenSubsonic_Api::_getCatalogId($video->catalog);
+
+            // set the elementName if missing
+            if (!isset($response[$elementName])) {
+                $response[$elementName] = [];
+            }
+
+            $json = [
+                'id' => $sub_id,
+                'parent' => $subParent,
+                'title' => $video->getFileName(),
+                'isDir' => 'false',
+                'isVideo' => 'true',
+                'type' => 'video',
+            ];
+
+            if ($video->has_art()) {
+                $json['coverArt'] = $sub_id;
+            }
+
+            $json['duration'] = (string)$video->time;
+            $json['bitrate']  = (string)((int)($video->bitrate / 1024));
+
+            $rating      = new Rating($video->id, 'video');
+            $user_rating = ($rating->get_user_rating() ?? 0);
+            if ($user_rating > 0) {
+                $json['userRating'] = (string)ceil($user_rating);
+            }
+
+            $avg_rating = $rating->get_average_rating();
+            if ($avg_rating > 0) {
+                $json['averageRating'] = (string)$avg_rating;
+            }
+
+            $starred = new Userflag($object_id, 'video');
+            $result  = $starred->get_flag(null, true);
+            if (is_array($result)) {
+                $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
+            }
+
+            if (isset($video->year) && $video->year > 0) {
+                $json['year'] = (string)$video->year;
+            }
+
+            $tags = Tag::get_object_tags('video', (int)$video->id);
+            if (!empty($tags)) {
+                $json['genre'] = implode(',', array_column($tags, 'name'));
+            }
+
+            $json['size']        = (string)$video->size;
+            $json['suffix']      = $video->type;
+            $json['contentType'] = (string)$video->mime;
+
+            // Create a clean fake path instead of real file path to have better offline mode storage on Subsonic clients
+            $json['path'] = basename($video->file);
+
+            // Set transcoding information if required
+            $transcode_cfg = AmpConfig::get('transcode', 'default');
+            $valid_types   = Stream::get_stream_types_for_type($video->type, 'api');
+            if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
+                $transcode_settings = $video->get_transcode_settings(null, 'api');
+                if (!empty($transcode_settings)) {
+                    $transcode_type                 = $transcode_settings['format'];
+                    $json['transcodedSuffix']       = $transcode_type;
+                    $json['transcodedContentType']  = Video::type_to_mime($transcode_type);
+                }
+            }
+            $response[$elementName][] = $json;
+        }
+
+        return $response;
     }
 
     /**
@@ -277,13 +476,96 @@ class OpenSubsonic_Json_Data
      * addAlbumID3
      *
      * An album from ID3 tags.
+     * https://opensubsonic.netlify.app/docs/responses/albumid3/
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addAlbumID3(array $response, Album $album, bool $songs = false, string $elementName = "album"): array
+    {
+        if ($album->isNew()) {
+            return $response;
+        }
 
+        $sub_id       = OpenSubsonic_Api::_getSongId($album->id);
+        $album_artist = $album->findAlbumArtist();
+        $subParent    = ($album_artist) ? OpenSubsonic_Api::_getArtistId($album_artist) : false;
+        $f_name       = (string)$album->get_fullname();
+
+        $json = [
+            'id' => $sub_id,
+            'parent' => '',
+            'album' => $f_name,
+            'title' => $f_name,
+            'name' => $f_name,
+            'isDir' => 'true',
+        ];
+
+        if ($subParent) {
+            $json['parent'] = $subParent;
+        } else {
+            unset($json['parent']);
+        }
+
+        if ($album->has_art()) {
+            $json['coverArt'] = $sub_id;
+        }
+
+        $json['songCount'] = (string) $album->song_count;
+        $json['created']   = date("c", (int)$album->addition_time);
+        $json['duration']  = (string) $album->time;
+        $json['playCount'] = (string)$album->total_count;
+        if ($subParent) {
+            $json['artistId'] = $subParent;
+        }
+        $json['artist'] = (string)$album->get_artist_fullname();
+        // original year (fall back to regular year)
+        $original_year = AmpConfig::get('use_original_year');
+        $year          = ($original_year && $album->original_year)
+            ? $album->original_year
+            : $album->year;
+        if ($year > 0) {
+            $json['year'] = (string)$year;
+        }
+
+        $tags = Tag::get_object_tags('album', $album->id);
+        if (!empty($tags)) {
+            $json['genre'] = implode(',', array_column($tags, 'name'));
+        }
+
+        $rating      = new Rating($album->id, "album");
+        $user_rating = ($rating->get_user_rating() ?? 0);
+        if ($user_rating > 0) {
+            $json['userRating'] = (string)ceil($user_rating);
+        }
+
+        $avg_rating = $rating->get_average_rating();
+        if ($avg_rating > 0) {
+            $json['averageRating'] = (string)$avg_rating;
+        }
+
+        $starred = new Userflag($album->id, 'album');
+        $result  = $starred->get_flag(null, true);
+        if (is_array($result)) {
+            $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
+        }
+
+        if ($songs) {
+            $media_ids = self::getAlbumRepository()->getSongs($album->id);
+            foreach ($media_ids as $song_id) {
+                self::addChild($json, $song_id, 'song', 'song');
+            }
+        }
+
+        $response['subsonic-response'][$elementName] = $json;
+
+        return $response;
+    }
 
     /**
      * addAlbumID3WithSongs
      *
      * Album with songs.
+     * @see self::addAlbumID3()
      */
 
 
@@ -386,107 +668,17 @@ class OpenSubsonic_Json_Data
      * @param array<string, mixed> $response
      * @return array<string, mixed>
      */
-    public static function addChild(array $response, int $object_id, string $elementName): array
+    public static function addChild(array $response, int $object_id, string $object_type, string $elementName): array
     {
-
-        $song = new Song($object_id);
-        if ($song->isNew()) {
-            return $response;
+        switch ($object_type) {
+            case 'song':
+                return self::_addSong($response, $object_id, $elementName);
+            case 'video':
+                return self::_addVideo($response, $object_id, $elementName);
+            default:
+                // If the object type is not recognized, return the response unchanged
+                return $response;
         }
-
-        // Don't create entries for disabled songs
-        if ($song->enabled) {
-            $sub_id    = OpenSubsonic_Api::_getSongId($song->id);
-            $subParent = OpenSubsonic_Api::_getAlbumId($song->album);
-
-            // set the elementName if missing
-            if (!isset($response[$elementName])) {
-                $response[$elementName] = [];
-            }
-
-            $child = [
-                'id' => $sub_id,
-                'parent' => $subParent,
-                'title' => (string)$song->title,
-                'isDir' => 'false',
-                'isVideo' => 'false',
-                'type' => 'music',
-                'albumId' => $subParent,
-                'album' => (string)$song->get_album_fullname(),
-                'artistId' => ($song->artist) ? OpenSubsonic_Api::_getArtistId($song->artist) : '',
-                'artist' => (string)$song->get_artist_fullname(),
-            ];
-
-            if ($song->has_art()) {
-                $art_id            = (AmpConfig::get('show_song_art', false)) ? $sub_id : $subParent;
-                $child['coverArt'] = $art_id;
-            }
-
-            $child['duration'] = (string)$song->time;
-            $child['bitrate']  = (string)((int)($song->bitrate / 1024));
-
-            $rating      = new Rating($song->id, "song");
-            $user_rating = ($rating->get_user_rating() ?? 0);
-            if ($user_rating > 0) {
-                $child['userRating'] = (string)ceil($user_rating);
-            }
-
-            $avg_rating = $rating->get_average_rating();
-            if ($avg_rating > 0) {
-                $child['averageRating'] = (string)$avg_rating;
-            }
-
-            $starred = new Userflag($object_id, 'song');
-            $result  = $starred->get_flag(null, true);
-            if (is_array($result)) {
-                $child['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
-            }
-
-            if ($song->track > 0) {
-                $child['track'] = (string)$song->track;
-            }
-
-            if ($song->year > 0) {
-                $child['year'] = (string)$song->year;
-            }
-
-            $tags = Tag::get_object_tags('song', $song->id);
-            if (!empty($tags)) {
-                $child['genre'] = implode(',', array_column($tags, 'name'));
-            }
-
-            $child['size'] = (string)$song->size;
-
-            $disk = $song->disk;
-            if ($disk > 0) {
-                $child['discNumber'] = (string)$disk;
-            }
-
-            $child['suffix']      = $song->type;
-            $child['contentType'] = (string)$song->mime;
-            // Always return the original filename, not the transcoded one
-            $child['path'] = (string)$song->file;
-            if (AmpConfig::get('transcode', 'default') != 'never') {
-                $cache_path     = (string)AmpConfig::get('cache_path', '');
-                $cache_target   = (string)AmpConfig::get('cache_target', '');
-                $file_target    = Catalog::get_cache_path($song->getId(), $song->getCatalogId(), $cache_path, $cache_target);
-                $transcode_type = ($file_target !== null && is_file($file_target))
-                    ? $cache_target
-                    : Stream::get_transcode_format($song->type, null, 'api');
-
-                if (!empty($transcode_type) && $song->type !== $transcode_type) {
-                    // Set transcoding information
-                    $child['transcodedSuffix']      = $transcode_type;
-                    $child['transcodedContentType'] = Song::type_to_mime($transcode_type);
-                }
-            }
-
-            $response[$elementName][] = $child;
-
-            return $response;
-        }
-
-        return $response;
     }
 
 
@@ -668,7 +860,8 @@ class OpenSubsonic_Json_Data
     /**
      * addPlaylist
      *
-     * Playlist.
+     * Playlist or playlist with songs
+     * https://opensubsonic.netlify.app/docs/responses/playlist/
      * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
@@ -685,11 +878,12 @@ class OpenSubsonic_Json_Data
         return $response;
     }
 
-
     /**
      * addPlaylists
      *
      * Playlists.
+     * return playlists object with nested playlist items
+     * https://opensubsonic.netlify.app/docs/responses/playlists/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[]|string[] $playlists
      * @return array{'subsonic-response': array<string, mixed>}
@@ -725,8 +919,9 @@ class OpenSubsonic_Json_Data
      * addPlaylistWithSongs
      *
      * Playlist with songs.
+     * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
+     * @see self::addPlaylist()
      */
-
 
     /**
      * addPlayQueue
@@ -915,4 +1110,14 @@ class OpenSubsonic_Json_Data
      *
      * videos.
      */
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
+    }
 }
