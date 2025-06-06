@@ -552,7 +552,7 @@ class OpenSubsonic_Json_Data
         if ($songs) {
             $media_ids = self::getAlbumRepository()->getSongs($album->id);
             foreach ($media_ids as $song_id) {
-                self::addChild($json, $song_id, 'song', 'song');
+                $json = self::addChild($json, $song_id, 'song', 'song');
             }
         }
 
