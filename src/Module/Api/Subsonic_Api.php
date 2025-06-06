@@ -2758,10 +2758,7 @@ class Subsonic_Api
             $email = urldecode($email);
         }
 
-        if (
-            (!$username || !$password) ||
-            $user->access >= AccessLevelEnum::ADMIN->value
-        ) {
+        if ($user->access >= AccessLevelEnum::ADMIN->value) {
             $access = AccessLevelEnum::USER;
             if ($coverArtRole) {
                 $access = AccessLevelEnum::MANAGER;
