@@ -830,17 +830,33 @@ class OpenSubsonic_Api
     //{
     //}
 
-    ///**
-    // * deleteBookmark
-    // *
-    // * Creates or updates a bookmark.
-    // * https://opensubsonic.netlify.app/docs/endpoints/deletebookmark/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function deletebookmark(array $input, User $user): void
-    //{
-    //}
+    /**
+     * deleteBookmark
+     *
+     * Creates or updates a bookmark.
+     * https://opensubsonic.netlify.app/docs/endpoints/deletebookmark/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function deletebookmark(array $input, User $user): void
+    {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
+
+        $object_id = self::_getAmpacheId($sub_id);
+        $type      = self::_getAmpacheType((string)$object_id);
+
+        $bookmark = new Bookmark($object_id, $type, $user->id);
+        if ($bookmark->isNew()) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+        } else {
+            self::getBookmarkRepository()->delete($bookmark->getId());
+
+            self::_responseOutput($input, __FUNCTION__);
+        }
+    }
 
     /**
      * deleteInternetRadioStation
