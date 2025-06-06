@@ -609,6 +609,7 @@ class OpenSubsonic_Xml_Data
         if (!$artist_id) {
             return;
         }
+
         $data = Artist::get_id_array($artist_id);
         $xdir = self::addChildToResultXml($xml, 'directory');
         $xdir->addAttribute('id', (string)$sub_id);
@@ -659,6 +660,7 @@ class OpenSubsonic_Xml_Data
         if ($catalog === null) {
             return;
         }
+
         $xdir = self::addChildToResultXml($xml, 'directory');
         $xdir->addAttribute('id', (string)$catalog_id);
         $xdir->addAttribute('name', (string)$catalog->name);
@@ -1506,6 +1508,7 @@ class OpenSubsonic_Xml_Data
         if (empty($messages)) {
             return;
         }
+
         foreach ($messages as $message) {
             $chat = new PrivateMsg($message);
             self::addMessage($xmessages, $chat);

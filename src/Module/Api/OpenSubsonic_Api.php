@@ -1063,9 +1063,7 @@ class OpenSubsonic_Api
     public static function download(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if ($sub_id === false) {
-            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
-
+        if (!$sub_id) {
             return;
         }
 
@@ -1301,9 +1299,7 @@ class OpenSubsonic_Api
     public static function getcoverart(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if ($sub_id === false) {
-            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
-
+        if (!$sub_id) {
             return;
         }
 
@@ -1943,8 +1939,12 @@ class OpenSubsonic_Api
     public static function stream(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
+
         $object = self::_getAmpacheObject($sub_id);
-        if (($object instanceof Song || $object instanceof Podcast_episode) === false) {
+        if (($object instanceof Song || $object instanceof Podcast_Episode) === false) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
