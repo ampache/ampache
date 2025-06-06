@@ -39,6 +39,7 @@ use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\PrivateMsg;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Rating;
@@ -99,6 +100,7 @@ class OpenSubsonic_Api
         '_jsonpOutput',
         '_output_body',
         '_output_header',
+        '_responseOutput',
         '_setStar',
         '_updatePlaylist',
         '_xml2json',
@@ -393,6 +395,57 @@ class OpenSubsonic_Api
     }
 
     /**
+     * _updatePlaylist
+     * @param int|string $playlist_id
+     * @param string $name
+     * @param int[]|string[] $songsIdToAdd
+     * @param int[]|string[] $songIndexToRemove
+     * @param bool $public
+     * @param bool $clearFirst
+     */
+    private static function _updatePlaylist(
+        int|string $playlist_id,
+        string $name,
+        array $songsIdToAdd = [],
+        array $songIndexToRemove = [],
+        bool $public = true,
+        bool $clearFirst = false
+    ): void {
+        // If it's a string it probably needs a clean up
+        if (is_string($playlist_id)) {
+            $playlist_id = self::_getAmpacheId($playlist_id);
+        }
+        $playlist           = new Playlist((int)$playlist_id);
+        $songsIdToAdd_count = count($songsIdToAdd);
+        $newdata            = [];
+        $newdata['name']    = (!empty($name)) ? $name : $playlist->name;
+        $newdata['pl_type'] = ($public) ? "public" : "private";
+        $playlist->update($newdata);
+        if ($clearFirst) {
+            $playlist->delete_all();
+        }
+
+        if ($songsIdToAdd_count > 0) {
+            for ($i = 0; $i < $songsIdToAdd_count; ++$i) {
+                $ampacheId = self::_getAmpacheId((string)$songsIdToAdd[$i]);
+                if ($ampacheId) {
+                    $songsIdToAdd[$i] = $ampacheId;
+                }
+            }
+            $playlist->add_songs($songsIdToAdd);
+        }
+        if (count($songIndexToRemove) > 0) {
+            $playlist->regenerate_track_numbers(); // make sure track indexes are in order
+            rsort($songIndexToRemove);
+            foreach ($songIndexToRemove as $track) {
+                $playlist->delete_track_number(((int)$track + 1));
+            }
+            $playlist->set_items();
+            $playlist->regenerate_track_numbers(); // reorder now that the tracks are removed
+        }
+    }
+
+    /**
      * _xmlOutput
      * @param SimpleXMLElement $xml
      */
@@ -477,22 +530,57 @@ class OpenSubsonic_Api
     }
 
     /**
-     * _responseOutput
-     * @param array<string, mixed> $input
+     * _addJsonResponse
+     *
+     * Generate a subsonic-response
+     * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
+     * @return array{'subsonic-response': array{'status': string, 'version': string, 'type': string, 'serverVersion': string, 'openSubsonic': bool}}
      */
-    private static function _responseOutput(array $input, string $function): void
+    public static function _addJsonResponse(string $function): array
+    {
+        return OpenSubsonic_Json_Data::addResponse($function);
+    }
+
+    /**
+     * _addXmlResponse
+     *
+     * Generate a subsonic-response
+     * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
+     */
+    public static function _addXmlResponse(string $function): SimpleXMLElement
+    {
+        return OpenSubsonic_Xml_Data::addResponse($function);
+    }
+
+    /**
+     * _responseOutput
+     *
+     * Output a response or a default success response if no response is provided.
+     * @param array<string, mixed> $input
+     * @param array{'subsonic-response': array<string, mixed>}|SimpleXMLElement $response
+     */
+    private static function _responseOutput(array $input, string $function, array|SimpleXMLElement|null $response = null): void
     {
         $format = (string)($input['f'] ?? 'xml');
         switch ($format) {
             case 'json':
-                self::_jsonOutput(OpenSubsonic_Json_Data::addResponse($function));
+                $response = (is_array($response))
+                    ? $response
+                    : self::_addJsonResponse($function);
+                self::_jsonOutput($response);
                 break;
             case 'jsonp':
+                $response = (is_array($response))
+                    ? $response
+                    : self::_addJsonResponse($function);
                 $callback = (string)($input['callback'] ?? 'jsonp');
-                self::_jsonpOutput(OpenSubsonic_Json_Data::addResponse($function), $callback);
+                self::_jsonpOutput($response, $callback);
                 break;
             default:
-                self::_xmlOutput(OpenSubsonic_Xml_Data::addResponse($function));
+                $response = ($response instanceof SimpleXMLElement)
+                    ? $response
+                    : self::_addXmlResponse($function);
+                self::_xmlOutput($response);
                 break;
         }
     }
@@ -653,120 +741,165 @@ class OpenSubsonic_Api
         }
     }
 
-    ///**
-    // * createPlaylist
-    // *
-    // * Creates (or updates) a playlist.
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function createPlaylist(array $input, User $user): void
-    //{
-    //}
-    //
+    /**
+     * createPlaylist
+     *
+     * Creates (or updates) a playlist.
+     * https://opensubsonic.netlify.app/docs/endpoints/createplaylist/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function createPlaylist(array $input, User $user): void
+    {
+        $playlistId = $input['playlistId'] ?? null;
+        $name       = $input['name'] ?? '';
+        $songIdList = $input['songId'] ?? [];
+        if (isset($input['songId']) && is_string($input['songId'])) {
+            $songIdList = explode(',', $input['songId']);
+        }
+
+        if ($playlistId !== null) {
+            self::_updatePlaylist((string)$playlistId, $name, $songIdList, [], true, true);
+            self::_responseOutput($input, __FUNCTION__);
+        } elseif (!empty($name)) {
+            $playlistId = Playlist::create($name, 'public', $user->id);
+            if ($playlistId !== null) {
+                if (count($songIdList) > 0) {
+                    self::_updatePlaylist($playlistId, "", $songIdList, [], true, true);
+                }
+
+                // output the new playlist
+                $format   = (string)($input['f'] ?? 'xml');
+                $playlist = new Playlist($playlistId);
+                if ($format === 'xml') {
+                    $response = self::_addXmlResponse(__FUNCTION__);
+                    $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, true);
+                } else {
+                    $response = self::_addJsonResponse(__FUNCTION__);
+                    $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, true);
+                }
+                self::_responseOutput($input, __FUNCTION__, $response);
+            } else {
+                self::_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+        }
+    }
+
     ///**
     // * createPodcastChannel
     // *
     // * Adds a new Podcast channel.
+    // * https://opensubsonic.netlify.app/docs/endpoints/createpodcastchannel/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function createPodcastChannel(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * createShare
     // *
     // * Creates a public URL that can be used by anyone to stream music or video from the server.
+    // * https://opensubsonic.netlify.app/docs/endpoints/createshare/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function createShare(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * createUser
     // *
     // * Creates a new user on the server.
+    // * https://opensubsonic.netlify.app/docs/endpoints/createuser/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function createUser(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * deleteBookmark
     // *
     // * Creates or updates a bookmark.
+    // * https://opensubsonic.netlify.app/docs/endpoints/deletebookmark/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function deleteBookmark(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * deleteInternetRadioStation
     // *
     // * Deletes an existing internet radio station.
+    // * https://opensubsonic.netlify.app/docs/endpoints/deleteinternetradiostation/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function deleteInternetRadioStation(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * deletePlaylist
     // *
     // * Deletes a saved playlist.
+    // * https://opensubsonic.netlify.app/docs/endpoints/deleteplaylist/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function deletePlaylist(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * deletePodcastChannel
     // *
     // * Deletes a Podcast channel.
+    // * https://opensubsonic.netlify.app/docs/endpoints/deletepodcastchannel/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function deletePodcastChannel(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * deletePodcastEpisode
     // *
     // * Deletes a Podcast episode.
+    // * https://opensubsonic.netlify.app/docs/endpoints/deletepodcastepisode/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function deletePodcastEpisode(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * deleteShare
     // *
     // * Deletes an existing share.
+    // * https://opensubsonic.netlify.app/docs/endpoints/deleteshare/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function deleteShare(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * deleteUser
     // *
     // * Deletes an existing user on the server.
+    // * https://opensubsonic.netlify.app/docs/endpoints/deleteuser/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
@@ -778,6 +911,7 @@ class OpenSubsonic_Api
      * download
      *
      * Downloads a given media file.
+     * https://opensubsonic.netlify.app/docs/endpoints/download/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -791,7 +925,7 @@ class OpenSubsonic_Api
         }
 
         $object = self::_getAmpacheObject($sub_id);
-        if (($object instanceof Song || $object instanceof Podcast_episode) === false) {
+        if (($object instanceof Song || $object instanceof Podcast_Episode) === false) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -807,161 +941,176 @@ class OpenSubsonic_Api
     // * downloadPodcastEpisode
     // *
     // * Request the server to start downloading a given Podcast episode.
+    // * https://opensubsonic.netlify.app/docs/endpoints/downloadpodcastepisode/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function downloadPodcastEpisode(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getAlbum
     // *
     // * Returns details for an album.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getalbum/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getAlbum(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getAlbumInfo
     // *
     // * Returns album info.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getalbuminfo/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getAlbumInfo(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getAlbumInfo2
     // *
     // * Returns album info.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getalbuminfo2/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getAlbumInfo2(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getAlbumList
     // *
     // * Returns a list of random, newest, highest rated etc. albums.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getalbumlist/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getAlbumList(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getAlbumList2
     // *
     // * Returns a list of random, newest, highest rated etc. albums.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getalbumlist2/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getAlbumList2(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getArtist
     // *
     // * Returns details for an artist.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getartist/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getArtist(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getArtistInfo
     // *
     // * Returns artist info.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getartistinfo/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getArtistInfo(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getArtistInfo2
     // *
     // * Returns artist info.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getartistinfo2/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getArtistInfo2(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getArtists
     // *
     // * Returns all artists.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getartists/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getArtists(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getAvatar
     // *
     // * Returns the avatar (personal image) for a user.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getavatar/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getAvatar(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getBookmarks
     // *
     // * Returns all bookmarks for this user.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getbookmarks/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getBookmarks(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getCaptions
     // *
     // * Returns captions (subtitles) for a video.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getcaptions/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getCaptions(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getChatMessages
     // *
     // * Returns the current visible (non-expired) chat messages.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getchatmessages/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getChatMessages(array $input, User $user): void
     //{
     //}
-    //
+
 
     /**
      * getCoverArt
      *
      * Returns a cover art image.
+     * https://opensubsonic.netlify.app/docs/endpoints/getcoverart/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1040,347 +1189,432 @@ class OpenSubsonic_Api
     // * getGenres
     // *
     // * Returns all genres.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getgenres/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getGenres(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getIndexes
     // *
     // * Returns an indexed structure of all artists.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getindexes/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getIndexes(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getInternetRadioStations
     // *
     // * Returns all internet radio stations.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getinternetradiostations/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getInternetRadioStations(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getLicense
     // *
     // * Get details about the software license.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getlicense/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getLicense(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getLyrics
     // *
     // * Searches for and returns lyrics for a given song.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getlyrics/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getLyrics(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getLyricsBySongId
     // *
     // * Add support for synchronized lyrics, multiple languages, and retrieval by song ID
+    // * https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getLyricsBySongId(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getMusicDirectory
     // *
     // * Returns a listing of all files in a music directory.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getmusicdirectory/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getMusicDirectory(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getMusicFolders
     // *
     // * Returns all configured top-level music folders.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getmusicfolders/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getMusicFolders(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getNewestPodcasts
     // *
     // * Returns the most recently published Podcast episodes.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getnewestpodcasts/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getNewestPodcasts(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getNowPlaying
     // *
     // * Returns what is currently being played by all users.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getnowplaying/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getNowPlaying(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getOpenSubsonicExtensions
     // *
     // * List the OpenSubsonic extensions supported by this server.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getOpenSubsonicExtensions(array $input, User $user): void
     //{
     //}
-    //
-    ///**
-    // * getPlaylist
-    // *
-    // * Returns a listing of files in a saved playlist.
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getPlaylist(array $input, User $user): void
-    //{
-    //}
-    //
-    ///**
-    // * getPlaylists
-    // *
-    // * Returns all playlists a user is allowed to play.
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getPlaylists(array $input, User $user): void
-    //{
-    //}
-    //
+
+    /**
+     * getPlaylist
+     *
+     * Returns a listing of files in a saved playlist.
+     * https://opensubsonic.netlify.app/docs/endpoints/getplaylist/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getPlaylist(array $input, User $user): void
+    {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
+
+        $playlist = self::_getAmpacheObject($sub_id);
+        if (!($playlist instanceof Playlist || $playlist instanceof Search)) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $format   = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, true);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, true);
+        }
+
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
+     * getPlaylists
+     *
+     * Returns all playlists a user is allowed to play.
+     * https://opensubsonic.netlify.app/docs/endpoints/getplaylists/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getPlaylists(array $input, User $user): void
+    {
+        $user = (isset($input['username']))
+            ? User::get_from_username($input['username']) ?? $user
+            : $user;
+        $user_id  = $user->id ?? 0;
+        $response = Subsonic_Xml_Data::addSubsonicResponse('getplaylists');
+
+        $browse = Api::getBrowse($user);
+        $browse->set_type('playlist_search');
+        $browse->set_sort('name', 'ASC');
+        $browse->set_filter('playlist_open', $user_id);
+
+        // hide duplicate searches that match name and user (if enabled)
+        if ((bool)Preference::get_by_user($user_id, 'api_hide_dupe_searches') === true) {
+            $browse->set_filter('hide_dupe_smartlist', 1);
+        }
+        // hide playlists starting with the user string (if enabled)
+        $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user_id, 'api_hidden_playlists')));
+        if (!empty($hide_string)) {
+            $browse->set_filter('not_starts_with', $hide_string);
+        }
+
+        $results = $browse->get_objects();
+        $format  = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addPlaylists($response, $user, $results);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addPlaylists($response, $user, $results);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
     ///**
     // * getPlayQueue
     // *
     // * Returns the state of the play queue for this user.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getplayqueue/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getPlayQueue(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getPodcastEpisode
     // *
     // * Returns details for a podcast episode.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getpodcastepisode/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getPodcastEpisode(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getPodcasts
     // *
     // * Returns all Podcast channels the server subscribes to, and (optionally) their episodes.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getpodcasts/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getPodcasts(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getRandomSongs
     // *
     // * Returns random songs matching the given criteria.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getrandomsongs/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getRandomSongs(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getScanStatus
     // *
     // * Returns the current status for media library scanning.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getscanstatus/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getScanStatus(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getShares
     // *
     // * Returns information about shared media this user is allowed to manage.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getshares/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getShares(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getSimilarSongs
     // *
     // * Returns a random collection of songs from the given artist and similar artists.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getSimilarSongs(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getSimilarSongs2
     // *
     // * Returns a random collection of songs from the given artist and similar artists.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs2/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getSimilarSongs2(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getSong
     // *
     // * Returns details for a song.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getsong/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getSong(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getSongsByGenre
     // *
     // * Returns songs in a given genre.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getsongsbygenre/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getSongsByGenre(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getStarred
     // *
     // * Returns starred songs, albums and artists.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getstarred/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getStarred(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getStarred2
     // *
     // * Returns starred songs, albums and artists.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getstarred2/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getStarred2(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getTopSongs
     // *
     // * Returns top songs for the given artist.
+    // * https://opensubsonic.netlify.app/docs/endpoints/gettopsongs/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getTopSongs(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getUser
     // *
     // * Get details about a given user, including which authorization roles and folder access it has.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getuser/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getUser(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getUsers
     // *
     // * Get details about all users, including which authorization roles and folder access they have.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getusers/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getUsers(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getVideoInfo
     // *
     // * Returns details for a video.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getvideoinfo/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getVideoInfo(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * getVideos
     // *
     // * Returns all video files.
+    // * https://opensubsonic.netlify.app/docs/endpoints/getvideos/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function getVideos(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * hls
     // *
     // * Downloads a given media file.
+    // * https://opensubsonic.netlify.app/docs/endpoints/hls/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function hls(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * jukeboxControl
     // *
     // * Controls the jukebox, i.e., playback directly on the server’s audio hardware.
+    // * https://opensubsonic.netlify.app/docs/endpoints/jukeboxcontrol/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
@@ -1407,94 +1641,103 @@ class OpenSubsonic_Api
     // * refreshPodcasts
     // *
     // * Requests the server to check for new Podcast episodes.
+    // * https://opensubsonic.netlify.app/docs/endpoints/refreshpodcasts/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function refreshPodcasts(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * savePlayQueue
     // *
     // * Saves the state of the play queue for this user.
+    // * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueue/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function savePlayQueue(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * scrobble
     // *
     // * Registers the local playback of one or more media files.
+    // * https://opensubsonic.netlify.app/docs/endpoints/scrobble/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function scrobble(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * search
     // *
     // * Returns a listing of files matching the given search criteria. Supports paging through the result.
+    // * https://opensubsonic.netlify.app/docs/endpoints/search/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function search(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * search2
     // *
     // * Returns a listing of files matching the given search criteria. Supports paging through the result.
+    // * https://opensubsonic.netlify.app/docs/endpoints/search2/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function search2(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * search3
     // *
     // * Returns albums, artists and songs matching the given search criteria. Supports paging through the result.
+    // * https://opensubsonic.netlify.app/docs/endpoints/search3/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function search3(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * setRating
     // *
     // * Sets the rating for a music file.
+    // * https://opensubsonic.netlify.app/docs/endpoints/setrating/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function setRating(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * star
     // *
     // * Attaches a star to a song, album or artist.
+    // * https://opensubsonic.netlify.app/docs/endpoints/star/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function star(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * startScan
     // *
     // * Initiates a rescan of the media libraries.
+    // * https://opensubsonic.netlify.app/docs/endpoints/startscan/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
@@ -1506,6 +1749,7 @@ class OpenSubsonic_Api
      * stream
      *
      * Streams a given media file.
+     * https://opensubsonic.netlify.app/docs/endpoints/stream/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1549,61 +1793,67 @@ class OpenSubsonic_Api
     // * tokenInfo
     // *
     // * Returns information about an API key.
+    // * https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function tokenInfo(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * unstar
     // *
     // * Attaches a star to a song, album or artist.
+    // * https://opensubsonic.netlify.app/docs/endpoints/unstar/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function unstar(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * updateInternetRadioStation
     // *
     // * Updates an existing internet radio station.
+    // * https://opensubsonic.netlify.app/docs/endpoints/updateinternetradiostation/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function updateInternetRadioStation(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * updatePlaylist
     // *
     // * Updates a playlist. Only the owner of a playlist is allowed to update it.
+    // * https://opensubsonic.netlify.app/docs/endpoints/updateplaylist/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function updatePlaylist(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * updateShare
     // *
     // * Updates the description and/or expiration date for an existing share.
+    // * https://opensubsonic.netlify.app/docs/endpoints/updateshare/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */
     //public static function updateShare(array $input, User $user): void
     //{
     //}
-    //
+
     ///**
     // * updateUser
     // *
     // * Modifies an existing user on the server.
+    // * https://opensubsonic.netlify.app/docs/endpoints/updateuser/
     // * @param array<string, mixed> $input
     // * @param User $user
     // */

@@ -749,11 +749,9 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addPlaylists
-     * @param SimpleXMLElement $xml
-     * @param User|null $user
      * @param int[]|string[] $playlists
      */
-    public static function addPlaylists(SimpleXMLElement $xml, ?User $user, array $playlists): void
+    public static function addPlaylists(SimpleXMLElement $xml, ?User $user, array $playlists): SimpleXMLElement
     {
         $xplaylists = self::addChildToResultXml($xml, 'playlists');
         foreach ($playlists as $playlist_id) {
@@ -774,27 +772,31 @@ class OpenSubsonic_Xml_Data
                 }
             }
 
-            self::addPlaylist($xplaylists, $playlist);
+            return self::addPlaylist($xplaylists, $playlist);
         }
+
+        return $xml;
     }
 
     /**
      * addPlaylist
      */
-    public static function addPlaylist(SimpleXMLElement $xml, Playlist|Search $playlist, bool $songs = false): void
+    public static function addPlaylist(SimpleXMLElement $xml, Playlist|Search $playlist, bool $songs = false): SimpleXMLElement
     {
         if ($playlist instanceof Playlist) {
-            self::addPlaylist_Playlist($xml, $playlist, $songs);
+            $xml = self::addPlaylist_Playlist($xml, $playlist, $songs);
         }
         if ($playlist instanceof Search) {
-            self::addPlaylist_Search($xml, $playlist, $songs);
+            $xml = self::addPlaylist_Search($xml, $playlist, $songs);
         }
+
+        return $xml;
     }
 
     /**
      * addPlaylist_Playlist
      */
-    private static function addPlaylist_Playlist(SimpleXMLElement $xml, Playlist $playlist, bool $songs = false): void
+    private static function addPlaylist_Playlist(SimpleXMLElement $xml, Playlist $playlist, bool $songs = false): SimpleXMLElement
     {
         $sub_id    = OpenSubsonic_Api::_getPlaylistId($playlist->id);
         $songcount = $playlist->get_media_count('song');
@@ -819,12 +821,14 @@ class OpenSubsonic_Xml_Data
                 self::addSong($xplaylist, $song_id, "entry");
             }
         }
+
+        return $xml;
     }
 
     /**
      * addPlaylist_Search
      */
-    private static function addPlaylist_Search(SimpleXMLElement $xml, Search $search, bool $songs = false): void
+    private static function addPlaylist_Search(SimpleXMLElement $xml, Search $search, bool $songs = false): SimpleXMLElement
     {
         $sub_id    = OpenSubsonic_Api::_getSmartPlaylistId($search->id);
         $xplaylist = self::addChildToResultXml($xml, 'playlist');
@@ -850,6 +854,8 @@ class OpenSubsonic_Xml_Data
             $xplaylist->addAttribute('duration', (string)$search->last_duration);
             $xplaylist->addAttribute('coverArt', $sub_id);
         }
+
+        return $xml;
     }
 
     /**
