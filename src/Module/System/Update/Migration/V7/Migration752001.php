@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -20,26 +20,22 @@ declare(strict_types=0);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Ajax;
-use Ampache\Module\Util\Ui;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-/** @var array{name: string, mbid: string} $wartist */
+use Ampache\Module\System\Update\Migration\AbstractMigration;
+use Ampache\Repository\Model\Preference;
 
-$web_path = AmpConfig::get_web_path();
+/**
+ * Delete `custom_blankmovie` preference. (Movies don't exist now)
+ */
+final class Migration752001 extends AbstractMigration
+{
+    protected array $changelog = ['Delete `custom_blankmovie` preference. (Movies don\'t exist now)'];
 
-Ui::show_box_top($wartist['name'], 'info-box');
-if (AmpConfig::get('lastfm_api_key')) {
-    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&fullname=' . rawurlencode($wartist['name']), 'artist_info')); ?>
-    <div id="artist_biography">
-        <?php echo T_('Loading...'); ?>
-    </div>
-<?php }
-Ui::show_box_bottom();
-if (AmpConfig::get('wanted')) {
-    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=wanted_missing_albums&artist_mbid=' . $wartist['mbid'], 'missing_albums')); ?>
-    <div id="missing_albums"></div>
-<?php } ?>
+    public function migrate(): void
+    {
+        Preference::delete('custom_blankmovie');
+    }
+}

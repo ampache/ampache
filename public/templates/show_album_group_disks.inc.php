@@ -48,6 +48,7 @@ use Ampache\Repository\Model\Userflag;
 /** @var bool $isAlbumEditable */
 
 $web_path = AmpConfig::get_web_path();
+
 // Title for this album
 $f_album_name     = (string)$album->get_artist_fullname();
 $simple           = (string)$album->get_fullname(true);

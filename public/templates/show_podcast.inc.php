@@ -42,13 +42,14 @@ use Ampache\Repository\Model\Userflag;
 /** @var string $object_type */
 /** @var User $current_user */
 
+$web_path = AmpConfig::get_web_path();
+
 $access75 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER);
 $access50 = ($access75 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER));
 $browse   = new Browse();
 $browse->set_type($object_type);
 $browse->set_use_filters(false);
 $browse->set_skip_catalog_check(true);
-$web_path = AmpConfig::get_web_path();
 Ui::show_box_top((string)$podcast->get_fullname(), 'info-box'); ?>
 <div class="item_right_info">
 <?php $size = Ui::is_grid_view('album')

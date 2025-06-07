@@ -37,9 +37,10 @@ use Ampache\Module\Util\Ui;
 // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
 <?php
 Ui::show_box_top(T_('Upload'));
+$web_path = AmpConfig::get_web_path();
+
 $artist   = (int) (Core::get_request('artist'));
 $album    = (int) (Core::get_request('album'));
-$web_path = AmpConfig::get_web_path();
 $access50 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
 $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
 

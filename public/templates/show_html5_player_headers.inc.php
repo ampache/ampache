@@ -8,8 +8,9 @@ use Ampache\Module\Util\Ui;
 
 global $dic;
 
+$web_path = AmpConfig::get_web_path();
+
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
-$web_path         = AmpConfig::get_web_path();
 $webplayer_debug  = (AmpConfig::get('webplayer_debug'))
     ? 'js'
     : 'min.js';

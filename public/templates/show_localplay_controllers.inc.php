@@ -28,7 +28,8 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 
 /** @var list<string> $controllers */
 
-$web_path   = AmpConfig::get_web_path();
+$web_path = AmpConfig::get_web_path();
+
 $admin_path = AmpConfig::get_web_path('/admin'); ?>
 <!-- Plugin we've found -->
 <table class="tabledata striped-rows">

@@ -467,7 +467,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get_web_path();
+            $web_path = AmpConfig::get_web_path();
+
             $this->link = $web_path . '/artists.php?action=show&artist=' . $this->id;
         }
 

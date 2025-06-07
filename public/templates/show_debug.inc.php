@@ -35,8 +35,10 @@ $environment = $dic->get(EnvironmentInterface::class);
 /** @var array $configuration */
 /** @var int $lastCronDate */
 
-$web_path   = AmpConfig::get_web_path();
+$web_path = AmpConfig::get_web_path();
+
 $admin_path = AmpConfig::get_web_path('/admin');
+
 // don't share the database password and unset additional variables
 unset(
     $configuration['database_password'],

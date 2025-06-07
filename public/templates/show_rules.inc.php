@@ -28,6 +28,8 @@ use Ampache\Repository\Model\Search;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+$web_path = AmpConfig::get_web_path();
+
 /** @var null|string $currentType */
 $currentType = (isset($currentType))
     ? $currentType
@@ -41,8 +43,7 @@ if (isset($playlist)) {
 } else {
     $logic_operator = Core::get_request('operator');
 }
-$logic_operator = strtolower((string)$logic_operator);
-$web_path       = AmpConfig::get_web_path(); ?>
+$logic_operator = strtolower((string)$logic_operator);?>
 <script src="<?php echo $web_path; ?>/lib/javascript/search.js"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/search-data.php?type=<?php echo $currentType; ?>"></script>
 

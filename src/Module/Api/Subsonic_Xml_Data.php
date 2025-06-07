@@ -110,7 +110,7 @@ class Subsonic_Xml_Data
         $xerr = self::addChildToResultXml($xml, 'error');
         $xerr->addAttribute('code', (string)$code);
 
-        $message = "A generic error.";
+        $message = "Error creating response.";
         switch ($code) {
             case self::SSERROR_MISSINGPARAM:
                 $message = "Required parameter is missing.";
@@ -1186,9 +1186,9 @@ class Subsonic_Xml_Data
 
         $lyrics = $song->get_lyrics();
 
-        if (!empty($lyrics) && $lyrics['text']) {
+        if (!empty($lyrics) && $lyrics['text'] && is_string($lyrics['text'])) {
             $text    = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
-            $text    = preg_replace('/\\n\\n/i', "\n", $text);
+            $text    = preg_replace('/\\n\\n/i', "\n", (string)$text);
             $text    = str_replace("\r", '', (string)$text);
             $xlyrics = self::addChildToResultXml($xml, 'lyrics', htmlspecialchars($text));
             if ($artist) {

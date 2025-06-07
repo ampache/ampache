@@ -35,8 +35,10 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var list<int> $object_ids */
 
-$web_path   = AmpConfig::get_web_path();
+$web_path = AmpConfig::get_web_path();
+
 $admin_path = AmpConfig::get_web_path('/admin');
+
 // show_user_row.inc.php
 $t_send_pm     = T_('Send private message');
 $t_edit        = T_('Edit');

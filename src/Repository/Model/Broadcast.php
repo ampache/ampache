@@ -189,7 +189,8 @@ class Broadcast extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get_web_path();
+            $web_path = AmpConfig::get_web_path();
+
             $this->link = $web_path . '/broadcast.php?id=' . $this->id;
         }
 

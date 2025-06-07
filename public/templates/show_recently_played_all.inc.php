@@ -40,6 +40,8 @@ use Ampache\Repository\Model\Video;
 /** @var list<array{user: int, object_type: string, object_id: int, agent: string, user_recent: int, user_time: int, date?: null|int, activity_id: int}> $data */
 /** @var User $user */
 
+$web_path = AmpConfig::get_web_path();
+
 $ajax_page = $ajax_page ?? 'index';
 $user_id   = $user_id ?? $user->id ?? -1;
 $user_only = (isset($user_only) && $user_only);
@@ -48,7 +50,6 @@ $user_str  = ($user_only)
     ? '&user_only=1&user_id=' . $user_id
     : '';
 $refresh   = "&nbsp" . Ajax::button('?page=index&action=refresh_index' . $user_str, 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
-$web_path  = AmpConfig::get_web_path();
 $is_admin  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $showAlbum = AmpConfig::get('album_group');
 Ui::show_box_top(T_('Recently Played') . $refresh, 'box_recently_played'); ?>

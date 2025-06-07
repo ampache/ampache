@@ -1,5 +1,14 @@
 # API CHANGELOG
 
+## API 6.7.3
+
+This version is being released for Ampache7 **only**
+
+### Added
+
+* API6
+  * Add mbig_group to `album` data responses
+
 ## API 6.7.2
 
 This version is being released for Ampache7 **only**

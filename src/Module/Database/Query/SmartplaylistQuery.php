@@ -182,7 +182,7 @@ final class SmartplaylistQuery implements QueryInterface
         switch ($field) {
             case 'name':
             case 'title':
-                $sql = "`search`.`name`";
+                $sql = "`search`.`name`, `search`.`id`";
                 break;
             case 'date':
             case 'id':
