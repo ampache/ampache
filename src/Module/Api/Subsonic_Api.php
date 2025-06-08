@@ -418,7 +418,7 @@ class Subsonic_Api
                 $strattr      = trim((string)$attribute);
                 if (
                     $options['boolean'] &&
-                    ($strattr == "true" || $strattr == "false") &&
+                    ($strattr === "true" || $strattr === "false") &&
                     !in_array($attributeName, $options['neverBool'])
                 ) {
                     $vattr = ($strattr == "true");
