@@ -138,12 +138,6 @@ class Subsonic_Api
 
     private const ALWAYS_BOOL = ['openSubsonic'];
 
-    private const NEVER_BOOL = [
-        'album',
-        'title',
-        'name',
-    ];
-
     private const ALWAYS_INTEGER = [
         'albumCount',
         'audioTrackId',
@@ -395,7 +389,6 @@ class Subsonic_Api
             'alwaysDouble' => self::ALWAYS_DOUBLE,  // array of xml tag names which should always become doubles
             'alwaysInteger' => self::ALWAYS_INTEGER, // array of xml tag names which should always become integers
             'alwaysBool' => self::ALWAYS_BOOL, // array of xml tag names which should always become booleans
-            'neverBool' => self::NEVER_BOOL, // array of xml tag names which should always become booleans
             'autoArray' => true, // create arrays for tags which appear more than once
             'textContent' => 'value', // key used for the text content of elements
             'autoText' => true, // skip textContent key if node has no attributes or child nodes
@@ -416,11 +409,7 @@ class Subsonic_Api
                 }
                 $attributeKey = $options['attributePrefix'] . (($prefix) ? $prefix . $options['namespaceSeparator'] : '') . $attributeName;
                 $strattr      = trim((string)$attribute);
-                if (
-                    $options['boolean'] &&
-                    ($strattr == "true" || $strattr == "false") &&
-                    !in_array($attributeName, $options['neverBool'])
-                ) {
+                if ($options['boolean'] && ($strattr == "true" || $strattr == "false")) {
                     $vattr = ($strattr == "true");
                 } else {
                     $vattr = $strattr;
