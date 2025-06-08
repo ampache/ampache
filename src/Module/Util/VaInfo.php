@@ -1383,7 +1383,10 @@ final class VaInfo implements VaInfoInterface
             }
         }
 
-        if (!empty($id3v2['TXXX']) && isset($id3v2['comments']['text'])) {
+        if (
+            !empty($id3v2['TXXX']) &&
+            isset($id3v2['comments']['text'])
+        ) {
             // Find the MBIDs for the album and artist
             // Use trimAscii to remove noise (see #225 and #438 issues). Is this a GetID3 bug?
             // not a bug those strings are UTF-16 encoded
@@ -1391,6 +1394,7 @@ final class VaInfo implements VaInfoInterface
             $enable_custom_metadata = $this->configContainer->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
             foreach ($id3v2['TXXX'] as $txxx) {
                 //$this->logger->debug('id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'] ?? '')) . ' value: ' . print_r($id3v2['comments']['text'][$txxx['description']] ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
+                //$this->logger->debug('id3v2 TXXX: value: ' . print_r($txxx, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'artists':
                         $parsed['artists'] = $this->parseArtists($id3v2['comments']['text'][$txxx['description']]);
