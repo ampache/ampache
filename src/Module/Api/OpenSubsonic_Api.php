@@ -38,6 +38,7 @@ use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGeneratorInterface;
+use Ampache\Module\Util\Mailer;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\Model\Album;
@@ -59,6 +60,7 @@ use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
@@ -308,6 +310,70 @@ class OpenSubsonic_Api
             default:
                 return "";
         }
+    }
+
+    /**
+     * _setStar
+     * @param array<string, mixed> $input
+     * @param User $user
+     * @param bool $star
+     */
+    private static function _setStar(array $input, User $user, bool $star): void
+    {
+        $object_id = $input['id'] ?? null;
+        $albumId   = $input['albumId'] ?? null;
+        $artistId  = $input['artistId'] ?? null;
+
+        // Normalize all in one array
+        $ids = [];
+
+        if ($object_id) {
+            if (!is_array($object_id)) {
+                $object_id = [$object_id];
+            }
+            foreach ($object_id as $item) {
+                $aid  = self::_getAmpacheId($item);
+                $type = self::_getAmpacheType($item);
+
+                $ids[] = [
+                    'id' => $aid,
+                    'type' => $type
+                ];
+            }
+        } elseif ($albumId) {
+            if (!is_array($albumId)) {
+                $albumId = [$albumId];
+            }
+            foreach ($albumId as $album) {
+                $aid   = self::_getAmpacheId($album);
+                $ids[] = [
+                    'id' => $aid,
+                    'type' => 'album'
+                ];
+            }
+        } elseif ($artistId) {
+            if (!is_array($artistId)) {
+                $artistId = [$artistId];
+            }
+            foreach ($artistId as $artist) {
+                $aid   = self::_getAmpacheId($artist);
+                $ids[] = [
+                    'id' => $aid,
+                    'type' => 'artist'
+                ];
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+
+            return;
+        }
+
+        foreach ($ids as $object_id) {
+            $flag = new Userflag($object_id['id'], $object_id['type']);
+            $flag->set_flag($star, $user->id);
+        }
+
+        self::_responseOutput($input, __FUNCTION__);
     }
 
     /**
@@ -953,16 +1019,6 @@ class OpenSubsonic_Api
         $uploadRole   = (array_key_exists('uploadRole', $input) && $input['uploadRole'] == 'true');
         $coverArtRole = (array_key_exists('coverArtRole', $input) && $input['coverArtRole'] == 'true');
         $shareRole    = (array_key_exists('shareRole', $input) && $input['shareRole'] == 'true');
-        //$ldapAuthenticated = $input['ldapAuthenticated'];
-        //$settingsRole = $input['settingsRole'];
-        //$streamRole = $input['streamRole'];
-        //$jukeboxRole = $input['jukeboxRole'];
-        //$playlistRole = $input['playlistRole'];
-        //$commentRole = $input['commentRole'];
-        //$podcastRole = $input['podcastRole'];
-        if ($email) {
-            $email = urldecode($email);
-        }
 
         if ($user->access >= AccessLevelEnum::ADMIN->value) {
             $access = AccessLevelEnum::USER;
@@ -2055,29 +2111,52 @@ class OpenSubsonic_Api
     //{
     //}
 
-    ///**
-    // * setRating
-    // *
-    // * Sets the rating for a music file.
-    // * https://opensubsonic.netlify.app/docs/endpoints/setrating/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function setrating(array $input, User $user): void
-    //{
-    //}
+    /**
+     * setRating
+     *
+     * Sets the rating for a music file.
+     * https://opensubsonic.netlify.app/docs/endpoints/setrating/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function setrating(array $input, User $user): void
+    {
+        $object_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$object_id) {
+            return;
+        }
 
-    ///**
-    // * star
-    // *
-    // * Attaches a star to a song, album or artist.
-    // * https://opensubsonic.netlify.app/docs/endpoints/star/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function star(array $input, User $user): void
-    //{
-    //}
+        $rating = self::_check_parameter($input, 'rating', __FUNCTION__);
+        if (!$rating) {
+            return;
+        }
+
+        $type = self::_getAmpacheType($object_id);
+        $robj = (!empty($type))
+            ? new Rating(self::_getAmpacheId($object_id), $type)
+            : null;
+
+        if ($robj != null && ($rating >= 0 && $rating <= 5)) {
+            $robj->set_rating($rating, $user->id);
+
+            self::_responseOutput($input, __FUNCTION__);
+        } else {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+        }
+    }
+
+    /**
+     * star
+     *
+     * Attaches a star to a song, album or artist.
+     * https://opensubsonic.netlify.app/docs/endpoints/star/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function star(array $input, User $user): void
+    {
+        self::_setStar($input, $user, true);
+    }
 
     ///**
     // * startScan
@@ -2151,65 +2230,220 @@ class OpenSubsonic_Api
     //{
     //}
 
-    ///**
-    // * unstar
-    // *
-    // * Attaches a star to a song, album or artist.
-    // * https://opensubsonic.netlify.app/docs/endpoints/unstar/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function unstar(array $input, User $user): void
-    //{
-    //}
+    /**
+     * unstar
+     *
+     * Attaches a star to a song, album or artist.
+     * https://opensubsonic.netlify.app/docs/endpoints/unstar/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function unstar(array $input, User $user): void
+    {
+        self::_setStar($input, $user, false);
+    }
 
-    ///**
-    // * updateInternetRadioStation
-    // *
-    // * Updates an existing internet radio station.
-    // * https://opensubsonic.netlify.app/docs/endpoints/updateinternetradiostation/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function updateinternetradiostation(array $input, User $user): void
-    //{
-    //}
+    /**
+     * updateInternetRadioStation
+     *
+     * Updates an existing internet radio station.
+     * https://opensubsonic.netlify.app/docs/endpoints/updateinternetradiostation/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function updateinternetradiostation(array $input, User $user): void
+    {
+        $internetradiostation_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$internetradiostation_id) {
+            return;
+        }
 
-    ///**
-    // * updatePlaylist
-    // *
-    // * Updates a playlist. Only the owner of a playlist is allowed to update it.
-    // * https://opensubsonic.netlify.app/docs/endpoints/updateplaylist/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function updateplaylist(array $input, User $user): void
-    //{
-    //}
+        $url = self::_check_parameter($input, 'streamUrl', __FUNCTION__);
+        if (!$url) {
+            return;
+        }
 
-    ///**
-    // * updateShare
-    // *
-    // * Updates the description and/or expiration date for an existing share.
-    // * https://opensubsonic.netlify.app/docs/endpoints/updateshare/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function updateshare(array $input, User $user): void
-    //{
-    //}
+        $name = self::_check_parameter($input, 'name', __FUNCTION__);
+        if (!$name) {
+            return;
+        }
 
-    ///**
-    // * updateUser
-    // *
-    // * Modifies an existing user on the server.
-    // * https://opensubsonic.netlify.app/docs/endpoints/updateuser/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function updateuser(array $input, User $user): void
-    //{
-    //}
+        $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?: '';
+
+        if (AmpConfig::get('live_stream') && $user->access >= 75) {
+            $internetradiostation = new Live_Stream(self::_getAmpacheId($internetradiostation_id));
+            if ($internetradiostation->id > 0) {
+                $data = [
+                    "name" => $name,
+                    "url" => $url,
+                    "codec" => 'mp3',
+                    "site_url" => $site_url
+                ];
+                if ($internetradiostation->update($data)) {
+                    self::_responseOutput($input, __FUNCTION__);
+                } else {
+                    self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+                }
+            } else {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
+
+    /**
+     * updatePlaylist
+     *
+     * Updates a playlist. Only the owner of a playlist is allowed to update it.
+     * https://opensubsonic.netlify.app/docs/endpoints/updateplaylist/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function updateplaylist(array $input, User $user): void
+    {
+        unset($user);
+        $sub_id = self::_check_parameter($input, 'playlistId', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
+
+        $name              = $input['name'] ?? '';
+        $public            = (array_key_exists('public', $input) && $input['public'] === "true");
+        $songIdToAdd       = $input['songIdToAdd'] ?? [];
+        $songIndexToRemove = $input['songIndexToRemove'] ?? [];
+
+        $object = self::_getAmpacheObject($sub_id);
+        if (!$object) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        if ($object instanceof Playlist) {
+            if (is_string($songIdToAdd)) {
+                $songIdToAdd = explode(',', $songIdToAdd);
+            }
+            if (is_string($songIndexToRemove)) {
+                $songIndexToRemove = explode(',', $songIndexToRemove);
+            }
+            self::_updatePlaylist($object->getId(), $name, $songIdToAdd, $songIndexToRemove, $public);
+
+            self::_responseOutput($input, __FUNCTION__);
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
+
+    /**
+     * updateShare
+     *
+     * Updates the description and/or expiration date for an existing share.
+     * https://opensubsonic.netlify.app/docs/endpoints/updateshare/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function updateshare(array $input, User $user): void
+    {
+        $share_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$share_id) {
+            return;
+        }
+
+        if (AmpConfig::get('share')) {
+            $share = new Share(self::_getAmpacheId($share_id));
+            if ($share->id > 0) {
+                $expires = (isset($input['expires']))
+                    ? Share::get_expiry(((int)filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
+                    : $share->expire_days;
+                $data = [
+                    'max_counter' => $share->max_counter,
+                    'expire' => $expires,
+                    'allow_stream' => $share->allow_stream,
+                    'allow_download' => $share->allow_download,
+                    'description' => $input['description'] ?? $share->description,
+                ];
+                if ($share->update($data, $user)) {
+                    self::_responseOutput($input, __FUNCTION__);
+                } else {
+                    self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+                }
+            } else {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
+
+    /**
+     * updateUser
+     *
+     * Modifies an existing user on the server.
+     * https://opensubsonic.netlify.app/docs/endpoints/updateuser/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function updateuser(array $input, User $user): void
+    {
+        $username = self::_check_parameter($input, 'username', __FUNCTION__);
+        if (!$username) {
+            return;
+        }
+
+        $password     = $input['password'] ?? false;
+        $email        = (array_key_exists('email', $input)) ? urldecode($input['email']) : false;
+        $adminRole    = (array_key_exists('adminRole', $input) && $input['adminRole'] == 'true');
+        $downloadRole = (array_key_exists('downloadRole', $input) && $input['downloadRole'] == 'true');
+        $uploadRole   = (array_key_exists('uploadRole', $input) && $input['uploadRole'] == 'true');
+        $coverArtRole = (array_key_exists('coverArtRole', $input) && $input['coverArtRole'] == 'true');
+        $shareRole    = (array_key_exists('shareRole', $input) && $input['shareRole'] == 'true');
+        $maxbitrate   = (int)($input['maxBitRate'] ?? 0);
+
+        if ($user->access === 100) {
+            $access = 25;
+            if ($coverArtRole) {
+                $access = 75;
+            }
+            if ($adminRole) {
+                $access = 100;
+            }
+            // identify the user to modify
+            $update_user = User::get_from_username((string)$username);
+            if ($update_user instanceof User) {
+                $user_id = $update_user->id;
+                // update access level
+                $update_user->update_access($access);
+                // update password
+                if ($password && !AmpConfig::get('simple_user_mode')) {
+                    $password = self::_decryptPassword($password);
+                    $update_user->update_password($password);
+                }
+                // update e-mail
+                if ($email && Mailer::validate_address($email)) {
+                    $update_user->update_email($email);
+                }
+                // set preferences
+                if ($downloadRole) {
+                    Preference::update('download', $user_id, 1);
+                }
+                if ($uploadRole) {
+                    Preference::update('allow_upload', $user_id, 1);
+                }
+                if ($shareRole) {
+                    Preference::update('share', $user_id, 1);
+                }
+                if ($maxbitrate > 0) {
+                    Preference::update('transcode_bitrate', $user_id, $maxbitrate);
+                }
+                self::_responseOutput($input, __FUNCTION__);
+            } else {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
 
     /**
      * @deprecated inject dependency
