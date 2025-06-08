@@ -205,8 +205,8 @@ class OpenSubsonic_Json_Data
                 'id' => $sub_id,
                 'parent' => $subParent,
                 'title' => (string)$song->title,
-                'isDir' => 'false',
-                'isVideo' => 'false',
+                'isDir' => false,
+                'isVideo' => false,
                 'type' => 'music',
                 'albumId' => $subParent,
                 'album' => (string)$song->get_album_fullname(),
@@ -311,8 +311,8 @@ class OpenSubsonic_Json_Data
                 'id' => $sub_id,
                 'parent' => $subParent,
                 'title' => $video->getFileName(),
-                'isDir' => 'false',
-                'isVideo' => 'true',
+                'isDir' => false,
+                'isVideo' => true,
                 'type' => 'video',
             ];
 
@@ -498,7 +498,7 @@ class OpenSubsonic_Json_Data
             'album' => $f_name,
             'title' => $f_name,
             'name' => $f_name,
-            'isDir' => 'true',
+            'isDir' => true,
         ];
 
         if ($subParent) {
