@@ -136,7 +136,30 @@ class Subsonic_Api
 
     private const ALWAYS_DOUBLE = ['averageRating'];
 
-    private const ALWAYS_BOOL = ['openSubsonic'];
+    private const ALWAYS_BOOL = [
+        'adminRole',
+        'commentRole',
+        'coverArtRole',
+        'downloadRole',
+        'isCompilation',
+        'isDir',
+        'isVideo',
+        'jukeboxRole',
+        'openSubsonic',
+        'playing',
+        'playlistRole',
+        'podcastRole',
+        'public',
+        'scanning',
+        'scrobblingEnabled',
+        'settingsRole',
+        'shareRole',
+        'streamRole',
+        'synced',
+        'uploadRole',
+        'valid',
+        'videoConversionRole',
+    ];
 
     private const ALWAYS_INTEGER = [
         'albumCount',
@@ -409,19 +432,15 @@ class Subsonic_Api
                 }
                 $attributeKey = $options['attributePrefix'] . (($prefix) ? $prefix . $options['namespaceSeparator'] : '') . $attributeName;
                 $strattr      = trim((string)$attribute);
-                if ($options['boolean'] && ($strattr == "true" || $strattr == "false")) {
-                    $vattr = ($strattr == "true");
-                } else {
-                    $vattr = $strattr;
-                    if (in_array($attributeName, $options['alwaysInteger'])) {
-                        $vattr = (int) $strattr;
-                    }
-                    if (in_array($attributeName, $options['alwaysDouble'])) {
-                        $vattr = (float) $strattr;
-                    }
-                    if (in_array($attributeName, $options['alwaysBool'])) {
-                        $vattr = (bool) $strattr;
-                    }
+                $vattr        = $strattr;
+                if (in_array($attributeName, $options['alwaysInteger'])) {
+                    $vattr = (int) $strattr;
+                }
+                if (in_array($attributeName, $options['alwaysDouble'])) {
+                    $vattr = (float) $strattr;
+                }
+                if (in_array($attributeName, $options['alwaysBool'])) {
+                    $vattr = (bool) $strattr;
                 }
                 $attributesArray[$attributeKey] = $vattr;
             }
