@@ -1130,10 +1130,9 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addShares
-     * @param SimpleXMLElement $xml
      * @param list<int> $shares
      */
-    public static function addShares(SimpleXMLElement $xml, array $shares): void
+    public static function addShares(SimpleXMLElement $xml, array $shares): SimpleXMLElement
     {
         $xshares = self::addChildToResultXml($xml, 'shares');
         foreach ($shares as $share_id) {
@@ -1143,6 +1142,8 @@ class OpenSubsonic_Xml_Data
                 self::addShare($xshares, $share);
             }
         }
+
+        return $xml;
     }
 
     /**

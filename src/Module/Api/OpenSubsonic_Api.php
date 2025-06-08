@@ -28,11 +28,16 @@ namespace Ampache\Module\Api;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Podcast\Exception\PodcastCreationException;
+use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
+use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\System\Core;
+use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\Model\Album;
@@ -40,6 +45,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
@@ -794,41 +800,198 @@ class OpenSubsonic_Api
         }
     }
 
-    ///**
-    // * createPodcastChannel
-    // *
-    // * Adds a new Podcast channel.
-    // * https://opensubsonic.netlify.app/docs/endpoints/createpodcastchannel/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function createpodcastchannel(array $input, User $user): void
-    //{
-    //}
+    /**
+     * createPodcastChannel
+     *
+     * Adds a new Podcast channel.
+     * https://opensubsonic.netlify.app/docs/endpoints/createpodcastchannel/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function createpodcastchannel(array $input, User $user): void
+    {
+        $url = self::_check_parameter($input, 'url', __FUNCTION__);
+        if (!$url) {
+            return;
+        }
 
-    ///**
-    // * createShare
-    // *
-    // * Creates a public URL that can be used by anyone to stream music or video from the server.
-    // * https://opensubsonic.netlify.app/docs/endpoints/createshare/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function createshare(array $input, User $user): void
-    //{
-    //}
+        if (AmpConfig::get('podcast') && $user->access >= 75) {
+            $catalogs = $user->get_catalogs('podcast');
+            if (count($catalogs) > 0) {
+                /** @var Catalog $catalog */
+                $catalog = Catalog::create_from_id($catalogs[0]);
 
-    ///**
-    // * createUser
-    // *
-    // * Creates a new user on the server.
-    // * https://opensubsonic.netlify.app/docs/endpoints/createuser/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function createuser(array $input, User $user): void
-    //{
-    //}
+                try {
+                    self::getPodcastCreator()->create($url, $catalog);
+
+                    self::_responseOutput($input, __FUNCTION__);
+                } catch (PodcastCreationException) {
+                    self::_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
+                }
+            } else {
+                self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
+
+    /**
+     * createShare
+     *
+     * Creates a public URL that can be used by anyone to stream music or video from the server.
+     * https://opensubsonic.netlify.app/docs/endpoints/createshare/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function createshare(array $input, User $user): void
+    {
+        $object_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$object_id) {
+            return;
+        }
+
+        $description = $input['description'] ?? null;
+        if (AmpConfig::get('share')) {
+            $share_expire = AmpConfig::get('share_expire', 7);
+            $expire_days  = (isset($input['expires']))
+                ? Share::get_expiry(((int)filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
+                : $share_expire;
+            $object_type = self::_getAmpacheType((string)$object_id);
+            if (is_array($object_id) && $object_type === 'song') {
+                debug_event(self::class, 'createShare: sharing song list (album)', 5);
+                $song_id     = self::_getAmpacheId($object_id[0]);
+                $tmp_song    = new Song($song_id);
+                $object_id   = $tmp_song->album;
+                $object_type = 'album';
+            } else {
+                $object_id = self::_getAmpacheId($object_id);
+            }
+
+            if (
+                !in_array(
+                    $object_type,
+                    [
+                        'album',
+                        'album_disk',
+                        'artist',
+                        'playlist',
+                        'podcast',
+                        'podcast_episode',
+                        'search',
+                        'video',
+                    ]
+                )
+            ) {
+                $object_type = '';
+            }
+            debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
+
+            if (!empty($object_type) && !empty($object_id)) {
+                global $dic; // @todo remove after refactoring
+                $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
+                $shareCreator      = $dic->get(ShareCreatorInterface::class);
+
+                $format   = (string)($input['f'] ?? 'xml');
+                $shares   = [];
+                $shares[] = $shareCreator->create(
+                    $user,
+                    LibraryItemEnum::from($object_type),
+                    $object_id,
+                    true,
+                    Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
+                    $expire_days,
+                    $passwordGenerator->generate_token(),
+                    0,
+                    $description
+                );
+
+                if ($format === 'xml') {
+                    $response = self::_addXmlResponse(__FUNCTION__);
+                    $response = OpenSubsonic_Xml_Data::addShares($response, $shares);
+                } else {
+                    $response = self::_addJsonResponse(__FUNCTION__);
+                    $response = OpenSubsonic_Json_Data::addShares($response, $shares);
+                }
+                self::_responseOutput($input, __FUNCTION__, $response);
+            } else {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
+
+    /**
+     * createUser
+     *
+     * Creates a new user on the server.
+     * https://opensubsonic.netlify.app/docs/endpoints/createuser/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function createuser(array $input, User $user): void
+    {
+        $username = self::_check_parameter($input, 'username', __FUNCTION__);
+        if (!$username) {
+            return;
+        }
+
+        $password = self::_check_parameter($input, 'password', __FUNCTION__);
+        if (!$password) {
+            return;
+        }
+
+        $email = self::_check_parameter($input, 'email', __FUNCTION__);
+        if (!$email) {
+            return;
+        }
+
+        $email        = urldecode($email);
+        $adminRole    = (array_key_exists('adminRole', $input) && $input['adminRole'] == 'true');
+        $downloadRole = (array_key_exists('downloadRole', $input) && $input['downloadRole'] == 'true');
+        $uploadRole   = (array_key_exists('uploadRole', $input) && $input['uploadRole'] == 'true');
+        $coverArtRole = (array_key_exists('coverArtRole', $input) && $input['coverArtRole'] == 'true');
+        $shareRole    = (array_key_exists('shareRole', $input) && $input['shareRole'] == 'true');
+        //$ldapAuthenticated = $input['ldapAuthenticated'];
+        //$settingsRole = $input['settingsRole'];
+        //$streamRole = $input['streamRole'];
+        //$jukeboxRole = $input['jukeboxRole'];
+        //$playlistRole = $input['playlistRole'];
+        //$commentRole = $input['commentRole'];
+        //$podcastRole = $input['podcastRole'];
+        if ($email) {
+            $email = urldecode($email);
+        }
+
+        if ($user->access >= AccessLevelEnum::ADMIN->value) {
+            $access = AccessLevelEnum::USER;
+            if ($coverArtRole) {
+                $access = AccessLevelEnum::MANAGER;
+            }
+            if ($adminRole) {
+                $access = AccessLevelEnum::ADMIN;
+            }
+            $password = self::_decryptPassword($password);
+            $user_id  = User::create($username, $username, $email, '', $password, $access);
+            if ($user_id > 0) {
+                if ($downloadRole) {
+                    Preference::update('download', $user_id, 1);
+                }
+                if ($uploadRole) {
+                    Preference::update('allow_upload', $user_id, 1);
+                }
+                if ($shareRole) {
+                    Preference::update('share', $user_id, 1);
+                }
+                self::_responseOutput($input, __FUNCTION__);
+            } else {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
 
     /**
      * deleteBookmark
@@ -2086,6 +2249,16 @@ class OpenSubsonic_Api
         global $dic;
 
         return $dic->get(LiveStreamRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastCreator(): PodcastCreatorInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastCreatorInterface::class);
     }
 
     /**

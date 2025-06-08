@@ -42,6 +42,7 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * OpenSubsonic_Json_Data Class
@@ -1004,14 +1005,81 @@ class OpenSubsonic_Json_Data
      * addShare
      *
      * Share.
+     * @return array{
+     *     'id': string,
+     *     'url': string,
+     *     'description': string,
+     *     'username': string,
+     *     'created': string,
+     *     'lastVisited'?: string,
+     *     'expires'?: string,
+     *     'visitCount': string,
+     *     'object_id'?: int|string,
+     *     'object_type'?: string,
+     *     'entry'?: array<string, mixed>
+     * }
      */
+    private static function addShare(Share $share): array
+    {
+        $user = new User($share->user);
+        $json = [
+            'id' => OpenSubsonic_Api::_getShareId($share->id),
+            'url' => (string)$share->public_url,
+            'description' => (string)$share->description,
+            'username' => (string)(string)$user->username,
+            'created' => date("c", (int)$share->creation_date),
+        ];
+
+        if ($share->lastvisit_date > 0) {
+            $json['lastVisited'] = date("c", $share->lastvisit_date);
+        }
+
+        if ($share->expire_days > 0) {
+            $json['expires'] = date("c", (int)$share->creation_date + ($share->expire_days * 86400));
+        }
+
+        $json['visitCount'] = (string)$share->counter;
+
+        if ($share->object_type == 'song') {
+            self::addChild($json, $share->object_id, 'song', "entry");
+        } elseif ($share->object_type == 'playlist') {
+            $playlist = new Playlist($share->object_id);
+            $songs    = $playlist->get_songs();
+            foreach ($songs as $song_id) {
+                self::addChild($json, $song_id, 'song', "entry");
+            }
+        } elseif ($share->object_type == 'album') {
+            $songs = self::getSongRepository()->getByAlbum($share->object_id);
+            foreach ($songs as $song_id) {
+                self::addChild($json, $song_id, 'song', "entry");
+            }
+        }
+
+        return $json;
+    }
 
 
     /**
      * addShares
      *
      * Shares.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param list<int> $shares
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addShares(array $response, array $shares): array
+    {
+        $response['subsonic-response']['shares']['share'] = [];
+        foreach ($shares as $share_id) {
+            $share = new Share($share_id);
+            // Don't add share with max counter already reached
+            if ($share->max_counter === 0 || $share->counter < $share->max_counter) {
+                $response['subsonic-response']['shares']['share'][] = self::addShare($share);
+            }
+        }
+
+        return $response;
+    }
 
 
     /**
@@ -1119,5 +1187,15 @@ class OpenSubsonic_Json_Data
         global $dic;
 
         return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

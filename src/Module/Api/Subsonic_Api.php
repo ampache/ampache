@@ -2741,7 +2741,12 @@ class Subsonic_Api
             return;
         }
 
-        $email        = urldecode((string)self::_check_parameter($input, 'email'));
+        $email = self::_check_parameter($input, 'email');
+        if (!$email) {
+            return;
+        }
+
+        $email        = urldecode($email);
         $adminRole    = (array_key_exists('adminRole', $input) && $input['adminRole'] == 'true');
         $downloadRole = (array_key_exists('downloadRole', $input) && $input['downloadRole'] == 'true');
         $uploadRole   = (array_key_exists('uploadRole', $input) && $input['uploadRole'] == 'true');
