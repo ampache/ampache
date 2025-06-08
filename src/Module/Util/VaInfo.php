@@ -1383,7 +1383,7 @@ final class VaInfo implements VaInfoInterface
             }
         }
 
-        if (!empty($id3v2['TXXX'])) {
+        if (!empty($id3v2['TXXX']) && isset($id3v2['comments']['text'])) {
             // Find the MBIDs for the album and artist
             // Use trimAscii to remove noise (see #225 and #438 issues). Is this a GetID3 bug?
             // not a bug those strings are UTF-16 encoded
