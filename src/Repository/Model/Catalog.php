@@ -2059,7 +2059,7 @@ abstract class Catalog extends database_object
                     }
                 }
 
-                if ($inserted) {
+                if ($inserted === true) {
                     break;
                 }
             } elseif ($result === true) {
@@ -2077,7 +2077,7 @@ abstract class Catalog extends database_object
             Ui::update_text('read_art_' . $object_id, (string)$libitem->get_fullname());
         }
 
-        return $inserted;
+        return ($inserted === true);
     }
 
     /**

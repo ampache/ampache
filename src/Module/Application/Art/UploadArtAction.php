@@ -81,17 +81,30 @@ final class UploadArtAction extends AbstractArtAction
 
         // If we got something back insert it
         if ($image_data !== '') {
-            $art = $this->modelFactory->createArt($item->getId(), $object_type);
-            if ($art->insert($image_data, $_FILES['file']['type'])) {
+            $art    = $this->modelFactory->createArt($item->getId(), $object_type);
+            $insert = $art->insert($image_data, $_FILES['file']['type']);
+            if ($insert === true) {
                 $this->ui->showContinue(
                     T_('No Problem'),
                     T_('Art has been added'),
                     $burl
                 );
+            } elseif ($insert === 'check_dimensions') {
+                $this->ui->showContinue(
+                    T_('There Was a Problem'),
+                    T_('Art file failed to insert, check the dimensions are correct.'),
+                    $burl
+                );
+            } elseif ($insert === 'max_upload_size') {
+                $this->ui->showContinue(
+                    T_('There Was a Problem'),
+                    T_('Art file failed to insert, check the size does not exceed the limit.'),
+                    $burl
+                );
             } else {
                 $this->ui->showContinue(
                     T_('There Was a Problem'),
-                    T_('Art file failed to insert, check file size and if the dimensions are correct.'),
+                    T_('Failed to update_art for ' . $item->getId()),
                     $burl
                 );
             }

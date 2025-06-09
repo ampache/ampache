@@ -187,22 +187,6 @@ class Art extends database_object
      */
     private function test_image(string $source): bool
     {
-        $source_size = strlen($source);
-        if ($source_size < 10) {
-            debug_event(self::class, 'Invalid image passed', 1);
-
-            return false;
-        }
-
-        $max_upload_size = (int)AmpConfig::get('max_upload_size', 0);
-
-        // Check image size doesn't exceed the limit
-        if ($max_upload_size > 0 && $source_size > $max_upload_size) {
-            debug_event(self::class, 'Image size (' . $source_size . ') exceed the limit (' . $max_upload_size . ').', 1);
-
-            return false;
-        }
-
         // Check to make sure PHP:GD exists. Don't test things you can't change
         if (!function_exists('imagecreatefromstring')) {
             return true;
@@ -224,6 +208,32 @@ class Art extends database_object
         }
 
         return $test;
+    }
+
+    /**
+     * test_size
+     * Runs some sanity checks on the putative image
+     * @throws RuntimeException
+     */
+    private function test_size(string $source): bool|string
+    {
+        $source_size = strlen($source);
+        if ($source_size < 10) {
+            debug_event(self::class, 'Invalid image passed', 1);
+
+            return 'invalid_image';
+        }
+
+        $max_upload_size = (int)AmpConfig::get('max_upload_size', 0);
+
+        // Check image size doesn't exceed the limit
+        if ($max_upload_size > 0 && $source_size > $max_upload_size) {
+            debug_event(self::class, 'Image size (' . $source_size . ') exceed the limit (' . $max_upload_size . ').', 1);
+
+            return 'max_upload_size';
+        }
+
+        return true;
     }
 
     /**
@@ -400,11 +410,18 @@ class Art extends database_object
      * This takes the string representation of an image and inserts it into
      * the database. You must also pass the mime type.
      */
-    public function insert(string $source, ?string $mime = ''): bool
+    public function insert(string $source, ?string $mime = ''): bool|string
     {
         // Disabled in demo mode cause people suck and upload porn
         if (AmpConfig::get('demo_mode')) {
             return false;
+        }
+
+        $test_size = $this->test_size($source);
+        if ($test_size == 'invalid_image' || $test_size == 'max_upload_size') {
+            debug_event(self::class, 'Not inserting image for ' . $this->object_type . ' ' . $this->object_id . ', failed check: ' . $test_size, 1);
+
+            return $test_size;
         }
 
         // Check to make sure we like this image
@@ -422,7 +439,7 @@ class Art extends database_object
         if (!self::check_dimensions($dimensions)) {
             debug_event(self::class, 'Not inserting image for ' . $this->object_type . ' ' . $this->object_id . ', dimensions are wrong (' . $width . 'x' . $height . ')', 1);
 
-            return false;
+            return 'check_dimensions';
         }
 
         // Default to image/jpeg if they don't pass anything
@@ -815,6 +832,12 @@ class Art extends database_object
      */
     public function save_thumb(string $source, string $mime, array $size): bool
     {
+        $test_size = $this->test_size($source);
+        if ($test_size == 'invalid_image' || $test_size == 'max_upload_size') {
+            debug_event(self::class, 'Not inserting thumbnail, failed check: ' . $test_size, 1);
+
+            return false;
+        }
         // Quick sanity check
         if (!$this->test_image($source)) {
             debug_event(self::class, 'Not inserting thumbnail, invalid data passed', 1);
@@ -912,9 +935,12 @@ class Art extends database_object
      */
     public function generate_thumb(string $image, array $size, string $mime): array
     {
-        $data = explode('/', (string) $mime);
-        $type = ((string)($data[1] ?? '') !== '') ? strtolower($data[1]) : 'jpg';
+        $test_size = $this->test_size($image);
+        if ($test_size == 'invalid_image' || $test_size == 'max_upload_size') {
+            debug_event(self::class, 'Not inserting thumbnail, failed check: ' . $test_size, 1);
 
+            return [];
+        }
         if (!$this->test_image($image)) {
             debug_event(self::class, 'Not trying to generate thumbnail, invalid data passed', 1);
 
@@ -977,6 +1003,9 @@ class Art extends database_object
         }
 
         imagedestroy($source);
+
+        $data = explode('/', (string) $mime);
+        $type = ((string)($data[1] ?? '') !== '') ? strtolower($data[1]) : 'jpg';
 
         // Start output buffer
         ob_start();
