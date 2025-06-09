@@ -28,7 +28,6 @@ namespace Ampache\Module\Api;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
@@ -622,34 +621,6 @@ class OpenSubsonic_Json_Data
     }
 
     /**
-     * _getAmpacheIdArrays
-     * @param string[]|int[] $object_ids
-     * @return list<array{
-     *     object_id: int|null,
-     *     object_type: string,
-     *     track: int
-     * }>
-     */
-    private static function _getAmpacheIdArrays(array $object_ids): array
-    {
-        $ampidarrays = [];
-        $track       = 1;
-        foreach ($object_ids as $object_id) {
-            $ampacheId = OpenSubsonic_Api::getAmpacheId((string)$object_id);
-            if ($ampacheId) {
-                $ampidarrays[] = [
-                    'object_id' => $ampacheId,
-                    'object_type' => OpenSubsonic_Api::getAmpacheType((string)$object_id),
-                    'track' => $track
-                ];
-                $track++;
-            }
-        }
-
-        return $ampidarrays;
-    }
-
-    /**
      * addResponse
      *
      * Generate a subsonic-response
@@ -752,8 +723,31 @@ class OpenSubsonic_Json_Data
      * addAlbumInfo
      *
      * Album info.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param array{
+     *     id: int,
+     *     summary: ?string,
+     *     largephoto: ?string,
+     *     smallphoto: ?string,
+     *     mediumphoto: ?string,
+     *     megaphoto: ?string
+     * } $info
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addAlbumInfo(array $response, array $info): array
+    {
+        $album = new Album((int) $info['id']);
 
+        $response['subsonic-response']['albumInfo'] = [
+            'notes' => htmlspecialchars(trim((string)$info['summary'])),
+            'musicBrainzId' => $album->mbid,
+            'smallImageUrl' => htmlentities((string)$info['smallphoto']),
+            'mediumImageUrl' => htmlentities((string)$info['mediumphoto']),
+            'largeImageUrl' => htmlentities((string)$info['largephoto']),
+        ];
+
+        return $response;
+    }
 
     /**
      * addAlbumList

@@ -1343,7 +1343,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addAlbumInfo
-     * @param SimpleXMLElement $xml
      * @param array{
      *     id: int,
      *     summary: ?string,
@@ -1353,7 +1352,7 @@ class OpenSubsonic_Xml_Data
      *     megaphoto: ?string
      * } $info
      */
-    public static function addAlbumInfo(SimpleXMLElement $xml, array $info): void
+    public static function addAlbumInfo(SimpleXMLElement $xml, array $info): SimpleXMLElement
     {
         $album = new Album((int) $info['id']);
 
@@ -1364,6 +1363,8 @@ class OpenSubsonic_Xml_Data
         $xartist->addChild('smallImageUrl', htmlentities((string)$info['smallphoto']));
         $xartist->addChild('mediumImageUrl', htmlentities((string)$info['mediumphoto']));
         $xartist->addChild('largeImageUrl', htmlentities((string)$info['largephoto']));
+
+        return $xml;
     }
 
     /**
