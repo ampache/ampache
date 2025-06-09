@@ -1730,29 +1730,79 @@ class OpenSubsonic_Api
         self::_responseOutput($input, __FUNCTION__, $response);
     }
 
-    ///**
-    // * getArtistInfo
-    // *
-    // * Returns artist info.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getartistinfo/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getartistinfo(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getArtistInfo
+     *
+     * Returns artist info.
+     * https://opensubsonic.netlify.app/docs/endpoints/getartistinfo/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getartistinfo(array $input, User $user): void
+    {
+        unset($user);
+        $object_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$object_id) {
+            return;
+        }
 
-    ///**
-    // * getArtistInfo2
-    // *
-    // * Returns artist info.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getartistinfo2/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getartistinfo2(array $input, User $user): void
-    //{
-    //}
+        $count             = $input['count'] ?? 20;
+        $includeNotPresent = (array_key_exists('includeNotPresent', $input) && $input['includeNotPresent'] === "true");
+
+        if (Subsonic_Xml_Data::_isArtist($object_id)) {
+            $artist_id = Subsonic_Xml_Data::_getAmpacheId($object_id);
+            $info      = Recommendation::get_artist_info($artist_id);
+            $similars  = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
+            $format    = (string)($input['f'] ?? 'xml');
+            if ($format === 'xml') {
+                $response = self::_addXmlResponse(__FUNCTION__);
+                $response = OpenSubsonic_Xml_Data::addArtistInfo($response, $info, $similars);
+            } else {
+                $response = self::_addJsonResponse(__FUNCTION__);
+                $response = OpenSubsonic_Json_Data::addArtistInfo($response, $info, $similars);
+            }
+            self::_responseOutput($input, __FUNCTION__, $response);
+        } else {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+        }
+    }
+
+    /**
+     * getArtistInfo2
+     *
+     * Returns artist info.
+     * https://opensubsonic.netlify.app/docs/endpoints/getartistinfo2/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getartistinfo2(array $input, User $user): void
+    {
+        unset($user);
+        $object_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$object_id) {
+            return;
+        }
+
+        $count             = $input['count'] ?? 20;
+        $includeNotPresent = (array_key_exists('includeNotPresent', $input) && $input['includeNotPresent'] === "true");
+
+        if (Subsonic_Xml_Data::_isArtist($object_id)) {
+            $artist_id = Subsonic_Xml_Data::_getAmpacheId($object_id);
+            $info      = Recommendation::get_artist_info($artist_id);
+            $similars  = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
+            $format    = (string)($input['f'] ?? 'xml');
+            if ($format === 'xml') {
+                $response = self::_addXmlResponse(__FUNCTION__);
+                $response = OpenSubsonic_Xml_Data::addArtistInfo($response, $info, $similars);
+            } else {
+                $response = self::_addJsonResponse(__FUNCTION__);
+                $response = OpenSubsonic_Json_Data::addArtistInfo($response, $info, $similars);
+            }
+            self::_responseOutput($input, __FUNCTION__, $response);
+        } else {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+        }
+    }
 
     /**
      * getArtists
@@ -1783,54 +1833,123 @@ class OpenSubsonic_Api
         self::_responseOutput($input, __FUNCTION__, $response);
     }
 
-    ///**
-    // * getAvatar
-    // *
-    // * Returns the avatar (personal image) for a user.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getavatar/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getavatar(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getAvatar
+     *
+     * Returns the avatar (personal image) for a user.
+     * https://opensubsonic.netlify.app/docs/endpoints/getavatar/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getavatar(array $input, User $user): void
+    {
+        $username = self::_check_parameter($input, 'username', __FUNCTION__);
+        if (!$username) {
+            return;
+        }
 
-    ///**
-    // * getBookmarks
-    // *
-    // * Returns all bookmarks for this user.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getbookmarks/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getbookmarks(array $input, User $user): void
-    //{
-    //}
+        if ($user->access === 100 || $user->username == $username) {
+            if ($user->username == $username) {
+                $update_user = $user;
+            } else {
+                $update_user = User::get_from_username((string)$username);
+            }
 
-    ///**
-    // * getCaptions
-    // *
-    // * Returns captions (subtitles) for a video.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getcaptions/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getcaptions(array $input, User $user): void
-    //{
-    //}
+            if ($update_user instanceof User) {
+                // Get Session key
+                $avatar = $update_user->get_avatar(true);
+                if (!empty($avatar['url'])) {
+                    $request = Requests::get($avatar['url'], [], Core::requests_options());
+                    header("Content-Type: " . $request->headers['Content-Type']);
+                    echo $request->body;
+                }
+            } else {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
 
-    ///**
-    // * getChatMessages
-    // *
-    // * Returns the current visible (non-expired) chat messages.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getchatmessages/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getchatmessages(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getBookmarks
+     *
+     * Returns all bookmarks for this user.
+     * https://opensubsonic.netlify.app/docs/endpoints/getbookmarks/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getbookmarks(array $input, User $user): void
+    {
+        $bookmarks = [];
 
+        $bookmarkRepository = self::getBookmarkRepository();
+        foreach ($bookmarkRepository->getByUser($user) as $bookmarkId) {
+            $bookmark = $bookmarkRepository->findById($bookmarkId);
+
+            if ($bookmark !== null) {
+                $bookmarks[] = $bookmark;
+            }
+        }
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addBookmarks($response, $bookmarks);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addBookmarks($response, $bookmarks);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
+     * getCaptions
+     *
+     * Returns captions (subtitles) for a video.
+     * https://opensubsonic.netlify.app/docs/endpoints/getcaptions/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getcaptions(array $input, User $user): void
+    {
+        unset($user);
+
+        self::_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
+    }
+
+    /**
+     * getChatMessages
+     *
+     * Returns the current visible (non-expired) chat messages.
+     * https://opensubsonic.netlify.app/docs/endpoints/getchatmessages/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getchatmessages(array $input, User $user): void
+    {
+        unset($user);
+        $since                    = (int)($input['since'] ?? 0);
+        $privateMessageRepository = self::getPrivateMessageRepository();
+
+        $privateMessageRepository->cleanChatMessages();
+
+        if (!AmpConfig::get('sociable')) {
+            $messages = [];
+        } else {
+            $messages = $privateMessageRepository->getChatMessages($since);
+        }
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addChatMessages($response, $messages);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addChatMessages($response, $messages);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     /**
      * getCoverArt
@@ -1932,17 +2051,74 @@ class OpenSubsonic_Api
         self::_responseOutput($input, __FUNCTION__, $response);
     }
 
-    ///**
-    // * getIndexes
-    // *
-    // * Returns an indexed structure of all artists.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getindexes/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getindexes(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getIndexes
+     *
+     * Returns an indexed structure of all artists.
+     * https://opensubsonic.netlify.app/docs/endpoints/getindexes/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getindexes(array $input, User $user): void
+    {
+        set_time_limit(300);
+
+        $musicFolderId   = $input['musicFolderId'] ?? '-1';
+        $ifModifiedSince = $input['ifModifiedSince'] ?? '';
+
+        $catalogs = [];
+        if (!empty($musicFolderId) && $musicFolderId != '-1') {
+            $catalogs[] = (int)$musicFolderId;
+        } else {
+            $catalogs = $user->get_catalogs('music');
+        }
+
+        $lastmodified = 0;
+        $fcatalogs    = [];
+
+        foreach ($catalogs as $catalogid) {
+            $clastmodified = 0;
+            $catalog       = Catalog::create_from_id($catalogid);
+            if ($catalog === null) {
+                break;
+            }
+            if ($catalog->last_update > $clastmodified) {
+                $clastmodified = $catalog->last_update;
+            }
+            if ($catalog->last_add > $clastmodified) {
+                $clastmodified = $catalog->last_add;
+            }
+            if ($catalog->last_clean > $clastmodified) {
+                $clastmodified = $catalog->last_clean;
+            }
+
+            if ($clastmodified > $lastmodified) {
+                $lastmodified = $clastmodified;
+            }
+            if (!empty($ifModifiedSince) && $clastmodified > (((int)$ifModifiedSince) / 1000)) {
+                $fcatalogs[] = (int)$catalogid;
+            }
+        }
+        if (empty($ifModifiedSince)) {
+            $fcatalogs = $catalogs;
+        }
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            if (count($fcatalogs) > 0) {
+                $artists  = Catalog::get_artist_arrays($fcatalogs);
+                $response = OpenSubsonic_Xml_Data::addIndexes($response, $artists, $lastmodified);
+            }
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            if (count($fcatalogs) > 0) {
+                $artists  = Catalog::get_artist_arrays($fcatalogs);
+                $response = OpenSubsonic_Json_Data::addIndexes($response, $artists, $lastmodified);
+            }
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     /**
      * getInternetRadioStations
@@ -3183,7 +3359,7 @@ class OpenSubsonic_Api
     /**
      * @deprecated inject dependency
      */
-    private static function getprivateMessageRepository(): PrivateMessageRepositoryInterface
+    private static function getPrivateMessageRepository(): PrivateMessageRepositoryInterface
     {
         global $dic;
 
