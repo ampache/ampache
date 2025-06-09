@@ -1064,7 +1064,7 @@ class OpenSubsonic_Api
                     $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, true);
                 } else {
                     $response = self::_addJsonResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Json_Data::addplaylist($response, $playlist, true);
+                    $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, true);
                 }
                 self::_responseOutput($input, __FUNCTION__, $response);
             } else {
