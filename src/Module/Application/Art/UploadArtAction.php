@@ -91,7 +91,7 @@ final class UploadArtAction extends AbstractArtAction
             } else {
                 $this->ui->showContinue(
                     T_('There Was a Problem'),
-                    T_('Art file failed to insert, check the dimensions are correct.'),
+                    T_('Art file failed to insert, check file size and if the dimensions are correct.'),
                     $burl
                 );
             }

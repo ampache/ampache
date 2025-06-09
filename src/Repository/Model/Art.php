@@ -420,6 +420,8 @@ class Art extends database_object
         $sizetext   = 'original';
 
         if (!self::check_dimensions($dimensions)) {
+            debug_event(self::class, 'Not inserting image for ' . $this->object_type . ' ' . $this->object_id . ', dimensions are wrong (' . $width . 'x' . $height . ')', 1);
+
             return false;
         }
 
