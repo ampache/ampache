@@ -1265,7 +1265,7 @@ class User extends database_object
 
         $art = new Art($this->id, 'user');
 
-        return $art->insert($data, $mime);
+        return ($art->insert($data, $mime) === true);
     }
 
     /**
