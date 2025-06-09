@@ -1944,17 +1944,29 @@ class OpenSubsonic_Api
     //{
     //}
 
-    ///**
-    // * getInternetRadioStations
-    // *
-    // * Returns all internet radio stations.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getinternetradiostations/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getinternetradiostations(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getInternetRadioStations
+     *
+     * Returns all internet radio stations.
+     * https://opensubsonic.netlify.app/docs/endpoints/getinternetradiostations/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getinternetradiostations(array $input, User $user): void
+    {
+        unset($user);
+
+        $radios = self::getLiveStreamRepository()->findAll();
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addInternetRadioStations($response, $radios);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addInternetRadioStations($response, $radios);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     ///**
     // * getLicense

@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Rating;
@@ -1136,18 +1137,42 @@ class OpenSubsonic_Json_Data
 
 
     /**
-     * addInternetRadioStation
+     * _addInternetRadioStation
      *
      * An internetRadioStation.
+     * @return array{'id': string, 'name': string, 'streamUrl': string, 'homepageUrl': string}
      */
+    private static function _addInternetRadioStation(Live_Stream $radio): array
+    {
+        return [
+            'id' => (string)$radio->id,
+            'name' => (string)$radio->name,
+            'streamUrl' => (string)$radio->url,
+            'homepageUrl' => (string)$radio->site_url,
+        ];
+    }
 
 
     /**
      * addInternetRadioStations
      *
      * internetRadioStations.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param int[] $radios
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addInternetRadioStations(array $response, array $radios): array
+    {
+        $json = [];
+        foreach ($radios as $radio_id) {
+            $radio = new Live_Stream((int)$radio_id);
+            $json[] = self::_addInternetRadioStation($radio);
+        }
 
+        $response['subsonic-response']['internetRadioStations']['internetRadioStation'] = $json;
+
+        return $response;
+    }
 
     /**
      * addItemDate

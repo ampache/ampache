@@ -744,7 +744,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addGenres
-     * @param SimpleXMLElement $xml
      * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
      */
     public static function addGenres(SimpleXMLElement $xml, array $tags): SimpleXMLElement
@@ -1208,16 +1207,17 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addInternetRadioStations
-     * @param SimpleXMLElement $xml
      * @param int[] $radios
      */
-    public static function addInternetRadioStations(SimpleXMLElement $xml, array $radios): void
+    public static function addInternetRadioStations(SimpleXMLElement $xml, array $radios): SimpleXMLElement
     {
         $xradios = self::addChildToResultXml($xml, 'internetRadioStations');
         foreach ($radios as $radio_id) {
             $radio = new Live_Stream((int)$radio_id);
             self::addInternetRadioStation($xradios, $radio);
         }
+
+        return $xml;
     }
 
     /**
