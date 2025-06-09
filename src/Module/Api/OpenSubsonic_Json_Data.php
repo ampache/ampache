@@ -1093,10 +1093,7 @@ class OpenSubsonic_Json_Data
                 $json = self::_addArtistArray($json, $artist);
             }
 
-            $response['subsonic-response']['artists']['index'][] = [
-                'name' => '#',
-                'artist' => $json
-            ];
+            $response['subsonic-response']['artists']['index']["#"] = $json;
         }
 
         return $response;
