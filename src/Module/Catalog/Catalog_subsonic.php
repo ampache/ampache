@@ -363,7 +363,7 @@ class Catalog_subsonic extends Catalog
 
         return (
             is_string($image) &&
-            $art->insert($image)
+            $art->insert($image) === true
         );
     }
 
