@@ -96,27 +96,8 @@ class OpenSubsonic_Api
         '_apiOutput',
         '_apiOutput2',
         '_check_parameter',
-        '_decryptPassword',
         '_errorOutput',
         '_follow_stream',
-        '_getAlbumId',
-        '_getAmpacheId',
-        '_getAmpacheObject',
-        '_getAmpacheType',
-        '_getArtistId',
-        '_getBookmarkId',
-        '_getCatalogId',
-        '_getChatId',
-        '_getGenreId',
-        '_getLiveStreamId',
-        '_getPlaylistId',
-        '_getPodcastEpisodeId',
-        '_getPodcastId',
-        '_getShareId',
-        '_getSmartPlaylistId',
-        '_getSongId',
-        '_getUserId',
-        '_getVideoId',
         '_jsonOutput',
         '_jsonpOutput',
         '_output_body',
@@ -126,7 +107,26 @@ class OpenSubsonic_Api
         '_updatePlaylist',
         '_xml2json',
         '_xmlOutput',
+        'decryptPassword',
         'error',
+        'getAlbumSubId',
+        'getAmpacheId',
+        'getAmpacheObject',
+        'getAmpacheType',
+        'getArtistSubId',
+        'getBookmarkSubId',
+        'getCatalogSubId',
+        'getChatSubId',
+        'getGenreSubId',
+        'getLiveStreamSubId',
+        'getPlaylistSubId',
+        'getPodcastEpisodeSubId',
+        'getPodcastSubId',
+        'getShareSubId',
+        'getSmartPlaylistSubId',
+        'getSongSubId',
+        'getUserSubId',
+        'getVideoSubId',
     ];
 
     public const SSERROR_GENERIC                = 0; // A generic error.
@@ -161,117 +161,117 @@ class OpenSubsonic_Api
     public const SUBID_USER       = 'us-';
     public const SUBID_VIDEO      = 'vi-';
 
-    public static function _getAlbumId(int|string $ampache_id): string
+    public static function getAlbumSubId(int|string $ampache_id): string
     {
         return self::SUBID_ALBUM . $ampache_id;
     }
 
-    public static function _getArtistId(int|string $ampache_id): string
+    public static function getArtistSubId(int|string $ampache_id): string
     {
         return self::SUBID_ARTIST . $ampache_id;
     }
 
-    public static function _getBookmarkId(int|string $ampache_id): string
+    public static function getBookmarkSubId(int|string $ampache_id): string
     {
         return self::SUBID_BOOKMARK . $ampache_id;
     }
 
-    public static function _getCatalogId(int|string $ampache_id): string
+    public static function getCatalogSubId(int|string $ampache_id): string
     {
         return self::SUBID_CATALOG . $ampache_id;
     }
 
-    public static function _getChatId(int|string $ampache_id): string
+    public static function getChatSubId(int|string $ampache_id): string
     {
         return self::SUBID_CHAT . $ampache_id;
     }
 
-    public static function _getGenreId(int|string $ampache_id): string
+    public static function getGenreSubId(int|string $ampache_id): string
     {
         return self::SUBID_GENRE . $ampache_id;
     }
 
-    public static function _getLiveStreamId(int|string $ampache_id): string
+    public static function getLiveStreamSubId(int|string $ampache_id): string
     {
         return self::SUBID_LIVESTREAM . $ampache_id;
     }
 
-    public static function _getPlaylistId(int|string $ampache_id): string
+    public static function getPlaylistSubId(int|string $ampache_id): string
     {
         return self::SUBID_PLAYLIST . $ampache_id;
     }
 
-    public static function _getPodcastId(int|string $ampache_id): string
+    public static function getPodcastSubId(int|string $ampache_id): string
     {
         return self::SUBID_PODCAST . $ampache_id;
     }
 
-    public static function _getPodcastEpisodeId(int|string $ampache_id): string
+    public static function getPodcastEpisodeSubId(int|string $ampache_id): string
     {
         return self::SUBID_PODCASTEP . $ampache_id;
     }
-    public static function _getShareId(int|string $ampache_id): string
+    public static function getShareSubId(int|string $ampache_id): string
     {
         return self::SUBID_SHARE . $ampache_id;
     }
 
-    public static function _getSmartPlaylistId(int|string $ampache_id): string
+    public static function getSmartPlaylistSubId(int|string $ampache_id): string
     {
         return self::SUBID_SMARTPL . $ampache_id;
     }
 
-    public static function _getSongId(int|string $ampache_id): string
+    public static function getSongSubId(int|string $ampache_id): string
     {
         return self::SUBID_SONG . $ampache_id;
     }
 
-    public static function _getUserId(int|string $ampache_id): string
+    public static function getUserSubId(int|string $ampache_id): string
     {
         return self::SUBID_USER . $ampache_id;
     }
 
-    public static function _getVideoId(int|string $ampache_id): string
+    public static function getVideoSubId(int|string $ampache_id): string
     {
         return self::SUBID_VIDEO . $ampache_id;
     }
 
     /**
-     * _getAmpacheObject
+     * getAmpacheObject
      * Return the Ampache media object
      */
-    public static function _getAmpacheObject(string $object_id): ?object
+    public static function getAmpacheObject(string $object_id): ?object
     {
         switch (substr($object_id, 0, 3)) {
             case self::SUBID_ALBUM:
-                return new Album((int)self::_getAmpacheId($object_id));
+                return new Album((int)self::getAmpacheId($object_id));
             case self::SUBID_ARTIST:
-                return new Artist((int)self::_getAmpacheId($object_id));
+                return new Artist((int)self::getAmpacheId($object_id));
             case self::SUBID_BOOKMARK:
-                return new Bookmark((int)self::_getAmpacheId($object_id));
+                return new Bookmark((int)self::getAmpacheId($object_id));
             case self::SUBID_CATALOG:
-                return Catalog::create_from_id((int)self::_getAmpacheId($object_id));
+                return Catalog::create_from_id((int)self::getAmpacheId($object_id));
             case self::SUBID_CHAT:
-                return new PrivateMsg((int)self::_getAmpacheId($object_id));
+                return new PrivateMsg((int)self::getAmpacheId($object_id));
             case self::SUBID_GENRE:
-                return new Tag((int)self::_getAmpacheId($object_id));
+                return new Tag((int)self::getAmpacheId($object_id));
             case self::SUBID_LIVESTREAM:
-                return new Live_Stream((int)self::_getAmpacheId($object_id));
+                return new Live_Stream((int)self::getAmpacheId($object_id));
             case self::SUBID_PLAYLIST:
-                return new Playlist((int)self::_getAmpacheId($object_id));
+                return new Playlist((int)self::getAmpacheId($object_id));
             case self::SUBID_PODCAST:
-                return new Podcast((int)self::_getAmpacheId($object_id));
+                return new Podcast((int)self::getAmpacheId($object_id));
             case self::SUBID_PODCASTEP:
-                return new Podcast_Episode((int)self::_getAmpacheId($object_id));
+                return new Podcast_Episode((int)self::getAmpacheId($object_id));
             case self::SUBID_SHARE:
-                return new Share((int)self::_getAmpacheId($object_id));
+                return new Share((int)self::getAmpacheId($object_id));
             case self::SUBID_SMARTPL:
-                return new Search((int)self::_getAmpacheId($object_id));
+                return new Search((int)self::getAmpacheId($object_id));
             case self::SUBID_SONG:
-                return new Song((int)self::_getAmpacheId($object_id));
+                return new Song((int)self::getAmpacheId($object_id));
             case self::SUBID_USER:
-                return new User((int)self::_getAmpacheId($object_id));
+                return new User((int)self::getAmpacheId($object_id));
             case self::SUBID_VIDEO:
-                return new Video((int)self::_getAmpacheId($object_id));
+                return new Video((int)self::getAmpacheId($object_id));
         }
         debug_event(self::class, 'Couldn\'t identify Ampache object from ' . $object_id, 5);
 
@@ -279,9 +279,9 @@ class OpenSubsonic_Api
     }
 
     /**
-     * _getAmpacheId
+     * getAmpacheId
      */
-    public static function _getAmpacheId(string $object_id): ?int
+    public static function getAmpacheId(string $object_id): ?int
     {
         $ampache_id = substr($object_id, 3) ?: null;
         if (is_numeric($ampache_id)) {
@@ -292,9 +292,9 @@ class OpenSubsonic_Api
     }
 
     /**
-     * _getAmpacheType
+     * getAmpacheType
      */
-    public static function _getAmpacheType(string $object_id): string
+    public static function getAmpacheType(string $object_id): string
     {
         switch (substr($object_id, 0, 3)) {
             case self::SUBID_ARTIST:
@@ -338,8 +338,8 @@ class OpenSubsonic_Api
                 $object_id = [$object_id];
             }
             foreach ($object_id as $item) {
-                $aid  = self::_getAmpacheId($item);
-                $type = self::_getAmpacheType($item);
+                $aid  = self::getAmpacheId($item);
+                $type = self::getAmpacheType($item);
 
                 $ids[] = [
                     'id' => $aid,
@@ -351,7 +351,7 @@ class OpenSubsonic_Api
                 $albumId = [$albumId];
             }
             foreach ($albumId as $album) {
-                $aid   = self::_getAmpacheId($album);
+                $aid   = self::getAmpacheId($album);
                 $ids[] = [
                     'id' => $aid,
                     'type' => 'album'
@@ -362,7 +362,7 @@ class OpenSubsonic_Api
                 $artistId = [$artistId];
             }
             foreach ($artistId as $artist) {
-                $aid   = self::_getAmpacheId($artist);
+                $aid   = self::getAmpacheId($artist);
                 $ids[] = [
                     'id' => $aid,
                     'type' => 'artist'
@@ -497,7 +497,7 @@ class OpenSubsonic_Api
         return $input[$parameter];
     }
 
-    public static function _decryptPassword(string $password): string
+    public static function decryptPassword(string $password): string
     {
         // Decode hex-encoded password
         $encpwd = strpos($password, "enc:");
@@ -594,7 +594,7 @@ class OpenSubsonic_Api
     ): void {
         // If it's a string it probably needs a clean up
         if (is_string($playlist_id)) {
-            $playlist_id = self::_getAmpacheId($playlist_id);
+            $playlist_id = self::getAmpacheId($playlist_id);
         }
         $playlist           = new Playlist((int)$playlist_id);
         $songsIdToAdd_count = count($songsIdToAdd);
@@ -608,7 +608,7 @@ class OpenSubsonic_Api
 
         if ($songsIdToAdd_count > 0) {
             for ($count = 0; $count < $songsIdToAdd_count; ++$count) {
-                $ampacheId = self::_getAmpacheId((string)$songsIdToAdd[$count]);
+                $ampacheId = self::getAmpacheId((string)$songsIdToAdd[$count]);
                 if ($ampacheId) {
                     $songsIdToAdd[$count] = $ampacheId;
                 }
@@ -717,7 +717,7 @@ class OpenSubsonic_Api
      * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
      * @return array{'subsonic-response': array{'status': string, 'version': string, 'type': string, 'serverVersion': string, 'openSubsonic': bool}}
      */
-    public static function _addJsonResponse(string $function): array
+    private static function _addJsonResponse(string $function): array
     {
         return OpenSubsonic_Json_Data::addResponse($function);
     }
@@ -728,7 +728,7 @@ class OpenSubsonic_Api
      * Generate a subsonic-response
      * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
      */
-    public static function _addXmlResponse(string $function): SimpleXMLElement
+    private static function _addXmlResponse(string $function): SimpleXMLElement
     {
         return OpenSubsonic_Xml_Data::addResponse($function);
     }
@@ -821,7 +821,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $password = self::_decryptPassword($inp_pass);
+        $password = self::decryptPassword($inp_pass);
         if ($user->username == $username || $user->access === 100) {
             $update_user = User::get_from_username((string) $username);
             if ($update_user instanceof User && !AmpConfig::get('simple_user_mode')) {
@@ -856,8 +856,8 @@ class OpenSubsonic_Api
         }
 
         $comment   = $input['comment'] ?? '';
-        $object_id = self::_getAmpacheId((string)$object_id);
-        $type      = self::_getAmpacheType((string)$object_id);
+        $object_id = self::getAmpacheId((string)$object_id);
+        $type      = self::getAmpacheType((string)$object_id);
 
         if (!empty($object_id) && !empty($type)) {
             $bookmark = new Bookmark($object_id, $type);
@@ -1025,15 +1025,15 @@ class OpenSubsonic_Api
             $expire_days  = (isset($input['expires']))
                 ? Share::get_expiry(((int)filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
                 : $share_expire;
-            $object_type = self::_getAmpacheType((string)$object_id);
+            $object_type = self::getAmpacheType((string)$object_id);
             if (is_array($object_id) && $object_type === 'song') {
                 debug_event(self::class, 'createShare: sharing song list (album)', 5);
-                $song_id     = self::_getAmpacheId($object_id[0]);
+                $song_id     = self::getAmpacheId($object_id[0]);
                 $tmp_song    = new Song($song_id);
                 $object_id   = $tmp_song->album;
                 $object_type = 'album';
             } else {
-                $object_id = self::_getAmpacheId($object_id);
+                $object_id = self::getAmpacheId($object_id);
             }
 
             if (
@@ -1130,7 +1130,7 @@ class OpenSubsonic_Api
             if ($adminRole) {
                 $access = AccessLevelEnum::ADMIN;
             }
-            $password = self::_decryptPassword($password);
+            $password = self::decryptPassword($password);
             $user_id  = User::create($username, $username, $email, '', $password, $access);
             if ($user_id > 0) {
                 if ($downloadRole) {
@@ -1166,8 +1166,8 @@ class OpenSubsonic_Api
             return;
         }
 
-        $object_id = self::_getAmpacheId($sub_id);
-        $type      = self::_getAmpacheType((string)$object_id);
+        $object_id = self::getAmpacheId($sub_id);
+        $type      = self::getAmpacheType((string)$object_id);
 
         $bookmark = new Bookmark($object_id, $type, $user->id);
         if ($bookmark->isNew()) {
@@ -1226,7 +1226,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $playlist = self::_getAmpacheObject($sub_id);
+        $playlist = self::getAmpacheObject($sub_id);
         if (
             (!($playlist instanceof Playlist || $playlist instanceof Search)) ||
             $playlist->isNew()
@@ -1263,7 +1263,7 @@ class OpenSubsonic_Api
         }
 
         if (AmpConfig::get(ConfigurationKeyEnum::PODCAST) && $user->access >= AccessLevelEnum::MANAGER->value) {
-            $podcast_id = self::_getAmpacheId($sub_id);
+            $podcast_id = self::getAmpacheId($sub_id);
             $podcast    = ($podcast_id)
                 ? self::getPodcastRepository()->findById($podcast_id)
                 : null;
@@ -1295,7 +1295,7 @@ class OpenSubsonic_Api
         }
 
         if (AmpConfig::get('podcast') && $user->access >= 75) {
-            $episode = new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($episode_id));
+            $episode = new Podcast_Episode(self::getAmpacheId($episode_id));
             if ($episode->isNew()) {
                 self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             } elseif ($episode->remove()) {
@@ -1388,7 +1388,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $object = self::_getAmpacheObject($sub_id);
+        $object = self::getAmpacheObject($sub_id);
         if (($object instanceof Song || $object instanceof Podcast_Episode) === false) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
@@ -1417,7 +1417,7 @@ class OpenSubsonic_Api
         }
 
         if (AmpConfig::get('podcast') && $user->access >= 75) {
-            $episode = new Podcast_Episode(self::_getAmpacheId($episode_id));
+            $episode = new Podcast_Episode(self::getAmpacheId($episode_id));
             if ($episode->isNew()) {
                 self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             } else {
@@ -1446,7 +1446,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $album = self::_getAmpacheObject($albumid);
+        $album = self::getAmpacheObject($albumid);
         if (!$album instanceof Album || $album->isNew()) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
@@ -1624,8 +1624,8 @@ class OpenSubsonic_Api
             return;
         }
 
-        $object_id   = self::_getAmpacheId($sub_id);
-        $object_type = self::_getAmpacheType($sub_id);
+        $object_id   = self::getAmpacheId($sub_id);
+        $object_type = self::getAmpacheType($sub_id);
         if (
             !$object_id ||
             empty($object_type)
@@ -1833,7 +1833,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $playlist = self::_getAmpacheObject($sub_id);
+        $playlist = self::getAmpacheObject($sub_id);
         if (
             (!($playlist instanceof Playlist || $playlist instanceof Search)) ||
             $playlist->isNew()
@@ -2118,7 +2118,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $object_id = self::_getAmpacheId($sub_id);
+        $object_id = self::getAmpacheId($sub_id);
         if (!$object_id) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
@@ -2127,7 +2127,7 @@ class OpenSubsonic_Api
 
         $bitRate = $input['bitRate'] ?? false;
         $media   = [];
-        $type    = self::_getAmpacheType($sub_id);
+        $type    = self::getAmpacheType($sub_id);
         if ($type === 'song') {
             $media['object_type'] = LibraryItemEnum::SONG;
         } elseif ($type === 'video') {
@@ -2221,7 +2221,7 @@ class OpenSubsonic_Api
                         $url = null;
 
                         if (Subsonic_Xml_Data::_isSong($song_id)) {
-                            $media = new Song(Subsonic_Xml_Data::_getAmpacheId($song_id));
+                            $media = new Song(self::getAmpacheId($song_id));
                             $url   = $media->play_url('&client=' . $localplay->type, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
                         }
 
@@ -2372,8 +2372,8 @@ class OpenSubsonic_Api
                 $previous  = Stats::get_last_play($user->id, $client, $time);
                 $prev_obj  = $previous['object_id'] ?: 0;
                 $prev_date = $previous['date'];
-                $type      = self::_getAmpacheType((string)$subsonic_id);
-                $media     = self::_getAmpacheObject((string)$subsonic_id);
+                $type      = self::getAmpacheType((string)$subsonic_id);
+                $media     = self::getAmpacheObject((string)$subsonic_id);
                 if (!$media instanceof Media || !isset($media->time) || !isset($media->id)) {
                     continue;
                 }
@@ -2485,9 +2485,9 @@ class OpenSubsonic_Api
             return;
         }
 
-        $type = self::_getAmpacheType($object_id);
+        $type = self::getAmpacheType($object_id);
         $robj = (!empty($type))
-            ? new Rating(self::_getAmpacheId($object_id), $type)
+            ? new Rating(self::getAmpacheId($object_id), $type)
             : null;
 
         if ($robj != null && ($rating >= 0 && $rating <= 5)) {
@@ -2548,7 +2548,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $object = self::_getAmpacheObject($sub_id);
+        $object = self::getAmpacheObject($sub_id);
         if (($object instanceof Song || $object instanceof Podcast_Episode) === false) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
@@ -2643,7 +2643,7 @@ class OpenSubsonic_Api
         $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?: '';
 
         if (AmpConfig::get('live_stream') && $user->access >= 75) {
-            $internetradiostation = new Live_Stream(self::_getAmpacheId($internetradiostation_id));
+            $internetradiostation = new Live_Stream(self::getAmpacheId($internetradiostation_id));
             if ($internetradiostation->id > 0) {
                 $data = [
                     "name" => $name,
@@ -2685,7 +2685,7 @@ class OpenSubsonic_Api
         $songIdToAdd       = $input['songIdToAdd'] ?? [];
         $songIndexToRemove = $input['songIndexToRemove'] ?? [];
 
-        $object = self::_getAmpacheObject($sub_id);
+        $object = self::getAmpacheObject($sub_id);
         if (!$object) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
@@ -2723,7 +2723,7 @@ class OpenSubsonic_Api
         }
 
         if (AmpConfig::get('share')) {
-            $share = new Share(self::_getAmpacheId($share_id));
+            $share = new Share(self::getAmpacheId($share_id));
             if ($share->id > 0) {
                 $expires = (isset($input['expires']))
                     ? Share::get_expiry(((int)filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
@@ -2788,7 +2788,7 @@ class OpenSubsonic_Api
                 $update_user->update_access($access);
                 // update password
                 if ($password && !AmpConfig::get('simple_user_mode')) {
-                    $password = self::_decryptPassword($password);
+                    $password = self::decryptPassword($password);
                     $update_user->update_password($password);
                 }
                 // update e-mail

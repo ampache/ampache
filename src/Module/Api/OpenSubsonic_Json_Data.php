@@ -117,7 +117,7 @@ class OpenSubsonic_Json_Data
      *      'position': string
      * }
      */
-    public static function _addJukeboxStatus(LocalPlay $localplay): array
+    private static function _addJukeboxStatus(LocalPlay $localplay): array
     {
         $json   = [];
         $status = $localplay->status();
@@ -138,7 +138,7 @@ class OpenSubsonic_Json_Data
      */
     private static function _addPlaylist_Playlist(Playlist $playlist, bool $songs = false): array
     {
-        $sub_id    = OpenSubsonic_Api::_getPlaylistId($playlist->id);
+        $sub_id    = OpenSubsonic_Api::getPlaylistSubId($playlist->id);
         $songcount = $playlist->get_media_count('song');
         $duration  = ($songcount > 0) ? $playlist->get_total_duration() : 0;
 
@@ -173,7 +173,7 @@ class OpenSubsonic_Json_Data
      */
     private static function _addPlaylist_Search(Search $search, bool $songs = false): array
     {
-        $sub_id = OpenSubsonic_Api::_getSmartPlaylistId($search->id);
+        $sub_id = OpenSubsonic_Api::getSmartPlaylistSubId($search->id);
 
         $json = [
             'id' => $sub_id,
@@ -213,13 +213,13 @@ class OpenSubsonic_Json_Data
      * @param array<string, mixed> $response
      * @return array<string, mixed>
      */
-    public static function _addChildAlbum(array $response, int $object_id, string $elementName): array
+    private static function _addChildAlbum(array $response, int $object_id, string $elementName): array
     {
         $album = new Album($object_id);
         if ($album->isNew()) {
             return $response;
         }
-        $sub_id = OpenSubsonic_Api::_getAlbumId($album->id);
+        $sub_id = OpenSubsonic_Api::getAlbumSubId($album->id);
 
         // set the elementName if missing
         if (!isset($response[$elementName])) {
@@ -228,7 +228,7 @@ class OpenSubsonic_Json_Data
 
         $album_artist = $album->findAlbumArtist();
         $subParent    = ($album_artist)
-            ? OpenSubsonic_Api::_getArtistId($album_artist)
+            ? OpenSubsonic_Api::getArtistSubId($album_artist)
             : '';
 
         $json = [
@@ -287,11 +287,11 @@ class OpenSubsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/albumid3/
      * @return array{'id': string, 'parent'?: string, 'album': string, 'title': string, 'name': string, 'isDir': bool, 'coverArt'?: string, 'songCount': string, 'created': string, 'duration': string, 'playCount': string, 'artistId'?: string, 'artist': string, 'year'?: string, 'genre'?: string, 'userRating'?: string, 'averageRating'?: string, 'starred'?: string}
      */
-    public static function _addAlbumID3(Album $album): array
+    private static function _addAlbumID3(Album $album): array
     {
-        $sub_id       = OpenSubsonic_Api::_getAlbumId($album->id);
+        $sub_id       = OpenSubsonic_Api::getAlbumSubId($album->id);
         $album_artist = $album->findAlbumArtist();
-        $subParent    = ($album_artist) ? OpenSubsonic_Api::_getArtistId($album_artist) : false;
+        $subParent    = ($album_artist) ? OpenSubsonic_Api::getArtistSubId($album_artist) : false;
         $f_name       = (string)$album->get_fullname();
 
         $json = [
@@ -362,9 +362,9 @@ class OpenSubsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/artistid3/
      * @return array{'id': string, 'name': string, 'coverArt'?: string, 'albumCount': string, 'starred'?: string}
      */
-    public static function _addArtistID3(Artist $artist): array
+    private static function _addArtistID3(Artist $artist): array
     {
-        $sub_id = OpenSubsonic_Api::_getArtistId($artist->id);
+        $sub_id = OpenSubsonic_Api::getArtistSubId($artist->id);
         $json   = [
             'id' => $sub_id,
             'name' => (string)$artist->get_fullname(),
@@ -392,9 +392,9 @@ class OpenSubsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/artist/
      * @return array{'id': string, 'name': string, 'coverArt'?: string, 'starred'?: string, 'userRating'?: string, 'averageRating'?: string}
      */
-    public static function _addArtist(Artist $artist): array
+    private static function _addArtist(Artist $artist): array
     {
-        $sub_id = OpenSubsonic_Api::_getArtistId($artist->id);
+        $sub_id = OpenSubsonic_Api::getArtistSubId($artist->id);
         $json   = [
             'id' => $sub_id,
             'name' => (string)$artist->get_fullname(),
@@ -432,7 +432,7 @@ class OpenSubsonic_Json_Data
      * @param array<string, mixed> $response
      * @return array<string, mixed>
      */
-    public static function _addChildSong(array $response, int $object_id, string $elementName): array
+    private static function _addChildSong(array $response, int $object_id, string $elementName): array
     {
         $song = new Song($object_id);
         if ($song->isNew()) {
@@ -441,8 +441,8 @@ class OpenSubsonic_Json_Data
 
         // Don't create entries for disabled songs
         if ($song->enabled) {
-            $sub_id    = OpenSubsonic_Api::_getSongId($song->id);
-            $subParent = OpenSubsonic_Api::_getAlbumId($song->album);
+            $sub_id    = OpenSubsonic_Api::getSongSubId($song->id);
+            $subParent = OpenSubsonic_Api::getAlbumSubId($song->album);
 
             // set the elementName if missing
             if (!isset($response[$elementName])) {
@@ -458,7 +458,7 @@ class OpenSubsonic_Json_Data
                 'type' => 'music',
                 'albumId' => $subParent,
                 'album' => (string)$song->get_album_fullname(),
-                'artistId' => ($song->artist) ? OpenSubsonic_Api::_getArtistId($song->artist) : '',
+                'artistId' => ($song->artist) ? OpenSubsonic_Api::getArtistSubId($song->artist) : '',
                 'artist' => (string)$song->get_artist_fullname(),
             ];
 
@@ -547,8 +547,8 @@ class OpenSubsonic_Json_Data
         }
 
         if ($video->enabled) {
-            $sub_id    = OpenSubsonic_Api::_getVideoId($video->id);
-            $subParent = OpenSubsonic_Api::_getCatalogId($video->catalog);
+            $sub_id    = OpenSubsonic_Api::getVideoSubId($video->id);
+            $subParent = OpenSubsonic_Api::getCatalogSubId($video->catalog);
 
             // set the elementName if missing
             if (!isset($response[$elementName])) {
@@ -630,16 +630,16 @@ class OpenSubsonic_Json_Data
      *     track: int
      * }>
      */
-    public static function _getAmpacheIdArrays(array $object_ids): array
+    private static function _getAmpacheIdArrays(array $object_ids): array
     {
         $ampidarrays = [];
         $track       = 1;
         foreach ($object_ids as $object_id) {
-            $ampacheId = OpenSubsonic_Api::_getAmpacheId((string)$object_id);
+            $ampacheId = OpenSubsonic_Api::getAmpacheId((string)$object_id);
             if ($ampacheId) {
                 $ampidarrays[] = [
                     'object_id' => $ampacheId,
-                    'object_type' => OpenSubsonic_Api::_getAmpacheType((string)$object_id),
+                    'object_type' => OpenSubsonic_Api::getAmpacheType((string)$object_id),
                     'track' => $track
                 ];
                 $track++;
@@ -802,7 +802,7 @@ class OpenSubsonic_Json_Data
             return $response;
         }
 
-        $sub_id = OpenSubsonic_Api::_getArtistId($artist->id);
+        $sub_id = OpenSubsonic_Api::getArtistSubId($artist->id);
         $json   = [
             'id' => $sub_id,
             'name' => $artist->get_fullname(),
@@ -1194,7 +1194,7 @@ class OpenSubsonic_Json_Data
             $changedBy = $playQueue->client ?? '';
 
             $json = [
-                'current' => OpenSubsonic_Api::_getSongId($current['object_id']),
+                'current' => OpenSubsonic_Api::getSongSubId($current['object_id']),
                 'position' => (string)($current['current_time'] * 1000),
                 'username' => $username,
                 'changed' => $date->format("c"),
@@ -1389,7 +1389,7 @@ class OpenSubsonic_Json_Data
     {
         $user = new User($share->user);
         $json = [
-            'id' => OpenSubsonic_Api::_getShareId($share->id),
+            'id' => OpenSubsonic_Api::getShareSubId($share->id),
             'url' => (string)$share->public_url,
             'description' => (string)$share->description,
             'username' => (string)(string)$user->username,
