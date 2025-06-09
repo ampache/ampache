@@ -422,6 +422,45 @@ class OpenSubsonic_Json_Data
         return $json;
     }
 
+    /**
+     * _addArtistArray
+     * @param array<int, array{'id': string, 'name': string, 'coverArt'?: string, 'albumCount': string, 'starred'?: string}> $artist_list
+     * @param array{
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * } $artist
+     * @return array<int, array{'id': string, 'name': string, 'coverArt'?: string, 'albumCount': string, 'starred'?: string}>
+     */
+    private static function _addArtistArray(array $artist_list, array $artist): array
+    {
+        $sub_id  = OpenSubsonic_Api::getArtistSubId($artist['id']);
+
+        $json = [
+            'id' => $sub_id,
+            'name' => (string)$artist['f_name'],
+        ];
+
+        if (array_key_exists('has_art', $artist) && !empty($artist['has_art'])) {
+            $json['coverArt'] = $sub_id;
+        }
+
+        $json['albumCount'] = (string)$artist['album_count'];
+
+        $starred = new Userflag($artist['id'], 'artist');
+        $result  = $starred->get_flag(null, true);
+        if (is_array($result)) {
+            $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
+        }
+
+        $artist_list[] = $json;
+
+        return $artist_list;
+    }
+
 
     /**
      * _addSong
@@ -621,6 +660,21 @@ class OpenSubsonic_Json_Data
     }
 
     /**
+     * _addIgnoredArticles
+     */
+    private static function _getIgnoredArticles(): string
+    {
+        $ignoredArticles = AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La');
+        if (!empty($ignoredArticles)) {
+            $ignoredArticles = str_replace("|", " ", $ignoredArticles);
+
+            return (string)$ignoredArticles;
+        }
+
+        return '';
+    }
+
+    /**
      * addResponse
      *
      * Generate a subsonic-response
@@ -753,15 +807,45 @@ class OpenSubsonic_Json_Data
      * addAlbumList
      *
      * Album list.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param int[] $albums
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addAlbumList(array $response, array $albums): array
+    {
+        $json = [];
+        foreach ($albums as $album_id) {
+            $json = self::addChild($response, $album_id, 'album', 'albumList');
+        }
 
+        $response['subsonic-response']['albumList'] = $json['albumList'];
+
+        return $response;
+    }
 
     /**
      * addAlbumList2
      *
      * Album list.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param int[] $albums
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addAlbumList2(array $response, array $albums): array
+    {
+        $output_albums = [];
+        foreach ($albums as $album_id) {
+            $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
+            $output_albums[] = self::_addAlbumID3($album);
+        }
 
+        $response['subsonic-response']['albumList2'] = $output_albums;
+
+        return $response;
+    }
 
     /**
      * addArtist
@@ -837,7 +921,28 @@ class OpenSubsonic_Json_Data
      * addArtistsID3
      *
      * A list of indexed Artists.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param list<array{
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * }> $artists
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addArtists(array $response, array $artists): array
+    {
+        $response['subsonic-response']['artists'] = [];
+
+        $ignored = self::_getIgnoredArticles();
+        if (!empty($ignored)) {
+            $response['subsonic-response']['artists']['ignoredArticles'] = $ignored;
+        }
+
+        return self::addIndex($response, $artists);
+    }
 
 
     /**
@@ -945,8 +1050,57 @@ class OpenSubsonic_Json_Data
      * addIndex
      *
      * An indexed artist list.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param list<array{
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * }> $artists
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    private static function addIndex(array $response, array $artists): array
+    {
+        $sharpartists = [];
+        $json         = [];
+        foreach ($artists as $artist) {
+            // list Letters
+            if (strlen((string)$artist['name']) > 0) {
+                $letter = strtoupper((string)$artist['name'][0]);
+                if ($letter == "X" || $letter == "Y" || $letter == "Z") {
+                    $letter = "X-Z";
+                } elseif (!preg_match("/^[A-W]$/", $letter)) {
+                    $sharpartists[] = $artist;
+                    continue;
+                }
 
+                if (!isset($json[$letter])) {
+                    $json[$letter] = [];
+                }
+
+                $json[$letter] = self::_addArtistArray($json[$letter], $artist);
+            }
+        }
+
+        $response['subsonic-response']['index'] = $json;
+
+        // Always add # index at the end
+        if (count($sharpartists) > 0) {
+            $json = [];
+            foreach ($sharpartists as $artist) {
+                $json = self::_addArtistArray($json, $artist);
+            }
+
+            $response['subsonic-response']['index'][] = [
+                'name' => '#',
+                'artist' => $json
+            ];
+        }
+
+        return $response;
+    }
 
     /**
      * addIndexes

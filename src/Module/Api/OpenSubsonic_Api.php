@@ -44,6 +44,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\Model\Album;
@@ -317,6 +318,82 @@ class OpenSubsonic_Api
             default:
                 return "";
         }
+    }
+
+    /**
+     * _albumList
+     * @param array<string, mixed> $input
+     * @param User $user
+     * @param string $type
+     * @return int[]|null
+     */
+    private static function _albumList(array $input, User $user, string $type): ?array
+    {
+        $size          = (int)($input['size'] ?? 10);
+        $offset        = (int)($input['offset'] ?? 0);
+        $musicFolderId = (int)($input['musicFolderId'] ?? 0);
+        $catalogFilter = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'));
+
+        // Get albums from all catalogs by default Catalog filter is not supported for all request types for now.
+        $catalogs = ($catalogFilter)
+            ? $user->get_catalogs('music')
+            : null;
+        if ($musicFolderId > 0) {
+            $catalogs   = [];
+            $catalogs[] = $musicFolderId;
+        }
+        $albums = null;
+        switch ($type) {
+            case 'random':
+                $albums = self::getAlbumRepository()->getRandom(
+                    $user->id,
+                    $size
+                );
+                break;
+            case 'newest':
+                $albums = Stats::get_newest('album', $size, $offset, $musicFolderId, $user);
+                break;
+            case 'highest':
+                $albums = Rating::get_highest('album', $size, $offset, $user->id);
+                break;
+            case 'frequent':
+                $albums = Stats::get_top('album', $size, 0, $offset);
+                break;
+            case 'recent':
+                $albums = Stats::get_recent('album', $size, $offset);
+                break;
+            case 'starred':
+                $albums = Userflag::get_latest('album', null, $size, $offset);
+                break;
+            case 'alphabeticalByName':
+                $albums = ($catalogFilter && empty($catalogs) && $musicFolderId == 0)
+                    ? []
+                    : Catalog::get_albums($size, $offset, $catalogs);
+                break;
+            case 'alphabeticalByArtist':
+                $albums = ($catalogFilter && empty($catalogs) && $musicFolderId == 0)
+                    ? []
+                    : Catalog::get_albums_by_artist($size, $offset, $catalogs);
+                break;
+            case 'byYear':
+                $fromYear = (int)min($input['fromYear'], $input['toYear']);
+                $toYear   = (int)max($input['fromYear'], $input['toYear']);
+
+                if ($fromYear || $toYear) {
+                    $data   = Search::year_search($fromYear, $toYear, $size, $offset);
+                    $albums = Search::run($data, $user);
+                }
+                break;
+            case 'byGenre':
+                $genre  = $input['genre'];
+                $tag_id = Tag::tag_exists($genre);
+                if ($tag_id > 0) {
+                    $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
+                }
+                break;
+        }
+
+        return $albums;
     }
 
     /**
@@ -875,8 +952,8 @@ class OpenSubsonic_Api
      */
     public static function createbookmark(array $input, User $user): void
     {
-        $object_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$object_id) {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
             return;
         }
 
@@ -886,8 +963,8 @@ class OpenSubsonic_Api
         }
 
         $comment   = $input['comment'] ?? '';
-        $object_id = self::getAmpacheId((string)$object_id);
-        $type      = self::getAmpacheType((string)$object_id);
+        $object_id = self::getAmpacheId((string)$sub_id);
+        $type      = self::getAmpacheType((string)$sub_id);
 
         if (!empty($object_id) && !empty($type)) {
             $bookmark = new Bookmark($object_id, $type);
@@ -1044,8 +1121,8 @@ class OpenSubsonic_Api
      */
     public static function createshare(array $input, User $user): void
     {
-        $object_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$object_id) {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
             return;
         }
 
@@ -1055,15 +1132,15 @@ class OpenSubsonic_Api
             $expire_days  = (isset($input['expires']))
                 ? Share::get_expiry(((int)filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
                 : $share_expire;
-            $object_type = self::getAmpacheType((string)$object_id);
-            if (is_array($object_id) && $object_type === 'song') {
+            $object_type = self::getAmpacheType((string)$sub_id);
+            if (is_array($sub_id) && $object_type === 'song') {
                 debug_event(self::class, 'createShare: sharing song list (album)', 5);
-                $song_id     = self::getAmpacheId($object_id[0]);
+                $song_id     = self::getAmpacheId($sub_id[0]);
                 $tmp_song    = new Song($song_id);
-                $object_id   = $tmp_song->album;
+                $sub_id      = $tmp_song->album;
                 $object_type = 'album';
             } else {
-                $object_id = self::getAmpacheId($object_id);
+                $sub_id = self::getAmpacheId($sub_id);
             }
 
             if (
@@ -1083,9 +1160,9 @@ class OpenSubsonic_Api
             ) {
                 $object_type = '';
             }
-            debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
+            debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $sub_id, 4);
 
-            if (!empty($object_type) && !empty($object_id)) {
+            if (!empty($object_type) && !empty($sub_id)) {
                 global $dic; // @todo remove after refactoring
                 $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
                 $shareCreator      = $dic->get(ShareCreatorInterface::class);
@@ -1095,7 +1172,7 @@ class OpenSubsonic_Api
                 $shares[] = $shareCreator->create(
                     $user,
                     LibraryItemEnum::from($object_type),
-                    $object_id,
+                    $sub_id,
                     true,
                     Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
                     $expire_days,
@@ -1219,15 +1296,15 @@ class OpenSubsonic_Api
      */
     public static function deleteinternetradiostation(array $input, User $user): void
     {
-        $stream_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$stream_id) {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
             return;
         }
 
         $liveStreamRepository = self::getLiveStreamRepository();
 
         if (AmpConfig::get('live_stream') && $user->access >= AccessLevelEnum::MANAGER->value) {
-            $liveStream = $liveStreamRepository->findById((int) $stream_id);
+            $liveStream = $liveStreamRepository->findById((int) $sub_id);
 
             if ($liveStream === null) {
                 self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
@@ -1319,13 +1396,13 @@ class OpenSubsonic_Api
      */
     public static function deletepodcastepisode(array $input, User $user): void
     {
-        $episode_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$episode_id) {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
             return;
         }
 
         if (AmpConfig::get('podcast') && $user->access >= 75) {
-            $episode = new Podcast_Episode(self::getAmpacheId($episode_id));
+            $episode = new Podcast_Episode(self::getAmpacheId($sub_id));
             if ($episode->isNew()) {
                 self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             } elseif ($episode->remove()) {
@@ -1350,15 +1427,15 @@ class OpenSubsonic_Api
      */
     public static function deleteshare(array $input, User $user): void
     {
-        $share_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$share_id) {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
             return;
         }
 
         if (AmpConfig::get('share')) {
             $shareRepository = self::getShareRepository();
 
-            $share = $shareRepository->findById((int) $share_id);
+            $share = $shareRepository->findById((int) $sub_id);
             if (
                 $share === null ||
                 !$share->isAccessible($user)
@@ -1441,13 +1518,13 @@ class OpenSubsonic_Api
      */
     public static function downloadpodcastepisode(array $input, User $user): void
     {
-        $episode_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$episode_id) {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
             return;
         }
 
         if (AmpConfig::get('podcast') && $user->access >= 75) {
-            $episode = new Podcast_Episode(self::getAmpacheId($episode_id));
+            $episode = new Podcast_Episode(self::getAmpacheId($sub_id));
             if ($episode->isNew()) {
                 self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             } else {
@@ -1471,12 +1548,12 @@ class OpenSubsonic_Api
     public static function getalbum(array $input, User $user): void
     {
         unset($user);
-        $albumid = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$albumid) {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
             return;
         }
 
-        $album = self::getAmpacheObject($albumid);
+        $album = self::getAmpacheObject($sub_id);
         if (!$album instanceof Album || $album->isNew()) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
@@ -1505,13 +1582,13 @@ class OpenSubsonic_Api
     public static function getalbuminfo(array $input, User $user): void
     {
         unset($user);
-        $object_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$object_id) {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
             return;
         }
 
-        if (Subsonic_Xml_Data::_isAlbum($object_id)) {
-            $album_id = Subsonic_Xml_Data::_getAmpacheId($object_id);
+        if (Subsonic_Xml_Data::_isAlbum($sub_id)) {
+            $album_id = Subsonic_Xml_Data::_getAmpacheId($sub_id);
             $info     = Recommendation::get_album_info($album_id);
             $response = Subsonic_Xml_Data::addSubsonicResponse('albumInfo');
             Subsonic_Xml_Data::addAlbumInfo($response, $info);
@@ -1545,41 +1622,113 @@ class OpenSubsonic_Api
         self::getalbuminfo($input, $user);
     }
 
-    ///**
-    // * getAlbumList
-    // *
-    // * Returns a list of random, newest, highest rated etc. albums.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getalbumlist/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getalbumlist(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getAlbumList
+     *
+     * Returns a list of random, newest, highest rated etc. albums.
+     * https://opensubsonic.netlify.app/docs/endpoints/getalbumlist/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getalbumlist(array $input, User $user): void
+    {
+        $type = self::_check_parameter($input, 'type', __FUNCTION__);
+        if (!$type) {
+            return;
+        }
 
-    ///**
-    // * getAlbumList2
-    // *
-    // * Returns a list of random, newest, highest rated etc. albums.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getalbumlist2/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getalbumlist2(array $input, User $user): void
-    //{
-    //}
+        if ($type === 'byGenre' && !self::_check_parameter($input, 'genre', __FUNCTION__)) {
+            return;
+        }
 
-    ///**
-    // * getArtist
-    // *
-    // * Returns details for an artist.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getartist/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getartist(array $input, User $user): void
-    //{
-    //}
+        $albums = self::_albumList($input, $user, (string)$type);
+        if ($albums === null) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $format   = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addAlbumList($response, $albums);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addAlbumList($response, $albums);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
+     * getAlbumList2
+     *
+     * Returns a list of random, newest, highest rated etc. albums.
+     * https://opensubsonic.netlify.app/docs/endpoints/getalbumlist2/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getalbumlist2(array $input, User $user): void
+    {
+        $type = self::_check_parameter($input, 'type', __FUNCTION__);
+        if (!$type) {
+            return;
+        }
+
+        if ($type === 'byGenre' && !self::_check_parameter($input, 'genre', __FUNCTION__)) {
+            return;
+        }
+
+        $albums = self::_albumList($input, $user, (string)$type);
+        if ($albums === null) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $format   = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addAlbumList2($response, $albums);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addAlbumList2($response, $albums);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
+     * getArtist
+     *
+     * Returns details for an artist.
+     * https://opensubsonic.netlify.app/docs/endpoints/getartist/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getartist(array $input, User $user): void
+    {
+        unset($user);
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
+
+        $artist = new Artist(self::getAmpacheId($sub_id));
+        if ($artist->isNew()) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $format   = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addArtist($response, $artist);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addArtist($response, $artist);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     ///**
     // * getArtistInfo
@@ -1605,17 +1754,35 @@ class OpenSubsonic_Api
     //{
     //}
 
-    ///**
-    // * getArtists
-    // *
-    // * Returns all artists.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getartists/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getartists(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getArtists
+     *
+     * Returns all artists.
+     * https://opensubsonic.netlify.app/docs/endpoints/getartists/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getartists(array $input, User $user): void
+    {
+        unset($user);
+        $musicFolderId = $input['musicFolderId'] ?? '';
+        $catalogs      = [];
+        if (!empty($musicFolderId) && $musicFolderId != '-1') {
+            $catalogs[] = $musicFolderId;
+        }
+
+        $response = Subsonic_Xml_Data::addSubsonicResponse('getartists');
+        $artists  = Artist::get_id_arrays($catalogs);
+        $format   = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addArtists($response, $artists);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addArtists($response, $artists);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     ///**
     // * getAvatar
@@ -2472,32 +2639,32 @@ class OpenSubsonic_Api
      */
     public static function scrobble(array $input, User $user): void
     {
-        $object_ids = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$object_ids) {
+        $sub_ids = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_ids) {
             return;
         }
 
         $submission = (array_key_exists('submission', $input) && ($input['submission'] === 'true' || $input['submission'] === '1'));
         $client     = scrub_in((string) ($input['c'] ?? 'Subsonic'));
 
-        if (!is_array($object_ids)) {
-            $rid        = [];
-            $rid[]      = $object_ids;
-            $object_ids = $rid;
+        if (!is_array($sub_ids)) {
+            $rid     = [];
+            $rid[]   = $sub_ids;
+            $sub_ids = $rid;
         }
         $playqueue_time = (int)User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
         $now_time       = time();
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
-            foreach ($object_ids as $subsonic_id) {
+            foreach ($sub_ids as $sub_id) {
                 $time      = (isset($input['time']))
                     ? (int)(((int)$input['time']) / 1000)
                     : time();
                 $previous  = Stats::get_last_play($user->id, $client, $time);
                 $prev_obj  = $previous['object_id'] ?: 0;
                 $prev_date = $previous['date'];
-                $type      = self::getAmpacheType((string)$subsonic_id);
-                $media     = self::getAmpacheObject((string)$subsonic_id);
+                $type      = self::getAmpacheType((string)$sub_id);
+                $media     = self::getAmpacheObject((string)$sub_id);
                 if (!$media instanceof Media || !isset($media->time) || !isset($media->id)) {
                     continue;
                 }
@@ -2599,8 +2766,8 @@ class OpenSubsonic_Api
      */
     public static function setrating(array $input, User $user): void
     {
-        $object_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$object_id) {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
             return;
         }
 
@@ -2609,9 +2776,9 @@ class OpenSubsonic_Api
             return;
         }
 
-        $type = self::getAmpacheType($object_id);
+        $type = self::getAmpacheType($sub_id);
         $robj = (!empty($type))
-            ? new Rating(self::getAmpacheId($object_id), $type)
+            ? new Rating(self::getAmpacheId($sub_id), $type)
             : null;
 
         if ($robj != null && ($rating >= 0 && $rating <= 5)) {
@@ -2749,8 +2916,8 @@ class OpenSubsonic_Api
      */
     public static function updateinternetradiostation(array $input, User $user): void
     {
-        $internetradiostation_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$internetradiostation_id) {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
             return;
         }
 
@@ -2767,7 +2934,7 @@ class OpenSubsonic_Api
         $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?: '';
 
         if (AmpConfig::get('live_stream') && $user->access >= 75) {
-            $internetradiostation = new Live_Stream(self::getAmpacheId($internetradiostation_id));
+            $internetradiostation = new Live_Stream(self::getAmpacheId($sub_id));
             if ($internetradiostation->id > 0) {
                 $data = [
                     "name" => $name,
@@ -2841,13 +3008,13 @@ class OpenSubsonic_Api
      */
     public static function updateshare(array $input, User $user): void
     {
-        $share_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$share_id) {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
             return;
         }
 
         if (AmpConfig::get('share')) {
-            $share = new Share(self::getAmpacheId($share_id));
+            $share = new Share(self::getAmpacheId($sub_id));
             if ($share->id > 0) {
                 $expires = (isset($input['expires']))
                     ? Share::get_expiry(((int)filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
@@ -2949,6 +3116,16 @@ class OpenSubsonic_Api
         global $dic;
 
         return $dic->get(PrivateMessageRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
     }
 
     /**

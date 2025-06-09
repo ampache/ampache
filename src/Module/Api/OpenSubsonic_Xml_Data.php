@@ -294,7 +294,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addArtists
-     * @param SimpleXMLElement $xml
      * @param list<array{
      *     id: int,
      *     f_name: string,
@@ -304,20 +303,22 @@ class OpenSubsonic_Xml_Data
      *     has_art: int
      * }> $artists
      */
-    public static function addArtists(SimpleXMLElement $xml, array $artists): void
+    public static function addArtists(SimpleXMLElement $xml, array $artists): SimpleXMLElement
     {
         $xartists = self::addChildToResultXml($xml, 'artists');
         self::addIgnoredArticles($xartists);
         self::addIndex($xartists, $artists);
+
+        return $xml;
     }
 
     /**
      * addArtist
      */
-    public static function addArtist(SimpleXMLElement $xml, Artist $artist, bool $extra = false, bool $albums = false, bool $albumsSet = false): void
+    public static function addArtist(SimpleXMLElement $xml, Artist $artist, bool $extra = false, bool $albums = false, bool $albumsSet = false): SimpleXMLElement
     {
         if ($artist->isNew()) {
-            return;
+            return $xml;
         }
 
         $sub_id  = OpenSubsonic_Api::getArtistSubId($artist->id);
@@ -347,6 +348,8 @@ class OpenSubsonic_Xml_Data
                 self::addAlbumID3($xartist, $album);
             }
         }
+
+        return $xml;
     }
 
     /**
@@ -407,13 +410,15 @@ class OpenSubsonic_Xml_Data
      * https://opensubsonic.netlify.app/docs/responses/albumList/
      * @param int[] $albums
      */
-    public static function addAlbumList(SimpleXMLElement $xml, array $albums): void
+    public static function addAlbumList(SimpleXMLElement $xml, array $albums): SimpleXMLElement
     {
         $xlist = self::addChildToResultXml($xml, htmlspecialchars('albumList'));
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             self::addAlbumID3($xlist, $album);
         }
+
+        return $xml;
     }
 
     /**
@@ -421,13 +426,15 @@ class OpenSubsonic_Xml_Data
      * https://opensubsonic.netlify.app/docs/responses/albumList2/
      * @param int[] $albums
      */
-    public static function addAlbumList2(SimpleXMLElement $xml, array $albums): void
+    public static function addAlbumList2(SimpleXMLElement $xml, array $albums): SimpleXMLElement
     {
         $xlist = self::addChildToResultXml($xml, htmlspecialchars('albumList2'));
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             self::addAlbumID3($xlist, $album);
         }
+
+        return $xml;
     }
 
     /**
