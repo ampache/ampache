@@ -1771,7 +1771,6 @@ class OpenSubsonic_Api
             $catalogs[] = $musicFolderId;
         }
 
-        $response = Subsonic_Xml_Data::addSubsonicResponse('getartists');
         $artists  = Artist::get_id_arrays($catalogs);
         $format   = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {

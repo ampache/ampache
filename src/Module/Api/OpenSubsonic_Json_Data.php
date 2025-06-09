@@ -1084,7 +1084,7 @@ class OpenSubsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['index'] = $json;
+        $response['subsonic-response']['artists']['index'] = $json;
 
         // Always add # index at the end
         if (count($sharpartists) > 0) {
@@ -1093,7 +1093,7 @@ class OpenSubsonic_Json_Data
                 $json = self::_addArtistArray($json, $artist);
             }
 
-            $response['subsonic-response']['index'][] = [
+            $response['subsonic-response']['artists']['index'][] = [
                 'name' => '#',
                 'artist' => $json
             ];
