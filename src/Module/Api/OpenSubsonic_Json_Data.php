@@ -660,6 +660,22 @@ class OpenSubsonic_Json_Data
     }
 
     /**
+     * _addGenre
+     *
+     * A genre.
+     * @param array{id: int, name: string, is_hidden: int, count: int} $genre
+     * @return array{'songCount': string, 'albumCount': string, 'value': string}
+     */
+    public static function _addGenre(array $genre): array
+    {
+        return [
+            'songCount' => (string)$genre['count'],
+            'albumCount' => (string)$genre['count'],
+            'value' => (string)$genre['name'],
+        ];
+    }
+
+    /**
      * _addIgnoredArticles
      */
     private static function _getIgnoredArticles(): string
@@ -1033,18 +1049,24 @@ class OpenSubsonic_Json_Data
 
 
     /**
-     * addGenre
-     *
-     * A genre.
-     */
-
-
-    /**
      * addGenres
      *
      * Genres list.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addGenres(array $response, array $tags): array
+    {
+        $json = [];
+        foreach ($tags as $tag) {
+            $json[] = self::_addGenre($tag);
+        }
 
+        $response['subsonic-response']['genres']['genre'][] = $json;
+
+        return $response;
+    }
 
     /**
      * addIndex

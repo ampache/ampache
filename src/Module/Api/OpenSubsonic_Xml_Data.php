@@ -747,7 +747,7 @@ class OpenSubsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
      */
-    public static function addGenres(SimpleXMLElement $xml, array $tags): void
+    public static function addGenres(SimpleXMLElement $xml, array $tags): SimpleXMLElement
     {
         $xgenres = self::addChildToResultXml($xml, 'genres');
 
@@ -757,6 +757,8 @@ class OpenSubsonic_Xml_Data
             $xgenre->addAttribute('songCount', (string)($otag->song));
             $xgenre->addAttribute('albumCount', (string)($otag->album));
         }
+
+        return $xml;
     }
 
     /**

@@ -1909,17 +1909,28 @@ class OpenSubsonic_Api
         echo $image;
     }
 
-    ///**
-    // * getGenres
-    // *
-    // * Returns all genres.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getgenres/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getgenres(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getGenres
+     *
+     * Returns all genres.
+     * https://opensubsonic.netlify.app/docs/endpoints/getgenres/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getgenres(array $input, User $user): void
+    {
+        unset($user);
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addGenres($response, Tag::get_tags('song'));
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addGenres($response, Tag::get_tags('song'));
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     ///**
     // * getIndexes
