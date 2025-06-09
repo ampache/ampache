@@ -30,12 +30,16 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Podcast\Exception\PodcastCreationException;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Share\ShareCreatorInterface;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\Mailer;
@@ -48,6 +52,7 @@ use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -60,6 +65,7 @@ use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\User_Playlist;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -374,6 +380,102 @@ class OpenSubsonic_Api
         }
 
         self::_responseOutput($input, __FUNCTION__);
+    }
+
+    /**
+     * _search
+     * @param array<string, mixed> $input
+     * @return array<string, int[]>
+     */
+    private static function _search(string $query, array $input, User $user): array
+    {
+        $operator = 0; // contains
+        $original = unhtmlentities($query);
+        $query    = $original;
+        if (str_starts_with($original, '"') && (str_ends_with($original, '"'))) {
+            $query = substr($original, 1, -1);
+            // query is non-optional, but some clients send empty queries to fetch
+            // all items. Fall back on default contains in such cases.
+            if (strlen($query) > 0) {
+                $operator = 4; // equals
+            }
+        }
+        if (str_starts_with($original, '"') && str_ends_with($original, '"*')) {
+            $query    = substr($original, 1, -2);
+            $operator = 4; // equals
+        }
+        $artists = [];
+        $albums  = [];
+        $songs   = [];
+
+        if (strlen($query) > 1) {
+            // if we didn't catch a "wrapped" query it might just be a starts with
+            if (str_ends_with($original, "*") && $operator == 0) {
+                $query    = substr($query, 0, -1);
+                $operator = 2; // Starts with
+            }
+        }
+
+        $artistCount   = $input['artistCount'] ?? 20;
+        $artistOffset  = $input['artistOffset'] ?? 0;
+        $albumCount    = $input['albumCount'] ?? 20;
+        $albumOffset   = $input['albumOffset'] ?? 0;
+        $songCount     = $input['songCount'] ?? 20;
+        $songOffset    = $input['songOffset'] ?? 0;
+        $musicFolderId = $input['musicFolderId'] ?? 0;
+
+        if ($artistCount > 0) {
+            $data                    = [];
+            $data['limit']           = $artistCount;
+            $data['offset']          = $artistOffset;
+            $data['type']            = 'artist';
+            $data['rule_1_input']    = $query;
+            $data['rule_1_operator'] = $operator;
+            $data['rule_1']          = 'title';
+            if ($musicFolderId > 0) {
+                $data['rule_2_input']    = $musicFolderId;
+                $data['rule_2_operator'] = 0;
+                $data['rule_2']          = 'catalog';
+            }
+            $artists = Search::run($data, $user);
+        }
+
+        if ($albumCount > 0) {
+            $data                    = [];
+            $data['limit']           = $albumCount;
+            $data['offset']          = $albumOffset;
+            $data['type']            = 'album';
+            $data['rule_1_input']    = $query;
+            $data['rule_1_operator'] = $operator;
+            $data['rule_1']          = 'title';
+            if ($musicFolderId > 0) {
+                $data['rule_2_input']    = $musicFolderId;
+                $data['rule_2_operator'] = 0;
+                $data['rule_2']          = 'catalog';
+            }
+            $albums = Search::run($data, $user);
+        }
+
+        if ($songCount > 0) {
+            $data                    = [];
+            $data['limit']           = $songCount;
+            $data['offset']          = $songOffset;
+            $data['type']            = 'song';
+            $data['rule_1_input']    = $query;
+            $data['rule_1_operator'] = $operator;
+            $data['rule_1']          = 'title';
+            if ($musicFolderId > 0) {
+                $data['rule_2_input']    = $musicFolderId;
+                $data['rule_2_operator'] = 0;
+                $data['rule_2']          = 'catalog';
+            }
+            $songs = Search::run($data, $user);
+        }
+        return [
+            'artists' => $artists,
+            'albums' => $albums,
+            'songs' => $songs,
+        ];
     }
 
     /**
@@ -1345,7 +1447,7 @@ class OpenSubsonic_Api
         }
 
         $album = self::_getAmpacheObject($albumid);
-        if (!$album || !$album instanceof Album || $album->isNew()) {
+        if (!$album instanceof Album || $album->isNew()) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -2000,29 +2102,178 @@ class OpenSubsonic_Api
     //{
     //}
 
-    ///**
-    // * hls
-    // *
-    // * Downloads a given media file.
-    // * https://opensubsonic.netlify.app/docs/endpoints/hls/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function hls(array $input, User $user): void
-    //{
-    //}
+    /**
+     * hls
+     *
+     * Downloads a given media file.
+     * https://opensubsonic.netlify.app/docs/endpoints/hls/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function hls(array $input, User $user): void
+    {
+        unset($user);
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
 
-    ///**
-    // * jukeboxControl
-    // *
-    // * Controls the jukebox, i.e., playback directly on the server’s audio hardware.
-    // * https://opensubsonic.netlify.app/docs/endpoints/jukeboxcontrol/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function jukeboxcontrol(array $input, User $user): void
-    //{
-    //}
+        $object_id = self::_getAmpacheId($sub_id);
+        if (!$object_id) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $bitRate = $input['bitRate'] ?? false;
+        $media   = [];
+        $type    = self::_getAmpacheType($sub_id);
+        if ($type === 'song') {
+            $media['object_type'] = LibraryItemEnum::SONG;
+        } elseif ($type === 'video') {
+            $media['object_type'] = LibraryItemEnum::VIDEO;
+        } else {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $media['object_id'] = $object_id;
+        $medias             = [];
+        $medias[]           = $media;
+        $stream             = new Stream_Playlist();
+        $additional_params  = '';
+        if ($bitRate) {
+            $additional_params .= '&bitrate=' . $bitRate;
+        }
+
+        $stream->add($medias, $additional_params);
+
+        // vlc won't work if we use application/vnd.apple.mpegurl, but works fine with this. this is
+        // also an allowed header by the standard
+        header('Content-Type: audio/mpegurl;');
+        echo $stream->create_m3u();
+    }
+
+    /**
+     * jukeboxControl
+     *
+     * Controls the jukebox, i.e., playback directly on the server’s audio hardware.
+     * https://opensubsonic.netlify.app/docs/endpoints/jukeboxcontrol/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function jukeboxcontrol(array $input, User $user): void
+    {
+        $action = self::_check_parameter($input, 'action', __FUNCTION__);
+        if (!$action) {
+            return;
+        }
+
+        $object_id  = $input['id'] ?? [];
+        $controller = AmpConfig::get('localplay_controller', '');
+        $localplay  = new LocalPlay($controller);
+        $return     = false;
+        if (empty($controller) || empty($localplay->type) || !$localplay->connect()) {
+            debug_event(self::class, 'Error Localplay controller: ' . (empty($controller) ? 'Is not set' : $controller), 3);
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        debug_event(self::class, 'Using Localplay controller: ' . $controller, 5);
+        switch ($action) {
+            case 'get':
+            case 'status':
+                $return = true;
+                break;
+            case 'start':
+                $return = $localplay->play();
+                break;
+            case 'stop':
+                $return = $localplay->stop();
+                break;
+            case 'skip':
+                if (isset($input['index'])) {
+                    if ($localplay->skip((int)$input['index'])) {
+                        $return = $localplay->play();
+                    }
+                } elseif (isset($input['offset'])) {
+                    debug_event(self::class, 'Skip with offset is not supported on JukeboxControl.', 5);
+                } else {
+                    self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+
+                    return;
+                }
+                break;
+            case 'set':
+                $localplay->delete_all();
+                // Intentional break fall-through
+            case 'add':
+                if ($object_id) {
+                    if (!is_array($object_id)) {
+                        $rid       = [];
+                        $rid[]     = $object_id;
+                        $object_id = $rid;
+                    }
+
+                    foreach ($object_id as $song_id) {
+                        $url = null;
+
+                        if (Subsonic_Xml_Data::_isSong($song_id)) {
+                            $media = new Song(Subsonic_Xml_Data::_getAmpacheId($song_id));
+                            $url   = $media->play_url('&client=' . $localplay->type, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
+                        }
+
+                        if ($url !== null) {
+                            debug_event(self::class, 'Adding ' . $url, 5);
+                            $stream        = [];
+                            $stream['url'] = $url;
+                            $return        = $localplay->add_url(new Stream_Url($stream));
+                        }
+                    }
+                }
+                break;
+            case 'clear':
+                $return = $localplay->delete_all();
+                break;
+            case 'remove':
+                if (isset($input['index'])) {
+                    $return = $localplay->delete_track((int)$input['index']);
+                } else {
+                    self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+                }
+                break;
+            case 'shuffle':
+                $return = $localplay->random(true);
+                break;
+            case 'setGain':
+                $return = $localplay->volume_set(((float)$input['gain']) * 100);
+                break;
+        }
+
+        if ($return) {
+            $format = (string)($input['f'] ?? 'xml');
+            if ($format === 'xml') {
+                $response = self::_addXmlResponse(__FUNCTION__);
+                $response = OpenSubsonic_Xml_Data::addScanStatus($response, $user);
+                if ($action == 'get') {
+                    $response = OpenSubsonic_Xml_Data::addJukeboxPlaylist($response, $localplay);
+                } else {
+                    $response = OpenSubsonic_Xml_Data::addJukeboxStatus($response, $localplay);
+                }
+            } else {
+                $response = self::_addJsonResponse(__FUNCTION__);
+                $response = OpenSubsonic_Json_Data::addScanStatus($response, $user);
+                if ($action == 'get') {
+                    $response = OpenSubsonic_Json_Data::addJukeboxPlaylist($response, $localplay);
+                } else {
+                    $response = OpenSubsonic_Json_Data::addJukeboxStatus($response, $localplay);
+                }
+            }
+            self::_responseOutput($input, __FUNCTION__, $response);
+        }
+    }
 
     /**
      * ping
@@ -2039,77 +2290,180 @@ class OpenSubsonic_Api
         self::_responseOutput($input, __FUNCTION__);
     }
 
-    ///**
-    // * refreshPodcasts
-    // *
-    // * Requests the server to check for new Podcast episodes.
-    // * https://opensubsonic.netlify.app/docs/endpoints/refreshpodcasts/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function refreshpodcasts(array $input, User $user): void
-    //{
-    //}
+    /**
+     * refreshPodcasts
+     *
+     * Requests the server to check for new Podcast episodes.
+     * https://opensubsonic.netlify.app/docs/endpoints/refreshpodcasts/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function refreshpodcasts(array $input, User $user): void
+    {
+        if (AmpConfig::get('podcast') && $user->access >= 75) {
+            $podcasts = Catalog::get_podcasts(User::get_user_catalogs($user->id));
 
-    ///**
-    // * savePlayQueue
-    // *
-    // * Saves the state of the play queue for this user.
-    // * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueue/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function saveplayqueue(array $input, User $user): void
-    //{
-    //}
+            $podcastSyncer = self::getPodcastSyncer();
 
-    ///**
-    // * scrobble
-    // *
-    // * Registers the local playback of one or more media files.
-    // * https://opensubsonic.netlify.app/docs/endpoints/scrobble/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function scrobble(array $input, User $user): void
-    //{
-    //}
+            foreach ($podcasts as $podcast) {
+                $podcastSyncer->sync($podcast, true);
+            }
+            self::_responseOutput($input, __FUNCTION__);
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
 
-    ///**
-    // * search
-    // *
-    // * Returns a listing of files matching the given search criteria. Supports paging through the result.
-    // * https://opensubsonic.netlify.app/docs/endpoints/search/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function search(array $input, User $user): void
-    //{
-    //}
+    /**
+     * savePlayQueue
+     *
+     * Saves the state of the play queue for this user.
+     * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueue/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function saveplayqueue(array $input, User $user): void
+    {
+        $client    = scrub_in((string) ($input['c'] ?? 'Subsonic'));
+        $playQueue = new User_Playlist($user->id, $client);
 
-    ///**
-    // * search2
-    // *
-    // * Returns a listing of files matching the given search criteria. Supports paging through the result.
-    // * https://opensubsonic.netlify.app/docs/endpoints/search2/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function search2(array $input, User $user): void
-    //{
-    //}
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addPlayQueue($response, $playQueue, (string)$user->username);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addPlayQueue($response, $playQueue, (string)$user->username);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
-    ///**
-    // * search3
-    // *
-    // * Returns albums, artists and songs matching the given search criteria. Supports paging through the result.
-    // * https://opensubsonic.netlify.app/docs/endpoints/search3/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function search3(array $input, User $user): void
-    //{
-    //}
+    /**
+     * scrobble
+     *
+     * Registers the local playback of one or more media files.
+     * https://opensubsonic.netlify.app/docs/endpoints/scrobble/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function scrobble(array $input, User $user): void
+    {
+        $object_ids = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$object_ids) {
+            return;
+        }
+
+        $submission = (array_key_exists('submission', $input) && ($input['submission'] === 'true' || $input['submission'] === '1'));
+        $client     = scrub_in((string) ($input['c'] ?? 'Subsonic'));
+
+        if (!is_array($object_ids)) {
+            $rid        = [];
+            $rid[]      = $object_ids;
+            $object_ids = $rid;
+        }
+        $playqueue_time = (int)User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
+        $now_time       = time();
+        // don't scrobble after setting the play queue too quickly
+        if ($playqueue_time < ($now_time - 2)) {
+            foreach ($object_ids as $subsonic_id) {
+                $time      = (isset($input['time']))
+                    ? (int)(((int)$input['time']) / 1000)
+                    : time();
+                $previous  = Stats::get_last_play($user->id, $client, $time);
+                $prev_obj  = $previous['object_id'] ?: 0;
+                $prev_date = $previous['date'];
+                $type      = self::_getAmpacheType((string)$subsonic_id);
+                $media     = self::_getAmpacheObject((string)$subsonic_id);
+                if (!$media instanceof Media || !isset($media->time) || !isset($media->id)) {
+                    continue;
+                }
+
+
+                // long pauses might cause your now_playing to hide
+                Stream::garbage_collection();
+                Stream::insert_now_playing((int)$media->id, (int)$user->id, $time, (string)$user->username, $type, ((int)$time));
+                // submission is true: go to scrobble plugins (Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY))
+                if ($submission && get_class($media) == Song::class && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
+                    // stream has finished
+                    debug_event(self::class, $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
+                    User::save_mediaplay($user, $media);
+                }
+                // Submission is false and not a repeat. let repeats go through to saveplayqueue
+                if ((!$submission) && $media->id && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
+                    $media->set_played($user->id, $client, [], $time);
+                }
+            }
+        }
+
+        self::_responseOutput($input, __FUNCTION__);
+    }
+
+    /**
+     * search
+     *
+     * NOT IMPLEMENTED
+     * https://opensubsonic.netlify.app/docs/endpoints/search/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function search(array $input, User $user): void
+    {
+        unset($user);
+        self::_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
+    }
+
+    /**
+     * search2
+     *
+     * Returns a listing of files matching the given search criteria. Supports paging through the result.
+     * https://opensubsonic.netlify.app/docs/endpoints/search2/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function search2(array $input, User $user): void
+    {
+        $query = $input['query'] ?? '';
+
+        $results = self::_search($query, $input, $user);
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
+     * search3
+     *
+     * Returns albums, artists and songs matching the given search criteria. Supports paging through the result.
+     * https://opensubsonic.netlify.app/docs/endpoints/search3/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function search3(array $input, User $user): void
+    {
+        $query = self::_check_parameter($input, 'query', __FUNCTION__);
+        if ($query === false) {
+            return;
+        }
+
+        $results = self::_search($query, $input, $user);
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     /**
      * setRating
@@ -2158,17 +2512,26 @@ class OpenSubsonic_Api
         self::_setStar($input, $user, true);
     }
 
-    ///**
-    // * startScan
-    // *
-    // * Initiates a rescan of the media libraries.
-    // * https://opensubsonic.netlify.app/docs/endpoints/startscan/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function startscan(array $input, User $user): void
-    //{
-    //}
+    /**
+     * startScan
+     *
+     * Initiates a rescan of the media libraries.
+     * https://opensubsonic.netlify.app/docs/endpoints/startscan/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function startscan(array $input, User $user): void
+    {
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addScanStatus($response, $user);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addScanStatus($response, $user);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     /**
      * stream
@@ -2218,17 +2581,26 @@ class OpenSubsonic_Api
         self::_follow_stream($object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken));
     }
 
-    ///**
-    // * tokenInfo
-    // *
-    // * Returns information about an API key.
-    // * https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function tokeninfo(array $input, User $user): void
-    //{
-    //}
+    /**
+     * tokenInfo
+     *
+     * Returns information about an API key.
+     * https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function tokeninfo(array $input, User $user): void
+    {
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addTokenInfo($response, $user);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addTokenInfo($response, $user);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     /**
      * unstar

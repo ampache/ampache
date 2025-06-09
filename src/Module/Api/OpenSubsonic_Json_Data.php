@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
@@ -40,9 +41,13 @@ use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\User_Playlist;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\SongRepositoryInterface;
+use DateTime;
+use DateTimeZone;
+use Exception;
 
 /**
  * OpenSubsonic_Json_Data Class
@@ -103,6 +108,30 @@ class OpenSubsonic_Json_Data
         ];
     }
 
+    /**
+     * _addJukeboxStatus
+     * @return array{
+     *     'currentIndex': string,
+     *      'playing': string,
+     *      'gain': string,
+     *      'position': string
+     * }
+     */
+    public static function _addJukeboxStatus(LocalPlay $localplay): array
+    {
+        $json   = [];
+        $status = $localplay->status();
+        $index  = (((int)$status['track']) === 0)
+            ? 0
+            : $status['track'] - 1;
+
+        $json['currentIndex'] = (string)$index;
+        $json['playing']      = ($status['state'] == 'play') ? 'true' : 'false';
+        $json['gain']         = (string)$status['volume'];
+        $json['position']     = '0'; // TODO Not supported
+
+        return $json;
+    }
     /**
      * _addPlaylist_Playlist
      * @return array<string, mixed>
@@ -177,6 +206,225 @@ class OpenSubsonic_Json_Data
     }
 
     /**
+     * _addAlbum
+     *
+     * Child media.
+     * https://opensubsonic.netlify.app/docs/responses/child/
+     * @param array<string, mixed> $response
+     * @return array<string, mixed>
+     */
+    public static function _addChildAlbum(array $response, int $object_id, string $elementName): array
+    {
+        $album = new Album($object_id);
+        if ($album->isNew()) {
+            return $response;
+        }
+        $sub_id = OpenSubsonic_Api::_getAlbumId($album->id);
+
+        // set the elementName if missing
+        if (!isset($response[$elementName])) {
+            $response[$elementName] = [];
+        }
+
+        $album_artist = $album->findAlbumArtist();
+        $subParent    = ($album_artist)
+            ? OpenSubsonic_Api::_getArtistId($album_artist)
+            : '';
+
+        $json = [
+            'id' => $sub_id,
+            'parent' => $subParent,
+            'title' => $album->get_fullname(),
+            'album' => $album->get_fullname(),
+            'isDir' => false,
+            'isVideo' => false,
+            'type' => 'music',
+            'artistId' => $subParent,
+            'artist' => (string)$album->get_artist_fullname(),
+        ];
+
+        if ($album->has_art()) {
+            $json['coverArt'] = $sub_id;
+        }
+
+        $json['duration'] = (string)$album->time;
+
+        $rating      = new Rating($album->id, "alnum");
+        $user_rating = ($rating->get_user_rating() ?? 0);
+        if ($user_rating > 0) {
+            $json['userRating'] = (string)ceil($user_rating);
+        }
+
+        $avg_rating = $rating->get_average_rating();
+        if ($avg_rating > 0) {
+            $json['averageRating'] = (string)$avg_rating;
+        }
+
+        $starred = new Userflag($object_id, 'song');
+        $result  = $starred->get_flag(null, true);
+        if (is_array($result)) {
+            $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
+        }
+
+        if ($album->year > 0) {
+            $json['year'] = (string)$album->year;
+        }
+
+        $tags = Tag::get_object_tags('album', $album->id);
+        if (!empty($tags)) {
+            $json['genre'] = implode(',', array_column($tags, 'name'));
+        }
+
+        $response[$elementName][] = $json;
+
+        return $response;
+    }
+
+    /**
+     * _addAlbumID3
+     *
+     * An album from ID3 tags.
+     * https://opensubsonic.netlify.app/docs/responses/albumid3/
+     * @return array{'id': string, 'parent'?: string, 'album': string, 'title': string, 'name': string, 'isDir': bool, 'coverArt'?: string, 'songCount': string, 'created': string, 'duration': string, 'playCount': string, 'artistId'?: string, 'artist': string, 'year'?: string, 'genre'?: string, 'userRating'?: string, 'averageRating'?: string, 'starred'?: string}
+     */
+    public static function _addAlbumID3(Album $album): array
+    {
+        $sub_id       = OpenSubsonic_Api::_getAlbumId($album->id);
+        $album_artist = $album->findAlbumArtist();
+        $subParent    = ($album_artist) ? OpenSubsonic_Api::_getArtistId($album_artist) : false;
+        $f_name       = (string)$album->get_fullname();
+
+        $json = [
+            'id' => $sub_id,
+            'parent' => '',
+            'album' => $f_name,
+            'title' => $f_name,
+            'name' => $f_name,
+            'isDir' => true,
+        ];
+
+        if ($subParent) {
+            $json['parent'] = $subParent;
+        } else {
+            unset($json['parent']);
+        }
+
+        if ($album->has_art()) {
+            $json['coverArt'] = $sub_id;
+        }
+
+        $json['songCount'] = (string) $album->song_count;
+        $json['created']   = date("c", (int)$album->addition_time);
+        $json['duration']  = (string) $album->time;
+        $json['playCount'] = (string)$album->total_count;
+        if ($subParent) {
+            $json['artistId'] = $subParent;
+        }
+        $json['artist'] = (string)$album->get_artist_fullname();
+        // original year (fall back to regular year)
+        $original_year = AmpConfig::get('use_original_year');
+        $year          = ($original_year && $album->original_year)
+            ? $album->original_year
+            : $album->year;
+        if ($year > 0) {
+            $json['year'] = (string)$year;
+        }
+
+        $tags = Tag::get_object_tags('album', $album->id);
+        if (!empty($tags)) {
+            $json['genre'] = implode(',', array_column($tags, 'name'));
+        }
+
+        $rating      = new Rating($album->id, "album");
+        $user_rating = ($rating->get_user_rating() ?? 0);
+        if ($user_rating > 0) {
+            $json['userRating'] = (string)ceil($user_rating);
+        }
+
+        $avg_rating = $rating->get_average_rating();
+        if ($avg_rating > 0) {
+            $json['averageRating'] = (string)$avg_rating;
+        }
+
+        $starred = new Userflag($album->id, 'album');
+        $result  = $starred->get_flag(null, true);
+        if (is_array($result)) {
+            $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
+        }
+
+        return $json;
+    }
+
+    /**
+     * _addArtistID3
+     *
+     * An artist from ID3 tags.
+     * https://opensubsonic.netlify.app/docs/responses/artistid3/
+     * @return array{'id': string, 'name': string, 'coverArt'?: string, 'albumCount': string, 'starred'?: string}
+     */
+    public static function _addArtistID3(Artist $artist): array
+    {
+        $sub_id = OpenSubsonic_Api::_getArtistId($artist->id);
+        $json   = [
+            'id' => $sub_id,
+            'name' => (string)$artist->get_fullname(),
+        ];
+
+        if ($artist->has_art()) {
+            $json['coverArt'] = $sub_id;
+        }
+
+        $json['albumCount'] = (string)$artist->album_count;
+
+        $starred = new Userflag($artist->id, 'artist');
+        $result  = $starred->get_flag(null, true);
+        if (is_array($result)) {
+            $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
+        }
+
+        return $json;
+    }
+
+    /**
+     * _addArtist
+     *
+     * Artist details.
+     * https://opensubsonic.netlify.app/docs/responses/artist/
+     * @return array{'id': string, 'name': string, 'coverArt'?: string, 'starred'?: string, 'userRating'?: string, 'averageRating'?: string}
+     */
+    public static function _addArtist(Artist $artist): array
+    {
+        $sub_id = OpenSubsonic_Api::_getArtistId($artist->id);
+        $json   = [
+            'id' => $sub_id,
+            'name' => (string)$artist->get_fullname(),
+        ];
+
+        if ($artist->has_art()) {
+            $json['coverArt'] = $sub_id;
+        }
+
+        $starred = new Userflag($artist->id, 'artist');
+        $result  = $starred->get_flag(null, true);
+        if (is_array($result)) {
+            $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
+        }
+        $rating      = new Rating($artist->id, "artist");
+        $user_rating = ($rating->get_user_rating() ?? 0);
+        if ($user_rating > 0) {
+            $json['userRating'] = (string)ceil($user_rating);
+        }
+
+        $avg_rating = $rating->get_average_rating();
+        if ($avg_rating > 0) {
+            $json['averageRating'] = (string)$avg_rating;
+        }
+
+        return $json;
+    }
+
+
+    /**
      * _addSong
      *
      * Child media.
@@ -184,7 +432,7 @@ class OpenSubsonic_Json_Data
      * @param array<string, mixed> $response
      * @return array<string, mixed>
      */
-    public static function _addSong(array $response, int $object_id, string $elementName): array
+    public static function _addChildSong(array $response, int $object_id, string $elementName): array
     {
         $song = new Song($object_id);
         if ($song->isNew()) {
@@ -291,7 +539,7 @@ class OpenSubsonic_Json_Data
      * @param array<string, mixed> $response
      * @return array<string, mixed>
      */
-    private static function _addVideo(array $response, int $object_id, string $elementName): array
+    private static function _addChildVideo(array $response, int $object_id, string $elementName): array
     {
         $video = new Video($object_id);
         if ($video->isNew()) {
@@ -487,77 +735,7 @@ class OpenSubsonic_Json_Data
             return $response;
         }
 
-        $sub_id       = OpenSubsonic_Api::_getAlbumId($album->id);
-        $album_artist = $album->findAlbumArtist();
-        $subParent    = ($album_artist) ? OpenSubsonic_Api::_getArtistId($album_artist) : false;
-        $f_name       = (string)$album->get_fullname();
-
-        $json = [
-            'id' => $sub_id,
-            'parent' => '',
-            'album' => $f_name,
-            'title' => $f_name,
-            'name' => $f_name,
-            'isDir' => true,
-        ];
-
-        if ($subParent) {
-            $json['parent'] = $subParent;
-        } else {
-            unset($json['parent']);
-        }
-
-        if ($album->has_art()) {
-            $json['coverArt'] = $sub_id;
-        }
-
-        $json['songCount'] = (string) $album->song_count;
-        $json['created']   = date("c", (int)$album->addition_time);
-        $json['duration']  = (string) $album->time;
-        $json['playCount'] = (string)$album->total_count;
-        if ($subParent) {
-            $json['artistId'] = $subParent;
-        }
-        $json['artist'] = (string)$album->get_artist_fullname();
-        // original year (fall back to regular year)
-        $original_year = AmpConfig::get('use_original_year');
-        $year          = ($original_year && $album->original_year)
-            ? $album->original_year
-            : $album->year;
-        if ($year > 0) {
-            $json['year'] = (string)$year;
-        }
-
-        $tags = Tag::get_object_tags('album', $album->id);
-        if (!empty($tags)) {
-            $json['genre'] = implode(',', array_column($tags, 'name'));
-        }
-
-        $rating      = new Rating($album->id, "album");
-        $user_rating = ($rating->get_user_rating() ?? 0);
-        if ($user_rating > 0) {
-            $json['userRating'] = (string)ceil($user_rating);
-        }
-
-        $avg_rating = $rating->get_average_rating();
-        if ($avg_rating > 0) {
-            $json['averageRating'] = (string)$avg_rating;
-        }
-
-        $starred = new Userflag($album->id, 'album');
-        $result  = $starred->get_flag(null, true);
-        if (is_array($result)) {
-            $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
-        }
-
-        if ($songs) {
-            $media_ids = self::getAlbumRepository()->getSongs($album->id);
-            foreach ($media_ids as $song_id) {
-                $json = self::addChild($json, $song_id, 'song', 'song');
-            }
-        }
-
-        $response['subsonic-response'][$elementName] = $json;
+        $response['subsonic-response'][$elementName] = self::_addAlbumID3($album);
 
         return $response;
     }
@@ -595,15 +773,57 @@ class OpenSubsonic_Json_Data
      * addArtist
      *
      * Artist details.
+     * https://opensubsonic.netlify.app/docs/responses/artist/
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addArtist(array $response, Artist $artist, bool $extra = false, bool $albums = false, bool $albumsSet = false): array
+    {
+        if ($artist->isNew()) {
+            return $response;
+        }
 
+        $response['subsonic-response']['artist'] = self::_addArtist($artist);
+
+        return $response;
+    }
 
     /**
      * addArtistID3
      *
      * An artist from ID3 tags.
+     * https://opensubsonic.netlify.app/docs/responses/artistid3/
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addArtistID3(array $response, Artist $artist, bool $songs = false): array
+    {
+        if ($artist->isNew()) {
+            return $response;
+        }
 
+        $sub_id = OpenSubsonic_Api::_getArtistId($artist->id);
+        $json   = [
+            'id' => $sub_id,
+            'name' => $artist->get_fullname(),
+        ];
+
+        if ($artist->has_art()) {
+            $json['coverArt'] = $sub_id;
+        }
+
+        $json['albumCount'] = (string)$artist->album_count;
+
+        $starred = new Userflag($artist->id, 'artist');
+        $result  = $starred->get_flag(null, true);
+        if (is_array($result)) {
+            $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
+        }
+
+        $response['subsonic-response']['artist'] = $json;
+
+        return $response;
+    }
 
     /**
      * addArtistInfo
@@ -673,9 +893,11 @@ class OpenSubsonic_Json_Data
     {
         switch ($object_type) {
             case 'song':
-                return self::_addSong($response, $object_id, $elementName);
+                return self::_addChildSong($response, $object_id, $elementName);
+            case 'album':
+                return self::_addChildAlbum($response, $object_id, $elementName);
             case 'video':
-                return self::_addVideo($response, $object_id, $elementName);
+                return self::_addChildVideo($response, $object_id, $elementName);
             default:
                 // If the object type is not recognized, return the response unchanged
                 return $response;
@@ -774,18 +996,41 @@ class OpenSubsonic_Json_Data
      */
 
 
+
     /**
      * addJukeboxPlaylist
-     *
-     * jukeboxPlaylist.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addJukeboxPlaylist(array $response, LocalPlay $localplay): array
+    {
+        $status = self::_addJukeboxStatus($localplay);
+        $tracks = $localplay->get();
+        foreach ($tracks as $track) {
+            if (array_key_exists('oid', $track)) {
+                self::_addChildSong($status, (int)$track['oid'], 'entry');
+            }
+            // TODO This can be random play, democratic, podcasts, etc. not just songs
+        }
 
+        $response['subsonic-response']['jukeboxPlaylist'] = $status;
+
+        return $response;
+    }
 
     /**
      * addJukeboxStatus
-     *
-     * jukeboxStatus.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addJukeboxStatus(array $response, LocalPlay $localplay): array
+    {
+        $status = self::_addJukeboxStatus($localplay);
+
+        $response['subsonic-response']['jukeboxstatus'] = $status;
+
+        return $response;
+    }
 
 
     /**
@@ -928,7 +1173,44 @@ class OpenSubsonic_Json_Data
      * addPlayQueue
      *
      * NowPlayingEntry.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addPlayQueue(array $response, User_Playlist $playQueue, string $username): array
+    {
+        $items = $playQueue->get_items();
+        if (!empty($items)) {
+            $current   = $playQueue->get_current_object();
+            $play_time = date("Y-m-d H:i:s", $playQueue->get_time());
+            try {
+                $date = new DateTime($play_time);
+            } catch (Exception $error) {
+                debug_event(self::class, 'DateTime error: ' . $error->getMessage(), 5);
+
+                return $response;
+            }
+
+            $date->setTimezone(new DateTimeZone('UTC'));
+            $changedBy = $playQueue->client ?? '';
+
+            $json = [
+                'current' => OpenSubsonic_Api::_getSongId($current['object_id']),
+                'position' => (string)($current['current_time'] * 1000),
+                'username' => $username,
+                'changed' => $date->format("c"),
+                'changedBy' => $changedBy,
+            ];
+
+            foreach ($items as $row) {
+                self::_addChildSong($json, (int)$row['object_id'], "entry");
+            }
+
+            $response['subsonic-response']['playQueue'] = $json;
+        }
+
+
+        return $response;
+    }
 
 
     /**
@@ -977,29 +1259,113 @@ class OpenSubsonic_Json_Data
      * addScanStatus
      *
      * Scan status information.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addScanStatus(array $response, User $user): array
+    {
+        $counts = Catalog::get_server_counts($user->id ?? 0);
+        $count  = $counts['artist'] + $counts['album'] + $counts['song'] + $counts['podcast_episode'];
+
+        $response['subsonic-response']['scanStatus'] = [
+            'scanning' => false,
+            'count' => (string)$count,
+        ];
+
+        return $response;
+    }
 
 
     /**
      * addSearchResult
      *
      * searchResult.
+     * Deprecated
      */
-
 
     /**
      * addSearchResult2
      *
      * searchResult2.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param int[] $artists
+     * @param int[] $albums
+     * @param int[] $songs
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addSearchResult2(array $response, array $artists, array $albums, array $songs): array
+    {
+        $json = [];
 
+        if (!empty($artists)) {
+            $json['artist'] = [];
+            foreach ($artists as $artist_id) {
+                $artist           = new Artist($artist_id);
+                $json['artist'][] = self::_addArtist($artist);
+            }
+        }
+        if (!empty($albums)) {
+            foreach ($albums as $album_id) {
+                $json = self::addChild($json, $album_id, 'album', 'album');
+            }
+        }
+        if (!empty($songs)) {
+            foreach ($songs as $song_id) {
+                $json = self::addChild($json, $song_id, 'song', 'song');
+            }
+        }
+
+        $response['subsonic-response']['searchResult2'] = $json;
+
+        return $response;
+    }
 
     /**
      * addSearchResult3
      *
      * search3 result.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param int[] $artists
+     * @param int[] $albums
+     * @param int[] $songs
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addSearchResult3(array $response, array $artists, array $albums, array $songs): array
+    {
+        $json = [];
 
+        if (!empty($artists)) {
+            $output_artists = [];
+            foreach ($artists as $artist_id) {
+                $artist = new Artist($artist_id);
+                if ($artist->isNew()) {
+                    continue;
+                }
+                $output_artists[] = self::_addArtistID3($artist);
+            }
+            $json['artist'] = $output_artists;
+        }
+        if (!empty($albums)) {
+            $output_albums = [];
+            foreach ($albums as $album_id) {
+                $album = new Album($album_id);
+                if ($album->isNew()) {
+                    continue;
+                }
+                $output_albums[] = self::_addAlbumID3($album);
+            }
+            $json['album'] = $output_albums;
+        }
+        if (!empty($songs)) {
+            foreach ($songs as $song_id) {
+                $json = self::addChild($json, $song_id, 'song', 'song');
+            }
+        }
+
+        $response['subsonic-response']['searchResult2'] = $json;
+
+        return $response;
+    }
 
     /**
      * addShare
@@ -1137,13 +1503,21 @@ class OpenSubsonic_Json_Data
      * Common answer wrapper.
      */
 
-
     /**
      * addTokenInfo
      *
-     * Information about an API key
+     *  Information about an API key
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addTokenInfo(array $response, User $user): array
+    {
+        $response['subsonic-response']['tokenInfo'] = [
+            'username' => $user->username
+        ];
 
+        return $response;
+    }
 
     /**
      * addTopSongs
@@ -1178,16 +1552,6 @@ class OpenSubsonic_Json_Data
      *
      * videos.
      */
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
-    }
 
     /**
      * @deprecated

@@ -1457,11 +1457,10 @@ class Subsonic_Api
         $response = Subsonic_Xml_Data::addSubsonicResponse('getplaylist');
         if (Subsonic_Xml_Data::_isSmartPlaylist($playlistId)) {
             $playlist = new Search(Subsonic_Xml_Data::_getAmpacheId($playlistId), 'song', $user);
-            Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
         } else {
             $playlist = new Playlist(Subsonic_Xml_Data::_getAmpacheId($playlistId));
-            Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
         }
+        Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
         self::_apiOutput($input, $response);
     }
 
