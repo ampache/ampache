@@ -1968,17 +1968,28 @@ class OpenSubsonic_Api
         self::_responseOutput($input, __FUNCTION__, $response);
     }
 
-    ///**
-    // * getLicense
-    // *
-    // * Get details about the software license.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getlicense/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getlicense(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getLicense
+     *
+     * Get details about the software license.
+     * https://opensubsonic.netlify.app/docs/endpoints/getlicense/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getlicense(array $input, User $user): void
+    {
+        unset($user);
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addLicense($response);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addLicense($response);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     ///**
     // * getLyrics
@@ -2016,17 +2027,27 @@ class OpenSubsonic_Api
     //{
     //}
 
-    ///**
-    // * getMusicFolders
-    // *
-    // * Returns all configured top-level music folders.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getmusicfolders/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getmusicfolders(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getMusicFolders
+     *
+     * Returns all configured top-level music folders.
+     * https://opensubsonic.netlify.app/docs/endpoints/getmusicfolders/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getmusicfolders(array $input, User $user): void
+    {
+        $catalogs = $user->get_catalogs('music');
+        $format   = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addMusicFolders($response, $catalogs);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addMusicFolders($response, $catalogs);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     ///**
     // * getNewestPodcasts
@@ -2052,17 +2073,34 @@ class OpenSubsonic_Api
     //{
     //}
 
-    ///**
-    // * getOpenSubsonicExtensions
-    // *
-    // * List the OpenSubsonic extensions supported by this server.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getopensubsonicextensions(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getOpenSubsonicExtensions
+     *
+     * List the OpenSubsonic extensions supported by this server.
+     * https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getopensubsonicextensions(array $input, User $user): void
+    {
+        unset($user);
+        $response = Subsonic_Xml_Data::addSubsonicResponse('getopensubsonicextensions');
+
+        $extensions = [
+            'formPost' => [1],
+            'transcodeOffset' => [1],
+        ];
+
+        $format   = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addOpenSubsonicExtensions($response, $extensions);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addOpenSubsonicExtensions($response, $extensions);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     /**
      * getPlaylist
@@ -2348,17 +2386,29 @@ class OpenSubsonic_Api
     //{
     //}
 
-    ///**
-    // * getVideos
-    // *
-    // * Returns all video files.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getvideos/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getvideos(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getVideos
+     *
+     * Returns all video files.
+     * https://opensubsonic.netlify.app/docs/endpoints/getvideos/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getvideos(array $input, User $user): void
+    {
+        unset($user);
+
+        $videos = Catalog::get_videos();
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addVideos($response, $videos);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addVideos($response, $videos);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     /**
      * hls

@@ -168,19 +168,20 @@ class OpenSubsonic_Xml_Data
     /**
      * addLicense
      */
-    public static function addLicense(SimpleXMLElement $xml): void
+    public static function addLicense(SimpleXMLElement $xml): SimpleXMLElement
     {
         $xlic = self::addChildToResultXml($xml, 'license');
         $xlic->addAttribute('valid', 'true');
         $xlic->addAttribute('email', 'webmaster@ampache.org');
+
+        return $xml;
     }
 
     /**
      * addMusicFolders
-     * @param SimpleXMLElement $xml
      * @param int[] $catalogs
      */
-    public static function addMusicFolders(SimpleXMLElement $xml, array $catalogs): void
+    public static function addMusicFolders(SimpleXMLElement $xml, array $catalogs): SimpleXMLElement
     {
         $xfolders = self::addChildToResultXml($xml, 'musicFolders');
         foreach ($catalogs as $folder_id) {
@@ -192,11 +193,12 @@ class OpenSubsonic_Xml_Data
             $xfolder->addAttribute('id', (string)$folder_id);
             $xfolder->addAttribute('name', (string)$catalog->name);
         }
+
+        return $xml;
     }
 
     /**
      * addIndexes
-     * @param SimpleXMLElement $xml
      * @param list<array{
      *     id: int,
      *     f_name: string,
@@ -229,7 +231,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addIndex
-     * @param SimpleXMLElement $xml
      * @param list<array{
      *     id: int,
      *     f_name: string,
@@ -279,17 +280,19 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addOpenSubsonicExtension
-     * @param SimpleXMLElement $xml
-     * @param string $name
-     * @param int[] $versions
+     * @param array<string, int[]> $extensions
      */
-    public static function addOpenSubsonicExtensions(SimpleXMLElement $xml, string $name, array $versions): void
+    public static function addOpenSubsonicExtensions(SimpleXMLElement $xml, array $extensions): SimpleXMLElement
     {
-        $xextension = self::addChildToResultXml($xml, 'openSubsonicExtensions');
-        $xextension->addAttribute('name', $name);
-        foreach ($versions as $version) {
-            $xextension->addChild('versions', (string)$version);
+        foreach ($extensions as $name => $versions) {
+            $xextension = self::addChildToResultXml($xml, 'openSubsonicExtensions');
+            $xextension->addAttribute('name', $name);
+            foreach ($versions as $version) {
+                $xextension->addChild('versions', (string)$version);
+            }
         }
+
+        return $xml;
     }
 
     /**
@@ -354,7 +357,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addChildArray
-     * @param SimpleXMLElement $xml
      * @param array{
      *     id: int,
      *     f_name: string,
@@ -382,7 +384,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addArtistArray
-     * @param SimpleXMLElement $xml
      * @param array{
      *     id: int,
      *     f_name: string,
@@ -762,15 +763,16 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addVideos
-     * @param SimpleXMLElement $xml
      * @param Video[] $videos
      */
-    public static function addVideos(SimpleXMLElement $xml, array $videos): void
+    public static function addVideos(SimpleXMLElement $xml, array $videos): SimpleXMLElement
     {
         $xvideos = self::addChildToResultXml($xml, 'videos');
         foreach ($videos as $video) {
             self::addVideo($xvideos, $video);
         }
+
+        return $xml;
     }
 
     /**
@@ -974,7 +976,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addRandomSongs
-     * @param SimpleXMLElement $xml
      * @param int[] $songs
      */
     public static function addRandomSongs(SimpleXMLElement $xml, array $songs): void
@@ -987,7 +988,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addSongsByGenre
-     * @param SimpleXMLElement $xml
      * @param int[] $songs
      */
     public static function addSongsByGenre(SimpleXMLElement $xml, array $songs): void
@@ -1000,7 +1000,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addTopSongs
-     * @param SimpleXMLElement $xml
      * @param int[] $songs
      */
     public static function addTopSongs(SimpleXMLElement $xml, array $songs): void
@@ -1013,7 +1012,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addNowPlaying
-     * @param SimpleXMLElement $xml
      * @param list<array{
      *     media: library_item,
      *     client: User,
@@ -1115,7 +1113,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addStarred
-     * @param SimpleXMLElement $xml
      * @param int[] $artists
      * @param int[] $albums
      * @param int[] $songs
@@ -1141,7 +1138,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addStarred2
-     * @param SimpleXMLElement $xml
      * @param int[] $artists
      * @param int[] $albums
      * @param int[] $songs
@@ -1191,7 +1187,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addUsers
-     * @param SimpleXMLElement $xml
      * @param int[] $users
      */
     public static function addUsers(SimpleXMLElement $xml, array $users): void
@@ -1378,7 +1373,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addArtistInfo
-     * @param SimpleXMLElement $xml
      * @param array{
      *     id: ?int,
      *     summary: ?string,
@@ -1424,7 +1418,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addArtistInfo2
-     * @param SimpleXMLElement $xml
      * @param array{
           *     id: ?int,
           *     summary: ?string,
@@ -1449,7 +1442,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addSimilarSongs
-     * @param SimpleXMLElement $xml
      * @param list<array{
      *     id: ?int,
      *     name?: ?string,
@@ -1470,7 +1462,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addSimilarSongs2
-     * @param SimpleXMLElement $xml
      * @param list<array{
      *     id: ?int,
      *     name?: ?string,
@@ -1491,7 +1482,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addPodcasts
-     * @param SimpleXMLElement $xml
      * @param Podcast[] $podcasts
      * @param bool $includeEpisodes
      */
@@ -1522,7 +1512,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addNewestPodcasts
-     * @param SimpleXMLElement $xml
      * @param Podcast_Episode[] $episodes
      */
     public static function addNewestPodcasts(SimpleXMLElement $xml, array $episodes): void
@@ -1535,7 +1524,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addBookmarks
-     * @param SimpleXMLElement $xml
      * @param list<Bookmark> $bookmarks
      */
     public static function addBookmarks(SimpleXMLElement $xml, array $bookmarks): void
@@ -1607,7 +1595,6 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addChatMessages
-     * @param SimpleXMLElement $xml
      * @param int[] $messages
      */
     public static function addChatMessages(SimpleXMLElement $xml, array $messages): void
