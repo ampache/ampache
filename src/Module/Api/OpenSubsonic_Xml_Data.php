@@ -466,7 +466,7 @@ class OpenSubsonic_Xml_Data
         $xalbum->addAttribute('isDir', 'true');
         //$xalbum->addAttribute('discNumber', (string)$album->disk);
         if ($album->has_art()) {
-            $xalbum->addAttribute('coverArt', 'al-' . $sub_id);
+            $xalbum->addAttribute('coverArt', $sub_id);
         }
         $xalbum->addAttribute('songCount', (string) $album->song_count);
         $xalbum->addAttribute('created', date('c', (int)$album->addition_time));
@@ -533,7 +533,7 @@ class OpenSubsonic_Xml_Data
         $xalbum->addAttribute('isDir', 'true');
         //$xalbum->addAttribute('discNumber', (string)$album->disk);
         if ($album->has_art()) {
-            $xalbum->addAttribute('coverArt', 'al-' . $sub_id);
+            $xalbum->addAttribute('coverArt', $sub_id);
         }
         $xalbum->addAttribute('songCount', (string) $album->song_count);
         $xalbum->addAttribute('created', date('c', (int)$album->addition_time));
