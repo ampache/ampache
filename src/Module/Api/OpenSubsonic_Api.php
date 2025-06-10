@@ -101,20 +101,21 @@ class OpenSubsonic_Api
      * @var string[]
      */
     public const SYSTEM_LIST = [
+        '_addJsonResponse',
+        '_addXmlResponse',
         '_albumList',
-        '_apiOutput',
-        '_apiOutput2',
         '_check_parameter',
         '_errorOutput',
         '_follow_stream',
+        '_getAmpacheIdArrays',
         '_jsonOutput',
         '_jsonpOutput',
         '_output_body',
         '_output_header',
         '_responseOutput',
+        '_search',
         '_setStar',
         '_updatePlaylist',
-        '_xml2json',
         '_xmlOutput',
         'decryptPassword',
         'error',
@@ -628,6 +629,37 @@ class OpenSubsonic_Api
     }
 
     /**
+     * _output_body
+     */
+    private static function _output_body($curl, $data): int
+    {
+        unset($curl);
+        echo $data;
+        ob_flush();
+
+        return strlen((string)$data);
+    }
+
+    /**
+     * _output_header
+     */
+    private static function _output_header($curl, $header): int
+    {
+        $rheader = trim((string)$header);
+        $rhpart  = explode(':', $rheader);
+        if (!empty($rheader) && count($rhpart) > 1) {
+            if ($rhpart[0] != "Transfer-Encoding") {
+                header($rheader);
+            }
+        } elseif (str_starts_with($header, "HTTP/")) {
+            // if $header starts with HTTP/ assume it's the status line
+            http_response_code(curl_getinfo($curl, CURLINFO_HTTP_CODE));
+        }
+
+        return strlen((string)$header);
+    }
+
+    /**
      * _follow_stream
      */
     private static function _follow_stream(string $url): void
@@ -661,11 +693,11 @@ class OpenSubsonic_Api
                         CURLOPT_RETURNTRANSFER => false,
                         CURLOPT_FOLLOWLOCATION => true,
                         CURLOPT_WRITEFUNCTION => [
-                            'Ampache\Module\Api\Subsonic_Api',
+                            'Ampache\Module\Api\OpenSubsonic_Api',
                             '_output_body'
                         ],
                         CURLOPT_HEADERFUNCTION => [
-                            'Ampache\Module\Api\Subsonic_Api',
+                            'Ampache\Module\Api\OpenSubsonic_Api',
                             '_output_header'
                         ],
                         // Ignore invalid certificate
