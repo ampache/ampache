@@ -550,7 +550,7 @@ class OpenSubsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/artist/
      * @return array{'id': string, 'name': string, 'coverArt'?: string, 'starred'?: string, 'userRating'?: string, 'averageRating'?: string}
      */
-    private static function _getArtist(Artist $artist): array
+    private static function _getArtist(Artist $artist, bool $AlbumID3 = false): array
     {
         $sub_id = OpenSubsonic_Api::getArtistSubId($artist->id);
         $json   = [
@@ -561,6 +561,8 @@ class OpenSubsonic_Json_Data
         if ($artist->has_art()) {
             $json['coverArt'] = $sub_id;
         }
+
+        $json['albumCount'] = (string)$artist->album_count;
 
         $starred = new Userflag($artist->id, 'artist');
         $result  = $starred->get_flag(null, true);
@@ -576,6 +578,18 @@ class OpenSubsonic_Json_Data
         $avg_rating = $rating->get_average_rating();
         if ($avg_rating > 0) {
             $json['averageRating'] = (string)$avg_rating;
+        }
+
+        if ($AlbumID3) {
+            $allalbums = self::getAlbumRepository()->getAlbumByArtist($artist->id);
+            $albumJson = [];
+            foreach ($allalbums as $album_id) {
+                $album       = new Album($album_id);
+                $albumJson[] = self::_getAlbumID3($album);
+            }
+            if (!empty($albumJson)) {
+                $json['album'] = $albumJson;
+            }
         }
 
         return $json;
@@ -1310,13 +1324,32 @@ class OpenSubsonic_Json_Data
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
-    public static function addArtist(array $response, Artist $artist, bool $extra = false, bool $albums = false, bool $albumsSet = false): array
+    public static function addArtist(array $response, Artist $artist): array
     {
         if ($artist->isNew()) {
             return $response;
         }
 
         $response['subsonic-response']['artist'] = self::_getArtist($artist);
+
+        return $response;
+    }
+
+    /**
+     * addArtistWithAlbumsID3
+     *
+     * Artist details.
+     * https://opensubsonic.netlify.app/docs/responses/artistwithalbumsid3/
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @return array{'subsonic-response': array<string, mixed>}
+     */
+    public static function addArtistWithAlbumsID3(array $response, Artist $artist): array
+    {
+        if ($artist->isNew()) {
+            return $response;
+        }
+
+        $response['subsonic-response']['artist'] = self::_getArtist($artist, true);
 
         return $response;
     }

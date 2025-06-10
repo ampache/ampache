@@ -1734,10 +1734,10 @@ class OpenSubsonic_Api
         $format   = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addArtist($response, $artist);
+            $response = OpenSubsonic_Xml_Data::addArtist($response, $artist, true);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addArtist($response, $artist);
+            $response = OpenSubsonic_Json_Data::addArtistWithAlbumsID3($response, $artist);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }

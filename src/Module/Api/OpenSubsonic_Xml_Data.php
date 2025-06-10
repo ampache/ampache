@@ -319,7 +319,7 @@ class OpenSubsonic_Xml_Data
     /**
      * addArtist
      */
-    public static function addArtist(SimpleXMLElement $xml, Artist $artist, bool $extra = false, bool $albums = false, bool $albumsSet = false): SimpleXMLElement
+    public static function addArtist(SimpleXMLElement $xml, Artist $artist, bool $albums = false): SimpleXMLElement
     {
         if ($artist->isNew()) {
             return $xml;
@@ -329,24 +329,16 @@ class OpenSubsonic_Xml_Data
         $xartist = self::addChildToResultXml($xml, 'artist');
         $xartist->addAttribute('id', $sub_id);
         $xartist->addAttribute('name', (string)$artist->get_fullname());
-        $allalbums = [];
-        if (($extra && !$albumsSet) || $albums) {
-            $allalbums = self::getAlbumRepository()->getAlbumByArtist($artist->id);
-        }
 
         if ($artist->has_art()) {
             $xartist->addAttribute('coverArt', $sub_id);
         }
 
-        if ($extra) {
-            if ($albumsSet) {
-                $xartist->addAttribute('albumCount', (string)$artist->album_count);
-            } else {
-                $xartist->addAttribute('albumCount', (string)count($allalbums));
-            }
-            self::_setIfStarred($xartist, 'artist', $artist->id);
-        }
+        $xartist->addAttribute('albumCount', (string)$artist->album_count);
+
+        self::_setIfStarred($xartist, 'artist', $artist->id);
         if ($albums) {
+            $allalbums = self::getAlbumRepository()->getAlbumByArtist($artist->id);
             foreach ($allalbums as $album_id) {
                 $album = new Album($album_id);
                 self::addAlbumID3($xartist, $album);
