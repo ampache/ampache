@@ -2017,7 +2017,7 @@ class OpenSubsonic_Api
         }
 
         // replace additional prefixes
-        $sub_id = preg_replace('/^[a-z]{2}-([a-z]{2}-)/', '$1', $sub_id);
+        $sub_id = preg_replace('/^[a-z]+-([a-z]{2}-)/', '$1', $sub_id);
 
         $object_id   = self::getAmpacheId($sub_id);
         $object_type = self::getAmpacheType($sub_id);
