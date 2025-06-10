@@ -18,9 +18,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.9
--- Generation Time: May 21, 2025 at 08:06 AM
--- Server version: 11.8.1-MariaDB-4
--- PHP Version: 8.3.20
+-- Generation Time: Jun 10, 2025 at 10:08 AM
+-- Server version: 11.8.1-MariaDB-5 from Debian
+-- PHP Version: 8.4.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -1467,7 +1467,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '750010'),
+('db_version', '752001'),
 ('Plugin_Last.FM', '000005'),
 ('Plugin_Home Dashboard', '2');
 
