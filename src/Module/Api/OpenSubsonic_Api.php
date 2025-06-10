@@ -79,6 +79,7 @@ use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use CurlHandle;
 use DateTime;
 use DOMDocument;
 use Psr\Container\ContainerExceptionInterface;
@@ -631,21 +632,22 @@ class OpenSubsonic_Api
     /**
      * _output_body
      */
-    private static function _output_body($curl, $data): int
+    private static function _output_body(CurlHandle $curl, string $data): int
     {
         unset($curl);
+
         echo $data;
         ob_flush();
 
-        return strlen((string)$data);
+        return strlen($data);
     }
 
     /**
      * _output_header
      */
-    private static function _output_header($curl, $header): int
+    private static function _output_header(CurlHandle $curl, string $header): int
     {
-        $rheader = trim((string)$header);
+        $rheader = trim($header);
         $rhpart  = explode(':', $rheader);
         if (!empty($rheader) && count($rhpart) > 1) {
             if ($rhpart[0] != "Transfer-Encoding") {
@@ -656,7 +658,7 @@ class OpenSubsonic_Api
             http_response_code(curl_getinfo($curl, CURLINFO_HTTP_CODE));
         }
 
-        return strlen((string)$header);
+        return strlen($header);
     }
 
     /**
