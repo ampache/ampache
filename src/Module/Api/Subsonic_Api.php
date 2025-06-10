@@ -3135,7 +3135,7 @@ class Subsonic_Api
                 isset($type) &&
                 isset($media->id)
             ) {
-                $playQueue->set_current_object($type, $media->id, $time);
+                $playQueue->set_current_object($type, $media->id, $position);
             }
 
             // subsonic cares about queue dates so set them (and set them together)
