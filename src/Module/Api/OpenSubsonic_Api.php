@@ -3006,6 +3006,48 @@ class OpenSubsonic_Api
     }
 
     /**
+     * getUser
+     *
+     * Get details about all users, including which authorization roles and folder access they have.
+     * https://opensubsonic.netlify.app/docs/endpoints/getuser/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getuser(array $input, User $user): void
+    {
+        $username = self::_check_parameter($input, 'username', __FUNCTION__);
+        if (!$username) {
+            return;
+        }
+
+        if ($user->access === 100 || $user->username == $username) {
+            $response = Subsonic_Xml_Data::addSubsonicResponse('getuser');
+            if ($user->username == $username) {
+                $update_user = $user;
+            } else {
+                $update_user = User::get_from_username((string)$username);
+            }
+            if (!$update_user) {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            } else {
+                Subsonic_Xml_Data::addUser($response, $update_user);
+                $format = (string)($input['f'] ?? 'xml');
+                if ($format === 'xml') {
+                    $response = self::_addXmlResponse(__FUNCTION__);
+                    $response = OpenSubsonic_Xml_Data::addUser($response, $user);
+                } else {
+                    $response = self::_addJsonResponse(__FUNCTION__);
+                    $response = OpenSubsonic_Json_Data::addUser($response, $user);
+                }
+                self::_responseOutput($input, __FUNCTION__, $response);
+            }
+        } else {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+        }
+    }
+
+
+    /**
      * getUsers
      *
      * Get details about all users, including which authorization roles and folder access they have.

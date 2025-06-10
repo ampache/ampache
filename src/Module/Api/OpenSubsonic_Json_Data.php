@@ -2677,7 +2677,7 @@ class OpenSubsonic_Json_Data
 
         $json = [];
         foreach ($videos as $video) {
-            $response = self::addChild($response, $video->getId(), 'video', 'videos');
+            $json[] = self::_getChildVideo($video);
         }
 
         $response['subsonic-response']['videos']['video'] = $json;
