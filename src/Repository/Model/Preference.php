@@ -571,6 +571,7 @@ class Preference extends database_object
 
         return $results;
     }
+
     /**
      * get_special_values
      * This returns an array of the values for special preferences which are not kept in the database
