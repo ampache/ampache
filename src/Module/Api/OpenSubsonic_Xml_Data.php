@@ -510,12 +510,12 @@ class OpenSubsonic_Xml_Data
             return;
         }
 
-        $sub_id = (string)OpenSubsonic_Api::getAlbumSubId($album->id);
+        $sub_id = OpenSubsonic_Api::getAlbumSubId($album->id);
         $xalbum = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
         $xalbum->addAttribute('id', $sub_id);
         $album_artist = $album->findAlbumArtist();
         if ($album_artist) {
-            $xalbum->addAttribute('parent', (string)OpenSubsonic_Api::getArtistSubId($album_artist));
+            $xalbum->addAttribute('parent', OpenSubsonic_Api::getArtistSubId($album_artist));
         }
         $f_name = $album->get_fullname();
         $xalbum->addAttribute('album', $f_name);
@@ -531,7 +531,7 @@ class OpenSubsonic_Xml_Data
         $xalbum->addAttribute('duration', (string) $album->time);
         $xalbum->addAttribute('playCount', (string)$album->total_count);
         if ($album_artist) {
-            $xalbum->addAttribute('artistId', (string)OpenSubsonic_Api::getArtistSubId($album_artist));
+            $xalbum->addAttribute('artistId', OpenSubsonic_Api::getArtistSubId($album_artist));
         }
         $xalbum->addAttribute('artist', (string)$album->get_artist_fullname());
         // original year (fall back to regular year)
