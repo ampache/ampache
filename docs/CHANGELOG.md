@@ -4,6 +4,8 @@
 
 ### Added
 
+* Translations 2025-06-10
+* Extend error messages when uploading art and it fails checks
 * Database 752001
   * Delete `custom_blankmovie` preference. (Movies don't exist now)
 
@@ -23,11 +25,14 @@
 
 ### Fixed
 
+* Error when importing empty TXXX id3 tags
 * Search
   * Updated rules were not presisted in `update_playlist`
 * Subsonic
   * Double output when missing parameters for some calls
   * Check getAlbumList & getAlbumList2 calls for `genre` when type is `byGenre`
+  * Strings are being converted to booleans for Json responses
+  * Time used for savePlayQueue was the server time not the song position
 
 ## Ampache 7.5.2
 
