@@ -2532,7 +2532,9 @@ class OpenSubsonic_Api
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
         }
 
-        $podcast_id      = self::getAmpacheId($sub_id);
+        $podcast_id = ($sub_id)
+            ? self::getAmpacheId($sub_id)
+            : null;
         if ($podcast_id) {
             $podcast = self::getPodcastRepository()->findById($podcast_id);
             if ($podcast === null) {
