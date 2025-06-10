@@ -76,7 +76,7 @@ class OpenSubsonic_Json_Data
                 'status' => 'ok',
                 'version' => OpenSubsonic_Api::API_VERSION,
                 'type' => 'ampache',
-                'serverVersion' => Api::$version,
+                'serverVersion' => AmpConfig::get('version'),
                 'openSubsonic' => true,
             ]
         ];
@@ -106,7 +106,7 @@ class OpenSubsonic_Json_Data
                 'status' => 'failed',
                 'version' => OpenSubsonic_Api::API_VERSION,
                 'type' => 'ampache',
-                'serverVersion' => Api::$version,
+                'serverVersion' => AmpConfig::get('version'),
                 'openSubsonic' => true,
                 'error' => [
                     'code' => OpenSubsonic_Api::SSERROR_GENERIC,

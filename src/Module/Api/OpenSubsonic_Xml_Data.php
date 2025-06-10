@@ -75,7 +75,7 @@ class OpenSubsonic_Xml_Data
         $response->addAttribute('status', (string)$status);
         $response->addAttribute('version', OpenSubsonic_Api::API_VERSION);
         $response->addAttribute('type', 'ampache');
-        $response->addAttribute('serverVersion', Api::$version);
+        $response->addAttribute('serverVersion', AmpConfig::get('version'));
         $response->addAttribute('openSubsonic', "1");
 
         return $response;
