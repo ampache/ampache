@@ -418,7 +418,7 @@ class Art extends database_object
         }
 
         $test_size = $this->test_size($source);
-        if ($test_size == 'invalid_image' || $test_size == 'max_upload_size') {
+        if ($test_size !== true) {
             debug_event(self::class, 'Not inserting image for ' . $this->object_type . ' ' . $this->object_id . ', failed check: ' . $test_size, 1);
 
             return $test_size;
@@ -833,7 +833,7 @@ class Art extends database_object
     public function save_thumb(string $source, string $mime, array $size): bool
     {
         $test_size = $this->test_size($source);
-        if ($test_size == 'invalid_image' || $test_size == 'max_upload_size') {
+        if ($test_size !== true) {
             debug_event(self::class, 'Not inserting thumbnail, failed check: ' . $test_size, 1);
 
             return false;
@@ -936,7 +936,7 @@ class Art extends database_object
     public function generate_thumb(string $image, array $size, string $mime): array
     {
         $test_size = $this->test_size($image);
-        if ($test_size == 'invalid_image' || $test_size == 'max_upload_size') {
+        if ($test_size !== true) {
             debug_event(self::class, 'Not inserting thumbnail, failed check: ' . $test_size, 1);
 
             return [];
