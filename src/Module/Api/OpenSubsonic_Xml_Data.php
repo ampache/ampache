@@ -184,13 +184,13 @@ class OpenSubsonic_Xml_Data
     public static function addMusicFolders(SimpleXMLElement $xml, array $catalogs): SimpleXMLElement
     {
         $xfolders = self::addChildToResultXml($xml, 'musicFolders');
-        foreach ($catalogs as $folder_id) {
-            $catalog = Catalog::create_from_id($folder_id);
+        foreach ($catalogs as $catalog_id) {
+            $catalog = Catalog::create_from_id($catalog_id);
             if ($catalog === null) {
                 break;
             }
             $xfolder = self::addChildToResultXml($xfolders, 'musicFolder');
-            $xfolder->addAttribute('id', (string)$folder_id);
+            $xfolder->addAttribute('id', OpenSubsonic_Api::getCatalogSubId($catalog_id));
             $xfolder->addAttribute('name', (string)$catalog->name);
         }
 
@@ -207,7 +207,6 @@ class OpenSubsonic_Xml_Data
      *     catalog_id: int,
      *     has_art: int
      * }> $artists
-     * @param int $lastModified
      */
     public static function addIndexes(SimpleXMLElement $xml, array $artists, int $lastModified = 0): SimpleXMLElement
     {
@@ -660,34 +659,28 @@ class OpenSubsonic_Xml_Data
     /**
      * addDirectory will create the directory element based on the type
      */
-    public static function addDirectory(SimpleXMLElement $xml, string $sub_id, string $dirType): void
+    public static function addDirectory(SimpleXMLElement $xml, Artist|Album|Catalog $object): SimpleXMLElement
     {
-        switch ($dirType) {
-            case 'artist':
-                self::addDirectory_Artist($xml, $sub_id);
-                break;
-            case 'album':
-                self::addDirectory_Album($xml, $sub_id);
-                break;
-            case 'catalog':
-                self::addDirectory_Catalog($xml, $sub_id);
-                break;
+        if ($object instanceof Artist) {
+            self::addDirectory_Artist($xml, $object);
+        } elseif ($object instanceof Album) {
+            self::addDirectory_Album($xml, $object);
+        } elseif ($object instanceof Catalog) {
+            self::addDirectory_Catalog($xml, $object);
         }
+
+        return $xml;
     }
 
     /**
      * addDirectory_Artist for subsonic artist id
      */
-    private static function addDirectory_Artist(SimpleXMLElement $xml, string $sub_id): void
+    private static function addDirectory_Artist(SimpleXMLElement $xml, Artist $artist): void
     {
-        $artist_id = OpenSubsonic_Api::getAmpacheId($sub_id);
-        if (!$artist_id) {
-            return;
-        }
-
-        $data = Artist::get_id_array($artist_id);
-        $xdir = self::addChildToResultXml($xml, 'directory');
-        $xdir->addAttribute('id', (string)$sub_id);
+        $artist_id = $artist->id;
+        $data      = Artist::get_id_array($artist_id);
+        $xdir      = self::addChildToResultXml($xml, 'directory');
+        $xdir->addAttribute('id', OpenSubsonic_Api::getArtistSubId($artist_id));
         if (array_key_exists('catalog_id', $data)) {
             $xdir->addAttribute('parent', (string)$data['catalog_id']);
         }
@@ -704,12 +697,11 @@ class OpenSubsonic_Xml_Data
     /**
      * addDirectory_Album for subsonic album id
      */
-    private static function addDirectory_Album(SimpleXMLElement $xml, string $sub_id): void
+    private static function addDirectory_Album(SimpleXMLElement $xml, Album $album): void
     {
-        $album_id = OpenSubsonic_Api::getAmpacheId($sub_id);
-        $album    = new Album($album_id);
+        $album_id = $album->id;
         $xdir     = self::addChildToResultXml($xml, 'directory');
-        $xdir->addAttribute('id', (string)$album_id);
+        $xdir->addAttribute('id', OpenSubsonic_Api::getAlbumSubId($album_id));
         $album_artist = $album->findAlbumArtist();
         if ($album_artist) {
             $xdir->addAttribute('parent', OpenSubsonic_Api::getArtistSubId($album_artist));
@@ -729,15 +721,11 @@ class OpenSubsonic_Xml_Data
     /**
      * addDirectory_Catalog for subsonic artist id
      */
-    private static function addDirectory_Catalog(SimpleXMLElement $xml, string $catalog_id): void
+    private static function addDirectory_Catalog(SimpleXMLElement $xml, Catalog $catalog): void
     {
-        $catalog = Catalog::create_from_id((int)$catalog_id);
-        if ($catalog === null) {
-            return;
-        }
-
-        $xdir = self::addChildToResultXml($xml, 'directory');
-        $xdir->addAttribute('id', (string)$catalog_id);
+        $catalog_id = $catalog->id;
+        $xdir       = self::addChildToResultXml($xml, 'directory');
+        $xdir->addAttribute('id', OpenSubsonic_Api::getCatalogSubId($catalog_id));
         $xdir->addAttribute('name', (string)$catalog->name);
         $allartists = Catalog::get_artist_arrays([$catalog_id]);
         foreach ($allartists as $artist) {
@@ -824,10 +812,12 @@ class OpenSubsonic_Xml_Data
     /**
      * addVideoInfo
      */
-    public static function addVideoInfo(SimpleXMLElement $xml, int $video_id): void
+    public static function addVideoInfo(SimpleXMLElement $xml, int $video_id): SimpleXMLElement
     {
         $xvideoinfo = self::addChildToResultXml($xml, 'videoinfo');
         $xvideoinfo->addAttribute('id', (string)$video_id);
+
+        return $xml;
     }
 
     /**
@@ -846,16 +836,12 @@ class OpenSubsonic_Xml_Data
              * smartlist = 'smart_1'
              * playlist  = 1000000
              */
-            if ((int)$playlist_id === 0) {
-                $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user);
-                if ($playlist->isNew()) {
-                    continue;
-                }
-            } else {
-                $playlist = new Playlist((int)$playlist_id);
-                if ($playlist->isNew()) {
-                    continue;
-                }
+            $playlist = ((int)$playlist_id === 0)
+                ? new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user)
+                : new Playlist((int)$playlist_id);
+
+            if ($playlist->isNew()) {
+                continue;
             }
 
             self::addPlaylist($xplaylists, $playlist);
@@ -980,36 +966,42 @@ class OpenSubsonic_Xml_Data
      * addRandomSongs
      * @param int[] $songs
      */
-    public static function addRandomSongs(SimpleXMLElement $xml, array $songs): void
+    public static function addRandomSongs(SimpleXMLElement $xml, array $songs): SimpleXMLElement
     {
         $xsongs = self::addChildToResultXml($xml, 'randomSongs');
         foreach ($songs as $song_id) {
             self::addSong($xsongs, $song_id);
         }
+
+        return $xml;
     }
 
     /**
      * addSongsByGenre
      * @param int[] $songs
      */
-    public static function addSongsByGenre(SimpleXMLElement $xml, array $songs): void
+    public static function addSongsByGenre(SimpleXMLElement $xml, array $songs): SimpleXMLElement
     {
         $xsongs = self::addChildToResultXml($xml, 'songsByGenre');
         foreach ($songs as $song_id) {
             self::addSong($xsongs, $song_id);
         }
+
+        return $xml;
     }
 
     /**
      * addTopSongs
      * @param int[] $songs
      */
-    public static function addTopSongs(SimpleXMLElement $xml, array $songs): void
+    public static function addTopSongs(SimpleXMLElement $xml, array $songs): SimpleXMLElement
     {
         $xsongs = self::addChildToResultXml($xml, 'topSongs');
         foreach ($songs as $song_id) {
             self::addSong($xsongs, $song_id);
         }
+
+        return $xml;
     }
 
     /**
@@ -1021,7 +1013,7 @@ class OpenSubsonic_Xml_Data
      *     expire: int
      * }> $data
      */
-    public static function addNowPlaying(SimpleXMLElement $xml, array $data): void
+    public static function addNowPlaying(SimpleXMLElement $xml, array $data): SimpleXMLElement
     {
         $xplaynow = self::addChildToResultXml($xml, 'nowPlaying');
         foreach ($data as $row) {
@@ -1034,34 +1026,37 @@ class OpenSubsonic_Xml_Data
                 $track = self::addSong($xplaynow, $row['media']->getId(), 'entry');
                 $track->addAttribute('username', (string)$row['client']->username);
                 $track->addAttribute('minutesAgo', (string)(abs((time() - ($row['expire'] - $row['media']->time)) / 60)));
-                $track->addAttribute('playerId', (string)$row['agent']);
+                $track->addAttribute('playerId', '0');
+                $track->addAttribute('playerName', (string)$row['agent']);
             }
-        }
-    }
-
-    /**
-     * addSearchResult
-     * @param int[] $artists
-     * @param int[] $albums
-     * @param int[] $songs
-     */
-    public static function addSearchResult(SimpleXMLElement $xml, array $artists, array $albums, array $songs): SimpleXMLElement
-    {
-        $xresult = self::addChildToResultXml($xml, htmlspecialchars('searchResult'));
-        foreach ($artists as $artist_id) {
-            $artist = new Artist((int) $artist_id);
-            self::addArtist($xresult, $artist);
-        }
-        foreach ($albums as $album_id) {
-            $album = new Album($album_id);
-            self::addAlbumID3($xresult, $album);
-        }
-        foreach ($songs as $song_id) {
-            self::addSong($xresult, $song_id);
         }
 
         return $xml;
     }
+
+    ///**
+    // * addSearchResult
+    // * @param int[] $artists
+    // * @param int[] $albums
+    // * @param int[] $songs
+    // */
+    //public static function addSearchResult(SimpleXMLElement $xml, array $artists, array $albums, array $songs): SimpleXMLElement
+    //{
+    //    $xresult = self::addChildToResultXml($xml, htmlspecialchars('searchResult'));
+    //    foreach ($artists as $artist_id) {
+    //        $artist = new Artist((int) $artist_id);
+    //        self::addArtist($xresult, $artist);
+    //    }
+    //    foreach ($albums as $album_id) {
+    //        $album = new Album($album_id);
+    //        self::addAlbumID3($xresult, $album);
+    //    }
+    //    foreach ($songs as $song_id) {
+    //        self::addSong($xresult, $song_id);
+    //    }
+    //
+    //    return $xml;
+    //}
 
     /**
      * addSearchResult2
@@ -1119,7 +1114,7 @@ class OpenSubsonic_Xml_Data
      * @param int[] $albums
      * @param int[] $songs
      */
-    public static function addStarred(SimpleXMLElement $xml, array $artists, array $albums, array $songs): void
+    public static function addStarred(SimpleXMLElement $xml, array $artists, array $albums, array $songs): SimpleXMLElement
     {
         $xstarred = self::addChildToResultXml($xml, htmlspecialchars('starred'));
 
@@ -1136,6 +1131,8 @@ class OpenSubsonic_Xml_Data
         foreach ($songs as $song_id) {
             self::addSong($xstarred, $song_id);
         }
+
+        return $xml;
     }
 
     /**
@@ -1144,7 +1141,7 @@ class OpenSubsonic_Xml_Data
      * @param int[] $albums
      * @param int[] $songs
      */
-    public static function addStarred2(SimpleXMLElement $xml, array $artists, array $albums, array $songs): void
+    public static function addStarred2(SimpleXMLElement $xml, array $artists, array $albums, array $songs): SimpleXMLElement
     {
         $xstarred = self::addChildToResultXml($xml, htmlspecialchars('starred2'));
 
@@ -1161,12 +1158,14 @@ class OpenSubsonic_Xml_Data
         foreach ($songs as $song_id) {
             self::addSong($xstarred, $song_id);
         }
+
+        return $xml;
     }
 
     /**
      * addUser
      */
-    public static function addUser(SimpleXMLElement $xml, User $user): void
+    public static function addUser(SimpleXMLElement $xml, User $user): SimpleXMLElement
     {
         $xuser = self::addChildToResultXml($xml, 'user');
         $xuser->addAttribute('username', (string)$user->username);
@@ -1185,13 +1184,15 @@ class OpenSubsonic_Xml_Data
         $xuser->addAttribute('jukeboxRole', (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST)) ? 'true' : 'false');
         $xuser->addAttribute('shareRole', Preference::get_by_user($user->id, 'share') ? 'true' : 'false');
         $xuser->addAttribute('videoConversionRole', 'false');
+
+        return $xml;
     }
 
     /**
      * addUsers
      * @param int[] $users
      */
-    public static function addUsers(SimpleXMLElement $xml, array $users): void
+    public static function addUsers(SimpleXMLElement $xml, array $users): SimpleXMLElement
     {
         $xusers = self::addChildToResultXml($xml, 'users');
         foreach ($users as $user_id) {
@@ -1200,6 +1201,8 @@ class OpenSubsonic_Xml_Data
                 self::addUser($xusers, $user);
             }
         }
+
+        return $xml;
     }
 
     /**
@@ -1325,10 +1328,10 @@ class OpenSubsonic_Xml_Data
     /**
      * addLyrics
      */
-    public static function addLyrics(SimpleXMLElement $xml, string $artist, string $title, Song $song): void
+    public static function addLyrics(SimpleXMLElement $xml, string $artist, string $title, Song $song): SimpleXMLElement
     {
         if ($song->isNew()) {
-            return;
+            return $xml;
         }
 
         $lyrics = $song->get_lyrics();
@@ -1345,6 +1348,8 @@ class OpenSubsonic_Xml_Data
                 $xlyrics->addAttribute('title', (string)$title);
             }
         }
+
+        return $xml;
     }
 
     /**
@@ -1391,7 +1396,6 @@ class OpenSubsonic_Xml_Data
      *     rel?: ?string,
      *     mbid?: ?string
      * }> $similars
-     * @param string $elementName
      */
     public static function addArtistInfo(SimpleXMLElement $xml, array $info, array $similars, string $elementName = 'artistInfo'): SimpleXMLElement
     {
@@ -1439,9 +1443,9 @@ class OpenSubsonic_Xml_Data
           *     mbid?: ?string
           * }> $similars
      */
-    public static function addArtistInfo2(SimpleXMLElement $xml, array $info, array $similars): void
+    public static function addArtistInfo2(SimpleXMLElement $xml, array $info, array $similars): SimpleXMLElement
     {
-        self::addArtistInfo($xml, $info, $similars, 'artistInfo2');
+        return self::addArtistInfo($xml, $info, $similars, 'artistInfo2');
     }
 
     /**
@@ -1452,16 +1456,17 @@ class OpenSubsonic_Xml_Data
      *     rel?: ?string,
      *     mbid?: ?string,
      * }> $similar_songs
-     * @param string $child
      */
-    public static function addSimilarSongs(SimpleXMLElement $xml, array $similar_songs, string $child): void
+    public static function addSimilarSongs(SimpleXMLElement $xml, array $similar_songs): SimpleXMLElement
     {
-        $xsimilar = self::addChildToResultXml($xml, htmlspecialchars($child));
+        $xsimilar = self::addChildToResultXml($xml, 'similarSongs');
         foreach ($similar_songs as $similar_song) {
             if ($similar_song['id'] !== null) {
                 self::addSong($xsimilar, $similar_song['id']);
             }
         }
+
+        return $xml;
     }
 
     /**
@@ -1472,24 +1477,24 @@ class OpenSubsonic_Xml_Data
      *     rel?: ?string,
      *     mbid?: ?string,
      * }> $similar_songs
-     * @param string $child
      */
-    public static function addSimilarSongs2(SimpleXMLElement $xml, array $similar_songs, string $child): void
+    public static function addSimilarSongs2(SimpleXMLElement $xml, array $similar_songs): SimpleXMLElement
     {
-        $xsimilar = self::addChildToResultXml($xml, htmlspecialchars($child));
+        $xsimilar = self::addChildToResultXml($xml, 'similarSongs2');
         foreach ($similar_songs as $similar_song) {
             if ($similar_song['id'] !== null) {
                 self::addSong($xsimilar, $similar_song['id']);
             }
         }
+
+        return $xml;
     }
 
     /**
      * addPodcasts
      * @param Podcast[] $podcasts
-     * @param bool $includeEpisodes
      */
-    public static function addPodcasts(SimpleXMLElement $xml, array $podcasts, bool $includeEpisodes = true): void
+    public static function addPodcasts(SimpleXMLElement $xml, array $podcasts, bool $includeEpisodes = true): SimpleXMLElement
     {
         $xpodcasts = self::addChildToResultXml($xml, 'podcasts');
         foreach ($podcasts as $podcast) {
@@ -1512,18 +1517,22 @@ class OpenSubsonic_Xml_Data
                 }
             }
         }
+
+        return $xml;
     }
 
     /**
      * addNewestPodcasts
      * @param Podcast_Episode[] $episodes
      */
-    public static function addNewestPodcasts(SimpleXMLElement $xml, array $episodes): void
+    public static function addNewestPodcasts(SimpleXMLElement $xml, array $episodes): SimpleXMLElement
     {
         $xpodcasts = self::addChildToResultXml($xml, 'newestPodcasts');
         foreach ($episodes as $episode) {
             self::addPodcastEpisode($xpodcasts, $episode);
         }
+
+        return $xml;
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnused */
+
 declare(strict_types=0);
 
 /**
@@ -45,6 +47,7 @@ use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\Model\Album;
@@ -52,6 +55,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
@@ -73,8 +77,11 @@ use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use DateTime;
 use DOMDocument;
+use Psr\Container\ContainerExceptionInterface;
 use SimpleXMLElement;
 use WpOrg\Requests\Requests;
 
@@ -583,7 +590,7 @@ class OpenSubsonic_Api
         if ($encpwd !== false) {
             $hex    = substr($password, 4);
             $decpwd = '';
-            for ($count = 0; $count < strlen((string)$hex); $count += 2) {
+            for ($count = 0; $count < strlen($hex); $count += 2) {
                 $decpwd .= chr((int)hexdec(substr($hex, $count, 2)));
             }
             $password = $decpwd;
@@ -1163,11 +1170,18 @@ class OpenSubsonic_Api
             debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $sub_id, 4);
 
             if (!empty($object_type) && !empty($sub_id)) {
-                global $dic; // @todo remove after refactoring
-                $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
-                $shareCreator      = $dic->get(ShareCreatorInterface::class);
+                try {
+                    global $dic; // @todo remove after refactoring
 
-                $format   = (string)($input['f'] ?? 'xml');
+                    $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
+                    $shareCreator      = $dic->get(ShareCreatorInterface::class);
+                } catch (ContainerExceptionInterface $error) {
+                    debug_event(self::class, 'createShare: Dependency injection error: ' . $error->getMessage(), 1);
+                    self::_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
+
+                    return;
+                }
+
                 $shares   = [];
                 $shares[] = $shareCreator->create(
                     $user,
@@ -1181,6 +1195,7 @@ class OpenSubsonic_Api
                     $description
                 );
 
+                $format = (string)($input['f'] ?? 'xml');
                 if ($format === 'xml') {
                     $response = self::_addXmlResponse(__FUNCTION__);
                     $response = OpenSubsonic_Xml_Data::addShares($response, $shares);
@@ -1587,17 +1602,14 @@ class OpenSubsonic_Api
             return;
         }
 
-        if (Subsonic_Xml_Data::_isAlbum($sub_id)) {
-            $album_id = Subsonic_Xml_Data::_getAmpacheId($sub_id);
-            $info     = Recommendation::get_album_info($album_id);
-            $response = Subsonic_Xml_Data::addSubsonicResponse('albumInfo');
-            Subsonic_Xml_Data::addAlbumInfo($response, $info);
-        } else {
+        $album_id = self::getAmpacheId($sub_id);
+        if (self::getAmpacheType($sub_id) !== 'album' || !$album_id) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
 
+        $info     = Recommendation::get_album_info($album_id);
         $format   = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
@@ -1741,30 +1753,32 @@ class OpenSubsonic_Api
     public static function getartistinfo(array $input, User $user): void
     {
         unset($user);
-        $object_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$object_id) {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
+
+        $artist_id = self::getAmpacheId($sub_id);
+        if (self::getAmpacheType($sub_id) !== 'artist' || !$artist_id) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
             return;
         }
 
         $count             = $input['count'] ?? 20;
         $includeNotPresent = (array_key_exists('includeNotPresent', $input) && $input['includeNotPresent'] === "true");
 
-        if (Subsonic_Xml_Data::_isArtist($object_id)) {
-            $artist_id = Subsonic_Xml_Data::_getAmpacheId($object_id);
-            $info      = Recommendation::get_artist_info($artist_id);
-            $similars  = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
-            $format    = (string)($input['f'] ?? 'xml');
-            if ($format === 'xml') {
-                $response = self::_addXmlResponse(__FUNCTION__);
-                $response = OpenSubsonic_Xml_Data::addArtistInfo($response, $info, $similars);
-            } else {
-                $response = self::_addJsonResponse(__FUNCTION__);
-                $response = OpenSubsonic_Json_Data::addArtistInfo($response, $info, $similars);
-            }
-            self::_responseOutput($input, __FUNCTION__, $response);
+        $info     = Recommendation::get_artist_info($artist_id);
+        $similars = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
+        $format   = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addArtistInfo($response, $info, $similars);
         } else {
-            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addArtistInfo($response, $info, $similars);
         }
+        self::_responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1778,30 +1792,32 @@ class OpenSubsonic_Api
     public static function getartistinfo2(array $input, User $user): void
     {
         unset($user);
-        $object_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$object_id) {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
+
+        $artist_id = self::getAmpacheId($sub_id);
+        if (self::getAmpacheType($sub_id) !== 'artist' || !$artist_id) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
             return;
         }
 
         $count             = $input['count'] ?? 20;
         $includeNotPresent = (array_key_exists('includeNotPresent', $input) && $input['includeNotPresent'] === "true");
 
-        if (Subsonic_Xml_Data::_isArtist($object_id)) {
-            $artist_id = Subsonic_Xml_Data::_getAmpacheId($object_id);
-            $info      = Recommendation::get_artist_info($artist_id);
-            $similars  = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
-            $format    = (string)($input['f'] ?? 'xml');
-            if ($format === 'xml') {
-                $response = self::_addXmlResponse(__FUNCTION__);
-                $response = OpenSubsonic_Xml_Data::addArtistInfo($response, $info, $similars);
-            } else {
-                $response = self::_addJsonResponse(__FUNCTION__);
-                $response = OpenSubsonic_Json_Data::addArtistInfo($response, $info, $similars);
-            }
-            self::_responseOutput($input, __FUNCTION__, $response);
+        $info      = Recommendation::get_artist_info($artist_id);
+        $similars  = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
+        $format    = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addArtistInfo2($response, $info, $similars);
         } else {
-            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addArtistInfo2($response, $info, $similars);
         }
+        self::_responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2024,7 +2040,7 @@ class OpenSubsonic_Api
         }
         $image = $art->get('original', true);
         header('Content-type: ' . $art->raw_mime);
-        header('Content-Length: ' . strlen((string) $image));
+        header('Content-Length: ' . strlen($image));
         echo $image;
     }
 
@@ -2167,17 +2183,60 @@ class OpenSubsonic_Api
         self::_responseOutput($input, __FUNCTION__, $response);
     }
 
-    ///**
-    // * getLyrics
-    // *
-    // * Searches for and returns lyrics for a given song.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getlyrics/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getlyrics(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getLyrics
+     *
+     * Searches for and returns lyrics for a given song.
+     * https://opensubsonic.netlify.app/docs/endpoints/getlyrics/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getlyrics(array $input, User $user): void
+    {
+        $artist = (string)($input['artist'] ?? '');
+        $title  = (string)($input['title'] ?? '');
+
+        if (empty($artist) && empty($title)) {
+            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+
+            return;
+        }
+
+        $data           = [];
+        $data['limit']  = 1;
+        $data['offset'] = 0;
+        $data['type']   = "song";
+
+        if ($artist) {
+            $data['rule_0_input']    = $artist;
+            $data['rule_0_operator'] = 4;
+            $data['rule_0']          = "artist";
+        }
+        if ($title) {
+            $data['rule_1_input']    = $title;
+            $data['rule_1_operator'] = 4;
+            $data['rule_1']          = "title";
+        }
+
+        $songs = Search::run($data, $user);
+        if (count($songs) > 0) {
+            $song = new Song($songs[0]);
+        } else {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addLyrics($response, $artist, $title, $song);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addLyrics($response, $artist, $title, $song);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     ///**
     // * getLyricsBySongId
@@ -2191,17 +2250,50 @@ class OpenSubsonic_Api
     //{
     //}
 
-    ///**
-    // * getMusicDirectory
-    // *
-    // * Returns a listing of all files in a music directory.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getmusicdirectory/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getmusicdirectory(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getMusicDirectory
+     *
+     * Returns a listing of all files in a music directory.
+     * https://opensubsonic.netlify.app/docs/endpoints/getmusicdirectory/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getmusicdirectory(array $input, User $user): void
+    {
+        unset($user);
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
+
+        $object_id = self::getAmpacheId($sub_id);
+        if (!$object_id) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $object = self::getAmpacheObject($sub_id);
+        if (!$object) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        if ($object instanceof Album || $object instanceof Artist || $object instanceof Catalog) {
+            $format = (string)($input['f'] ?? 'xml');
+            if ($format === 'xml') {
+                $response = self::_addXmlResponse(__FUNCTION__);
+                $response = OpenSubsonic_Xml_Data::addDirectory($response, $object);
+            } else {
+                $response = self::_addJsonResponse(__FUNCTION__);
+                $response = OpenSubsonic_Json_Data::addDirectory($response, $object);
+            }
+            self::_responseOutput($input, __FUNCTION__, $response);
+        } else {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+        }
+    }
 
     /**
      * getMusicFolders
@@ -2225,29 +2317,58 @@ class OpenSubsonic_Api
         self::_responseOutput($input, __FUNCTION__, $response);
     }
 
-    ///**
-    // * getNewestPodcasts
-    // *
-    // * Returns the most recently published Podcast episodes.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getnewestpodcasts/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getnewestpodcasts(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getNewestPodcasts
+     *
+     * Returns the most recently published Podcast episodes.
+     * https://opensubsonic.netlify.app/docs/endpoints/getnewestpodcasts/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getnewestpodcasts(array $input, User $user): void
+    {
+        unset($user);
+        $count = $input['count'] ?? AmpConfig::get('podcast_new_download');
+        if (!AmpConfig::get('podcast')) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
-    ///**
-    // * getNowPlaying
-    // *
-    // * Returns what is currently being played by all users.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getnowplaying/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getnowplaying(array $input, User $user): void
-    //{
-    //}
+            return;
+        }
+
+        $episodes = Catalog::get_newest_podcasts($count);
+        $format   = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addNewestPodcasts($response, $episodes);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addNewestPodcasts($response, $episodes);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
+     * getNowPlaying
+     *
+     * Returns what is currently being played by all users.
+     * https://opensubsonic.netlify.app/docs/endpoints/getnowplaying/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getnowplaying(array $input, User $user): void
+    {
+        unset($user);
+        $data   = Stream::get_now_playing();
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addNowPlaying($response, $data);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addNowPlaying($response, $data);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     /**
      * getOpenSubsonicExtensions
@@ -2260,14 +2381,13 @@ class OpenSubsonic_Api
     public static function getopensubsonicextensions(array $input, User $user): void
     {
         unset($user);
-        $response = Subsonic_Xml_Data::addSubsonicResponse('getopensubsonicextensions');
 
         $extensions = [
             'formPost' => [1],
             'transcodeOffset' => [1],
         ];
 
-        $format   = (string)($input['f'] ?? 'xml');
+        $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
             $response = OpenSubsonic_Xml_Data::addOpenSubsonicExtensions($response, $extensions);
@@ -2288,6 +2408,7 @@ class OpenSubsonic_Api
      */
     public static function getplaylist(array $input, User $user): void
     {
+        unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
         if (!$sub_id) {
             return;
@@ -2394,173 +2515,555 @@ class OpenSubsonic_Api
     //{
     //}
 
-    ///**
-    // * getPodcasts
-    // *
-    // * Returns all Podcast channels the server subscribes to, and (optionally) their episodes.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getpodcasts/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getpodcasts(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getPodcasts
+     *
+     * Returns all Podcast channels the server subscribes to, and (optionally) their episodes.
+     * https://opensubsonic.netlify.app/docs/endpoints/getpodcasts/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getpodcasts(array $input, User $user): void
+    {
+        $sub_id          = $input['id'] ?? null;
+        $includeEpisodes = !isset($input['includeEpisodes']) || $input['includeEpisodes'] === "true";
 
-    ///**
-    // * getRandomSongs
-    // *
-    // * Returns random songs matching the given criteria.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getrandomsongs/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getrandomsongs(array $input, User $user): void
-    //{
-    //}
+        if (!AmpConfig::get(ConfigurationKeyEnum::PODCAST)) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+        }
 
-    ///**
-    // * getScanStatus
-    // *
-    // * Returns the current status for media library scanning.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getscanstatus/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getscanstatus(array $input, User $user): void
-    //{
-    //}
+        $podcast_id      = self::getAmpacheId($sub_id);
+        if ($podcast_id) {
+            $podcast = self::getPodcastRepository()->findById($podcast_id);
+            if ($podcast === null) {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
-    ///**
-    // * getShares
-    // *
-    // * Returns information about shared media this user is allowed to manage.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getshares/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getshares(array $input, User $user): void
-    //{
-    //}
+                return;
+            }
 
-    ///**
-    // * getSimilarSongs
-    // *
-    // * Returns a random collection of songs from the given artist and similar artists.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getsimilarsongs(array $input, User $user): void
-    //{
-    //}
+            $podcasts = [$podcast];
+        } else {
+            $podcasts = Catalog::get_podcasts(User::get_user_catalogs($user->id));
+        }
 
-    ///**
-    // * getSimilarSongs2
-    // *
-    // * Returns a random collection of songs from the given artist and similar artists.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs2/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getsimilarsongs2(array $input, User $user): void
-    //{
-    //}
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addPodcasts($response, $podcasts, $includeEpisodes);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addPodcasts($response, $podcasts, $includeEpisodes);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
-    ///**
-    // * getSong
-    // *
-    // * Returns details for a song.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getsong/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getsong(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getRandomSongs
+     *
+     * Returns random songs matching the given criteria.
+     * https://opensubsonic.netlify.app/docs/endpoints/getrandomsongs/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getrandomsongs(array $input, User $user): void
+    {
+        $size = (int)($input['size'] ?? 10);
 
-    ///**
-    // * getSongsByGenre
-    // *
-    // * Returns songs in a given genre.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getsongsbygenre/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getsongbygenre(array $input, User $user): void
-    //{
-    //}
+        $genre         = $input['genre'] ?? '';
+        $fromYear      = $input['fromYear'] ?? null;
+        $toYear        = $input['toYear'] ?? null;
+        $musicFolderId = $input['musicFolderId'] ?? 0;
 
-    ///**
-    // * getStarred
-    // *
-    // * Returns starred songs, albums and artists.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getstarred/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getstarred(array $input, User $user): void
-    //{
-    //}
+        $data           = [];
+        $data['limit']  = $size;
+        $data['random'] = 1;
+        $data['type']   = "song";
+        $count          = 0;
+        if ($genre) {
+            $data['rule_' . $count . '_input']    = $genre;
+            $data['rule_' . $count . '_operator'] = 0;
+            $data['rule_' . $count]               = "tag";
+            ++$count;
+        }
+        if ($fromYear) {
+            $data['rule_' . $count . '_input']    = $fromYear;
+            $data['rule_' . $count . '_operator'] = 0;
+            $data['rule_' . $count]               = "year";
+            ++$count;
+        }
+        if ($toYear) {
+            $data['rule_' . $count . '_input']    = $toYear;
+            $data['rule_' . $count . '_operator'] = 1;
+            $data['rule_' . $count]               = "year";
+            ++$count;
+        }
+        if ($musicFolderId > 0) {
+            $type = self::getAmpacheType($musicFolderId);
+            if ($type === 'artist') {
+                $artist   = new Artist(self::getAmpacheId($musicFolderId));
+                $finput   = $artist->get_fullname();
+                $operator = 4;
+                $ftype    = "artist";
+            } elseif ($type === 'album') {
+                $album    = new Album(self::getAmpacheId($musicFolderId));
+                $finput   = $album->get_fullname(true);
+                $operator = 4;
+                $ftype    = "artist";
+            } else {
+                $finput   = (int)($musicFolderId);
+                $operator = 0;
+                $ftype    = "catalog";
+            }
 
-    ///**
-    // * getStarred2
-    // *
-    // * Returns starred songs, albums and artists.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getstarred2/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getstarred2(array $input, User $user): void
-    //{
-    //}
+            $data['rule_' . $count . '_input']    = $finput;
+            $data['rule_' . $count . '_operator'] = $operator;
+            $data['rule_' . $count]               = $ftype;
+            ++$count;
+        }
+        if ($count > 0) {
+            $songs = Random::advanced('song', $data);
+        } else {
+            $songs = Random::get_default($size, $user);
+        }
 
-    ///**
-    // * getTopSongs
-    // *
-    // * Returns top songs for the given artist.
-    // * https://opensubsonic.netlify.app/docs/endpoints/gettopsongs/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function gettopsongs(array $input, User $user): void
-    //{
-    //}
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addRandomSongs($response, $songs);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addRandomSongs($response, $songs);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
-    ///**
-    // * getUser
-    // *
-    // * Get details about a given user, including which authorization roles and folder access it has.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getuser/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function geuser(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getScanStatus
+     *
+     * Returns the current status for media library scanning.
+     * https://opensubsonic.netlify.app/docs/endpoints/getscanstatus/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getscanstatus(array $input, User $user): void
+    {
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addScanStatus($response, $user);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addScanStatus($response, $user);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
-    ///**
-    // * getUsers
-    // *
-    // * Get details about all users, including which authorization roles and folder access they have.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getusers/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getusers(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getShares
+     *
+     * Returns information about shared media this user is allowed to manage.
+     * https://opensubsonic.netlify.app/docs/endpoints/getshares/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getshares(array $input, User $user): void
+    {
+        $shares = self::getShareRepository()->getIdsByUser($user);
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addShares($response, $shares);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addShares($response, $shares);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
-    ///**
-    // * getVideoInfo
-    // *
-    // * Returns details for a video.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getvideoinfo/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getvideoinfo(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getSimilarSongs
+     *
+     * Returns a random collection of songs from the given artist and similar artists.
+     * https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs/
+     * @param array<string, mixed> $input
+     */
+    public static function getsimilarsongs(array $input, User $user, string $elementName = 'similarSongs'): void
+    {
+        unset($user);
+        if (!AmpConfig::get('show_similar')) {
+            debug_event(self::class, $elementName . ': Enable: show_similar', 4);
+            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+
+            return;
+        }
+
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
+        $object_id = self::getAmpacheId($sub_id);
+        if (!$object_id) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $count = $input['count'] ?? 50;
+        $songs = [];
+        $type  = self::getAmpacheType($sub_id);
+        if ($type === 'artist') {
+            $similars = Recommendation::get_artists_like($object_id);
+            if (!empty($similars)) {
+                debug_event(self::class, 'Found: ' . count($similars) . ' similar artists', 4);
+                foreach ($similars as $similar) {
+                    debug_event(self::class, $similar['name'] . ' (id=' . $similar['id'] . ')', 5);
+                    if ($similar['id']) {
+                        $artist = new Artist($similar['id']);
+                        if ($artist->isNew()) {
+                            continue;
+                        }
+                        // get the songs in a random order for even more chaos
+                        $artist_songs = self::getSongRepository()->getRandomByArtist($artist);
+                        foreach ($artist_songs as $song) {
+                            $songs[] = ['id' => $song];
+                        }
+                    }
+                }
+            }
+            // randomize and slice
+            shuffle($songs);
+            $songs = array_slice($songs, 0, $count);
+        } elseif ($type === 'album') {
+            // TODO: support similar songs for albums
+            debug_event(self::class, $elementName . ': album is unsupported', 4);
+        } elseif ($type === 'song') {
+            $songs = Recommendation::get_songs_like($object_id, $count);
+        }
+
+        if (count($songs) == 0) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            switch ($elementName) {
+                case 'similarSongs':
+                    $response = OpenSubsonic_Xml_Data::addSimilarSongs($response, $songs);
+                    break;
+                case 'similarSongs2':
+                    $response = OpenSubsonic_Xml_Data::addSimilarSongs2($response, $songs);
+                    break;
+            }
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            switch ($elementName) {
+                case 'similarSongs':
+                    $response = OpenSubsonic_Json_Data::addSimilarSongs($response, $songs);
+                    break;
+                case 'similarSongs2':
+                    $response = OpenSubsonic_Json_Data::addSimilarSongs2($response, $songs);
+                    break;
+            }
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
+     * getSimilarSongs2
+     *
+     * Returns a random collection of songs from the given artist and similar artists.
+     * https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs2/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getsimilarsongs2(array $input, User $user): void
+    {
+        self::getsimilarsongs($input, $user, "similarSongs2");
+    }
+
+    /**
+     * getSong
+     *
+     * Returns details for a song.
+     * https://opensubsonic.netlify.app/docs/endpoints/getsong/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getsong(array $input, User $user): void
+    {
+        unset($user);
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
+
+        $song_id = self::getAmpacheId($sub_id);
+        if (!$song_id) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addSong($response, $song_id);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addSong($response, $song_id);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
+     * getSongsByGenre
+     *
+     * Returns songs in a given genre.
+     * https://opensubsonic.netlify.app/docs/endpoints/getsongsbygenre/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getsongbygenre(array $input, User $user): void
+    {
+        unset($user);
+        $genre = self::_check_parameter($input, 'genre', __FUNCTION__);
+        if (!$genre) {
+            return;
+        }
+
+        $count  = (int)($input['count'] ?? 0);
+        $offset = (int)($input['offset'] ?? 0);
+
+        $tag = Tag::construct_from_name($genre);
+        if ($tag->isNew()) {
+            $songs = [];
+        } else {
+            $songs = Tag::get_tag_objects("song", $tag->id, $count, $offset);
+        }
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addSongsByGenre($response, $songs);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addSongsByGenre($response, $songs);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
+     * getStarred
+     *
+     * Returns starred songs, albums and artists.
+     * https://opensubsonic.netlify.app/docs/endpoints/getstarred/
+     * @param array<string, mixed> $input
+     */
+    public static function getstarred(array $input, User $user, string $elementName = 'starred'): void
+    {
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            switch ($elementName) {
+                case 'starred':
+                    $response = OpenSubsonic_Xml_Data::addStarred(
+                        $response,
+                        Userflag::get_latest('artist', $user, 10000),
+                        Userflag::get_latest('album', $user, 10000),
+                        Userflag::get_latest('song', $user, 10000)
+                    );
+                    break;
+                case 'starred2':
+                    $response = OpenSubsonic_Xml_Data::addStarred2(
+                        $response,
+                        Userflag::get_latest('artist', $user, 10000),
+                        Userflag::get_latest('album', $user, 10000),
+                        Userflag::get_latest('song', $user, 10000)
+                    );
+                    break;
+            }
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            switch ($elementName) {
+                case 'starred':
+                    $response = OpenSubsonic_Json_Data::addStarred(
+                        $response,
+                        Userflag::get_latest('artist', $user, 10000),
+                        Userflag::get_latest('album', $user, 10000),
+                        Userflag::get_latest('song', $user, 10000)
+                    );
+                    break;
+                case 'starred2':
+                    $response = OpenSubsonic_Json_Data::addStarred2(
+                        $response,
+                        Userflag::get_latest('artist', $user, 10000),
+                        Userflag::get_latest('album', $user, 10000),
+                        Userflag::get_latest('song', $user, 10000)
+                    );
+                    break;
+            }
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
+     * getStarred2
+     *
+     * Returns starred songs, albums and artists.
+     * https://opensubsonic.netlify.app/docs/endpoints/getstarred2/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getstarred2(array $input, User $user): void
+    {
+        self::getstarred($input, $user, "starred2");
+    }
+
+    /**
+     * getTopSongs
+     *
+     * Returns top songs for the given artist.
+     * https://opensubsonic.netlify.app/docs/endpoints/gettopsongs/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function gettopsongs(array $input, User $user): void
+    {
+        unset($user);
+        $name = self::_check_parameter($input, 'artist', __FUNCTION__);
+        if (!$name) {
+            return;
+        }
+
+        $artist = self::getArtistRepository()->findByName(urldecode((string)$name));
+        $count  = (int)($input['count'] ?? 50);
+        $songs  = [];
+        if ($count < 1) {
+            $count = 50;
+        }
+        if ($artist) {
+            $songs = self::getSongRepository()->getTopSongsByArtist(
+                $artist,
+                $count
+            );
+        }
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addTopSongs($response, $songs);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addTopSongs($response, $songs);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
+     * getUser
+     *
+     * Get details about a given user, including which authorization roles and folder access it has.
+     * https://opensubsonic.netlify.app/docs/endpoints/getuser/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function geuser(array $input, User $user): void
+    {
+        $username = self::_check_parameter($input, 'username', __FUNCTION__);
+        if (!$username) {
+            return;
+        }
+
+        if ($user->access === 100 || $user->username == $username) {
+            if ($user->username == $username) {
+                $update_user = $user;
+            } else {
+                $update_user = User::get_from_username((string)$username);
+            }
+            if (!$update_user) {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+                return;
+            }
+
+            $format = (string)($input['f'] ?? 'xml');
+            if ($format === 'xml') {
+                $response = self::_addXmlResponse(__FUNCTION__);
+                $response = OpenSubsonic_Xml_Data::addUser($response, $update_user);
+            } else {
+                $response = self::_addJsonResponse(__FUNCTION__);
+                $response = OpenSubsonic_Json_Data::addUser($response, $update_user);
+            }
+            self::_responseOutput($input, __FUNCTION__, $response);
+        }
+
+        self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+    }
+
+    /**
+     * getUsers
+     *
+     * Get details about all users, including which authorization roles and folder access they have.
+     * https://opensubsonic.netlify.app/docs/endpoints/getusers/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getusers(array $input, User $user): void
+    {
+        if ($user->access !== 100) {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+
+            return;
+        }
+
+        $users  = self::getUserRepository()->getValid();
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addUsers($response, $users);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addUsers($response, $users);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
+     * getVideoInfo
+     *
+     * Returns details for a video.
+     * https://opensubsonic.netlify.app/docs/endpoints/getvideoinfo/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getvideoinfo(array $input, User $user): void
+    {
+        unset($user);
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
+
+        $video_id = self::getAmpacheId($sub_id);
+        if (!$video_id) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addVideoInfo($response, $video_id);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addVideoInfo($response, $video_id);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     /**
      * getVideos
@@ -2701,12 +3204,18 @@ class OpenSubsonic_Api
                         $object_id = $rid;
                     }
 
-                    foreach ($object_id as $song_id) {
-                        $url = null;
+                    foreach ($object_id as $sub_id) {
+                        $song_id = self::getAmpacheId($sub_id);
+                        if (!$song_id) {
+                            continue;
+                        }
 
-                        if (Subsonic_Xml_Data::_isSong($song_id)) {
-                            $media = new Song(self::getAmpacheId($song_id));
-                            $url   = $media->play_url('&client=' . $localplay->type, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
+                        $url = null;
+                        if (self::getAmpacheType($sub_id) === 'song') {
+                            $media = new Song($song_id);
+                            $url   = ($media->isNew() === false)
+                                ? $media->play_url('&client=' . $localplay->type, 'api', function_exists('curl_version'), $user->id, $user->streamtoken)
+                                : null;
                         }
 
                         if ($url !== null) {
@@ -2821,23 +3330,24 @@ class OpenSubsonic_Api
             $playQueue->clear();
         } else {
             $media = (!empty($current))
-                ? Subsonic_Xml_Data::_getAmpacheObject($current)
+                ? self::getAmpacheObject($current)
                 : null;
-            if ($media === null || $media->isNew()) {
-                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-
-                return;
-            } else {
+            if (
+                $media instanceof library_item &&
+                $media instanceof Media &&
+                $media->isNew() === false &&
+                isset($media->time)
+            ) {
                 $playqueue_time = (int)User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
                 // wait a few seconds before smashing out play times
                 if ($playqueue_time < ($time - 2)) {
                     $previous = Stats::get_last_play($user_id, $client);
-                    $type     = Subsonic_Xml_Data::_getAmpacheType($current);
+                    $type     = self::getAmpacheType($current);
                     // long pauses might cause your now_playing to hide
                     Stream::garbage_collection();
-                    Stream::insert_now_playing((int)$media->id, (int)$user_id, ((int)$media->time - $position), (string)$user->username, $type, ($time - $position));
+                    Stream::insert_now_playing($media->getId(), $user_id, ($media->time - $position), (string)$user->username, $type, ($time - $position));
 
-                    if (array_key_exists('object_id', $previous) && $previous['object_id'] == $media->id) {
+                    if (array_key_exists('object_id', $previous) && $previous['object_id'] == $media->getId()) {
                         $time_diff = $time - $previous['date'];
                         $old_play  = $time_diff > $media->time * 5;
                         // shift the start time if it's an old play or has been pause/played
@@ -2846,10 +3356,14 @@ class OpenSubsonic_Api
                         }
                         // track has just started. repeated plays aren't called by scrobble so make sure we call this too
                         if (($position < 1 && $time_diff > 5) && !$old_play) {
-                            $media->set_played((int)$user_id, $client, [], $time);
+                            $media->set_played($user_id, $client, [], $time);
                         }
                     }
                 }
+            } else {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+                return;
             }
 
             $sub_ids = (is_array($id_list))
@@ -2920,7 +3434,7 @@ class OpenSubsonic_Api
 
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
-                Stream::insert_now_playing((int)$media->id, (int)$user->id, $time, (string)$user->username, $type, ((int)$time));
+                Stream::insert_now_playing((int)$media->id, $user->id, $time, (string)$user->username, $type, ($time));
                 // submission is true: go to scrobble plugins (Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY))
                 if ($submission && get_class($media) == Song::class && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
                     // stream has finished
@@ -3379,6 +3893,16 @@ class OpenSubsonic_Api
     /**
      * @deprecated inject dependency
      */
+    private static function getArtistRepository(): ArtistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
     private static function getBookmarkRepository(): BookmarkRepositoryInterface
     {
         global $dic;
@@ -3444,5 +3968,25 @@ class OpenSubsonic_Api
         global $dic;
 
         return $dic->get(ShareRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

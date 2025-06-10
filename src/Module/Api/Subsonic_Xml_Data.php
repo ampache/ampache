@@ -734,16 +734,12 @@ class Subsonic_Xml_Data
              * smartlist = 'smart_1'
              * playlist  = 1000000
              */
-            if ((int)$playlist_id === 0) {
-                $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user);
-                if ($playlist->isNew()) {
-                    continue;
-                }
-            } else {
-                $playlist = new Playlist((int)$playlist_id);
-                if ($playlist->isNew()) {
-                    continue;
-                }
+            $playlist = ((int)$playlist_id === 0)
+                ? new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user)
+                : new Playlist((int)$playlist_id);
+
+            if ($playlist->isNew()) {
+                continue;
             }
 
             self::addPlaylist($xplaylists, $playlist);
