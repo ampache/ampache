@@ -177,7 +177,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         Preference::init();
 
         // Get the list of possible methods for the Ampache API
-        $subsonic_legacy =  AmpConfig::get('subsonic_legacy', false); // force this for the moment to always use subsonic
+        $subsonic_legacy =  AmpConfig::get('subsonic_legacy', true); // force this for the moment to always use subsonic
         // OpenSubsonic API by default
         $os_methods = ($subsonic_legacy)
             ? []
