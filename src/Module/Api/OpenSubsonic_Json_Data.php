@@ -429,7 +429,24 @@ class OpenSubsonic_Json_Data
      *
      * Child media.
      * https://opensubsonic.netlify.app/docs/responses/child/
-     * @return array<string, mixed>
+     * @return array{
+     *     'id': string,
+     *     'parent': string,
+     *     'title': string,
+     *     'album': string,
+     *     'isDir': bool,
+     *     'isVideo': bool,
+     *     'type': string,
+     *     'artistId': string,
+     *     'artist': string,
+     *     'coverArt'?: string,
+     *     'duration': string,
+     *     'userRating'?: string,
+     *     'averageRating'?: string,
+     *     'starred'?: string,
+     *     'year'?: string,
+     *     'genre'?: string
+     * }
      */
     private static function _getChildAlbum(Album $album): array
     {
@@ -748,7 +765,19 @@ class OpenSubsonic_Json_Data
      *     mbid?: ?string
      * }> $similars
      * @param string $elementName
-     *@return array<string, mixed>
+     *@return array{
+     *     'biography'?: string,
+     *     'musicBrainzId': string,
+     *     'smallImageUrl': string,
+     *     'mediumImageUrl': string,
+     *     'largeImageUrl': string,
+     *     'similarArtist': array<array{
+     *         'id': string,
+     *         'name': string,
+     *         'rel'?: string,
+     *         'mbid'?: string
+     *     }>
+     *}
      */
     private static function _getArtistInfo(Artist $artist, array $info, array $similars, string $elementName): array
     {
@@ -892,7 +921,34 @@ class OpenSubsonic_Json_Data
      *
      * Child media.
      * https://opensubsonic.netlify.app/docs/responses/child/
-     * @return array<string, mixed>
+     * @return array{
+     *     'id': string,
+     *     'parent': string,
+     *     'title': string,
+     *     'isDir': bool,
+     *     'isVideo': bool,
+     *     'type': string,
+     *     'albumId': string,
+     *     'album': string,
+     *     'artistId': string,
+     *     'artist': string,
+     *     'coverArt'?: string,
+     *     'duration': string,
+     *     'bitrate': string,
+     *     'userRating'?: string,
+     *     'averageRating'?: string,
+     *     'starred'?: string,
+     *     'track'?: string,
+     *     'year'?: string,
+     *     'genre'?: string,
+     *     'size': string,
+     *     'diskNumber'?: string,
+     *     'suffix'?: string,
+     *     'contentType'?: string,
+     *     'path'?: string,
+     *     'transcodedSuffix'?: string,
+     *     'transcodedContentType'?: string
+     * }
      */
     private static function _getChildSong(Song $song): array
     {
@@ -983,7 +1039,26 @@ class OpenSubsonic_Json_Data
     /**
      * _getChildPodcastEpisode
      *  https://opensubsonic.netlify.app/docs/responses/child/
-     * @return array<string, mixed>
+     * @return array{
+     *     'id': string,
+     *     'parent': string,
+     *     'title': string,
+     *     'isDir': bool,
+     *     'isVideo': bool,
+     *     'type': string,
+     *     'coverArt'?: string,
+     *     'duration': string,
+     *     'bitrate': string,
+     *     'userRating'?: string,
+     *     'averageRating'?: string,
+     *     'starred'?: string,
+     *     'year'?: string,
+     *     'genre'?: string,
+     *     'size': string,
+     *     'suffix': string,
+     *     'contentType': string,
+     *     'path'?: string
+     * }
      */
     private static function _getChildPodcastEpisode(Podcast_Episode $episode): array
     {
@@ -993,7 +1068,7 @@ class OpenSubsonic_Json_Data
         $json = [
             'id' => $sub_id,
             'parent' => $subParent,
-            'title' => $episode->get_fullname(),
+            'title' => (string)$episode->get_fullname(),
             'isDir' => false,
             'isVideo' => true,
             'type' => 'podcast',
@@ -1046,7 +1121,28 @@ class OpenSubsonic_Json_Data
     /**
      * _getChildVideo
      *  https://opensubsonic.netlify.app/docs/responses/child/
-     * @return array<string, mixed>
+     * @return array{
+     *     'id': string,
+     *     'parent': string,
+     *     'title': string,
+     *     'isDir': bool,
+     *     'isVideo': bool,
+     *     'type': string,
+     *     'coverArt'?: string,
+     *     'duration': string,
+     *     'bitrate': string,
+     *     'userRating'?: string,
+     *     'averageRating'?: string,
+     *     'starred'?: string,
+     *     'year'?: string,
+     *     'genre'?: string,
+     *     'size': string,
+     *     'suffix': string,
+     *     'contentType': string,
+     *     'path'?: string,
+     *     'transcodedSuffix'?: string,
+     *     'transcodedContentType'?: string
+     * }
      */
     private static function _getChildVideo(Video $video): array
     {
