@@ -366,7 +366,7 @@ class Subsonic_Xml_Data
      *     has_art: int
      * } $artist
      */
-    private static function addArtistArray(SimpleXMLElement $xml, $artist): void
+    private static function addArtistArray(SimpleXMLElement $xml, array $artist): void
     {
         $sub_id  = (string)self::_getArtistId($artist['id']);
         $xartist = self::addChildToResultXml($xml, 'artist');
