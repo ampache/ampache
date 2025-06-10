@@ -2014,6 +2014,7 @@ class OpenSubsonic_Api
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
         if (!$sub_id) {
             return;
+        }
 
         // replace additional prefixes
         $sub_id = preg_replace('/^[a-z]*-[a-z]*-/', '', $sub_id);
