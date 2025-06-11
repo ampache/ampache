@@ -34,15 +34,15 @@ use WpOrg\Requests\Requests;
 
 class AmpacheGoogleMaps extends AmpachePlugin implements PluginLocationInterface
 {
-    public string $name        = 'GoogleMaps';
+    public string $name = 'GoogleMaps';
 
-    public string $categories  = 'geolocation';
+    public string $categories = 'geolocation';
 
     public string $description = 'Show user\'s location with Google Maps';
 
-    public string $url         = 'http://maps.google.com';
+    public string $url = 'http://maps.google.com';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370022';
 

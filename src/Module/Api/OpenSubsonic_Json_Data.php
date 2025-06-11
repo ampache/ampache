@@ -339,7 +339,7 @@ class OpenSubsonic_Json_Data
     private static function _getPodcast(Podcast $podcast, bool $includeEpisodes): array
     {
 
-        $sub_id   = OpenSubsonic_Api::getPodcastSubId($podcast->getId());
+        $sub_id = OpenSubsonic_Api::getPodcastSubId($podcast->getId());
 
         $json = [
             'id' => $sub_id,
@@ -721,7 +721,7 @@ class OpenSubsonic_Json_Data
      */
     private static function _getArtistArray(array $artist_list, array $artist): array
     {
-        $sub_id  = OpenSubsonic_Api::getArtistSubId($artist['id']);
+        $sub_id = OpenSubsonic_Api::getArtistSubId($artist['id']);
 
         $json = [
             'id' => $sub_id,
@@ -971,8 +971,8 @@ class OpenSubsonic_Json_Data
         ];
 
         if ($song->has_art()) {
-            $art_id            = (AmpConfig::get('show_song_art', false)) ? $sub_id : $subParent;
-            $json['coverArt']  = $art_id;
+            $art_id           = (AmpConfig::get('show_song_art', false)) ? $sub_id : $subParent;
+            $json['coverArt'] = $art_id;
         }
 
         $json['duration'] = (string)$song->time;
@@ -1206,9 +1206,9 @@ class OpenSubsonic_Json_Data
         if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
             $transcode_settings = $video->get_transcode_settings(null, 'api');
             if (!empty($transcode_settings)) {
-                $transcode_type                 = $transcode_settings['format'];
-                $json['transcodedSuffix']       = $transcode_type;
-                $json['transcodedContentType']  = Video::type_to_mime($transcode_type);
+                $transcode_type                = $transcode_settings['format'];
+                $json['transcodedSuffix']      = $transcode_type;
+                $json['transcodedContentType'] = Video::type_to_mime($transcode_type);
             }
         }
 
@@ -2068,9 +2068,9 @@ class OpenSubsonic_Json_Data
         $lyrics = $song->get_lyrics();
 
         if (!empty($lyrics) && $lyrics['text'] && is_string($lyrics['text'])) {
-            $text    = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
-            $text    = preg_replace('/\\n\\n/i', "\n", (string)$text);
-            $text    = str_replace("\r", '', (string)$text);
+            $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
+            $text = preg_replace('/\\n\\n/i', "\n", (string)$text);
+            $text = str_replace("\r", '', (string)$text);
 
             $json = [];
             if ($artist) {

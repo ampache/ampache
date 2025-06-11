@@ -770,7 +770,7 @@ class AmpacheXbmc extends localplay_controller
 
                 $array['track'] = $playposition['position'] + 1;
 
-                $playlist_item  = rawurldecode($currentplay['item']['file']);
+                $playlist_item = rawurldecode($currentplay['item']['file']);
 
                 $url_data = $this->parse_url($playlist_item);
                 $oid      = (array_key_exists('oid', $url_data)) ? $url_data['oid'] : '';

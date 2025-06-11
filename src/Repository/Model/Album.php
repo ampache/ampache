@@ -226,11 +226,11 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         ?string $version = null,
         bool $readonly = false
     ): int {
-        $trimmed        = Catalog::trim_prefix(trim((string) $name));
-        $name           = $trimmed['string'];
-        $prefix         = $trimmed['prefix'];
-        $album_artist   = (int)$album_artist;
-        $album_artist   = ($album_artist < 1) ? null : $album_artist;
+        $trimmed      = Catalog::trim_prefix(trim((string) $name));
+        $name         = $trimmed['string'];
+        $prefix       = $trimmed['prefix'];
+        $album_artist = (int)$album_artist;
+        $album_artist = ($album_artist < 1) ? null : $album_artist;
 
         $mbid           = (empty($mbid)) ? null : $mbid;
         $mbid_group     = (empty($mbid_group)) ? null : $mbid_group;
@@ -888,7 +888,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $changed    = [];
         $songs      = $this->getSongRepository()->getByAlbum($this->id);
         // run an album check on the current object READONLY means that it won't insert a new album
-        $album_id   = self::check(
+        $album_id = self::check(
             $this->catalog,
             $name,
             $year,

@@ -34,15 +34,15 @@ use Ampache\Module\Util\Ui;
 
 class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
 {
-    public string $name        = 'RSSView';
+    public string $name = 'RSSView';
 
-    public string $categories  = 'home';
+    public string $categories = 'home';
 
     public string $description = 'RSS View';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000002';
+    public string $version = '000002';
 
     public string $min_ampache = '370021';
 

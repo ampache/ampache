@@ -36,15 +36,15 @@ use Ampache\Module\Playback\Scrobble\Scrobbler;
 
 class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
-    public string $name        = 'Libre.FM';
+    public string $name = 'Libre.FM';
 
-    public string $categories  = 'scrobbling';
+    public string $categories = 'scrobbling';
 
     public string $description = 'Records your played songs to your Libre.FM Account';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000003';
+    public string $version = '000003';
 
     public string $min_ampache = '360003';
 
@@ -55,9 +55,9 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
 
     private $challenge;
 
-    private string $api_key  = '';
+    private string $api_key = '';
 
-    private string $secret  = '';
+    private string $secret = '';
 
     private string $scheme = 'https';
 

@@ -47,8 +47,8 @@ final class ShowAction implements ApplicationActionInterface
         ConfigContainerInterface $configContainer,
         UiInterface $ui
     ) {
-        $this->configContainer   = $configContainer;
-        $this->ui                = $ui;
+        $this->configContainer = $configContainer;
+        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

@@ -323,7 +323,7 @@ class UPnPPlayer
         if ($state == 'PLAYING') {
             $response = $this->Device()->instanceOnly('Pause');
         } else {
-            $args     = [
+            $args = [
                 'InstanceID' => 0,
                 'Speed' => 1
             ];

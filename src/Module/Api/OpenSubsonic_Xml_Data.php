@@ -1650,7 +1650,7 @@ class OpenSubsonic_Xml_Data
      */
     public static function addTokenInfo(SimpleXMLElement $xml, User $user): SimpleXMLElement
     {
-        $xscan  = self::_addChildToResultXml($xml, htmlspecialchars('tokenInfo'));
+        $xscan = self::_addChildToResultXml($xml, htmlspecialchars('tokenInfo'));
         $xscan->addAttribute('username', (string)$user->username);
 
         return $xml;

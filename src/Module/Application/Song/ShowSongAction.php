@@ -58,11 +58,11 @@ final class ShowSongAction implements ApplicationActionInterface
         TalFactoryInterface $talFactory,
         LoggerInterface $logger
     ) {
-        $this->ui             = $ui;
-        $this->modelFactory   = $modelFactory;
-        $this->guiFactory     = $guiFactory;
-        $this->talFactory     = $talFactory;
-        $this->logger         = $logger;
+        $this->ui           = $ui;
+        $this->modelFactory = $modelFactory;
+        $this->guiFactory   = $guiFactory;
+        $this->talFactory   = $talFactory;
+        $this->logger       = $logger;
     }
 
     public function run(

@@ -1667,7 +1667,7 @@ class Subsonic_Api
     public static function hls(array $input, User $user): void
     {
         unset($user);
-        $fileid  = self::_check_parameter($input, 'id', true);
+        $fileid = self::_check_parameter($input, 'id', true);
         if (!$fileid) {
             return;
         }
@@ -1984,7 +1984,7 @@ class Subsonic_Api
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
             foreach ($object_ids as $subsonic_id) {
-                $time      = (isset($input['time']))
+                $time = (isset($input['time']))
                     ? (int)(((int)$input['time']) / 1000)
                     : time();
                 $previous  = Stats::get_last_play($user->id, $client, $time);

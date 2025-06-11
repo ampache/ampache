@@ -88,11 +88,11 @@ final class UserUpdate5Method
         if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
-        $username   = $input['username'];
-        $password   = $input['password'] ?? null;
-        $fullname   = $input['fullname'] ?? null;
-        $email      = (array_key_exists('email', $input)) ? urldecode($input['email']) : null;
-        $website    = (isset($input['website']))
+        $username = $input['username'];
+        $password = $input['password'] ?? null;
+        $fullname = $input['fullname'] ?? null;
+        $email    = (array_key_exists('email', $input)) ? urldecode($input['email']) : null;
+        $website  = (isset($input['website']))
             ? filter_var(urldecode($input['website']), FILTER_VALIDATE_URL) ?: null
             : null;
         $state      = $input['state'] ?? null;

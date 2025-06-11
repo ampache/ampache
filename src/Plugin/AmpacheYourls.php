@@ -34,15 +34,15 @@ use WpOrg\Requests\Requests;
 
 class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
 {
-    public string $name        = 'YOURLS';
+    public string $name = 'YOURLS';
 
-    public string $categories  = 'shortener';
+    public string $categories = 'shortener';
 
     public string $description = 'URL shorteners on shared links with YOURLS';
 
-    public string $url         = 'http://yourls.org';
+    public string $url = 'http://yourls.org';
 
-    public string $version     = '000002';
+    public string $version = '000002';
 
     public string $min_ampache = '360037';
 

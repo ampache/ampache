@@ -35,15 +35,15 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInterface
 {
-    public string $name        = 'Stream Time';
+    public string $name = 'Stream Time';
 
-    public string $categories  = 'stream_control';
+    public string $categories = 'stream_control';
 
     public string $description = 'Control time per user';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370024';
 

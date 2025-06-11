@@ -35,15 +35,15 @@ use Ampache\Module\Playback\Scrobble\Scrobbler;
 
 class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
-    public string $name        = 'Last.FM';
+    public string $name = 'Last.FM';
 
-    public string $categories  = 'scrobbling';
+    public string $categories = 'scrobbling';
 
     public string $description = 'Records your played songs to your Last.FM account';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000005';
+    public string $version = '000005';
 
     public string $min_ampache = '360003';
 
