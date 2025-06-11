@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Api\Authentication\Gatekeeper;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -34,6 +35,8 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\UserRepositoryInterface;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Log\LoggerInterface;
 
 final class SubsonicApiApplication implements ApiApplicationInterface
@@ -44,14 +47,22 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
     private NetworkCheckerInterface $networkChecker;
 
+    private ServerRequestCreatorInterface $serverRequestCreator;
+
+    private UserRepositoryInterface $userRepository;
+
     public function __construct(
         AuthenticationManagerInterface $authenticationManager,
         LoggerInterface $logger,
-        NetworkCheckerInterface $networkChecker
+        NetworkCheckerInterface $networkChecker,
+        ServerRequestCreatorInterface $serverRequestCreator,
+        UserRepositoryInterface $userRepository
     ) {
         $this->authenticationManager = $authenticationManager;
         $this->logger                = $logger;
         $this->networkChecker        = $networkChecker;
+        $this->serverRequestCreator  = $serverRequestCreator;
+        $this->userRepository        = $userRepository;
     }
 
     public function run(): void
@@ -62,13 +73,23 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             return;
         }
 
-        $action = strtolower($_REQUEST['ssaction'] ?? '');
+        $request = $this->serverRequestCreator->fromGlobals();
+        $request = $request->withQueryParams($request->getQueryParams());
+
+        $gatekeeper = new Gatekeeper(
+            $this->userRepository,
+            $request,
+            $this->logger
+        );
+
+        $query  = $request->getQueryParams();
+        $action = strtolower($query['ssaction'] ?? '');
         // Compatibility reason
         if (empty($action)) {
-            $action = strtolower($_REQUEST['action'] ?? '');
+            $action = strtolower($query['action'] ?? '');
         }
-        $format   = (string)($_REQUEST['f'] ?? 'xml');
-        $callback = $_REQUEST['callback'] ?? $format;
+        $format   = (string)($query['f'] ?? 'xml');
+        $callback = $query['callback'] ?? $format;
         /* Set the correct default headers */
         if (!in_array($action, ['getcoverart', 'hls', 'stream', 'download', 'getavatar'])) {
             Subsonic_Api::_setHeader($format);
@@ -86,44 +107,83 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             return;
         }
 
+        // Legacy Subsonic API by default.
+        $subsonic_legacy = AmpConfig::get('subsonic_legacy', true); // force this for the moment to always use subsonic
+
         // Authenticate the user with preemptive HTTP Basic authentication first
-        $userName = $_REQUEST['PHP_AUTH_USER'] ?? '';
+        $userName = $query['PHP_AUTH_USER'] ?? '';
         if (empty($userName)) {
-            $userName = $_REQUEST['u'] ?? '';
+            $userName = $query['u'] ?? '';
         }
-        $password = $_REQUEST['PHP_AUTH_PW'] ?? '';
+        $password = $query['PHP_AUTH_PW'] ?? '';
         if (empty($password)) {
-            $password = $_REQUEST['p'] ?? '';
+            $password = $query['p'] ?? '';
         }
 
-        $token     = $_REQUEST['t'] ?? '';
-        $salt      = $_REQUEST['s'] ?? '';
-        $version   = $_REQUEST['v'] ?? '';
-        $clientapp = $_REQUEST['c'] ?? '';
+        // apiKey authentication https://opensubsonic.netlify.app/docs/extensions/apikeyauth/
+        $apiKey = ($subsonic_legacy)
+            ? ''
+            : $gatekeeper->getAuth('apiKey');
+
+        $token     = $query['t'] ?? '';
+        $salt      = $query['s'] ?? '';
+        $version   = $query['v'] ?? '';
+        $clientapp = $query['c'] ?? '';
 
         if (!isset($_SERVER['HTTP_USER_AGENT'])) {
             $_SERVER['HTTP_USER_AGENT'] = $clientapp;
         }
 
+        $token_auth = (!empty($token) && !empty($salt));
+        $api_auth   = false;
+        $pass_auth  = (!empty($password) && !$token_auth);
+
+        if ($apiKey) {
+            if ($subsonic_legacy) {
+                Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_BADAUTH, $action), $callback);
+
+                return;
+            }
+
+            $user     = $gatekeeper->getUser('apiKey');
+            $userName = $user?->getUsername();
+            $api_auth = (!empty($userName));
+        }
+
+
+        // make sure we have correct authentication parameters
         if (
             empty($userName) ||
             empty($version) ||
             empty($action) ||
-            empty($clientapp) ||
-            (
-                empty($password) &&
-                (
-                    empty($token) ||
-                    empty($salt)
-                )
-            )
+            empty($clientapp)
         ) {
             ob_end_clean();
             $this->logger->warning(
                 'Missing Subsonic base parameters',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
-            Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, $action), $callback);
+
+            if ($subsonic_legacy) {
+                Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, $action), $callback);
+            } else {
+                OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_MISSINGPARAM, $action);
+            }
+
+            return;
+        }
+        if (
+            !$token_auth ||
+            !$api_auth ||
+            !$pass_auth
+        ) {
+            if ($subsonic_legacy) {
+                Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_BADAUTH, $action), $callback);
+            } elseif ($apiKey && !$api_auth) {
+                OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_BADAPIKEY, $action);
+            } else {
+                OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_BADAUTH, $action);
+            }
 
             return;
         }
@@ -177,8 +237,6 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         Preference::init();
 
         // Get the list of possible methods for the Ampache API
-        $subsonic_legacy =  AmpConfig::get('subsonic_legacy', true); // force this for the moment to always use subsonic
-        // OpenSubsonic API by default
         $os_methods = ($subsonic_legacy)
             ? []
             : array_diff(get_class_methods(OpenSubsonic_Api::class), OpenSubsonic_Api::SYSTEM_LIST);
