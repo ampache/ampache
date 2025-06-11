@@ -124,10 +124,6 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $password = $query['p'] ?? '';
         }
 
-        // apiKey authentication https://opensubsonic.netlify.app/docs/extensions/apikeyauth/
-        $apiKey = ($subsonic_legacy)
-            ? ''
-            : $gatekeeper->getAuth('apiKey');
 
         $token     = $query['t'] ?? '';
         $salt      = $query['s'] ?? '';
@@ -141,6 +137,9 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $token_auth = (!empty($token) && !empty($salt));
         $api_auth   = false;
         $pass_auth  = (!empty($password) && !$token_auth);
+
+        // apiKey authentication https://opensubsonic.netlify.app/docs/extensions/apikeyauth/
+        $apiKey = $gatekeeper->getAuth('apiKey');
 
         if ($apiKey) {
             if ($subsonic_legacy) {
@@ -311,6 +310,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 }
             }
         }
+
         //$this->logger->debug(print_r($input, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
         //$this->logger->debug(print_r(apache_request_headers(), true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
