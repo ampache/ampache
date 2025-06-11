@@ -191,7 +191,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             );
             if ($subsonic_legacy) {
                 Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_BADAUTH, $action), $callback);
-            } elseif ($apiKey && !$api_auth) {
+            } elseif ($apiKey) {
                 OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_BADAPIKEY, $action);
             } else {
                 OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_BADAUTH, $action);

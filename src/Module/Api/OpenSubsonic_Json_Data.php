@@ -112,7 +112,8 @@ class OpenSubsonic_Json_Data
      *         'openSubsonic': bool,
      *         'error': array{
      *             'code': int,
-     *             'message': string
+     *             'message': string,
+     *             'helpUrl': string
      *         }
      *     }
      * }
@@ -130,7 +131,8 @@ class OpenSubsonic_Json_Data
                 'openSubsonic' => true,
                 'error' => [
                     'code' => OpenSubsonic_Api::SSERROR_GENERIC,
-                    'message' => 'Error creating response.'
+                    'message' => 'Error creating response.',
+                    'helpUrl' => 'https://ampache.org/api/subsonic'
                 ]
             ]
         ];
@@ -1379,7 +1381,8 @@ class OpenSubsonic_Json_Data
      *         'openSubsonic': bool,
      *         'error': array{
      *             'code': int,
-     *             'message': string
+     *             'message': string,
+     *             'helpUrl': string
      *         }
      *     }
      * }

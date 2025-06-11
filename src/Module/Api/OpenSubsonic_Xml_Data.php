@@ -160,7 +160,8 @@ class OpenSubsonic_Xml_Data
                 $message = "Invalid API key.";
                 break;
         }
-        $xerr->addAttribute('message', (string)$message);
+        $xerr->addAttribute('message', $message);
+        $xerr->addAttribute('helpUrl', 'https://ampache.org/api/subsonic');
 
         return $xml;
     }
