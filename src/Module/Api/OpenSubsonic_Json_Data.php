@@ -66,6 +66,9 @@ class OpenSubsonic_Json_Data
 {
     /**
      * _createResponse
+     *
+     * Common answer wrapper.
+     * https://opensubsonic.netlify.app/docs/responses/subsonicresponse/
      * @return array{
      *     'subsonic-response': array{
      *         'status': string,
@@ -1040,7 +1043,7 @@ class OpenSubsonic_Json_Data
 
     /**
      * _getChildPodcastEpisode
-     *  https://opensubsonic.netlify.app/docs/responses/child/
+     * https://opensubsonic.netlify.app/docs/responses/child/
      * @return array{
      *     'id': string,
      *     'parent': string,
@@ -1122,7 +1125,7 @@ class OpenSubsonic_Json_Data
 
     /**
      * _getChildVideo
-     *  https://opensubsonic.netlify.app/docs/responses/child/
+     * https://opensubsonic.netlify.app/docs/responses/child/
      * @return array{
      *     'id': string,
      *     'parent': string,
@@ -1368,79 +1371,6 @@ class OpenSubsonic_Json_Data
         return self::_createSuccessResponse($function);
     }
 
-
-    /**
-     * addError
-     * Add a failed subsonic-response with error information.
-     * @return array{
-     *     'subsonic-response': array{
-     *         'status': string,
-     *         'version': string,
-     *         'type': string,
-     *         'serverVersion': string,
-     *         'openSubsonic': bool,
-     *         'error': array{
-     *             'code': int,
-     *             'message': string,
-     *             'helpUrl': string
-     *         }
-     *     }
-     * }
-     */
-    public static function addError(int $code, string $function): array
-    {
-        $error = self::_createFailedResponse($function);
-
-        switch ($code) {
-            case OpenSubsonic_Api::SSERROR_MISSINGPARAM:
-                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_MISSINGPARAM;
-                $error['subsonic-response']['error']['message'] = 'Required parameter is missing.';
-                break;
-            case OpenSubsonic_Api::SSERROR_APIVERSION_CLIENT:
-                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_APIVERSION_CLIENT;
-                $error['subsonic-response']['error']['message'] = 'Incompatible Subsonic REST protocol version. Client must upgrade.';
-                break;
-            case OpenSubsonic_Api::SSERROR_APIVERSION_SERVER:
-                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_APIVERSION_SERVER;
-                $error['subsonic-response']['error']['message'] = 'Incompatible Subsonic REST protocol version. Server must upgrade.';
-                break;
-            case OpenSubsonic_Api::SSERROR_BADAUTH:
-                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_BADAUTH;
-                $error['subsonic-response']['error']['message'] = 'Wrong username or password.';
-                break;
-            case OpenSubsonic_Api::SSERROR_TOKENAUTHNOTSUPPORTED:
-                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_TOKENAUTHNOTSUPPORTED;
-                $error['subsonic-response']['error']['message'] = 'Token authentication not supported.';
-                break;
-            case OpenSubsonic_Api::SSERROR_UNAUTHORIZED:
-                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_UNAUTHORIZED;
-                $error['subsonic-response']['error']['message'] = 'User is not authorized for the given operation.';
-                break;
-            case OpenSubsonic_Api::SSERROR_TRIAL:
-                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_TRIAL;
-                $error['subsonic-response']['error']['message'] = 'The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details.';
-                break;
-            case OpenSubsonic_Api::SSERROR_DATA_NOTFOUND:
-                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_DATA_NOTFOUND;
-                $error['subsonic-response']['error']['message'] = 'The requested data was not found.';
-                break;
-            case OpenSubsonic_Api::SSERROR_AUTHMETHODNOTSUPPORTED:
-                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_AUTHMETHODNOTSUPPORTED;
-                $error['subsonic-response']['error']['message'] = 'Provided authentication mechanism not supported.';
-                break;
-            case OpenSubsonic_Api::SSERROR_AUTHMETHODCONFLICT:
-                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_AUTHMETHODCONFLICT;
-                $error['subsonic-response']['error']['message'] = 'Multiple conflicting authentication mechanisms provided.';
-                break;
-            case OpenSubsonic_Api::SSERROR_BADAPIKEY:
-                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_BADAPIKEY;
-                $error['subsonic-response']['error']['message'] = 'Invalid API key.';
-                break;
-        }
-
-        return $error;
-    }
-
     /**
      * addAlbumID3
      *
@@ -1464,6 +1394,7 @@ class OpenSubsonic_Json_Data
      * addAlbumID3WithSongs
      *
      * Album with songs.
+     * https://opensubsonic.netlify.app/docs/responses/albumid3withsongs/
      * @see self::addAlbumID3()
      */
 
@@ -1472,6 +1403,7 @@ class OpenSubsonic_Json_Data
      * addAlbumInfo
      *
      * Album info.
+     * https://opensubsonic.netlify.app/docs/responses/albuminfo/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param array{
      *     id: int,
@@ -1502,6 +1434,7 @@ class OpenSubsonic_Json_Data
      * addAlbumList
      *
      * Album list.
+     * https://opensubsonic.netlify.app/docs/responses/albumlist/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $albums
      * @return array{'subsonic-response': array<string, mixed>}
@@ -1522,6 +1455,7 @@ class OpenSubsonic_Json_Data
      * addAlbumList2
      *
      * Album list.
+     * https://opensubsonic.netlify.app/docs/responses/albumlist2/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $albums
      * @return array{'subsonic-response': array<string, mixed>}
@@ -1621,6 +1555,7 @@ class OpenSubsonic_Json_Data
      * addArtistInfo
      *
      * Artist info.
+     * https://opensubsonic.netlify.app/docs/responses/artistinfo/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param array{
      *     id: ?int,
@@ -1656,6 +1591,7 @@ class OpenSubsonic_Json_Data
      * addArtistInfo2
      *
      * Artist info.
+     * https://opensubsonic.netlify.app/docs/responses/artistinfo2/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param array{
      *     id: ?int,
@@ -1691,6 +1627,7 @@ class OpenSubsonic_Json_Data
      * addArtistsID3
      *
      * A list of indexed Artists.
+     * https://opensubsonic.netlify.app/docs/responses/artistsid3/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param list<array{
      *     id: int,
@@ -1721,6 +1658,8 @@ class OpenSubsonic_Json_Data
      * addArtistWithAlbumsID3
      *
      * An extension of ArtistID3 with AlbumID3
+     * https://opensubsonic.netlify.app/docs/responses/artistwithalbumsid3/
+     * @see self::addArtistID3()
      */
 
 
@@ -1728,6 +1667,7 @@ class OpenSubsonic_Json_Data
      * addBookmarks
      *
      * Bookmarks list.
+     * https://opensubsonic.netlify.app/docs/responses/bookmarks/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param list<Bookmark> $bookmarks
      * @return array{'subsonic-response': array<string, mixed>}
@@ -1750,6 +1690,7 @@ class OpenSubsonic_Json_Data
     * addChatMessages
     *
     * Chat messages list.
+     * https://opensubsonic.netlify.app/docs/responses/chatmessages/
     * @param array{'subsonic-response': array<string, mixed>} $response
     * @param int[] $messages
     * @return array{'subsonic-response': array<string, mixed>}
@@ -1823,6 +1764,14 @@ class OpenSubsonic_Json_Data
      * addContributor
      *
      * A contributor artist for a song or an album
+     * https://opensubsonic.netlify.app/docs/responses/contributor/
+     */
+
+    /**
+     * addDirectory
+     *
+     * Directory.
+     * https://opensubsonic.netlify.app/docs/responses/directory/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -1843,30 +1792,91 @@ class OpenSubsonic_Json_Data
     }
 
     /**
-     * addDirectory
-     *
-     * Directory.
-     */
-
-
-    /**
      * addDiscTitle
      *
      * A disc title for an album
+     * https://opensubsonic.netlify.app/docs/responses/disctitle/
      */
 
 
     /**
      * addError
-     *
-     * Error.
+     * Add a failed subsonic-response with error information.
+     * https://opensubsonic.netlify.app/docs/responses/error/
+     * @return array{
+     *     'subsonic-response': array{
+     *         'status': string,
+     *         'version': string,
+     *         'type': string,
+     *         'serverVersion': string,
+     *         'openSubsonic': bool,
+     *         'error': array{
+     *             'code': int,
+     *             'message': string,
+     *             'helpUrl': string
+     *         }
+     *     }
+     * }
      */
+    public static function addError(int $code, string $function): array
+    {
+        $error = self::_createFailedResponse($function);
 
+        switch ($code) {
+            case OpenSubsonic_Api::SSERROR_MISSINGPARAM:
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_MISSINGPARAM;
+                $error['subsonic-response']['error']['message'] = 'Required parameter is missing.';
+                break;
+            case OpenSubsonic_Api::SSERROR_APIVERSION_CLIENT:
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_APIVERSION_CLIENT;
+                $error['subsonic-response']['error']['message'] = 'Incompatible Subsonic REST protocol version. Client must upgrade.';
+                break;
+            case OpenSubsonic_Api::SSERROR_APIVERSION_SERVER:
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_APIVERSION_SERVER;
+                $error['subsonic-response']['error']['message'] = 'Incompatible Subsonic REST protocol version. Server must upgrade.';
+                break;
+            case OpenSubsonic_Api::SSERROR_BADAUTH:
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_BADAUTH;
+                $error['subsonic-response']['error']['message'] = 'Wrong username or password.';
+                break;
+            case OpenSubsonic_Api::SSERROR_TOKENAUTHNOTSUPPORTED:
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_TOKENAUTHNOTSUPPORTED;
+                $error['subsonic-response']['error']['message'] = 'Token authentication not supported.';
+                break;
+            case OpenSubsonic_Api::SSERROR_UNAUTHORIZED:
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_UNAUTHORIZED;
+                $error['subsonic-response']['error']['message'] = 'User is not authorized for the given operation.';
+                break;
+            case OpenSubsonic_Api::SSERROR_TRIAL:
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_TRIAL;
+                $error['subsonic-response']['error']['message'] = 'The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details.';
+                break;
+            case OpenSubsonic_Api::SSERROR_DATA_NOTFOUND:
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_DATA_NOTFOUND;
+                $error['subsonic-response']['error']['message'] = 'The requested data was not found.';
+                break;
+            case OpenSubsonic_Api::SSERROR_AUTHMETHODNOTSUPPORTED:
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_AUTHMETHODNOTSUPPORTED;
+                $error['subsonic-response']['error']['message'] = 'Provided authentication mechanism not supported.';
+                break;
+            case OpenSubsonic_Api::SSERROR_AUTHMETHODCONFLICT:
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_AUTHMETHODCONFLICT;
+                $error['subsonic-response']['error']['message'] = 'Multiple conflicting authentication mechanisms provided.';
+                break;
+            case OpenSubsonic_Api::SSERROR_BADAPIKEY:
+                $error['subsonic-response']['error']['code']    = OpenSubsonic_Api::SSERROR_BADAPIKEY;
+                $error['subsonic-response']['error']['message'] = 'Invalid API key.';
+                break;
+        }
+
+        return $error;
+    }
 
     /**
      * addGenres
      *
      * Genres list.
+     * https://opensubsonic.netlify.app/docs/responsesq
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
      * @return array{'subsonic-response': array<string, mixed>}
@@ -1889,6 +1899,7 @@ class OpenSubsonic_Json_Data
      * addIndexes
      *
      * Artist list.
+     * https://opensubsonic.netlify.app/docs/responses/indexes/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param list<array{
      *     id: int,
@@ -1922,6 +1933,7 @@ class OpenSubsonic_Json_Data
      * addIndexID3
      *
      * An indexed artist list by ID3 tags.
+     * https://opensubsonic.netlify.app/docs/responses/indexid3/
      */
 
 
@@ -1929,6 +1941,7 @@ class OpenSubsonic_Json_Data
      * _getInternetRadioStation
      *
      * An internetRadioStation.
+     * https://opensubsonic.netlify.app/docs/responses/internetradiostation/
      * @return array{
      *     'id': string,
      *     'name': string,
@@ -1951,6 +1964,7 @@ class OpenSubsonic_Json_Data
      * addInternetRadioStations
      *
      * internetRadioStations.
+     * https://opensubsonic.netlify.app/docs/responses/internetradiostations/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $radios
      * @return array{'subsonic-response': array<string, mixed>}
@@ -1974,6 +1988,7 @@ class OpenSubsonic_Json_Data
      * addItemDate
      *
      * A date for a media item that may be just a year, or year-month, or full date.
+     * https://opensubsonic.netlify.app/docs/responses/itemdate/
      */
 
 
@@ -1981,12 +1996,17 @@ class OpenSubsonic_Json_Data
      * addItemGenre
      *
      * A genre returned in list of genres for an item.
+     * https://opensubsonic.netlify.app/docs/responses/itemgenre/
+     * @see self::addChild()
+     * @see self::addAlbumID3()
+     *
      */
 
 
 
     /**
      * addJukeboxPlaylist
+     * https://opensubsonic.netlify.app/docs/responses/jukeboxplaylist/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -2014,6 +2034,7 @@ class OpenSubsonic_Json_Data
 
     /**
      * addJukeboxStatus
+     * https://opensubsonic.netlify.app/docs/responses/jukeboxstatus/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -2031,6 +2052,7 @@ class OpenSubsonic_Json_Data
      * addLicense
      *
      * getLicense result.
+     * https://opensubsonic.netlify.app/docs/responses/license/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -2049,6 +2071,8 @@ class OpenSubsonic_Json_Data
      * addLine
      *
      * One line of a song lyric
+     * https://opensubsonic.netlify.app/docs/responses/line/
+     * @see self::addLyricsList())
      */
 
 
@@ -2056,6 +2080,7 @@ class OpenSubsonic_Json_Data
      * addLyrics
      *
      * Lyrics.
+     * https://opensubsonic.netlify.app/docs/responses/lyrics/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -2104,31 +2129,7 @@ class OpenSubsonic_Json_Data
             return $response;
         }
 
-        $response['subsonic-response']['structuredLyrics'] = [];
-
-        $lyrics = $song->get_lyrics();
-
-        if (!empty($lyrics) && $lyrics['text'] && is_string($lyrics['text'])) {
-            $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
-            $text = preg_replace('/\\n\\n/i', "\n", (string)$text);
-            $text = str_replace("\r", '', (string)$text);
-
-            $json = [
-                'displayArtist' => (string)$song->get_artist_fullname(),
-                'displayTitle' => (string)$song->title,
-                'lang' => 'xxx',
-                'synced' => false,
-                'line' => [],
-            ];
-
-            foreach (explode("\n", htmlspecialchars($text)) as $line) {
-                if (!empty($line)) {
-                    $json['line'][] = ['value' => (string)$line];
-                }
-            }
-
-            $response['subsonic-response']['structuredLyrics'][] = $json;
-        }
+        $response['subsonic-response']['structuredLyrics'] = self::_getStructuredLyrics($song);
 
         return $response;
     }
@@ -2137,6 +2138,8 @@ class OpenSubsonic_Json_Data
      * addMusicFolder
      *
      * MusicFolder.
+     * https://opensubsonic.netlify.app/docs/responses/musicfolder/
+     * @see self::addMusicFolders()
      */
 
 
@@ -2144,6 +2147,7 @@ class OpenSubsonic_Json_Data
      * addMusicFolders
      *
      * MusicFolders.
+     * https://opensubsonic.netlify.app/docs/responses/musicfolders/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $catalogs
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2173,6 +2177,7 @@ class OpenSubsonic_Json_Data
      * addNewestPodcasts
      *
      * NewestPodcasts.
+     * https://opensubsonic.netlify.app/docs/responses/newestpodcasts/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param Podcast_Episode[] $episodes
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2195,6 +2200,7 @@ class OpenSubsonic_Json_Data
      * addNowPlaying
      *
      * nowPlaying.
+     * https://opensubsonic.netlify.app/docs/responses/nowplaying/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param list<array{
      *     media: library_item,
@@ -2241,6 +2247,7 @@ class OpenSubsonic_Json_Data
      * addOpenSubsonicExtension
      *
      * A supported OpenSubsonic API extension.
+     * https://opensubsonic.netlify.app/docs/responses/opensubsonicextensions/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param array<string, int[]> $extensions
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2248,6 +2255,7 @@ class OpenSubsonic_Json_Data
     public static function addOpenSubsonicExtensions(array $response, array $extensions): array
     {
         $json = [];
+        // https://opensubsonic.netlify.app/docs/responses/opensubsonicextension/
         foreach ($extensions as $name => $versions) {
             $json[] = [
                 'name' => $name,
@@ -2265,7 +2273,6 @@ class OpenSubsonic_Json_Data
      *
      * Playlist or playlist with songs
      * https://opensubsonic.netlify.app/docs/responses/playlist/
-     * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -2333,6 +2340,7 @@ class OpenSubsonic_Json_Data
      * addPlayQueue
      *
      * NowPlayingEntry.
+     * https://opensubsonic.netlify.app/docs/responses/playqueue/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -2382,6 +2390,8 @@ class OpenSubsonic_Json_Data
      * addPodcastChannel
      *
      * A Podcast channel
+     * https://opensubsonic.netlify.app/docs/responses/podcastchannel/
+     * @see self::addPodcasts()
      */
 
 
@@ -2389,6 +2399,7 @@ class OpenSubsonic_Json_Data
      * addPodcastEpside
      *
      * Podcasts.
+     * https://opensubsonic.netlify.app/docs/responses/podcastepisode/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param Podcast_Episode $episode
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2405,6 +2416,7 @@ class OpenSubsonic_Json_Data
      * addPodcasts
      *
      * Podcasts.
+     *  https://opensubsonic.netlify.app/docs/responses/podcasts/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param Podcast[] $podcasts
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2427,11 +2439,14 @@ class OpenSubsonic_Json_Data
      * addPodcastStatus
      *
      * An enumeration of possible podcast statuses
+     * https://opensubsonic.netlify.app/docs/responses/podcaststatus/
+     * @see self::addPodcasts()
      */
 
 
     /**
      * addRandomSongs
+     * https://opensubsonic.netlify.app/docs/responses/randomsongs/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $songs
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2455,6 +2470,8 @@ class OpenSubsonic_Json_Data
      * addRecordLabel
      *
      * A record label for an album.
+     * https://opensubsonic.netlify.app/docs/responses/recordlabel/
+     * @see self::addAlbumID3()
      */
 
 
@@ -2462,6 +2479,8 @@ class OpenSubsonic_Json_Data
      * addReplayGain
      *
      * The replay gain data of a song.
+     * https://opensubsonic.netlify.app/docs/responses/replaygain/
+     * @see self::addChild()
      */
 
 
@@ -2469,6 +2488,7 @@ class OpenSubsonic_Json_Data
      * addScanStatus
      *
      * Scan status information.
+     * https://opensubsonic.netlify.app/docs/responses/scanstatus/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -2490,6 +2510,7 @@ class OpenSubsonic_Json_Data
      * addSearchResult
      *
      * searchResult.
+     * https://opensubsonic.netlify.app/docs/responses/searchresult/
      * Deprecated
      */
 
@@ -2497,6 +2518,7 @@ class OpenSubsonic_Json_Data
      * addSearchResult2
      *
      * searchResult2.
+     * https://opensubsonic.netlify.app/docs/responses/searchresult2/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $artists
      * @param int[] $albums
@@ -2534,6 +2556,7 @@ class OpenSubsonic_Json_Data
      * addSearchResult3
      *
      * search3 result.
+     * https://opensubsonic.netlify.app/docs/responses/searchresult3/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $artists
      * @param int[] $albums
@@ -2635,6 +2658,48 @@ class OpenSubsonic_Json_Data
     }
 
     /**
+     * addStructuredLyrics
+     *
+     * Structured lyrics
+     * https://opensubsonic.netlify.app/docs/responses/structuredlyrics/
+     * @return array{
+     *     'displayArtist'?: string,
+     *     'displayTitle'?: string,
+     *     'lang'?: string,
+     *     'synced'?: bool,
+     *     'line'?: array<array{'value': string}>
+     * }
+     */
+    public static function _getStructuredLyrics(Song $song): array
+    {
+        $lyrics = $song->get_lyrics();
+
+        if (!empty($lyrics) && $lyrics['text'] && is_string($lyrics['text'])) {
+            $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
+            $text = preg_replace('/\\n\\n/i', "\n", (string)$text);
+            $text = str_replace("\r", '', (string)$text);
+
+            $json = [
+                'displayArtist' => (string)$song->get_artist_fullname(),
+                'displayTitle' => (string)$song->title,
+                'lang' => 'xxx',
+                'synced' => false,
+                'line' => [],
+            ];
+
+            foreach (explode("\n", htmlspecialchars($text)) as $line) {
+                if (!empty($line)) {
+                    $json['line'][] = ['value' => (string)$line];
+                }
+            }
+
+            return $json;
+        }
+
+        return [];
+    }
+
+    /**
      * _getUser
      *
      * user.
@@ -2682,6 +2747,7 @@ class OpenSubsonic_Json_Data
      * addShares
      *
      * Shares.
+     * https://opensubsonic.netlify.app/docs/responses/shares/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param list<int> $shares
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2709,6 +2775,7 @@ class OpenSubsonic_Json_Data
      * addSimilarSongs
      *
      * SimilarSongs list.
+     * https://opensubsonic.netlify.app/docs/responses/similarsongs/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param list<array{
      *     id: ?int,
@@ -2739,6 +2806,7 @@ class OpenSubsonic_Json_Data
      * addSimilarSongs2
      *
      * SimilarSongs2 list.
+     * https://opensubsonic.netlify.app/docs/responses/similarsongs2/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param list<array{
      *     id: ?int,
@@ -2769,6 +2837,7 @@ class OpenSubsonic_Json_Data
      * addSong
      *
      * song.
+     * https://opensubsonic.netlify.app/docs/responses/song/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int $song_id
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2784,11 +2853,14 @@ class OpenSubsonic_Json_Data
      * addSongs
      *
      * Songs list.
+     * https://opensubsonic.netlify.app/docs/responses/songs/
+     * @see self::_getChildSong()
      */
 
 
     /**
      * addSongsByGenre
+     * https://opensubsonic.netlify.app/docs/responses/songsbygenre/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $songs
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2812,6 +2884,7 @@ class OpenSubsonic_Json_Data
      * addStarred
      *
      * starred.
+     * https://opensubsonic.netlify.app/docs/responses/starred/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $artists
      * @param int[] $albums
@@ -2850,6 +2923,7 @@ class OpenSubsonic_Json_Data
      * addStarred2
      *
      * starred2.
+     * https://opensubsonic.netlify.app/docs/responses/starred2/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $artists
      * @param int[] $albums
@@ -2887,22 +2961,10 @@ class OpenSubsonic_Json_Data
     }
 
     /**
-     * addStructuredLyrics
-     *
-     * Structured lyrics
-     */
-
-
-    /**
-     * addSubsonicResponse
-     *
-     * Common answer wrapper.
-     */
-
-    /**
      * addTokenInfo
      *
      *  Information about an API key
+     * https://opensubsonic.netlify.app/docs/responses/tokeninfo/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -2919,6 +2981,7 @@ class OpenSubsonic_Json_Data
      * addTopSongs
      *
      * TopSongs list.
+     * https://opensubsonic.netlify.app/docs/responses/topsongs/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $songs
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2942,6 +3005,7 @@ class OpenSubsonic_Json_Data
      * addUser
      *
      * user.
+     * https://opensubsonic.netlify.app/docs/responses/user/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -2957,6 +3021,7 @@ class OpenSubsonic_Json_Data
      * addUsers
      *
      * users.
+     * https://opensubsonic.netlify.app/docs/responses/users/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $users
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2982,6 +3047,7 @@ class OpenSubsonic_Json_Data
      * addVideoInfo
      *
      * videoInfo.
+     * https://opensubsonic.netlify.app/docs/responses/videoinfo/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -2999,6 +3065,7 @@ class OpenSubsonic_Json_Data
      * addVideos
      *
      * videos.
+     * https://opensubsonic.netlify.app/docs/responses/videos/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param Video[] $videos
      * @return array{'subsonic-response': array<string, mixed>}

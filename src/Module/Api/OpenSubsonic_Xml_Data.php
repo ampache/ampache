@@ -435,8 +435,8 @@ class OpenSubsonic_Xml_Data
     /**
      * addAlbumID3
      *
-     *  An album from ID3 tags.
-     *  https://opensubsonic.netlify.app/docs/responses/albumid3/
+     * An album from ID3 tags.
+     * https://opensubsonic.netlify.app/docs/responses/albumid3/
      */
     public static function addAlbumID3(SimpleXMLElement $xml, Album $album, bool $songs = false, string $elementName = 'album'): SimpleXMLElement
     {
