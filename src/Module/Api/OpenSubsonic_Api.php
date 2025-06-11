@@ -2420,6 +2420,8 @@ class OpenSubsonic_Api
         unset($user);
 
         $extensions = [
+            'apiKeyAuthentication' => [1],
+            'getPodcastEpisode' => [1],
             'formPost' => [1],
             'transcodeOffset' => [1],
         ];
@@ -2540,17 +2542,45 @@ class OpenSubsonic_Api
         self::_responseOutput($input, __FUNCTION__, $response);
     }
 
-    ///**
-    // * getPodcastEpisode
-    // *
-    // * Returns details for a podcast episode.
-    // * https://opensubsonic.netlify.app/docs/endpoints/getpodcastepisode/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getpodcastepisode(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getPodcastEpisode
+     *
+     * Returns details for a podcast episode.
+     * https://opensubsonic.netlify.app/docs/endpoints/getpodcastepisode/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getpodcastepisode(array $input, User $user): void
+    {
+        unset($user);
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
+
+        $episode_id = self::getAmpacheId($sub_id);
+        if (!$episode_id) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+        $episode = new Podcast_Episode($episode_id);
+        if ($episode->isNew()) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addPodcastEpisode($response, $episode);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addPodcastEpisode($response, $episode);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     /**
      * getPodcasts

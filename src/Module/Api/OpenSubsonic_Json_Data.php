@@ -2350,6 +2350,22 @@ class OpenSubsonic_Json_Data
 
 
     /**
+     * addPodcastEpside
+     *
+     * Podcasts.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param Podcast_Episode $episode
+     * @return array{'subsonic-response': array<string, mixed>}
+     */
+    public static function addPodcastEpisode(array $response, Podcast_Episode $episode): array
+    {
+        $response['subsonic-response']['podcastEpisode'] = self::_getPodcastEpisode($episode);
+
+
+        return $response;
+    }
+
+    /**
      * addPodcasts
      *
      * Podcasts.

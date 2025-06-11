@@ -1484,6 +1484,17 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
+     * addPodcastEpisode
+     */
+    public static function addPodcastEpisode(SimpleXMLElement $xml, Podcast_Episode $episode): SimpleXMLElement
+    {
+        $xepisode = self::_addChildToResultXml($xml, 'podcastEpisode');
+        self::_addPodcastEpisode($xepisode, $episode);
+
+        return $xml;
+    }
+
+    /**
      * addPodcasts
      * @param Podcast[] $podcasts
      */

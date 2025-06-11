@@ -194,7 +194,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             if ($subsonic_legacy) {
-                Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_BADAUTH, $action), $callback);
+                Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_TOKENAUTHNOTSUPPORTED, $action), $callback);
             } elseif ($apiKey) {
                 OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_BADAPIKEY, $action);
             } else {
