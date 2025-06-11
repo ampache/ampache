@@ -72,7 +72,7 @@ final class ShowAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $user      =  $gatekeeper->getUser() ?? new User(-1);
+        $user      = $gatekeeper->getUser() ?? new User(-1);
         $catalogs  = (isset($user->catalogs['podcast'])) ? $user->catalogs['podcast'] : User::get_user_catalogs($user->id);
         $podcastId = (int) ($request->getQueryParams()['podcast'] ?? 0);
         $podcast   = $this->podcastRepository->findById($podcastId);
