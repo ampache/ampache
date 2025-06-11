@@ -82,7 +82,11 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $this->logger
         );
 
-        $query  = $request->getQueryParams();
+        $query = $request->getQueryParams();
+
+        //$this->logger->debug(print_r($query, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
+        //$this->logger->debug(print_r(apache_request_headers(), true), [LegacyLogger::CONTEXT_TYPE => self::class]);
+
         $action = strtolower($query['ssaction'] ?? '');
         // Compatibility reason
         if (empty($action)) {
@@ -140,6 +144,10 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
         if ($apiKey) {
             if ($subsonic_legacy) {
+                $this->logger->warning(
+                    'Error Attempted to use OpenSubsonic Token authentication with legacy Subsonic API',
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
                 Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_BADAUTH, $action), $callback);
 
                 return;
@@ -173,10 +181,14 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             return;
         }
         if (
-            !$token_auth ||
-            !$api_auth ||
+            !$token_auth &&
+            !$api_auth &&
             !$pass_auth
         ) {
+            $this->logger->warning(
+                'Error Attempted to use OpenSubsonic Token authentication with legacy Subsonic API',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
             if ($subsonic_legacy) {
                 Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_BADAUTH, $action), $callback);
             } elseif ($apiKey && !$api_auth) {
