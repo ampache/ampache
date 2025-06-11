@@ -1335,10 +1335,43 @@ class OpenSubsonic_Xml_Data
             $text    = str_replace("\r", '', (string)$text);
             $xlyrics = self::_addChildToResultXml($xml, 'lyrics', htmlspecialchars($text));
             if ($artist) {
-                $xlyrics->addAttribute('artist', (string)$artist);
+                $xlyrics->addAttribute('artist', $artist);
             }
             if ($title) {
-                $xlyrics->addAttribute('title', (string)$title);
+                $xlyrics->addAttribute('title', $title);
+            }
+        }
+
+        return $xml;
+    }
+
+    /**
+     * addLyricsList
+     * https://opensubsonic.netlify.app/docs/responses/lyricslist/
+     */
+    public static function addLyricsList(SimpleXMLElement $xml, Song $song): SimpleXMLElement
+    {
+        if ($song->isNew()) {
+            return $xml;
+        }
+
+        $lyrics = $song->get_lyrics();
+
+        if (!empty($lyrics) && $lyrics['text'] && is_string($lyrics['text'])) {
+            $text    = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
+            $text    = preg_replace('/\\n\\n/i', "\n", (string)$text);
+            $text    = str_replace("\r", '', (string)$text);
+            $xlyrics = self::_addChildToResultXml($xml, 'structuredLyrics', htmlspecialchars($text));
+
+            $xlyrics->addAttribute('displayArtist', $song->get_artist_fullname());
+            $xlyrics->addAttribute('displayTitle', (string)$song->title);
+
+
+            foreach (explode("\n", htmlspecialchars($text)) as $line) {
+                $xline  = self::_addChildToResultXml($xlyrics, 'line');
+                if (!empty($line)) {
+                    $xline->addAttribute('value', $line);
+                }
             }
         }
 

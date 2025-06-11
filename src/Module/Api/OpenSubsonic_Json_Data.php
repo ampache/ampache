@@ -2094,8 +2094,44 @@ class OpenSubsonic_Json_Data
      * addLyricsList
      *
      * List of structured lyrics
+     * https://opensubsonic.netlify.app/docs/responses/lyricslist/
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addLyricsList(array $response, Song $song): array
+    {
+        if ($song->isNew()) {
+            return $response;
+        }
 
+        $response['subsonic-response']['structuredLyrics'] = [];
+
+        $lyrics = $song->get_lyrics();
+
+        if (!empty($lyrics) && $lyrics['text'] && is_string($lyrics['text'])) {
+            $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
+            $text = preg_replace('/\\n\\n/i', "\n", (string)$text);
+            $text = str_replace("\r", '', (string)$text);
+
+            $json = [
+                'displayArtist' => (string)$song->get_artist_fullname(),
+                'displayTitle' => (string)$song->title,
+                'lang' => 'xxx',
+                'synced' => false,
+                'line' => [],
+            ];
+
+            foreach (explode("\n", htmlspecialchars($text)) as $line) {
+                if (!empty($line)) {
+                    $json['line'][] = ['value' => (string)$line];
+                }
+            }
+
+            $response['subsonic-response']['structuredLyrics'][] = $json;
+        }
+
+        return $response;
+    }
 
     /**
      * addMusicFolder

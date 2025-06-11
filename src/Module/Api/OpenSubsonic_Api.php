@@ -2302,17 +2302,37 @@ class OpenSubsonic_Api
         self::_responseOutput($input, __FUNCTION__, $response);
     }
 
-    ///**
-    // * getLyricsBySongId
-    // *
-    // * Add support for synchronized lyrics, multiple languages, and retrieval by song ID
-    // * https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/
-    // * @param array<string, mixed> $input
-    // * @param User $user
-    // */
-    //public static function getlyricsbysongid(array $input, User $user): void
-    //{
-    //}
+    /**
+     * getLyricsBySongId
+     *
+     * Add support for synchronized lyrics, multiple languages, and retrieval by song ID
+     * https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getlyricsbysongid(array $input, User $user): void
+    {
+        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
+        if (!$sub_id) {
+            return;
+        }
+        $song = self::getAmpacheObject($sub_id);
+        if (!$song instanceof Song || $song->isNew()) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addLyricsList($response, $song);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addLyricsList($response, $song);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
 
     /**
      * getMusicDirectory
