@@ -142,6 +142,14 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $apiKey = $gatekeeper->getAuth('apiKey');
 
         if ($apiKey) {
+            $user = $gatekeeper->getUser('apiKey');
+            if ($user) {
+                $userName = $user->getUsername();
+                $api_auth = (!empty($userName));
+                // get the user preference in case the server is different
+                $subsonic_legacy = Preference::get_by_user($user->getId(), 'subsonic_legacy');
+            }
+
             if ($subsonic_legacy) {
                 $this->logger->warning(
                     'Error Attempted to use OpenSubsonic Token authentication with legacy Subsonic API',
@@ -151,10 +159,6 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
                 return;
             }
-
-            $user     = $gatekeeper->getUser('apiKey');
-            $userName = $user?->getUsername();
-            $api_auth = (!empty($userName));
         }
 
 
@@ -206,7 +210,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if ($auth === []) {
             $auth = $this->authenticationManager->login($userName, $password, true);
         }
-        $user = User::get_from_username($userName);
+        $user = $user ?? User::get_from_username($userName);
         if ($user === null || !$auth['success']) {
             $this->logger->warning(
                 'Invalid authentication attempt to Subsonic API for user [' . $userName . ']',
@@ -245,7 +249,11 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
             return;
         }
+
         Preference::init();
+
+        // get the user preference in case the server is different
+        $subsonic_legacy = Preference::get_by_user($user->getId(), 'subsonic_legacy');
 
         // Get the list of possible methods for the Ampache API
         $os_methods = ($subsonic_legacy)
