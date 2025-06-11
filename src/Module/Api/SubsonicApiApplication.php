@@ -134,16 +134,17 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $_SERVER['HTTP_USER_AGENT'] = $clientapp;
         }
 
+        $login      = false;
         $token_auth = (!empty($token) && !empty($salt));
         $api_auth   = false;
         $pass_auth  = (!empty($password) && !$token_auth);
 
         // apiKey authentication https://opensubsonic.netlify.app/docs/extensions/apikeyauth/
         $apiKey = $gatekeeper->getAuth('apiKey');
-
         if ($apiKey) {
             $user = $gatekeeper->getUser('apiKey');
             if ($user) {
+                $login    = true;
                 $userName = $user->getUsername();
                 $api_auth = (!empty($userName));
                 // get the user preference in case the server is different
@@ -205,19 +206,29 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
         $password = Subsonic_Api::_decryptPassword($password);
 
-        // Check user authentication
-        $auth = $this->authenticationManager->tokenLogin($userName, $token, $salt);
-        if ($auth === []) {
-            $auth = $this->authenticationManager->login($userName, $password, true);
+        if (!isset($user)) {
+            // Check user authentication
+            $auth = $this->authenticationManager->tokenLogin($userName, $token, $salt);
+            if ($auth === []) {
+                $auth = $this->authenticationManager->login($userName, $password, true);
+            }
+            $login = (bool)$auth['success'];
+            $user  = User::get_from_username($userName);
         }
-        $user = $user ?? User::get_from_username($userName);
-        if ($user === null || !$auth['success']) {
+
+        if ($user === null || $login === false) {
             $this->logger->warning(
                 'Invalid authentication attempt to Subsonic API for user [' . $userName . ']',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             ob_end_clean();
-            Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_BADAUTH, $action), $callback);
+            if ($subsonic_legacy) {
+                Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_BADAUTH, $action), $callback);
+            } elseif ($apiKey) {
+                OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_BADAPIKEY, $action);
+            } else {
+                OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_BADAUTH, $action);
+            }
 
             return;
         }
