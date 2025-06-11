@@ -592,23 +592,54 @@ class OpenSubsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/albumid3/
      * @return array{
      *     'id': string,
-     *     'parent'?: string,
-     *     'album': string,
-     *     'title': string,
      *     'name': string,
-     *     'isDir': bool,
+     *     'version'?: string,
+     *     'artist'?: string,
+     *     'artistId'?: string,
      *     'coverArt'?: string,
      *     'songCount': int,
-     *     'created': string,
      *     'duration': int,
-     *     'playCount': int,
-     *     'artistId'?: string,
-     *     'artist': string,
+     *     'playCount'?: int,
+     *     'created': string,
+     *     'starred'?: string,
      *     'year'?: int,
      *     'genre'?: string,
+     *     'played'?: string,
      *     'userRating'?: int,
-     *     'averageRating'?: float,
-     *     'starred'?: string
+     *     'recordLabels'?: array{'name': string},
+     *     'musicBrainzId'?: string,
+     *     'genres'?: array{'name': string},
+     *     'artists'?: array<int, array{
+     *      'id': string,
+     *      'name': string,
+     *      'coverArt'?: string,
+     *      'artistImageUrl'?: string,
+     *         'albumCount'?: int,
+     *         'starred'?: string,
+     *         'musicBrainzId'?: string,
+     *         'sortName'?: string,
+     *         'roles'?: string[]
+     *     }>,
+     *     'displayArtist'?: string,
+     *     'releaseTypes'?: string[],
+     *     'moods'?: string[],
+     *     'sortName'?: string,
+     *     'originalReleaseDate'?: array{
+     *         'year'?: int,
+     *         'month'?: int,
+     *         'day'?: int
+     *     },
+     *     'releaseDate'?: array{
+     *         'year'?: int,
+     *         'month'?: int,
+     *         'day'?: int
+     *     },
+     *     'isCompilation'?: bool,
+     *     'explicitStatus'?: string,
+     *     'discTitles'?: array{
+     *         'disc': int,
+     *         'title': string
+     *     }
      * }
      */
     private static function _getAlbumID3(Album $album): array
