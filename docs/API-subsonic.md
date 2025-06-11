@@ -24,9 +24,44 @@ Ampache Subsonic support is being extended to support these changes
 
 ### Extensions
 
+* Add [API Key Authentication](https://opensubsonic.netlify.app/docs/extensions/apikeyauth/)
+* Add [getPodcastEpisode](https://opensubsonic.netlify.app/docs/extensions/getpodcastepisode/) method
 * Expanded [subsonic-response](https://opensubsonic.netlify.app/docs/responses/subsonic-response/)
+* Expanded [subsonic-response error](https://opensubsonic.netlify.app/docs/responses/error/)
 * Support [HTTP form POST](https://opensubsonic.netlify.app/docs/extensions/formpost/)
+* Add [songLyrics](https://opensubsonic.netlify.app/docs/extensions/songlyrics/) support
 * Tentatively supported [Transcode Offset](https://opensubsonic.netlify.app/docs/extensions/transcodeoffset/) (Parameter is supported but untested)
+
+#### Api Key authentication
+
+The key that must be passed to Ampache is the API Key generated for a specific user (none by default, only the administrator can generate one).
+
+Then call the following URL (Where localhost/ampache is the location of your Ampache installation):
+
+```URL
+http://localhost/ampache/rest/ping.view?apiKey=API_KEY&v=1.2.0&c=DSub&f=json
+```
+
+**NOTE** Do not send a user (u) parameter or auth will be rejected.
+
+The key can be also be passed to Ampache using `SHA256(USER+KEY)` where `KEY` is `SHA256('APIKEY')`. Below is a PHP example
+
+```PHP
+$user = 'username';
+$key = hash('sha256', 'myapikey');
+$passphrase = hash('sha256', $user . $key);
+```
+
+#### HTTP Header Authentication
+
+Ampache supports sending your apiKey parameter to the server using a Bearer Token.
+
+The `apiKey` parameter does not need to be sent with your URL. We will check your header for a token first
+
+```Text
+GET http://localhost/ampache/rest/ping.view?v=1.2.0&c=DSub&f=jsonHTTP/1.1
+Authorization: Bearer 000111112233334444455556667777788888899aaaaabbbbcccccdddeeeeeeff
+```
 
 ### Endpoint extension
 
