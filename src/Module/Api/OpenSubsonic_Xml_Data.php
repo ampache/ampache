@@ -1368,8 +1368,8 @@ class OpenSubsonic_Xml_Data
 
 
             foreach (explode("\n", htmlspecialchars($text)) as $line) {
-                $xline  = self::_addChildToResultXml($xlyrics, 'line');
                 if (!empty($line)) {
+                    $xline = self::_addChildToResultXml($xlyrics, 'line');
                     $xline->addAttribute('value', $line);
                 }
             }

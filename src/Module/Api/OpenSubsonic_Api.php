@@ -2470,6 +2470,7 @@ class OpenSubsonic_Api
             'apiKeyAuthentication' => [1],
             'getPodcastEpisode' => [1],
             'formPost' => [1],
+            'songLyrics' => [1],
             'transcodeOffset' => [1],
         ];
 
