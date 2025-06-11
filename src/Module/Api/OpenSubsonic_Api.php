@@ -140,37 +140,63 @@ class OpenSubsonic_Api
         'getVideoSubId',
     ];
 
-    public const SSERROR_GENERIC                = 0; // A generic error.
-    public const SSERROR_MISSINGPARAM           = 10; // Required parameter is missing.
-    public const SSERROR_APIVERSION_CLIENT      = 20; // Incompatible Subsonic REST protocol version. Client must upgrade.
-    public const SSERROR_APIVERSION_SERVER      = 30; // Incompatible Subsonic REST protocol version. Server must upgrade.
-    public const SSERROR_BADAUTH                = 40; // Wrong username or password.
-    public const SSERROR_TOKENAUTHNOTSUPPORTED  = 41; // Token authentication not supported for LDAP users.
+    public const SSERROR_GENERIC = 0; // A generic error.
+
+    public const SSERROR_MISSINGPARAM = 10; // Required parameter is missing.
+
+    public const SSERROR_APIVERSION_CLIENT = 20; // Incompatible Subsonic REST protocol version. Client must upgrade.
+
+    public const SSERROR_APIVERSION_SERVER = 30; // Incompatible Subsonic REST protocol version. Server must upgrade.
+
+    public const SSERROR_BADAUTH = 40; // Wrong username or password.
+
+    public const SSERROR_TOKENAUTHNOTSUPPORTED = 41; // Token authentication not supported for LDAP users.
+
     public const SSERROR_AUTHMETHODNOTSUPPORTED = 42; // [OPENSUBSONIC] Provided authentication mechanism not supported.
-    public const SSERROR_AUTHMETHODCONFLICT     = 43; // [OPENSUBSONIC] Multiple conflicting authentication mechanisms provided.
-    public const SSERROR_BADAPIKEY              = 44; // [OPENSUBSONIC] Invalid API key.
-    public const SSERROR_UNAUTHORIZED           = 50; // User is not authorized for the given operation.
-    public const SSERROR_TRIAL                  = 60; // The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details.
-    public const SSERROR_DATA_NOTFOUND          = 70; // The requested data was not found.
+
+    public const SSERROR_AUTHMETHODCONFLICT = 43; // [OPENSUBSONIC] Multiple conflicting authentication mechanisms provided.
+
+    public const SSERROR_BADAPIKEY = 44; // [OPENSUBSONIC] Invalid API key.
+
+    public const SSERROR_UNAUTHORIZED = 50; // User is not authorized for the given operation.
+
+    public const SSERROR_TRIAL = 60; // The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details.
+
+    public const SSERROR_DATA_NOTFOUND = 70; // The requested data was not found.
 
     /**
      * Ampache doesn't have a global unique id but items are unique per category. We use id prefixes to identify item category.
      */
-    public const SUBID_ALBUM      = 'al-';
-    public const SUBID_ARTIST     = 'ar-';
-    public const SUBID_BOOKMARK   = 'bo-';
-    public const SUBID_CATALOG    = 'mf-';
-    public const SUBID_CHAT       = 'pm-';
-    public const SUBID_GENRE      = 'ta-';
+
+    public const SUBID_ALBUM = 'al-';
+
+    public const SUBID_ARTIST = 'ar-';
+
+    public const SUBID_BOOKMARK = 'bo-';
+
+    public const SUBID_CATALOG = 'mf-';
+
+    public const SUBID_CHAT = 'pm-';
+
+    public const SUBID_GENRE = 'ta-';
+
     public const SUBID_LIVESTREAM = 'li-';
-    public const SUBID_PLAYLIST   = 'pl-';
-    public const SUBID_PODCAST    = 'po-';
-    public const SUBID_PODCASTEP  = 'pe-';
-    public const SUBID_SHARE      = 'sh-';
-    public const SUBID_SMARTPL    = 'sp-';
-    public const SUBID_SONG       = 'so-';
-    public const SUBID_USER       = 'us-';
-    public const SUBID_VIDEO      = 'vi-';
+
+    public const SUBID_PLAYLIST = 'pl-';
+
+    public const SUBID_PODCAST = 'po-';
+
+    public const SUBID_PODCASTEP = 'pe-';
+
+    public const SUBID_SHARE = 'sh-';
+
+    public const SUBID_SMARTPL = 'sp-';
+
+    public const SUBID_SONG = 'so-';
+
+    public const SUBID_USER = 'us-';
+
+    public const SUBID_VIDEO = 'vi-';
 
     public static function getAlbumSubId(int|string $ampache_id): string
     {
@@ -1610,7 +1636,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $format   = (string)($input['f'] ?? 'xml');
+        $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
             $response = OpenSubsonic_Xml_Data::addAlbumID3($response, $album, true);
@@ -1644,8 +1670,8 @@ class OpenSubsonic_Api
             return;
         }
 
-        $info     = Recommendation::get_album_info($album_id);
-        $format   = (string)($input['f'] ?? 'xml');
+        $info   = Recommendation::get_album_info($album_id);
+        $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
             $response = OpenSubsonic_Xml_Data::addAlbumInfo($response, $info);
@@ -1695,7 +1721,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $format   = (string)($input['f'] ?? 'xml');
+        $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
             $response = OpenSubsonic_Xml_Data::addAlbumList($response, $albums);
@@ -1732,7 +1758,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $format   = (string)($input['f'] ?? 'xml');
+        $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
             $response = OpenSubsonic_Xml_Data::addAlbumList2($response, $albums);
@@ -1766,7 +1792,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $format   = (string)($input['f'] ?? 'xml');
+        $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
             $response = OpenSubsonic_Xml_Data::addArtist($response, $artist, true);
@@ -1842,9 +1868,9 @@ class OpenSubsonic_Api
         $count             = $input['count'] ?? 20;
         $includeNotPresent = (array_key_exists('includeNotPresent', $input) && $input['includeNotPresent'] === "true");
 
-        $info      = Recommendation::get_artist_info($artist_id);
-        $similars  = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
-        $format    = (string)($input['f'] ?? 'xml');
+        $info     = Recommendation::get_artist_info($artist_id);
+        $similars = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
+        $format   = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
             $response = OpenSubsonic_Xml_Data::addArtistInfo2($response, $info, $similars);
@@ -1872,8 +1898,8 @@ class OpenSubsonic_Api
             $catalogs[] = $musicFolderId;
         }
 
-        $artists  = Artist::get_id_arrays($catalogs);
-        $format   = (string)($input['f'] ?? 'xml');
+        $artists = Artist::get_id_arrays($catalogs);
+        $format  = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
             $response = OpenSubsonic_Xml_Data::addArtists($response, $artists);
@@ -2464,7 +2490,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $format   = (string)($input['f'] ?? 'xml');
+        $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
             $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, true);
@@ -3531,7 +3557,7 @@ class OpenSubsonic_Api
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
             foreach ($sub_ids as $sub_id) {
-                $time      = (isset($input['time']))
+                $time = (isset($input['time']))
                     ? (int)(((int)$input['time']) / 1000)
                     : time();
                 $previous  = Stats::get_last_play($user->id, $client, $time);
