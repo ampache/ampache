@@ -792,10 +792,11 @@ class OpenSubsonic_Api
                 $output            = $dom->saveXML();
             }
         }
+
         // saving xml can fail
         if (!$output) {
             $output = "<subsonic-response status=\"failed\" " . "version=\"1.16.1\" " . "type=\"ampache\" " . "serverVersion=\"" . Api::$version . "\" " . "openSubsonic=\"1\" " . ">" .
-                "<error code=\"" . OpenSubsonic_Api::SSERROR_GENERIC . "\" message=\"Error creating response.\"/>" .
+                "<error code=\"" . OpenSubsonic_Api::SSERROR_GENERIC . "\" message=\"Error creating response.\" helpUrl=\"https://ampache.org/api/subsonic\"/>" .
                 "</subsonic-response>";
         }
 
