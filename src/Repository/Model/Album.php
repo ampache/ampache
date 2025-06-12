@@ -628,6 +628,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     public function findAlbumArtist(): ?int
     {
         if (
+            $this->isNew() === false &&
             !$this->album_artist &&
             $this->song_artist_count == 1
         ) {
