@@ -105,6 +105,9 @@ final class HandshakeMethod
         if (!$username) {
             $client   = self::getUserRepository()->findByApiKey(trim($passphrase));
             $username = false;
+        } elseif (Session::exists('api', $input['auth'])) {
+            $client   = User::get_from_username($username);
+            $username = false;
         } else {
             $client = User::get_from_username($username);
         }
