@@ -7,7 +7,7 @@ This version is being released for Ampache7 **only**
 ### Added
 
 * API6
-  * Add mbig_group to `album` data responses
+  * Add mbid_group to `album` data responses
 
 ### Fixed
 
