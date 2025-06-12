@@ -1359,13 +1359,15 @@ class OpenSubsonic_Xml_Data
         $lyrics = $song->get_lyrics();
 
         $xlyrics = self::_addChildToResultXml($xml, 'structuredLyrics');
+        $xlyrics->addAttribute('displayArtist', $song->get_artist_fullname());
+        $xlyrics->addAttribute('displayTitle', (string)$song->title);
+        $xlyrics->addAttribute('lang', 'xxx');
+        $xlyrics->addAttribute('synced', 'false');
+
         if (!empty($lyrics) && $lyrics['text'] && is_string($lyrics['text'])) {
             $text    = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
             $text    = preg_replace('/\\n\\n/i', "\n", (string)$text);
             $text    = str_replace("\r", '', (string)$text);
-
-            $xlyrics->addAttribute('displayArtist', $song->get_artist_fullname());
-            $xlyrics->addAttribute('displayTitle', (string)$song->title);
 
 
             foreach (explode("\n", htmlspecialchars($text)) as $line) {
@@ -1374,6 +1376,8 @@ class OpenSubsonic_Xml_Data
                     $xline->addAttribute('value', $line);
                 }
             }
+        } else {
+            self::_addChildToResultXml($xlyrics, 'line');
         }
 
         return $xml;
