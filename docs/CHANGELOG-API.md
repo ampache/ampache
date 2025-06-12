@@ -9,6 +9,11 @@ This version is being released for Ampache7 **only**
 * API6
   * Add mbig_group to `album` data responses
 
+### Fixed
+
+* ALL
+  * handshake: Check if auth is sent as a valid session and don't try to create a new one
+
 ## API 6.7.2
 
 This version is being released for Ampache7 **only**
