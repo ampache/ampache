@@ -1819,8 +1819,8 @@ class OpenSubsonic_Api
             return;
         }
 
-        $artist_id = self::getAmpacheId($sub_id);
-        if (self::getAmpacheType($sub_id) !== 'artist' || !$artist_id) {
+        $artist = self::getAmpacheObject($sub_id);
+        if (!$artist instanceof Artist || $artist->isNew()) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -1829,15 +1829,15 @@ class OpenSubsonic_Api
         $count             = $input['count'] ?? 20;
         $includeNotPresent = (array_key_exists('includeNotPresent', $input) && $input['includeNotPresent'] === "true");
 
-        $info     = Recommendation::get_artist_info($artist_id);
-        $similars = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
+        $info     = Recommendation::get_artist_info($artist->getId());
+        $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
         $format   = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addArtistInfo($response, $info, $similars);
+            $response = OpenSubsonic_Xml_Data::addArtistInfo($response, $info, $artist, $similars);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addArtistInfo($response, $info, $similars);
+            $response = OpenSubsonic_Json_Data::addArtistInfo($response, $info, $artist, $similars);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }

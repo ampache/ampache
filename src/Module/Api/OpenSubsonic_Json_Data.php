@@ -2043,13 +2043,8 @@ class OpenSubsonic_Json_Data
      * }> $similars
      *@return array{'subsonic-response': array<string, mixed>}
      */
-    public static function addArtistInfo(array $response, array $info, array $similars): array
+    public static function addArtistInfo(array $response, array $info, Artist $artist, array $similars): array
     {
-        $artist = new Artist((int)($info['id'] ?? 0));
-        if ($artist->isNew()) {
-            return $response;
-        }
-
         $response['subsonic-response']['artistInfo'] = self::_getArtistInfo($artist, $info, $similars, 'artistInfo');
 
         return $response;

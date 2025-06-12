@@ -1467,7 +1467,7 @@ class OpenSubsonic_Xml_Data
      */
     public static function addArtistInfo2(SimpleXMLElement $xml, array $info, Artist $artist, array $similars): SimpleXMLElement
     {
-        return self::addArtistInfo($xml, $info, $similars, $artist, 'artistInfo2');
+        return self::addArtistInfo($xml, $info, $artist, $similars, 'artistInfo2');
     }
 
     /**
