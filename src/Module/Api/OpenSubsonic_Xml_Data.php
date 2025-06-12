@@ -1392,10 +1392,8 @@ class OpenSubsonic_Xml_Data
      *     megaphoto: ?string
      * } $info
      */
-    public static function addAlbumInfo(SimpleXMLElement $xml, array $info): SimpleXMLElement
+    public static function addAlbumInfo(SimpleXMLElement $xml, array $info, Album $album): SimpleXMLElement
     {
-        $album = new Album((int) $info['id']);
-
         $xartist = self::_addChildToResultXml($xml, htmlspecialchars('albumInfo'));
         $xartist->addChild('notes', htmlspecialchars(trim((string)$info['summary'])));
         $xartist->addChild('musicBrainzId', $album->mbid);
@@ -1426,13 +1424,8 @@ class OpenSubsonic_Xml_Data
      *     mbid?: ?string
      * }> $similars
      */
-    public static function addArtistInfo(SimpleXMLElement $xml, array $info, array $similars, string $elementName = 'artistInfo'): SimpleXMLElement
+    public static function addArtistInfo(SimpleXMLElement $xml, array $info, Artist $artist, array $similars, string $elementName = 'artistInfo'): SimpleXMLElement
     {
-        $artist = new Artist((int)($info['id'] ?? 0));
-        if ($artist->isNew()) {
-            return $xml;
-        }
-
         $xartist   = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
         $biography = trim((string)$info['summary']);
         if (!empty($biography)) {
@@ -1472,9 +1465,9 @@ class OpenSubsonic_Xml_Data
           *     mbid?: ?string
           * }> $similars
      */
-    public static function addArtistInfo2(SimpleXMLElement $xml, array $info, array $similars): SimpleXMLElement
+    public static function addArtistInfo2(SimpleXMLElement $xml, array $info, Artist $artist, array $similars): SimpleXMLElement
     {
-        return self::addArtistInfo($xml, $info, $similars, 'artistInfo2');
+        return self::addArtistInfo($xml, $info, $similars, $artist, 'artistInfo2');
     }
 
     /**

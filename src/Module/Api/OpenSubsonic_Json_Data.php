@@ -390,10 +390,8 @@ class OpenSubsonic_Json_Data
      *     'message': string
      * }
      */
-    private static function _getChatMessage(PrivateMsg $message): array
+    private static function _getChatMessage(PrivateMsg $message, User $user): array
     {
-        $user = new User($message->getSenderUserId());
-
         return [
             'username' => ($user->fullname_public) ? (string)$user->fullname : (string)$user->username,
             'time' => (string)($message->getCreationDate() * 1000),
@@ -1887,10 +1885,8 @@ class OpenSubsonic_Json_Data
      * } $info
      * @return array{'subsonic-response': array<string, mixed>}
      */
-    public static function addAlbumInfo(array $response, array $info): array
+    public static function addAlbumInfo(array $response, array $info, Album $album): array
     {
-        $album = new Album((int) $info['id']);
-
         $response['subsonic-response']['albumInfo'] = [
             'notes' => htmlspecialchars(trim((string)$info['summary'])),
             'musicBrainzId' => $album->mbid,
@@ -2083,13 +2079,8 @@ class OpenSubsonic_Json_Data
      * }> $similars
      *@return array{'subsonic-response': array<string, mixed>}
      */
-    public static function addArtistInfo2(array $response, array $info, array $similars): array
+    public static function addArtistInfo2(array $response, array $info, Artist $artist, array $similars): array
     {
-        $artist = new Artist((int)($info['id'] ?? 0));
-        if ($artist->isNew()) {
-            return $response;
-        }
-
         $response['subsonic-response']['artistInfo'] = self::_getArtistInfo($artist, $info, $similars, 'artistInfo2');
 
         return $response;
@@ -2178,8 +2169,11 @@ class OpenSubsonic_Json_Data
         $json = [];
         foreach ($messages as $message) {
             $chat = new PrivateMsg($message);
-
-            $json[] = self::_getChatMessage($chat);
+            $user = new User($chat->getSenderUserId());
+            if ($user->isNew()) {
+                continue;
+            }
+            $json[] = self::_getChatMessage($chat, $user);
         }
 
         $response['subsonic-response']['chatMessages']['chatMessage'] = $json;
@@ -3061,9 +3055,8 @@ class OpenSubsonic_Json_Data
      *     'entry'?: list<array<string, mixed>>
      * }
      */
-    private static function _getShare(Share $share): array
+    private static function _getShare(Share $share, User $user): array
     {
-        $user = new User($share->user);
         $json = [
             'id' => OpenSubsonic_Api::getShareSubId($share->id),
             'url' => (string)$share->public_url,
@@ -3205,7 +3198,12 @@ class OpenSubsonic_Json_Data
             $share = new Share($share_id);
             // Don't add share with max counter already reached
             if ($share->max_counter === 0 || $share->counter < $share->max_counter) {
-                $json[] = self::_getShare($share);
+                $user = new User($share->user);
+                if ($user->isNew()) {
+                    continue;
+                }
+
+                $json[] = self::_getShare($share, $user);
             }
         }
 
