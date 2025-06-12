@@ -100,6 +100,7 @@ final class HandshakeMethod
             return false;
         }
 
+        $exists  = false;
         $user_id = -1;
         // Grab the correct userid
         if (!$username) {
@@ -108,6 +109,7 @@ final class HandshakeMethod
         } elseif (Session::exists('api', $input['auth'])) {
             $client   = User::get_from_username($username);
             $username = false;
+            $exists   = true;
         } else {
             $client = User::get_from_username($username);
         }
@@ -158,31 +160,36 @@ final class HandshakeMethod
             }
 
             if ($client instanceof User) {
-                // Create the session
-                $data             = [];
-                $data['username'] = (string)$client->username;
-                $data['type']     = 'api';
-                $data['apikey']   = (string)$client->apikey;
-                $data['value']    = $data_version;
-                if (isset($input['client'])) {
-                    $data['agent'] = scrub_in((string) $input['client']);
-                }
-                if (isset($input['geo_latitude'])) {
-                    $data['geo_latitude'] = (float)$input['geo_latitude'];
-                }
-                if (isset($input['geo_longitude'])) {
-                    $data['geo_longitude'] = (float)$input['geo_longitude'];
-                }
-                if (isset($input['geo_name'])) {
-                    $data['geo_name'] = $input['geo_name'];
-                }
-                // Session might not exist or has expired
-                if (!Session::read($data['apikey'])) {
-                    Session::destroy($data['apikey']);
-                    $token = Session::create($data);
+                if ($exists) {
+                    Session::extend($input['auth'], AccessTypeEnum::API->value);
+                    $token = $input['auth'];
                 } else {
-                    Session::extend($data['apikey'], AccessTypeEnum::API->value);
-                    $token = $data['apikey'];
+                    // Create the session
+                    $data             = [];
+                    $data['username'] = (string)$client->username;
+                    $data['type']     = 'api';
+                    $data['apikey']   = (string)$client->apikey;
+                    $data['value']    = $data_version;
+                    if (isset($input['client'])) {
+                        $data['agent'] = scrub_in((string)$input['client']);
+                    }
+                    if (isset($input['geo_latitude'])) {
+                        $data['geo_latitude'] = (float)$input['geo_latitude'];
+                    }
+                    if (isset($input['geo_longitude'])) {
+                        $data['geo_longitude'] = (float)$input['geo_longitude'];
+                    }
+                    if (isset($input['geo_name'])) {
+                        $data['geo_name'] = $input['geo_name'];
+                    }
+                    // Session might not exist or has expired
+                    if (!Session::read($data['apikey'])) {
+                        Session::destroy($data['apikey']);
+                        $token = Session::create($data);
+                    } else {
+                        Session::extend($data['apikey'], AccessTypeEnum::API->value);
+                        $token = $data['apikey'];
+                    }
                 }
 
                 // We're about to start. Record this user's IP.
