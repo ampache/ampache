@@ -16,7 +16,7 @@
 * Browse
   * Sort `playlist` and `search` objects by `name` and `id` to make sure dupes are ordered the same way
 * Subsonic
-  * getAlbumList type `starred` sorted by recent date
+  * Change `getAlbumList` type `starred` sorted by recent date
 
 ### Removed
 
@@ -27,12 +27,12 @@
 
 * Error when importing empty TXXX id3 tags
 * Search
-  * Updated rules were not presisted in `update_playlist`
+  * Updated rules were not persisted in `update_playlist`
 * Subsonic
   * Double output when missing parameters for some calls
-  * Check getAlbumList & getAlbumList2 calls for `genre` when type is `byGenre`
+  * Check `getAlbumList` & `getAlbumList2` calls for `genre` when type is `byGenre`
   * Strings are being converted to booleans for Json responses
-  * Time used for savePlayQueue was the server time not the song position
+  * Time used for `savePlayQueue` was the server time not the song position
 
 ## Ampache 7.5.2
 
