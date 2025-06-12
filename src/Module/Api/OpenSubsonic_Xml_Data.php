@@ -1358,7 +1358,9 @@ class OpenSubsonic_Xml_Data
 
         $lyrics = $song->get_lyrics();
 
-        $xlyrics = self::_addChildToResultXml($xml, 'structuredLyrics');
+        $xlist   = self::_addChildToResultXml($xml, 'lyricsList');
+
+        $xlyrics = self::_addChildToResultXml($xlist, 'structuredLyrics');
         $xlyrics->addAttribute('displayArtist', $song->get_artist_fullname());
         $xlyrics->addAttribute('displayTitle', (string)$song->title);
         $xlyrics->addAttribute('lang', 'xxx');
