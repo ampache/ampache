@@ -846,6 +846,7 @@ class OpenSubsonic_Xml_Data
     /**
      * addPlaylist
      * https://opensubsonic.netlify.app/docs/responses/playlist/
+     * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
      */
     public static function addPlaylist(SimpleXMLElement $xml, Playlist|Search $playlist, bool $songs = false): SimpleXMLElement
     {
