@@ -1356,21 +1356,19 @@ class OpenSubsonic_Xml_Data
             return $xml;
         }
 
+        $xlist  = self::_addChildToResultXml($xml, 'lyricsList');
         $lyrics = $song->get_lyrics();
 
-        $xlist   = self::_addChildToResultXml($xml, 'lyricsList');
-
-        $xlyrics = self::_addChildToResultXml($xlist, 'structuredLyrics');
-        $xlyrics->addAttribute('displayArtist', $song->get_artist_fullname());
-        $xlyrics->addAttribute('displayTitle', (string)$song->title);
-        $xlyrics->addAttribute('lang', 'xxx');
-        $xlyrics->addAttribute('synced', 'false');
-
         if (!empty($lyrics) && $lyrics['text'] && is_string($lyrics['text'])) {
-            $text    = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
-            $text    = preg_replace('/\\n\\n/i', "\n", (string)$text);
-            $text    = str_replace("\r", '', (string)$text);
+            $xlyrics = self::_addChildToResultXml($xlist, 'structuredLyrics');
+            $xlyrics->addAttribute('displayArtist', $song->get_artist_fullname());
+            $xlyrics->addAttribute('displayTitle', (string)$song->title);
+            $xlyrics->addAttribute('lang', 'xxx');
+            $xlyrics->addAttribute('synced', 'false');
 
+            $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
+            $text = preg_replace('/\\n\\n/i', "\n", (string)$text);
+            $text = str_replace("\r", '', (string)$text);
 
             foreach (explode("\n", htmlspecialchars($text)) as $line) {
                 if (!empty($line)) {
@@ -1378,8 +1376,6 @@ class OpenSubsonic_Xml_Data
                     $xline->addAttribute('value', $line);
                 }
             }
-        } else {
-            self::_addChildToResultXml($xlyrics, 'line');
         }
 
         return $xml;
