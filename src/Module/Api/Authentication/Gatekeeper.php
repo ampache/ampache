@@ -92,18 +92,22 @@ final class Gatekeeper implements GatekeeperInterface
 
             if ($matches !== []) {
                 $token = (string)$matches[1];
+                $this->logger->notice(
+                    sprintf('API session [%s] (Bearer token)', $token),
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
             } else {
                 /**
                  * Fallback to legacy get parameter
                  * Remove some day when backwards compatability isn't a problem
                  */
                 $token = (string)($this->request->getQueryParams()[$requestKey] ?? '');
+                $this->logger->notice(
+                    sprintf('API session [%s] (%s)', $token, $requestKey),
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
             }
 
-            $this->logger->notice(
-                sprintf('API session [%s]', $token),
-                [LegacyLogger::CONTEXT_TYPE => self::class]
-            );
 
             $this->auth = $token;
         }
