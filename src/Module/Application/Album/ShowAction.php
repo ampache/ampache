@@ -73,7 +73,7 @@ final class ShowAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
-        $user     =  $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
+        $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs = (isset($user->catalogs['music'])) ? $user->catalogs['music'] : User::get_user_catalogs($user->id);
         $albumId  = (int) ($request->getQueryParams()['album'] ?? 0);
         $album    = $this->modelFactory->createAlbum($albumId);

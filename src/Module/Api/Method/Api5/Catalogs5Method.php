@@ -62,7 +62,7 @@ final class Catalogs5Method
     public static function catalogs(array $input, User $user): bool
     {
         // filter for specific catalog types
-        $filter  = (isset($input['filter']) && in_array($input['filter'], ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'video', 'podcast']))
+        $filter = (isset($input['filter']) && in_array($input['filter'], ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'video', 'podcast']))
             ? $input['filter']
             : '';
         if (in_array($filter, ['clip', 'tvshow', 'movie', 'personal_video'])) {

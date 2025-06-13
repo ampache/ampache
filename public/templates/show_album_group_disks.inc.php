@@ -285,7 +285,7 @@ if (Catalog::can_remove($album)) {
 <?php
 define('TABLE_RENDERED', 1);
 foreach ($album->getDisks() as $album_disk) {
-    $sub_title  = (!empty($album_disk->disksubtitle))
+    $sub_title = (!empty($album_disk->disksubtitle))
         ? $album_disk->get_f_link() . "<span class=\"discnb disc" . $album_disk->disk . "\">: " . scrub_out($album_disk->disksubtitle) . "</span>"
         : $album_disk->get_f_link();
     if ($directplay_limit > 0) {

@@ -41,7 +41,7 @@ class Rating extends database_object
 {
     protected const DB_TABLENAME = 'rating';
 
-    private const RATING_TYPES   = [
+    private const RATING_TYPES = [
         'album_disk',
         'album',
         'artist',
@@ -385,8 +385,8 @@ class Rating extends database_object
         int $since = 0,
         int $before = 0
     ): string {
-        $type    = Stats::validate_type($input_type);
-        $sql     = "SELECT DISTINCT(`rating`.`object_id`) AS `id`, `rating`.`rating`, `rating`.`object_type` AS `type`, MAX(`rating`.`user`) AS `user`, MAX(`rating`.`date`) AS `date` FROM `rating`";
+        $type = Stats::validate_type($input_type);
+        $sql  = "SELECT DISTINCT(`rating`.`object_id`) AS `id`, `rating`.`rating`, `rating`.`object_type` AS `type`, MAX(`rating`.`user`) AS `user`, MAX(`rating`.`date`) AS `date` FROM `rating`";
         if ($input_type == 'album_artist' || $input_type == 'song_artist') {
             $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `rating`.`object_id` AND `rating`.`object_type` = 'artist'";
         }

@@ -44,8 +44,8 @@ $web_path = AmpConfig::get_web_path();
 
 ob_start();
 echo $playlist->getFullname();
-$title    = ob_get_contents();
-$browse   = new Browse();
+$title  = ob_get_contents();
+$browse = new Browse();
 $browse->set_type('playlist_media');
 $browse->set_use_filters(false);
 $browse->add_supplemental_object('search', $playlist->id);

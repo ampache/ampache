@@ -156,8 +156,8 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 
                             break;
                         case 'artist_random':
-                            $object    = new Artist($request_id);
-                            $songs     = $this->songRepository->getRandomByArtist($object);
+                            $object = new Artist($request_id);
+                            $songs  = $this->songRepository->getRandomByArtist($object);
                             foreach ($songs as $song_id) {
                                 $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                             }

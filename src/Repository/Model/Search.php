@@ -447,7 +447,7 @@ class Search extends playlist_object
             'description' => T_('Limit'),
             'sql' => '`date`',
         ];
-        $this->basetypes['recent_added'][]  = [
+        $this->basetypes['recent_added'][] = [
             'name' => 'add',
             'description' => T_('Limit'),
             'sql' => '`addition_time`',

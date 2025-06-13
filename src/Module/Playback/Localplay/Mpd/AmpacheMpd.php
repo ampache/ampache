@@ -227,7 +227,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function update_instance(int $uid, array $data): void
     {
-        $sql  = "UPDATE `localplay_mpd` SET `host` = ?, `port` = ?, `name` = ?, `password` = ? WHERE `id` = ?;";
+        $sql = "UPDATE `localplay_mpd` SET `host` = ?, `port` = ?, `name` = ?, `password` = ? WHERE `id` = ?;";
         Dba::write($sql, [$data['host'] ?? '127.0.0.1', $data['port'] ?? '6600', $data['name'], $data['password'], $uid]);
     }
 
@@ -499,7 +499,7 @@ class AmpacheMpd extends localplay_controller
                     $data['link'] = '';
                     break;
                 case 'random':
-                    $className    = ObjectTypeToClassNameMapper::map($url_data['random_type']);
+                    $className = ObjectTypeToClassNameMapper::map($url_data['random_type']);
                     /** @var library_item $random */
                     $random       = new $className($url_data['random_id']);
                     $data['name'] = T_('Random') . ' - ' . scrub_out($random->get_fullname());

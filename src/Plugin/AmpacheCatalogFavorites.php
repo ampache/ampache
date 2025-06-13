@@ -42,15 +42,15 @@ use Ampache\Module\Util\Ui;
 
 class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHomeInterface
 {
-    public string $name        = 'Catalog Favorites';
+    public string $name = 'Catalog Favorites';
 
-    public string $categories  = 'home';
+    public string $categories = 'home';
 
     public string $description = 'Catalog favorites on homepage';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000004';
+    public string $version = '000004';
 
     public string $min_ampache = '370021';
 

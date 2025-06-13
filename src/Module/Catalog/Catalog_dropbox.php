@@ -351,7 +351,7 @@ class Catalog_dropbox extends Catalog
 
     public function add_file(Dropbox $dropbox, string $path): bool
     {
-        $file     = $dropbox->getMetadata(
+        $file = $dropbox->getMetadata(
             $path,
             [
                 'include_media_info' => true,

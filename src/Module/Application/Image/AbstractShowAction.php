@@ -103,7 +103,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
         $size  = ($thumb === 0)
             ? filter_input(INPUT_GET, 'size', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE) ?? 'original'
             : 'original';
-        $kind  = (array_key_exists('kind', $_GET) && $_GET['kind'] == 'preview')
+        $kind = (array_key_exists('kind', $_GET) && $_GET['kind'] == 'preview')
             ? 'preview'
             : 'default';
 
@@ -156,7 +156,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                         ? $rootimg . "blankalbum_" . $size . ".png"
                         : $rootimg . "blankalbum.png";
                 }
-                $etag  = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))
+                $etag = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))
                     ? "EmptyMediaAlbum" . $size
                     : "EmptyMediaAlbum";
                 $image = file_get_contents($defaultimg);
@@ -179,7 +179,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                     $etag       = null;
                 }
 
-                $mime  = (array_key_exists('thumb_mime', $thumb_data))
+                $mime = (array_key_exists('thumb_mime', $thumb_data))
                     ? $thumb_data['thumb_mime']
                     : $art->raw_mime;
                 $image = (array_key_exists('thumb', $thumb_data))

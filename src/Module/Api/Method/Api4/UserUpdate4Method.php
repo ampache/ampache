@@ -96,16 +96,16 @@ final class UserUpdate4Method
             return false;
         }
 
-        $password   = $input['password'] ?? null;
+        $password = $input['password'] ?? null;
         if ($password && $update_user->access == 100) {
             Api4::message('error', 'Do not update passwords for admin users! ' . $username, '400', $input['api_format']);
 
             return false;
         }
 
-        $fullname   = $input['fullname'] ?? null;
-        $email      = (array_key_exists('email', $input)) ? urldecode($input['email']) : null;
-        $website    = (isset($input['website']))
+        $fullname = $input['fullname'] ?? null;
+        $email    = (array_key_exists('email', $input)) ? urldecode($input['email']) : null;
+        $website  = (isset($input['website']))
             ? filter_var(urldecode($input['website']), FILTER_VALIDATE_URL) ?: null
             : null;
         $state      = $input['state'] ?? null;

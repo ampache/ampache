@@ -30,15 +30,15 @@ use Ampache\Module\System\Core;
 
 class AmpacheLibravatar extends AmpachePlugin implements PluginGetAvatarUrlInterface
 {
-    public string $name        = 'Libravatar';
+    public string $name = 'Libravatar';
 
-    public string $categories  = 'avatar';
+    public string $categories = 'avatar';
 
     public string $description = 'Users avatar\'s with Libravatar';
 
-    public string $url         = 'https://www.libravatar.org';
+    public string $url = 'https://www.libravatar.org';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '360040';
 

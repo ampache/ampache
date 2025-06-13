@@ -61,7 +61,7 @@ final readonly class UserActivityRenderer implements UserActivityRendererInterfa
             return '';
         }
 
-        $descr   = $user->get_f_link() . ' ';
+        $descr = $user->get_f_link() . ' ';
         $descr .= match ($useractivity->action) {
             'shout' => T_('commented on'),
             'upload' => T_('uploaded'),

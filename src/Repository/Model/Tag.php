@@ -567,7 +567,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $limit_text = ($limit == 0)
             ? ''
             : 'LIMIT ' . $limit;
-        $sql   = (in_array($type, ['artist', 'album', 'song', 'video']))
+        $sql = (in_array($type, ['artist', 'album', 'song', 'video']))
             ? 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`' . $type . '` AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `' . $type . '` DESC ' . $limit_text
             : 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `count` DESC ' . $limit_text;
 
@@ -711,7 +711,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $results = [];
         if ($type == 'tag_hidden') {
-            $sql       = "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, 0 AS `count` FROM `tag` WHERE (`tag`.`is_hidden` = 1 OR (`tag`.`album` = 0 AND `tag`.`artist` = 0 AND `tag`.`song` = 0 AND `tag`.`video` = 0 )) ";
+            $sql = "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, 0 AS `count` FROM `tag` WHERE (`tag`.`is_hidden` = 1 OR (`tag`.`album` = 0 AND `tag`.`artist` = 0 AND `tag`.`song` = 0 AND `tag`.`video` = 0 )) ";
         } else {
             $type_select = (empty($type) || $type == 'all_hidden')
                 ? ', (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count`'

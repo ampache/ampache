@@ -113,8 +113,8 @@ final class ApiHandler implements ApiHandlerInterface
             $input['auth'] = $gatekeeper->getAuth();
         }
 
-        $api_format  = $input['api_format'];
-        $version     = (isset($input['version']))
+        $api_format = $input['api_format'];
+        $version    = (isset($input['version']))
             ? $input['version']
             : Api::$version;
 

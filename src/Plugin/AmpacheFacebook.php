@@ -29,15 +29,15 @@ use Ampache\Repository\Model\User;
 
 class AmpacheFacebook extends AmpachePlugin implements PluginExternalShareInterface
 {
-    public string $name        = 'Facebook';
+    public string $name = 'Facebook';
 
-    public string $categories  = 'share';
+    public string $categories = 'share';
 
     public string $description = 'Facebook share';
 
-    public string $url         = 'https://facebook.com';
+    public string $url = 'https://facebook.com';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370027';
 

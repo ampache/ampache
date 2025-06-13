@@ -38,15 +38,15 @@ use Ampache\Repository\UserActivityRepositoryInterface;
 
 class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeInterface
 {
-    public string $name        = 'Friends Timeline';
+    public string $name = 'Friends Timeline';
 
-    public string $categories  = 'home';
+    public string $categories = 'home';
 
     public string $description = 'Friends Timeline on homepage';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000002';
+    public string $version = '000002';
 
     public string $min_ampache = '370040';
 

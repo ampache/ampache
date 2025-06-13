@@ -163,7 +163,7 @@ class Upnp_Api
      */
     public static function sendResponse($delaytime, $actst, $address): void
     {
-        $response  = 'HTTP/1.1 200 OK' . "\r\n";
+        $response = 'HTTP/1.1 200 OK' . "\r\n";
         $response .= 'CACHE-CONTROL: max-age=1800' . "\r\n";
         $dt = new DateTime('UTC');
         $response .= 'DATE: ' . $dt->format('D, d M Y H:i:s \G\M\T') . "\r\n"; // RFC2616 date
@@ -601,7 +601,7 @@ class Upnp_Api
             case 'artists':
                 switch (count($pathreq)) {
                     case 1:
-                        $meta   = [
+                        $meta = [
                             'id' => $root . '/artists',
                             'parentID' => $root,
                             'restricted' => '1',
@@ -621,7 +621,7 @@ class Upnp_Api
             case 'albums':
                 switch (count($pathreq)) {
                     case 1:
-                        $meta   = [
+                        $meta = [
                             'id' => $root . '/albums',
                             'parentID' => $root,
                             'restricted' => '1',
@@ -641,7 +641,7 @@ class Upnp_Api
             case 'songs':
                 switch (count($pathreq)) {
                     case 1:
-                        $meta   = [
+                        $meta = [
                             'id' => $root . '/songs',
                             'parentID' => $root,
                             'restricted' => '1',
@@ -662,7 +662,7 @@ class Upnp_Api
             case 'playlists':
                 switch (count($pathreq)) {
                     case 1:
-                        $meta   = [
+                        $meta = [
                             'id' => $root . '/playlists',
                             'parentID' => $root,
                             'restricted' => '1',
@@ -682,7 +682,7 @@ class Upnp_Api
             case 'smartplaylists':
                 switch (count($pathreq)) {
                     case 1:
-                        $meta   = [
+                        $meta = [
                             'id' => $root . '/smartplaylists',
                             'parentID' => $root,
                             'restricted' => '1',
@@ -702,7 +702,7 @@ class Upnp_Api
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1:
-                        $meta   = [
+                        $meta = [
                             'id' => $root . '/live_streams',
                             'parentID' => $root,
                             'restricted' => '1',
@@ -722,7 +722,7 @@ class Upnp_Api
             case 'podcasts':
                 switch (count($pathreq)) {
                     case 1:
-                        $meta   = [
+                        $meta = [
                             'id' => $root . '/podcasts',
                             'parentID' => $root,
                             'restricted' => '1',

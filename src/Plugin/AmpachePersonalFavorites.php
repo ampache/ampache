@@ -35,15 +35,15 @@ use Ampache\Module\Util\Ui;
 
 class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHomeInterface
 {
-    public string $name        = 'Personal Favorites';
+    public string $name = 'Personal Favorites';
 
-    public string $categories  = 'home';
+    public string $categories = 'home';
 
     public string $description = 'Personal favorites on homepage';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000003';
+    public string $version = '000003';
 
     public string $min_ampache = '370021';
 
@@ -129,7 +129,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
         if ($this->display) {
             $list_array = [];
             foreach (explode(',', (string) $this->playlist) as $list_id) {
-                $playlist     = new Playlist((int)$list_id);
+                $playlist = new Playlist((int)$list_id);
                 if ($playlist->isNew() === false) {
                     $list_array[] = [$playlist, 'playlist'];
                 }

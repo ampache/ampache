@@ -834,12 +834,12 @@ class Xml4_Data
             $song->fill_ext_info();
 
             // FIXME: This is duplicate code and so wrong, functions need to be improved
-            $tag         = new Tag((int)($song->get_tags()[0]['id'] ?? 0));
-            $tag_string  = self::tags_string($song->get_tags());
-            $rating      = new Rating($song->id, 'song');
-            $art_url     = Art::url($song->album, 'album', Core::get_request('auth'));
-            $songMime    = $song->mime;
-            $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $tag        = new Tag((int)($song->get_tags()[0]['id'] ?? 0));
+            $tag_string = self::tags_string($song->get_tags());
+            $rating     = new Rating($song->id, 'song');
+            $art_url    = Art::url($song->album, 'album', Core::get_request('auth'));
+            $songMime   = $song->mime;
+            $play_url   = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
 
             $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->title . "]]></name>\n"
                 . "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_fullname() . "]]></artist>\n"

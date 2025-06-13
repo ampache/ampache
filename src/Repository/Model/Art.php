@@ -263,8 +263,8 @@ class Art extends database_object
      */
     public function get_image(bool $fallback = false, ?string $size = null): bool
     {
-        $sql         = "SELECT `id`, `image`, `width`, `height`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = 'original' AND `kind` = ?";
-        $db_results  = Dba::read($sql, [$this->object_type, $this->object_id, $this->kind]);
+        $sql        = "SELECT `id`, `image`, `width`, `height`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = 'original' AND `kind` = ?";
+        $db_results = Dba::read($sql, [$this->object_type, $this->object_id, $this->kind]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             if (AmpConfig::get('album_art_store_disk')) {
@@ -453,8 +453,8 @@ class Art extends database_object
         if (AmpConfig::get('write_tags', false)) {
             $className = ObjectTypeToClassNameMapper::map($this->object_type);
             /** @var playable_item $object */
-            $object    = new $className($this->object_id);
-            $songs     = [];
+            $object = new $className($this->object_id);
+            $songs  = [];
             debug_event(self::class, 'Inserting ' . $this->object_type . ' image' . $object->get_fullname() . ' for song files.', 5);
             if ($this->object_type === 'album') {
                 /** Use special treatment for albums */
@@ -482,13 +482,13 @@ class Art extends database_object
                     : $data['id3v2']['APIC'];
 
                 /* is the file flac or mp3? */
-                $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg')
+                $apic_typeid = ($fileformat == 'flac' || $fileformat == 'ogg')
                     ? 'typeid'
                     : 'picturetypeid';
                 $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg')
                     ? 'image_mime'
                     : 'mime';
-                $new_pic       = [
+                $new_pic = [
                     'data' => $source,
                     'description' => $description,
                     'mime' => $mime,

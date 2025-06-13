@@ -125,8 +125,8 @@ class easy_captcha
         $this->id = $this->new_id();
 
         // meta information
-        $this->created      = time();
-        $this->expires      = $this->created + self::CAPTCHA_TIMEOUT;
+        $this->created = time();
+        $this->expires = $this->created + self::CAPTCHA_TIMEOUT;
 
         // captcha processing info
         $this->sent       = 0;

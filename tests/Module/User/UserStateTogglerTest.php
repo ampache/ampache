@@ -92,13 +92,13 @@ class UserStateTogglerTest extends MockeryTestCase
         $user   = $this->mock(User::class);
         $mailer = $this->mock(MailerInterface::class);
 
-        $userName       = 'some-name';
-        $userId         = 666;
-        $email          = 'example@email.com';
-        $fullName       = 'some-fullname';
-        $siteTitle      = 'some-title';
-        $webPath        = 'some-path';
-        $message        = sprintf('A new user has been enabled. %s', $userName) .
+        $userName  = 'some-name';
+        $userId    = 666;
+        $email     = 'example@email.com';
+        $fullName  = 'some-fullname';
+        $siteTitle = 'some-title';
+        $webPath   = 'some-path';
+        $message   = sprintf('A new user has been enabled. %s', $userName) .
             "\n\n" .
             sprintf(
                 'You can log in at the following address %s',

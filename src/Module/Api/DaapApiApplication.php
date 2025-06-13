@@ -53,7 +53,7 @@ final class DaapApiApplication implements ApiApplicationInterface
 
         Daap_Api::create_dictionary();
 
-        $params  = array_filter(
+        $params = array_filter(
             explode('/', $action),
             fn (string $value): bool => strlen($value) > 0
         );

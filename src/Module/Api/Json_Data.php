@@ -572,7 +572,7 @@ class Json_Data
             $license = $licenseRepository->findById((int)$license_id);
 
             if ($license !== null) {
-                $JSON[]  = [
+                $JSON[] = [
                     "id" => (string)$license_id,
                     "name" => $license->getName(),
                     "description" => $license->getDescription(),
@@ -1841,7 +1841,7 @@ class Json_Data
      */
     public static function users(array $objects, bool $encode = true, bool $object = true): array|string
     {
-        $count  = self::$count ?? count($objects);
+        $count = self::$count ?? count($objects);
         if (($count > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }

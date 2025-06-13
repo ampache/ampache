@@ -146,7 +146,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
     $videoprops[T_('Filename')] = (isset($data['extension']))
         ? scrub_out($data['filename'] . "." . $data['extension'])
         : '';
-    $videoprops[T_('Size')]     = Ui::format_bytes($video->size);
+    $videoprops[T_('Size')] = Ui::format_bytes($video->size);
 }
 if ($video->update_time) {
     $videoprops[T_('Last Updated')] = get_datetime((int) $video->update_time);

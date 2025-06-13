@@ -36,15 +36,15 @@ use Ampache\Repository\ShoutRepositoryInterface;
 
 class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterface
 {
-    public string $name        = 'Shout Home';
+    public string $name = 'Shout Home';
 
-    public string $categories  = 'home';
+    public string $categories = 'home';
 
     public string $description = 'Shoutbox on homepage';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000002';
+    public string $version = '000002';
 
     public string $min_ampache = '370021';
 

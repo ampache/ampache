@@ -32,15 +32,15 @@ use WpOrg\Requests\Requests;
 
 class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterface
 {
-    public string $name        = 'ChartLyrics';
+    public string $name = 'ChartLyrics';
 
-    public string $categories  = 'lyrics';
+    public string $categories = 'lyrics';
 
     public string $description = 'Get lyrics from ChartLyrics';
 
-    public string $url         = 'http://www.chartlyrics.com';
+    public string $url = 'http://www.chartlyrics.com';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '360022';
 

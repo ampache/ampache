@@ -185,7 +185,7 @@ final class PlayAction implements ApplicationActionInterface
             $random  = (int)filter_input(INPUT_GET, 'random', FILTER_SANITIZE_NUMBER_INT);
 
             // run_custom_play_action... whatever that is
-            $cpaction = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
+            $cpaction = (int)filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
         }
         //$this->logger->debug('REQUEST: ' . print_r($_REQUEST, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
         // democratic play url doesn't include these
@@ -609,10 +609,10 @@ final class PlayAction implements ApplicationActionInterface
             );
         }
 
-        $transcode      = false;
-        $transcode_cfg  = AmpConfig::get('transcode', 'default');
-        $cache_file     = false;
-        $mediaOwnerId   = ($media instanceof Song_Preview)
+        $transcode     = false;
+        $transcode_cfg = AmpConfig::get('transcode', 'default');
+        $cache_file    = false;
+        $mediaOwnerId  = ($media instanceof Song_Preview)
             ? null
             : $media->get_user_owner();
         $mediaCatalogId = ($media instanceof Song_Preview)

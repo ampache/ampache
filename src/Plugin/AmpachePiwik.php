@@ -33,15 +33,15 @@ use Ampache\Module\System\Core;
 
 class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterface
 {
-    public string $name        = 'Piwik';
+    public string $name = 'Piwik';
 
-    public string $categories  = 'stats';
+    public string $categories = 'stats';
 
     public string $description = 'Piwik statistics';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370034';
 

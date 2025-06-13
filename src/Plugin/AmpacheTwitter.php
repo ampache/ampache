@@ -29,15 +29,15 @@ use Ampache\Repository\Model\User;
 
 class AmpacheTwitter extends AmpachePlugin implements PluginExternalShareInterface
 {
-    public string $name        = 'Twitter';
+    public string $name = 'Twitter';
 
-    public string $categories  = 'share';
+    public string $categories = 'share';
 
     public string $description = 'Twitter share';
 
-    public string $url         = 'https://twitter.com';
+    public string $url = 'https://twitter.com';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370027';
 

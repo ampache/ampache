@@ -136,9 +136,9 @@ class Playlist extends playlist_object
                 $user_id == -1
             )
         );
-        $sql      = "SELECT `id` FROM `playlist` ";
-        $params   = [];
-        $join     = 'WHERE';
+        $sql    = "SELECT `id` FROM `playlist` ";
+        $params = [];
+        $join   = 'WHERE';
 
         if (!$is_admin) {
             $sql .= ($includePublic)
@@ -445,7 +445,7 @@ class Playlist extends playlist_object
                     "OR `playlist_data`.`object_type` = 'podcast_episode' AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
                     "OR `playlist_data`.`object_type` = 'song' AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
                     "OR `playlist_data`.`object_type` = 'video' AND `video`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1)) ";
-                $params  = [$this->id, $user_id, $user_id, $user_id, $user_id];
+                $params = [$this->id, $user_id, $user_id, $user_id, $user_id];
             } else {
                 $sql .= "AND `playlist_data`.`object_type` = '$type' AND `$type`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ";
                 $params[] = $user_id;

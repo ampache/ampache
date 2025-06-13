@@ -293,7 +293,7 @@ if (!function_exists('getallheaders')) {
  */
 function check_http_referer(): bool
 {
-    $referer  = Core::get_server('HTTP_REFERER');
+    $referer = Core::get_server('HTTP_REFERER');
 
     $web_path = AmpConfig::get_web_path();
 

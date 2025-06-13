@@ -49,7 +49,7 @@ final readonly class AlbumDiskRepository implements AlbumDiskRepositoryInterface
             [$album->getId()]
         );
 
-        $results    = [];
+        $results = [];
         while ($rowId = $result->fetchColumn()) {
             $results[] = new AlbumDisk((int) $rowId);
         }

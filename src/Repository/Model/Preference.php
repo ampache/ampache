@@ -179,6 +179,7 @@ class Preference extends database_object
         'stream_beautiful_url',
         'subsonic_always_download',
         'subsonic_backend',
+        'subsonic_legacy',
         'theme_color',
         'theme_name',
         'topmenu',
@@ -312,8 +313,8 @@ class Preference extends database_object
 
         $column_name = 'name'; // Ampache 7
         if (!Dba::read('SELECT `name` FROM `user_preference` LIMIT 1;', [], true)) {
-            $column_name  = 'preference'; // Backward compatibility for Ampache < 7
-            $pref_name    = self::id_from_name($pref_name);
+            $column_name = 'preference'; // Backward compatibility for Ampache < 7
+            $pref_name   = self::id_from_name($pref_name);
         }
         //debug_event(self::class, 'Getting preference {' . $pref_name . '} for user identifier {' . $user_id . '} -- no cache, need to do one', 5);
 
@@ -570,6 +571,7 @@ class Preference extends database_object
 
         return $results;
     }
+
     /**
      * get_special_values
      * This returns an array of the values for special preferences which are not kept in the database
@@ -1732,8 +1734,8 @@ class Preference extends database_object
         switch ($preset) {
             case 'system':
                 // Get current system preferences
-                $sql          = "SELECT `value`, `name` FROM `user_preference` WHERE `user` = -1;";
-                $db_results   = Dba::read($sql);
+                $sql        = "SELECT `value`, `name` FROM `user_preference` WHERE `user` = -1;";
+                $db_results = Dba::read($sql);
 
                 while ($row = Dba::fetch_assoc($db_results)) {
                     $pref_sql = "UPDATE `user_preference` SET `value` = ? WHERE `user` = ? AND `name` = ?;";
@@ -2133,6 +2135,7 @@ class Preference extends database_object
             'stream_beautiful_url',
             'subsonic_always_download',
             'subsonic_backend',
+            'subsonic_legacy',
             'tadb_overwrite_name',
             'topmenu',
             'track_user_ip',

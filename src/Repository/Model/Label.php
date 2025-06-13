@@ -288,7 +288,7 @@ class Label extends database_object implements library_item
         $website  = (isset($data['website']))
             ? filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: null
             : null;
-        $active   = (isset($data['active']))
+        $active = (isset($data['active']))
             ? (bool)$data['active']
             : $this->active;
 
@@ -399,7 +399,7 @@ class Label extends database_object implements library_item
 
         $web_path = AmpConfig::get_web_path();
 
-        $results  = '';
+        $results = '';
         // Iterate through the labels, format them according to type and element id
         foreach ($labels as $label_id => $value) {
             if ($link) {

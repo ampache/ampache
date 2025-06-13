@@ -34,15 +34,15 @@ use WpOrg\Requests\Requests;
 
 class AmpacheBitly extends AmpachePlugin implements PluginShortenerInterface
 {
-    public string $name        = 'Bit.ly';
+    public string $name = 'Bit.ly';
 
-    public string $categories  = 'shortener';
+    public string $categories = 'shortener';
 
     public string $description = 'URL shorteners on shared links with Bit.ly';
 
-    public string $url         = 'http://bitly.com';
+    public string $url = 'http://bitly.com';
 
-    public string $version     = '000003';
+    public string $version = '000003';
 
     public string $min_ampache = '360037';
 

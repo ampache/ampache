@@ -61,7 +61,7 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
 
         $webPath = $this->configContainer->getWebPath();
 
-        $html   = "<div class='shoutbox-item'>";
+        $html = "<div class='shoutbox-item'>";
         $html .= "<div class='shoutbox-data'>";
         if (
             $details &&

@@ -58,11 +58,11 @@ final class ShowSongAction implements ApplicationActionInterface
         TalFactoryInterface $talFactory,
         LoggerInterface $logger
     ) {
-        $this->ui             = $ui;
-        $this->modelFactory   = $modelFactory;
-        $this->guiFactory     = $guiFactory;
-        $this->talFactory     = $talFactory;
-        $this->logger         = $logger;
+        $this->ui           = $ui;
+        $this->modelFactory = $modelFactory;
+        $this->guiFactory   = $guiFactory;
+        $this->talFactory   = $talFactory;
+        $this->logger       = $logger;
     }
 
     public function run(
@@ -71,7 +71,7 @@ final class ShowSongAction implements ApplicationActionInterface
     ): ?ResponseInterface {
         $this->ui->showHeader();
 
-        $user     =  $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
+        $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs = (isset($user->catalogs['music'])) ? $user->catalogs['music'] : User::get_user_catalogs($user->id);
         $song     = $this->modelFactory->createSong((int)($request->getQueryParams()['song_id'] ?? 0));
 

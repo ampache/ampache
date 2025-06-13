@@ -58,10 +58,10 @@ final class ShowEditPlaylistAction extends AbstractEditAction
         GuiFactoryInterface $guiFactory
     ) {
         parent::__construct($configContainer, $logger);
-        $this->responseFactory  = $responseFactory;
-        $this->streamFactory    = $streamFactory;
-        $this->talFactory       = $talFactory;
-        $this->guiFactory       = $guiFactory;
+        $this->responseFactory = $responseFactory;
+        $this->streamFactory   = $streamFactory;
+        $this->talFactory      = $talFactory;
+        $this->guiFactory      = $guiFactory;
     }
 
     protected function handle(

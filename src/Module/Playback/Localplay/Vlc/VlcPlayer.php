@@ -137,7 +137,7 @@ class VlcPlayer
      */
     public function skip(int $track_id): bool
     {
-        $args    = [
+        $args = [
             'command' => 'pl_play',
             '&id' => $track_id,
         ];

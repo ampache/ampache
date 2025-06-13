@@ -311,7 +311,7 @@ class Json5_Data
             $license = $licenseRepository->findById((int)$license_id);
 
             if ($license !== null) {
-                $JSON[]  = [
+                $JSON[] = [
                     'id' => (string) $license->getId(),
                     'name' => $license->getName(),
                     'description' => $license->getDescription(),

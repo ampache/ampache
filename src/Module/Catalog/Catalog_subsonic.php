@@ -276,9 +276,9 @@ class Catalog_subsonic extends Catalog
                                 if (is_array($albumartist) && $albumartist['success']) {
                                     $data['albumartist'] = html_entity_decode($albumartist['data']['artist']['name']);
                                 }
-                                $data['artist']      = html_entity_decode($song['artist']);
-                                $data['album']       = html_entity_decode($song['album']);
-                                $data['title']       = html_entity_decode($song['title']);
+                                $data['artist'] = html_entity_decode($song['artist']);
+                                $data['album']  = html_entity_decode($song['album']);
+                                $data['title']  = html_entity_decode($song['title']);
                                 if (
                                     is_array($artistInfo) &&
                                     isset($artistInfo['data']['artistInfo']['biography'])
@@ -296,7 +296,7 @@ class Catalog_subsonic extends Catalog
                                 $data['genre']    = (!empty($song['genre']))
                                     ? explode(',', html_entity_decode($song['genre']))
                                     : [];
-                                $data['file']     = $this->uri . '/rest/stream.view?id=' . $song['id'] . '&filename=' . urlencode($song['path']);
+                                $data['file'] = $this->uri . '/rest/stream.view?id=' . $song['id'] . '&filename=' . urlencode($song['path']);
                                 if ($this->check_remote_song($data)) {
                                     debug_event('subsonic.catalog', 'Skipping existing song ' . $song['path'], 5);
                                 } else {

@@ -36,7 +36,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
 {
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
-    private const VERSION = '7.5.3'; // AMPACHE_VERSION
+    private const VERSION = '7.6.0'; // AMPACHE_VERSION
 
     private const CONFIG_VERSION = '82';
 
@@ -64,7 +64,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
             throw new ConfigFileNotParsableException();
         }
 
-        /** This is the version.... fluff nothing more... */
+        /** This is the version... fluff nothing more... */
         $results['version']            = self::VERSION;
         $results['int_config_version'] = self::CONFIG_VERSION;
         $results['structure']          = self::STRUCTURE;
@@ -98,7 +98,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
             $results['raw_web_path'] = (empty($results['web_path']))
                 ? '/'
                 : $results['web_path'];
-            $results['web_path']     = sprintf(
+            $results['web_path'] = sprintf(
                 '%s://%s%s%s',
                 $protocol,
                 $results['http_host'],

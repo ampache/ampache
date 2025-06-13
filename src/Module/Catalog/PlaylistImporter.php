@@ -199,7 +199,7 @@ final class PlaylistImporter
      */
     private static function parse_asx(string $data): Generator
     {
-        $xml   = simplexml_load_string($data);
+        $xml = simplexml_load_string($data);
 
         if ($xml) {
             foreach ($xml->entry as $entry) {
@@ -219,7 +219,7 @@ final class PlaylistImporter
      */
     private static function parse_xspf(string $data): Generator
     {
-        $xml   = simplexml_load_string($data);
+        $xml = simplexml_load_string($data);
         if ($xml) {
             foreach ($xml->trackList->track as $track) {
                 $file = trim((string)$track->location);

@@ -301,7 +301,7 @@ class User extends database_object
                 'value' => $row['value'],
                 'subcategory' => $row['subcategory'],
             ];
-            $results[$type]                  = [
+            $results[$type] = [
                 'title' => ucwords((string)$type),
                 'admin' => $admin,
                 'prefs' => $type_array[$type],
@@ -610,7 +610,7 @@ class User extends database_object
         // TODO $user_list[] = -1; // make sure the System / Guest user gets a count as well
         if (!$catalog_filter) {
             // no filter means no need for filtering or counting per user
-            $count_array   = [
+            $count_array = [
                 'album_disk',
                 'album',
                 'artist',
@@ -681,9 +681,9 @@ class User extends database_object
                 'video',
                 'podcast_episode'
             ];
-            $items        = 0;
-            $time         = 0;
-            $size         = 0;
+            $items = 0;
+            $time  = 0;
+            $size  = 0;
             foreach ($media_tables as $table) {
                 if ($catalog_array === []) {
                     continue;

@@ -225,9 +225,9 @@ class PodcastEpisodeRepositoryTest extends TestCase
 
     public function testGetEpisodeEligibleForDownloadYieldsEpisodesWithoutLimit(): void
     {
-        $episodeId     = 42;
-        $podcastId     = 21;
-        $lastSyncDate  = new DateTime();
+        $episodeId    = 42;
+        $podcastId    = 21;
+        $lastSyncDate = new DateTime();
 
         $podcast = $this->createMock(Podcast::class);
         $result  = $this->createMock(PDOStatement::class);

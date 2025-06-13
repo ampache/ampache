@@ -33,15 +33,15 @@ use Ampache\Module\Util\Graph;
 
 class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInterface
 {
-    public string $name        = 'Stream Hits';
+    public string $name = 'Stream Hits';
 
-    public string $categories  = 'stream_control';
+    public string $categories = 'stream_control';
 
     public string $description = 'Control hits per user';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370024';
 

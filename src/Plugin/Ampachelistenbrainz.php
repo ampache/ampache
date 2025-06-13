@@ -35,15 +35,15 @@ use Ampache\Repository\Model\User;
 
 class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
-    public string $name        = 'ListenBrainz';
+    public string $name = 'ListenBrainz';
 
-    public string $categories  = 'scrobbling';
+    public string $categories = 'scrobbling';
 
     public string $description = 'Records your played songs to your ListenBrainz Account';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000002';
+    public string $version = '000002';
 
     public string $min_ampache = '380004';
 

@@ -47,15 +47,15 @@ use MusicBrainz\Objects\Tag;
 
 class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInterface
 {
-    public string $name        = 'MusicBrainz';
+    public string $name = 'MusicBrainz';
 
-    public string $categories  = 'metadata';
+    public string $categories = 'metadata';
 
     public string $description = 'MusicBrainz metadata integration';
 
-    public string $url         = 'http://www.musicbrainz.org';
+    public string $url = 'http://www.musicbrainz.org';
 
-    public string $version     = '000003';
+    public string $version = '000003';
 
     public string $min_ampache = '360003';
 

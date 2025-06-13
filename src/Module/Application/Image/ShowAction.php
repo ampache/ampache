@@ -105,8 +105,8 @@ final readonly class ShowAction extends AbstractShowAction
         }
 
         if ($item instanceof Podcast_Episode) {
-            $objectId        = $item->podcast;
-            $objectType      = 'podcast';
+            $objectId   = $item->podcast;
+            $objectType = 'podcast';
         }
 
         return [
