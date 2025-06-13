@@ -1216,7 +1216,7 @@ class Catalog_local extends Catalog
             }
 
             if ($this->getMetadataManager()->isCustomMetadataEnabled()) {
-                $song    = new Song($song_id);
+                $song = new Song($song_id);
                 $this->addMetadata($song, $results);
             }
             // disable dupes if catalog_check_duplicate is enabled

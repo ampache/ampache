@@ -266,9 +266,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         $original_year = (AmpConfig::get('use_original_year'))
             ? "IFNULL(`album`.`original_year`, `album`.`year`)"
             : "`album`.`year`";
-        $sort_type     = AmpConfig::get('album_sort');
-        $showAlbum     = AmpConfig::get('album_group');
-        $sql_sort      = match ($sort_type) {
+        $sort_type = AmpConfig::get('album_sort');
+        $showAlbum = AmpConfig::get('album_group');
+        $sql_sort  = match ($sort_type) {
             'name_asc' => "`album`.`name` ASC",
             'name_desc' => "`album`.`name` DESC",
             'year_asc' => $original_year . ' ASC',
@@ -328,8 +328,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         $original_year = (AmpConfig::get('use_original_year'))
             ? "IFNULL(`album`.`original_year`, `album`.`year`)"
             : "`album`.`year`";
-        $sort_type     = AmpConfig::get('album_sort');
-        $sql_sort      = match ($sort_type) {
+        $sort_type = AmpConfig::get('album_sort');
+        $sql_sort  = match ($sort_type) {
             'name_asc' => "`album`.`name` ASC",
             'name_desc' => "`album`.`name` DESC",
             'year_asc' => $original_year . ' ASC',

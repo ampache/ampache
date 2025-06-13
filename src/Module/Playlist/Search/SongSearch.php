@@ -211,7 +211,7 @@ final class SongSearch implements SearchInterface
                     $parameters[] = $input;
                     break;
                 case 'no_license':
-                    $where[]      = "`song`.`license` IS NULL";
+                    $where[] = "`song`.`license` IS NULL";
                     break;
                 case 'comment':
                     $join['song_data'] = true;
@@ -356,7 +356,7 @@ final class SongSearch implements SearchInterface
                 case 'myplayedalbum':
                 case 'myplayedartist':
                     /** @var string $rulename */
-                    $rulename     = $rule[0];
+                    $rulename = $rule[0];
                     // combine these as they all do the same thing just different tables
                     $looking      = str_replace('myplayed', '', $rulename);
                     $column       = ($looking == '') ? 'id' : $looking;

@@ -436,7 +436,7 @@ class Browse extends Query
                     }
                 }
 
-                $box_req   = Ui::find_template('show_manage_shoutbox.inc.php');
+                $box_req = Ui::find_template('show_manage_shoutbox.inc.php');
                 break;
             case 'tag':
                 Tag::build_cache($object_ids);
@@ -450,8 +450,8 @@ class Browse extends Query
                 break;
             case 'video':
                 Video::build_cache($object_ids);
-                $box_title  = $this->get_title(T_('Videos'));
-                $box_req    = Ui::find_template('show_videos.inc.php');
+                $box_title = $this->get_title(T_('Videos'));
+                $box_req   = Ui::find_template('show_videos.inc.php');
                 break;
             case 'democratic':
                 $browse->set_grid_view(false);

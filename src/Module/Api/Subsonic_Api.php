@@ -1457,11 +1457,10 @@ class Subsonic_Api
         $response = Subsonic_Xml_Data::addSubsonicResponse('getplaylist');
         if (Subsonic_Xml_Data::_isSmartPlaylist($playlistId)) {
             $playlist = new Search(Subsonic_Xml_Data::_getAmpacheId($playlistId), 'song', $user);
-            Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
         } else {
             $playlist = new Playlist(Subsonic_Xml_Data::_getAmpacheId($playlistId));
-            Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
         }
+        Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
         self::_apiOutput($input, $response);
     }
 
@@ -1668,7 +1667,8 @@ class Subsonic_Api
     public static function hls(array $input, User $user): void
     {
         unset($user);
-        $fileid  = self::_check_parameter($input, 'id', true);
+
+        $fileid = self::_check_parameter($input, 'id', true);
         if (!$fileid) {
             return;
         }
@@ -1985,7 +1985,7 @@ class Subsonic_Api
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
             foreach ($object_ids as $subsonic_id) {
-                $time      = (isset($input['time']))
+                $time = (isset($input['time']))
                     ? (int)(((int)$input['time']) / 1000)
                     : time();
                 $previous  = Stats::get_last_play($user->id, $client, $time);
@@ -2760,22 +2760,17 @@ class Subsonic_Api
             return;
         }
 
-        $email        = urldecode((string)self::_check_parameter($input, 'email'));
+        $email = self::_check_parameter($input, 'email');
+        if (!$email) {
+            return;
+        }
+
+        $email        = urldecode($email);
         $adminRole    = (array_key_exists('adminRole', $input) && $input['adminRole'] == 'true');
         $downloadRole = (array_key_exists('downloadRole', $input) && $input['downloadRole'] == 'true');
         $uploadRole   = (array_key_exists('uploadRole', $input) && $input['uploadRole'] == 'true');
         $coverArtRole = (array_key_exists('coverArtRole', $input) && $input['coverArtRole'] == 'true');
         $shareRole    = (array_key_exists('shareRole', $input) && $input['shareRole'] == 'true');
-        //$ldapAuthenticated = $input['ldapAuthenticated'];
-        //$settingsRole = $input['settingsRole'];
-        //$streamRole = $input['streamRole'];
-        //$jukeboxRole = $input['jukeboxRole'];
-        //$playlistRole = $input['playlistRole'];
-        //$commentRole = $input['commentRole'];
-        //$podcastRole = $input['podcastRole'];
-        if ($email) {
-            $email = urldecode($email);
-        }
 
         if ($user->access >= AccessLevelEnum::ADMIN->value) {
             $access = AccessLevelEnum::USER;
@@ -2822,9 +2817,8 @@ class Subsonic_Api
             return;
         }
 
-        $password = $input['password'] ?? false;
-        $email    = urldecode((string)self::_check_parameter($input, 'email'));
-        //$ldapAuthenticated = $input['ldapAuthenticated'];
+        $password     = $input['password'] ?? false;
+        $email        = (array_key_exists('email', $input)) ? urldecode($input['email']) : false;
         $adminRole    = (array_key_exists('adminRole', $input) && $input['adminRole'] == 'true');
         $downloadRole = (array_key_exists('downloadRole', $input) && $input['downloadRole'] == 'true');
         $uploadRole   = (array_key_exists('uploadRole', $input) && $input['uploadRole'] == 'true');
@@ -2852,7 +2846,7 @@ class Subsonic_Api
                     $update_user->update_password($password);
                 }
                 // update e-mail
-                if (Mailer::validate_address($email)) {
+                if ($email && Mailer::validate_address($email)) {
                     $update_user->update_email($email);
                 }
                 // set preferences

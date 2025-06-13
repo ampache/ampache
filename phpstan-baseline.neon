@@ -871,6 +871,11 @@ parameters:
 			path: src/Module/Api/Output/XmlOutput.php
 
 		-
+			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\OpenSubsonic_Api', non\\-falsy\\-string\\} given\\.$#"
+			count: 1
+			path: src/Module/Api/SubsonicApiApplication.php
+
+		-
 			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Subsonic_Api', non\\-falsy\\-string\\} given\\.$#"
 			count: 1
 			path: src/Module/Api/SubsonicApiApplication.php
@@ -904,11 +909,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_output_header\\(\\) has parameter \\$header with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Cannot cast array\\<int, string\\>\\|string\\|null to string\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
 			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
@@ -1261,19 +1261,9 @@ parameters:
 			path: src/Module/Application/Installation/DefaultAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$action_index of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:run_custom_play_action\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<1, max\\>, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Parameter \\#1 \\$action_index of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:run_custom_play_action\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
 
 		-
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<1, max\\>, int given\\.$#"

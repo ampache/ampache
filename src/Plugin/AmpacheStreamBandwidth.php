@@ -35,15 +35,15 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamControlInterface
 {
-    public string $name        = 'Stream Bandwidth';
+    public string $name = 'Stream Bandwidth';
 
-    public string $categories  = 'stream_control';
+    public string $categories = 'stream_control';
 
     public string $description = 'Control bandwidth per user';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370024';
 

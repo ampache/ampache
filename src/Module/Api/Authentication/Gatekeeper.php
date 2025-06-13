@@ -58,9 +58,9 @@ final class Gatekeeper implements GatekeeperInterface
         $this->request        = $request;
     }
 
-    public function getUser(): ?User
+    public function getUser(string $requestKey = 'auth'): ?User
     {
-        return $this->userRepository->findByApiKey($this->getAuth()) ?? $this->userRepository->findByUsername($this->request->getQueryParams()['user'] ?? '');
+        return $this->userRepository->findByApiKey($this->getAuth($requestKey)) ?? $this->userRepository->findByUsername($this->request->getQueryParams()['user'] ?? '');
     }
 
     public function sessionExists(string $auth): bool
@@ -73,14 +73,14 @@ final class Gatekeeper implements GatekeeperInterface
         Session::extend($auth, AccessTypeEnum::API->value);
     }
 
-    public function getUserName(): string
+    public function getUserName(string $requestKey = 'auth'): string
     {
         return (isset($this->request->getQueryParams()['user']))
             ? $this->request->getQueryParams()['user']
-            : Session::username($this->getAuth());
+            : Session::username($this->getAuth($requestKey));
     }
 
-    public function getAuth(): string
+    public function getAuth(string $requestKey = 'auth'): string
     {
         if ($this->auth === null) {
             $auth = $this->request->getHeaderLine('Authorization');
@@ -91,13 +91,13 @@ final class Gatekeeper implements GatekeeperInterface
             preg_match('/Bearer ([0-9a-f].*)/', $auth, $matches);
 
             if ($matches !== []) {
-                $token = $matches[1];
+                $token = (string)$matches[1];
             } else {
                 /**
                  * Fallback to legacy get parameter
                  * Remove some day when backwards compatability isn't a problem
                  */
-                $token = $this->request->getQueryParams()['auth'] ?? '';
+                $token = (string)($this->request->getQueryParams()[$requestKey] ?? '');
             }
 
             $this->logger->notice(

@@ -219,8 +219,8 @@ final readonly class DefaultAction implements ApplicationActionInterface
                 !empty($media->file)
             ) {
                 $total_size += $media->size ?? 0;
-                $dirname    = '';
-                $parent     = $media->get_parent();
+                $dirname = '';
+                $parent  = $media->get_parent();
                 if ($parent != null) {
                     $className = ObjectTypeToClassNameMapper::map($parent['object_type']->value);
                     /** @var class-string<library_item> $className */

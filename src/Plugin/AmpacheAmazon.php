@@ -33,15 +33,15 @@ use Ampache\Module\Util\AmazonSearch;
 
 class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
 {
-    public string $name        = 'Amazon';
+    public string $name = 'Amazon';
 
-    public string $categories  = 'metadata';
+    public string $categories = 'metadata';
 
     public string $description = 'Amazon arts';
 
-    public string $url         = 'http://www.amazon.com';
+    public string $url = 'http://www.amazon.com';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370009';
 

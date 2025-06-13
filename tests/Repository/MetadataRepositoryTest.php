@@ -217,8 +217,8 @@ class MetadataRepositoryTest extends TestCase
 
     public function testFindByObjectIdAndTypeReturnsFoundObject(): void
     {
-        $result        = $this->createMock(PDOStatement::class);
-        $metadata      = $this->createMock(Metadata::class);
+        $result   = $this->createMock(PDOStatement::class);
+        $metadata = $this->createMock(Metadata::class);
 
         $objectType = 'some-object-type';
         $objectId   = 42;

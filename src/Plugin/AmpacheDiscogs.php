@@ -34,15 +34,15 @@ use Exception;
 
 class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface, PluginGetMetadataInterface
 {
-    public string $name        = 'Discogs';
+    public string $name = 'Discogs';
 
-    public string $categories  = 'metadata';
+    public string $categories = 'metadata';
 
     public string $description = 'Discogs metadata integration';
 
-    public string $url         = 'http://www.discogs.com';
+    public string $url = 'http://www.discogs.com';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370021';
 

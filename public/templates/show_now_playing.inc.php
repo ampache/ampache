@@ -41,7 +41,7 @@ use Ampache\Repository\Model\Video;
 /** @var list<array{media: Media, client: User, agent: string,}> $results */
 
 if (count($results)) {
-    $user     = (!empty(Core::get_global('user')))
+    $user = (!empty(Core::get_global('user')))
         ? Core::get_global('user')
         : new User(-1);
     $catalogs = User::get_user_catalogs($user->id);

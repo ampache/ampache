@@ -341,7 +341,7 @@ class Random
                 }
 
                 $size_total += $new_size;
-                $results[]  = (int)$row['id'];
+                $results[] = (int)$row['id'];
 
                 // If we are within 4mb of target then jump ship
                 if (($data['size_limit'] - floor($size_total)) < 4) {
@@ -365,7 +365,7 @@ class Random
                 }
 
                 $time_total += $new_time;
-                $results[]  = (int)$row['id'];
+                $results[] = (int)$row['id'];
 
                 // If there are less then 2 min of free space return
                 if (($data['length'] - $time_total) < 2) {
