@@ -1516,7 +1516,8 @@ class OpenSubsonic_Api
         if (AmpConfig::get('share')) {
             $shareRepository = self::getShareRepository();
 
-            $share = $shareRepository->findById((int) $sub_id);
+            $share_id = self::getAmpacheId($sub_id);
+            $share    = $shareRepository->findById($share_id);
             if (
                 $share === null ||
                 !$share->isAccessible($user)
