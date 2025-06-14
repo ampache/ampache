@@ -1194,6 +1194,13 @@ class OpenSubsonic_Api
             return;
         }
 
+        $object = self::getAmpacheObject((string)$sub_id);
+        if (!$object) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
         $description = $input['description'] ?? null;
         if (AmpConfig::get('share')) {
             $share_expire = AmpConfig::get('share_expire', 7);
@@ -1205,12 +1212,10 @@ class OpenSubsonic_Api
                 debug_event(self::class, 'createShare: sharing song list (album)', 5);
                 $song_id     = self::getAmpacheId($sub_id[0]);
                 $tmp_song    = new Song($song_id);
-                $sub_id      = $tmp_song->album;
+                $sub_id      = self::getAlbumSubId($tmp_song->album);
                 $object_type = 'album';
-            } else {
-                $sub_id = self::getAmpacheId($sub_id);
             }
-
+            debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $sub_id, 4);
             if (
                 !in_array(
                     $object_type,
@@ -1228,7 +1233,6 @@ class OpenSubsonic_Api
             ) {
                 $object_type = '';
             }
-            debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $sub_id, 4);
 
             if (!empty($object_type) && !empty($sub_id)) {
                 try {
