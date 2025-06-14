@@ -1252,7 +1252,7 @@ class OpenSubsonic_Api
                 $shares[] = $shareCreator->create(
                     $user,
                     LibraryItemEnum::from($object_type),
-                    $sub_id,
+                    $object->getId(),
                     true,
                     Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
                     $expire_days,
