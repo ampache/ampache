@@ -93,7 +93,7 @@ final class Gatekeeper implements GatekeeperInterface
             if ($matches !== []) {
                 $token = (string)$matches[1];
                 $this->logger->notice(
-                    sprintf('API session [%s] (Bearer token)', $token),
+                    'API session using Bearer token',
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             } else {
