@@ -1227,6 +1227,7 @@ class OpenSubsonic_Api
                         'podcast',
                         'podcast_episode',
                         'search',
+                        'song',
                         'video',
                     ]
                 )
