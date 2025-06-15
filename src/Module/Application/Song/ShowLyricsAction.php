@@ -66,7 +66,7 @@ final class ShowLyricsAction implements ApplicationActionInterface
             throw new ObjectNotFoundException($song_id);
         }
 
-        $lyrics  = $song->get_lyrics();
+        $lyrics = $song->get_lyrics();
 
         $this->ui->show(
             'show_lyrics.inc.php',
