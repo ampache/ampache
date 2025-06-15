@@ -852,7 +852,7 @@ class OpenSubsonic_Json_Data
         }
 
         if ($songs) {
-            $allsongs = self::getAlbumRepository()->getSongs($album->getId());;
+            $allsongs = self::getAlbumRepository()->getSongs($album->getId());
             $entries  = [];
             foreach ($allsongs as $song_id) {
                 $entries[] = self::_getChild($song_id, 'song');
