@@ -732,6 +732,7 @@ class OpenSubsonic_Json_Data
      *
      * An album from ID3 tags.
      * https://opensubsonic.netlify.app/docs/responses/albumid3/
+     * https://opensubsonic.netlify.app/docs/responses/albumid3withsongs/
      * @return array{
      *     'id': string,
      *     'name': string,
@@ -782,9 +783,10 @@ class OpenSubsonic_Json_Data
      *         'disc': int,
      *         'title': string
      *     }
+     *     'song'?: array<array<string, mixed>>
      * }
      */
-    private static function _getAlbumID3(Album $album): array
+    private static function _getAlbumID3(Album $album, bool $songs = false): array
     {
         $sub_id       = OpenSubsonic_Api::getAlbumSubId($album->id);
         $album_artist = $album->findAlbumArtist();
@@ -847,6 +849,15 @@ class OpenSubsonic_Json_Data
         $result  = $starred->get_flag(null, true);
         if (is_array($result)) {
             $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
+        }
+
+        if ($songs) {
+            $allsongs = self::getAlbumRepository()->getSongs($album->getId());;
+            $entries  = [];
+            foreach ($allsongs as $song_id) {
+                $entries[] = self::_getChild($song_id, 'song');
+            }
+            $json['song'] = $entries;
         }
 
         return $json;
@@ -1855,19 +1866,10 @@ class OpenSubsonic_Json_Data
             return $response;
         }
 
-        $response['subsonic-response'][$elementName] = self::_getAlbumID3($album);
+        $response['subsonic-response'][$elementName] = self::_getAlbumID3($album, $songs);
 
         return $response;
     }
-
-    /**
-     * addAlbumID3WithSongs
-     *
-     * Album with songs.
-     * https://opensubsonic.netlify.app/docs/responses/albumid3withsongs/
-     * @see self::addAlbumID3()
-     */
-
 
     /**
      * addAlbumInfo
