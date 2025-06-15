@@ -849,7 +849,7 @@ class Query
 
         if (!$this->is_simple()) {
             $sql        = 'SELECT `data`, `object_data` FROM `tmp_browse` WHERE `sid` = ? AND `id` = ?';
-            $db_results = Dba::read($sql, [session_id(), $this->id]);
+            $db_results = Dba::read($sql, [session_id(), $this->getId()]);
             $results    = Dba::fetch_assoc($db_results);
 
             if (array_key_exists('data', $results) && !empty($results['data'])) {
@@ -1344,7 +1344,7 @@ class Query
      */
     public function store(): void
     {
-        $browse_id = $this->id;
+        $browse_id = $this->getId();
         if ($browse_id != 'nocache') {
             $data = $this->_serialize($this->_state);
 
@@ -1369,7 +1369,7 @@ class Query
         if (!$this->is_simple()) {
             $this->_cache = $object_ids;
             $this->set_total(count($object_ids));
-            $browse_id = $this->id;
+            $browse_id = $this->getId();
             if ($browse_id != 'nocache') {
                 $data = $this->_serialize($this->_cache);
 
@@ -1391,7 +1391,7 @@ class Query
             $key .= '_' . $this->_state['extended_key_name'];
         }
 
-        return $key . ('_' . $this->id);
+        return $key . ('_' . $this->getId());
     }
 
     /**

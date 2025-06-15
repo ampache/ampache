@@ -209,7 +209,7 @@ class Browse extends Query
      */
     public function get_supplemental_objects(): array
     {
-        $objects = $_SESSION['browse']['supplemental'][$this->id] ?? '';
+        $objects = $_SESSION['browse']['supplemental'][$this->getId()] ?? '';
 
         if (!is_array($objects)) {
             $objects = [];
@@ -296,8 +296,8 @@ class Browse extends Query
         }
 
         // Set the correct classes based on type
-        $class = "box browse_" . $type . '_' . $this->id;
-        debug_event(self::class, 'show_objects called. browse {' . $this->id . '} type {' . $type . '}', 5);
+        $class = "box browse_" . $type . '_' . $this->getId();
+        debug_event(self::class, 'show_objects called. browse {' . $this->getId() . '} type {' . $type . '}', 5);
 
         // hide some of the useless columns in a browse
         $hide_columns   = [];
@@ -518,7 +518,7 @@ class Browse extends Query
 
             if ($this->is_use_filters()) {
                 echo '<script>';
-                echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
+                echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->getId() . $argument_param, '');
                 echo ';</script>';
             }
         } elseif (!$this->is_use_pages()) {
