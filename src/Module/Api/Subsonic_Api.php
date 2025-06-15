@@ -514,7 +514,7 @@ class Subsonic_Api
                             $childProperties = (float)$childProperties;
                         }
                         if (in_array($childTagName, $options['alwaysBool'])) {
-                            $childProperties = (bool)$childProperties;
+                            $childProperties = make_bool($childProperties);
                         }
                         if (is_array($tagsArray[$childTagName]) && array_keys($tagsArray[$childTagName]) === range(0, count($tagsArray[$childTagName]) - 1)) {
                             // key already exists and is integer indexed array
