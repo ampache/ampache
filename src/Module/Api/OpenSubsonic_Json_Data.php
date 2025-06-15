@@ -1932,16 +1932,18 @@ class OpenSubsonic_Json_Data
      */
     public static function addAlbumList2(array $response, array $albums): array
     {
-        $output_albums = [];
+        $response['subsonic-response']['albumList2'] = [];
+
+        $json = [];
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
                 continue;
             }
-            $output_albums[] = self::_getAlbumID3($album);
+            $json[] = self::_getAlbumID3($album);
         }
 
-        $response['subsonic-response']['albumList2'] = $output_albums;
+        $response['subsonic-response']['albumList2']['album'] = $json;
 
         return $response;
     }
