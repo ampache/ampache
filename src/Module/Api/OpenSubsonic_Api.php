@@ -2216,9 +2216,7 @@ class OpenSubsonic_Api
      */
     public static function getinternetradiostations(array $input, User $user): void
     {
-        unset($user);
-
-        $radios = self::getLiveStreamRepository()->findAll();
+        $radios = self::getLiveStreamRepository()->findAll($user);
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);

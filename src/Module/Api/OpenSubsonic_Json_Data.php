@@ -2391,7 +2391,7 @@ class OpenSubsonic_Json_Data
 
         $json = [];
         foreach ($radios as $radio_id) {
-            $radio  = new Live_Stream((int)$radio_id);
+            $radio  = new Live_Stream($radio_id);
             $json[] = self::_getInternetRadioStation($radio);
         }
 
