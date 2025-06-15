@@ -440,7 +440,7 @@ class Subsonic_Api
                     $vattr = (float) $strattr;
                 }
                 if (in_array($attributeName, $options['alwaysBool'])) {
-                    $vattr = (bool) $strattr;
+                    $vattr = make_bool($strattr);
                 }
                 $attributesArray[$attributeKey] = $vattr;
             }
