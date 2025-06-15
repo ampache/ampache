@@ -782,7 +782,7 @@ class OpenSubsonic_Json_Data
      *     'discTitles'?: array{
      *         'disc': int,
      *         'title': string
-     *     }
+     *     },
      *     'song'?: array<array<string, mixed>>
      * }
      */

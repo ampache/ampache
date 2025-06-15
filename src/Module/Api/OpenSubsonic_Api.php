@@ -1195,7 +1195,7 @@ class OpenSubsonic_Api
         }
 
         $object = self::getAmpacheObject((string)$sub_id);
-        if (!$object) {
+        if (!$object || !$object instanceof library_item) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -1385,7 +1385,10 @@ class OpenSubsonic_Api
         $liveStreamRepository = self::getLiveStreamRepository();
 
         if (AmpConfig::get('live_stream') && $user->access >= AccessLevelEnum::MANAGER->value) {
-            $liveStream = $liveStreamRepository->findById((int) $sub_id);
+            $radio_id   = self::getAmpacheId($sub_id);
+            $liveStream = ($radio_id)
+                ? $liveStreamRepository->findById($radio_id)
+                : null;
 
             if ($liveStream === null) {
                 self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
@@ -1517,7 +1520,10 @@ class OpenSubsonic_Api
             $shareRepository = self::getShareRepository();
 
             $share_id = self::getAmpacheId($sub_id);
-            $share    = $shareRepository->findById($share_id);
+            $share    = ($share_id)
+                ? $shareRepository->findById($share_id)
+                : null;
+
             if (
                 $share === null ||
                 !$share->isAccessible($user)
