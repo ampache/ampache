@@ -197,7 +197,7 @@ class Browse extends Query
      */
     public function add_supplemental_object(string $class, int $uid): bool
     {
-        $_SESSION['browse']['supplemental'][$this->id][$class] = $uid;
+        $_SESSION['browse']['supplemental'][$this->getId()][$class] = $uid;
 
         return true;
     }
@@ -549,7 +549,7 @@ class Browse extends Query
         $total       = $this->get_total();
         $next_offset = $start + $limit;
         if ($next_offset <= $total) {
-            echo '<a class="jscroll-next" href="' . $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri() . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode=' . $this->get_content_div() . '&show_header=false' . $argument_param . '">' . T_('More') . '</a>';
+            echo '<a class="jscroll-next" href="' . $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri() . '?page=browse&action=page&browse_id=' . $this->getId() . '&start=' . $next_offset . '&xoutput=raw&xoutputnode=' . $this->get_content_div() . '&show_header=false' . $argument_param . '">' . T_('More') . '</a>';
         }
     }
 
