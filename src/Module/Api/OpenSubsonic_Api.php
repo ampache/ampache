@@ -2953,7 +2953,7 @@ class OpenSubsonic_Api
      * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getsongbygenre(array $input, User $user): void
+    public static function getsongsbygenre(array $input, User $user): void
     {
         unset($user);
         $genre = self::_check_parameter($input, 'genre', __FUNCTION__);
