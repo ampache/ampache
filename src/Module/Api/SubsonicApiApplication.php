@@ -150,16 +150,6 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 // get the user preference in case the server is different
                 $subsonic_legacy = Preference::get_by_user($user->getId(), 'subsonic_legacy');
             }
-
-            if ($subsonic_legacy) {
-                $this->logger->warning(
-                    'Error Attempted to use OpenSubsonic Token authentication with legacy Subsonic API',
-                    [LegacyLogger::CONTEXT_TYPE => self::class]
-                );
-                Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_BADAUTH, $action), $callback);
-
-                return;
-            }
         }
 
 
