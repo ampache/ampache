@@ -351,9 +351,9 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
         if ($subsonic_legacy) {
-            Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, $action), $callback);
+            Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_APIVERSION_SERVER, $action), $callback);
         } else {
-            OpenSubsonic_Api::error($input, OpenSubsonic_Api::SSERROR_GENERIC, $action);
+            OpenSubsonic_Api::error($input, OpenSubsonic_Api::SSERROR_APIVERSION_SERVER, $action);
         }
     }
 }
