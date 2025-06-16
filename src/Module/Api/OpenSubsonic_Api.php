@@ -2868,12 +2868,6 @@ class OpenSubsonic_Api
             $songs = Recommendation::get_songs_like($object_id, $count);
         }
 
-        if (count($songs) == 0) {
-            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-
-            return;
-        }
-
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
