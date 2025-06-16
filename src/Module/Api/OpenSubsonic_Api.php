@@ -3147,7 +3147,6 @@ class OpenSubsonic_Api
         }
 
         if ($user->access === 100 || $user->username == $username) {
-            $response = Subsonic_Xml_Data::addSubsonicResponse('getuser');
             if ($user->username == $username) {
                 $update_user = $user;
             } else {
@@ -3156,14 +3155,13 @@ class OpenSubsonic_Api
             if (!$update_user) {
                 self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             } else {
-                Subsonic_Xml_Data::addUser($response, $update_user);
                 $format = (string)($input['f'] ?? 'xml');
                 if ($format === 'xml') {
                     $response = self::_addXmlResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Xml_Data::addUser($response, $user);
+                    $response = OpenSubsonic_Xml_Data::addUser($response, $update_user);
                 } else {
                     $response = self::_addJsonResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Json_Data::addUser($response, $user);
+                    $response = OpenSubsonic_Json_Data::addUser($response, $update_user);
                 }
                 self::_responseOutput($input, __FUNCTION__, $response);
             }
