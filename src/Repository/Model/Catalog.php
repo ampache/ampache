@@ -2046,6 +2046,9 @@ abstract class Catalog extends database_object
         }
 
         foreach ($results as $result) {
+            if (!is_array($result)) {
+                continue;
+            }
             // Pull the string representation from the source
             $image = Art::get_from_source($result, $type);
             if (strlen($image) > '5') {
