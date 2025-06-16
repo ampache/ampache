@@ -631,21 +631,22 @@ class OpenSubsonic_Api
      * _getAmpacheIdArrays
      * @param string[]|int[] $object_ids
      * @return list<array{
-     *     object_id: int|null,
+     *     object_id: string|null,
      *     object_type: string,
      *     track: int
      * }>
      */
-    private static function _getAmpacheIdArrays(array $object_ids): array
+    private static function _getAmpacheIdArrays(array $sub_ids): array
     {
         $ampidarrays = [];
         $track       = 1;
-        foreach ($object_ids as $object_id) {
-            $ampacheId = self::getAmpacheId((string)$object_id);
+        foreach ($sub_ids as $sub_id) {
+            $ampacheId   = self::getAmpacheId($sub_id);
+            $ampacheType = self::getAmpacheType($sub_id);
             if ($ampacheId) {
                 $ampidarrays[] = [
                     'object_id' => $ampacheId,
-                    'object_type' => self::getAmpacheType((string)$object_id),
+                    'object_type' => $ampacheType,
                     'track' => $track
                 ];
                 $track++;
@@ -1031,8 +1032,8 @@ class OpenSubsonic_Api
         }
 
         $comment   = $input['comment'] ?? '';
-        $object_id = self::getAmpacheId((string)$sub_id);
-        $type      = self::getAmpacheType((string)$sub_id);
+        $object_id = self::getAmpacheId($sub_id);
+        $type      = self::getAmpacheType($sub_id);
 
         if (!empty($object_id) && !empty($type)) {
             $bookmark = new Bookmark($object_id, $type);
@@ -1207,7 +1208,7 @@ class OpenSubsonic_Api
             $expire_days  = (isset($input['expires']))
                 ? Share::get_expiry(((int)filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
                 : $share_expire;
-            $object_type = self::getAmpacheType((string)$sub_id);
+            $object_type = self::getAmpacheType($sub_id);
             if (is_array($sub_id) && $object_type === 'song') {
                 debug_event(self::class, 'createShare: sharing song list (album)', 5);
                 $song_id     = self::getAmpacheId($sub_id[0]);
@@ -1355,7 +1356,7 @@ class OpenSubsonic_Api
         }
 
         $object_id = self::getAmpacheId($sub_id);
-        $type      = self::getAmpacheType((string)$object_id);
+        $type      = self::getAmpacheType($sub_id);
 
         $bookmark = new Bookmark($object_id, $type, $user->id);
         if ($bookmark->isNew()) {
@@ -3594,7 +3595,7 @@ class OpenSubsonic_Api
                 $previous  = Stats::get_last_play($user->id, $client, $time);
                 $prev_obj  = $previous['object_id'] ?: 0;
                 $prev_date = $previous['date'];
-                $type      = self::getAmpacheType((string)$sub_id);
+                $type      = self::getAmpacheType($sub_id);
                 $media     = self::getAmpacheObject((string)$sub_id);
                 if (!$media instanceof Media || !isset($media->time) || !isset($media->id)) {
                     continue;
