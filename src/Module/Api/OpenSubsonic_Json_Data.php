@@ -3313,6 +3313,9 @@ class OpenSubsonic_Json_Data
         $json = [];
         foreach ($songs as $song_id) {
             $song   = new Song($song_id);
+            if ($song->isNew()) {
+                continue;
+            }
             $json[] = self::_getChildSong($song);
         }
 
