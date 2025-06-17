@@ -1471,7 +1471,7 @@ class OpenSubsonic_Json_Data
      */
     private static function _getChildPodcastEpisode(Podcast_Episode $episode): array
     {
-        $sub_id    = OpenSubsonic_Api::getVideoSubId($episode->id);
+        $sub_id    = OpenSubsonic_Api::getPodcastEpisodeSubId($episode->id);
         $subParent = OpenSubsonic_Api::getPodcastSubId($episode->podcast);
 
         $json = [
