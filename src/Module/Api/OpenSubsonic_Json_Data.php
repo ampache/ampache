@@ -3429,8 +3429,6 @@ class OpenSubsonic_Json_Data
      */
     public static function addStarred2(array $response, array $artists, array $albums, array $songs): array
     {
-        $response['subsonic-response']['starred2'] = [];
-
         $json = [
             'artist' => [],
             'album' => [],
@@ -3452,7 +3450,7 @@ class OpenSubsonic_Json_Data
             $json['song'][] = self::_getChildSong($song);
         }
 
-        $response['subsonic-response']['starred'] = $json;
+        $response['subsonic-response']['starred2'] = $json;
 
         return $response;
     }
