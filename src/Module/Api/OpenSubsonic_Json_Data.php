@@ -1108,13 +1108,13 @@ class OpenSubsonic_Json_Data
 
         if ($bookmark->object_type == "song") {
             $song            = new Song($bookmark->object_id);
-            $json['entry'][] = self::_getChildSong($song);
+            $json['entry'] = self::_getChildSong($song);
         } elseif ($bookmark->object_type == "video") {
             $video           = new Video($bookmark->object_id);
-            $json['entry'][] = self::_getChildVideo($video);
+            $json['entry'] = self::_getChildVideo($video);
         } elseif ($bookmark->object_type == "podcast_episode") {
             $episode         = new Podcast_Episode($bookmark->object_id);
-            $json['entry'][] = self::_getChildPodcastEpisode($episode);
+            $json['entry'] = self::_getChildPodcastEpisode($episode);
         }
 
         return $json;
