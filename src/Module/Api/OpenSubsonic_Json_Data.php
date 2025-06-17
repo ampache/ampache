@@ -1,4 +1,4 @@
-<?php
+Dr<?php
 
 declare(strict_types=0);
 
@@ -3084,7 +3084,7 @@ class OpenSubsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['searchResult2'] = $json;
+        $response['subsonic-response']['searchResult3'] = $json;
 
         return $response;
     }
