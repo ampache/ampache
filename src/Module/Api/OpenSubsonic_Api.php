@@ -2617,6 +2617,30 @@ class OpenSubsonic_Api
     }
 
     /**
+     * getPlayQueueByIndex
+     *
+     * Returns the state of the play queue for this user.
+     * https://opensubsonic.netlify.app/docs/endpoints/getplayqueue/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getplayqueuebyindex(array $input, User $user): void
+    {
+        $client    = scrub_in((string) ($input['c'] ?? 'Subsonic'));
+        $playQueue = new User_Playlist($user->id, $client);
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addPlayQueueByIndex($response, $playQueue, (string)$user->username);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addPlayQueueByIndex($response, $playQueue, (string)$user->username);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
      * getPodcastEpisode
      *
      * Returns details for a podcast episode.
@@ -3546,6 +3570,97 @@ class OpenSubsonic_Api
             $sub_ids = (is_array($id_list))
                 ? $id_list
                 : [$id_list];
+            $playlist = self::_getAmpacheIdArrays($sub_ids);
+
+            // clear the old list
+            $playQueue->clear();
+            // set the new items
+            $playQueue->add_items($playlist, $time);
+
+            if (
+                isset($type) &&
+                isset($media->id)
+            ) {
+                $playQueue->set_current_object($type, $media->id, $position);
+            }
+
+            // subsonic cares about queue dates so set them (and set them together)
+            User::set_user_data($user_id, 'playqueue_time', $time);
+            User::set_user_data($user_id, 'playqueue_client', $client);
+        }
+
+        self::_responseOutput($input, __FUNCTION__);
+    }
+
+    /**
+     * savePlayQueueByIndex
+     *
+     * Saves the state of the play queue for this user.
+     * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueuebyindex/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function saveplayqueuebyindex(array $input, User $user): void
+    {
+        $id_list = $input['id'] ?? '';
+        $sub_ids = (is_array($id_list))
+            ? $id_list
+            : [$id_list];
+        $index    = (int)($input['currentIndex'] ?? 0);
+        if ($index < 0 || $index >= count($sub_ids)) {
+            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+
+            return;
+        }
+
+        $current  = $sub_ids[$index];
+        $position = (array_key_exists('position', $input))
+            ? (int)(((int)$input['position']) / 1000)
+            : 0;
+        $client    = scrub_in((string) ($input['c'] ?? 'Subsonic'));
+        $user_id   = $user->id;
+        $time      = time();
+        $playQueue = new User_Playlist($user_id, $client);
+        if (empty($id_list)) {
+            $playQueue->clear();
+        } else {
+            $media = (!empty($current))
+                ? self::getAmpacheObject($current)
+                : null;
+            if (
+                $media instanceof library_item &&
+                $media instanceof Media &&
+                $media->isNew() === false &&
+                isset($media->time)
+            ) {
+                $playqueue_time = (int)User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
+                // wait a few seconds before smashing out play times
+                if ($playqueue_time < ($time - 2)) {
+                    $previous = Stats::get_last_play($user_id, $client);
+                    $type     = self::getAmpacheType($current);
+                    // long pauses might cause your now_playing to hide
+                    Stream::garbage_collection();
+                    Stream::insert_now_playing($media->getId(), $user_id, ($media->time - $position), (string)$user->username, $type, ($time - $position));
+
+                    if (array_key_exists('object_id', $previous) && $previous['object_id'] == $media->getId()) {
+                        $time_diff = $time - $previous['date'];
+                        $old_play  = $time_diff > $media->time * 5;
+                        // shift the start time if it's an old play or has been pause/played
+                        if ($position >= 1 || $old_play) {
+                            Stats::shift_last_play($user_id, $client, $previous['date'], ($time - $position));
+                        }
+                        // track has just started. repeated plays aren't called by scrobble so make sure we call this too
+                        if (($position < 1 && $time_diff > 5) && !$old_play) {
+                            $media->set_played($user_id, $client, [], $time);
+                        }
+                    }
+                }
+            } else {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+                return;
+            }
+
             $playlist = self::_getAmpacheIdArrays($sub_ids);
 
             // clear the old list

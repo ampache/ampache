@@ -2788,14 +2788,67 @@ class OpenSubsonic_Json_Data
             $date->setTimezone(new DateTimeZone('UTC'));
             $changedBy = $playQueue->client ?? '';
 
-            $json = [
-                'current' => OpenSubsonic_Api::getSongSubId($current['object_id']),
-                'position' => (string)($current['current_time'] * 1000),
-                'username' => $username,
-                'changed' => $date->format('c'),
-                'changedBy' => $changedBy,
-                'entry' => [],
-            ];
+            $json = ($current !== [])
+                ? [
+                    'current' => OpenSubsonic_Api::getSongSubId($current['object_id']),
+                    'position' => (string)($current['current_time'] * 1000),
+                    'username' => $username,
+                    'changed' => $date->format('c'),
+                    'changedBy' => $changedBy,
+                    'entry' => [],
+                ]
+                : [];
+
+            foreach ($items as $row) {
+                $song = new Song((int)$row['object_id']);
+                if ($song->isNew()) {
+                    continue;
+                }
+                $json['entry'][] = self::_getChildSong($song);
+            }
+
+            $response['subsonic-response']['playQueue'] = $json;
+        }
+
+
+        return $response;
+    }
+
+    /**
+     * addPlayQueueByIndex
+     *
+     * NowPlayingEntry.
+     * https://opensubsonic.netlify.app/docs/responses/playqueue/
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @return array{'subsonic-response': array<string, mixed>}
+     */
+    public static function addPlayQueueByIndex(array $response, User_Playlist $playQueue, string $username): array
+    {
+        $items = $playQueue->get_items();
+        if (!empty($items)) {
+            $current   = $playQueue->get_current_object();
+            $play_time = date("Y-m-d H:i:s", $playQueue->get_time());
+            try {
+                $date = new DateTime($play_time);
+            } catch (Exception $error) {
+                debug_event(self::class, 'DateTime error: ' . $error->getMessage(), 5);
+
+                return $response;
+            }
+
+            $date->setTimezone(new DateTimeZone('UTC'));
+            $changedBy = $playQueue->client ?? '';
+
+            $json = ($current !== [])
+                ? [
+                    'currentIndex' => OpenSubsonic_Api::getSongSubId($current['object_id']),
+                    'position' => (string)($current['current_time'] * 1000),
+                    'username' => $username,
+                    'changed' => $date->format('c'),
+                    'changedBy' => $changedBy,
+                    'entry' => [],
+                ]
+                : [];
 
             foreach ($items as $row) {
                 $song = new Song((int)$row['object_id']);

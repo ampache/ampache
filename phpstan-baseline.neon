@@ -5031,11 +5031,6 @@ parameters:
 			path: src/Repository/Model/User_Playlist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:get_current_object\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Userflag.php

@@ -971,6 +971,37 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
+     * addPlayQueueByIndex
+     * currentIndex="133" position="45000" username="admin" changed="2015-02-18T15:22:22.825Z" changedBy="android"
+     */
+    public static function addPlayQueueByIndex(SimpleXMLElement $xml, User_Playlist $playQueue, string $username): SimpleXMLElement
+    {
+        $items = $playQueue->get_items();
+        if (!empty($items)) {
+            $current   = $playQueue->get_current_object();
+            $play_time = date("Y-m-d H:i:s", $playQueue->get_time());
+            $date      = new DateTime($play_time);
+            $date->setTimezone(new DateTimeZone('UTC'));
+            $changedBy  = $playQueue->client ?? '';
+            $xplayqueue = self::_addChildToResultXml($xml, 'playQueue');
+            if (!empty($current)) {
+                $xplayqueue->addAttribute('currentIndex', (string)$current['current_track']);
+                $xplayqueue->addAttribute('position', (string)($current['current_time'] * 1000));
+                $xplayqueue->addAttribute('username', $username);
+                $xplayqueue->addAttribute('changed', $date->format('c'));
+                $xplayqueue->addAttribute('changedBy', $changedBy);
+            }
+
+            foreach ($items as $row) {
+                // TODO addEntry
+                self::addSong($xplayqueue, (int)$row['object_id'], 'entry');
+            }
+        }
+
+        return $xml;
+    }
+
+    /**
      * addSongsByGenre
      * @param int[] $songs
      */
