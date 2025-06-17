@@ -334,22 +334,36 @@ class OpenSubsonic_Api
     public static function getAmpacheType(string $object_id): string
     {
         switch (substr($object_id, 0, 3)) {
-            case self::SUBID_ARTIST:
-                return "artist";
             case self::SUBID_ALBUM:
                 return "album";
-            case self::SUBID_SONG:
-                return "song";
-            case self::SUBID_SMARTPL:
-                return "search";
-            case self::SUBID_VIDEO:
-                return "video";
+            case self::SUBID_ARTIST:
+                return "artist";
+            case self::SUBID_BOOKMARK:
+                return "bookmark";
+            case self::SUBID_CATALOG:
+                return "catalog";
+            case self::SUBID_CHAT:
+                return "private_message";
+            case self::SUBID_GENRE:
+                return "genre";
+            case self::SUBID_LIVESTREAM:
+                return "live_stream";
+            case self::SUBID_PLAYLIST:
+                return "playlist";
             case self::SUBID_PODCAST:
                 return "podcast";
             case self::SUBID_PODCASTEP:
                 return "podcast_episode";
-            case self::SUBID_PLAYLIST:
-                return "playlist";
+            case self::SUBID_SHARE:
+                return "share";
+            case self::SUBID_SMARTPL:
+                return "search";
+            case self::SUBID_SONG:
+                return "song";
+            case self::SUBID_USER:
+                return "user";
+            case self::SUBID_VIDEO:
+                return "video";
             default:
                 return "";
         }
@@ -629,9 +643,9 @@ class OpenSubsonic_Api
 
     /**
      * _getAmpacheIdArrays
-     * @param string[]|int[] $object_ids
+     * @param string[] $sub_ids
      * @return list<array{
-     *     object_id: string|null,
+     *     object_id: int,
      *     object_type: string,
      *     track: int
      * }>
@@ -2480,6 +2494,7 @@ class OpenSubsonic_Api
         $extensions = [
             'apiKeyAuthentication' => [1],
             'getPodcastEpisode' => [1],
+            'indexBasedQueue' => [1],
             'formPost' => [1],
             'songLyrics' => [1],
             'transcodeOffset' => [1],
