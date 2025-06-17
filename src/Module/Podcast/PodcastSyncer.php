@@ -155,7 +155,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
 
         $downloadLimit = (int)$this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
         // -1 means no downloads
-        if ($downloadLimit === -1) {
+        if ($downloadLimit < 0) {
             $downloadLimit = false;
         }
         // 0 means no limit

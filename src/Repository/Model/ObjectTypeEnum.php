@@ -43,6 +43,7 @@ enum ObjectTypeEnum: string
     case PLAYLIST        = 'playlist';
     case PODCAST         = 'podcast';
     case PODCAST_EPISODE = 'podcast_episode';
+    case PRIVATE_MESSAGE = 'private_message';
     case SEARCH          = 'search';
     case SHARE           = 'share';
     case SONG_ARTIST     = 'song_artist';
