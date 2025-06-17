@@ -198,76 +198,76 @@ class OpenSubsonic_Api
 
     public const SUBID_VIDEO = 'vi-';
 
-    public static function getAlbumSubId(int|string $ampache_id): string
+    public static function getAlbumSubId(int $ampache_id): string
     {
         return self::SUBID_ALBUM . $ampache_id;
     }
 
-    public static function getArtistSubId(int|string $ampache_id): string
+    public static function getArtistSubId(int $ampache_id): string
     {
         return self::SUBID_ARTIST . $ampache_id;
     }
 
-    public static function getBookmarkSubId(int|string $ampache_id): string
+    public static function getBookmarkSubId(int $ampache_id): string
     {
         return self::SUBID_BOOKMARK . $ampache_id;
     }
 
-    public static function getCatalogSubId(int|string $ampache_id): string
+    public static function getCatalogSubId(int $ampache_id): string
     {
         return self::SUBID_CATALOG . $ampache_id;
     }
 
-    public static function getChatSubId(int|string $ampache_id): string
+    public static function getChatSubId(int $ampache_id): string
     {
         return self::SUBID_CHAT . $ampache_id;
     }
 
-    public static function getGenreSubId(int|string $ampache_id): string
+    public static function getGenreSubId(int $ampache_id): string
     {
         return self::SUBID_GENRE . $ampache_id;
     }
 
-    public static function getLiveStreamSubId(int|string $ampache_id): string
+    public static function getLiveStreamSubId(int $ampache_id): string
     {
         return self::SUBID_LIVESTREAM . $ampache_id;
     }
 
-    public static function getPlaylistSubId(int|string $ampache_id): string
+    public static function getPlaylistSubId(int $ampache_id): string
     {
         return self::SUBID_PLAYLIST . $ampache_id;
     }
 
-    public static function getPodcastSubId(int|string $ampache_id): string
+    public static function getPodcastSubId(int $ampache_id): string
     {
         return self::SUBID_PODCAST . $ampache_id;
     }
 
-    public static function getPodcastEpisodeSubId(int|string $ampache_id): string
+    public static function getPodcastEpisodeSubId(int $ampache_id): string
     {
         return self::SUBID_PODCASTEP . $ampache_id;
     }
-    public static function getShareSubId(int|string $ampache_id): string
+    public static function getShareSubId(int $ampache_id): string
     {
         return self::SUBID_SHARE . $ampache_id;
     }
 
-    public static function getSmartPlaylistSubId(int|string $ampache_id): string
+    public static function getSmartPlaylistSubId(int $ampache_id): string
     {
         return self::SUBID_SMARTPL . $ampache_id;
     }
 
-    public static function getSongSubId(int|string $ampache_id): string
+    public static function getSongSubId(int $ampache_id): string
     {
         return self::SUBID_SONG . $ampache_id;
     }
 
-    public static function getUserSubId(int|string $ampache_id): string
+    public static function getUserSubId(int $ampache_id): string
     {
         return self::SUBID_USER . $ampache_id;
     }
 
-    public static function getVideoSubId(int|string $ampache_id): string
+    public static function getVideoSubId(int $ampache_id): string
     {
         return self::SUBID_VIDEO . $ampache_id;
     }
