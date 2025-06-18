@@ -2193,7 +2193,7 @@ class Subsonic_Api
     public static function getpodcasts(array $input, User $user): void
     {
         $podcast_id      = $input['id'] ?? null;
-        $includeEpisodes = !isset($input['includeEpisodes']) || $input['includeEpisodes'] === "true";
+        $includeEpisodes = make_bool($input['includeEpisodes'] ?? true);
 
         if (AmpConfig::get(ConfigurationKeyEnum::PODCAST)) {
             if ($podcast_id) {
