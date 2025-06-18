@@ -1092,7 +1092,101 @@ class OpenSubsonic_Json_Data
      *     'comment': string,
      *     'created': string,
      *     'changed': string,
-     *     'entry'?: list<array<string, mixed>>
+     *     'entry'?: array{}|array{
+     *         'id': string,
+     *         'parent'?: string,
+     *         'isDir': bool,
+     *         'title': string,
+     *         'album'?: string,
+     *         'artist'?: string,
+     *         'track'?: int,
+     *         'year'?: int,
+     *         'genre'?: string,
+     *         'coverArt'?: string,
+     *         'size'?: int,
+     *         'contentType'?: string,
+     *         'suffix'?: string,
+     *         'transcodedContentType'?: string,
+     *         'transcodedSuffix'?: string,
+     *         'duration'?: int,
+     *         'bitRate'?: int,
+     *         'bitDepth'?: int,
+     *         'samplingRate'?: int,
+     *         'channelCount'?: int,
+     *         'path'?: string,
+     *         'isVideo'?: bool,
+     *         'userRating'?: int,
+     *         'averageRating'?: float,
+     *         'playCount'?: int,
+     *         'discNumber'?: int,
+     *         'created'?: string,
+     *         'starred'?: string,
+     *         'albumId'?: string,
+     *         'artistId'?: string,
+     *         'type'?: string,
+     *         'mediaType'?: string,
+     *         'bookmarkPosition'?: int,
+     *         'originalWidth'?: int,
+     *         'originalHeight'?: int,
+     *         'played'?: string,
+     *         'bpm'?: int,
+     *         'comment'?: string,
+     *         'sortName'?: string,
+     *         'musicBrainzId'?: string,
+     *         'isrc'?: string[],
+     *         'genres'?: array<'name', string>,
+     *         'artists'?: array<int, array{
+     *             'id': string,
+     *             'name': string,
+     *             'coverArt'?: string,
+     *             'artistImageUrl'?: string,
+     *             'albumCount'?: int,
+     *             'starred'?: string,
+     *             'musicBrainzId'?: string,
+     *             'sortName'?: string,
+     *             'roles'?: array<string>
+     *         }>,
+     *         'displayArtist'?: string,
+     *         'albumArtists'?: array<int, array{
+     *             'id': string,
+     *             'name': string,
+     *             'coverArt'?: string,
+     *             'artistImageUrl'?: string,
+     *             'albumCount'?: int,
+     *             'starred'?: string,
+     *             'musicBrainzId'?: string,
+     *             'sortName'?: string,
+     *             'roles'?: array<string>
+     *         }>,
+     *         'displayAlbumArtist'?: string,
+     *         'contributors'?: array{
+     *             'contributor', array{
+     *                 'role': string,
+     *                 'subRole': string,
+     *                 'artist': array<int, array{
+     *                     'id': string,
+     *                     'name': string,
+     *                     'coverArt'?: string,
+     *                     'artistImageUrl'?: string,
+     *                     'albumCount'?: int,
+     *                     'starred'?: string,
+     *                     'musicBrainzId'?: string,
+     *                     'sortName'?: string,
+     *                     'roles'?: array<string>
+     *                 }>
+     *             }
+     *         },
+     *         'displayComposer'?: string,
+     *         'moods'?: string[],
+     *         'replayGain'?: array{
+     *             'trackGain': float,
+     *             'albumGain': float,
+     *             'trackPeak': float,
+     *             'albumPeak': float,
+     *             'baseGain': float
+     *         },
+     *         'explicitStatus'?: string
+     *     }
      * }
      */
     private static function _getBookmark(Bookmark $bookmark): array
