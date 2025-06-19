@@ -1145,14 +1145,14 @@ class Xml_Data
         if (($count > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('share', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('share', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         foreach ($objects as $share_id) {
             $share = new Share((int)$share_id);
             $string .= "<share id=\"$share_id\">\n\t<name><![CDATA[" . $share->getObjectName() . "]]></name>\n\t<user><![CDATA[" . $share->getUserName() . "]]></user>\n\t<allow_stream>" . $share->allow_stream . "</allow_stream>\n\t<allow_download>" . $share->allow_download . "</allow_download>\n\t<creation_date>" . $share->creation_date . "</creation_date>\n\t<lastvisit_date>" . $share->lastvisit_date . "</lastvisit_date>\n\t<object_type><![CDATA[" . $share->object_type . "]]></object_type>\n\t<object_id>" . $share->object_id . "</object_id>\n\t<expire_days>" . $share->expire_days . "</expire_days>\n\t<max_counter>" . $share->max_counter . "</max_counter>\n\t<counter>" . $share->counter . "</counter>\n\t<secret><![CDATA[" . $share->secret . "]]></secret>\n\t<public_url><![CDATA[" . $share->public_url . "]]></public_url>\n\t<description><![CDATA[" . $share->description . "]]></description>\n</share>\n";
         } // end foreach
 
-        return self::output_xml($string);
+        return self::output_xml($string, $full_xml);
     }
 
     /**
@@ -1215,7 +1215,7 @@ class Xml_Data
         if (($count > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('catalog', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('catalog', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         foreach ($objects as $catalog_id) {
             $catalog = Catalog::create_from_id((int)$catalog_id);
