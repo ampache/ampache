@@ -591,7 +591,7 @@ class Xml4_Data
      * @param bool $full_xml whether to return a full XML document or just the node, bool $full_xml = true
      * @return string
      */
-    public static function shares(array $shares): string
+    public static function shares(array $shares, bool $full_xml = true): string
     {
         if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
