@@ -498,7 +498,7 @@ class Xml_Data
         // here is where we call the object type
         switch ($object_type) {
             case 'catalog':
-                $string .= self::catalogs($objects, $user);
+                $string .= self::catalogs($objects, $user, false);
                 break;
             case 'album_artist':
             case 'artist':
@@ -583,7 +583,7 @@ class Xml_Data
                 }
                 break;
             case 'share':
-                $string .= self::shares($objects, $user);
+                $string .= self::shares($objects, $user, false);
                 break;
             case 'podcast':
                 foreach ($objects as $object_id) {
@@ -705,7 +705,7 @@ class Xml_Data
                     }
                     break;
                 case 'share':
-                    $string .= self::shares($objects, $user);
+                    $string .= self::shares($objects, $user, false);
                     break;
                 case 'podcast':
                     if (($count > self::$limit || self::$offset > 0) && self::$limit) {
@@ -1135,9 +1135,10 @@ class Xml_Data
      *
      * @param list<int|string> $objects Share id's to include
      * @param User $user
+     * @param bool $full_xml whether to return a full XML document or just the node.
      * @return string
      */
-    public static function shares(array $objects, User $user): string
+    public static function shares(array $objects, User $user, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1204,9 +1205,10 @@ class Xml_Data
      *
      * @param list<int|string> $objects group of catalog id's
      * @param User $user
+     * @param bool $full_xml whether to return a full XML document or just the node.
      * @return string
      */
-    public static function catalogs(array $objects, User $user): string
+    public static function catalogs(array $objects, User $user, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1223,7 +1225,7 @@ class Xml_Data
             $string .= "<catalog id=\"$catalog_id\">\n\t<name><![CDATA[" . $catalog->name . "]]></name>\n\t<type><![CDATA[" . $catalog->catalog_type . "]]></type>\n\t<gather_types><![CDATA[" . $catalog->gather_types . "]]></gather_types>\n\t<enabled>" . $catalog->enabled . "</enabled>\n\t<last_add>" . $catalog->last_add . "</last_add>\n\t<last_clean>" . $catalog->last_clean . "</last_clean>\n\t<last_update>" . $catalog->last_update . "</last_update>\n\t<path><![CDATA[" . $catalog->get_f_info() . "]]></path>\n\t<rename_pattern><![CDATA[" . $catalog->rename_pattern . "]]></rename_pattern>\n\t<sort_pattern><![CDATA[" . $catalog->sort_pattern . "]]></sort_pattern>\n</catalog>\n";
         } // end foreach
 
-        return self::output_xml($string);
+        return self::output_xml($string, $full_xml);
     }
 
     /**
