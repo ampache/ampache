@@ -602,13 +602,13 @@ class Xml_Data
                 }
                 break;
             case 'podcast_episode':
-                $string .= self::podcast_episodes($objects, $user);
+                $string .= self::podcast_episodes($objects, $user, false);
                 break;
             case 'video':
-                $string .= self::videos($objects, $user);
+                $string .= self::videos($objects, $user, false);
                 break;
             case 'live_stream':
-                $string .= self::live_streams($objects, $user);
+                $string .= self::live_streams($objects, $user, false);
         }
 
         return self::output_xml($string, $full_xml);

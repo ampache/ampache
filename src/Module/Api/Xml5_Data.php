@@ -388,7 +388,7 @@ class Xml5_Data
                 }
                 break;
             case 'podcast_episode':
-                $string .= self::podcast_episodes($objects, $user);
+                $string .= self::podcast_episodes($objects, $user, false);
                 break;
             case 'video':
                 $string .= self::videos($objects, $user);
