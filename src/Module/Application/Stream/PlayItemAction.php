@@ -57,8 +57,8 @@ final class PlayItemAction extends AbstractStreamAction
         $object_type = $_REQUEST['object_type'] ?? '';
         if ($object_type === 'browse') {
             $browse = new Browse(Core::get_get('object_id'));
-            $objectType = $browse->get_type();
-            $objectIds  = LibraryItemEnum::tryFrom($browse->get_objects());
+            $objectType = LibraryItemEnum::tryFrom($browse->get_type());
+            $objectIds  = $browse->get_objects();
         } else {
             $objectType = LibraryItemEnum::tryFrom($_REQUEST['object_type'] ?? '');
 
