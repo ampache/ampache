@@ -411,18 +411,18 @@ class Subsonic_Api
         switch (substr($sub_id, 0, 3)) {
             case self::SUBID_ALBUM:
             case self::SUBID_ARTIST:
-            case self::SUBID_PLAYLIST:
-            case self::SUBID_PODCAST:
-            case self::SUBID_SMARTPL:
-            case self::SUBID_SONG:
-            case self::SUBID_VIDEO:
             case self::SUBID_BOOKMARK:
             case self::SUBID_CATALOG:
             case self::SUBID_CHAT:
             case self::SUBID_GENRE:
             case self::SUBID_LIVESTREAM:
+            case self::SUBID_PLAYLIST:
+            case self::SUBID_PODCAST:
             case self::SUBID_SHARE:
+            case self::SUBID_SMARTPL:
+            case self::SUBID_SONG:
             case self::SUBID_USER:
+            case self::SUBID_VIDEO:
                 return (int)$ampache_id;
         }
 
@@ -589,24 +589,23 @@ class Subsonic_Api
      */
     private static function _setStar(array $input, User $user, bool $star): void
     {
-        $object_id = $input['id'] ?? null;
-        $albumId   = $input['albumId'] ?? null;
-        $artistId  = $input['artistId'] ?? null;
+        $sub_ids  = $input['id'] ?? null;
+        $albumId  = $input['albumId'] ?? null;
+        $artistId = $input['artistId'] ?? null;
 
         // Normalize all in one array
-        $ids = [];
+        $objects = [];
 
-        if ($object_id) {
-            if (!is_array($object_id)) {
-                $object_id = [$object_id];
+        if ($sub_ids) {
+            if (!is_array($sub_ids)) {
+                $sub_ids = [$sub_ids];
             }
-            foreach ($object_id as $item) {
-                $aid  = self::getAmpacheId($item);
-                $type = self::getAmpacheType($item);
-
-                $ids[] = [
-                    'id' => $aid,
-                    'type' => $type
+            foreach ($sub_ids as $item) {
+                $object_id   = self::getAmpacheId($item);
+                $object_type = self::getAmpacheType($item);
+                $objects[]   = [
+                    'id' => $object_id,
+                    'type' => $object_type
                 ];
             }
         } elseif ($albumId) {
@@ -614,9 +613,9 @@ class Subsonic_Api
                 $albumId = [$albumId];
             }
             foreach ($albumId as $album) {
-                $aid   = self::getAmpacheId($album);
-                $ids[] = [
-                    'id' => $aid,
+                $object_id = self::getAmpacheId($album);
+                $objects[] = [
+                    'id' => $object_id,
                     'type' => 'album'
                 ];
             }
@@ -625,9 +624,9 @@ class Subsonic_Api
                 $artistId = [$artistId];
             }
             foreach ($artistId as $artist) {
-                $aid   = self::getAmpacheId($artist);
-                $ids[] = [
-                    'id' => $aid,
+                $object_id = self::getAmpacheId($artist);
+                $objects[] = [
+                    'id' => $object_id,
                     'type' => 'artist'
                 ];
             }
@@ -637,8 +636,8 @@ class Subsonic_Api
             return;
         }
 
-        foreach ($ids as $object_id) {
-            $flag = new Userflag($object_id['id'], $object_id['type']);
+        foreach ($objects as $object) {
+            $flag = new Userflag($object['id'], $object['type']);
             $flag->set_flag($star, $user->id);
         }
 
@@ -1256,7 +1255,7 @@ class Subsonic_Api
      */
     public static function createplaylist(array $input, User $user): void
     {
-        $playlistId = $input['playlistId'] ?? null;
+        $playlistId = self::getAmpacheId($input['playlistId'] ?? '');
         $name       = $input['name'] ?? '';
         $songIdList = $input['songId'] ?? [];
         if (isset($input['songId']) && is_string($input['songId'])) {
