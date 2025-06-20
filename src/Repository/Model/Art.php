@@ -1196,12 +1196,18 @@ class Art extends database_object
             }
         }
 
-        $mime      = $thumb_mime ?? ($mime ?? null);
-        $extension = self::extension($mime);
+        $mime       = $thumb_mime ?? ($mime ?? null);
+        $extension  = self::extension($mime);
+        $size       = 'original';
+        if ($thumb !== null) {
+            $size_array = self::get_thumb_size($thumb);
+            $size       = $size_array['width'] . 'x' . $size_array['height'];
+        }
 
         if (
             $type !== 'user' &&
-            AmpConfig::get('stream_beautiful_url')
+            AmpConfig::get('stream_beautiful_url') &&
+            $size !== 'original'
         ) {
             if (
                 $extension === '' ||
@@ -1210,20 +1216,15 @@ class Art extends database_object
                 $extension = 'jpg';
             }
 
-            // e.g. https://demo.ampache.dev/play/art/{sessionid}/artist/1240/thumb2.png
-            $url = AmpConfig::get_web_path() . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . $uid . '/thumb';
-            if ($thumb !== null) {
-                $url .= $thumb;
-            }
-
-            $url .= '.' . $extension;
+            // e.g. https://demo.ampache.dev/play/art/{sessionid}/artist/1240/size400x400.png
+            $url = AmpConfig::get_web_path() . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . $uid . '/size/' . $size . '.' . $extension;
         } else {
             $actionStr = ($type === 'user')
                     ? 'action=show_user_avatar&'
                     : '';
             $url = AmpConfig::get_web_path() . '/image.php?' . $actionStr . 'object_id=' . $uid . '&object_type=' . scrub_out($type);
-            if ($thumb !== null) {
-                $url .= '&thumb=' . $thumb; // @todo convert thumb links to size links after a period of timie to allow conversion of rules
+            if ($size !== 'original') {
+                $url .= '&size=' . $size;
             }
 
             if ($extension !== '' && $extension !== '0') {

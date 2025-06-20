@@ -61,11 +61,12 @@ use Exception;
  * Subsonic_Json_Data Class
  *
  * This class takes care of all of the xml document stuff for SubSonic Responses
+ * https://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.16.1.xsd
  */
 class Subsonic_Json_Data
 {
     /**
-     * _createResponse
+     * _createResponse [OS]
      *
      * Common answer wrapper.Subsonic
      * @return array{
@@ -93,7 +94,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * _createSuccessResponse
+     * _createSuccessResponse [OS]
      * @return array{
      *     'subsonic-response': array{
      *         'status': string,
@@ -112,7 +113,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * _createFailedResponse
+     * _createFailedResponse [OS]
      * @return array{
      *     'subsonic-response': array{
      *         'status': string,
@@ -724,7 +725,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * _getAlbumID3
+     * _getAlbumID3 [OS]
      *
      * An album from ID3 tags.
      * https://opensubsonic.netlify.app/docs/responses/albumid3/
@@ -3030,7 +3031,7 @@ class Subsonic_Json_Data
 
         $response['subsonic-response']['scanStatus'] = [
             'scanning' => false,
-            'count' => (string)$count,
+            'count' => $count,
         ];
 
         return $response;

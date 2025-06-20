@@ -62,11 +62,12 @@ use SimpleXMLElement;
  * Subsonic_Xml_Data Class
  *
  * This class takes care of all of the xml document stuff for SubSonic Responses
+ * https://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.16.1.xsd
  */
 class Subsonic_Xml_Data
 {
     /**
-     * _createResponse
+     * _createResponse [OS]
      */
     private static function _createResponse(string $status = 'ok'): SimpleXMLElement
     {
@@ -82,7 +83,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * _createSuccessResponse
+     * _createSuccessResponse [OS]
      */
     private static function _createSuccessResponse(string $function = ''): SimpleXMLElement
     {
@@ -93,7 +94,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * _createFailedResponse
+     * _createFailedResponse [OS]
      */
     private static function _createFailedResponse(string $function = ''): SimpleXMLElement
     {
@@ -115,7 +116,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addError
+     * addError [OS]
      * Add a failed subsonic-response with error information.
      */
     public static function addError(int $code, string $function): SimpleXMLElement
