@@ -901,7 +901,7 @@ class Subsonic_Api
 
     /**
      * _updatePlaylist
-     * @param int|string $playlist_id
+     * @param int $playlist_id
      * @param string $name
      * @param int[]|string[] $songsIdToAdd
      * @param int[]|string[] $songIndexToRemove
@@ -909,17 +909,13 @@ class Subsonic_Api
      * @param bool $clearFirst
      */
     private static function _updatePlaylist(
-        int|string $playlist_id,
+        int $playlist_id,
         string $name,
         array $songsIdToAdd = [],
         array $songIndexToRemove = [],
         bool $public = true,
         bool $clearFirst = false
     ): void {
-        // If it's a string it probably needs a clean up
-        if (is_string($playlist_id)) {
-            $playlist_id = self::getAmpacheId($playlist_id);
-        }
         $playlist           = new Playlist((int)$playlist_id);
         $songsIdToAdd_count = count($songsIdToAdd);
         $newdata            = [];
@@ -1263,7 +1259,7 @@ class Subsonic_Api
         }
 
         if ($playlistId !== null) {
-            self::_updatePlaylist((string)$playlistId, $name, $songIdList, [], true, true);
+            self::_updatePlaylist($playlistId, $name, $songIdList, [], true, true);
             self::_responseOutput($input, __FUNCTION__);
         } elseif (!empty($name)) {
             $playlistId = Playlist::create($name, 'public', $user->id);
