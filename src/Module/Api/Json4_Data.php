@@ -252,7 +252,7 @@ class Json4_Data
             $license = self::getLicenseRepository()->findById((int)$license_id);
 
             if ($license !== null) {
-                $JSON[]  = [
+                $JSON[] = [
                     'id' => (string)$license_id,
                     'name' => $license->getName(),
                     'description' => $license->getDescription(),

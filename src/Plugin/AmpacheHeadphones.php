@@ -34,15 +34,15 @@ use WpOrg\Requests\Requests;
 
 class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInterface
 {
-    public string $name        = 'Headphones';
+    public string $name = 'Headphones';
 
-    public string $categories  = 'wanted';
+    public string $categories = 'wanted';
 
     public string $description = 'Automatically download accepted Wanted List albums with Headphones';
 
-    public string $url         = 'https://github.com/rembo10/headphones/';
+    public string $url = 'https://github.com/rembo10/headphones/';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '360030';
 

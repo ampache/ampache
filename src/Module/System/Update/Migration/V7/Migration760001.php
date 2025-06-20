@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -18,22 +20,22 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Api\Authentication;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-use Ampache\Repository\Model\User;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
+use Ampache\Repository\Model\Preference;
 
-interface GatekeeperInterface
+/**
+ * Add preference `subsonic_legacy`. (Disable to enable OpenSubsonic compatibility)
+ */
+final class Migration760001 extends AbstractMigration
 {
-    public function getUser(string $requestKey = 'auth'): ?User;
+    protected array $changelog = ['Add preference `subsonic_legacy`. (Disable to enable OpenSubsonic compatibility)'];
 
-    public function sessionExists(string $auth): bool;
-
-    public function extendSession(string $auth): void;
-
-    public function getUserName(string $requestKey = 'auth'): string;
-
-    public function getAuth(string $requestKey = 'auth'): string;
+    public function migrate(): void
+    {
+        $this->updatePreferences('subsonic_legacy', 'Enable legacy Subsonic API responses for compatibility issues', '1', 25, 'boolean', 'options', 'api');
+    }
 }

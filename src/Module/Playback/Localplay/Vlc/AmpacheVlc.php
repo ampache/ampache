@@ -522,9 +522,9 @@ class AmpacheVlc extends localplay_controller
             $data = [];
 
             /* Required Elements */
-            $data['id']    = $counter; // id follows localplay api
-            $data['vlid']  = $song_id[$counter]; // vlid number of the files in the VLC playlist, needed for other operations
-            $data['raw']   = $entry;
+            $data['id']   = $counter; // id follows localplay api
+            $data['vlid'] = $song_id[$counter]; // vlid number of the files in the VLC playlist, needed for other operations
+            $data['raw']  = $entry;
 
             $url_data = $this->parse_url($entry);
             switch ($url_data['primary_key']) {
@@ -599,9 +599,9 @@ class AmpacheVlc extends localplay_controller
             $state = 'pause';
         }
 
-        $array                 = [];
-        $array['track']        = 0;
-        $oid                   = '';
+        $array          = [];
+        $array['track'] = 0;
+        $oid            = '';
 
         $array['track_title']  = '';
         $array['track_artist'] = '';
@@ -615,7 +615,7 @@ class AmpacheVlc extends localplay_controller
 
         // api version 1
         if (isset($arrayholder['root']['information']['meta-information']['title']['value'])) {
-            $ampurl  = htmlspecialchars_decode(
+            $ampurl = htmlspecialchars_decode(
                 $arrayholder['root']['information']['meta-information']['title']['value'],
                 ENT_NOQUOTES
             );

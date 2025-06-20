@@ -42,10 +42,10 @@ $t_comment = T_('Comment');
 $t_added   = T_('Date Added');
 $t_action  = T_('Action');
 // show_shout_row.inc.php
-$t_edit    = T_('Edit');
-$t_delete  = T_('Delete');
-$t_yes     = T_('Yes');
-$t_no      = T_('No'); ?>
+$t_edit   = T_('Edit');
+$t_delete = T_('Delete');
+$t_yes    = T_('Yes');
+$t_no     = T_('No'); ?>
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">

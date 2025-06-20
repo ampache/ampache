@@ -2046,6 +2046,10 @@ abstract class Catalog extends database_object
         }
 
         foreach ($results as $result) {
+            if ($result === true) {
+                debug_event(self::class, 'Database already has image.', 3);
+                continue;
+            }
             // Pull the string representation from the source
             $image = Art::get_from_source($result, $type);
             if (strlen($image) > '5') {
@@ -2062,8 +2066,6 @@ abstract class Catalog extends database_object
                 if ($inserted === true) {
                     break;
                 }
-            } elseif ($result === true) {
-                debug_event(self::class, 'Database already has image.', 3);
             } else {
                 debug_event(self::class, 'Image less than 5 chars, not inserting', 3);
             }
@@ -2671,7 +2673,7 @@ abstract class Catalog extends database_object
                             'is_hidden' => 0,
                             'count' => 0,
                         ];
-                        $new_tag_array[]  = $genreName;
+                        $new_tag_array[] = $genreName;
                     }
                 } else {
                     $new_song->tags[] = [
@@ -2680,7 +2682,7 @@ abstract class Catalog extends database_object
                         'is_hidden' => 0,
                         'count' => 0,
                     ];
-                    $new_tag_array[]  = $genreName;
+                    $new_tag_array[] = $genreName;
                 }
             }
         }
@@ -2689,7 +2691,7 @@ abstract class Catalog extends database_object
         $tags           = Tag::get_object_tags('song', $song->id);
         if ($tags) {
             foreach ($tags as $genre) {
-                $song->tags[]     = [
+                $song->tags[] = [
                     'id' => $genre['id'],
                     'name' => $genre['name'],
                     'is_hidden' => $genre['is_hidden'],
@@ -2715,10 +2717,10 @@ abstract class Catalog extends database_object
             : self::check_length($results['albumartist']);
         $albumartist ??= null;
 
-        $original_year    = (!empty($results['original_year'])) ? (int)$results['original_year'] : null;
-        $barcode          = self::check_length($results['barcode'], 64);
-        $catalog_number   = self::check_length($results['catalog_number'], 64);
-        $version          = self::check_length($results['version'], 64);
+        $original_year  = (!empty($results['original_year'])) ? (int)$results['original_year'] : null;
+        $barcode        = self::check_length($results['barcode'], 64);
+        $catalog_number = self::check_length($results['catalog_number'], 64);
+        $version        = self::check_length($results['version'], 64);
 
         // info for the artist_map table.
         $artists_array          = $results['artists'] ?? [];
@@ -3362,9 +3364,9 @@ abstract class Catalog extends database_object
             'video',
             'podcast_episode',
         ];
-        $items        = 0;
-        $time         = 0;
-        $size         = 0;
+        $items = 0;
+        $time  = 0;
+        $size  = 0;
         foreach ($media_tables as $table) {
             $enabled_sql = ($catalog_disable) ? sprintf(' WHERE `%s`.`enabled` = \'1\'', $table) : '';
             $sql         = sprintf('SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s`', $table) . $enabled_sql;
@@ -4218,7 +4220,7 @@ abstract class Catalog extends database_object
                 }
                 break;
             case 'update_from':
-                $catalog_id  = 0;
+                $catalog_id = 0;
                 // clean deleted files
                 $clean_path = (string)($options['clean_path'] ?? '/');
                 if (strlen($clean_path) && $clean_path != '/') {
@@ -4463,7 +4465,7 @@ abstract class Catalog extends database_object
             $genre,
             $barcode,
         ];
-        $sort_pattern  = str_replace($replace_array, $content_array, $sort_pattern);
+        $sort_pattern = str_replace($replace_array, $content_array, $sort_pattern);
 
         // Remove non A-Z0-9 chars
         $sort_pattern = preg_replace("[^\\\/A-Za-z0-9\-\_\ \'\, \(\)]", "_", $sort_pattern);
@@ -4492,7 +4494,7 @@ abstract class Catalog extends database_object
             '',
             '',
         ];
-        $sort_pattern       = str_replace($post_replace_array, $post_content_array, (string)$sort_pattern);
+        $sort_pattern = str_replace($post_replace_array, $post_content_array, (string)$sort_pattern);
 
         $home .= '/' . $sort_pattern;
 

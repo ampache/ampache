@@ -73,10 +73,19 @@ final class ToggleFollow4Method
                 );
                 ob_end_clean();
                 Api4::message('success', 'follow toggled for: ' . $user->id, null, $input['api_format']);
+
+                return true;
             }
+
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api4::message('error', 'User `' . $username . '` cannot be found.', '400', $input['api_format']);
+
+            return false;
         }
 
-        return true;
+        Api4::message('error', T_('Invalid request'), '405', $input['api_format']);
+
+        return false;
     }
 
     private static function getUserFollowToggler(): UserFollowTogglerInterface

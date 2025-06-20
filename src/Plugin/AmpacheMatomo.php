@@ -33,15 +33,15 @@ use Ampache\Module\System\Core;
 
 class AmpacheMatomo extends AmpachePlugin implements PluginDisplayOnFooterInterface
 {
-    public string $name        = 'Matomo';
+    public string $name = 'Matomo';
 
-    public string $categories  = 'stats';
+    public string $categories = 'stats';
 
     public string $description = 'Matomo statistics';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370034';
 

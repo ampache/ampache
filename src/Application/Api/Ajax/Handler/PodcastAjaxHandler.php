@@ -62,7 +62,7 @@ final readonly class PodcastAjaxHandler implements AjaxHandlerInterface
             return;
         }
 
-        $action  = $this->requestParser->getFromRequest('action');
+        $action = $this->requestParser->getFromRequest('action');
 
         switch ($action) {
             case 'syncPodcastEpisode':

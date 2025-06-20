@@ -50,7 +50,7 @@ final class Migration500004 extends AbstractMigration
             'song',
             'video',
         ];
-        $catalogs  = Catalog::get_all_catalogs();
+        $catalogs = Catalog::get_all_catalogs();
 
         // Make sure your files have a catalog
         foreach ($catalogs as $catalog_id) {

@@ -69,4 +69,25 @@ final class Tags3Method
         ob_end_clean();
         echo Xml3_Data::tags($results);
     }
+
+    /**
+     * genres
+     * This returns the tags based on the specified filter
+     *
+     * @param array{
+     *     filter?: string,
+     *     exact?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     */
+    public static function genres(array $input, User $user): void
+    {
+        self::tags($input, $user);
+    }
 }

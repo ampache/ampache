@@ -74,10 +74,19 @@ final class ToggleFollow5Method
                 );
                 ob_end_clean();
                 Api5::message('follow toggled for: ' . $user->id, $input['api_format']);
+
+                return true;
             }
+
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api5::error(sprintf('Not Found: %s', $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+
+            return false;
         }
 
-        return true;
+        Api5::error(sprintf('Bad Request: %s', 'username'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
+
+        return false;
     }
 
     private static function getUserFollowToggler(): UserFollowTogglerInterface

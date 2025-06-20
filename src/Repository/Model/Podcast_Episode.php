@@ -287,8 +287,8 @@ class Podcast_Episode extends database_object implements
             return $min . ":" . $sec;
         }
 
-        $hour           = sprintf("%02d", floor($min / 60));
-        $min_h          = sprintf("%02d", ($min % 60));
+        $hour  = sprintf("%02d", floor($min / 60));
+        $min_h = sprintf("%02d", ($min % 60));
 
         return $hour . ":" . $min_h . ":" . $sec;
     }
@@ -306,8 +306,8 @@ class Podcast_Episode extends database_object implements
     public function getPodcastLink(): string
     {
         if ($this->podcast_link === null) {
-            $podcast              = $this->getPodcastRepository()->findById($this->podcast);
-            $this->podcast_link   = (string)$podcast?->get_f_link();
+            $podcast            = $this->getPodcastRepository()->findById($this->podcast);
+            $this->podcast_link = (string)$podcast?->get_f_link();
         }
 
         return $this->podcast_link;
@@ -444,15 +444,15 @@ class Podcast_Episode extends database_object implements
      */
     public function update(array $data): int
     {
-        $title    = $data['title'] ?? $this->title;
-        $website  = (isset($data['website']))
+        $title   = $data['title'] ?? $this->title;
+        $website = (isset($data['website']))
             ? filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: null
             : null;
         $category = $data['category'] ?? null;
         /** @var string $description */
         $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string)$data['description'], 4096)) : null;
         /** @var string $author */
-        $author   = (isset($data['author'])) ? scrub_in(Dba::check_length((string)$data['author'], 64)) : null;
+        $author = (isset($data['author'])) ? scrub_in(Dba::check_length((string)$data['author'], 64)) : null;
 
         $sql = 'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?';
         Dba::write($sql, [$title, $website, $description, $author, $category, $this->id]);

@@ -153,13 +153,20 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         $change   = 0;
         $syncDate = new DateTime();
 
-        $downloadLimit = (int) $this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
-        if ($downloadLimit < 1) {
+        $downloadLimit = (int)$this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
+        // -1 means no downloads
+        if ($downloadLimit < 0) {
+            $downloadLimit = false;
+        }
+        // 0 means no limit
+        if ($downloadLimit === 0) {
             $downloadLimit = null;
         }
 
         // Select episodes to download
-        $downloadEpisodes = $this->podcastEpisodeRepository->getEpisodesEligibleForDownload($podcast, $downloadLimit);
+        $downloadEpisodes = ($downloadLimit === false)
+            ? []
+            : $this->podcastEpisodeRepository->getEpisodesEligibleForDownload($podcast, $downloadLimit);
 
         /** @var Podcast_Episode $episode */
         foreach ($downloadEpisodes as $episode) {

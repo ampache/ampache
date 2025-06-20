@@ -347,7 +347,7 @@ class Xml4_Data
                 }
                 break;
             case 'share':
-                $string .= self::shares($objects);
+                $string .= self::shares($objects, false);
                 break;
             case 'podcast':
                 foreach ($objects as $object_id) {
@@ -365,10 +365,10 @@ class Xml4_Data
                 }
                 break;
             case 'podcast_episode':
-                $string .= self::podcast_episodes($objects, $user);
+                $string .= self::podcast_episodes($objects, $user, false);
                 break;
             case 'video':
-                $string .= self::videos($objects, $user);
+                $string .= self::videos($objects, $user, false);
                 break;
         }
 
@@ -588,21 +588,22 @@ class Xml4_Data
      * This returns shares to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $shares
+     * @param bool $full_xml whether to return a full XML document or just the node, bool $full_xml = true
      * @return string
      */
-    public static function shares(array $shares): string
+    public static function shares(array $shares, bool $full_xml = true): string
     {
         if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($shares) . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . count($shares) . "</total_count>\n" : '';
 
         foreach ($shares as $share_id) {
             $share = new Share((int)$share_id);
             $string .= "<share id=\"$share_id\">\n\t<name><![CDATA[" . $share->getObjectName() . "]]></name>\n\t<user><![CDATA[" . $share->getUserName() . "]]></user>\n\t<allow_stream>" . (int) $share->allow_stream . "</allow_stream>\n\t<allow_download>" . (int) $share->allow_download . "</allow_download>\n\t<creation_date><![CDATA[" . $share->creation_date . "]]></creation_date>\n\t<lastvisit_date><![CDATA[" . $share->lastvisit_date . "]]></lastvisit_date>\n\t<object_type><![CDATA[" . $share->object_type . "]]></object_type>\n\t<object_id>" . $share->object_id . "</object_id>\n\t<expire_days>" . $share->expire_days . "</expire_days>\n\t<max_counter>" . $share->max_counter . "</max_counter>\n\t<counter>" . $share->counter . "</counter>\n\t<secret><![CDATA[" . $share->secret . "]]></secret>\n\t<public_url><![CDATA[" . $share->public_url . "]]></public_url>\n\t<description><![CDATA[" . $share->description . "]]></description>\n</share>\n";
         } // end foreach
 
-        return Xml_Data::output_xml($string);
+        return Xml_Data::output_xml($string, $full_xml);
     }
 
     /**
@@ -638,14 +639,15 @@ class Xml4_Data
      * @param list<int|string> $podcasts
      * @param User $user
      * @param bool $episodes include the episodes of the podcast //optional
+     * @param bool $full_xml whether to return a full XML document or just the node
      * @return string
      */
-    public static function podcasts(array $podcasts, User $user, bool $episodes = false): string
+    public static function podcasts(array $podcasts, User $user, bool $episodes = false, bool $full_xml = true): string
     {
         if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($podcasts) . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . count($podcasts) . "</total_count>\n" : '';
 
         $podcastRepository = self::getPodcastRepository();
 
@@ -668,7 +670,7 @@ class Xml4_Data
             $string .= "\t</podcast>\n";
         } // end foreach
 
-        return Xml_Data::output_xml($string);
+        return Xml_Data::output_xml($string, $full_xml);
     }
 
     /**
@@ -780,14 +782,15 @@ class Xml4_Data
      *
      * @param list<int|string> $videos
      * @param User $user
+     * @param bool $full_xml whether to return a full XML document or just the node
      * @return string
      */
-    public static function videos(array $videos, User $user): string
+    public static function videos(array $videos, User $user, bool $full_xml = true): string
     {
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($videos) . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . count($videos) . "</total_count>\n" : '';
 
         foreach ($videos as $video_id) {
             $video = new Video((int)$video_id);
@@ -802,7 +805,7 @@ class Xml4_Data
             $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->get_f_resolution() . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n</video>\n";
         } // end foreach
 
-        return Xml_Data::output_xml($string);
+        return Xml_Data::output_xml($string, $full_xml);
     }
 
     /**
@@ -834,12 +837,12 @@ class Xml4_Data
             $song->fill_ext_info();
 
             // FIXME: This is duplicate code and so wrong, functions need to be improved
-            $tag         = new Tag((int)($song->get_tags()[0]['id'] ?? 0));
-            $tag_string  = self::tags_string($song->get_tags());
-            $rating      = new Rating($song->id, 'song');
-            $art_url     = Art::url($song->album, 'album', Core::get_request('auth'));
-            $songMime    = $song->mime;
-            $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $tag        = new Tag((int)($song->get_tags()[0]['id'] ?? 0));
+            $tag_string = self::tags_string($song->get_tags());
+            $rating     = new Rating($song->id, 'song');
+            $art_url    = Art::url($song->album, 'album', Core::get_request('auth'));
+            $songMime   = $song->mime;
+            $play_url   = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
 
             $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->title . "]]></name>\n"
                 . "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_fullname() . "]]></artist>\n"

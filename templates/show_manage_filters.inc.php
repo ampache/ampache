@@ -33,8 +33,8 @@ $t_num_users = T_('Number of Users');
 $t_num_cats  = T_('Number of Catalogs');
 $t_actions   = T_('Actions');
 // show_filter_row.inc.php
-$t_edit      = T_('Edit');
-$t_delete    = T_('Delete');
+$t_edit   = T_('Edit');
+$t_delete = T_('Delete');
 ?>
 <div id="information_actions">
     <ul style="float: left;">

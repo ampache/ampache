@@ -581,7 +581,7 @@ class Catalog_remote extends Catalog
         if ($user_bit_rate > $max_bitrate) {
             $max_bitrate = $user_bit_rate;
         }
-        $handshake  = $remote_handle->info();
+        $handshake = $remote_handle->info();
         if (!$handshake instanceof SimpleXMLElement) {
             return false;
         }
