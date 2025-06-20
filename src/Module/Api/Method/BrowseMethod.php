@@ -118,7 +118,7 @@ final class BrowseMethod
             $browse->set_filter('user', $user->getId());
         } elseif ($object_type === 'catalog') {
             // artist/podcasts/videos
-            if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
+            if ($object_id === null && !Api::check_parameter($input, ['filter'], self::ACTION)) {
                 return false;
             }
             $catalog = ($object_id !== null)
