@@ -2461,10 +2461,10 @@ class Subsonic_Api
     }
 
     /**
-     * getLyricsBySongId
+     * getLyricsBySongId [OS]
      *
      * Add support for synchronized lyrics, multiple languages, and retrieval by song ID
-     * https://www.subsonic.org/pages/api.jsp#getlyricsbysongid
+     * https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2614,14 +2614,14 @@ class Subsonic_Api
     }
 
     /**
-     * getSubsonicExtensions
+     * getOpenSubsonicExtensions [OS]
      *
      * List the Subsonic extensions supported by this server.
-     * https://www.subsonic.org/pages/api.jsp#getSubsonicextensions
+     * https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/
      * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getSubsonicextensions(array $input, User $user): void
+    public static function getOpenSubsonicExtensions(array $input, User $user): void
     {
         unset($user);
 
@@ -2751,10 +2751,10 @@ class Subsonic_Api
     }
 
     /**
-     * getPlayQueueByIndex
+     * getPlayQueueByIndex [OS]
      *
      * Returns the state of the play queue for this user.
-     * https://www.subsonic.org/pages/api.jsp#getplayqueue
+     * https://opensubsonic.netlify.app/docs/endpoints/getplayqueuebyindex/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -4061,10 +4061,10 @@ class Subsonic_Api
     }
 
     /**
-     * tokenInfo
+     * tokenInfo [OS]
      *
      * Returns information about an API key.
-     * https://www.subsonic.org/pages/api.jsp#tokeninfo
+     * https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/
      * @param array<string, mixed> $input
      * @param User $user
      */
