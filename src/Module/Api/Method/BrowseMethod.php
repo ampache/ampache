@@ -84,6 +84,9 @@ final class BrowseMethod
         $catalog_id  = (isset($input['catalog'])) ? (int)$input['catalog'] : null;
         $object_id   = (isset($input['filter'])) ? (int)$input['filter'] : null;
         $object_type = $input['type'] ?? 'root';
+        if (!$object_id && $object_type == 'catalog') {
+            $object_id = $catalog_id;
+        }
         if (!AmpConfig::get('podcast') && $object_type == 'podcast') {
             Api::error('Enable: podcast', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
