@@ -166,7 +166,24 @@ class OpenSubsonic_Api
 
     /**
      * Ampache doesn't have a global unique id but items are unique per category. We use id prefixes to identify item category.
+     * TODO remove old subsonic ids in Ampache 8.0
      */
+
+    public const OLD_SUBID_ALBUM = 200000000;
+
+    public const OLD_SUBID_ARTIST = 100000000;
+
+    public const OLD_SUBID_PLAYLIST = 800000000;
+
+    public const OLD_SUBID_PODCAST = 600000000;
+
+    public const OLD_SUBID_PODCASTEP = 700000000;
+
+    public const OLD_SUBID_SMARTPL = 400000000;
+
+    public const OLD_SUBID_SONG = 300000000;
+
+    public const OLD_SUBID_VIDEO = 500000000;
 
     public const SUBID_ALBUM = 'al-';
 
@@ -276,41 +293,77 @@ class OpenSubsonic_Api
      * getAmpacheObject
      * Return the Ampache media object
      */
-    public static function getAmpacheObject(string $object_id): ?object
+    public static function getAmpacheObject(string $sub_id): ?object
     {
-        switch (substr($object_id, 0, 3)) {
-            case self::SUBID_ALBUM:
-                return new Album((int)self::getAmpacheId($object_id));
-            case self::SUBID_ARTIST:
-                return new Artist((int)self::getAmpacheId($object_id));
-            case self::SUBID_BOOKMARK:
-                return new Bookmark((int)self::getAmpacheId($object_id));
-            case self::SUBID_CATALOG:
-                return Catalog::create_from_id((int)self::getAmpacheId($object_id));
-            case self::SUBID_CHAT:
-                return new PrivateMsg((int)self::getAmpacheId($object_id));
-            case self::SUBID_GENRE:
-                return new Tag((int)self::getAmpacheId($object_id));
-            case self::SUBID_LIVESTREAM:
-                return new Live_Stream((int)self::getAmpacheId($object_id));
-            case self::SUBID_PLAYLIST:
-                return new Playlist((int)self::getAmpacheId($object_id));
-            case self::SUBID_PODCAST:
-                return new Podcast((int)self::getAmpacheId($object_id));
-            case self::SUBID_PODCASTEP:
-                return new Podcast_Episode((int)self::getAmpacheId($object_id));
-            case self::SUBID_SHARE:
-                return new Share((int)self::getAmpacheId($object_id));
-            case self::SUBID_SMARTPL:
-                return new Search((int)self::getAmpacheId($object_id));
-            case self::SUBID_SONG:
-                return new Song((int)self::getAmpacheId($object_id));
-            case self::SUBID_USER:
-                return new User((int)self::getAmpacheId($object_id));
-            case self::SUBID_VIDEO:
-                return new Video((int)self::getAmpacheId($object_id));
+        // keep oldstyle subsonic ids for compatibility (TODO REMOVE IN AMPACHE 8.0)
+        if (is_numeric($sub_id)) {
+            $int_id = (int)$sub_id;
+            if ($int_id >= self::OLD_SUBID_ARTIST && $int_id < self::OLD_SUBID_ALBUM) {
+                return new Artist($int_id - self::OLD_SUBID_ARTIST);
+            }
+            if ($int_id >= self::OLD_SUBID_ALBUM && $int_id < self::OLD_SUBID_SONG) {
+                return new Album($int_id - self::OLD_SUBID_ALBUM);
+            }
+            if ($int_id >= self::OLD_SUBID_SONG && $int_id < self::OLD_SUBID_SMARTPL) {
+                return new Song($int_id - self::OLD_SUBID_SONG);
+            }
+            if ($int_id >= self::OLD_SUBID_SMARTPL && $int_id < self::OLD_SUBID_VIDEO) {
+                return new Search($int_id - self::OLD_SUBID_SMARTPL);
+            }
+            if ($int_id >= self::OLD_SUBID_VIDEO && $int_id < self::OLD_SUBID_PODCAST) {
+                return new Video($int_id - self::OLD_SUBID_VIDEO);
+            }
+            if ($int_id >= self::OLD_SUBID_PODCAST && $int_id < self::OLD_SUBID_PODCASTEP) {
+                return new Artist($int_id - self::OLD_SUBID_PODCAST);
+            }
+            if ($int_id >= self::OLD_SUBID_PODCASTEP && $int_id < self::OLD_SUBID_PLAYLIST) {
+                return new Podcast_Episode($int_id - self::OLD_SUBID_PODCASTEP);
+            }
+            if ($int_id >= self::OLD_SUBID_PLAYLIST && $int_id < 900000000) {
+                return new Playlist($int_id - self::OLD_SUBID_PLAYLIST);
+            }
         }
-        debug_event(self::class, 'Couldn\'t identify Ampache object from ' . $object_id, 5);
+
+        // everything else is a string prefix
+        $ampache_id = substr($sub_id, 3) ?: null;
+        if (!$ampache_id) {
+            return null;
+        }
+
+        $ampache_id = (int)$ampache_id;
+        switch (substr($sub_id, 0, 3)) {
+            case self::SUBID_ALBUM:
+                return new Album($ampache_id);
+            case self::SUBID_ARTIST:
+                return new Artist($ampache_id);
+            case self::SUBID_BOOKMARK:
+                return new Bookmark($ampache_id);
+            case self::SUBID_CATALOG:
+                return Catalog::create_from_id($ampache_id);
+            case self::SUBID_CHAT:
+                return new PrivateMsg($ampache_id);
+            case self::SUBID_GENRE:
+                return new Tag($ampache_id);
+            case self::SUBID_LIVESTREAM:
+                return new Live_Stream($ampache_id);
+            case self::SUBID_PLAYLIST:
+                return new Playlist($ampache_id);
+            case self::SUBID_PODCAST:
+                return new Podcast($ampache_id);
+            case self::SUBID_PODCASTEP:
+                return new Podcast_Episode($ampache_id);
+            case self::SUBID_SHARE:
+                return new Share($ampache_id);
+            case self::SUBID_SMARTPL:
+                return new Search($ampache_id);
+            case self::SUBID_SONG:
+                return new Song($ampache_id);
+            case self::SUBID_USER:
+                return new User($ampache_id);
+            case self::SUBID_VIDEO:
+                return new Video($ampache_id);
+        }
+        debug_event(self::class, 'Couldn\'t identify Ampache object from ' . $sub_id, 5);
 
         return null;
     }
@@ -318,11 +371,59 @@ class OpenSubsonic_Api
     /**
      * getAmpacheId
      */
-    public static function getAmpacheId(string $object_id): ?int
+    public static function getAmpacheId(string $sub_id): ?int
     {
-        $ampache_id = substr($object_id, 3) ?: null;
-        if (is_numeric($ampache_id)) {
-            return (int)$ampache_id;
+        // keep oldstyle subsonic ids for compatibility (TODO REMOVE IN AMPACHE 8.0)
+        if (is_numeric($sub_id)) {
+            $int_id = (int)$sub_id;
+            if ($int_id >= self::OLD_SUBID_ARTIST && $int_id < self::OLD_SUBID_ALBUM) {
+                return $int_id - self::OLD_SUBID_ARTIST;
+            }
+            if ($int_id >= self::OLD_SUBID_ALBUM && $int_id < self::OLD_SUBID_SONG) {
+                return $int_id - self::OLD_SUBID_ALBUM;
+            }
+            if ($int_id >= self::OLD_SUBID_SONG && $int_id < self::OLD_SUBID_SMARTPL) {
+                return $int_id - self::OLD_SUBID_SONG;
+            }
+            if ($int_id >= self::OLD_SUBID_SMARTPL && $int_id < self::OLD_SUBID_VIDEO) {
+                return $int_id - self::OLD_SUBID_SMARTPL;
+            }
+            if ($int_id >= self::OLD_SUBID_VIDEO && $int_id < self::OLD_SUBID_PODCAST) {
+                return $int_id - self::OLD_SUBID_VIDEO;
+            }
+            if ($int_id >= self::OLD_SUBID_PODCAST && $int_id < self::OLD_SUBID_PODCASTEP) {
+                return $int_id - self::OLD_SUBID_PODCAST;
+            }
+            if ($int_id >= self::OLD_SUBID_PODCASTEP && $int_id < self::OLD_SUBID_PLAYLIST) {
+                return $int_id - self::OLD_SUBID_PODCASTEP;
+            }
+            if ($int_id >= self::OLD_SUBID_PLAYLIST && $int_id < 900000000) {
+                return $int_id - self::OLD_SUBID_PLAYLIST;
+            }
+        }
+
+        // everything else is a string prefix
+        $ampache_id = substr($sub_id, 3) ?: null;
+        if (!$ampache_id) {
+            return null;
+        }
+
+        switch (substr($sub_id, 0, 3)) {
+            case self::SUBID_ALBUM:
+            case self::SUBID_ARTIST:
+            case self::SUBID_BOOKMARK:
+            case self::SUBID_CATALOG:
+            case self::SUBID_CHAT:
+            case self::SUBID_GENRE:
+            case self::SUBID_LIVESTREAM:
+            case self::SUBID_PLAYLIST:
+            case self::SUBID_PODCAST:
+            case self::SUBID_SHARE:
+            case self::SUBID_SMARTPL:
+            case self::SUBID_SONG:
+            case self::SUBID_USER:
+            case self::SUBID_VIDEO:
+                return (int)$ampache_id;
         }
 
         return null;
@@ -331,13 +432,60 @@ class OpenSubsonic_Api
     /**
      * getAmpacheType
      */
-    public static function getAmpacheType(string $object_id): string
+    public static function getAmpacheType(string $sub_id): string
     {
-        switch (substr($object_id, 0, 3)) {
-            case self::SUBID_ALBUM:
+        // keep oldstyle subsonic ids for compatibility (TODO REMOVE IN AMPACHE 8.0)
+        if (is_numeric($sub_id)) {
+            $int_id = (int)$sub_id;
+            if ($int_id >= self::OLD_SUBID_ARTIST && $int_id < self::OLD_SUBID_ALBUM) {
+                return "artist";
+            }
+            if ($int_id >= self::OLD_SUBID_ALBUM && $int_id < self::OLD_SUBID_SONG) {
                 return "album";
+            }
+            if ($int_id >= self::OLD_SUBID_SONG && $int_id < self::OLD_SUBID_SMARTPL) {
+                return "song";
+            }
+            if ($int_id >= self::OLD_SUBID_SMARTPL && $int_id < self::OLD_SUBID_VIDEO) {
+                return "search";
+            }
+            if ($int_id >= self::OLD_SUBID_VIDEO && $int_id < self::OLD_SUBID_PODCAST) {
+                return "video";
+            }
+            if ($int_id >= self::OLD_SUBID_PODCAST && $int_id < self::OLD_SUBID_PODCASTEP) {
+                return "podcast";
+            }
+            if ($int_id >= self::OLD_SUBID_PODCASTEP && $int_id < self::OLD_SUBID_PLAYLIST) {
+                return "podcast_episode";
+            }
+            if ($int_id >= self::OLD_SUBID_PLAYLIST && $int_id < 900000000) {
+                return "playlist";
+            }
+        }
+
+        // everything else is a string prefix
+        $ampache_id = substr($sub_id, 3) ?: null;
+        if (!$ampache_id) {
+            return "";
+        }
+
+        switch ($ampache_id) {
             case self::SUBID_ARTIST:
                 return "artist";
+            case self::SUBID_ALBUM:
+                return "album";
+            case self::SUBID_SONG:
+                return "song";
+            case self::SUBID_SMARTPL:
+                return "search";
+            case self::SUBID_VIDEO:
+                return "video";
+            case self::SUBID_PODCAST:
+                return "podcast";
+            case self::SUBID_PODCASTEP:
+                return "podcast_episode";
+            case self::SUBID_PLAYLIST:
+                return "playlist";
             case self::SUBID_BOOKMARK:
                 return "bookmark";
             case self::SUBID_CATALOG:
@@ -348,25 +496,13 @@ class OpenSubsonic_Api
                 return "genre";
             case self::SUBID_LIVESTREAM:
                 return "live_stream";
-            case self::SUBID_PLAYLIST:
-                return "playlist";
-            case self::SUBID_PODCAST:
-                return "podcast";
-            case self::SUBID_PODCASTEP:
-                return "podcast_episode";
             case self::SUBID_SHARE:
                 return "share";
-            case self::SUBID_SMARTPL:
-                return "search";
-            case self::SUBID_SONG:
-                return "song";
             case self::SUBID_USER:
                 return "user";
-            case self::SUBID_VIDEO:
-                return "video";
-            default:
-                return "";
         }
+
+        return "";
     }
 
     /**
@@ -453,24 +589,23 @@ class OpenSubsonic_Api
      */
     private static function _setStar(array $input, User $user, bool $star): void
     {
-        $object_id = $input['id'] ?? null;
-        $albumId   = $input['albumId'] ?? null;
-        $artistId  = $input['artistId'] ?? null;
+        $sub_ids  = $input['id'] ?? null;
+        $albumId  = $input['albumId'] ?? null;
+        $artistId = $input['artistId'] ?? null;
 
         // Normalize all in one array
-        $ids = [];
+        $objects = [];
 
-        if ($object_id) {
-            if (!is_array($object_id)) {
-                $object_id = [$object_id];
+        if ($sub_ids) {
+            if (!is_array($sub_ids)) {
+                $sub_ids = [$sub_ids];
             }
-            foreach ($object_id as $item) {
-                $aid  = self::getAmpacheId($item);
-                $type = self::getAmpacheType($item);
-
-                $ids[] = [
-                    'id' => $aid,
-                    'type' => $type
+            foreach ($sub_ids as $item) {
+                $object_id   = self::getAmpacheId($item);
+                $object_type = self::getAmpacheType($item);
+                $objects[]   = [
+                    'id' => $object_id,
+                    'type' => $object_type
                 ];
             }
         } elseif ($albumId) {
@@ -478,9 +613,9 @@ class OpenSubsonic_Api
                 $albumId = [$albumId];
             }
             foreach ($albumId as $album) {
-                $aid   = self::getAmpacheId($album);
-                $ids[] = [
-                    'id' => $aid,
+                $object_id = self::getAmpacheId($album);
+                $objects[] = [
+                    'id' => $object_id,
                     'type' => 'album'
                 ];
             }
@@ -489,9 +624,9 @@ class OpenSubsonic_Api
                 $artistId = [$artistId];
             }
             foreach ($artistId as $artist) {
-                $aid   = self::getAmpacheId($artist);
-                $ids[] = [
-                    'id' => $aid,
+                $object_id = self::getAmpacheId($artist);
+                $objects[] = [
+                    'id' => $object_id,
                     'type' => 'artist'
                 ];
             }
@@ -501,8 +636,8 @@ class OpenSubsonic_Api
             return;
         }
 
-        foreach ($ids as $object_id) {
-            $flag = new Userflag($object_id['id'], $object_id['type']);
+        foreach ($objects as $object) {
+            $flag = new Userflag($object['id'], $object['type']);
             $flag->set_flag($star, $user->id);
         }
 
@@ -783,7 +918,7 @@ class OpenSubsonic_Api
     ): void {
         // If it's a string it probably needs a clean up
         if (is_string($playlist_id)) {
-            $playlist_id = self::getAmpacheId($playlist_id);
+            $playlist_id = self::getAmpacheId($sub_id);
         }
         $playlist           = new Playlist((int)$playlist_id);
         $songsIdToAdd_count = count($songsIdToAdd);
@@ -1122,7 +1257,7 @@ class OpenSubsonic_Api
      */
     public static function createplaylist(array $input, User $user): void
     {
-        $playlistId = $input['playlistId'] ?? null;
+        $playlistId = self::getAmpacheId($input['playlistId'] ?? '');
         $name       = $input['name'] ?? '';
         $songIdList = $input['songId'] ?? [];
         if (isset($input['songId']) && is_string($input['songId'])) {
@@ -1130,7 +1265,7 @@ class OpenSubsonic_Api
         }
 
         if ($playlistId !== null) {
-            self::_updatePlaylist((string)$playlistId, $name, $songIdList, [], true, true);
+            self::_updatePlaylist($playlistId, $name, $songIdList, [], true, true);
             self::_responseOutput($input, __FUNCTION__);
         } elseif (!empty($name)) {
             $playlistId = Playlist::create($name, 'public', $user->id);
