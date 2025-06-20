@@ -31,9 +31,10 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Ampache\Repository\Model\Browse $browse */
+/** @var string|null $search_type */
 
 Ui::show_box_top(T_('Options'), 'info-box');
-$search_type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS); ?>
+$search_type = $search_type ?? (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS); ?>
 <div id="information_actions">
 <ul>
 <?php if (in_array($search_type, ['song', 'album', 'artist'])) { ?>

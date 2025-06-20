@@ -111,7 +111,12 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
 <?php Ui::show_box_bottom(); ?>
 
 <div>
-<?php $browse->duration = Search::get_total_duration($object_ids);
+<?php
+if (in_array($playlist->objectType, ['album', 'artist', 'song'])) {
+    $search_type = $playlist->objectType;
+    require_once Ui::find_template('show_search_options.inc.php');
+}
+$browse->duration = Search::get_total_duration($object_ids);
 $browse->show_objects($object_ids);
 $browse->store(); ?>
 </div>
