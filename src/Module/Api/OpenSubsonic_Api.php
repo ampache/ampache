@@ -1210,7 +1210,7 @@ class OpenSubsonic_Api
         }
 
         $object = self::getAmpacheObject((string)$sub_id);
-        if (!$object || !$object instanceof library_item) {
+        if (!$object instanceof library_item) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -2337,6 +2337,7 @@ class OpenSubsonic_Api
      */
     public static function getlyricsbysongid(array $input, User $user): void
     {
+        unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
         if (!$sub_id) {
             return;

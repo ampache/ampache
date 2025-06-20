@@ -884,7 +884,6 @@ class OpenSubsonic_Xml_Data
         if ($songs) {
             $allsongs = $playlist->get_songs();
             foreach ($allsongs as $song_id) {
-                // TODO addEntry
                 self::addSong($xplaylist, $song_id, 'entry');
             }
         }
@@ -913,7 +912,6 @@ class OpenSubsonic_Xml_Data
             $xplaylist->addAttribute('duration', (string)$duration);
             $xplaylist->addAttribute('coverArt', $sub_id);
             foreach ($allitems as $item) {
-                // TODO addEntry
                 self::addSong($xplaylist, (int)$item['object_id'], 'entry');
             }
         } else {
@@ -948,7 +946,6 @@ class OpenSubsonic_Xml_Data
             }
 
             foreach ($items as $row) {
-                // TODO addEntry
                 self::addSong($xplayqueue, (int)$row['object_id'], 'entry');
             }
         }
@@ -993,7 +990,6 @@ class OpenSubsonic_Xml_Data
             }
 
             foreach ($items as $row) {
-                // TODO addEntry
                 self::addSong($xplayqueue, (int)$row['object_id'], 'entry');
             }
         }
@@ -1042,7 +1038,6 @@ class OpenSubsonic_Xml_Data
     {
         $xplaynow = self::_addChildToResultXml($xml, 'nowPlaying');
         foreach ($data as $row) {
-            // TODO addEntry
             if (
                 $row['media'] instanceof Song &&
                 !$row['media']->isNew() &&
@@ -1296,19 +1291,16 @@ class OpenSubsonic_Xml_Data
         $xshare->addAttribute('visitCount', (string)$share->counter);
 
         if ($share->object_type == 'song') {
-            // TODO addEntry
             self::addSong($xshare, $share->object_id, 'entry');
         } elseif ($share->object_type == 'playlist') {
             $playlist = new Playlist($share->object_id);
             $songs    = $playlist->get_songs();
             foreach ($songs as $song_id) {
-                // TODO addEntry
                 self::addSong($xshare, $song_id, 'entry');
             }
         } elseif ($share->object_type == 'album') {
             $songs = self::getSongRepository()->getByAlbum($share->object_id);
             foreach ($songs as $song_id) {
-                // TODO addEntry
                 self::addSong($xshare, $song_id, 'entry');
             }
         }
@@ -1323,7 +1315,6 @@ class OpenSubsonic_Xml_Data
         $tracks = $localplay->get();
         foreach ($tracks as $track) {
             if (array_key_exists('oid', $track)) {
-                // TODO addEntry
                 self::addSong($xjbox, (int)$track['oid'], 'entry');
             }
             // TODO This can be random play, democratic, podcasts, etc. not just songs
@@ -1625,13 +1616,10 @@ class OpenSubsonic_Xml_Data
         $xbookmark->addAttribute('created', date("c", (int)$bookmark->creation_date));
         $xbookmark->addAttribute('changed', date("c", (int)$bookmark->update_date));
         if ($bookmark->object_type == "song") {
-            // TODO addEntry
             self::addSong($xbookmark, $bookmark->object_id, 'entry');
         } elseif ($bookmark->object_type == "video") {
-            // TODO addEntry
             self::_addVideo($xbookmark, new Video($bookmark->object_id), 'entry');
         } elseif ($bookmark->object_type == "podcast_episode") {
-            // TODO addEntry
             self::_addPodcastEpisode($xbookmark, new Podcast_Episode($bookmark->object_id), 'entry');
         }
     }
