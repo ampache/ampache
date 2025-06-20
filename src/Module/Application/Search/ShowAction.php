@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -35,11 +36,15 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
+    private ModelFactoryInterface;
+
     private UiInterface $ui;
 
     public function __construct(
+        ModelFactoryInterface $modelFactory,
         UiInterface $ui
     ) {
+        $this->modelFactory = $modelFactory;
         $this->ui = $ui;
     }
 
@@ -47,7 +52,13 @@ final class ShowAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
+        $browse = $this->modelFactory->createBrowse();
+
         $this->ui->show('show_form_search.inc.php');
+        $this->ui->show(
+            'show_search_options.inc.php',
+            ['browse' => $browse]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
