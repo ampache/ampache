@@ -1988,7 +1988,7 @@ class Subsonic_Api
         }
 
         $count             = $input['count'] ?? 20;
-        $includeNotPresent = (array_key_exists('includeNotPresent', $input) && $input['includeNotPresent'] === "true");
+        $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
 
         $info     = Recommendation::get_artist_info($artist->getId());
         $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
@@ -2027,7 +2027,7 @@ class Subsonic_Api
         }
 
         $count             = $input['count'] ?? 20;
-        $includeNotPresent = (array_key_exists('includeNotPresent', $input) && $input['includeNotPresent'] === "true");
+        $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
 
         $info     = Recommendation::get_artist_info($artist->getId());
         $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
@@ -2826,7 +2826,7 @@ class Subsonic_Api
     public static function getpodcasts(array $input, User $user): void
     {
         $sub_id          = $input['id'] ?? null;
-        $includeEpisodes = !isset($input['includeEpisodes']) || $input['includeEpisodes'] === "true";
+        $includeEpisodes = make_bool($input['includeEpisodes'] ?? false);
 
         if (!AmpConfig::get(ConfigurationKeyEnum::PODCAST)) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
@@ -4161,7 +4161,7 @@ class Subsonic_Api
         }
 
         $name              = $input['name'] ?? '';
-        $public            = (array_key_exists('public', $input) && $input['public'] === "true");
+        $public            = make_bool($input['public'] ?? false);
         $songIdToAdd       = $input['songIdToAdd'] ?? [];
         $songIndexToRemove = $input['songIndexToRemove'] ?? [];
 

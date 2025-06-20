@@ -1854,7 +1854,7 @@ class OpenSubsonic_Api
         }
 
         $count             = $input['count'] ?? 20;
-        $includeNotPresent = (array_key_exists('includeNotPresent', $input) && $input['includeNotPresent'] === "true");
+        $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
 
         $info     = Recommendation::get_artist_info($artist->getId());
         $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
@@ -1893,7 +1893,7 @@ class OpenSubsonic_Api
         }
 
         $count             = $input['count'] ?? 20;
-        $includeNotPresent = (array_key_exists('includeNotPresent', $input) && $input['includeNotPresent'] === "true");
+        $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
 
         $info     = Recommendation::get_artist_info($artist->getId());
         $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
@@ -4027,7 +4027,7 @@ class OpenSubsonic_Api
         }
 
         $name              = $input['name'] ?? '';
-        $public            = (array_key_exists('public', $input) && $input['public'] === "true");
+        $public            = make_bool($input['public'] ?? false);
         $songIdToAdd       = $input['songIdToAdd'] ?? [];
         $songIndexToRemove = $input['songIndexToRemove'] ?? [];
 
