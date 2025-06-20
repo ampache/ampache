@@ -162,9 +162,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 $image = file_get_contents($defaultimg);
             } else {
                 // show the original image or thumbnail
-                $etag = ($art->id > 0)
-                    ? $art->id
-                    : null;
+                $etag       = $type . '_' . $art->id . '_' . $size;
                 $thumb_data = [];
                 if ($has_size) {
                     if ($art->thumb && $art->thumb_mime) {
@@ -176,7 +174,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                     // thumbs should be avoided but can still be used
                     $size_array = Art::get_thumb_size($thumb);
                     $thumb_data = $art->get_thumb($size_array);
-                    $etag       = null;
+                    $etag       = $type . '_' . $art->id . '_thumb_' . $thumb;
                 }
 
                 $mime = (array_key_exists('thumb_mime', $thumb_data))
