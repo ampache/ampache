@@ -807,7 +807,7 @@ class OpenSubsonic_Xml_Data
      */
     public static function addVideoInfo(SimpleXMLElement $xml, int $video_id): SimpleXMLElement
     {
-        $xvideoinfo = self::_addChildToResultXml($xml, 'videoinfo');
+        $xvideoinfo = self::_addChildToResultXml($xml, 'videoInfo');
         $xvideoinfo->addAttribute('id', OpenSubsonic_Api::getVideoSubId($video_id));
 
         return $xml;
