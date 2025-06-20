@@ -2046,6 +2046,10 @@ abstract class Catalog extends database_object
         }
 
         foreach ($results as $result) {
+            if ($result === true) {
+                debug_event(self::class, 'Database already has image.', 3);
+                continue;
+            }
             // Pull the string representation from the source
             $image = Art::get_from_source($result, $type);
             if (strlen($image) > '5') {
@@ -2062,8 +2066,6 @@ abstract class Catalog extends database_object
                 if ($inserted === true) {
                     break;
                 }
-            } elseif ($result === true) {
-                debug_event(self::class, 'Database already has image.', 3);
             } else {
                 debug_event(self::class, 'Image less than 5 chars, not inserting', 3);
             }
