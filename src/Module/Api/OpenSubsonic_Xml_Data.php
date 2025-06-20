@@ -62,11 +62,13 @@ use SimpleXMLElement;
  * OpenSubsonic_Xml_Data Class
  *
  * This class takes care of all of the xml document stuff for SubSonic Responses
+ * https://opensubsonic.netlify.app/docs/responses/
  */
 class OpenSubsonic_Xml_Data
 {
     /**
      * _createResponse
+     * https://opensubsonic.netlify.app/docs/responses/subsonicresponse/
      */
     private static function _createResponse(string $status = 'ok'): SimpleXMLElement
     {
@@ -807,7 +809,7 @@ class OpenSubsonic_Xml_Data
      */
     public static function addVideoInfo(SimpleXMLElement $xml, int $video_id): SimpleXMLElement
     {
-        $xvideoinfo = self::_addChildToResultXml($xml, 'videoinfo');
+        $xvideoinfo = self::_addChildToResultXml($xml, 'videoInfo');
         $xvideoinfo->addAttribute('id', OpenSubsonic_Api::getVideoSubId($video_id));
 
         return $xml;
