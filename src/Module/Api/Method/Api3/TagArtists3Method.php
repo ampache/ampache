@@ -62,4 +62,24 @@ final class TagArtists3Method
             echo Xml3_Data::artists($results, [], $user);
         }
     }
+
+    /**
+     * genre_artists
+     * This returns the artists associated with the tag in question as defined by the UID
+     *
+     * @param array{
+     *     filter?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     */
+    public static function genre_artists(array $input, User $user): void
+    {
+        self::tag_artists($input, $user);
+    }
 }

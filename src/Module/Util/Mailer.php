@@ -213,7 +213,9 @@ final class Mailer implements MailerInterface
         $mail->Sender   = (string) $this->sender;
         $mail->FromName = (string) $this->sender_name;
         $mail->Subject  = (string) $this->subject;
-
+        // add autogeneration headers to mail
+        $mail->addCustomHeader('Precedence', 'auto');
+        $mail->addCustomHeader('Auto-Submitted', 'auto-generated');
         if (function_exists('mb_eregi_replace')) {
             $this->message = (string) mb_eregi_replace("\r\n", "\n", (string) $this->message);
         }

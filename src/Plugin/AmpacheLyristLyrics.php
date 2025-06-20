@@ -34,15 +34,15 @@ use WpOrg\Requests\Requests;
 
 class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterface
 {
-    public string $name        = 'Lyrist Lyrics';
+    public string $name = 'Lyrist Lyrics';
 
-    public string $categories  = 'lyrics';
+    public string $categories = 'lyrics';
 
     public string $description = 'Get lyrics from a public Lyrist instance';
 
-    public string $url         = 'https://github.com/asrvd/lyrist';
+    public string $url = 'https://github.com/asrvd/lyrist';
 
-    public string $version     = '000002';
+    public string $version = '000002';
 
     public string $min_ampache = '360022';
 

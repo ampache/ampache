@@ -658,7 +658,7 @@ final class VaInfo implements VaInfoInterface
             $info['video_codec']   = (!$info['video_codec'] && array_key_exists('video_codec', $tags)) ? trim((string)$tags['video_codec']) : $info['video_codec'];
             $info['description']   = (!$info['description'] && array_key_exists('description', $tags)) ? trim((string)$tags['description']) : $info['description'];
 
-            $info['art']               = (!$info['art'] && array_key_exists('art', $tags)) ? trim((string)$tags['art']) : $info['art'];
+            $info['art'] = (!$info['art'] && array_key_exists('art', $tags)) ? trim((string)$tags['art']) : $info['art'];
 
             if (self::getConfigContainer()->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) && is_array($tags)) {
                 // Add rest of the tags without typecast to the array
@@ -1383,7 +1383,10 @@ final class VaInfo implements VaInfoInterface
             }
         }
 
-        if (!empty($id3v2['TXXX'])) {
+        if (
+            !empty($id3v2['TXXX']) &&
+            isset($id3v2['comments']['text'])
+        ) {
             // Find the MBIDs for the album and artist
             // Use trimAscii to remove noise (see #225 and #438 issues). Is this a GetID3 bug?
             // not a bug those strings are UTF-16 encoded
@@ -1391,6 +1394,7 @@ final class VaInfo implements VaInfoInterface
             $enable_custom_metadata = $this->configContainer->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
             foreach ($id3v2['TXXX'] as $txxx) {
                 //$this->logger->debug('id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'] ?? '')) . ' value: ' . print_r($id3v2['comments']['text'][$txxx['description']] ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
+                //$this->logger->debug('id3v2 TXXX: value: ' . print_r($txxx, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'artists':
                         $parsed['artists'] = $this->parseArtists($id3v2['comments']['text'][$txxx['description']]);

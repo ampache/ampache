@@ -32,9 +32,9 @@ global $dic;
 
 $web_path = AmpConfig::get_web_path('/client');
 
-$environment       = $dic->get(EnvironmentInterface::class);
-$manifest          = __DIR__ . '/../dist/.vite/manifest.json';
-$entrypoint        = false;
+$environment = $dic->get(EnvironmentInterface::class);
+$manifest    = __DIR__ . '/../dist/.vite/manifest.json';
+$entrypoint  = false;
 if (file_exists($manifest)) {
     try {
         $vm         = new Manifest($manifest, "");

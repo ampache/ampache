@@ -57,9 +57,9 @@ $zip_albumD   = $batch_dl && $zipHandler->isZipable('album_disk');
 $web_path = AmpConfig::get_web_path('/client');
 
 /** @var AlbumDisk $albumDisk */
-$simple   = $albumDisk->get_fullname(true);
-$f_name   = $albumDisk->get_fullname(false, true);
-$title    = ($albumDisk->album_artist !== null)
+$simple = $albumDisk->get_fullname(true);
+$f_name = $albumDisk->get_fullname(false, true);
+$title  = ($albumDisk->album_artist !== null)
     ? scrub_out($f_name) . '&nbsp;-&nbsp;' . $albumDisk->get_f_parent_link()
     : scrub_out($f_name);
 

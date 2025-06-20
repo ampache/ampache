@@ -29,15 +29,15 @@ use Ampache\Repository\Model\User;
 
 class AmpacheGravatar extends AmpachePlugin implements PluginGetAvatarUrlInterface
 {
-    public string $name        = 'Gravatar';
+    public string $name = 'Gravatar';
 
-    public string $categories  = 'avatar';
+    public string $categories = 'avatar';
 
     public string $description = 'User\'s avatars with Gravatar';
 
-    public string $url         = 'https://gravatar.com';
+    public string $url = 'https://gravatar.com';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '360040';
 

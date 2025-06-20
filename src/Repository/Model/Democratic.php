@@ -54,7 +54,7 @@ class Democratic extends Tmp_Playlist
 
     public int $base_playlist = 0;
 
-    public ?int $tmp_playlist;
+    public ?int $tmp_playlist = null;
 
     /** @var list<int|string> $object_ids */
     public array $object_ids = [];

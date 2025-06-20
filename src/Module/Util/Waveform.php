@@ -78,7 +78,7 @@ class Waveform
             if (AmpConfig::get('album_art_store_disk')) {
                 $waveform = self::get_from_file($media->id, $object_type);
             } else {
-                // todo waveforms aren't saved for podcast episodes.
+                // TODO waveforms aren't saved for podcast episodes.
                 if ($media instanceof Song) {
                     $media->fill_ext_info('waveform');
                 }

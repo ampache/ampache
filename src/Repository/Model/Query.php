@@ -80,7 +80,7 @@ class Query
         'year' => 'ASC',
     ];
 
-    public int|string $id;
+    public int|string $id = 0;
 
     public ?int $catalog = null;
 

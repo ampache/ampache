@@ -53,7 +53,7 @@ $web_path = AmpConfig::get_web_path('/client');
 
 ob_start();
 echo $playlist->getFullname();
-$title    = ob_get_contents();
+$title = ob_get_contents();
 ob_end_clean();
 Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</div>', 'info-box'); ?>
 <div class="item_right_info">

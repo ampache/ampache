@@ -51,7 +51,7 @@ final class GetBookmark5Method
      * Get the bookmark from it's object_id and object_type.
      *
      * filter = (string) object_id to find
-     * type   = (string) object_type ('song', 'video', 'podcast_episode')
+     * type   = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
      *
      * @param array{
      *     filter: string,
@@ -77,7 +77,7 @@ final class GetBookmark5Method
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'video', 'podcast_episode'])) {
+        if (!in_array(strtolower($type), ['bookmark', 'song', 'video', 'podcast_episode'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 

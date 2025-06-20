@@ -46,9 +46,9 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
 
     public function handle(User $user): void
     {
-        $results   = [];
-        $action    = $this->requestParser->getFromRequest('action');
-        $type      = $this->requestParser->getFromRequest('type');
+        $results = [];
+        $action  = $this->requestParser->getFromRequest('action');
+        $type    = $this->requestParser->getFromRequest('type');
 
         // Switch on the actions
         switch ($action) {

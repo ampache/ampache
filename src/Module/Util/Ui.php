@@ -397,7 +397,7 @@ class Ui implements UiInterface
             return self::$_icon_cache[$name];
         }
 
-        $path       = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/icons/';
+        $path = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/icons/';
         // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
         $filesearch = array_merge(
             glob(__DIR__ . '/../../../public/client/' . $path . 'icon_' . $name . '.svg') ?: [],
@@ -502,7 +502,7 @@ class Ui implements UiInterface
         }
 
         // always check themes first
-        $path       = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/';
+        $path = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/';
         // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
         $filesearch = array_merge(
             glob(__DIR__ . '/../../../public/client/' . $path . $name . '.svg') ?: [],
@@ -914,6 +914,7 @@ class Ui implements UiInterface
             case 'stream_beautiful_url':
             case 'subsonic_always_download':
             case 'subsonic_backend':
+            case 'subsonic_legacy':
             case 'tadb_overwrite_name':
             case 'topmenu':
             case 'ui_fixed':
@@ -1292,8 +1293,8 @@ class Ui implements UiInterface
                 echo "</select>\n";
                 break;
             case 'disabled_custom_metadata_fields':
-                $ids             = explode(',', $value);
-                $options         = [];
+                $ids     = explode(',', $value);
+                $options = [];
                 foreach ($this->getMetadataFieldRepository()->getPropertyList() as $propertyId => $propertyName) {
                     $selected  = (in_array($propertyId, $ids)) ? ' selected="selected"' : '';
                     $options[] = '<option value="' . $propertyId . '"' . $selected . '>' . scrub_out($propertyName) . '</option>';

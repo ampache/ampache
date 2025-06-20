@@ -142,8 +142,8 @@ class LabelRepositoryTest extends TestCase
 
     public function testRemoveArtistAssocDeletes(): void
     {
-        $labelId   = 666;
-        $artistId  = 42;
+        $labelId  = 666;
+        $artistId = 42;
 
         $this->connection->expects(static::once())
             ->method('query')
@@ -157,9 +157,9 @@ class LabelRepositoryTest extends TestCase
 
     public function testAddArtistAssocAdds(): void
     {
-        $labelId   = 666;
-        $artistId  = 42;
-        $date      = new DateTime();
+        $labelId  = 666;
+        $artistId = 42;
+        $date     = new DateTime();
 
         $this->connection->expects(static::once())
             ->method('query')

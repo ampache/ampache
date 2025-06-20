@@ -87,15 +87,14 @@ use SimpleXMLElement;
 use WpOrg\Requests\Requests;
 
 /**
- * Subsonic Class
+ * OpenSubsonic Class
  *
- * This class wraps Ampache to Subsonic API functions. See https://www.subsonic.org/pages/api.jsp
+ * This class wraps Ampache to OpenSubsonic API functions. See https://opensubsonic.netlify.app/
  *
  * @SuppressWarnings("unused")
  */
-class Subsonic_Api
+class OpenSubsonic_Api
 {
-    // TODO remove openSubsonic extensions in Ampache 8.0
     public const API_VERSION = "1.16.1";
 
     /**
@@ -153,11 +152,11 @@ class Subsonic_Api
 
     public const SSERROR_TOKENAUTHNOTSUPPORTED = 41; // Token authentication not supported for LDAP users.
 
-    public const SSERROR_AUTHMETHODNOTSUPPORTED = 42; // TODO remove for pure subsonic (openSubsonic only)
+    public const SSERROR_AUTHMETHODNOTSUPPORTED = 42; // [OPENSUBSONIC] Provided authentication mechanism not supported.
 
-    public const SSERROR_AUTHMETHODCONFLICT = 43; // TODO remove for pure subsonic (openSubsonic only)
+    public const SSERROR_AUTHMETHODCONFLICT = 43; // [OPENSUBSONIC] Multiple conflicting authentication mechanisms provided.
 
-    public const SSERROR_BADAPIKEY = 44; // TODO remove for pure subsonic (openSubsonic only)
+    public const SSERROR_BADAPIKEY = 44; // [OPENSUBSONIC] Invalid API key.
 
     public const SSERROR_UNAUTHORIZED = 50; // User is not authorized for the given operation.
 
@@ -168,22 +167,6 @@ class Subsonic_Api
     /**
      * Ampache doesn't have a global unique id but items are unique per category. We use id prefixes to identify item category.
      */
-
-    public const OLD_SUBID_ALBUM = 200000000;
-
-    public const OLD_SUBID_ARTIST = 100000000;
-
-    public const OLD_SUBID_PLAYLIST = 800000000;
-
-    public const OLD_SUBID_PODCAST = 600000000;
-
-    public const OLD_SUBID_PODCASTEP = 700000000;
-
-    public const OLD_SUBID_SMARTPL = 400000000;
-
-    public const OLD_SUBID_SONG = 300000000;
-
-    public const OLD_SUBID_VIDEO = 500000000;
 
     public const SUBID_ALBUM = 'al-';
 
@@ -201,9 +184,9 @@ class Subsonic_Api
 
     public const SUBID_PLAYLIST = 'pl-';
 
-    public const SUBID_PODCASTEP = 'pe-';
-
     public const SUBID_PODCAST = 'po-';
+
+    public const SUBID_PODCASTEP = 'pe-';
 
     public const SUBID_SHARE = 'sh-';
 
@@ -217,153 +200,117 @@ class Subsonic_Api
 
     public static function getAlbumSubId(int $ampache_id): string
     {
-        return (string)(self::OLD_SUBID_ALBUM + $ampache_id);
+        return self::SUBID_ALBUM . $ampache_id;
     }
 
     public static function getArtistSubId(int $ampache_id): string
     {
-        return (string)(self::OLD_SUBID_ARTIST + $ampache_id);
+        return self::SUBID_ARTIST . $ampache_id;
     }
 
-    public static function getBookmarkSubId(int|string $ampache_id): string
+    public static function getBookmarkSubId(int $ampache_id): string
     {
         return self::SUBID_BOOKMARK . $ampache_id;
     }
 
-    public static function getCatalogSubId(int|string $ampache_id): string
+    public static function getCatalogSubId(int $ampache_id): string
     {
         return self::SUBID_CATALOG . $ampache_id;
     }
 
-    public static function getChatSubId(int|string $ampache_id): string
+    public static function getChatSubId(int $ampache_id): string
     {
         return self::SUBID_CHAT . $ampache_id;
     }
 
-    public static function getGenreSubId(int|string $ampache_id): string
+    public static function getGenreSubId(int $ampache_id): string
     {
         return self::SUBID_GENRE . $ampache_id;
     }
 
-    public static function getLiveStreamSubId(int|string $ampache_id): string
+    public static function getLiveStreamSubId(int $ampache_id): string
     {
         return self::SUBID_LIVESTREAM . $ampache_id;
     }
 
     public static function getPlaylistSubId(int $ampache_id): string
     {
-        return (string)(self::OLD_SUBID_PLAYLIST + $ampache_id);
+        return self::SUBID_PLAYLIST . $ampache_id;
     }
 
     public static function getPodcastSubId(int $ampache_id): string
     {
-        return (string)(self::OLD_SUBID_PODCAST + $ampache_id);
+        return self::SUBID_PODCAST . $ampache_id;
     }
 
     public static function getPodcastEpisodeSubId(int $ampache_id): string
     {
-        return (string)(self::OLD_SUBID_PODCASTEP + $ampache_id);
+        return self::SUBID_PODCASTEP . $ampache_id;
     }
-    public static function getShareSubId(int|string $ampache_id): string
+    public static function getShareSubId(int $ampache_id): string
     {
         return self::SUBID_SHARE . $ampache_id;
     }
 
     public static function getSmartPlaylistSubId(int $ampache_id): string
     {
-        return (string)(self::OLD_SUBID_SMARTPL + $ampache_id);
+        return self::SUBID_SMARTPL . $ampache_id;
     }
 
     public static function getSongSubId(int $ampache_id): string
     {
-        return (string)(self::OLD_SUBID_SONG + $ampache_id);
+        return self::SUBID_SONG . $ampache_id;
     }
 
-    public static function getUserSubId(int|string $ampache_id): string
+    public static function getUserSubId(int $ampache_id): string
     {
         return self::SUBID_USER . $ampache_id;
     }
 
     public static function getVideoSubId(int $ampache_id): string
     {
-        return (string)(self::OLD_SUBID_VIDEO + $ampache_id);
+        return self::SUBID_VIDEO . $ampache_id;
     }
 
     /**
      * getAmpacheObject
      * Return the Ampache media object
      */
-    public static function getAmpacheObject(string $sub_id): ?object
+    public static function getAmpacheObject(string $object_id): ?object
     {
-        // keep oldstyle subsonic ids for compatibility (TODO REMOVE IN AMPACHE 8.0)
-        if (is_numeric($sub_id)) {
-            $int_id = (int)$sub_id;
-            if ($int_id >= self::OLD_SUBID_ARTIST && $int_id < self::OLD_SUBID_ALBUM) {
-                return new Artist($int_id - self::OLD_SUBID_ARTIST);
-            }
-            if ($int_id >= self::OLD_SUBID_ALBUM && $int_id < self::OLD_SUBID_SONG) {
-                return new Album($int_id - self::OLD_SUBID_ALBUM);
-            }
-            if ($int_id >= self::OLD_SUBID_SONG && $int_id < self::OLD_SUBID_SMARTPL) {
-                return new Song($int_id - self::OLD_SUBID_SONG);
-            }
-            if ($int_id >= self::OLD_SUBID_SMARTPL && $int_id < self::OLD_SUBID_VIDEO) {
-                return new Search($int_id - self::OLD_SUBID_SMARTPL);
-            }
-            if ($int_id >= self::OLD_SUBID_VIDEO && $int_id < self::OLD_SUBID_PODCAST) {
-                return new Video($int_id - self::OLD_SUBID_VIDEO);
-            }
-            if ($int_id >= self::OLD_SUBID_PODCAST && $int_id < self::OLD_SUBID_PODCASTEP) {
-                return new Artist($int_id - self::OLD_SUBID_PODCAST);
-            }
-            if ($int_id >= self::OLD_SUBID_PODCASTEP && $int_id < self::OLD_SUBID_PLAYLIST) {
-                return new Podcast_Episode($int_id - self::OLD_SUBID_PODCASTEP);
-            }
-            if ($int_id >= self::OLD_SUBID_PLAYLIST && $int_id < 900000000) {
-                return new Playlist($int_id - self::OLD_SUBID_PLAYLIST);
-            }
-        }
-
-        // everything else is a string prefix
-        $ampache_id = substr($sub_id, 3) ?: null;
-        if (!$ampache_id) {
-            return null;
-        }
-
-        $ampache_id = (int)$ampache_id;
-        switch (substr($sub_id, 0, 3)) {
+        switch (substr($object_id, 0, 3)) {
             case self::SUBID_ALBUM:
-                return new Album($ampache_id);
+                return new Album((int)self::getAmpacheId($object_id));
             case self::SUBID_ARTIST:
-                return new Artist($ampache_id);
+                return new Artist((int)self::getAmpacheId($object_id));
             case self::SUBID_BOOKMARK:
-                return new Bookmark($ampache_id);
+                return new Bookmark((int)self::getAmpacheId($object_id));
             case self::SUBID_CATALOG:
-                return Catalog::create_from_id($ampache_id);
+                return Catalog::create_from_id((int)self::getAmpacheId($object_id));
             case self::SUBID_CHAT:
-                return new PrivateMsg($ampache_id);
+                return new PrivateMsg((int)self::getAmpacheId($object_id));
             case self::SUBID_GENRE:
-                return new Tag($ampache_id);
+                return new Tag((int)self::getAmpacheId($object_id));
             case self::SUBID_LIVESTREAM:
-                return new Live_Stream($ampache_id);
+                return new Live_Stream((int)self::getAmpacheId($object_id));
             case self::SUBID_PLAYLIST:
-                return new Playlist($ampache_id);
+                return new Playlist((int)self::getAmpacheId($object_id));
             case self::SUBID_PODCAST:
-                return new Podcast($ampache_id);
+                return new Podcast((int)self::getAmpacheId($object_id));
             case self::SUBID_PODCASTEP:
-                return new Podcast_Episode($ampache_id);
+                return new Podcast_Episode((int)self::getAmpacheId($object_id));
             case self::SUBID_SHARE:
-                return new Share($ampache_id);
+                return new Share((int)self::getAmpacheId($object_id));
             case self::SUBID_SMARTPL:
-                return new Search($ampache_id);
+                return new Search((int)self::getAmpacheId($object_id));
             case self::SUBID_SONG:
-                return new Song($ampache_id);
+                return new Song((int)self::getAmpacheId($object_id));
             case self::SUBID_USER:
-                return new User($ampache_id);
+                return new User((int)self::getAmpacheId($object_id));
             case self::SUBID_VIDEO:
-                return new Video($ampache_id);
+                return new Video((int)self::getAmpacheId($object_id));
         }
-        debug_event(self::class, 'Couldn\'t identify Ampache object from ' . $sub_id, 5);
+        debug_event(self::class, 'Couldn\'t identify Ampache object from ' . $object_id, 5);
 
         return null;
     }
@@ -371,59 +318,11 @@ class Subsonic_Api
     /**
      * getAmpacheId
      */
-    public static function getAmpacheId(string $sub_id): ?int
+    public static function getAmpacheId(string $object_id): ?int
     {
-        // keep oldstyle subsonic ids for compatibility (TODO REMOVE IN AMPACHE 8.0)
-        if (is_numeric($sub_id)) {
-            $int_id = (int)$sub_id;
-            if ($int_id >= self::OLD_SUBID_ARTIST && $int_id < self::OLD_SUBID_ALBUM) {
-                return $int_id - self::OLD_SUBID_ARTIST;
-            }
-            if ($int_id >= self::OLD_SUBID_ALBUM && $int_id < self::OLD_SUBID_SONG) {
-                return $int_id - self::OLD_SUBID_ALBUM;
-            }
-            if ($int_id >= self::OLD_SUBID_SONG && $int_id < self::OLD_SUBID_SMARTPL) {
-                return $int_id - self::OLD_SUBID_SONG;
-            }
-            if ($int_id >= self::OLD_SUBID_SMARTPL && $int_id < self::OLD_SUBID_VIDEO) {
-                return $int_id - self::OLD_SUBID_SMARTPL;
-            }
-            if ($int_id >= self::OLD_SUBID_VIDEO && $int_id < self::OLD_SUBID_PODCAST) {
-                return $int_id - self::OLD_SUBID_VIDEO;
-            }
-            if ($int_id >= self::OLD_SUBID_PODCAST && $int_id < self::OLD_SUBID_PODCASTEP) {
-                return $int_id - self::OLD_SUBID_PODCAST;
-            }
-            if ($int_id >= self::OLD_SUBID_PODCASTEP && $int_id < self::OLD_SUBID_PLAYLIST) {
-                return $int_id - self::OLD_SUBID_PODCASTEP;
-            }
-            if ($int_id >= self::OLD_SUBID_PLAYLIST && $int_id < 900000000) {
-                return $int_id - self::OLD_SUBID_PLAYLIST;
-            }
-        }
-
-        // everything else is a string prefix
-        $ampache_id = substr($sub_id, 3) ?: null;
-        if (!$ampache_id) {
-            return null;
-        }
-
-        switch (substr($sub_id, 0, 3)) {
-            case self::SUBID_ALBUM:
-            case self::SUBID_ARTIST:
-            case self::SUBID_PLAYLIST:
-            case self::SUBID_PODCAST:
-            case self::SUBID_SMARTPL:
-            case self::SUBID_SONG:
-            case self::SUBID_VIDEO:
-            case self::SUBID_BOOKMARK:
-            case self::SUBID_CATALOG:
-            case self::SUBID_CHAT:
-            case self::SUBID_GENRE:
-            case self::SUBID_LIVESTREAM:
-            case self::SUBID_SHARE:
-            case self::SUBID_USER:
-                return (int)$ampache_id;
+        $ampache_id = substr($object_id, 3) ?: null;
+        if (is_numeric($ampache_id)) {
+            return (int)$ampache_id;
         }
 
         return null;
@@ -432,60 +331,13 @@ class Subsonic_Api
     /**
      * getAmpacheType
      */
-    public static function getAmpacheType(string $sub_id): string
+    public static function getAmpacheType(string $object_id): string
     {
-        // keep oldstyle subsonic ids for compatibility (TODO REMOVE IN AMPACHE 8.0)
-        if (is_numeric($sub_id)) {
-            $int_id = (int)$sub_id;
-            if ($int_id >= self::OLD_SUBID_ARTIST && $int_id < self::OLD_SUBID_ALBUM) {
-                return "artist";
-            }
-            if ($int_id >= self::OLD_SUBID_ALBUM && $int_id < self::OLD_SUBID_SONG) {
-                return "album";
-            }
-            if ($int_id >= self::OLD_SUBID_SONG && $int_id < self::OLD_SUBID_SMARTPL) {
-                return "song";
-            }
-            if ($int_id >= self::OLD_SUBID_SMARTPL && $int_id < self::OLD_SUBID_VIDEO) {
-                return "search";
-            }
-            if ($int_id >= self::OLD_SUBID_VIDEO && $int_id < self::OLD_SUBID_PODCAST) {
-                return "video";
-            }
-            if ($int_id >= self::OLD_SUBID_PODCAST && $int_id < self::OLD_SUBID_PODCASTEP) {
-                return "podcast";
-            }
-            if ($int_id >= self::OLD_SUBID_PODCASTEP && $int_id < self::OLD_SUBID_PLAYLIST) {
-                return "podcast_episode";
-            }
-            if ($int_id >= self::OLD_SUBID_PLAYLIST && $int_id < 900000000) {
-                return "playlist";
-            }
-        }
-
-        // everything else is a string prefix
-        $ampache_id = substr($sub_id, 3) ?: null;
-        if (!$ampache_id) {
-            return "";
-        }
-
-        switch ($ampache_id) {
-            case self::SUBID_ARTIST:
-                return "artist";
+        switch (substr($object_id, 0, 3)) {
             case self::SUBID_ALBUM:
                 return "album";
-            case self::SUBID_SONG:
-                return "song";
-            case self::SUBID_SMARTPL:
-                return "search";
-            case self::SUBID_VIDEO:
-                return "video";
-            case self::SUBID_PODCAST:
-                return "podcast";
-            case self::SUBID_PODCASTEP:
-                return "podcast_episode";
-            case self::SUBID_PLAYLIST:
-                return "playlist";
+            case self::SUBID_ARTIST:
+                return "artist";
             case self::SUBID_BOOKMARK:
                 return "bookmark";
             case self::SUBID_CATALOG:
@@ -496,13 +348,25 @@ class Subsonic_Api
                 return "genre";
             case self::SUBID_LIVESTREAM:
                 return "live_stream";
+            case self::SUBID_PLAYLIST:
+                return "playlist";
+            case self::SUBID_PODCAST:
+                return "podcast";
+            case self::SUBID_PODCASTEP:
+                return "podcast_episode";
             case self::SUBID_SHARE:
                 return "share";
+            case self::SUBID_SMARTPL:
+                return "search";
+            case self::SUBID_SONG:
+                return "song";
             case self::SUBID_USER:
                 return "user";
+            case self::SUBID_VIDEO:
+                return "video";
+            default:
+                return "";
         }
-
-        return "";
     }
 
     /**
@@ -872,11 +736,11 @@ class Subsonic_Api
                         CURLOPT_RETURNTRANSFER => false,
                         CURLOPT_FOLLOWLOCATION => true,
                         CURLOPT_WRITEFUNCTION => [
-                            'Ampache\Module\Api\Subsonic_Api',
+                            'Ampache\Module\Api\OpenSubsonic_Api',
                             '_output_body'
                         ],
                         CURLOPT_HEADERFUNCTION => [
-                            'Ampache\Module\Api\Subsonic_Api',
+                            'Ampache\Module\Api\OpenSubsonic_Api',
                             '_output_header'
                         ],
                         // Ignore invalid certificate
@@ -972,8 +836,8 @@ class Subsonic_Api
 
         // saving xml can fail
         if (!$output) {
-            $output = "<subsonic-response status=\"failed\" " . "version=\"1.16.1\" " . "type=\"ampache\" " . "serverVersion=\"" . Api::$version . "\" " . "openSubsonic=\"1\" " . ">" .
-                "<error code=\"" . Subsonic_Api::SSERROR_GENERIC . "\" message=\"Error creating response.\" helpUrl=\"https://ampache.org/api/subsonic\"/>" .
+            $output = "<subsonic-response status=\"failed\" " . "version=\"1.16.1\" " . "type=\"ampache\" " . "serverVersion=\"" . AmpConfig::get('version') . "\" " . "openSubsonic=\"1\" " . ">" .
+                "<error code=\"" . OpenSubsonic_Api::SSERROR_GENERIC . "\" message=\"Error creating response.\" helpUrl=\"https://ampache.org/api/subsonic\"/>" .
                 "</subsonic-response>";
         }
 
@@ -990,7 +854,7 @@ class Subsonic_Api
     {
         $output = json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         if (!$output) {
-            $output = json_encode(Subsonic_Json_Data::addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
+            $output = json_encode(OpenSubsonic_Json_Data::addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
         }
 
         header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
@@ -1007,7 +871,7 @@ class Subsonic_Api
     {
         $output = json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         if ($output === false) {
-            $output = json_encode(Subsonic_Json_Data::addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
+            $output = json_encode(OpenSubsonic_Json_Data::addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
         }
 
         header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset'));
@@ -1024,14 +888,14 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         switch ($format) {
             case 'json':
-                self::_jsonOutput(Subsonic_Json_Data::addError($errorCode, $function));
+                self::_jsonOutput(OpenSubsonic_Json_Data::addError($errorCode, $function));
                 break;
             case 'jsonp':
                 $callback = (string)($input['callback'] ?? 'jsonp');
-                self::_jsonpOutput(Subsonic_Json_Data::addError($errorCode, $function), $callback);
+                self::_jsonpOutput(OpenSubsonic_Json_Data::addError($errorCode, $function), $callback);
                 break;
             default:
-                self::_xmlOutput(Subsonic_Xml_Data::addError($errorCode, $function));
+                self::_xmlOutput(OpenSubsonic_Xml_Data::addError($errorCode, $function));
                 break;
         }
     }
@@ -1040,21 +904,23 @@ class Subsonic_Api
      * _addJsonResponse
      *
      * Generate a subsonic-response
+     * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
      * @return array{'subsonic-response': array{'status': string, 'version': string, 'type': string, 'serverVersion': string, 'openSubsonic': bool}}
      */
     private static function _addJsonResponse(string $function): array
     {
-        return Subsonic_Json_Data::addResponse($function);
+        return OpenSubsonic_Json_Data::addResponse($function);
     }
 
     /**
      * _addXmlResponse
      *
      * Generate a subsonic-response
+     * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
      */
     private static function _addXmlResponse(string $function): SimpleXMLElement
     {
-        return Subsonic_Xml_Data::addResponse($function);
+        return OpenSubsonic_Xml_Data::addResponse($function);
     }
 
     /**
@@ -1103,7 +969,7 @@ class Subsonic_Api
      * addChatMessage
      *
      * Adds a message to the chat log.
-     * https://www.subsonic.org/pages/api.jsp#addchatmessage
+     * https://opensubsonic.netlify.app/docs/endpoints/addchatmessage/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1129,7 +995,7 @@ class Subsonic_Api
      * changePassword
      *
      * Changes the password of an existing user on the server.
-     * https://www.subsonic.org/pages/api.jsp#changepassword
+     * https://opensubsonic.netlify.app/docs/endpoints/changepassword/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1163,7 +1029,7 @@ class Subsonic_Api
      * createBookmark
      *
      * Creates or updates a bookmark.
-     * https://www.subsonic.org/pages/api.jsp#createbookmark
+     * https://opensubsonic.netlify.app/docs/endpoints/createbookmark/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1209,7 +1075,7 @@ class Subsonic_Api
      * createInternetRadioStation
      *
      * Adds a new internet radio station.
-     * https://www.subsonic.org/pages/api.jsp#createinternetradiostation
+     * https://opensubsonic.netlify.app/docs/endpoints/createinternetradiostation/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1250,7 +1116,7 @@ class Subsonic_Api
      * createPlaylist
      *
      * Creates (or updates) a playlist.
-     * https://www.subsonic.org/pages/api.jsp#createplaylist
+     * https://opensubsonic.netlify.app/docs/endpoints/createplaylist/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1278,10 +1144,10 @@ class Subsonic_Api
                 $playlist = new Playlist($playlistId);
                 if ($format === 'xml') {
                     $response = self::_addXmlResponse(__FUNCTION__);
-                    $response = Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
+                    $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, true);
                 } else {
                     $response = self::_addJsonResponse(__FUNCTION__);
-                    $response = Subsonic_Json_Data::addPlaylist($response, $playlist, true);
+                    $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, true);
                 }
                 self::_responseOutput($input, __FUNCTION__, $response);
             } else {
@@ -1296,7 +1162,7 @@ class Subsonic_Api
      * createPodcastChannel
      *
      * Adds a new Podcast channel.
-     * https://www.subsonic.org/pages/api.jsp#createpodcastchannel
+     * https://opensubsonic.netlify.app/docs/endpoints/createpodcastchannel/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1332,7 +1198,7 @@ class Subsonic_Api
      * createShare
      *
      * Creates a public URL that can be used by anyone to stream music or video from the server.
-     * https://www.subsonic.org/pages/api.jsp#createshare
+     * https://opensubsonic.netlify.app/docs/endpoints/createshare/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1413,10 +1279,10 @@ class Subsonic_Api
                 $format = (string)($input['f'] ?? 'xml');
                 if ($format === 'xml') {
                     $response = self::_addXmlResponse(__FUNCTION__);
-                    $response = Subsonic_Xml_Data::addShares($response, $shares);
+                    $response = OpenSubsonic_Xml_Data::addShares($response, $shares);
                 } else {
                     $response = self::_addJsonResponse(__FUNCTION__);
-                    $response = Subsonic_Json_Data::addShares($response, $shares);
+                    $response = OpenSubsonic_Json_Data::addShares($response, $shares);
                 }
                 self::_responseOutput($input, __FUNCTION__, $response);
             } else {
@@ -1431,7 +1297,7 @@ class Subsonic_Api
      * createUser
      *
      * Creates a new user on the server.
-     * https://www.subsonic.org/pages/api.jsp#createuser
+     * https://opensubsonic.netlify.app/docs/endpoints/createuser/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1492,7 +1358,7 @@ class Subsonic_Api
      * deleteBookmark
      *
      * Creates or updates a bookmark.
-     * https://www.subsonic.org/pages/api.jsp#deletebookmark
+     * https://opensubsonic.netlify.app/docs/endpoints/deletebookmark/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1520,7 +1386,7 @@ class Subsonic_Api
      * deleteInternetRadioStation
      *
      * Deletes an existing internet radio station.
-     * https://www.subsonic.org/pages/api.jsp#deleteinternetradiostation
+     * https://opensubsonic.netlify.app/docs/endpoints/deleteinternetradiostation/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1555,7 +1421,7 @@ class Subsonic_Api
      * deletePlaylist
      *
      * Deletes a saved playlist.
-     * https://www.subsonic.org/pages/api.jsp#deleteplaylist
+     * https://opensubsonic.netlify.app/docs/endpoints/deleteplaylist/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1591,7 +1457,7 @@ class Subsonic_Api
      * deletePodcastChannel
      *
      * Deletes a Podcast channel.
-     * https://www.subsonic.org/pages/api.jsp#deletepodcastchannel
+     * https://opensubsonic.netlify.app/docs/endpoints/deletepodcastchannel/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1623,7 +1489,7 @@ class Subsonic_Api
      * deletePodcastEpisode
      *
      * Deletes a Podcast episode.
-     * https://www.subsonic.org/pages/api.jsp#deletepodcastepisode
+     * https://opensubsonic.netlify.app/docs/endpoints/deletepodcastepisode/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1654,7 +1520,7 @@ class Subsonic_Api
      * deleteShare
      *
      * Deletes an existing share.
-     * https://www.subsonic.org/pages/api.jsp#deleteshare
+     * https://opensubsonic.netlify.app/docs/endpoints/deleteshare/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1692,7 +1558,7 @@ class Subsonic_Api
      * deleteUser
      *
      * Deletes an existing user on the server.
-     * https://www.subsonic.org/pages/api.jsp#deleteuser
+     * https://opensubsonic.netlify.app/docs/endpoints/deleteuser/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1721,7 +1587,7 @@ class Subsonic_Api
      * download
      *
      * Downloads a given media file.
-     * https://www.subsonic.org/pages/api.jsp#download
+     * https://opensubsonic.netlify.app/docs/endpoints/download/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1749,7 +1615,7 @@ class Subsonic_Api
      * downloadPodcastEpisode
      *
      * Request the server to start downloading a given Podcast episode.
-     * https://www.subsonic.org/pages/api.jsp#downloadpodcastepisode
+     * https://opensubsonic.netlify.app/docs/endpoints/downloadpodcastepisode/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1778,7 +1644,7 @@ class Subsonic_Api
      * getAlbum
      *
      * Returns details for an album.
-     * https://www.subsonic.org/pages/api.jsp#getalbum
+     * https://opensubsonic.netlify.app/docs/endpoints/getalbum/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1800,10 +1666,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addAlbumID3($response, $album, true);
+            $response = OpenSubsonic_Xml_Data::addAlbumID3($response, $album, true);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addAlbumID3($response, $album, true);
+            $response = OpenSubsonic_Json_Data::addAlbumID3($response, $album, true);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1812,7 +1678,7 @@ class Subsonic_Api
      * getAlbumInfo
      *
      * Returns album info.
-     * https://www.subsonic.org/pages/api.jsp#getalbuminfo
+     * https://opensubsonic.netlify.app/docs/endpoints/getalbuminfo/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1835,10 +1701,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addAlbumInfo($response, $info, $album);
+            $response = OpenSubsonic_Xml_Data::addAlbumInfo($response, $info, $album);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addAlbumInfo($response, $info, $album);
+            $response = OpenSubsonic_Json_Data::addAlbumInfo($response, $info, $album);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1847,7 +1713,7 @@ class Subsonic_Api
      * getAlbumInfo2
      *
      * Returns album info.
-     * https://www.subsonic.org/pages/api.jsp#getalbuminfo2
+     * https://opensubsonic.netlify.app/docs/endpoints/getalbuminfo2/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1860,7 +1726,7 @@ class Subsonic_Api
      * getAlbumList
      *
      * Returns a list of random, newest, highest rated etc. albums.
-     * https://www.subsonic.org/pages/api.jsp#getalbumlist
+     * https://opensubsonic.netlify.app/docs/endpoints/getalbumlist/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1885,10 +1751,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addAlbumList($response, $albums);
+            $response = OpenSubsonic_Xml_Data::addAlbumList($response, $albums);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addAlbumList($response, $albums);
+            $response = OpenSubsonic_Json_Data::addAlbumList($response, $albums);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1897,7 +1763,7 @@ class Subsonic_Api
      * getAlbumList2
      *
      * Returns a list of random, newest, highest rated etc. albums.
-     * https://www.subsonic.org/pages/api.jsp#getalbumlist2
+     * https://opensubsonic.netlify.app/docs/endpoints/getalbumlist2/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1922,10 +1788,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addAlbumList2($response, $albums);
+            $response = OpenSubsonic_Xml_Data::addAlbumList2($response, $albums);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addAlbumList2($response, $albums);
+            $response = OpenSubsonic_Json_Data::addAlbumList2($response, $albums);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1934,7 +1800,7 @@ class Subsonic_Api
      * getArtist
      *
      * Returns details for an artist.
-     * https://www.subsonic.org/pages/api.jsp#getartist
+     * https://opensubsonic.netlify.app/docs/endpoints/getartist/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1956,10 +1822,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addArtist($response, $artist, true);
+            $response = OpenSubsonic_Xml_Data::addArtist($response, $artist, true);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addArtistWithAlbumsID3($response, $artist);
+            $response = OpenSubsonic_Json_Data::addArtistWithAlbumsID3($response, $artist);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -1968,7 +1834,7 @@ class Subsonic_Api
      * getArtistInfo
      *
      * Returns artist info.
-     * https://www.subsonic.org/pages/api.jsp#getartistinfo
+     * https://opensubsonic.netlify.app/docs/endpoints/getartistinfo/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -1995,10 +1861,10 @@ class Subsonic_Api
         $format   = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addArtistInfo($response, $info, $artist, $similars);
+            $response = OpenSubsonic_Xml_Data::addArtistInfo($response, $info, $artist, $similars);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addArtistInfo($response, $info, $artist, $similars);
+            $response = OpenSubsonic_Json_Data::addArtistInfo($response, $info, $artist, $similars);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2007,7 +1873,7 @@ class Subsonic_Api
      * getArtistInfo2
      *
      * Returns artist info.
-     * https://www.subsonic.org/pages/api.jsp#getartistinfo2
+     * https://opensubsonic.netlify.app/docs/endpoints/getartistinfo2/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2034,10 +1900,10 @@ class Subsonic_Api
         $format   = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addArtistInfo2($response, $info, $artist, $similars);
+            $response = OpenSubsonic_Xml_Data::addArtistInfo2($response, $info, $artist, $similars);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addArtistInfo2($response, $info, $artist, $similars);
+            $response = OpenSubsonic_Json_Data::addArtistInfo2($response, $info, $artist, $similars);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2046,7 +1912,7 @@ class Subsonic_Api
      * getArtists
      *
      * Returns all artists.
-     * https://www.subsonic.org/pages/api.jsp#getartists
+     * https://opensubsonic.netlify.app/docs/endpoints/getartists/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2063,10 +1929,10 @@ class Subsonic_Api
         $format  = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addArtists($response, $artists);
+            $response = OpenSubsonic_Xml_Data::addArtists($response, $artists);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addArtists($response, $artists);
+            $response = OpenSubsonic_Json_Data::addArtists($response, $artists);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2075,7 +1941,7 @@ class Subsonic_Api
      * getAvatar
      *
      * Returns the avatar (personal image) for a user.
-     * https://www.subsonic.org/pages/api.jsp#getavatar
+     * https://opensubsonic.netlify.app/docs/endpoints/getavatar/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2113,7 +1979,7 @@ class Subsonic_Api
      * getBookmarks
      *
      * Returns all bookmarks for this user.
-     * https://www.subsonic.org/pages/api.jsp#getbookmarks
+     * https://opensubsonic.netlify.app/docs/endpoints/getbookmarks/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2133,10 +1999,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addBookmarks($response, $bookmarks);
+            $response = OpenSubsonic_Xml_Data::addBookmarks($response, $bookmarks);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addBookmarks($response, $bookmarks);
+            $response = OpenSubsonic_Json_Data::addBookmarks($response, $bookmarks);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2145,7 +2011,7 @@ class Subsonic_Api
      * getCaptions
      *
      * Returns captions (subtitles) for a video.
-     * https://www.subsonic.org/pages/api.jsp#getcaptions
+     * https://opensubsonic.netlify.app/docs/endpoints/getcaptions/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2160,7 +2026,7 @@ class Subsonic_Api
      * getChatMessages
      *
      * Returns the current visible (non-expired) chat messages.
-     * https://www.subsonic.org/pages/api.jsp#getchatmessages
+     * https://opensubsonic.netlify.app/docs/endpoints/getchatmessages/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2181,10 +2047,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addChatMessages($response, $messages);
+            $response = OpenSubsonic_Xml_Data::addChatMessages($response, $messages);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addChatMessages($response, $messages);
+            $response = OpenSubsonic_Json_Data::addChatMessages($response, $messages);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2193,7 +2059,7 @@ class Subsonic_Api
      * getCoverArt
      *
      * Returns a cover art image.
-     * https://www.subsonic.org/pages/api.jsp#getcoverart
+     * https://opensubsonic.netlify.app/docs/endpoints/getcoverart/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2273,7 +2139,7 @@ class Subsonic_Api
      * getGenres
      *
      * Returns all genres.
-     * https://www.subsonic.org/pages/api.jsp#getgenres
+     * https://opensubsonic.netlify.app/docs/endpoints/getgenres/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2284,10 +2150,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addGenres($response, Tag::get_tags('song'));
+            $response = OpenSubsonic_Xml_Data::addGenres($response, Tag::get_tags('song'));
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addGenres($response, Tag::get_tags('song'));
+            $response = OpenSubsonic_Json_Data::addGenres($response, Tag::get_tags('song'));
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2296,7 +2162,7 @@ class Subsonic_Api
      * getIndexes
      *
      * Returns an indexed structure of all artists.
-     * https://www.subsonic.org/pages/api.jsp#getindexes
+     * https://opensubsonic.netlify.app/docs/endpoints/getindexes/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2349,13 +2215,13 @@ class Subsonic_Api
             $response = self::_addXmlResponse(__FUNCTION__);
             if (count($fcatalogs) > 0) {
                 $artists  = Catalog::get_artist_arrays($fcatalogs);
-                $response = Subsonic_Xml_Data::addIndexes($response, $artists, $lastmodified);
+                $response = OpenSubsonic_Xml_Data::addIndexes($response, $artists, $lastmodified);
             }
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
             if (count($fcatalogs) > 0) {
                 $artists  = Catalog::get_artist_arrays($fcatalogs);
-                $response = Subsonic_Json_Data::addIndexes($response, $artists, $lastmodified);
+                $response = OpenSubsonic_Json_Data::addIndexes($response, $artists, $lastmodified);
             }
         }
         self::_responseOutput($input, __FUNCTION__, $response);
@@ -2365,7 +2231,7 @@ class Subsonic_Api
      * getInternetRadioStations
      *
      * Returns all internet radio stations.
-     * https://www.subsonic.org/pages/api.jsp#getinternetradiostations
+     * https://opensubsonic.netlify.app/docs/endpoints/getinternetradiostations/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2375,10 +2241,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addInternetRadioStations($response, $radios);
+            $response = OpenSubsonic_Xml_Data::addInternetRadioStations($response, $radios);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addInternetRadioStations($response, $radios);
+            $response = OpenSubsonic_Json_Data::addInternetRadioStations($response, $radios);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2387,7 +2253,7 @@ class Subsonic_Api
      * getLicense
      *
      * Get details about the software license.
-     * https://www.subsonic.org/pages/api.jsp#getlicense
+     * https://opensubsonic.netlify.app/docs/endpoints/getlicense/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2398,10 +2264,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addLicense($response);
+            $response = OpenSubsonic_Xml_Data::addLicense($response);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addLicense($response);
+            $response = OpenSubsonic_Json_Data::addLicense($response);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2410,7 +2276,7 @@ class Subsonic_Api
      * getLyrics
      *
      * Searches for and returns lyrics for a given song.
-     * https://www.subsonic.org/pages/api.jsp#getlyrics
+     * https://opensubsonic.netlify.app/docs/endpoints/getlyrics/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2453,10 +2319,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addLyrics($response, $artist, $title, $song);
+            $response = OpenSubsonic_Xml_Data::addLyrics($response, $artist, $title, $song);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addLyrics($response, $artist, $title, $song);
+            $response = OpenSubsonic_Json_Data::addLyrics($response, $artist, $title, $song);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2465,7 +2331,7 @@ class Subsonic_Api
      * getLyricsBySongId
      *
      * Add support for synchronized lyrics, multiple languages, and retrieval by song ID
-     * https://www.subsonic.org/pages/api.jsp#getlyricsbysongid
+     * https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2486,10 +2352,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addLyricsList($response, $song);
+            $response = OpenSubsonic_Xml_Data::addLyricsList($response, $song);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addLyricsList($response, $song);
+            $response = OpenSubsonic_Json_Data::addLyricsList($response, $song);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2498,7 +2364,7 @@ class Subsonic_Api
      * getMusicDirectory
      *
      * Returns a listing of all files in a music directory.
-     * https://www.subsonic.org/pages/api.jsp#getmusicdirectory
+     * https://opensubsonic.netlify.app/docs/endpoints/getmusicdirectory/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2528,10 +2394,10 @@ class Subsonic_Api
             $format = (string)($input['f'] ?? 'xml');
             if ($format === 'xml') {
                 $response = self::_addXmlResponse(__FUNCTION__);
-                $response = Subsonic_Xml_Data::addDirectory($response, $object);
+                $response = OpenSubsonic_Xml_Data::addDirectory($response, $object);
             } else {
                 $response = self::_addJsonResponse(__FUNCTION__);
-                $response = Subsonic_Json_Data::addDirectory($response, $object);
+                $response = OpenSubsonic_Json_Data::addDirectory($response, $object);
             }
             self::_responseOutput($input, __FUNCTION__, $response);
         } else {
@@ -2543,7 +2409,7 @@ class Subsonic_Api
      * getMusicFolders
      *
      * Returns all configured top-level music folders.
-     * https://www.subsonic.org/pages/api.jsp#getmusicfolders
+     * https://opensubsonic.netlify.app/docs/endpoints/getmusicfolders/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2553,10 +2419,10 @@ class Subsonic_Api
         $format   = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addMusicFolders($response, $catalogs);
+            $response = OpenSubsonic_Xml_Data::addMusicFolders($response, $catalogs);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addMusicFolders($response, $catalogs);
+            $response = OpenSubsonic_Json_Data::addMusicFolders($response, $catalogs);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2565,7 +2431,7 @@ class Subsonic_Api
      * getNewestPodcasts
      *
      * Returns the most recently published Podcast episodes.
-     * https://www.subsonic.org/pages/api.jsp#getnewestpodcasts
+     * https://opensubsonic.netlify.app/docs/endpoints/getnewestpodcasts/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2583,10 +2449,10 @@ class Subsonic_Api
         $format   = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addNewestPodcasts($response, $episodes);
+            $response = OpenSubsonic_Xml_Data::addNewestPodcasts($response, $episodes);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addNewestPodcasts($response, $episodes);
+            $response = OpenSubsonic_Json_Data::addNewestPodcasts($response, $episodes);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2595,7 +2461,7 @@ class Subsonic_Api
      * getNowPlaying
      *
      * Returns what is currently being played by all users.
-     * https://www.subsonic.org/pages/api.jsp#getnowplaying
+     * https://opensubsonic.netlify.app/docs/endpoints/getnowplaying/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2606,23 +2472,23 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addNowPlaying($response, $data);
+            $response = OpenSubsonic_Xml_Data::addNowPlaying($response, $data);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addNowPlaying($response, $data);
+            $response = OpenSubsonic_Json_Data::addNowPlaying($response, $data);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
-     * getSubsonicExtensions
+     * getOpenSubsonicExtensions
      *
-     * List the Subsonic extensions supported by this server.
-     * https://www.subsonic.org/pages/api.jsp#getSubsonicextensions
+     * List the OpenSubsonic extensions supported by this server.
+     * https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/
      * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getSubsonicextensions(array $input, User $user): void
+    public static function getopensubsonicextensions(array $input, User $user): void
     {
         unset($user);
 
@@ -2638,10 +2504,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addSubsonicExtensions($response, $extensions);
+            $response = OpenSubsonic_Xml_Data::addOpenSubsonicExtensions($response, $extensions);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addSubsonicExtensions($response, $extensions);
+            $response = OpenSubsonic_Json_Data::addOpenSubsonicExtensions($response, $extensions);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2650,7 +2516,7 @@ class Subsonic_Api
      * getPlaylist
      *
      * Returns a listing of files in a saved playlist.
-     * https://www.subsonic.org/pages/api.jsp#getplaylist
+     * https://opensubsonic.netlify.app/docs/endpoints/getplaylist/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2675,10 +2541,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
+            $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, true);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addPlaylist($response, $playlist, true);
+            $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, true);
         }
 
         self::_responseOutput($input, __FUNCTION__, $response);
@@ -2688,7 +2554,7 @@ class Subsonic_Api
      * getPlaylists
      *
      * Returns all playlists a user is allowed to play.
-     * https://www.subsonic.org/pages/api.jsp#getplaylists
+     * https://opensubsonic.netlify.app/docs/endpoints/getplaylists/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2719,10 +2585,10 @@ class Subsonic_Api
         $format  = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addPlaylists($response, $user, $results);
+            $response = OpenSubsonic_Xml_Data::addPlaylists($response, $user, $results);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addPlaylists($response, $user, $results);
+            $response = OpenSubsonic_Json_Data::addPlaylists($response, $user, $results);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2731,7 +2597,7 @@ class Subsonic_Api
      * getPlayQueue
      *
      * Returns the state of the play queue for this user.
-     * https://www.subsonic.org/pages/api.jsp#getplayqueue
+     * https://opensubsonic.netlify.app/docs/endpoints/getplayqueue/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2743,10 +2609,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addPlayQueue($response, $playQueue, (string)$user->username);
+            $response = OpenSubsonic_Xml_Data::addPlayQueue($response, $playQueue, (string)$user->username);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addPlayQueue($response, $playQueue, (string)$user->username);
+            $response = OpenSubsonic_Json_Data::addPlayQueue($response, $playQueue, (string)$user->username);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2755,7 +2621,7 @@ class Subsonic_Api
      * getPlayQueueByIndex
      *
      * Returns the state of the play queue for this user.
-     * https://www.subsonic.org/pages/api.jsp#getplayqueue
+     * https://opensubsonic.netlify.app/docs/endpoints/getplayqueue/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2767,10 +2633,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addPlayQueueByIndex($response, $playQueue, (string)$user->username);
+            $response = OpenSubsonic_Xml_Data::addPlayQueueByIndex($response, $playQueue, (string)$user->username);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addPlayQueueByIndex($response, $playQueue, (string)$user->username);
+            $response = OpenSubsonic_Json_Data::addPlayQueueByIndex($response, $playQueue, (string)$user->username);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2779,7 +2645,7 @@ class Subsonic_Api
      * getPodcastEpisode
      *
      * Returns details for a podcast episode.
-     * https://www.subsonic.org/pages/api.jsp#getpodcastepisode
+     * https://opensubsonic.netlify.app/docs/endpoints/getpodcastepisode/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2807,10 +2673,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addPodcastEpisode($response, $episode);
+            $response = OpenSubsonic_Xml_Data::addPodcastEpisode($response, $episode);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addPodcastEpisode($response, $episode);
+            $response = OpenSubsonic_Json_Data::addPodcastEpisode($response, $episode);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2819,14 +2685,14 @@ class Subsonic_Api
      * getPodcasts
      *
      * Returns all Podcast channels the server subscribes to, and (optionally) their episodes.
-     * https://www.subsonic.org/pages/api.jsp#getpodcasts
+     * https://opensubsonic.netlify.app/docs/endpoints/getpodcasts/
      * @param array<string, mixed> $input
      * @param User $user
      */
     public static function getpodcasts(array $input, User $user): void
     {
         $sub_id          = $input['id'] ?? null;
-        $includeEpisodes = make_bool($input['includeEpisodes'] ?? false);
+        $includeEpisodes = make_bool($input['includeEpisodes'] ?? true);
 
         if (!AmpConfig::get(ConfigurationKeyEnum::PODCAST)) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
@@ -2851,10 +2717,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addPodcasts($response, $podcasts, $includeEpisodes);
+            $response = OpenSubsonic_Xml_Data::addPodcasts($response, $podcasts, $includeEpisodes);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addPodcasts($response, $podcasts, $includeEpisodes);
+            $response = OpenSubsonic_Json_Data::addPodcasts($response, $podcasts, $includeEpisodes);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2863,7 +2729,7 @@ class Subsonic_Api
      * getRandomSongs
      *
      * Returns random songs matching the given criteria.
-     * https://www.subsonic.org/pages/api.jsp#getrandomsongs
+     * https://opensubsonic.netlify.app/docs/endpoints/getrandomsongs/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2931,10 +2797,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addRandomSongs($response, $songs);
+            $response = OpenSubsonic_Xml_Data::addRandomSongs($response, $songs);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addRandomSongs($response, $songs);
+            $response = OpenSubsonic_Json_Data::addRandomSongs($response, $songs);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2943,7 +2809,7 @@ class Subsonic_Api
      * getScanStatus
      *
      * Returns the current status for media library scanning.
-     * https://www.subsonic.org/pages/api.jsp#getscanstatus
+     * https://opensubsonic.netlify.app/docs/endpoints/getscanstatus/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2952,10 +2818,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addScanStatus($response, $user);
+            $response = OpenSubsonic_Xml_Data::addScanStatus($response, $user);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addScanStatus($response, $user);
+            $response = OpenSubsonic_Json_Data::addScanStatus($response, $user);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2964,7 +2830,7 @@ class Subsonic_Api
      * getShares
      *
      * Returns information about shared media this user is allowed to manage.
-     * https://www.subsonic.org/pages/api.jsp#getshares
+     * https://opensubsonic.netlify.app/docs/endpoints/getshares/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -2974,10 +2840,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addShares($response, $shares);
+            $response = OpenSubsonic_Xml_Data::addShares($response, $shares);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addShares($response, $shares);
+            $response = OpenSubsonic_Json_Data::addShares($response, $shares);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -2986,7 +2852,7 @@ class Subsonic_Api
      * getSimilarSongs
      *
      * Returns a random collection of songs from the given artist and similar artists.
-     * https://www.subsonic.org/pages/api.jsp#getsimilarsongs
+     * https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs/
      * @param array<string, mixed> $input
      */
     public static function getsimilarsongs(array $input, User $user, string $elementName = 'similarSongs'): void
@@ -3047,20 +2913,20 @@ class Subsonic_Api
             $response = self::_addXmlResponse(__FUNCTION__);
             switch ($elementName) {
                 case 'similarSongs':
-                    $response = Subsonic_Xml_Data::addSimilarSongs($response, $songs);
+                    $response = OpenSubsonic_Xml_Data::addSimilarSongs($response, $songs);
                     break;
                 case 'similarSongs2':
-                    $response = Subsonic_Xml_Data::addSimilarSongs2($response, $songs);
+                    $response = OpenSubsonic_Xml_Data::addSimilarSongs2($response, $songs);
                     break;
             }
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
             switch ($elementName) {
                 case 'similarSongs':
-                    $response = Subsonic_Json_Data::addSimilarSongs($response, $songs);
+                    $response = OpenSubsonic_Json_Data::addSimilarSongs($response, $songs);
                     break;
                 case 'similarSongs2':
-                    $response = Subsonic_Json_Data::addSimilarSongs2($response, $songs);
+                    $response = OpenSubsonic_Json_Data::addSimilarSongs2($response, $songs);
                     break;
             }
         }
@@ -3071,7 +2937,7 @@ class Subsonic_Api
      * getSimilarSongs2
      *
      * Returns a random collection of songs from the given artist and similar artists.
-     * https://www.subsonic.org/pages/api.jsp#getsimilarsongs2
+     * https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs2/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3084,7 +2950,7 @@ class Subsonic_Api
      * getSong
      *
      * Returns details for a song.
-     * https://www.subsonic.org/pages/api.jsp#getsong
+     * https://opensubsonic.netlify.app/docs/endpoints/getsong/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3106,10 +2972,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addSong($response, $song_id);
+            $response = OpenSubsonic_Xml_Data::addSong($response, $song_id);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addSong($response, $song_id);
+            $response = OpenSubsonic_Json_Data::addSong($response, $song_id);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3118,7 +2984,7 @@ class Subsonic_Api
      * getSongsByGenre
      *
      * Returns songs in a given genre.
-     * https://www.subsonic.org/pages/api.jsp#getsongsbygenre
+     * https://opensubsonic.netlify.app/docs/endpoints/getsongsbygenre/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3143,10 +3009,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addSongsByGenre($response, $songs);
+            $response = OpenSubsonic_Xml_Data::addSongsByGenre($response, $songs);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addSongsByGenre($response, $songs);
+            $response = OpenSubsonic_Json_Data::addSongsByGenre($response, $songs);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3155,7 +3021,7 @@ class Subsonic_Api
      * getStarred
      *
      * Returns starred songs, albums and artists.
-     * https://www.subsonic.org/pages/api.jsp#getstarred
+     * https://opensubsonic.netlify.app/docs/endpoints/getstarred/
      * @param array<string, mixed> $input
      */
     public static function getstarred(array $input, User $user, string $elementName = 'starred'): void
@@ -3165,7 +3031,7 @@ class Subsonic_Api
             $response = self::_addXmlResponse(__FUNCTION__);
             switch ($elementName) {
                 case 'starred':
-                    $response = Subsonic_Xml_Data::addStarred(
+                    $response = OpenSubsonic_Xml_Data::addStarred(
                         $response,
                         Userflag::get_latest('artist', $user, 10000),
                         Userflag::get_latest('album', $user, 10000),
@@ -3173,7 +3039,7 @@ class Subsonic_Api
                     );
                     break;
                 case 'starred2':
-                    $response = Subsonic_Xml_Data::addStarred2(
+                    $response = OpenSubsonic_Xml_Data::addStarred2(
                         $response,
                         Userflag::get_latest('artist', $user, 10000),
                         Userflag::get_latest('album', $user, 10000),
@@ -3185,7 +3051,7 @@ class Subsonic_Api
             $response = self::_addJsonResponse(__FUNCTION__);
             switch ($elementName) {
                 case 'starred':
-                    $response = Subsonic_Json_Data::addStarred(
+                    $response = OpenSubsonic_Json_Data::addStarred(
                         $response,
                         Userflag::get_latest('artist', $user, 10000),
                         Userflag::get_latest('album', $user, 10000),
@@ -3193,7 +3059,7 @@ class Subsonic_Api
                     );
                     break;
                 case 'starred2':
-                    $response = Subsonic_Json_Data::addStarred2(
+                    $response = OpenSubsonic_Json_Data::addStarred2(
                         $response,
                         Userflag::get_latest('artist', $user, 10000),
                         Userflag::get_latest('album', $user, 10000),
@@ -3209,7 +3075,7 @@ class Subsonic_Api
      * getStarred2
      *
      * Returns starred songs, albums and artists.
-     * https://www.subsonic.org/pages/api.jsp#getstarred2
+     * https://opensubsonic.netlify.app/docs/endpoints/getstarred2/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3222,7 +3088,7 @@ class Subsonic_Api
      * getTopSongs
      *
      * Returns top songs for the given artist.
-     * https://www.subsonic.org/pages/api.jsp#gettopsongs
+     * https://opensubsonic.netlify.app/docs/endpoints/gettopsongs/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3250,10 +3116,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addTopSongs($response, $songs);
+            $response = OpenSubsonic_Xml_Data::addTopSongs($response, $songs);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addTopSongs($response, $songs);
+            $response = OpenSubsonic_Json_Data::addTopSongs($response, $songs);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3262,7 +3128,7 @@ class Subsonic_Api
      * getUser
      *
      * Get details about a given user, including which authorization roles and folder access it has.
-     * https://www.subsonic.org/pages/api.jsp#getuser
+     * https://opensubsonic.netlify.app/docs/endpoints/getuser/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3288,10 +3154,10 @@ class Subsonic_Api
             $format = (string)($input['f'] ?? 'xml');
             if ($format === 'xml') {
                 $response = self::_addXmlResponse(__FUNCTION__);
-                $response = Subsonic_Xml_Data::addUser($response, $update_user);
+                $response = OpenSubsonic_Xml_Data::addUser($response, $update_user);
             } else {
                 $response = self::_addJsonResponse(__FUNCTION__);
-                $response = Subsonic_Json_Data::addUser($response, $update_user);
+                $response = OpenSubsonic_Json_Data::addUser($response, $update_user);
             }
             self::_responseOutput($input, __FUNCTION__, $response);
         }
@@ -3303,7 +3169,7 @@ class Subsonic_Api
      * getUser
      *
      * Get details about all users, including which authorization roles and folder access they have.
-     * https://www.subsonic.org/pages/api.jsp#getuser
+     * https://opensubsonic.netlify.app/docs/endpoints/getuser/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3326,10 +3192,10 @@ class Subsonic_Api
                 $format = (string)($input['f'] ?? 'xml');
                 if ($format === 'xml') {
                     $response = self::_addXmlResponse(__FUNCTION__);
-                    $response = Subsonic_Xml_Data::addUser($response, $update_user);
+                    $response = OpenSubsonic_Xml_Data::addUser($response, $update_user);
                 } else {
                     $response = self::_addJsonResponse(__FUNCTION__);
-                    $response = Subsonic_Json_Data::addUser($response, $update_user);
+                    $response = OpenSubsonic_Json_Data::addUser($response, $update_user);
                 }
                 self::_responseOutput($input, __FUNCTION__, $response);
             }
@@ -3343,7 +3209,7 @@ class Subsonic_Api
      * getUsers
      *
      * Get details about all users, including which authorization roles and folder access they have.
-     * https://www.subsonic.org/pages/api.jsp#getusers
+     * https://opensubsonic.netlify.app/docs/endpoints/getusers/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3359,10 +3225,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addUsers($response, $users);
+            $response = OpenSubsonic_Xml_Data::addUsers($response, $users);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addUsers($response, $users);
+            $response = OpenSubsonic_Json_Data::addUsers($response, $users);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3371,7 +3237,7 @@ class Subsonic_Api
      * getVideoInfo
      *
      * Returns details for a video.
-     * https://www.subsonic.org/pages/api.jsp#getvideoinfo
+     * https://opensubsonic.netlify.app/docs/endpoints/getvideoinfo/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3393,10 +3259,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addVideoInfo($response, $video_id);
+            $response = OpenSubsonic_Xml_Data::addVideoInfo($response, $video_id);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addVideoInfo($response, $video_id);
+            $response = OpenSubsonic_Json_Data::addVideoInfo($response, $video_id);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3405,7 +3271,7 @@ class Subsonic_Api
      * getVideos
      *
      * Returns all video files.
-     * https://www.subsonic.org/pages/api.jsp#getvideos
+     * https://opensubsonic.netlify.app/docs/endpoints/getvideos/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3417,10 +3283,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addVideos($response, $videos);
+            $response = OpenSubsonic_Xml_Data::addVideos($response, $videos);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addVideos($response, $videos);
+            $response = OpenSubsonic_Json_Data::addVideos($response, $videos);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3429,7 +3295,7 @@ class Subsonic_Api
      * hls
      *
      * Downloads a given media file.
-     * https://www.subsonic.org/pages/api.jsp#hls
+     * https://opensubsonic.netlify.app/docs/endpoints/hls/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3482,7 +3348,7 @@ class Subsonic_Api
      * jukeboxControl
      *
      * Controls the jukebox, i.e., playback directly on the server’s audio hardware.
-     * https://www.subsonic.org/pages/api.jsp#jukeboxcontrol
+     * https://opensubsonic.netlify.app/docs/endpoints/jukeboxcontrol/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3585,19 +3451,19 @@ class Subsonic_Api
             $format = (string)($input['f'] ?? 'xml');
             if ($format === 'xml') {
                 $response = self::_addXmlResponse(__FUNCTION__);
-                $response = Subsonic_Xml_Data::addScanStatus($response, $user);
+                $response = OpenSubsonic_Xml_Data::addScanStatus($response, $user);
                 if ($action == 'get') {
-                    $response = Subsonic_Xml_Data::addJukeboxPlaylist($response, $localplay);
+                    $response = OpenSubsonic_Xml_Data::addJukeboxPlaylist($response, $localplay);
                 } else {
-                    $response = Subsonic_Xml_Data::addJukeboxStatus($response, $localplay);
+                    $response = OpenSubsonic_Xml_Data::addJukeboxStatus($response, $localplay);
                 }
             } else {
                 $response = self::_addJsonResponse(__FUNCTION__);
-                $response = Subsonic_Json_Data::addScanStatus($response, $user);
+                $response = OpenSubsonic_Json_Data::addScanStatus($response, $user);
                 if ($action == 'get') {
-                    $response = Subsonic_Json_Data::addJukeboxPlaylist($response, $localplay);
+                    $response = OpenSubsonic_Json_Data::addJukeboxPlaylist($response, $localplay);
                 } else {
-                    $response = Subsonic_Json_Data::addJukeboxStatus($response, $localplay);
+                    $response = OpenSubsonic_Json_Data::addJukeboxStatus($response, $localplay);
                 }
             }
             self::_responseOutput($input, __FUNCTION__, $response);
@@ -3608,7 +3474,7 @@ class Subsonic_Api
      * ping
      *
      * Used to test connectivity with the server.
-     * https://www.subsonic.org/pages/api.jsp#ping
+     * https://opensubsonic.netlify.app/docs/endpoints/ping/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3623,7 +3489,7 @@ class Subsonic_Api
      * refreshPodcasts
      *
      * Requests the server to check for new Podcast episodes.
-     * https://www.subsonic.org/pages/api.jsp#refreshpodcasts
+     * https://opensubsonic.netlify.app/docs/endpoints/refreshpodcasts/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3647,7 +3513,7 @@ class Subsonic_Api
      * savePlayQueue
      *
      * Saves the state of the play queue for this user.
-     * https://www.subsonic.org/pages/api.jsp#saveplayqueue
+     * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueue/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3731,7 +3597,7 @@ class Subsonic_Api
      * savePlayQueueByIndex
      *
      * Saves the state of the play queue for this user.
-     * https://www.subsonic.org/pages/api.jsp#saveplayqueuebyindex
+     * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueuebyindex/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3822,7 +3688,7 @@ class Subsonic_Api
      * scrobble
      *
      * Registers the local playback of one or more media files.
-     * https://www.subsonic.org/pages/api.jsp#scrobble
+     * https://opensubsonic.netlify.app/docs/endpoints/scrobble/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3882,7 +3748,7 @@ class Subsonic_Api
      * search
      *
      * NOT IMPLEMENTED
-     * https://www.subsonic.org/pages/api.jsp#search
+     * https://opensubsonic.netlify.app/docs/endpoints/search/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3896,7 +3762,7 @@ class Subsonic_Api
      * search2
      *
      * Returns a listing of files matching the given search criteria. Supports paging through the result.
-     * https://www.subsonic.org/pages/api.jsp#search2
+     * https://opensubsonic.netlify.app/docs/endpoints/search2/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3909,10 +3775,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
+            $response = OpenSubsonic_Xml_Data::addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
+            $response = OpenSubsonic_Json_Data::addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3921,7 +3787,7 @@ class Subsonic_Api
      * search3
      *
      * Returns albums, artists and songs matching the given search criteria. Supports paging through the result.
-     * https://www.subsonic.org/pages/api.jsp#search3
+     * https://opensubsonic.netlify.app/docs/endpoints/search3/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3937,10 +3803,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
+            $response = OpenSubsonic_Xml_Data::addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
+            $response = OpenSubsonic_Json_Data::addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3949,7 +3815,7 @@ class Subsonic_Api
      * setRating
      *
      * Sets the rating for a music file.
-     * https://www.subsonic.org/pages/api.jsp#setrating
+     * https://opensubsonic.netlify.app/docs/endpoints/setrating/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3983,7 +3849,7 @@ class Subsonic_Api
      * star
      *
      * Attaches a star to a song, album or artist.
-     * https://www.subsonic.org/pages/api.jsp#star
+     * https://opensubsonic.netlify.app/docs/endpoints/star/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -3996,7 +3862,7 @@ class Subsonic_Api
      * startScan
      *
      * Initiates a rescan of the media libraries.
-     * https://www.subsonic.org/pages/api.jsp#startscan
+     * https://opensubsonic.netlify.app/docs/endpoints/startscan/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -4005,10 +3871,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addScanStatus($response, $user);
+            $response = OpenSubsonic_Xml_Data::addScanStatus($response, $user);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addScanStatus($response, $user);
+            $response = OpenSubsonic_Json_Data::addScanStatus($response, $user);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -4017,7 +3883,7 @@ class Subsonic_Api
      * stream
      *
      * Streams a given media file.
-     * https://www.subsonic.org/pages/api.jsp#stream
+     * https://opensubsonic.netlify.app/docs/endpoints/stream/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -4055,7 +3921,7 @@ class Subsonic_Api
             $params .= '&frame=' . $timeOffset;
         }
 
-        // No scrobble for streams using open subsonic https://www.subsonic.org/pages/api.jsp#stream/
+        // No scrobble for streams using open subsonic https://opensubsonic.netlify.app/docs/endpoints/stream/
         $params .= '&cache=1';
 
         self::_follow_stream($object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken));
@@ -4065,7 +3931,7 @@ class Subsonic_Api
      * tokenInfo
      *
      * Returns information about an API key.
-     * https://www.subsonic.org/pages/api.jsp#tokeninfo
+     * https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -4074,10 +3940,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addTokenInfo($response, $user);
+            $response = OpenSubsonic_Xml_Data::addTokenInfo($response, $user);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addTokenInfo($response, $user);
+            $response = OpenSubsonic_Json_Data::addTokenInfo($response, $user);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -4086,7 +3952,7 @@ class Subsonic_Api
      * unstar
      *
      * Attaches a star to a song, album or artist.
-     * https://www.subsonic.org/pages/api.jsp#unstar
+     * https://opensubsonic.netlify.app/docs/endpoints/unstar/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -4099,7 +3965,7 @@ class Subsonic_Api
      * updateInternetRadioStation
      *
      * Updates an existing internet radio station.
-     * https://www.subsonic.org/pages/api.jsp#updateinternetradiostation
+     * https://opensubsonic.netlify.app/docs/endpoints/updateinternetradiostation/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -4148,7 +4014,7 @@ class Subsonic_Api
      * updatePlaylist
      *
      * Updates a playlist. Only the owner of a playlist is allowed to update it.
-     * https://www.subsonic.org/pages/api.jsp#updateplaylist
+     * https://opensubsonic.netlify.app/docs/endpoints/updateplaylist/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -4191,7 +4057,7 @@ class Subsonic_Api
      * updateShare
      *
      * Updates the description and/or expiration date for an existing share.
-     * https://www.subsonic.org/pages/api.jsp#updateshare
+     * https://opensubsonic.netlify.app/docs/endpoints/updateshare/
      * @param array<string, mixed> $input
      * @param User $user
      */
@@ -4232,7 +4098,7 @@ class Subsonic_Api
      * updateUser
      *
      * Modifies an existing user on the server.
-     * https://www.subsonic.org/pages/api.jsp#updateuser
+     * https://opensubsonic.netlify.app/docs/endpoints/updateuser/
      * @param array<string, mixed> $input
      * @param User $user
      */

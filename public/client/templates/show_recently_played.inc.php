@@ -46,7 +46,7 @@ $show_user = (!$user_only && $user_id > 0);
 $user_str  = ($user_only)
     ? '&user_only=1&user_id=' . $user_id
     : '';
-$rss_link  = (AmpConfig::get('use_rss'))
+$rss_link = (AmpConfig::get('use_rss'))
     ? '&nbsp' . Ui::getRssLink(RssFeedTypeEnum::RECENTLY_PLAYED, $user)
     : '';
 $refresh   = "&nbsp" . Ajax::button('?page=index&action=refresh_index' . $user_str, 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');

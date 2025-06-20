@@ -121,7 +121,7 @@ global $dic;
 $libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
 
 foreach ($objects as $object_data) {
-    $uid  = $object_data['track_id'];
+    $uid = $object_data['track_id'];
 
     $object = $libraryItemLoader->load(
         $object_data['object_type'],

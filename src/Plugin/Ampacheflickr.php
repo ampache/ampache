@@ -33,15 +33,15 @@ use WpOrg\Requests\Requests;
 
 class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
 {
-    public string $name        = 'Flickr';
+    public string $name = 'Flickr';
 
-    public string $categories  = 'slideshow';
+    public string $categories = 'slideshow';
 
     public string $description = 'Artist photos from Flickr';
 
-    public string $url         = 'http://www.flickr.com';
+    public string $url = 'http://www.flickr.com';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '360045';
 

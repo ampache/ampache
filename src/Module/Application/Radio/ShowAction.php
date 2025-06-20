@@ -74,7 +74,7 @@ final class ShowAction implements ApplicationActionInterface
         }
         $this->ui->showHeader();
 
-        $user     =  $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
+        $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs = User::get_user_catalogs($user->id);
         $radio_id = (int)$this->requestParser->getFromRequest('radio');
         $radio    = $this->modelFactory->createLiveStream($radio_id);

@@ -82,11 +82,11 @@ final class UpdateUserAction extends AbstractUserAction
         $this->ui->showHeader();
 
         /* Clean up the variables */
-        $user_id              = (int) ($body['user_id'] ?? 0);
-        $username             = scrub_in(htmlspecialchars($body['username'] ?? '', ENT_NOQUOTES));
-        $fullname             = scrub_in(htmlspecialchars($body['fullname'] ?? '', ENT_NOQUOTES));
-        $email                = scrub_in((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-        $website              = (isset($body['website']))
+        $user_id  = (int) ($body['user_id'] ?? 0);
+        $username = scrub_in(htmlspecialchars($body['username'] ?? '', ENT_NOQUOTES));
+        $fullname = scrub_in(htmlspecialchars($body['fullname'] ?? '', ENT_NOQUOTES));
+        $email    = scrub_in((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
+        $website  = (isset($body['website']))
             ? filter_var(urldecode($body['website']), FILTER_VALIDATE_URL) ?: ''
             : '';
         $access               = (int) ($body['access'] ?? 0);

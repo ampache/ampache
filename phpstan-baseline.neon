@@ -341,11 +341,6 @@ parameters:
 			path: src/Module/Api/Method/Api3/Handshake3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Tag3Method\\:\\:tag\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Tag3Method.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 3
 			path: src/Module/Api/Method/Api4/AdvancedSearch4Method.php
@@ -871,44 +866,14 @@ parameters:
 			path: src/Module/Api/Output/XmlOutput.php
 
 		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Subsonic_Api', non\\-falsy\\-string\\} given\\.$#"
+			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\OpenSubsonic_Api', non\\-falsy\\-string\\} given\\.$#"
 			count: 1
 			path: src/Module/Api/SubsonicApiApplication.php
 
 		-
-			message: "#^Cannot access offset '' on array\\<string\\>\\|false\\.$#"
+			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Subsonic_Api', non\\-falsy\\-string\\} given\\.$#"
 			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_hasNestedArray\\(\\) has parameter \\$properties with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_output_body\\(\\) has parameter \\$curl with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_output_body\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_output_header\\(\\) has parameter \\$curl with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_output_header\\(\\) has parameter \\$header with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Cannot cast array\\<int, string\\>\\|string\\|null to string\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
+			path: src/Module/Api/SubsonicApiApplication.php
 
 		-
 			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
@@ -1261,19 +1226,9 @@ parameters:
 			path: src/Module/Application/Installation/DefaultAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$action_index of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:run_custom_play_action\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<1, max\\>, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Parameter \\#1 \\$action_index of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:run_custom_play_action\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
 
 		-
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<1, max\\>, int given\\.$#"
@@ -5037,11 +4992,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:add_items\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:get_current_object\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/User_Playlist.php
 

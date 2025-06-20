@@ -40,15 +40,15 @@ use WpOrg\Requests\Requests;
 
 class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterface, PluginGetMetadataInterface
 {
-    public string $name        = 'TheAudioDb';
+    public string $name = 'TheAudioDb';
 
-    public string $categories  = 'metadata';
+    public string $categories = 'metadata';
 
     public string $description = 'TheAudioDb metadata integration';
 
-    public string $url         = 'http://www.theaudiodb.com';
+    public string $url = 'http://www.theaudiodb.com';
 
-    public string $version     = '000003';
+    public string $version = '000003';
 
     public string $min_ampache = '370009';
 
@@ -267,12 +267,12 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                         MusicBrainz::isMBID($object->mbid) &&
                         strtolower($data['name'] ?? '') !== strtolower((string)$object->get_fullname())
                     ) {
-                        $name_check     = Artist::update_name_from_mbid($data['name'], $object->mbid);
+                        $name_check = Artist::update_name_from_mbid($data['name'], $object->mbid);
                         if (isset($object->prefix)) {
                             $object->prefix = $name_check['prefix'];
                         }
 
-                        $object->name   = $name_check['name'];
+                        $object->name = $name_check['name'];
                     }
                 }
             }
