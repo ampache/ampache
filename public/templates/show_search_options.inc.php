@@ -27,6 +27,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
@@ -37,7 +38,22 @@ Ui::show_box_top(T_('Options'), 'info-box');
 $search_type = $search_type ?? (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS); ?>
 <div id="information_actions">
 <ul>
-<?php if (in_array($search_type, ['song', 'album', 'artist'])) { ?>
+<?php if (in_array($search_type, ['song', 'album', 'artist'])) {
+    if (AmpConfig::get('directplay')) { ?>
+        <li>
+        <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=browse&object_id=' . $browse->id, 'play_circle', T_('Play'), 'play_browse_browse_' . $browse->id); ?>
+        </li>
+        <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+            <li>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=browse&object_id=' . $browse->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_browse_' . $browse->id); ?>
+            </li>
+        <?php }
+        if (Stream_Playlist::check_autoplay_append()) { ?>
+            <li>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=browse&object_id=' . $browse->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_browse_' . $browse->id); ?>
+            </li>
+        <?php }
+        } ?>
     <li>
         <?php echo Ajax::button_with_text('?action=basket&type=browse_set&browse_id=' . $browse->id, 'new_window', T_('Add to Temporary Playlist'), 'add_search_results'); ?>
     </li>

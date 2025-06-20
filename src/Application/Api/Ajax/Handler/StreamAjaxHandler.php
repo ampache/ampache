@@ -29,6 +29,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
@@ -92,7 +93,10 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
 
                 debug_event('stream.ajax', 'Called for ' . $object_type . ': {' . $object_id . '}', 5);
 
-                if (InterfaceImplementationChecker::is_playable_item($object_type)) {
+                if (
+                    $object_type === 'browse' ||
+                    InterfaceImplementationChecker::is_playable_item($object_type)
+                ) {
                     $web_path = AmpConfig::get_web_path();
 
                     $_SESSION['iframe']['target'] = $web_path . '/stream.php?action=play_item&object_type=' . $object_type . '&object_id=' . $object_id;
