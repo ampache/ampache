@@ -94,7 +94,7 @@ final class BookmarkDeleteMethod
                 return false;
             }
 
-            /** @var Song|Podcast_Episode|Video $item */
+            /** @var Bookmark|Song|Podcast_Episode|Video $item */
             $item = new $className($object_id);
             if ($item->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

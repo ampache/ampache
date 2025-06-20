@@ -80,7 +80,7 @@ final class UserEdit5Method
      */
     public static function user_edit(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
+        if (!Api::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
 

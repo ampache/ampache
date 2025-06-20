@@ -61,4 +61,24 @@ final class TagSongs3Method
         ob_end_clean();
         echo Xml3_Data::songs($results, $user);
     }
+
+    /**
+     * genre_songs
+     * returns the songs for this tag
+     *
+     * @param array{
+     *     filter?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     */
+    public static function genre_songs(array $input, User $user): void
+    {
+        self::tag_songs($input, $user);
+    }
 }

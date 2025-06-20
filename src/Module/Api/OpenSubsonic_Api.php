@@ -198,76 +198,76 @@ class OpenSubsonic_Api
 
     public const SUBID_VIDEO = 'vi-';
 
-    public static function getAlbumSubId(int|string $ampache_id): string
+    public static function getAlbumSubId(int $ampache_id): string
     {
         return self::SUBID_ALBUM . $ampache_id;
     }
 
-    public static function getArtistSubId(int|string $ampache_id): string
+    public static function getArtistSubId(int $ampache_id): string
     {
         return self::SUBID_ARTIST . $ampache_id;
     }
 
-    public static function getBookmarkSubId(int|string $ampache_id): string
+    public static function getBookmarkSubId(int $ampache_id): string
     {
         return self::SUBID_BOOKMARK . $ampache_id;
     }
 
-    public static function getCatalogSubId(int|string $ampache_id): string
+    public static function getCatalogSubId(int $ampache_id): string
     {
         return self::SUBID_CATALOG . $ampache_id;
     }
 
-    public static function getChatSubId(int|string $ampache_id): string
+    public static function getChatSubId(int $ampache_id): string
     {
         return self::SUBID_CHAT . $ampache_id;
     }
 
-    public static function getGenreSubId(int|string $ampache_id): string
+    public static function getGenreSubId(int $ampache_id): string
     {
         return self::SUBID_GENRE . $ampache_id;
     }
 
-    public static function getLiveStreamSubId(int|string $ampache_id): string
+    public static function getLiveStreamSubId(int $ampache_id): string
     {
         return self::SUBID_LIVESTREAM . $ampache_id;
     }
 
-    public static function getPlaylistSubId(int|string $ampache_id): string
+    public static function getPlaylistSubId(int $ampache_id): string
     {
         return self::SUBID_PLAYLIST . $ampache_id;
     }
 
-    public static function getPodcastSubId(int|string $ampache_id): string
+    public static function getPodcastSubId(int $ampache_id): string
     {
         return self::SUBID_PODCAST . $ampache_id;
     }
 
-    public static function getPodcastEpisodeSubId(int|string $ampache_id): string
+    public static function getPodcastEpisodeSubId(int $ampache_id): string
     {
         return self::SUBID_PODCASTEP . $ampache_id;
     }
-    public static function getShareSubId(int|string $ampache_id): string
+    public static function getShareSubId(int $ampache_id): string
     {
         return self::SUBID_SHARE . $ampache_id;
     }
 
-    public static function getSmartPlaylistSubId(int|string $ampache_id): string
+    public static function getSmartPlaylistSubId(int $ampache_id): string
     {
         return self::SUBID_SMARTPL . $ampache_id;
     }
 
-    public static function getSongSubId(int|string $ampache_id): string
+    public static function getSongSubId(int $ampache_id): string
     {
         return self::SUBID_SONG . $ampache_id;
     }
 
-    public static function getUserSubId(int|string $ampache_id): string
+    public static function getUserSubId(int $ampache_id): string
     {
         return self::SUBID_USER . $ampache_id;
     }
 
-    public static function getVideoSubId(int|string $ampache_id): string
+    public static function getVideoSubId(int $ampache_id): string
     {
         return self::SUBID_VIDEO . $ampache_id;
     }
@@ -334,22 +334,36 @@ class OpenSubsonic_Api
     public static function getAmpacheType(string $object_id): string
     {
         switch (substr($object_id, 0, 3)) {
-            case self::SUBID_ARTIST:
-                return "artist";
             case self::SUBID_ALBUM:
                 return "album";
-            case self::SUBID_SONG:
-                return "song";
-            case self::SUBID_SMARTPL:
-                return "search";
-            case self::SUBID_VIDEO:
-                return "video";
+            case self::SUBID_ARTIST:
+                return "artist";
+            case self::SUBID_BOOKMARK:
+                return "bookmark";
+            case self::SUBID_CATALOG:
+                return "catalog";
+            case self::SUBID_CHAT:
+                return "private_message";
+            case self::SUBID_GENRE:
+                return "genre";
+            case self::SUBID_LIVESTREAM:
+                return "live_stream";
+            case self::SUBID_PLAYLIST:
+                return "playlist";
             case self::SUBID_PODCAST:
                 return "podcast";
             case self::SUBID_PODCASTEP:
                 return "podcast_episode";
-            case self::SUBID_PLAYLIST:
-                return "playlist";
+            case self::SUBID_SHARE:
+                return "share";
+            case self::SUBID_SMARTPL:
+                return "search";
+            case self::SUBID_SONG:
+                return "song";
+            case self::SUBID_USER:
+                return "user";
+            case self::SUBID_VIDEO:
+                return "video";
             default:
                 return "";
         }
@@ -629,23 +643,24 @@ class OpenSubsonic_Api
 
     /**
      * _getAmpacheIdArrays
-     * @param string[]|int[] $object_ids
+     * @param string[] $sub_ids
      * @return list<array{
-     *     object_id: int|null,
+     *     object_id: int,
      *     object_type: string,
      *     track: int
      * }>
      */
-    private static function _getAmpacheIdArrays(array $object_ids): array
+    private static function _getAmpacheIdArrays(array $sub_ids): array
     {
         $ampidarrays = [];
         $track       = 1;
-        foreach ($object_ids as $object_id) {
-            $ampacheId = self::getAmpacheId((string)$object_id);
+        foreach ($sub_ids as $sub_id) {
+            $ampacheId   = self::getAmpacheId($sub_id);
+            $ampacheType = self::getAmpacheType($sub_id);
             if ($ampacheId) {
                 $ampidarrays[] = [
                     'object_id' => $ampacheId,
-                    'object_type' => self::getAmpacheType((string)$object_id),
+                    'object_type' => $ampacheType,
                     'track' => $track
                 ];
                 $track++;
@@ -821,7 +836,7 @@ class OpenSubsonic_Api
 
         // saving xml can fail
         if (!$output) {
-            $output = "<subsonic-response status=\"failed\" " . "version=\"1.16.1\" " . "type=\"ampache\" " . "serverVersion=\"" . Api::$version . "\" " . "openSubsonic=\"1\" " . ">" .
+            $output = "<subsonic-response status=\"failed\" " . "version=\"1.16.1\" " . "type=\"ampache\" " . "serverVersion=\"" . AmpConfig::get('version') . "\" " . "openSubsonic=\"1\" " . ">" .
                 "<error code=\"" . OpenSubsonic_Api::SSERROR_GENERIC . "\" message=\"Error creating response.\" helpUrl=\"https://ampache.org/api/subsonic\"/>" .
                 "</subsonic-response>";
         }
@@ -1031,8 +1046,8 @@ class OpenSubsonic_Api
         }
 
         $comment   = $input['comment'] ?? '';
-        $object_id = self::getAmpacheId((string)$sub_id);
-        $type      = self::getAmpacheType((string)$sub_id);
+        $object_id = self::getAmpacheId($sub_id);
+        $type      = self::getAmpacheType($sub_id);
 
         if (!empty($object_id) && !empty($type)) {
             $bookmark = new Bookmark($object_id, $type);
@@ -1194,23 +1209,28 @@ class OpenSubsonic_Api
             return;
         }
 
+        $object = self::getAmpacheObject((string)$sub_id);
+        if (!$object instanceof library_item) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
         $description = $input['description'] ?? null;
         if (AmpConfig::get('share')) {
             $share_expire = AmpConfig::get('share_expire', 7);
             $expire_days  = (isset($input['expires']))
                 ? Share::get_expiry(((int)filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
                 : $share_expire;
-            $object_type = self::getAmpacheType((string)$sub_id);
+            $object_type = self::getAmpacheType($sub_id);
             if (is_array($sub_id) && $object_type === 'song') {
                 debug_event(self::class, 'createShare: sharing song list (album)', 5);
                 $song_id     = self::getAmpacheId($sub_id[0]);
                 $tmp_song    = new Song($song_id);
-                $sub_id      = $tmp_song->album;
+                $sub_id      = self::getAlbumSubId($tmp_song->album);
                 $object_type = 'album';
-            } else {
-                $sub_id = self::getAmpacheId($sub_id);
             }
-
+            debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $sub_id, 4);
             if (
                 !in_array(
                     $object_type,
@@ -1222,13 +1242,13 @@ class OpenSubsonic_Api
                         'podcast',
                         'podcast_episode',
                         'search',
+                        'song',
                         'video',
                     ]
                 )
             ) {
                 $object_type = '';
             }
-            debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $sub_id, 4);
 
             if (!empty($object_type) && !empty($sub_id)) {
                 try {
@@ -1247,7 +1267,7 @@ class OpenSubsonic_Api
                 $shares[] = $shareCreator->create(
                     $user,
                     LibraryItemEnum::from($object_type),
-                    $sub_id,
+                    $object->getId(),
                     true,
                     Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
                     $expire_days,
@@ -1350,7 +1370,7 @@ class OpenSubsonic_Api
         }
 
         $object_id = self::getAmpacheId($sub_id);
-        $type      = self::getAmpacheType((string)$object_id);
+        $type      = self::getAmpacheType($sub_id);
 
         $bookmark = new Bookmark($object_id, $type, $user->id);
         if ($bookmark->isNew()) {
@@ -1380,7 +1400,10 @@ class OpenSubsonic_Api
         $liveStreamRepository = self::getLiveStreamRepository();
 
         if (AmpConfig::get('live_stream') && $user->access >= AccessLevelEnum::MANAGER->value) {
-            $liveStream = $liveStreamRepository->findById((int) $sub_id);
+            $radio_id   = self::getAmpacheId($sub_id);
+            $liveStream = ($radio_id)
+                ? $liveStreamRepository->findById($radio_id)
+                : null;
 
             if ($liveStream === null) {
                 self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
@@ -1511,7 +1534,11 @@ class OpenSubsonic_Api
         if (AmpConfig::get('share')) {
             $shareRepository = self::getShareRepository();
 
-            $share = $shareRepository->findById((int) $sub_id);
+            $share_id = self::getAmpacheId($sub_id);
+            $share    = ($share_id)
+                ? $shareRepository->findById($share_id)
+                : null;
+
             if (
                 $share === null ||
                 !$share->isAccessible($user)
@@ -1827,7 +1854,7 @@ class OpenSubsonic_Api
         }
 
         $count             = $input['count'] ?? 20;
-        $includeNotPresent = (array_key_exists('includeNotPresent', $input) && $input['includeNotPresent'] === "true");
+        $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
 
         $info     = Recommendation::get_artist_info($artist->getId());
         $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
@@ -1866,7 +1893,7 @@ class OpenSubsonic_Api
         }
 
         $count             = $input['count'] ?? 20;
-        $includeNotPresent = (array_key_exists('includeNotPresent', $input) && $input['includeNotPresent'] === "true");
+        $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
 
         $info     = Recommendation::get_artist_info($artist->getId());
         $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
@@ -2210,9 +2237,7 @@ class OpenSubsonic_Api
      */
     public static function getinternetradiostations(array $input, User $user): void
     {
-        unset($user);
-
-        $radios = self::getLiveStreamRepository()->findAll();
+        $radios = self::getLiveStreamRepository()->findAll($user);
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
@@ -2312,6 +2337,7 @@ class OpenSubsonic_Api
      */
     public static function getlyricsbysongid(array $input, User $user): void
     {
+        unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
         if (!$sub_id) {
             return;
@@ -2469,6 +2495,7 @@ class OpenSubsonic_Api
         $extensions = [
             'apiKeyAuthentication' => [1],
             'getPodcastEpisode' => [1],
+            'indexBasedQueue' => [1],
             'formPost' => [1],
             'songLyrics' => [1],
             'transcodeOffset' => [1],
@@ -2591,6 +2618,30 @@ class OpenSubsonic_Api
     }
 
     /**
+     * getPlayQueueByIndex
+     *
+     * Returns the state of the play queue for this user.
+     * https://opensubsonic.netlify.app/docs/endpoints/getplayqueue/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function getplayqueuebyindex(array $input, User $user): void
+    {
+        $client    = scrub_in((string) ($input['c'] ?? 'Subsonic'));
+        $playQueue = new User_Playlist($user->id, $client);
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addPlayQueueByIndex($response, $playQueue, (string)$user->username);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addPlayQueueByIndex($response, $playQueue, (string)$user->username);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
      * getPodcastEpisode
      *
      * Returns details for a podcast episode.
@@ -2641,7 +2692,7 @@ class OpenSubsonic_Api
     public static function getpodcasts(array $input, User $user): void
     {
         $sub_id          = $input['id'] ?? null;
-        $includeEpisodes = !isset($input['includeEpisodes']) || $input['includeEpisodes'] === "true";
+        $includeEpisodes = make_bool($input['includeEpisodes'] ?? true);
 
         if (!AmpConfig::get(ConfigurationKeyEnum::PODCAST)) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
@@ -2857,12 +2908,6 @@ class OpenSubsonic_Api
             $songs = Recommendation::get_songs_like($object_id, $count);
         }
 
-        if (count($songs) == 0) {
-            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-
-            return;
-        }
-
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
@@ -2943,7 +2988,7 @@ class OpenSubsonic_Api
      * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getsongbygenre(array $input, User $user): void
+    public static function getsongsbygenre(array $input, User $user): void
     {
         unset($user);
         $genre = self::_check_parameter($input, 'genre', __FUNCTION__);
@@ -3136,7 +3181,6 @@ class OpenSubsonic_Api
         }
 
         if ($user->access === 100 || $user->username == $username) {
-            $response = Subsonic_Xml_Data::addSubsonicResponse('getuser');
             if ($user->username == $username) {
                 $update_user = $user;
             } else {
@@ -3145,14 +3189,13 @@ class OpenSubsonic_Api
             if (!$update_user) {
                 self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             } else {
-                Subsonic_Xml_Data::addUser($response, $update_user);
                 $format = (string)($input['f'] ?? 'xml');
                 if ($format === 'xml') {
                     $response = self::_addXmlResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Xml_Data::addUser($response, $user);
+                    $response = OpenSubsonic_Xml_Data::addUser($response, $update_user);
                 } else {
                     $response = self::_addJsonResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Json_Data::addUser($response, $user);
+                    $response = OpenSubsonic_Json_Data::addUser($response, $update_user);
                 }
                 self::_responseOutput($input, __FUNCTION__, $response);
             }
@@ -3551,6 +3594,97 @@ class OpenSubsonic_Api
     }
 
     /**
+     * savePlayQueueByIndex
+     *
+     * Saves the state of the play queue for this user.
+     * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueuebyindex/
+     * @param array<string, mixed> $input
+     * @param User $user
+     */
+    public static function saveplayqueuebyindex(array $input, User $user): void
+    {
+        $id_list = $input['id'] ?? '';
+        $sub_ids = (is_array($id_list))
+            ? $id_list
+            : [$id_list];
+        $index    = (int)($input['currentIndex'] ?? 0);
+        if ($index < 0 || $index >= count($sub_ids)) {
+            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+
+            return;
+        }
+
+        $current  = $sub_ids[$index];
+        $position = (array_key_exists('position', $input))
+            ? (int)(((int)$input['position']) / 1000)
+            : 0;
+        $client    = scrub_in((string) ($input['c'] ?? 'Subsonic'));
+        $user_id   = $user->id;
+        $time      = time();
+        $playQueue = new User_Playlist($user_id, $client);
+        if (empty($id_list)) {
+            $playQueue->clear();
+        } else {
+            $media = (!empty($current))
+                ? self::getAmpacheObject($current)
+                : null;
+            if (
+                $media instanceof library_item &&
+                $media instanceof Media &&
+                $media->isNew() === false &&
+                isset($media->time)
+            ) {
+                $playqueue_time = (int)User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
+                // wait a few seconds before smashing out play times
+                if ($playqueue_time < ($time - 2)) {
+                    $previous = Stats::get_last_play($user_id, $client);
+                    $type     = self::getAmpacheType($current);
+                    // long pauses might cause your now_playing to hide
+                    Stream::garbage_collection();
+                    Stream::insert_now_playing($media->getId(), $user_id, ($media->time - $position), (string)$user->username, $type, ($time - $position));
+
+                    if (array_key_exists('object_id', $previous) && $previous['object_id'] == $media->getId()) {
+                        $time_diff = $time - $previous['date'];
+                        $old_play  = $time_diff > $media->time * 5;
+                        // shift the start time if it's an old play or has been pause/played
+                        if ($position >= 1 || $old_play) {
+                            Stats::shift_last_play($user_id, $client, $previous['date'], ($time - $position));
+                        }
+                        // track has just started. repeated plays aren't called by scrobble so make sure we call this too
+                        if (($position < 1 && $time_diff > 5) && !$old_play) {
+                            $media->set_played($user_id, $client, [], $time);
+                        }
+                    }
+                }
+            } else {
+                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+                return;
+            }
+
+            $playlist = self::_getAmpacheIdArrays($sub_ids);
+
+            // clear the old list
+            $playQueue->clear();
+            // set the new items
+            $playQueue->add_items($playlist, $time);
+
+            if (
+                isset($type) &&
+                isset($media->id)
+            ) {
+                $playQueue->set_current_object($type, $media->id, $position);
+            }
+
+            // subsonic cares about queue dates so set them (and set them together)
+            User::set_user_data($user_id, 'playqueue_time', $time);
+            User::set_user_data($user_id, 'playqueue_client', $client);
+        }
+
+        self::_responseOutput($input, __FUNCTION__);
+    }
+
+    /**
      * scrobble
      *
      * Registers the local playback of one or more media files.
@@ -3584,7 +3718,7 @@ class OpenSubsonic_Api
                 $previous  = Stats::get_last_play($user->id, $client, $time);
                 $prev_obj  = $previous['object_id'] ?: 0;
                 $prev_date = $previous['date'];
-                $type      = self::getAmpacheType((string)$sub_id);
+                $type      = self::getAmpacheType($sub_id);
                 $media     = self::getAmpacheObject((string)$sub_id);
                 if (!$media instanceof Media || !isset($media->time) || !isset($media->id)) {
                     continue;
@@ -3893,7 +4027,7 @@ class OpenSubsonic_Api
         }
 
         $name              = $input['name'] ?? '';
-        $public            = (array_key_exists('public', $input) && $input['public'] === "true");
+        $public            = make_bool($input['public'] ?? false);
         $songIdToAdd       = $input['songIdToAdd'] ?? [];
         $songIndexToRemove = $input['songIndexToRemove'] ?? [];
 

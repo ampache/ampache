@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Song;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -61,7 +62,11 @@ final class ShowLyricsAction implements ApplicationActionInterface
 
         $song_id = (int)$this->requestParser->getFromRequest('song_id');
         $song    = $this->modelFactory->createSong($song_id);
-        $lyrics  = $song->get_lyrics();
+        if ($song->isNew()) {
+            throw new ObjectNotFoundException($song_id);
+        }
+
+        $lyrics = $song->get_lyrics();
 
         $this->ui->show(
             'show_lyrics.inc.php',

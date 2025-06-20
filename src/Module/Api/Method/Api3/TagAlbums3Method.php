@@ -62,4 +62,24 @@ final class TagAlbums3Method
             echo Xml3_Data::albums($results, [], $user);
         }
     }
+
+    /**
+     * genre_albums
+     * This returns the albums associated with the tag in question
+     *
+     * @param array{
+     *     filter?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     */
+    public static function genre_albums(array $input, User $user): void
+    {
+        self::tag_albums($input, $user);
+    }
 }

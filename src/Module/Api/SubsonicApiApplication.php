@@ -96,7 +96,14 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $callback = $query['callback'] ?? $format;
         /* Set the correct default headers */
         if (!in_array($action, ['getcoverart', 'hls', 'stream', 'download', 'getavatar'])) {
-            Subsonic_Api::_setHeader($format);
+            if (strtolower($format) == "json") {
+                header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
+            } elseif (strtolower($format) == "jsonp") {
+                header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset'));
+            } else {
+                header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
+            }
+            header("Access-Control-Allow-Origin: *");
         }
 
         // If we don't even have access control on then we can't use this!
@@ -106,7 +113,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             ob_end_clean();
-            Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, $action));
+            Subsonic_Api::error($query, Subsonic_Api::SSERROR_UNAUTHORIZED, $action);
 
             return;
         }
@@ -150,16 +157,6 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 // get the user preference in case the server is different
                 $subsonic_legacy = Preference::get_by_user($user->getId(), 'subsonic_legacy');
             }
-
-            if ($subsonic_legacy) {
-                $this->logger->warning(
-                    'Error Attempted to use OpenSubsonic Token authentication with legacy Subsonic API',
-                    [LegacyLogger::CONTEXT_TYPE => self::class]
-                );
-                Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_BADAUTH, $action), $callback);
-
-                return;
-            }
         }
 
 
@@ -177,7 +174,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             );
 
             if ($subsonic_legacy) {
-                Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, $action), $callback);
+                Subsonic_Api::error($query, Subsonic_Api::SSERROR_MISSINGPARAM, $action);
             } else {
                 OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_MISSINGPARAM, $action);
             }
@@ -194,7 +191,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             if ($subsonic_legacy) {
-                Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_TOKENAUTHNOTSUPPORTED, $action), $callback);
+                Subsonic_Api::error($query, Subsonic_Api::SSERROR_TOKENAUTHNOTSUPPORTED, $action);
             } elseif ($apiKey) {
                 OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_BADAPIKEY, $action);
             } else {
@@ -204,7 +201,16 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             return;
         }
 
-        $password = Subsonic_Api::_decryptPassword($password);
+        // Decode hex-encoded password
+        $encpwd = strpos($password, "enc:");
+        if ($encpwd !== false) {
+            $hex    = substr($password, 4);
+            $decpwd = '';
+            for ($count = 0; $count < strlen((string)$hex); $count += 2) {
+                $decpwd .= chr((int)hexdec(substr($hex, $count, 2)));
+            }
+            $password = $decpwd;
+        }
 
         if (!isset($user)) {
             // Check user authentication
@@ -223,7 +229,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             );
             ob_end_clean();
             if ($subsonic_legacy) {
-                Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_BADAUTH, $action), $callback);
+                Subsonic_Api::error($query, Subsonic_Api::SSERROR_BADAUTH, $action);
             } elseif ($apiKey) {
                 OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_BADAPIKEY, $action);
             } else {
@@ -241,14 +247,14 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             ob_end_clean();
-            Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, $action), $callback);
+            Subsonic_Api::error($query, Subsonic_Api::SSERROR_UNAUTHORIZED, $action);
 
             return;
         }
 
         // Check server version
         if (
-            version_compare(Subsonic_Xml_Data::API_VERSION, $version) < 0 &&
+            version_compare(Subsonic_Api::API_VERSION, $version) < 0 &&
             !($clientapp == 'Sublime Music' && $version == '1.15.0')
         ) {
             ob_end_clean();
@@ -256,7 +262,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 'Requested client version is not supported',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
-            Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_APIVERSION_CLIENT, $action), $callback);
+            Subsonic_Api::error($query, Subsonic_Api::SSERROR_APIVERSION_CLIENT, $action);
 
             return;
         }
@@ -361,9 +367,9 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
         if ($subsonic_legacy) {
-            Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, $action), $callback);
+            Subsonic_Api::error($input, Subsonic_Api::SSERROR_APIVERSION_SERVER, $action);
         } else {
-            OpenSubsonic_Api::error($input, OpenSubsonic_Api::SSERROR_GENERIC, $action);
+            OpenSubsonic_Api::error($input, OpenSubsonic_Api::SSERROR_APIVERSION_SERVER, $action);
         }
     }
 }
