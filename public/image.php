@@ -34,6 +34,13 @@ use Psr\Container\ContainerInterface;
 define('NO_SESSION', '1');
 define('OUTDATED_DATABASE_OK', 1);
 
+if (empty($_REQUEST)) {
+    // You should always call this file with some parameters
+    echo 'Status: 400 Missing parameters';
+    http_response_code(400);
+    die();
+}
+
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';
 
