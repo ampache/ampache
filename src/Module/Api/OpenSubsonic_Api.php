@@ -469,7 +469,7 @@ class OpenSubsonic_Api
             return "";
         }
 
-        switch ($ampache_id) {
+        switch (substr($sub_id, 0, 3)) {
             case self::SUBID_ARTIST:
                 return "artist";
             case self::SUBID_ALBUM:
