@@ -3858,7 +3858,7 @@ class OpenSubsonic_Api
 
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
-                Stream::insert_now_playing((int)$media->id, $user->id, $time, (string)$user->username, $type, ($time));
+                Stream::insert_now_playing((int)$media->id, $user->id, $media->time, (string)$user->username, $type, $time);
                 // submission is true: go to scrobble plugins (Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY))
                 if ($submission && get_class($media) == Song::class && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
                     // stream has finished
