@@ -90,6 +90,10 @@ final readonly class ShowAction extends AbstractShowAction
 
         $objectId = (int)($queryParams['object_id'] ?? 0);
 
+        if (!$objectId) {
+            return null;
+        }
+
         $item = $this->libraryItemLoader->load(
             LibraryItemEnum::from($objectType),
             $objectId
