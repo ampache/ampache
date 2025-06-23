@@ -1333,7 +1333,7 @@ abstract class Catalog extends database_object
         if (in_array($table, ['album', 'song', 'podcast_episode', 'video'])) {
             $sql .= ($table === 'album')
                     ? $where_sql . " `song`.`enabled` = 1 "
-                    : $where_sql . " `". $table . "`.`enabled` = 1 ";
+                    : $where_sql . " `" . $table . "`.`enabled` = 1 ";
                 $params[] = $update_time;
         }
 
