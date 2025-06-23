@@ -3112,7 +3112,7 @@ class OpenSubsonic_Json_Data
 
         $response['subsonic-response']['searchResult']['match'] = $json;
     
-        return $response['subsonic-response']['searchResult']['match'] = $json;
+        return $response;
     }
 
     /**
