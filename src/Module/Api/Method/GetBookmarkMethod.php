@@ -76,7 +76,7 @@ final class GetBookmarkMethod
         $object_id = (int)$input['filter'];
         $type      = $input['type'];
         $include   = make_bool($input['include'] ?? false);
-        $all       = make_bool($input['all'] ?? false);;
+        $all       = make_bool($input['all'] ?? false);
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 

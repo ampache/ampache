@@ -67,7 +67,7 @@ final class UserPlaylistsMethod
      */
     public static function user_playlists(array $input, User $user): bool
     {
-        $include = (isset($input['include']) && ((int)$input['include'] === 1 ||  $input['include'] === 'songs'));
+        $include = (isset($input['include']) && ((int)$input['include'] === 1 || $input['include'] === 'songs'));
         $browse  = Api::getBrowse($user);
         $browse->set_type('playlist');
 
