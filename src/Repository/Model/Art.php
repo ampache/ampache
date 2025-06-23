@@ -1217,7 +1217,7 @@ class Art extends database_object
             }
 
             // e.g. https://demo.ampache.dev/play/art/{sessionid}/artist/1240/size400x400.png
-            $url = AmpConfig::get_web_path('/client') . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . $uid . '/size/' . $size . '.' . $extension;
+            $url = AmpConfig::get_web_path('/client') . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . $uid . '/size' . $size . '.' . $extension;
         } else {
             $actionStr = ($type === 'user')
                     ? 'action=show_user_avatar&'

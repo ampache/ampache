@@ -1050,29 +1050,21 @@ class Subsonic_Xml_Data
         return $xml;
     }
 
-    ///**
-    // * addSearchResult
-    // * @param int[] $artists
-    // * @param int[] $albums
-    // * @param int[] $songs
-    // */
-    //public static function addSearchResult(SimpleXMLElement $xml, array $artists, array $albums, array $songs): SimpleXMLElement
-    //{
-    //    $xresult = self::addChildToResultXml($xml, htmlspecialchars('searchResult'));
-    //    foreach ($artists as $artist_id) {
-    //        $artist = new Artist((int) $artist_id);
-    //        self::addArtist($xresult, $artist);
-    //    }
-    //    foreach ($albums as $album_id) {
-    //        $album = new Album($album_id);
-    //        self::addAlbumID3($xresult, $album);
-    //    }
-    //    foreach ($songs as $song_id) {
-    //        self::addSong($xresult, $song_id);
-    //    }
-    //
-    //    return $xml;
-    //}
+    /**
+     * addSearchResult
+     * @param int[] $songs
+     */
+    public static function addSearchResult(SimpleXMLElement $xml, array $songs, int $offset, int $total): SimpleXMLElement
+    {
+        $xresult = self::_addChildToResultXml($xml, htmlspecialchars('searchResult'));
+        $xresult->addAttribute('offset', (string)$offset);
+        $xresult->addAttribute('totalHits', (string)$total);
+        foreach ($songs as $song_id) {
+            self::addSong($xresult, $song_id, 'match');
+        }
+    
+        return $xml;
+    }
 
     /**
      * addSearchResult2

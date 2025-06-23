@@ -3085,14 +3085,35 @@ class OpenSubsonic_Json_Data
         return $response;
     }
 
-
     /**
      * addSearchResult
      *
      * searchResult.
      * https://opensubsonic.netlify.app/docs/responses/searchresult/
-     * Deprecated
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param int[] $songs
+     * @return array{'subsonic-response': array<string, mixed>}
      */
+    public static function addSearchResult(array $response, array $songs, int $offset, int $total): array
+    {
+        $response['subsonic-response']['searchResult'] = [
+            'offset' => $offset,
+            'totalHits' => $total,
+        ];
+
+        $json = [];
+
+        if (!empty($songs)) {
+            $json = [];
+            foreach ($songs as $song_id) {
+                $json[] = self::_getChild($song_id, 'song');
+            }
+        }
+
+        $response['subsonic-response']['searchResult']['match'] = $json;
+    
+        return $response;
+    }
 
     /**
      * addSearchResult2
