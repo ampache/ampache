@@ -3375,8 +3375,10 @@ abstract class Catalog extends database_object
         $time  = 0;
         $size  = 0;
         foreach ($media_tables as $table) {
-            $enabled_sql = ($catalog_disable) ? sprintf(' WHERE `%s`.`enabled` = \'1\'', $table) : '';
-            $sql         = sprintf('SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s`', $table) . $enabled_sql;
+            $sql = ($catalog_disable)
+                ? sprintf('SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` LEFT JOIN `catalog` ON `%s`.`catalog` = `catalog`.`id` WHERE `catalog`.`enabled` = \'1\' AND `%s`.`enabled` = \'1\'', $table, $table, $table)
+                : sprintf('SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` WHERE `%s`.`enabled` = \'1\'', $table, $table);
+
             $db_results  = Dba::read($sql);
             $row         = Dba::fetch_row($db_results);
             // save the object and add to the current size
