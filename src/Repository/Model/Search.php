@@ -1811,6 +1811,17 @@ class Search extends playlist_object
     }
 
     /**
+     * get_rule_types
+     *
+     * Return rule list for the current search type
+     */
+    public function get_rule_types(): array
+    {
+        return $this->types;
+    }
+
+
+    /**
      * set_rules
      *
      * Takes an array of sanitized search data from the form and generates our real array from it.
