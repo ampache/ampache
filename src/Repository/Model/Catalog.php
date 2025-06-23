@@ -1330,6 +1330,13 @@ abstract class Catalog extends database_object
             $params[] = $update_time;
         }
 
+        if (in_array($table, ['album', 'song', 'podcast_episode', 'video'])) {
+            $sql .= ($table === 'album')
+                    ? $where_sql . " `song`.`enabled` = 1 "
+                    : $where_sql . " `". $table . "`.`enabled` = 1 ";
+                $params[] = $update_time;
+        }
+
         $sql .= ($limit > 0)
             ? 'LIMIT ' . (int)$limit . ') AS `table_count`;'
             : ') AS `table_count`;';
