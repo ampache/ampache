@@ -81,7 +81,7 @@ final class BookmarkCreateMethod
         $position  = (int)$input['position'];
         $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : null;
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
-        $include   = (bool)($input['include'] ?? false);
+        $include   = make_bool($input['include'] ?? false);
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 

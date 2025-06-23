@@ -75,9 +75,6 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
         <li>
             <?php echo Ajax::button_with_text('?page=random&action=send_playlist&random_type=search&random_id=' . $playlist->id, 'autorenew', T_('Random Play'), 'play_random_' . $playlist->id); ?>
         </li>
-        <li>
-            <?php echo Ajax::button_with_text('?action=basket&type=search&id=' . $playlist->id, 'new_window', T_('Add All To Temporary Playlist'), 'play_playlist'); ?>
-        </li>
 <?php if ($playlist->has_access()) { ?>
         <li>
             <a id="<?php echo 'edit_playlist_' . $playlist->id; ?>" onclick="showEditDialog('search_row', '<?php echo $playlist->id; ?>', '<?php echo 'edit_playlist_' . $playlist->id; ?>', '<?php echo addslashes(T_('Smart Playlist Edit')); ?>', '')">
@@ -114,7 +111,12 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
 <?php Ui::show_box_bottom(); ?>
 
 <div>
-<?php $browse->duration = Search::get_total_duration($object_ids);
+<?php
+if (in_array($playlist->objectType, ['album', 'artist', 'song'])) {
+    $search_type = $playlist->objectType;
+    require_once Ui::find_template('show_search_options.inc.php');
+}
+$browse->duration = Search::get_total_duration($object_ids);
 $browse->show_objects($object_ids);
 $browse->store(); ?>
 </div>
