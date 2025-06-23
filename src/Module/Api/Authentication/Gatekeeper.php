@@ -102,10 +102,12 @@ final class Gatekeeper implements GatekeeperInterface
                  * Remove some day when backwards compatability isn't a problem
                  */
                 $token = (string)($this->request->getQueryParams()[$requestKey] ?? '');
-                $this->logger->notice(
-                    sprintf('API session [%s] (%s)', $token, $requestKey),
-                    [LegacyLogger::CONTEXT_TYPE => self::class]
-                );
+                if ($token !== '') {
+                    $this->logger->notice(
+                        sprintf('API session [%s] (%s)', $token, $requestKey),
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
+                }
             }
 
 
