@@ -78,7 +78,7 @@ final class FlagMethod
         ob_end_clean();
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $flag      = (bool)$input['flag'];
+        $flag      = make_bool($input['flag']);
         $date      = (int)($input['date'] ?? time());
 
         // confirm the correct data
