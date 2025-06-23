@@ -73,7 +73,7 @@ final class BookmarkMethod
             return false;
         }
 
-        $include = (bool)($input['include'] ?? false);
+        $include = make_bool($input['include'] ?? false);
         $results = [$bookmark->getId()];
 
         ob_end_clean();
