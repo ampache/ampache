@@ -3884,9 +3884,7 @@ class Subsonic_Api
     {
         $data = [
             'type' => 'song',
-            'operator' => 'and',
-            'offset' => (int)($input['offset'] ?? 0),
-            'limit' => (int)($input['count'] ?? 20)
+            'operator' => 'and'
         ];
 
         $rule_count = 1;
@@ -3934,14 +3932,19 @@ class Subsonic_Api
         $search_sql = Search::prepare($data, $user);
         $query      = Search::query($search_sql);
         $results    = $query['results'];
+        $total      = $query['count'];
+
+        $offset  = (int)($input['offset'] ?? 0);
+        $count   = (int)($input['count'] ?? 20);
+        $results = array_slice($results, $offset, $count);
 
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addSearchResult($response, $results);
+            $response = Subsonic_Xml_Data::addSearchResult($response, $results, $offset, $total);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addSearchResult($response, $results);
+            $response = Subsonic_Json_Data::addSearchResult($response, $results, $offset, $total);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
