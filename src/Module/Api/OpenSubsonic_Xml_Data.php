@@ -1068,7 +1068,7 @@ class OpenSubsonic_Xml_Data
         foreach ($songs as $song_id) {
             self::addSong($xresult, $song_id, 'match');
         }
-    
+
         return $xml;
     }
 

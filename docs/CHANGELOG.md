@@ -1,5 +1,41 @@
 # CHANGELOG
 
+## Ampache 7.6.0
+
+Full OpenSubsonic rewrite to remove the weird JSON conversion class and fix up issues in responses.
+
+This is hidden behind a preference but will eventually become the default Subsonic API version.
+
+### Added
+
+* Restore thumbnail etag
+* Directplay for Searches and Smartlist pages
+* Set auto generation headers on emails
+* Search URL relationships with MusicBrainz (Spotify and Discogs linking TBC)
+* Database 760001
+  * Add `subsonic_legacy` preference. (Turn off to enable the OpenSubsonic classes)
+* Subsonic
+  * Implemented all OpenSubsonic [extentions](https://ampache.org/api/subsonic/#opensubsonic-api-extension)
+
+### Changed
+
+* Use size parameters for Art url generation
+
+### Removed
+
+* Don't generate any more image urls with a thumb parameter
+
+### Fixed
+
+* Table counts did not count disabled catalogs or enabled songs correctly
+* Error fetching empty Democratic playlist
+* Public user errors when loading browses
+* Searching for `Live_Stream` object might not search the map table correctly
+* Don't look up an Album Artist when the Album doesn't exist
+* Error during Art lookup when it exists and is able to be overwritten
+* Error looking up lyrics when the song doesn't exist
+* Error loading up an image.php link without a valid URL
+
 ## Ampache 7.5.3
 
 ### Added
