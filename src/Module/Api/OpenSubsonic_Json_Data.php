@@ -3104,9 +3104,9 @@ class OpenSubsonic_Json_Data
         $json = [];
 
         if (!empty($songs)) {
-            $json['match'] = [];
+            $json = [];
             foreach ($songs as $song_id) {
-                $json['match'][] = self::_getChild($song_id, 'song');
+                $json[] = self::_getChild($song_id, 'song');
             }
         }
 
