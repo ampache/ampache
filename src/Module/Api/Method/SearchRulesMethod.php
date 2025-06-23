@@ -82,10 +82,10 @@ final class SearchRulesMethod
 
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($results[0], JSON_PRETTY_PRINT);
+                echo json_encode(['rule' => $results], JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml_Data::object_array($results, 'preference');
+                echo Xml_Data::object_array($results, 'rule');
         }
 
         return true;
