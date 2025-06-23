@@ -76,7 +76,7 @@ final class Flag5Method
         ob_end_clean();
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $flag      = (bool)($input['flag']);
+        $flag      = make_bool($input['flag']);
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'])) {
             Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);

@@ -44,12 +44,13 @@ final class UserSmartlistsMethod
      *
      * This returns smartlists (searches) based on the specified filter (Does not include playlists)
      *
-     * filter = (string) Alpha-numeric search term (match all if missing) //optional
-     * exact  = (integer) 0,1, if true filter is exact rather than fuzzy //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
-     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * filter  = (string) Alpha-numeric search term (match all if missing) //optional
+     * exact   = (integer) 0,1, if true filter is exact rather than fuzzy //optional
+     * include = (integer) 0,1, if true include playlist contents //optional
+     * offset  = (integer) //optional
+     * limit   = (integer) //optional
+     * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter?: string,
@@ -66,7 +67,8 @@ final class UserSmartlistsMethod
      */
     public static function user_smartlists(array $input, User $user): bool
     {
-        $browse = Api::getBrowse($user);
+        $include = (isset($input['include']) && ((int)$input['include'] === 1 || $input['include'] === 'songs'));
+        $browse  = Api::getBrowse($user);
         $browse->set_type('smartplaylist');
 
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
@@ -90,13 +92,13 @@ final class UserSmartlistsMethod
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 Json_Data::set_count($browse->get_total());
-                echo Json_Data::playlists($results, $user);
+                echo Json_Data::playlists($results, $user, $include);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 Xml_Data::set_count($browse->get_total());
-                echo Xml_Data::playlists($results, $user);
+                echo Xml_Data::playlists($results, $user, $include);
         }
 
         return true;

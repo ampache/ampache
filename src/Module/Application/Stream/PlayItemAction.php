@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -53,15 +54,21 @@ final class PlayItemAction extends AbstractStreamAction
         if ($this->preCheck($gatekeeper) === false) {
             return null;
         }
+        $object_type = $_REQUEST['object_type'] ?? '';
+        if ($object_type === 'browse') {
+            $browse     = new Browse(Core::get_get('object_id'));
+            $objectType = LibraryItemEnum::tryFrom($browse->get_type());
+            $objectIds  = $browse->get_saved();
+        } else {
+            $objectType = LibraryItemEnum::tryFrom($_REQUEST['object_type'] ?? '');
+            $objectIds  = explode(',', Core::get_get('object_id'));
+        }
 
-        $objectType = LibraryItemEnum::tryFrom($_REQUEST['object_type'] ?? '');
         if ($objectType === null) {
             return null;
         }
 
-        $objectIds = explode(',', Core::get_get('object_id'));
         $mediaIds  = [];
-
         foreach ($objectIds as $object_id) {
             $item = $this->libraryItemLoader->load(
                 $objectType,

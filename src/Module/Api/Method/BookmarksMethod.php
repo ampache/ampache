@@ -59,7 +59,7 @@ final class BookmarksMethod
      */
     public static function bookmarks(array $input, User $user): bool
     {
-        $include = (bool)($input['include'] ?? false);
+        $include = make_bool($input['include'] ?? false);
         $results = (!empty($input['client']))
             ? self::getBookmarkRepository()->getByUserAndComment($user, scrub_in((string) $input['client']))
             : self::getBookmarkRepository()->getByUser($user);

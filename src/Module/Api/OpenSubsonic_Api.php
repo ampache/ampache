@@ -469,7 +469,7 @@ class OpenSubsonic_Api
             return "";
         }
 
-        switch ($ampache_id) {
+        switch (substr($sub_id, 0, 3)) {
             case self::SUBID_ARTIST:
                 return "artist";
             case self::SUBID_ALBUM:
@@ -3858,7 +3858,7 @@ class OpenSubsonic_Api
 
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
-                Stream::insert_now_playing((int)$media->id, $user->id, $time, (string)$user->username, $type, ($time));
+                Stream::insert_now_playing((int)$media->id, $user->id, $media->time, (string)$user->username, $type, $time);
                 // submission is true: go to scrobble plugins (Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY))
                 if ($submission && get_class($media) == Song::class && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
                     // stream has finished
@@ -3878,15 +3878,77 @@ class OpenSubsonic_Api
     /**
      * search
      *
-     * NOT IMPLEMENTED
      * https://opensubsonic.netlify.app/docs/endpoints/search/
      * @param array<string, mixed> $input
      * @param User $user
      */
     public static function search(array $input, User $user): void
     {
-        unset($user);
-        self::_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
+        $data = [
+            'type' => 'song',
+            'operator' => 'and'
+        ];
+
+        $rule_count = 1;
+
+        $artist = $input['artist'] ?? '';
+        if ($artist) {
+            $data['rule_' . $rule_count]               = 'artist';
+            $data['rule_' . $rule_count . '_operator'] = 2; // starts with
+            $data['rule_' . $rule_count . '_input']    = $artist;
+            $rule_count++;
+        }
+
+        $album = $input['album'] ?? '';
+        if ($album) {
+            $data['rule_' . $rule_count]               = 'album';
+            $data['rule_' . $rule_count . '_operator'] = 2; // starts with
+            $data['rule_' . $rule_count . '_input']    = $album;
+            $rule_count++;
+        }
+
+        $title = $input['title'] ?? '';
+        if ($title) {
+            $data['rule_' . $rule_count]               = 'title';
+            $data['rule_' . $rule_count . '_operator'] = 2; // starts with
+            $data['rule_' . $rule_count . '_input']    = $title;
+            $rule_count++;
+        }
+
+        $anywhere = $input['any'] ?? '';
+        if ($anywhere) {
+            $data['rule_' . $rule_count]               = 'anywhere';
+            $data['rule_' . $rule_count . '_operator'] = 2; // starts with
+            $data['rule_' . $rule_count . '_input']    = $anywhere;
+            $rule_count++;
+        }
+
+        $newerThan = (int)($input['newerThan'] ?? 0);
+        if ($newerThan > 0) {
+            $data['rule_' . $rule_count]               = 'added';
+            $data['rule_' . $rule_count . '_operator'] = 1; // after
+            $data['rule_' . $rule_count . '_input']    = date('Y-m-d\TH:i', $newerThan / 1000); // e.g. 2025-08-12T10:15
+            $rule_count++;
+        }
+
+        $search_sql = Search::prepare($data, $user);
+        $query      = Search::query($search_sql);
+        $results    = $query['results'];
+        $total      = $query['count'];
+
+        $offset  = (int)($input['offset'] ?? 0);
+        $count   = (int)($input['count'] ?? 20);
+        $results = array_slice($results, $offset, $count);
+
+        $format = (string)($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addSearchResult($response, $results, $offset, $total);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addSearchResult($response, $results, $offset, $total);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
