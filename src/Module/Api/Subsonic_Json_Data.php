@@ -181,13 +181,13 @@ class Subsonic_Json_Data
      *     'name': string,
      *     'owner': string,
      *     'public': bool,
+     *     'songCount': int,
+     *     'duration': int,
      *     'created': string,
      *     'changed': string,
-     *     'songCount': string,
-     *     'duration': int,
      *     'coverArt'?: string,
      *     'entry'?: list<array<string, mixed>>
-     * }
+     * }// todo add allowedUser	Array of string
      */
     private static function _getPlaylist_Playlist(Playlist $playlist, bool $songs = false): array
     {
@@ -200,10 +200,10 @@ class Subsonic_Json_Data
             'name' => (string)$playlist->get_fullname(),
             'owner' => (string)$playlist->username,
             'public' => ($playlist->type != 'private'),
+            'songCount' => $songcount,
+            'duration' => $duration,
             'created' => date('c', $playlist->date),
             'changed' => date('c', (int)$playlist->last_update),
-            'songCount' => (string)$songcount,
-            'duration' => $duration,
         ];
 
         if ($playlist->has_art()) {
@@ -228,13 +228,13 @@ class Subsonic_Json_Data
      *     'name': string,
      *     'owner': string,
      *     'public': bool,
-     *     'created': string,
-     *     'changed': string,
      *     'songCount': int,
      *     'duration': int,
+     *     'created': string,
+     *     'changed': string,
      *     'coverArt'?: string,
      *     'entry'?: list<array<string, mixed>>
-     * }
+     * }// todo add allowedUser	Array of string
      */
     private static function _getPlaylist_Search(Search $search, bool $songs = false): array
     {
@@ -245,13 +245,15 @@ class Subsonic_Json_Data
             'name' => (string)$search->get_fullname(),
             'owner' => (string)$search->username,
             'public' => ($search->type != 'private'),
+            'songCount' => (int)$search->last_count,
+            'duration' => (int)$search->last_duration,
             'created' => date('c', $search->date),
             'changed' => date('c', time()),
         ];
 
-        $json['songCount'] = (int)$search->last_count;
-        $json['duration']  = (int)$search->last_duration;
-        $json['coverArt']  = $sub_id;
+        if ($search->has_art()) {
+            $json['coverArt'] = $sub_id;
+        }
 
         if ($songs) {
             $allsongs = $search->get_songs();
@@ -385,7 +387,7 @@ class Subsonic_Json_Data
      * A chatMessage.
      * @return array{
      *     'username': string,
-     *     'time': string,
+     *     'time': int,
      *     'message': string
      * }
      */
@@ -393,7 +395,7 @@ class Subsonic_Json_Data
     {
         return [
             'username' => ($user->fullname_public) ? (string)$user->fullname : (string)$user->username,
-            'time' => (string)($message->getCreationDate() * 1000),
+            'time' => $message->getCreationDate() * 1000,
             'message' => (string)$message->getMessage(),
         ];
     }
