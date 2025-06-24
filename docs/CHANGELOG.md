@@ -6,6 +6,8 @@ Full OpenSubsonic rewrite to remove the weird JSON conversion class and fix up i
 
 This is hidden behind a preference but will eventually become the default Subsonic API version.
 
+While this fully implements new features it does not include all the new data fields in the responses yet
+
 ### Added
 
 * Restore thumbnail etag
@@ -13,7 +15,7 @@ This is hidden behind a preference but will eventually become the default Subson
 * Set auto generation headers on emails
 * Search URL relationships with MusicBrainz (Spotify and Discogs linking TBC)
 * Database 760001
-  * Add `subsonic_legacy` preference. (Turn off to enable the OpenSubsonic classes)
+  * Add `subsonic_legacy` preference. (Turn off to enable the new OpenSubsonic classes)
 * Subsonic
   * Implemented all OpenSubsonic [api extentions](https://ampache.org/api/subsonic/#opensubsonic-api-extension)
   * Add [API Key Authentication](https://opensubsonic.netlify.app/docs/extensions/apikeyauth/)
@@ -21,7 +23,6 @@ This is hidden behind a preference but will eventually become the default Subson
   * Add [songLyrics](https://opensubsonic.netlify.app/docs/extensions/songlyrics/) support
   * Add [Index based Queue](https://opensubsonic.netlify.app/docs/extensions/indexbasedqueue/)
   * Expanded [subsonic-response error](https://opensubsonic.netlify.app/docs/responses/error/)
-
 
 ### Changed
 
