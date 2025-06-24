@@ -4113,7 +4113,9 @@ class Subsonic_Api
         }
 
         // No scrobble for streams using open subsonic https://www.subsonic.org/pages/api.jsp#stream/
-        $params .= '&cache=1';
+        if (AmpConfig::get('subsonic_always_download')) {
+            $params .= '&cache=1';
+        }
 
         self::_follow_stream($object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken));
     }
