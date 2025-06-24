@@ -152,10 +152,10 @@ class Subsonic_Json_Data
     /**
      * _getJukeboxStatus
      * @return array{
-     *     'currentIndex': string,
+     *     'currentIndex': int,
      *     'playing': bool,
-     *     'gain': string,
-     *     'position': string
+     *     'gain': float,
+     *     'position': int
      * }
      */
     private static function _getJukeboxStatus(LocalPlay $localplay): array
@@ -166,10 +166,10 @@ class Subsonic_Json_Data
             ? 0
             : $status['track'] - 1;
 
-        $json['currentIndex'] = (string)$index;
+        $json['currentIndex'] = (int)$index;
         $json['playing']      = ($status['state'] == 'play');
-        $json['gain']         = (string)$status['volume'];
-        $json['position']     = '0'; // TODO Not supported
+        $json['gain']         = (float)$status['volume'];
+        $json['position']     = 0; // TODO Not supported
 
         return $json;
     }
@@ -1083,7 +1083,7 @@ class Subsonic_Json_Data
      *
      * A bookmark.
      * @return array{
-     *     'position': string,
+     *     'position': int,
      *     'username': string,
      *     'comment': string,
      *     'created': string,
@@ -1188,7 +1188,7 @@ class Subsonic_Json_Data
     private static function _getBookmark(Bookmark $bookmark): array
     {
         $json = [
-            'position' => (string)$bookmark->position,
+            'position' => $bookmark->position,
             'username' => $bookmark->getUserName(),
             'comment' => (string)$bookmark->comment,
             'created' => date("c", (int)$bookmark->creation_date),
@@ -2231,13 +2231,13 @@ class Subsonic_Json_Data
     }
 
     /**
-    * addChatMessages
-    *
-    * Chat messages list.Subsonic
-    * @param array{'subsonic-response': array<string, mixed>} $response
-    * @param int[] $messages
-    * @return array{'subsonic-response': array<string, mixed>}
-    */
+     * addChatMessages
+     *
+     * Chat messages list.Subsonic
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param int[] $messages
+     * @return array{'subsonic-response': array<string, mixed>}
+     */
     public static function addChatMessages(array $response, array $messages): array
     {
         if (empty($messages)) {
@@ -2892,16 +2892,22 @@ class Subsonic_Json_Data
             $date->setTimezone(new DateTimeZone('UTC'));
             $changedBy = $playQueue->client ?? '';
 
-            $json = ($current !== [])
-                ? [
-                    'currentIndex' => Subsonic_Api::getSongSubId($current['object_id']),
-                    'position' => (string)($current['current_time'] * 1000),
+            if ($current !== []) {
+                $json = [
+                    'currentIndex' => (int)$current['current_track'],
+                    'position' => (int)($current['current_time'] > 0 ? $current['current_time'] * 1000 : 0),
                     'username' => $username,
                     'changed' => $date->format('c'),
                     'changedBy' => $changedBy,
                     'entry' => [],
-                ]
-                : [];
+                ];
+            } else {
+                $json = [
+                    'username' => $username,
+                    'changed' => $date->format('c'),
+                    'changedBy' => $changedBy,
+                ];
+            }
 
             foreach ($items as $row) {
                 $song = new Song((int)$row['object_id']);
