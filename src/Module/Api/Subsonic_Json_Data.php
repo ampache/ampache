@@ -2892,16 +2892,22 @@ class Subsonic_Json_Data
             $date->setTimezone(new DateTimeZone('UTC'));
             $changedBy = $playQueue->client ?? '';
 
-            $json = ($current !== [])
-                ? [
-                    'currentIndex' => Subsonic_Api::getSongSubId($current['object_id']),
-                    'position' => (string)($current['current_time'] * 1000),
+            if ($current !== []) {
+                $json = [
+                    'currentIndex' => (int)$current['current_track'],
+                    'position' => (int)($current['current_time'] > 0 ? $current['current_time'] * 1000 : 0),
                     'username' => $username,
                     'changed' => $date->format('c'),
                     'changedBy' => $changedBy,
                     'entry' => [],
-                ]
-                : [];
+                ];
+            } else {
+                $json = [
+                    'username' => $username,
+                    'changed' => $date->format('c'),
+                    'changedBy' => $changedBy,
+                ];
+            }
 
             foreach ($items as $row) {
                 $song = new Song((int)$row['object_id']);

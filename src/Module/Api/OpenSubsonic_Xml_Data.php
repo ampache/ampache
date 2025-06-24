@@ -986,10 +986,11 @@ class OpenSubsonic_Xml_Data
             if (!empty($current)) {
                 $xplayqueue->addAttribute('currentIndex', (string)$current['current_track']);
                 $xplayqueue->addAttribute('position', (string)($current['current_time'] * 1000));
-                $xplayqueue->addAttribute('username', $username);
-                $xplayqueue->addAttribute('changed', $date->format('c'));
-                $xplayqueue->addAttribute('changedBy', $changedBy);
             }
+
+            $xplayqueue->addAttribute('username', $username);
+            $xplayqueue->addAttribute('changed', $date->format('c'));
+            $xplayqueue->addAttribute('changedBy', $changedBy);
 
             foreach ($items as $row) {
                 self::addSong($xplayqueue, (int)$row['object_id'], 'entry');
