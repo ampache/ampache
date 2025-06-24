@@ -56,9 +56,29 @@ final class PlayItemAction extends AbstractStreamAction
         }
         $object_type = $_REQUEST['object_type'] ?? '';
         if ($object_type === 'browse') {
-            $browse     = new Browse(Core::get_get('object_id'));
-            $objectType = LibraryItemEnum::tryFrom($browse->get_type());
-            $objectIds  = $browse->get_saved();
+            $browse     = new Browse((int)Core::get_get('object_id'));
+            $objectIds  = [];
+            $objectType = null;
+            $saved      = $browse->get_saved();
+            if (!empty($saved) && is_array($saved[0])) {
+                // search data is stored in arrays
+                foreach ($saved as $item) {
+                    if (isset($item['object_id'])) {
+                        $objectIds[] = (int)$item['object_id'];
+                    }
+                    if (
+                        !$objectType &&
+                        isset($item['object_type']) &&
+                        in_array($item['object_type'], ['album', 'artist', 'song'])
+                    ) {
+                        $objectType = LibraryItemEnum::tryFrom($item['object_type']);
+                    }
+                }
+            } else {
+                // other browse types store int lists
+                $objectIds  = $saved;
+                $objectType = LibraryItemEnum::tryFrom($browse->get_type());
+            }
         } else {
             $objectType = LibraryItemEnum::tryFrom($_REQUEST['object_type'] ?? '');
             $objectIds  = explode(',', Core::get_get('object_id'));

@@ -1814,6 +1814,7 @@ class Search extends playlist_object
      * get_rule_types
      *
      * Return rule list for the current search type
+     * @return array<string, array<string, mixed>>
      */
     public function get_rule_types(): array
     {

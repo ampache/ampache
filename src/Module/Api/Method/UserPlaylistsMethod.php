@@ -55,6 +55,7 @@ final class UserPlaylistsMethod
      * @param array{
      *     filter?: string,
      *     exact?: int,
+     *     include?: string|int,
      *     offset?: int,
      *     limit?: int,
      *     cond?: string,

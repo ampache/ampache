@@ -62,7 +62,7 @@ final class PlaylistsMethod
      *     filter?: string,
      *     hide_search?: int,
      *     show_dupes?: int,
-     *     include?: int,
+     *     include?: int|string,
      *     exact?: int,
      *     add?: string,
      *     update?: string,
