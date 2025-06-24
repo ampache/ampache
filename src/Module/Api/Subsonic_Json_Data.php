@@ -152,10 +152,10 @@ class Subsonic_Json_Data
     /**
      * _getJukeboxStatus
      * @return array{
-     *     'currentIndex': string,
+     *     'currentIndex': int,
      *     'playing': bool,
-     *     'gain': string,
-     *     'position': string
+     *     'gain': float,
+     *     'position': int
      * }
      */
     private static function _getJukeboxStatus(LocalPlay $localplay): array
@@ -166,10 +166,10 @@ class Subsonic_Json_Data
             ? 0
             : $status['track'] - 1;
 
-        $json['currentIndex'] = (string)$index;
+        $json['currentIndex'] = (int)$index;
         $json['playing']      = ($status['state'] == 'play');
-        $json['gain']         = (string)$status['volume'];
-        $json['position']     = '0'; // TODO Not supported
+        $json['gain']         = (float)$status['volume'];
+        $json['position']     = 0; // TODO Not supported
 
         return $json;
     }
@@ -181,13 +181,13 @@ class Subsonic_Json_Data
      *     'name': string,
      *     'owner': string,
      *     'public': bool,
+     *     'songCount': int,
+     *     'duration': int,
      *     'created': string,
      *     'changed': string,
-     *     'songCount': string,
-     *     'duration': int,
      *     'coverArt'?: string,
      *     'entry'?: list<array<string, mixed>>
-     * }
+     * }// todo add allowedUser	Array of string
      */
     private static function _getPlaylist_Playlist(Playlist $playlist, bool $songs = false): array
     {
@@ -200,10 +200,10 @@ class Subsonic_Json_Data
             'name' => (string)$playlist->get_fullname(),
             'owner' => (string)$playlist->username,
             'public' => ($playlist->type != 'private'),
+            'songCount' => $songcount,
+            'duration' => $duration,
             'created' => date('c', $playlist->date),
             'changed' => date('c', (int)$playlist->last_update),
-            'songCount' => (string)$songcount,
-            'duration' => $duration,
         ];
 
         if ($playlist->has_art()) {
@@ -228,13 +228,13 @@ class Subsonic_Json_Data
      *     'name': string,
      *     'owner': string,
      *     'public': bool,
-     *     'created': string,
-     *     'changed': string,
      *     'songCount': int,
      *     'duration': int,
+     *     'created': string,
+     *     'changed': string,
      *     'coverArt'?: string,
      *     'entry'?: list<array<string, mixed>>
-     * }
+     * }// todo add allowedUser	Array of string
      */
     private static function _getPlaylist_Search(Search $search, bool $songs = false): array
     {
@@ -245,13 +245,15 @@ class Subsonic_Json_Data
             'name' => (string)$search->get_fullname(),
             'owner' => (string)$search->username,
             'public' => ($search->type != 'private'),
+            'songCount' => (int)$search->last_count,
+            'duration' => (int)$search->last_duration,
             'created' => date('c', $search->date),
             'changed' => date('c', time()),
         ];
 
-        $json['songCount'] = (int)$search->last_count;
-        $json['duration']  = (int)$search->last_duration;
-        $json['coverArt']  = $sub_id;
+        if ($search->has_art()) {
+            $json['coverArt'] = $sub_id;
+        }
 
         if ($songs) {
             $allsongs = $search->get_songs();
@@ -385,7 +387,7 @@ class Subsonic_Json_Data
      * A chatMessage.
      * @return array{
      *     'username': string,
-     *     'time': string,
+     *     'time': int,
      *     'message': string
      * }
      */
@@ -393,7 +395,7 @@ class Subsonic_Json_Data
     {
         return [
             'username' => ($user->fullname_public) ? (string)$user->fullname : (string)$user->username,
-            'time' => (string)($message->getCreationDate() * 1000),
+            'time' => $message->getCreationDate() * 1000,
             'message' => (string)$message->getMessage(),
         ];
     }
@@ -1083,7 +1085,7 @@ class Subsonic_Json_Data
      *
      * A bookmark.
      * @return array{
-     *     'position': string,
+     *     'position': int,
      *     'username': string,
      *     'comment': string,
      *     'created': string,
@@ -1188,7 +1190,7 @@ class Subsonic_Json_Data
     private static function _getBookmark(Bookmark $bookmark): array
     {
         $json = [
-            'position' => (string)$bookmark->position,
+            'position' => $bookmark->position,
             'username' => $bookmark->getUserName(),
             'comment' => (string)$bookmark->comment,
             'created' => date("c", (int)$bookmark->creation_date),
@@ -2231,13 +2233,13 @@ class Subsonic_Json_Data
     }
 
     /**
-    * addChatMessages
-    *
-    * Chat messages list.Subsonic
-    * @param array{'subsonic-response': array<string, mixed>} $response
-    * @param int[] $messages
-    * @return array{'subsonic-response': array<string, mixed>}
-    */
+     * addChatMessages
+     *
+     * Chat messages list.Subsonic
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param int[] $messages
+     * @return array{'subsonic-response': array<string, mixed>}
+     */
     public static function addChatMessages(array $response, array $messages): array
     {
         if (empty($messages)) {
