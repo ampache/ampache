@@ -33,6 +33,7 @@ Ampache Subsonic support is being extended to support these changes
 * Expanded [subsonic-response error](https://opensubsonic.netlify.app/docs/responses/error/)
 * Support [HTTP form POST](https://opensubsonic.netlify.app/docs/extensions/formpost/)
 * Add [songLyrics](https://opensubsonic.netlify.app/docs/extensions/songlyrics/) support
+* Add [Index based Queue](https://opensubsonic.netlify.app/docs/extensions/indexbasedqueue/)
 * Tentatively supported [Transcode Offset](https://opensubsonic.netlify.app/docs/extensions/transcodeoffset/) (Parameter is supported but untested)
 
 #### Api Key authentication
@@ -76,12 +77,6 @@ Authorization: Bearer 000111112233334444455556667777788888899aaaaabbbbcccccdddee
 
 * [stream](https://opensubsonic.netlify.app/docs/endpoints/stream/)
   * Support `timeOffset` (Parameter is supported but untested)
-  * Enable `subsonic_always_download` preference (`preferences.php?tab=options`) to stop scrobbling plays
-
-### NOT implemented
-
-* [getLyricsBySongId](https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/)
-  * Currently Ampache lyrics do not track individual lines or timestamps
 
 ## Subsonic Examples
 

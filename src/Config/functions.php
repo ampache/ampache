@@ -117,7 +117,7 @@ function unhtmlentities($string): string
  * This takes a value and returns what we consider to be the correct boolean
  * value. We need a special function because PHP considers "false" to be true.
  *
- * @param bool|null|string $string
+ * @param bool|null|string|int $string
  */
 function make_bool($string): bool
 {
@@ -127,11 +127,11 @@ function make_bool($string): bool
     if ($string === null) {
         return false;
     }
-    if (strcasecmp((string) $string, 'false') == 0 || $string == '0') {
+    if (strcasecmp((string)$string, 'false') == 0 || $string === '0' || $string === 0) {
         return false;
     }
 
-    return (bool) $string;
+    return (bool)$string;
 }
 
 /**

@@ -15,7 +15,13 @@ This is hidden behind a preference but will eventually become the default Subson
 * Database 760001
   * Add `subsonic_legacy` preference. (Turn off to enable the OpenSubsonic classes)
 * Subsonic
-  * Implemented all OpenSubsonic [extentions](https://ampache.org/api/subsonic/#opensubsonic-api-extension)
+  * Implemented all OpenSubsonic [api extentions](https://ampache.org/api/subsonic/#opensubsonic-api-extension)
+  * Add [API Key Authentication](https://opensubsonic.netlify.app/docs/extensions/apikeyauth/)
+  * Add [getPodcastEpisode](https://opensubsonic.netlify.app/docs/extensions/getpodcastepisode/) method
+  * Add [songLyrics](https://opensubsonic.netlify.app/docs/extensions/songlyrics/) support
+  * Add [Index based Queue](https://opensubsonic.netlify.app/docs/extensions/indexbasedqueue/)
+  * Expanded [subsonic-response error](https://opensubsonic.netlify.app/docs/responses/error/)
+
 
 ### Changed
 
