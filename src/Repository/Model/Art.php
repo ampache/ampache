@@ -1073,7 +1073,7 @@ class Art extends database_object
      *     file?: string,
      *     raw?: string,
      *     title?: string,
-     *     db?: bool|int,
+     *     db?: int,
      *     song?: string,
      * } $data
      * @param string $type
@@ -1091,7 +1091,7 @@ class Art extends database_object
         }
 
         // If it came from the database
-        if (isset($data['db']) && is_int($data['db'])) {
+        if (isset($data['db'])) {
             if (empty($type)) {
                 $type = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
             }
