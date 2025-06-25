@@ -61,7 +61,7 @@ final class UrlToSong5Method
         if (!Api5::check_parameter($input, ['url'], self::ACTION)) {
             return false;
         }
-        $charset  = AmpConfig::get('site_charset');
+        $charset  = AmpConfig::get('site_charset', 'UTF-8');
         $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
         $url_data = Stream_Url::parse($song_url);
         if (!array_key_exists('id', $url_data)) {

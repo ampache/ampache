@@ -2,7 +2,7 @@
 
 use Ampache\Config\AmpConfig;
 
-$session_name = AmpConfig::get('session_name'); ?>
+$session_name = AmpConfig::get('session_name', 'ampache'); ?>
 <h1><?php echo T_('Use of cookies by Ampache'); ?></h1>
 <br />
 <p>

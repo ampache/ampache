@@ -97,7 +97,7 @@ final class PlayAction implements ApplicationActionInterface
         $use_auth         = AmpConfig::get('use_auth');
         $can_share        = AmpConfig::get('share');
         $player_customize = AmpConfig::get('transcode_player_customize');
-        $session_name     = AmpConfig::get('session_name');
+        $session_name     = AmpConfig::get('session_name', 'ampache');
         $require_session  = AmpConfig::get('require_session');
         $localnet_session = AmpConfig::get('require_localnet_session');
 

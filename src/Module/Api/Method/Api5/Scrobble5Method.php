@@ -79,7 +79,7 @@ final class Scrobble5Method
             return false;
         }
         ob_end_clean();
-        $charset     = AmpConfig::get('site_charset');
+        $charset     = AmpConfig::get('site_charset', 'UTF-8');
         $song_name   = html_entity_decode(scrub_out($input['song']), ENT_QUOTES, $charset);
         $artist_name = html_entity_decode(scrub_out($input['artist']), ENT_QUOTES, $charset);
         $album_name  = html_entity_decode(scrub_out($input['album']), ENT_QUOTES, $charset);

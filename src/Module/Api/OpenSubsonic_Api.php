@@ -955,7 +955,7 @@ class OpenSubsonic_Api
                 "</subsonic-response>";
         }
 
-        header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
+        header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
         header("Access-Control-Allow-Origin: *");
         echo $output;
     }
@@ -971,7 +971,7 @@ class OpenSubsonic_Api
             $output = json_encode(OpenSubsonic_Json_Data::addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
         }
 
-        header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
+        header("Content-type: application/json; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
         header("Access-Control-Allow-Origin: *");
         echo $output;
     }
@@ -988,7 +988,7 @@ class OpenSubsonic_Api
             $output = json_encode(OpenSubsonic_Json_Data::addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
         }
 
-        header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset'));
+        header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
         header("Access-Control-Allow-Origin: *");
         echo $callback . '(' . $output . ')';
     }

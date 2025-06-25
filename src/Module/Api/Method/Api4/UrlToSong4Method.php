@@ -60,7 +60,7 @@ final class UrlToSong4Method
         if (!Api4::check_parameter($input, ['url'], self::ACTION)) {
             return false;
         }
-        $charset  = AmpConfig::get('site_charset');
+        $charset  = AmpConfig::get('site_charset', 'UTF-8');
         $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
         $url_data = Stream_Url::parse($song_url);
         ob_end_clean();
