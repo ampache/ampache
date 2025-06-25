@@ -1096,14 +1096,14 @@ class Art extends database_object
                 $type = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
             }
 
-            $sql        = "SELECT * FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size`='original'";
+            $sql        = "SELECT * FROM `image` WHERE `id` = ?;";
             $db_results = Dba::read($sql, [$type, $data['db']]);
-            $row        = Dba::fetch_assoc($db_results);
-
-            if (AmpConfig::get('album_art_store_disk')) {
-                return (string)self::read_from_dir('original', $type, $data['db'], 'default', $row['mime']);
-            } else {
-                return $row['image'];
+            if ($row = Dba::fetch_assoc($db_results)) {
+                if (AmpConfig::get('album_art_store_disk')) {
+                    return (string)self::read_from_dir('original', $type, $row['object_id'], 'default', $row['mime']);
+                } else {
+                    return $row['image'];
+                }
             }
         } // came from the db
 
