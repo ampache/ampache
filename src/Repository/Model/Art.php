@@ -1073,7 +1073,7 @@ class Art extends database_object
      *     file?: string,
      *     raw?: string,
      *     title?: string,
-     *     db?: bool,
+     *     db?: bool|int,
      *     song?: string,
      * } $data
      * @param string $type
@@ -1091,7 +1091,7 @@ class Art extends database_object
         }
 
         // If it came from the database
-        if (isset($data['db'])) {
+        if (isset($data['db']) && is_int($data['db'])) {
             if (empty($type)) {
                 $type = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
             }
@@ -1100,7 +1100,11 @@ class Art extends database_object
             $db_results = Dba::read($sql, [$type, $data['db']]);
             $row        = Dba::fetch_assoc($db_results);
 
-            return $row['art'];
+            if (AmpConfig::get('album_art_store_disk')) {
+                return (string)self::read_from_dir('original', $type, $data['db'], 'default', $row['mime']);
+            } else {
+                return $row['image'];
+            }
         } // came from the db
 
         // Check to see if it's a URL
