@@ -95,7 +95,13 @@ class AlbumMethodTest extends MockeryTestCase
         $this->expectException(ResultEmptyException::class);
         $this->expectExceptionMessage((string) $albumId);
 
-        $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId], $user);
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            ['filter' => (string) $albumId],
+            $user
+        );
     }
 
     public function testHandleReturnsOutput(): void
@@ -108,7 +114,7 @@ class AlbumMethodTest extends MockeryTestCase
         $stream     = $this->mock(StreamInterface::class);
 
         $albumId = 666;
-        $include = [3];
+        $include = ['songs'];
         $result  = 'some-result';
 
         $this->modelFactory->shouldReceive('createAlbum')
@@ -148,7 +154,16 @@ class AlbumMethodTest extends MockeryTestCase
 
         $this->assertSame(
             $response,
-            $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId, 'include' => $include], $user)
+            $this->subject->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                [
+                    'filter' => (string) $albumId,
+                    'include' => $include
+                ],
+                $user
+            )
         );
     }
 }
