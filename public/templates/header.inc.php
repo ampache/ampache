@@ -92,7 +92,7 @@ $albumString = (AmpConfig::get('album_group'))
         <link rel="alternate" href="<?php echo $web_path; ?>/rss.php?type=<?php echo RssFeedTypeEnum::LATEST_SHOUT->value; ?>" type="application/rss+xml" title="<?php echo T_('Newest Shouts'); ?>">
         <?php }
         } ?>
-        <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>">
+        <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset', 'UTF-8'); ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo $site_title; ?></title>
 

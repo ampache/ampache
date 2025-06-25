@@ -452,7 +452,7 @@ class Catalog_local extends Catalog
 
             // Check to make sure the filename is of the expected charset
             if (function_exists('iconv')) {
-                $site_charset = AmpConfig::get('site_charset');
+                $site_charset = AmpConfig::get('site_charset', 'UTF-8');
                 $lc_charset   = $site_charset;
                 if (AmpConfig::get('lc_charset')) {
                     $lc_charset = AmpConfig::get('lc_charset');

@@ -306,7 +306,7 @@ class Core
     public static function conv_lc_file(string $filename): string
     {
         $lc_filename  = $filename;
-        $site_charset = AmpConfig::get('site_charset');
+        $site_charset = AmpConfig::get('site_charset', 'UTF-8');
         $lc_charset   = AmpConfig::get('lc_charset');
         if ($lc_charset && $lc_charset != $site_charset) {
             if (function_exists('iconv')) {
