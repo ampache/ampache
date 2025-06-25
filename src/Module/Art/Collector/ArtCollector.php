@@ -73,7 +73,13 @@ final class ArtCollector implements ArtCollectorInterface
      *      search_limit?: int,
      *  } $options
      * @param int $limit
-     * @return array
+     * @return array<int, array{
+     *     'db'?: bool,
+     *     'url'?: string,
+     *     'title'?: string,
+     *     'mime'?: string,
+     *     'title'?: string
+     * }>
      */
     public function collect(
         Art $art,

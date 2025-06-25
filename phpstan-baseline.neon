@@ -1241,19 +1241,9 @@ parameters:
 			path: src/Module/Application/Stream/StreamItemAction.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\ArtCollector\\:\\:collect\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/ArtCollector.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\ArtCollectorInterface\\:\\:collect\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/ArtCollectorInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\CollectorModuleInterface\\:\\:collect\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/CollectorModuleInterface.php
 
 		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
@@ -1636,17 +1626,7 @@ parameters:
 			path: src/Module/Catalog/Catalog_Seafile.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:download_metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:get_media_tags\\(\\) has parameter \\$gather_types with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:get_media_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
 

@@ -40,17 +40,18 @@ final class DbCollectorModule implements CollectorModuleInterface
      *      year_filter?: string,
      *      search_limit?: int,
      *  } $data
-     * @return array{db?: bool}
+     * @return array<int, array{db?: bool}>
      */
     public function collect(
         Art $art,
         int $limit = 5,
         array $data = []
     ): array {
+        $results = [];
         if ($art->has_db_info()) {
-            return ['db' => true];
+            $results[] = ['db' => true];
         }
 
-        return [];
+        return $results;
     }
 }
