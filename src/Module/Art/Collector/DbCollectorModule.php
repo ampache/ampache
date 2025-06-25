@@ -40,7 +40,11 @@ final class DbCollectorModule implements CollectorModuleInterface
      *      year_filter?: string,
      *      search_limit?: int,
      *  } $data
-     * @return array<int, array{db?: int}>
+     * @return array<int, array{
+     *     db?: int,
+     *     mime?: string,
+     *     title?: string,
+     * }>
      */
     public function collect(
         Art $art,
@@ -49,7 +53,11 @@ final class DbCollectorModule implements CollectorModuleInterface
     ): array {
         $results = [];
         if ($art->has_db_info() && $art->id) {
-            $results[] = ['db' => $art->id];
+            $results[] = [
+                'db' => $art->id,
+                'title' => T_('Art'),
+                'mime' => $art->raw_mime,
+            ];
         }
 
         return $results;

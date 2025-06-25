@@ -43,8 +43,7 @@ interface CollectorModuleInterface
      *     'db'?: bool,
      *     'url'?: string,
      *     'title'?: string,
-     *     'mime'?: string,
-     *     'title'?: string
+     *     'mime'?: string
      * }>
      */
     public function collect(
