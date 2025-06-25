@@ -92,19 +92,11 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if (empty($action)) {
             $action = strtolower($query['action'] ?? '');
         }
-        $format   = (string)($query['f'] ?? 'xml');
-        $callback = $query['callback'] ?? $format;
-        /* Set the correct default headers */
-        if (!in_array($action, ['getcoverart', 'hls', 'stream', 'download', 'getavatar'])) {
-            if (strtolower($format) == "json") {
-                header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
-            } elseif (strtolower($format) == "jsonp") {
-                header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset'));
-            } else {
-                header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
-            }
-            header("Access-Control-Allow-Origin: *");
-        }
+
+        $format = (string)($query['f'] ?? 'xml');
+
+        // Set the correct default headers
+        self::_setHeaders($action, $format, (string)AmpConfig::get('site_charset',  'UTF-8'));
 
         // If we don't even have access control on then we can't use this!
         if (!AmpConfig::get('access_control')) {
@@ -181,17 +173,18 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
             return;
         }
+
         if (
             !$token_auth &&
             !$api_auth &&
             !$pass_auth
         ) {
             $this->logger->warning(
-                'Error Attempted to use OpenSubsonic Token authentication with legacy Subsonic API',
+                'Error Invalid Authentication attempt to Subsonic API',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             if ($subsonic_legacy) {
-                Subsonic_Api::error($query, Subsonic_Api::SSERROR_TOKENAUTHNOTSUPPORTED, $action);
+                Subsonic_Api::error($query, Subsonic_Api::SSERROR_BADAUTH, $action);
             } elseif ($apiKey) {
                 OpenSubsonic_Api::error($query, OpenSubsonic_Api::SSERROR_BADAPIKEY, $action);
             } else {
@@ -202,15 +195,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         }
 
         // Decode hex-encoded password
-        $encpwd = strpos($password, "enc:");
-        if ($encpwd !== false) {
-            $hex    = substr($password, 4);
-            $decpwd = '';
-            for ($count = 0; $count < strlen((string)$hex); $count += 2) {
-                $decpwd .= chr((int)hexdec(substr($hex, $count, 2)));
-            }
-            $password = $decpwd;
-        }
+        $password = self::_decryptPassword($password);
 
         if (!isset($user)) {
             // Check user authentication
@@ -370,6 +355,36 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             Subsonic_Api::error($input, Subsonic_Api::SSERROR_APIVERSION_SERVER, $action);
         } else {
             OpenSubsonic_Api::error($input, OpenSubsonic_Api::SSERROR_APIVERSION_SERVER, $action);
+        }
+    }
+
+    private static function _decryptPassword(string $password): string
+    {
+        $encpwd = strpos($password, "enc:");
+        if ($encpwd !== false) {
+            $hex    = substr($password, 4);
+            $decpwd = '';
+            for ($count = 0; $count < strlen((string)$hex); $count += 2) {
+                $decpwd .= chr((int)hexdec(substr($hex, $count, 2)));
+            }
+
+            return $decpwd;
+        }
+
+        return $password;
+    }
+
+    private static function _setHeaders(string $action, string $format, string $site_charset): void
+    {
+        if (!in_array($action, ['getcoverart', 'hls', 'stream', 'download', 'getavatar'])) {
+            if (strtolower($format) == "json") {
+                header("Content-type: application/json; charset=" . $site_charset);
+            } elseif (strtolower($format) == "jsonp") {
+                header("Content-type: text/javascript; charset=" . $site_charset);
+            } else {
+                header("Content-type: text/xml; charset=" . $site_charset);
+            }
+            header("Access-Control-Allow-Origin: *");
         }
     }
 }
