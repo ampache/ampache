@@ -28,6 +28,7 @@ interface PluginGatherArtsInterface extends AmpachePluginInterface
     /**
      * gather_arts
      * Returns art items for the requested media type
+     * @return array<array{url: string, mime: string, title: string}>
      */
     public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array;
 }

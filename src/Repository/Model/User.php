@@ -98,8 +98,8 @@ class User extends database_object
 
     private ?string $f_link = null;
 
-    /** @var array<string, array<int>> $catalogs */
-    public array $catalogs;
+    /** @var array<string, int[]> $catalogs */
+    public array $catalogs = [];
 
     private ?bool $has_art = null;
 

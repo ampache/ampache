@@ -28,6 +28,9 @@ interface PluginGetMetadataInterface extends AmpachePluginInterface
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
+     * @param string[] $gather_types
+     * @param array<string, mixed> $media_info
+     * @return array<string, mixed>
      */
     public function get_metadata(array $gather_types, array $media_info): array;
 }
