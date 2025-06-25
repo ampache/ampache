@@ -73,7 +73,7 @@ function set_memory_limit(int|string $new_limit): void
 function scrub_in($input)
 {
     if (!is_array($input)) {
-        return stripslashes(htmlspecialchars(strip_tags((string) $input), ENT_NOQUOTES, AmpConfig::get('site_charset')));
+        return stripslashes(htmlspecialchars(strip_tags((string) $input), ENT_NOQUOTES, AmpConfig::get('site_charset', 'UTF-8')));
     } else {
         $results = [];
         foreach ($input as $item) {
@@ -99,7 +99,7 @@ function scrub_out($string): string
         return '';
     }
 
-    return htmlentities((string) $string, ENT_QUOTES, AmpConfig::get('site_charset'));
+    return htmlentities((string) $string, ENT_QUOTES, AmpConfig::get('site_charset', 'UTF-8'));
 }
 
 /**
@@ -109,7 +109,7 @@ function scrub_out($string): string
  */
 function unhtmlentities($string): string
 {
-    return html_entity_decode((string) $string, ENT_QUOTES, AmpConfig::get('site_charset'));
+    return html_entity_decode((string) $string, ENT_QUOTES, AmpConfig::get('site_charset', 'UTF-8'));
 }
 
 /**
@@ -893,10 +893,10 @@ function xoutput_headers(): void
 {
     $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
     if ($output == 'xml') {
-        header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
+        header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
         header("Content-Disposition: attachment; filename=ajax.xml");
     } else {
-        header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
+        header("Content-type: application/json; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
     }
 
     header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");

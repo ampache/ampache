@@ -207,7 +207,7 @@ final class Mailer implements MailerInterface
             $mail = $phpmailer;
         }
 
-        $mail->CharSet  = AmpConfig::get('site_charset');
+        $mail->CharSet  = AmpConfig::get('site_charset', 'UTF-8');
         $mail->Encoding = 'base64';
         $mail->From     = (string) $this->sender;
         $mail->Sender   = (string) $this->sender;

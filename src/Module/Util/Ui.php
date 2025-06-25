@@ -778,7 +778,7 @@ class Ui implements UiInterface
             return '';
         }
 
-        return htmlentities((string) $string, ENT_QUOTES, AmpConfig::get('site_charset'));
+        return htmlentities((string) $string, ENT_QUOTES, AmpConfig::get('site_charset', 'UTF-8'));
     }
 
     /**

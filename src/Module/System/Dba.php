@@ -431,7 +431,7 @@ class Dba
             return false;
         }
 
-        $charset = self::translate_to_mysqlcharset(AmpConfig::get('site_charset'));
+        $charset = self::translate_to_mysqlcharset(AmpConfig::get('site_charset', 'UTF-8'));
         $charset = $charset['charset'];
         if ($dbh->exec('SET NAMES ' . $charset) === false) {
             debug_event(self::class, 'Unable to set connection charset to ' . $charset, 1);

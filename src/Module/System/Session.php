@@ -183,7 +183,7 @@ final class Session implements SessionInterface
 
         debug_event(self::class, 'Deleting Session with key:' . $key, 6);
 
-        $session_name   = AmpConfig::get('session_name');
+        $session_name   = AmpConfig::get('session_name', 'ampache');
         $cookie_options = [
             'expires' => -1,
             'path' => (string)AmpConfig::get('cookie_path'),
@@ -398,7 +398,7 @@ final class Session implements SessionInterface
      */
     public static function check(): bool
     {
-        $session_name = AmpConfig::get('session_name');
+        $session_name = AmpConfig::get('session_name', 'ampache');
 
         // No cookie no go!
         if (!isset($_COOKIE[$session_name])) {
@@ -527,7 +527,7 @@ final class Session implements SessionInterface
      */
     public static function get(): string
     {
-        $session_name = AmpConfig::get('session_name');
+        $session_name = AmpConfig::get('session_name', 'ampache');
 
         if (array_key_exists($session_name, $_COOKIE)) {
             return $_COOKIE[$session_name];
@@ -662,7 +662,7 @@ final class Session implements SessionInterface
             session_set_cookie_params($cookie_params);
         }
         session_write_close();
-        session_name(AmpConfig::get('session_name'));
+        session_name(AmpConfig::get('session_name', 'ampache'));
         session_set_cookie_params($cookie_params);
 
         /* Start the session */
@@ -680,7 +680,7 @@ final class Session implements SessionInterface
      */
     public static function create_user_cookie(string $username): void
     {
-        $session_name   = AmpConfig::get('session_name');
+        $session_name   = AmpConfig::get('session_name', 'ampache');
         $cookie_options = [
             'expires' => (int)AmpConfig::get('cookie_life'),
             'path' => (string)AmpConfig::get('cookie_path'),
@@ -700,7 +700,7 @@ final class Session implements SessionInterface
      */
     public static function create_remember_cookie(string $username): void
     {
-        $session_name    = AmpConfig::get('session_name');
+        $session_name    = AmpConfig::get('session_name', 'ampache');
         $remember_length = (int)(time() + AmpConfig::get('remember_length', 604800));
         $cookie_options  = [
             'expires' => $remember_length,
@@ -803,7 +803,7 @@ final class Session implements SessionInterface
     public static function auth_remember(): bool
     {
         $auth  = false;
-        $cname = AmpConfig::get('session_name') . '_remember';
+        $cname = AmpConfig::get('session_name', 'ampache') . '_remember';
         if (isset($_COOKIE[$cname])) {
             [$username, $token, $mac] = explode(':', $_COOKIE[$cname]);
             if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {

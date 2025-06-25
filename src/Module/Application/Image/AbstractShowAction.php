@@ -76,7 +76,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 $salt
             );
 
-            $cookie = $_COOKIE[AmpConfig::get('session_name')] ?? '';
+            $cookie = $_COOKIE[AmpConfig::get('session_name', 'ampache')] ?? '';
 
             if (
                 !Session::exists(AccessTypeEnum::INTERFACE->value, $cookie) &&

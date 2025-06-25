@@ -33,7 +33,7 @@ $htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US')); ?>
 <head>
 <!-- Propelled by Ampache | ampache.org -->
 <?php Ui::show_custom_style(); ?>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset', 'UTF-8'); ?>" />
 <title><?php echo AmpConfig::get('site_title') . " - " . T_("Album Art"); ?></title>
 </head>
 <body onload="self.resizeTo(document.images[0].width+30, document.images[0].height+70)">
