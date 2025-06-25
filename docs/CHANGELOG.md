@@ -14,6 +14,7 @@ While this fully implements new features it does not include all the new data fi
 * Directplay for Searches and Smartlist pages
 * Set auto generation headers on emails
 * Search URL relationships with MusicBrainz (Spotify and Discogs linking TBC)
+* Add fallbacks for `session_name` and `site_charset`
 * Database 760001
   * Add `subsonic_legacy` preference. (Turn off to enable the new OpenSubsonic classes)
 * Subsonic
@@ -26,6 +27,8 @@ While this fully implements new features it does not include all the new data fi
 
 ### Changed
 
+* Update composer and NPM packages
+* Allow selecting the current Database art from the select art page
 * Use size parameters for Art url generation
 
 ### Removed
@@ -34,6 +37,7 @@ While this fully implements new features it does not include all the new data fi
 
 ### Fixed
 
+* Art selection only selected album as a type on insert
 * Table counts did not count disabled catalogs or enabled songs correctly
 * Error fetching empty Democratic playlist
 * Public user errors when loading browses
