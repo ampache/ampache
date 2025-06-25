@@ -119,7 +119,6 @@ class Subsonic_Api
         '_setStar',
         '_updatePlaylist',
         '_xmlOutput',
-        'decryptPassword',
         'error',
         'getAlbumSubId',
         'getAmpacheId',
@@ -760,22 +759,6 @@ class Subsonic_Api
         return $input[$parameter];
     }
 
-    public static function decryptPassword(string $password): string
-    {
-        // Decode hex-encoded password
-        $encpwd = strpos($password, "enc:");
-        if ($encpwd !== false) {
-            $hex    = substr($password, 4);
-            $decpwd = '';
-            for ($count = 0; $count < strlen($hex); $count += 2) {
-                $decpwd .= chr((int)hexdec(substr($hex, $count, 2)));
-            }
-            $password = $decpwd;
-        }
-
-        return $password;
-    }
-
     /**
      * _getAmpacheIdArrays
      * @param string[] $sub_ids
@@ -972,7 +955,7 @@ class Subsonic_Api
                 "</subsonic-response>";
         }
 
-        header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
+        header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
         header("Access-Control-Allow-Origin: *");
         echo $output;
     }
@@ -988,7 +971,7 @@ class Subsonic_Api
             $output = json_encode(Subsonic_Json_Data::addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
         }
 
-        header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
+        header("Content-type: application/json; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
         header("Access-Control-Allow-Origin: *");
         echo $output;
     }
@@ -1005,7 +988,7 @@ class Subsonic_Api
             $output = json_encode(Subsonic_Json_Data::addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
         }
 
-        header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset'));
+        header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
         header("Access-Control-Allow-Origin: *");
         echo $callback . '(' . $output . ')';
     }
@@ -1140,7 +1123,7 @@ class Subsonic_Api
             return;
         }
 
-        $password = self::decryptPassword($inp_pass);
+        $password = SubsonicApiApplication::decryptPassword($inp_pass);
         if ($user->username == $username || $user->access === 100) {
             $update_user = User::get_from_username((string) $username);
             if ($update_user instanceof User && !AmpConfig::get('simple_user_mode')) {
@@ -1462,7 +1445,7 @@ class Subsonic_Api
             if ($adminRole) {
                 $access = AccessLevelEnum::ADMIN;
             }
-            $password = self::decryptPassword($password);
+            $password = SubsonicApiApplication::decryptPassword($password);
             $user_id  = User::create($username, $username, $email, '', $password, $access);
             if ($user_id > 0) {
                 if ($downloadRole) {
@@ -4113,7 +4096,9 @@ class Subsonic_Api
         }
 
         // No scrobble for streams using open subsonic https://www.subsonic.org/pages/api.jsp#stream/
-        $params .= '&cache=1';
+        if (AmpConfig::get('subsonic_always_download')) {
+            $params .= '&cache=1';
+        }
 
         self::_follow_stream($object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken));
     }
@@ -4325,7 +4310,7 @@ class Subsonic_Api
                 $update_user->update_access($access);
                 // update password
                 if ($password && !AmpConfig::get('simple_user_mode')) {
-                    $password = self::decryptPassword($password);
+                    $password = SubsonicApiApplication::decryptPassword($password);
                     $update_user->update_password($password);
                 }
                 // update e-mail

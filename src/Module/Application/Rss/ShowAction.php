@@ -101,7 +101,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         $tal = $this->talFactory->createPhpTal();
         $tal->setOutputMode(PHPTAL::XML);
-        $tal->setEncoding(AmpConfig::get('site_charset'));
+        $tal->setEncoding(AmpConfig::get('site_charset', 'UTF-8'));
 
         $handler->configureTemplate($tal);
 

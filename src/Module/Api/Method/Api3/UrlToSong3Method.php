@@ -51,7 +51,7 @@ final class UrlToSong3Method
      */
     public static function url_to_song(array $input, User $user): void
     {
-        $charset  = AmpConfig::get('site_charset');
+        $charset  = AmpConfig::get('site_charset', 'UTF-8');
         $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
         $url_data = Stream_Url::parse($song_url);
         ob_end_clean();
