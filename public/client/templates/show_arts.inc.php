@@ -49,7 +49,7 @@ while ($count <= $rows) {
     $j=0;
     while ($j < 5) {
         $key        = $count * 5 + $j;
-        $image_url  = $web_path . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . bin2hex(random_bytes(20));
+        $image_url  = $web_path . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . bin2hex(random_bytes(20)) . '&object_type=' . $object_type;
         $dimensions = [
             'width' => 0,
             'height' => 0,

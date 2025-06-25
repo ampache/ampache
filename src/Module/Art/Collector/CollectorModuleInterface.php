@@ -39,8 +39,12 @@ interface CollectorModuleInterface
      *      year_filter?: string,
      *      search_limit?: int,
      *  } $data
-     *
-     * @return array
+     * @return array<int, array{
+     *     'db'?: bool,
+     *     'url'?: string,
+     *     'title'?: string,
+     *     'mime'?: string
+     * }>
      */
     public function collect(
         Art $art,

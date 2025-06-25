@@ -123,7 +123,8 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                     // If we need to pull the data out of the session
                     if (array_key_exists('form', $_SESSION)) {
                         $filename    = $this->requestParser->getFromRequest('image_index');
-                        $image       = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
+                        $object_type = $this->requestParser->getFromRequest('object_type');
+                        $image       = Art::get_from_source($_SESSION['form']['images'][$filename], $object_type);
                         $mime        = $_SESSION['form']['images'][$filename]['mime'];
                         $typeManaged = true;
                     }

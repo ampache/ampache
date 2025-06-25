@@ -34,6 +34,8 @@ This version is being released for Ampache7 **only**
   * bookmark: validate `include` bool with make_bool
   * bookmark_create: validate `include` bool with make_bool
   * bookmark_edit: validate `include` bool with make_bool
+API6
+  * album and albums method include didn't always work correctly
 API5
   * user_edit: incorrect parameter check for `filter` instead of `username`
   * bookmark: Bookmark is a valid `type`

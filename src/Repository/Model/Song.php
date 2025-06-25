@@ -2106,6 +2106,7 @@ class Song extends database_object implements
 
     /**
      * Get lyrics.
+     * @return array{'text'?: string}
      */
     public function get_lyrics(): array
     {

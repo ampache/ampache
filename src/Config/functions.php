@@ -258,7 +258,7 @@ function is_rtl($locale): bool
 // Declare apache_request_headers and getallheaders if it don't exists (PHP <= 5.3 + FastCGI)
 if (!function_exists('apache_request_headers')) {
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     function apache_request_headers(): array
     {
@@ -279,7 +279,7 @@ if (!function_exists('apache_request_headers')) {
 }
 if (!function_exists('getallheaders')) {
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     function getallheaders(): array
     {
@@ -1026,7 +1026,7 @@ function nT_($original, $plural, $value): string
  * this looks in /themes and pulls all of the
  * theme.cfg.php files it can find and returns an
  * array of the results
- * @return array
+ * @return array<string, array<string, mixed>>
  */
 function get_themes(): array
 {
