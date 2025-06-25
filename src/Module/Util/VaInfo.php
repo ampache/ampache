@@ -109,21 +109,34 @@ final class VaInfo implements VaInfoInterface
 
     private const MBID_REGEX = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
 
-    public string $encoding      = '';
+    public string $encoding = '';
+
     public string $encodingId3v1 = '';
+
     public string $encodingId3v2 = '';
-    public string $filename      = '';
-    public string $type          = '';
-    public array $tags           = [];
-    public array $gatherTypes    = [];
+
+    public string $filename = '';
+
+    public string $type = '';
+
+    public array $tags = [];
+
+    /* @var string[] */
+    public array $gatherTypes = [];
+
     public bool $islocal;
 
-    protected array $_raw            = [];
-    protected ?getID3 $_getID3       = null;
-    protected int $_forcedSize       = 0;
+    protected array $_raw = [];
+
+    protected ?getID3 $_getID3 = null;
+
+    protected int $_forcedSize = 0;
+
     protected string $_file_encoding = '';
-    protected string $_file_pattern  = '';
-    protected string $_dir_pattern   = '';
+
+    protected string $_file_pattern = '';
+
+    protected string $_dir_pattern = '';
 
     private bool $_broken = false;
 
@@ -459,7 +472,11 @@ final class VaInfo implements VaInfoInterface
             switch ($key) {
                 case 'text':
                     foreach ($text as $tkey => $data) {
-                        $ndata['text'][] = ['data' => $data, 'description' => $tkey, 'encodingid' => 0];
+                        $ndata['text'][] = [
+                            'data' => $data,
+                            'description' => $tkey,
+                            'encodingid' => 0
+                        ];
                     }
                     break;
                 default:
@@ -1008,8 +1025,8 @@ final class VaInfo implements VaInfoInterface
      * _cleanup_generic
      *
      * This does generic cleanup.
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      * @throws Exception
      */
     private function _cleanup_generic($tags): array
@@ -1091,8 +1108,8 @@ final class VaInfo implements VaInfoInterface
      * _cleanup_lyrics
      *
      * This is supposed to handle lyrics3. FIXME: does it?
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      */
     private function _cleanup_lyrics($tags): array
     {
@@ -1112,8 +1129,8 @@ final class VaInfo implements VaInfoInterface
      * _cleanup_vorbiscomment
      *
      * Standardizes tag names from vorbis.
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      * @throws Exception
      */
     private function _cleanup_vorbiscomment($tags): array
@@ -1261,8 +1278,8 @@ final class VaInfo implements VaInfoInterface
      * _cleanup_id3v1
      *
      * Doesn't do much.
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      */
     private function _cleanup_id3v1($tags): array
     {
@@ -1281,8 +1298,8 @@ final class VaInfo implements VaInfoInterface
      * _cleanup_id3v2
      *
      * Whee, v2!
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      * @throws Exception
      */
     private function _cleanup_id3v2($tags): array
@@ -1503,10 +1520,10 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * _cleanup_riff
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      */
-    private function _cleanup_riff($tags): array
+    private function _cleanup_riff(array $tags): array
     {
         $parsed = [];
 
@@ -1526,8 +1543,8 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * _cleanup_quicktime
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      * @throws Exception
      */
     private function _cleanup_quicktime($tags): array
@@ -1635,8 +1652,8 @@ final class VaInfo implements VaInfoInterface
      * _cleanup_asf
      *
      * This does WMA cleanup.
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      * @throws Exception
      */
     private function _cleanup_asf($tags): array

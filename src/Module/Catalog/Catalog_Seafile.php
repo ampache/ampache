@@ -389,7 +389,7 @@ class Catalog_Seafile extends Catalog
      * @param string $rename_pattern
      * @param array $gather_types
      * @param bool $keep
-     * @return array
+     * @return array<string, mixed>
      * @throws Exception
      */
     private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null, $keep = false): array
@@ -499,7 +499,7 @@ class Catalog_Seafile extends Catalog
      * @param array $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
-     * @return array
+     * @return array<string, mixed>
      * @throws Exception
      */
     public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern): array

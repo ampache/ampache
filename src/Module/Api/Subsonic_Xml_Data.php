@@ -1341,7 +1341,7 @@ class Subsonic_Xml_Data
 
         $lyrics = $song->get_lyrics();
 
-        if (!empty($lyrics) && $lyrics['text'] && is_string($lyrics['text'])) {
+        if (!empty($lyrics) && $lyrics['text']) {
             $text    = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
             $text    = preg_replace('/\\n\\n/i', "\n", (string)$text);
             $text    = str_replace("\r", '', (string)$text);
@@ -1369,7 +1369,7 @@ class Subsonic_Xml_Data
         $xlist  = self::_addChildToResultXml($xml, 'lyricsList');
         $lyrics = $song->get_lyrics();
 
-        if (!empty($lyrics) && $lyrics['text'] && is_string($lyrics['text'])) {
+        if (!empty($lyrics) && $lyrics['text']) {
             $xlyrics = self::_addChildToResultXml($xlist, 'structuredLyrics');
             $xlyrics->addAttribute('displayArtist', $song->get_artist_fullname());
             $xlyrics->addAttribute('displayTitle', (string)$song->title);

@@ -30,6 +30,7 @@ interface PluginGetLyricsInterface extends AmpachePluginInterface
     /**
      * get_lyrics
      * This will look web services for a song lyrics.
+     * @return null|array{'text': string, 'url': string}
      */
     public function get_lyrics(Song $song): ?array;
 }

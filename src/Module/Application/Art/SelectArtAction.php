@@ -74,7 +74,12 @@ final class SelectArtAction extends AbstractArtAction
         // Prevent the script from timing out
         set_time_limit(0);
 
-        $art_type   = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
+        if ($object_type === 'album') {
+            $art_type = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
+        } else {
+            $art_type = $object_type;
+        }
+
         $image      = Art::get_from_source($_SESSION['form']['images'][$image_id], $art_type);
         $dimensions = Core::image_dimensions($image);
         $mime       = $_SESSION['form']['images'][$image_id]['mime'];
