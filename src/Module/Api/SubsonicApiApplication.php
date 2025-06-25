@@ -96,7 +96,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $format = (string)($query['f'] ?? 'xml');
 
         // Set the correct default headers
-        self::_setHeaders($action, $format, (string)AmpConfig::get('site_charset',  'UTF-8'));
+        self::_setHeaders($action, $format, (string)AmpConfig::get('site_charset', 'UTF-8'));
 
         // If we don't even have access control on then we can't use this!
         if (!AmpConfig::get('access_control')) {
