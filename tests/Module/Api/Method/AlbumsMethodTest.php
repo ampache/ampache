@@ -58,7 +58,7 @@ class AlbumsMethodTest extends MockeryTestCase
         );
     }
 
-    public function testHandleThrowExceptionIfListIsEmpty(): void
+    public function testHandleEmptyListReturnsResponse(): void
     {
         ob_start();
 
@@ -68,6 +68,8 @@ class AlbumsMethodTest extends MockeryTestCase
         $browse     = $this->mock(Browse::class);
         $user       = $this->mock(User::class);
         $stream     = $this->mock(StreamInterface::class);
+
+        $user->catalogs['music'] = [1];
 
         $result  = '';
         $include = [];
@@ -147,8 +149,10 @@ class AlbumsMethodTest extends MockeryTestCase
                 $response,
                 $output,
                 [
-                    'exact' => true,
                     'include' => $include,
+                    'exact' => true,
+                    'api_format' => 'json',
+                    'auth' => 'stringauth',
                 ],
                 $user
             )
@@ -168,7 +172,7 @@ class AlbumsMethodTest extends MockeryTestCase
         $stream     = $this->mock(StreamInterface::class);
 
         $result  = 'some-result';
-        $include = [123, 456];
+        $include = [];
 
         $this->modelFactory->shouldReceive('createBrowse')
             ->with(null, false)
@@ -243,8 +247,10 @@ class AlbumsMethodTest extends MockeryTestCase
                 $response,
                 $output,
                 [
-                    'exact' => true,
                     'include' => $include,
+                    'exact' => true,
+                    'api_format' => 'json',
+                    'auth' => 'stringauth',
                 ],
                 $user
             )

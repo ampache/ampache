@@ -2581,7 +2581,7 @@ class Subsonic_Json_Data
 
         $lyrics = $song->get_lyrics();
 
-        if (!empty($lyrics) && $lyrics['text'] && is_string($lyrics['text'])) {
+        if (!empty($lyrics) && $lyrics['text']) {
             $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
             $text = preg_replace('/\\n\\n/i', "\n", (string)$text);
             $text = str_replace("\r", '', (string)$text);
@@ -3237,7 +3237,7 @@ class Subsonic_Json_Data
     {
         $lyrics = $song->get_lyrics();
 
-        if (!empty($lyrics) && $lyrics['text'] && is_string($lyrics['text'])) {
+        if (!empty($lyrics) && $lyrics['text']) {
             $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
             $text = preg_replace('/\\n\\n/i', "\n", (string)$text);
             $text = str_replace("\r", '', (string)$text);

@@ -24,6 +24,7 @@ This version is being released for Ampache7 **only**
 ### Fixed
 
 * ALL
+  * user_update: incorrect parameter check for `filter` instead of `username`
   * get_indexes: XML data may generate extra root elements
   * user_create: validate `disable` bool with make_bool
   * playlists: validate `show_dupes` bool with make_bool
@@ -33,6 +34,8 @@ This version is being released for Ampache7 **only**
   * bookmark: validate `include` bool with make_bool
   * bookmark_create: validate `include` bool with make_bool
   * bookmark_edit: validate `include` bool with make_bool
+API6
+  * album and albums method include didn't always work correctly
 API5
   * user_edit: incorrect parameter check for `filter` instead of `username`
   * bookmark: Bookmark is a valid `type`

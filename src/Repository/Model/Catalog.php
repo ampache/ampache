@@ -2053,7 +2053,7 @@ abstract class Catalog extends database_object
         }
 
         foreach ($results as $result) {
-            if ($result === true) {
+            if (isset($result['db'])) {
                 debug_event(self::class, 'Database already has image.', 3);
                 continue;
             }
