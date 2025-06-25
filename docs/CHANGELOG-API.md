@@ -24,6 +24,7 @@ This version is being released for Ampache7 **only**
 ### Fixed
 
 * ALL
+  * user_update: incorrect parameter check for `filter` instead of `username`
   * get_indexes: XML data may generate extra root elements
   * user_create: validate `disable` bool with make_bool
   * playlists: validate `show_dupes` bool with make_bool
