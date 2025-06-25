@@ -51,7 +51,11 @@ class DbCollectorModuleTest extends MockeryTestCase
 
         static::assertSame(
             [
-                ['db' => 6]
+                [
+                    'db' => 6,
+                    'title' => 'Art',
+                    'mime' => '',
+                ]
             ],
             $this->subject->collect($art)
         );
