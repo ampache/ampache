@@ -118,7 +118,6 @@ class OpenSubsonic_Api
         '_setStar',
         '_updatePlaylist',
         '_xmlOutput',
-        'decryptPassword',
         'error',
         'getAlbumSubId',
         'getAmpacheId',
@@ -760,22 +759,6 @@ class OpenSubsonic_Api
         return $input[$parameter];
     }
 
-    public static function decryptPassword(string $password): string
-    {
-        // Decode hex-encoded password
-        $encpwd = strpos($password, "enc:");
-        if ($encpwd !== false) {
-            $hex    = substr($password, 4);
-            $decpwd = '';
-            for ($count = 0; $count < strlen($hex); $count += 2) {
-                $decpwd .= chr((int)hexdec(substr($hex, $count, 2)));
-            }
-            $password = $decpwd;
-        }
-
-        return $password;
-    }
-
     /**
      * _getAmpacheIdArrays
      * @param string[] $sub_ids
@@ -1142,7 +1125,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $password = self::decryptPassword($inp_pass);
+        $password = SubsonicApiApplication::decryptPassword($inp_pass);
         if ($user->username == $username || $user->access === 100) {
             $update_user = User::get_from_username((string) $username);
             if ($update_user instanceof User && !AmpConfig::get('simple_user_mode')) {
@@ -1464,7 +1447,7 @@ class OpenSubsonic_Api
             if ($adminRole) {
                 $access = AccessLevelEnum::ADMIN;
             }
-            $password = self::decryptPassword($password);
+            $password = SubsonicApiApplication::decryptPassword($password);
             $user_id  = User::create($username, $username, $email, '', $password, $access);
             if ($user_id > 0) {
                 if ($downloadRole) {
@@ -4327,7 +4310,7 @@ class OpenSubsonic_Api
                 $update_user->update_access($access);
                 // update password
                 if ($password && !AmpConfig::get('simple_user_mode')) {
-                    $password = self::decryptPassword($password);
+                    $password = SubsonicApiApplication::decryptPassword($password);
                     $update_user->update_password($password);
                 }
                 // update e-mail

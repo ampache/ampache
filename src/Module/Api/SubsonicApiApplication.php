@@ -195,7 +195,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         }
 
         // Decode hex-encoded password
-        $password = self::_decryptPassword($password);
+        $password = self::decryptPassword($password);
 
         if (!isset($user)) {
             // Check user authentication
@@ -358,7 +358,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         }
     }
 
-    private static function _decryptPassword(string $password): string
+    public static function decryptPassword(string $password): string
     {
         $encpwd = strpos($password, "enc:");
         if ($encpwd !== false) {
