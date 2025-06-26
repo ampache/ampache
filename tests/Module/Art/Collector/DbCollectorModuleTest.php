@@ -57,7 +57,7 @@ class DbCollectorModuleTest extends MockeryTestCase
                     'mime' => '',
                 ]
             ],
-            $this->subject->collect($art)
+            $this->subject->collectArt($art)
         );
     }
 
@@ -72,7 +72,7 @@ class DbCollectorModuleTest extends MockeryTestCase
 
         static::assertSame(
             [],
-            $this->subject->collect($art)
+            $this->subject->collectArt($art)
         );
     }
 }

@@ -201,11 +201,11 @@ class Xml3_Data
      *
      * This returns the formatted 'playlistTrack' string for an xml document
      * @param null|list<array{
-     *       object_type: LibraryItemEnum,
-     *       object_id: int,
-     *       track_id: int,
-     *       track: int
-     *   }> $playlist_data
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     track_id: int,
+     *     track: int
+     * }> $playlist_data
      */
     private static function playlist_song_tracks_string(Song $song, ?array $playlist_data = []): string
     {
@@ -440,11 +440,11 @@ class Xml3_Data
      * This returns an xml document from an array of song ids
      * @param int[]|string[] $songs
      * @param null|list<array{
-     *      object_type: LibraryItemEnum,
-     *      object_id: int,
-     *      track_id: int,
-     *      track: int
-     *  }> $playlist_data
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     track_id: int,
+     *     track: int
+     * }> $playlist_data
      */
     public static function songs(array $songs, User $user, ?array $playlist_data = [], bool $full_xml = true): string
     {

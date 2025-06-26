@@ -413,10 +413,10 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
 
     /**
      * @param array{
-     *      latitude?: float,
-     *      longitude?: float,
-     *      name?: string
-     *  } $location
+     *     latitude?: float,
+     *     longitude?: float,
+     *     name?: string
+     * } $location
      */
     public function set_played(int $user_id, string $agent, array $location, int $date): bool
     {

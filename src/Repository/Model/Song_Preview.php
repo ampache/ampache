@@ -426,10 +426,10 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * @param array{
-     *      latitude?: float,
-     *      longitude?: float,
-     *      name?: string
-     *  } $location
+     *     latitude?: float,
+     *     longitude?: float,
+     *     name?: string
+     * } $location
      */
     public function set_played(int $user_id, string $agent, array $location, int $date): bool
     {
