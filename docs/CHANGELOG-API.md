@@ -46,8 +46,6 @@ API3
   * genre_artists: fallback function missing
   * genre_albums: fallback function missing
 
-### Added
-
 ## API 6.7.3
 
 This version is being released for Ampache7 **only**
