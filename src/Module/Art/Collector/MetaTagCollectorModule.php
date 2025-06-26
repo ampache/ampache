@@ -74,17 +74,17 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * @param Art $art
      * @param int $limit
      * @param array{
-     *      mb_albumid?: string,
-     *      artist?: string,
-     *      album?: string,
-     *      cover?: ?string,
-     *      file?: string,
-     *      year_filter?: string,
-     *      search_limit?: int,
-     *  } $data
-     * @return array
+     *     mb_albumid?: string,
+     *     artist?: string,
+     *     album?: string,
+     *     cover?: ?string,
+     *     file?: string,
+     *     year_filter?: string,
+     *     search_limit?: int,
+     * } $data
+     * @return array<int, array{raw: string, mime: string, title: string}>
      */
-    public function collect(
+    public function collectArt(
         Art $art,
         int $limit = 5,
         array $data = []
@@ -142,6 +142,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Gather tags from video files.
+     * @return array<int, array{raw: string, mime: string, title: string}>
      */
     private function gatherVideoTags(Art $art): array
     {
@@ -154,7 +155,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * Gather tags from audio files.
      * @param Art $art
      * @param int $limit
-     * @return array
+     * @return array<int, array{raw: string, mime: string, title: string}>
      */
     private function gatherSongTags(Art $art, int $limit = 5): array
     {
@@ -316,7 +317,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * (taken from function gather_song_tags with some changes)
      * @param Art $art
      * @param int $limit
-     * @return array
+     * @return array<int, array{raw: string, mime: string, title: string}>
      */
     public function gatherSongTagsSingle(Art $art, int $limit = 5): array
     {

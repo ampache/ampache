@@ -53,12 +53,12 @@ final class PlaylistRemoveSong5Method
      * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
      *
      * @param array{
-     *      filter: string,
-     *      song?: string,
-     *      track?: string,
-     *      clear?: int,
-     *      api_format: string,
-     *      auth: string,
+     *     filter: string,
+     *     song?: string,
+     *     track?: string,
+     *     clear?: int,
+     *     api_format: string,
+     *     auth: string,
      * } $input
      * @param User $user
      * @return bool

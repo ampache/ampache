@@ -33,6 +33,7 @@ use Ampache\Repository\Model\Plugin;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\User;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -63,17 +64,18 @@ final class ArtCollector implements ArtCollectorInterface
      * This tries to get the art in question
      * @param Art $art
      * @param array{
-     *      type?: string,
-     *      mb_albumid?: string,
-     *      artist?: string,
-     *      album?: string,
-     *      cover?: ?string,
-     *      file?: string,
-     *      year_filter?: string,
-     *      search_limit?: int,
-     *  } $options
+     *     type?: string,
+     *     mb_albumid?: string,
+     *     artist?: string,
+     *     album?: string,
+     *     cover?: ?string,
+     *     file?: string,
+     *     year_filter?: string,
+     *     search_limit?: int,
+     * } $options
      * @param int $limit
      * @return array<int, array{
+     *     'raw'?: string,
      *     'db'?: bool,
      *     'url'?: string,
      *     'title'?: string,
@@ -157,10 +159,15 @@ final class ArtCollector implements ArtCollectorInterface
                         "Method used: $method",
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
-                    /** @var CollectorModuleInterface $handler */
-                    $handler = $this->dic->get($handlerClassName);
+                    try {
+                        /** @var CollectorModuleInterface $handler */
+                        $handler = $this->dic->get($handlerClassName);
+                    } catch (ContainerExceptionInterface $error) {
+                        debug_event(self::class, 'createShare: Dependency injection error: ' . $error->getMessage(), 1);
+                        continue;
+                    }
 
-                    $data = $handler->collect(
+                    $data = $handler->collectArt(
                         $art,
                         $limit,
                         $options

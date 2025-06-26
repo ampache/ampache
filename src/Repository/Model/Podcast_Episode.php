@@ -435,12 +435,12 @@ class Podcast_Episode extends database_object implements
      * update
      * This takes a key'd array of data and updates the current podcast episode
      * @param array{
-     *      title?: string,
-     *      website?: string,
-     *      category: ?string,
-     *      description?: ?string,
-     *      author?: ?string,
-     *  } $data
+     *     title?: string,
+     *     website?: string,
+     *     category: ?string,
+     *     description?: ?string,
+     *     author?: ?string,
+     * } $data
      */
     public function update(array $data): int
     {
@@ -471,10 +471,10 @@ class Podcast_Episode extends database_object implements
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
      * @param array{
-     *      latitude?: float,
-     *      longitude?: float,
-     *      name?: string
-     *  } $location
+     *     latitude?: float,
+     *     longitude?: float,
+     *     name?: string
+     * } $location
      */
     public function set_played(int $user_id, string $agent, array $location, int $date): bool
     {
