@@ -253,7 +253,7 @@ class User extends database_object
      */
     public function get_catalogs(string $filter): array
     {
-        if (!isset($this->catalogs) || !isset($this->catalogs[$filter])) {
+        if (!isset($this->catalogs[$filter])) {
             $this->catalogs[$filter] = self::get_user_catalogs($this->id, $filter);
         }
 
