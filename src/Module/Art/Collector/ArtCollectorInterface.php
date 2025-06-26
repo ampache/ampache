@@ -32,7 +32,13 @@ interface ArtCollectorInterface
      * @param Art $art
      * @param array<string, mixed> $options
      * @param int $limit
-     * @return array
+     * @return array<int, array{
+     *     'raw'?: string,
+     *     'db'?: bool,
+     *     'url'?: string,
+     *     'title'?: string,
+     *     'mime'?: string
+     * }>
      */
     public function collect(Art $art, array $options = [], int $limit = 0): array;
 }

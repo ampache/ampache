@@ -1241,37 +1241,12 @@ parameters:
 			path: src/Module/Application/Stream/StreamItemAction.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\ArtCollectorInterface\\:\\:collect\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/ArtCollectorInterface.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/LastFmCollectorModule.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:collect\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/MetaTagCollectorModule.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:gatherMediaTags\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/MetaTagCollectorModule.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:gatherSongTags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/MetaTagCollectorModule.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:gatherSongTagsSingle\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/MetaTagCollectorModule.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:gatherVideoTags\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/MetaTagCollectorModule.php
 

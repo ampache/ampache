@@ -67,7 +67,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
      * } $data
      * @return array<int, array{url: string, mime: string, title: string}>
      */
-    public function collect(
+    public function collectArt(
         Art $art,
         int $limit = 5,
         array $data = []
