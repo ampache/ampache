@@ -63,17 +63,17 @@ final class FolderCollectorModule implements CollectorModuleInterface
      * @param Art $art
      * @param int $limit
      * @param array{
-     *      mb_albumid?: string,
-     *      artist?: string,
-     *      album?: string,
-     *      cover?: ?string,
-     *      file?: string,
-     *      year_filter?: string,
-     *      search_limit?: int,
-     *  } $data
+     *     mb_albumid?: string,
+     *     artist?: string,
+     *     album?: string,
+     *     cover?: ?string,
+     *     file?: string,
+     *     year_filter?: string,
+     *     search_limit?: int,
+     * } $data
      * @return array<int, array{file: string, mime: string, title: string}>
      */
-    public function collect(
+    public function collectArt(
         Art $art,
         int $limit = 5,
         array $data = []
