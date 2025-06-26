@@ -121,9 +121,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Sort images in the data array using the ART_PRIORITY list for your art_type
-     * @param array $data
-     * @param string $art_type
-     * @return array
+     * @param array<int, array{raw: string, mime: string, title: string}> $data
+     * @return array<int, array{raw: string, mime: string, title: string}>
      */
     private static function sortArtByPriority(array $data, string $art_type): array
     {
@@ -171,6 +170,10 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         // Foreach songs in this album
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
+            if ($song->isNew()) {
+                continue;
+            }
+
             $data = $this->gatherMediaTags($song, $data);
 
             if ($limit && count($data) >= $limit) {
@@ -283,7 +286,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     /**
      * Gather tags from files. (rotate through existing images so you don't return a tone of dupes)
      * @param Song|Video $media
-     * @param array $data
+     * @param array|array<int, array{raw: string, mime: string, title: string}> $data
      * @return array<int, array{raw: string, mime: string, title: string}>
      */
     private function gatherMediaTags(Song|Video $media, array $data): array
