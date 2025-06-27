@@ -102,9 +102,17 @@ final class ArtistsMethod
         ob_end_clean();
         $include = [];
         if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include']))
-                ? $input['include']
-                : explode(',', html_entity_decode((string)($input['include'])));
+            if (!is_array($input['include'])) {
+                $input['include'] = explode(',', html_entity_decode((string)($input['include'])));
+            }
+            foreach ($input['include'] as $item) {
+                if ($item === 'songs' || $item == '1') {
+                    $include[] = 'songs';
+                }
+                if ($item === 'albums' || $item == '1') {
+                    $include[] = 'albums';
+                }
+            }
         }
         switch ($input['api_format']) {
             case 'json':

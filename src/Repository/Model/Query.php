@@ -122,7 +122,7 @@ class Query
         'use_pages' => false,
     ];
 
-    /** @var int[] $_cache */
+    /** @var int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}> $_cache */
     protected array $_cache = [];
 
     private ?QueryInterface $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
@@ -249,6 +249,7 @@ class Query
             case 'season_gt':
             case 'season_lg':
             case 'season_lt':
+            case 'song_artist':
             case 'to_user':
             case 'top50':
             case 'unplayed':
@@ -838,7 +839,7 @@ class Query
     /**
      * get_saved
      * This looks in the session for the saved stuff and returns what it finds.
-     * @return int[]|string[]|array<array{object_id: int,object_type: string,track_id: int,track: int}>
+     * @return int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>
      */
     public function get_saved(): array
     {
@@ -1356,7 +1357,7 @@ class Query
     /**
      * save_objects
      * This takes the full array of object ids, often passed into show and if necessary it saves them
-     * @param array $object_ids
+     * @param int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}> $object_ids
      * @return bool
      */
     public function save_objects(array $object_ids): bool

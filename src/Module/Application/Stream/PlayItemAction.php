@@ -68,10 +68,14 @@ final class PlayItemAction extends AbstractStreamAction
                     }
                     if (
                         !$objectType &&
-                        isset($item['object_type']) &&
-                        in_array($item['object_type'], ['album', 'artist', 'song'])
+                        isset($item['object_type']) && (
+                            ($item['object_type'] instanceof LibraryItemEnum && in_array($item['object_type']->value, ['album', 'artist', 'song'])) ||
+                            (is_string($item['object_type']) && in_array($item['object_type'], ['album', 'artist', 'song']))
+                        )
                     ) {
-                        $objectType = LibraryItemEnum::tryFrom($item['object_type']);
+                        $objectType = ($item['object_type'] instanceof LibraryItemEnum)
+                            ? $item['object_type']
+                            : LibraryItemEnum::tryFrom($item['object_type']);
                     }
                 }
             } else {

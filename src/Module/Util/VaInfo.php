@@ -522,7 +522,7 @@ final class VaInfo implements VaInfoInterface
      * everything in random order.
      * @param array $results
      * @param string $configKey
-     * @return array
+     * @return string[]
      */
     public static function get_tag_type(array $results, string $configKey = 'metadata_order'): array
     {
@@ -573,10 +573,71 @@ final class VaInfo implements VaInfoInterface
      * This function takes the array from vainfo along with the
      * key we've decided on and the filename and returns it in a
      * sanitized format that Ampache can actually use
-     * @param array $results
-     * @param array $keys
+     * @param array<string, mixed> $results
+     * @param string[] $keys
      * @param string|null $filename
-     * @return array<string, mixed>
+     * @return array{
+     *     'albumartist': ?string,
+     *     'album': ?string,
+     *     'artist': ?string,
+     *     'artists': ?string,
+     *     'art': ?string,
+     *     'audio_codec': ?string,
+     *     'barcode': ?string,
+     *     'bitrate': ?int,
+     *     'catalog_number': ?string,
+     *     'channels': ?string,
+     *     'comment': ?string,
+     *     'composer': ?string,
+     *     'description': ?string,
+     *     'disk': ?int,
+     *     'disksubtitle': ?string,
+     *     'display_x': ?int,
+     *     'display_y': ?int,
+     *     'encoding': ?string,
+     *     'file': ?string,
+     *     'frame_rate': ?float,
+     *     'genre': ?string,
+     *     'isrc': ?string,
+     *     'language': ?string,
+     *     'lyrics': ?string,
+     *     'mb_albumartistid': ?string,
+     *     'mb_albumartistid_array': ?array<string>,
+     *     'mb_albumid_group': ?string,
+     *     'mb_albumid': ?string,
+     *     'mb_artistid': ?string,
+     *     'mb_artistid_array': ?array<string>,
+     *     'mb_trackid': ?string,
+     *     'mime': ?string,
+     *     'mode': ?string,
+     *     'original_name': ?string,
+     *     'original_year': ?int,
+     *     'publisher': ?string,
+     *     'r128_album_gain': ?float,
+     *     'r128_track_gain': ?float,
+     *     'rate': ?int,
+     *     'rating': ?array<int, float>,
+     *     'release_date': ?string,
+     *     'release_status': ?string,
+     *     'release_type': ?string,
+     *     'replaygain_album_gain': ?float,
+     *     'replaygain_album_peak': ?float,
+     *     'replaygain_track_gain': ?float,
+     *     'replaygain_track_peak': ?float,
+     *     'resolution_x': ?int,
+     *     'resolution_y': ?int,
+     *     'size': ?int,
+     *     'version': ?string,
+     *     'summary': ?string,
+     *     'time': ?int,
+     *     'title': ?string,
+     *     'totaldisks': ?int,
+     *     'totaltracks': ?int,
+     *     'track': ?int,
+     *     'video_bitrate': ?int,
+     *     'video_codec': ?string,
+     *     'year': ?int
+     * }
      */
     public static function clean_tag_info(array $results, array $keys, ?string $filename = null): array
     {
@@ -913,6 +974,7 @@ final class VaInfo implements VaInfoInterface
      *
      * Gather and return the general information about a file
      * (vbr/cbr, sample rate, channels, etc.)
+     * @return array<string, mixed>
      */
     private function _parse_general(array $tags): array
     {
