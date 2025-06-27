@@ -596,10 +596,10 @@ function debug_event($type, $message, $level, $username = ''): bool
 
 /**
  * @param string $action
- * @param array|null $catalogs
- * @param array $options
+ * @param int[]|null $catalogs
+ * @param array<string, bool>|null $options
  */
-function catalog_worker($action, $catalogs = null, $options = null): void
+function catalog_worker(string $action, array $catalogs = null, array $options = null): void
 {
     if (AmpConfig::get('ajax_load')) {
         $sse_url = AmpConfig::get_web_path() . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs) ?: '');

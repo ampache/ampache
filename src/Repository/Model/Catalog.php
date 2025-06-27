@@ -4108,8 +4108,8 @@ abstract class Catalog extends database_object
     /**
      * process_action
      * @param string $action
-     * @param array|null $catalogs
-     * @param array|null $options
+     * @param null|int[] $catalogs
+     * @param null|array<string, bool> $options
      * @noinspection PhpMissingBreakStatementInspection
      */
     public static function process_action(string $action, ?array $catalogs, ?array $options = null): void

@@ -15,6 +15,8 @@ While this fully implements new features it does not include all the new data fi
 * Set auto generation headers on emails
 * Search URL relationships with MusicBrainz (Spotify and Discogs linking TBC)
 * Add fallbacks for `session_name` and `site_charset`
+* Browse
+  * `song_artist` and `album_artist` negative sort conditions (e.g. `cond=song_artist,0` = not song_artist)
 * Database 760001
   * Add `subsonic_legacy` preference. (Turn off to enable the new OpenSubsonic classes)
 * Subsonic

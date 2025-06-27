@@ -43,6 +43,14 @@ use SimpleXMLElement;
  */
 class Catalog_remote extends Catalog
 {
+    private const CMD_PING = 'ping';
+
+    private const CMD_SONG_TAGS = 'song_tags';
+
+    private const CMD_SONGS = 'songs';
+
+    private const CMD_URL_TO_SONG = 'url_to_song';
+
     private string $version     = '000001';
     private string $type        = 'remote';
     private string $description = 'Ampache Remote Catalog';
@@ -336,7 +344,7 @@ class Catalog_remote extends Catalog
             $current += $step;
             $song_tags = true;
             try {
-                $songs = $remote_handle->send_command('songs', ['offset' => $start, 'limit' => $step]);
+                $songs = $remote_handle->send_command(self::CMD_SONGS, ['offset' => $start, 'limit' => $step]);
                 // Iterate over the songs we retrieved and insert them
                 if ($songs instanceof SimpleXMLElement && $songs->song->count() > 0) {
                     foreach ($songs->song as $song) {
@@ -359,7 +367,7 @@ class Catalog_remote extends Catalog
 
                             $id   = (string)$song->attributes()->id;
                             $tags = ($song_tags)
-                                ? $remote_handle->send_command('song_tags', ['filter' => $id])
+                                ? $remote_handle->send_command(self::CMD_SONG_TAGS, ['filter' => $id])
                                 : false;
                             // Iterate over the songs we retrieved and insert them
                             if ($tags instanceof SimpleXMLElement) {
@@ -514,7 +522,7 @@ class Catalog_remote extends Catalog
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event('remote.catalog', 'Starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
             try {
-                $song = $remote_handle->send_command('url_to_song', ['url' => $row['file']]);
+                $song = $remote_handle->send_command(self::CMD_URL_TO_SONG, ['url' => $row['file']]);
                 if (
                     $song instanceof SimpleXMLElement &&
                     count($song) == 1
@@ -619,7 +627,7 @@ class Catalog_remote extends Catalog
                 }
 
                 // keep alive just in case
-                $remote_handle->send_command('ping');
+                $remote_handle->send_command(self::CMD_PING);
             }
         }
 

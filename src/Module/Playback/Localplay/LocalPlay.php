@@ -533,7 +533,7 @@ class LocalPlay
      * update_instance
      * This updates the specified instance with a named array of data (_POST most likely)
      * @param int $uid
-     * @param array $data
+     * @param array<string, string> $data
      */
     public function update_instance(int $uid, array $data): void
     {

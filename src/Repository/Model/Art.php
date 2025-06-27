@@ -1275,7 +1275,7 @@ class Art extends database_object
      * Gather metadata from plugin.
      * @param AmpacheDiscogs|AmpacheMusicBrainz|AmpacheTheaudiodb $plugin
      * @param string $type
-     * @param array $options
+     * @param array<string, mixed> $options
      * @return list<array{
      *     url: string,
      *     mime: string,
@@ -1310,6 +1310,12 @@ class Art extends database_object
                 $media_info['title']       = $options['artist'];
                 $gtypes[]                  = 'music';
                 $gtypes[]                  = 'artist';
+                break;
+            case 'label':
+                $media_info['mb_artistid'] = $options['mb_labelid'];
+                $media_info['title']       = $options['label'];
+                $gtypes[]                  = 'music';
+                $gtypes[]                  = 'label';
                 break;
         }
 

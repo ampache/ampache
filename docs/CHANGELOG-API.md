@@ -13,6 +13,7 @@ This version is being released for Ampache7 **only**
   * user_playlists: Add include parameter to get song data
   * user_smartlists: Add include parameter to get song data
   * toggle_follow: Return errors when the users aren't found
+  * deprecation warnings from tag methods in the main API handler
 * API5
   * toggle_follow: Return errors when the users aren't found
 
@@ -35,7 +36,8 @@ This version is being released for Ampache7 **only**
   * bookmark_create: validate `include` bool with make_bool
   * bookmark_edit: validate `include` bool with make_bool
 API6
-  * album and albums method include didn't always work correctly
+  * `album` and `albums` include didn't always work correctly
+  * `artist` and `artists` include fixes
 API5
   * user_edit: incorrect parameter check for `filter` instead of `username`
   * bookmark: Bookmark is a valid `type`
@@ -45,8 +47,6 @@ API3
   * genre_songs: fallback function missing
   * genre_artists: fallback function missing
   * genre_albums: fallback function missing
-
-### Added
 
 ## API 6.7.3
 
