@@ -1334,7 +1334,6 @@ abstract class Catalog extends database_object
             $sql .= ($table === 'album')
                 ? $where_sql . " `song`.`enabled` = 1 "
                 : $where_sql . " `" . $table . "`.`enabled` = 1 ";
-            $params[] = $update_time;
         }
 
         $sql .= ($limit > 0)
