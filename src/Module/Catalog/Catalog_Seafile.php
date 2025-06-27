@@ -387,7 +387,7 @@ class Catalog_Seafile extends Catalog
      * @param $file
      * @param string $sort_pattern
      * @param string $rename_pattern
-     * @param array $gather_types
+     * @param null|string[] $gather_types
      * @param bool $keep
      * @return array<string, mixed>
      * @throws Exception
@@ -496,7 +496,7 @@ class Catalog_Seafile extends Catalog
 
     /**
      * @param Podcast_Episode|Song|Video $media
-     * @param array $gather_types
+     * @param string[] $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @return array<string, mixed>

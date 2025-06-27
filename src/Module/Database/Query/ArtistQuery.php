@@ -236,10 +236,14 @@ final class ArtistQuery implements QueryInterface
                 $filter_sql = " `catalog`.`enabled` = '1' AND ";
                 break;
             case 'album_artist':
-                $filter_sql = " `artist`.`id` IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album') AND ";
+                $filter_sql = ($value == 0)
+                    ? " `artist`.`id` NOT IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album') AND "
+                    : " `artist`.`id` IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album') AND ";
                 break;
             case 'song_artist':
-                $filter_sql = " `artist`.`id` IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'song') AND ";
+                $filter_sql = ($value == 0)
+                    ? " `artist`.`id` NOT IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'song') AND "
+                    : " `artist`.`id` IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'song') AND ";
                 break;
             case 'unplayed':
                 if ((int)$value == 1) {

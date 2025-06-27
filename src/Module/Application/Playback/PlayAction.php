@@ -185,7 +185,7 @@ final class PlayAction implements ApplicationActionInterface
             $random  = (int)filter_input(INPUT_GET, 'random', FILTER_SANITIZE_NUMBER_INT);
 
             // run_custom_play_action... whatever that is
-            $cpaction = (int)filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
+            $cpaction = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_NUMBER_INT);
         }
         //$this->logger->debug('REQUEST: ' . print_r($_REQUEST, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
         // democratic play url doesn't include these

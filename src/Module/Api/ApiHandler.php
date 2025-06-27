@@ -69,6 +69,15 @@ final class ApiHandler implements ApiHandlerInterface
 
     private UserRepositoryInterface $userRepository;
 
+    /* * @var string[] */
+    private array $deprecated = [
+        'tag_albums',
+        'tag_artists',
+        'tag',
+        'tag_songs',
+        'tags',
+    ];
+
     public function __construct(
         RequestParserInterface $requestParser,
         StreamFactoryInterface $streamFactory,
@@ -433,6 +442,20 @@ final class ApiHandler implements ApiHandlerInterface
                 }
                 break;
             case 5:
+                if (in_array($action, $this->deprecated)) {
+                    ob_end_clean();
+
+                    return $response->withBody(
+                        $this->streamFactory->createStream(
+                            $output->error5(
+                                ErrorCodeEnum::DEPRECATED,
+                                T_('Deprecated'),
+                                $action,
+                                'system'
+                            )
+                        )
+                    );
+                }
                 $handlerClassName = Api5::METHOD_LIST[$action] ?? null;
                 if ($handlerClassName === null) {
                     ob_end_clean();
@@ -451,6 +474,20 @@ final class ApiHandler implements ApiHandlerInterface
                 break;
             case 6:
             default:
+                if (in_array($action, $this->deprecated)) {
+                    ob_end_clean();
+
+                    return $response->withBody(
+                        $this->streamFactory->createStream(
+                            $output->error(
+                                ErrorCodeEnum::DEPRECATED,
+                                T_('Deprecated'),
+                                $action,
+                                'system'
+                            )
+                        )
+                    );
+                }
                 $handlerClassName = Api::METHOD_LIST[$action] ?? null;
                 if ($handlerClassName === null) {
                     ob_end_clean();

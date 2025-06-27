@@ -70,9 +70,12 @@ final class SseApiApplication implements ApiApplicationInterface
         } else {
             $options = null;
         }
+
         if (array_key_exists('catalogs', $_REQUEST)) {
-            /** @var array<int, int|string> $catalogs */
-            $catalogs = scrub_in((array) json_decode(urldecode($_REQUEST['catalogs']), true));
+            $catalogs = array_map(
+                'intval',
+                (array)json_decode(urldecode($_REQUEST['catalogs']), true)
+            );
         } else {
             $catalogs = null;
         }

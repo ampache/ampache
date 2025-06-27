@@ -78,7 +78,7 @@ interface VaInfoInterface
      * everything in random order.
      * @param array $results
      * @param string $configKey
-     * @return array
+     * @return string[]
      */
     public static function get_tag_type(array $results, string $configKey = 'metadata_order'): array;
 
