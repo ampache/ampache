@@ -249,6 +249,7 @@ class Query
             case 'season_gt':
             case 'season_lg':
             case 'season_lt':
+            case 'song_artist':
             case 'to_user':
             case 'top50':
             case 'unplayed':
