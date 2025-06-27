@@ -451,7 +451,7 @@ final class ApiHandler implements ApiHandlerInterface
                                 ErrorCodeEnum::DEPRECATED,
                                 T_('Deprecated'),
                                 $action,
-                                'system'
+                                'removed'
                             )
                         )
                     );
@@ -483,7 +483,7 @@ final class ApiHandler implements ApiHandlerInterface
                                 ErrorCodeEnum::DEPRECATED,
                                 T_('Deprecated'),
                                 $action,
-                                'system'
+                                'removed'
                             )
                         )
                     );
