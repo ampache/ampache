@@ -447,7 +447,7 @@ final class ApiHandler implements ApiHandlerInterface
 
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error(
+                            $output->error5(
                                 ErrorCodeEnum::DEPRECATED,
                                 T_('Deprecated'),
                                 $action,
