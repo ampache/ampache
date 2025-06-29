@@ -696,19 +696,19 @@ Return children of a parent object in a folder traversal/browse style. If you do
 
 **NOTE** Catalog ID is required on 'artist', 'album', 'podcast' so you can filter the browse correctly
 
-| Input    | Type       | Description                                                                                        | Optional |
-|----------|------------|----------------------------------------------------------------------------------------------------|---------:|
-| 'filter' | string     | object_id                                                                                          |      YES |
-| 'type'   | string     | 'root', 'catalog', 'artist', 'album', 'podcast'                                                    |      YES |
-| 'filter' | string     | catalog ID you are browsing                                                                        |      YES |
-| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
-| 'update' | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
-| 'offset' | integer    | Return results starting from this index position                                                   |      YES |
-| 'limit'  | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'   | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
-|          |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
-| 'sort'   | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
-|          |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
+| Input     | Type       | Description                                                                                        | Optional |
+|-----------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'  | string     | object_id                                                                                          |      YES |
+| 'type'    | string     | 'root', 'catalog', 'artist', 'album', 'podcast'                                                    |      YES |
+| 'catalog' | string     | catalog ID you are browsing                                                                        |      YES |
+| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'  | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'   | integer    | Maximum number of results to return                                                                |      YES |
+| 'cond'    | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
+|           |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
+| 'sort'    | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
+|           |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
 
 * return array
 
@@ -2626,6 +2626,34 @@ MUSIC [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/d
 
 PODCAST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_group%20\(podcast\).json)
 
+### search_rules
+
+Print a list of valid search rules for your search type
+
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|---------:|
+| 'filter' | string  | 'song', 'album', 'song_artist', 'album_artist',  |       NO |
+|          |         | 'artist', 'label', 'playlist', 'podcast',        |          |
+|          |         | 'podcast_episode', 'genre', 'user', 'video'      |          |
+
+* return array
+
+```JSON
+"rule": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+Artist [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules (artist).json)
+
+Album [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules (album).json)
+
+Song [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules (song).json)
+
 ### search_songs
 
 This searches the songs and returns... songs
@@ -3307,18 +3335,19 @@ Update an existing user.
 
 This returns playlists based on the specified filter
 
-| Input    | Type       | Description                                                                                        | Optional |
-|----------|------------|----------------------------------------------------------------------------------------------------|---------:|
-| 'filter' | string     | Filter results to match this string                                                                |      YES |
-| 'exact'  | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                    |      YES |
-| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
-| 'update' | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
-| 'offset' | integer    | Return results starting from this index position                                                   |      YES |
-| 'limit'  | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'   | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
-|          |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
-| 'sort'   | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
-|          |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
+| Input     | Type       | Description                                                                                        | Optional |
+|-----------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'  | string     | Filter results to match this string                                                                |      YES |
+| 'exact'   | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                    |      YES |
+| 'include' | string     | `0`, `1` (include playlist items)                                                                  |      YES |
+| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'  | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'   | integer    | Maximum number of results to return                                                                |      YES |
+| 'cond'    | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
+|           |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
+| 'sort'    | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
+|           |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
 
 * return array
 
@@ -3360,18 +3389,19 @@ Get your user preference by name
 
 This returns smartlists based on the specified filter
 
-| Input    | Type       | Description                                                                                        | Optional |
-|----------|------------|----------------------------------------------------------------------------------------------------|---------:|
-| 'filter' | string     | Filter results to match this string                                                                |      YES |
-| 'exact'  | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                    |      YES |
-| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
-| 'update' | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
-| 'offset' | integer    | Return results starting from this index position                                                   |      YES |
-| 'limit'  | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'   | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
-|          |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
-| 'sort'   | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
-|          |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
+| Input     | Type       | Description                                                                                        | Optional |
+|-----------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'  | string     | Filter results to match this string                                                                |      YES |
+| 'exact'   | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                    |      YES |
+| 'include' | string     | `0`, `1` (include playlist items)                                                                  |      YES |
+| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'  | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'   | integer    | Maximum number of results to return                                                                |      YES |
+| 'cond'    | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
+|           |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
+| 'sort'    | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
+|           |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
 
 * return array
 

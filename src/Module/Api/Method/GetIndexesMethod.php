@@ -49,7 +49,7 @@ final class GetIndexesMethod
      * This takes a collection of inputs and returns ID + name for the object type
      * Add 'include' to allow indexing all song tracks (enabled for xml by default)
      *
-     * This method is depreciated and will be removed in **API7** (Use list)
+     * This method is deprecated and will be removed in **API7** (Use list)
      *
      * type        = (string) 'album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'
      * filter      = (string) //optional
