@@ -16,6 +16,7 @@ config/ampache.cfg.php
 config/ampache.cfg.php.backup
 config/registration_agreement.php
 docker/media/
+locale/base/locale/
 log/
 logs/
 nbproject/
