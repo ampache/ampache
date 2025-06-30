@@ -905,8 +905,10 @@ class Catalog_local extends Catalog
                 true
             );
             debug_event('local.catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
-            AmpError::add('general', T_('Catalog root unreadable, stopping clean'));
-            echo AmpError::display('general');
+            if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+                AmpError::add('general', T_('Catalog root unreadable, stopping clean'));
+                echo AmpError::display('general');
+            }
 
             return 0;
         }
@@ -1356,8 +1358,10 @@ class Catalog_local extends Catalog
     {
         if (!Core::is_readable($this->path)) {
             // First sanity check; no point in proceeding with an unreadable catalog root.
-            AmpError::add('general', T_('Catalog root unreadable, stopping check'));
-            echo AmpError::display('general');
+            if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+                AmpError::add('general', T_('Catalog root unreadable, stopping check'));
+                echo AmpError::display('general');
+            }
 
             return [];
         }
