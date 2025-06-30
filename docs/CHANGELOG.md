@@ -10,6 +10,7 @@ While this fully implements new features it does not include all the new data fi
 
 ### Added
 
+* Translations 2025-06-30
 * Restore thumbnail etag
 * Directplay for Searches and Smartlist pages
 * Set auto generation headers on emails
@@ -50,6 +51,7 @@ While this fully implements new features it does not include all the new data fi
 * Error looking up lyrics when the song doesn't exist
 * Error loading up an image.php link without a valid URL
 * Default `composer_no_dev` fallback was false instead of true
+* Delete dupe `opbject_count` entries when the update fails
 
 ## Ampache 7.5.3
 

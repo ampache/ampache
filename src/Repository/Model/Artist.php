@@ -410,14 +410,20 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Get item prefix, basename and name by the artist id.
+     * @return array{
+     *     id: string,
+     *     name: string,
+     *     prefix: string,
+     *     basename: string
+     * }
      */
     public static function get_name_array_by_id(?int $artist_id = 0): array
     {
         if ($artist_id === 0) {
             return [
-                "id" => 0,
-                "name" => '',
-                "prefix" => T_('Various'),
+                "id" => '0',
+                "name" => T_('Various'),
+                "prefix" => '',
                 "basename" => T_('Various')
             ];
         }
