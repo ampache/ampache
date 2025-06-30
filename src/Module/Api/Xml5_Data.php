@@ -269,7 +269,7 @@ class Xml5_Data
                             $filter .= "\t\t<$widget_type id=\"$key\"><![CDATA[" . $val . "]]></$widget_type>\n";
                         }
                     }
-                } elseif ($name === 'values' && is_array($value)) {
+                } elseif (($name === 'values' || $name === 'subtypes') && is_array($value)) {
                     $filter = '';
                     foreach ($value as $key => $val) {
                         $filter .= "\t\t<value id=\"$key\"><![CDATA[" . $val . "]]></value>\n";
