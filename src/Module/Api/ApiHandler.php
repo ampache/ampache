@@ -69,7 +69,7 @@ final class ApiHandler implements ApiHandlerInterface
 
     private UserRepositoryInterface $userRepository;
 
-    /* * @var string[] */
+    /** @var string[] */
     private array $deprecated = [
         'tag_albums',
         'tag_artists',

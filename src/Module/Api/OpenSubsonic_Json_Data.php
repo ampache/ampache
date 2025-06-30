@@ -873,8 +873,8 @@ class OpenSubsonic_Json_Data
             $array = Artist::get_name_array_by_id($artist_id);
 
             $album_artists[] = [
-                'id' => OpenSubsonic_Api::getArtistSubId($array['id']),
-                'name' => (string)$array['f_name'],
+                'id' => OpenSubsonic_Api::getArtistSubId($artist_id),
+                'name' => (string)$array['name'],
             ];
         }
         $json['artists'] = $album_artists;
@@ -1485,8 +1485,8 @@ class OpenSubsonic_Json_Data
             $array = Artist::get_name_array_by_id($artist_id);
 
             $album_artists[] = [
-                'id' => OpenSubsonic_Api::getArtistSubId($array['id']),
-                'name' => (string)$array['f_name'],
+                'id' => OpenSubsonic_Api::getArtistSubId($artist_id),
+                'name' => (string)$array['name'],
             ];
         }
         $json['artists'] = $artists;
@@ -1496,8 +1496,8 @@ class OpenSubsonic_Json_Data
             $array = Artist::get_name_array_by_id($artist_id);
 
             $album_artists[] = [
-                'id' => OpenSubsonic_Api::getArtistSubId($array['id']),
-                'name' => (string)$array['f_name'],
+                'id' => OpenSubsonic_Api::getArtistSubId($artist_id),
+                'name' => (string)$array['name'],
             ];
         }
         $json['albumArtists'] = $album_artists;
