@@ -270,8 +270,9 @@ class Xml5_Data
                         }
                     }
                 } elseif ($name === 'values' && is_array($value)) {
-                    foreach ($value as $val) {
-                        $filter .= "\t\t<value><![CDATA[" . $val . "]]></value>\n";
+                    $filter = '';
+                    foreach ($value as $key => $val) {
+                        $filter .= "\t\t<value id=\"$key\"><![CDATA[" . $val . "]]></value>\n";
                     }
                 } else {
                     $filter = (is_numeric($value)) ? $value : "<![CDATA[" . $value . "]]>";
