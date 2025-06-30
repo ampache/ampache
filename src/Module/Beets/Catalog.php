@@ -211,9 +211,11 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         }
 
         debug_event(self::class, 'Insert failed for ' . $song['file'], 1);
-        /* HINT: filename (file path) */
-        AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
-        echo AmpError::display('general');
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+            /* HINT: filename (file path) */
+            AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
+            echo AmpError::display('general');
+        }
 
         return null;
     }
