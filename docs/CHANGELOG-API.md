@@ -25,6 +25,7 @@ This version is being released for Ampache7 **only**
 ### Fixed
 
 * ALL
+  * Incorrect data in the method docs
   * user_update: incorrect parameter check for `filter` instead of `username`
   * get_indexes: XML data may generate extra root elements
   * user_create: validate `disable` bool with make_bool
@@ -35,6 +36,8 @@ This version is being released for Ampache7 **only**
   * bookmark: validate `include` bool with make_bool
   * bookmark_create: validate `include` bool with make_bool
   * bookmark_edit: validate `include` bool with make_bool
+  * user_preference, user_preferences: Error with array special values
+  * system_preference, system_preferences:E rror with array special values
 API6
   * `album` and `albums` include didn't always work correctly
   * `artist` and `artists` include fixes
