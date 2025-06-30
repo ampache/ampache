@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-06-30 13:59+1000\n"
+"POT-Creation-Date: 2025-06-30 14:45+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -11322,4 +11322,776 @@ msgstr ""
 
 #: ./untranslated-strings.txt:256
 msgid "average"
+msgstr ""
+ #######################################################################
+
+ # This file lists all description strings from your Ampache-database -> preference-table.
+ # Please do not delete or modify the content by yourself. It will be automatically (re)generated
+ # if you run './gather-messages.sh [-gu|--getutds].
+ # Last Update: 30.06.2025 14:45:22 AEST 
+
+ #######################################################################
+
+#: Database preference table id 123
+msgid "Ajax page load"
+msgstr ""
+
+#: Database preference table id 108
+msgid "Album - Group multiple disks"
+msgstr ""
+
+#: Database preference table id 122
+msgid "Album - Group per release type"
+msgstr ""
+
+#: Database preference table id 130
+msgid "Album - Group per release type Sort"
+msgstr ""
+
+#: Database preference table id 83
+msgid "Album - Default sort"
+msgstr ""
+
+#: Database preference table id 45
+msgid "Allow Democratic Play"
+msgstr ""
+
+#: Database preference table id 46
+msgid "Allow Localplay Play"
+msgstr ""
+
+#: Database preference table id 93
+msgid "Share Recently Played information - Allow access to streaming agent"
+msgstr ""
+
+#: Database preference table id 90
+msgid "Share Now Playing information"
+msgstr ""
+
+#: Database preference table id 91
+msgid "Share Recently Played information"
+msgstr ""
+
+#: Database preference table id 92
+msgid "Share Recently Played information - Allow access to streaming date/time"
+msgstr ""
+
+#: Database preference table id 44
+msgid "Allow Streaming"
+msgstr ""
+
+#: Database preference table id 113
+msgid "Allow user uploads"
+msgstr ""
+
+#: Database preference table id 121
+msgid "Allow Video Features"
+msgstr ""
+
+#: Database preference table id 402
+msgid "Force API streams to download. (Enable scrobble in your client to record stats)"
+msgstr ""
+
+#: Database preference table id 299
+msgid "Allow Ampache API3 responses"
+msgstr ""
+
+#: Database preference table id 300
+msgid "Allow Ampache API4 responses"
+msgstr ""
+
+#: Database preference table id 301
+msgid "Allow Ampache API5 responses"
+msgstr ""
+
+#: Database preference table id 334
+msgid "Allow Ampache API6 responses"
+msgstr ""
+
+#: Database preference table id 302
+msgid "Force a specific API response no matter what version you send"
+msgstr ""
+
+#: Database preference table id 310
+msgid "Hide playlists in Subsonic and API clients that start with this string"
+msgstr ""
+
+#: Database preference table id 311
+msgid "Hide smartlists that match playlist names in Subsonic and API clients"
+msgstr ""
+
+#: Database preference table id 95
+msgid "Check for Ampache updates automatically"
+msgstr ""
+
+#: Database preference table id 96
+msgid "AutoUpdate last check time"
+msgstr ""
+
+#: Database preference table id 97
+msgid "AutoUpdate last version from last check"
+msgstr ""
+
+#: Database preference table id 98
+msgid "AutoUpdate last version from last check is newer"
+msgstr ""
+
+#: Database preference table id 344
+msgid "Only keep the latest media bookmark"
+msgstr ""
+
+#: Database preference table id 105
+msgid "Broadcast web player by default"
+msgstr ""
+
+#: Database preference table id 425
+msgid "Force Grid View on Album Disk browse"
+msgstr ""
+
+#: Database preference table id 424
+msgid "Force Grid View on Album browse"
+msgstr ""
+
+#: Database preference table id 426
+msgid "Force Grid View on Artist browse"
+msgstr ""
+
+#: Database preference table id 149
+msgid "Show filter box on browse"
+msgstr ""
+
+#: Database preference table id 427
+msgid "Force Grid View on Radio Station browse"
+msgstr ""
+
+#: Database preference table id 428
+msgid "Force Grid View on Playlist browse"
+msgstr ""
+
+#: Database preference table id 431
+msgid "Force Grid View on Podcast Episode browse"
+msgstr ""
+
+#: Database preference table id 430
+msgid "Force Grid View on Podcast browse"
+msgstr ""
+
+#: Database preference table id 423
+msgid "Force Grid View on Song browse"
+msgstr ""
+
+#: Database preference table id 429
+msgid "Force Grid View on Video browse"
+msgstr ""
+
+#: Database preference table id 131
+msgid "Web Player browser notifications"
+msgstr ""
+
+#: Database preference table id 132
+msgid "Web Player browser notifications timeout (seconds)"
+msgstr ""
+
+#: Database preference table id 148
+msgid "Check library item at import time and disable duplicates"
+msgstr ""
+
+#: Database preference table id 156
+msgid "Cache computed SQL data (eg. media hits stats) using a cron"
+msgstr ""
+
+#: Database preference table id 151
+msgid "Custom blank album default image"
+msgstr ""
+
+#: Database preference table id 155
+msgid "Custom datetime"
+msgstr ""
+
+#: Database preference table id 137
+msgid "Custom URL - Favicon"
+msgstr ""
+
+#: Database preference table id 275
+msgid "Custom URL - Login page background"
+msgstr ""
+
+#: Database preference table id 136
+msgid "Custom URL - Login page logo"
+msgstr ""
+
+#: Database preference table id 129
+msgid "Custom URL - Logo"
+msgstr ""
+
+#: Database preference table id 377
+msgid "Custom URL - Use your avatar for header logo"
+msgstr ""
+
+#: Database preference table id 138
+msgid "Custom text footer"
+msgstr ""
+
+#: Database preference table id 341
+msgid "Custom timezone (Override PHP date.timezone)"
+msgstr ""
+
+#: Database preference table id 118
+msgid "Use DAAP backend"
+msgstr ""
+
+#: Database preference table id 119
+msgid "DAAP backend password"
+msgstr ""
+
+#: Database preference table id 110
+msgid "Democratic - Clear votes for expired user sessions"
+msgstr ""
+
+#: Database preference table id 329
+msgid "Democratic - Use smartlists for base playlist"
+msgstr ""
+
+#: Database preference table id 124
+msgid "Limit direct play to maximum media count"
+msgstr ""
+
+#: Database preference table id 142
+msgid "Custom metadata - Disable these fields"
+msgstr ""
+
+#: Database preference table id 143
+msgid "Custom metadata - Define field list"
+msgstr ""
+
+#: Database preference table id 1
+msgid "Allow Downloads"
+msgstr ""
+
+#: Database preference table id 409
+msgid "Show extended links for playlist media"
+msgstr ""
+
+#: Database preference table id 407
+msgid "Show Bandcamp search icon on library items"
+msgstr ""
+
+#: Database preference table id 422
+msgid "Show Discogs search icon on library items"
+msgstr ""
+
+#: Database preference table id 404
+msgid "Show DuckDuckGo search icon on library items"
+msgstr ""
+
+#: Database preference table id 403
+msgid "Show Google search icon on library items"
+msgstr ""
+
+#: Database preference table id 406
+msgid "Show Last.fm search icon on library items"
+msgstr ""
+
+#: Database preference table id 408
+msgid "Show MusicBrainz search icon on library items"
+msgstr ""
+
+#: Database preference table id 405
+msgid "Show Wikipedia search icon on library items"
+msgstr ""
+
+#: Database preference table id 24
+msgid "Force HTTP playback regardless of port"
+msgstr ""
+
+#: Database preference table id 133
+msgid "Allow Geolocation"
+msgstr ""
+
+#: Database preference table id 163
+msgid "Hide the Genre column in browse table rows"
+msgstr ""
+
+#: Database preference table id 160
+msgid "Hide the Song Artist column for Albums with one Artist"
+msgstr ""
+
+#: Database preference table id 125
+msgid "Show Albums of the Moment"
+msgstr ""
+
+#: Database preference table id 126
+msgid "Show Videos of the Moment"
+msgstr ""
+
+#: Database preference table id 128
+msgid "Show Now Playing"
+msgstr ""
+
+#: Database preference table id 127
+msgid "Show Recently Played"
+msgstr ""
+
+#: Database preference table id 187
+msgid "Show all media types in Recently Played"
+msgstr ""
+
+#: Database preference table id 71
+msgid "httpQ Active Instance"
+msgstr ""
+
+#: Database preference table id 392
+msgid "Use Dashboard links for the index page header"
+msgstr ""
+
+#: Database preference table id 345
+msgid "Default webplayer volume"
+msgstr ""
+
+#: Database preference table id 153
+msgid "Alphabet browsing by default for following library items (album,artist,...)"
+msgstr ""
+
+#: Database preference table id 146
+msgid "Library item context menu"
+msgstr ""
+
+#: Database preference table id 41
+msgid "Localplay Type"
+msgstr ""
+
+#: Database preference table id 40
+msgid "Localplay Access"
+msgstr ""
+
+#: Database preference table id 23
+msgid "Lock Songs"
+msgstr ""
+
+#: Database preference table id 140
+msgid "Allow E-mail notifications"
+msgstr ""
+
+#: Database preference table id 82
+msgid "Now Playing filtered per user"
+msgstr ""
+
+#: Database preference table id 242
+msgid "Set the amount of items Album/Video of the Moment will display"
+msgstr ""
+
+#: Database preference table id 51
+msgid "Offset Limit"
+msgstr ""
+
+#: Database preference table id 348
+msgid "API sessions do not expire"
+msgstr ""
+
+#: Database preference table id 29
+msgid "Playback Type"
+msgstr ""
+
+#: Database preference table id 53
+msgid "Playlist Method"
+msgstr ""
+
+#: Database preference table id 32
+msgid "Playlist Type"
+msgstr ""
+
+#: Database preference table id 144
+msgid "# latest episodes to keep"
+msgstr ""
+
+#: Database preference table id 145
+msgid "# episodes to download when new episodes are available"
+msgstr ""
+
+#: Database preference table id 4
+msgid "Popular Threshold"
+msgstr ""
+
+#: Database preference table id 52
+msgid "Rate Limit"
+msgstr ""
+
+#: Database preference table id 102
+msgid "Allow Share"
+msgstr ""
+
+#: Database preference table id 103
+msgid "Share links default expiration days (0=never)"
+msgstr ""
+
+#: Database preference table id 327
+msgid "Show 'Album Artists' link in the main sidebar"
+msgstr ""
+
+#: Database preference table id 328
+msgid "Show 'Artists' link in the main sidebar"
+msgstr ""
+
+#: Database preference table id 111
+msgid "Show donate button in footer"
+msgstr ""
+
+#: Database preference table id 338
+msgid "Show the login / registration links in the site header"
+msgstr ""
+
+#: Database preference table id 158
+msgid "Show License"
+msgstr ""
+
+#: Database preference table id 337
+msgid "Show Album original year on links (if available)"
+msgstr ""
+
+#: Database preference table id 84
+msgid "Show # played"
+msgstr ""
+
+#: Database preference table id 435
+msgid "Show Artist column on playlist media rows"
+msgstr ""
+
+#: Database preference table id 309
+msgid "Show playlist owner username in titles"
+msgstr ""
+
+#: Database preference table id 154
+msgid "Show # skipped"
+msgstr ""
+
+#: Database preference table id 336
+msgid "Show Album subtitle on links (if available)"
+msgstr ""
+
+#: Database preference table id 363
+msgid "Enable access to your personal "Spotify Wrapped" from your user page"
+msgstr ""
+
+#: Database preference table id 370
+msgid "Hide the Browse menu in the sidebar"
+msgstr ""
+
+#: Database preference table id 371
+msgid "Hide the Dashboard menu in the sidebar"
+msgstr ""
+
+#: Database preference table id 375
+msgid "Hide the Information menu in the sidebar"
+msgstr ""
+
+#: Database preference table id 374
+msgid "Hide the Playlist menu in the sidebar"
+msgstr ""
+
+#: Database preference table id 373
+msgid "Hide the Search menu in the sidebar"
+msgstr ""
+
+#: Database preference table id 369
+msgid "Hide sidebar switcher arrows"
+msgstr ""
+
+#: Database preference table id 372
+msgid "Hide the Video menu in the sidebar"
+msgstr ""
+
+#: Database preference table id 150
+msgid "Light sidebar by default"
+msgstr ""
+
+#: Database preference table id 395
+msgid "Custom CSS Order - Browse"
+msgstr ""
+
+#: Database preference table id 396
+msgid "Custom CSS Order - Dashboard"
+msgstr ""
+
+#: Database preference table id 397
+msgid "Custom CSS Order - Information"
+msgstr ""
+
+#: Database preference table id 398
+msgid "Custom CSS Order - Playlist"
+msgstr ""
+
+#: Database preference table id 399
+msgid "Custom CSS Order - Search"
+msgstr ""
+
+#: Database preference table id 400
+msgid "Custom CSS Order - Video"
+msgstr ""
+
+#: Database preference table id 22
+msgid "Website Title"
+msgstr ""
+
+#: Database preference table id 104
+msgid "Artist slideshow inactivity time"
+msgstr ""
+
+#: Database preference table id 85
+msgid "Show current song in Web player page title"
+msgstr ""
+
+#: Database preference table id 47
+msgid "Statistics Day Threshold"
+msgstr ""
+
+#: Database preference table id 101
+msgid "Enable URL Rewriting"
+msgstr ""
+
+#: Database preference table id 298
+msgid "Force Subsonic streams to download. (Enable scrobble in your client to record stats)"
+msgstr ""
+
+#: Database preference table id 86
+msgid "Use Subsonic backend"
+msgstr ""
+
+#: Database preference table id 455
+msgid "Enable legacy Subsonic API responses for compatibility issues"
+msgstr ""
+
+#: Database preference table id 141
+msgid "Theme color"
+msgstr ""
+
+#: Database preference table id 33
+msgid "Theme"
+msgstr ""
+
+#: Database preference table id 109
+msgid "Top menu"
+msgstr ""
+
+#: Database preference table id 19
+msgid "Transcode Bitrate"
+msgstr ""
+
+#: Database preference table id 94
+msgid "Fix header position on compatible themes"
+msgstr ""
+
+#: Database preference table id 157
+msgid "Only add unique items to playlists"
+msgstr ""
+
+#: Database preference table id 335
+msgid "Upload Access Level"
+msgstr ""
+
+#: Database preference table id 117
+msgid "Allow users to edit uploaded songs"
+msgstr ""
+
+#: Database preference table id 135
+msgid "Allow users to remove uploaded songs"
+msgstr ""
+
+#: Database preference table id 376
+msgid "Destination catalog"
+msgstr ""
+
+#: Database preference table id 147
+msgid "Rename uploaded file according to catalog pattern"
+msgstr ""
+
+#: Database preference table id 116
+msgid "Post-upload script (current directory = upload target directory)"
+msgstr ""
+
+#: Database preference table id 114
+msgid "Create a subdirectory per user"
+msgstr ""
+
+#: Database preference table id 115
+msgid "Consider the user sender as the track's artist"
+msgstr ""
+
+#: Database preference table id 120
+msgid "Use UPnP backend"
+msgstr ""
+
+#: Database preference table id 159
+msgid "Browse by Original Year for albums (falls back to Year)"
+msgstr ""
+
+#: Database preference table id 339
+msgid "Use an alternative playback action for streaming if you have issues with playing music"
+msgstr ""
+
+#: Database preference table id 220
+msgid "Default logon page"
+msgstr ""
+
+#: Database preference table id 139
+msgid "Use WebDAV backend"
+msgstr ""
+
+#: Database preference table id 134
+msgid "Authorize JavaScript decoder (Aurora.js) in Web Player"
+msgstr ""
+
+#: Database preference table id 99
+msgid "Confirmation when closing current playing window"
+msgstr ""
+
+#: Database preference table id 88
+msgid "Authorize Flash Web Player"
+msgstr ""
+
+#: Database preference table id 89
+msgid "Authorize HTML5 Web Player"
+msgstr ""
+
+#: Database preference table id 100
+msgid "Auto-pause between tabs"
+msgstr ""
+
+#: Database preference table id 330
+msgid "Remove tracks before the current playlist item in the webplayer when played"
+msgstr ""
+
+#: Database preference subcategory table id 108
+msgid "library"
+msgstr ""
+
+#: Database preference subcategory table id 45
+msgid "feature"
+msgstr ""
+
+#: Database preference subcategory table id 46
+msgid "localplay"
+msgstr ""
+
+#: Database preference subcategory table id 93
+msgid "privacy"
+msgstr ""
+
+#: Database preference subcategory table id 113
+msgid "upload"
+msgstr ""
+
+#: Database preference subcategory table id 402
+msgid "api"
+msgstr ""
+
+#: Database preference subcategory table id 95
+msgid "update"
+msgstr ""
+
+#: Database preference subcategory table id 105
+msgid "player"
+msgstr ""
+
+#: Database preference subcategory table id 425
+msgid "cookies"
+msgstr ""
+
+#: Database preference subcategory table id 149
+msgid "browse"
+msgstr ""
+
+#: Database preference subcategory table id 131
+msgid "notification"
+msgstr ""
+
+#: Database preference subcategory table id 148
+msgid "catalog"
+msgstr ""
+
+#: Database preference subcategory table id 151
+msgid "custom"
+msgstr ""
+
+#: Database preference subcategory table id 138
+msgid "interface"
+msgstr ""
+
+#: Database preference subcategory table id 118
+msgid "backend"
+msgstr ""
+
+#: Database preference subcategory table id 142
+msgid "metadata"
+msgstr ""
+
+#: Database preference subcategory table id 176
+msgid "discogs"
+msgstr ""
+
+#: Database preference subcategory table id 125
+msgid "home"
+msgstr ""
+
+#: Database preference subcategory table id 386
+msgid "home dashboard"
+msgstr ""
+
+#: Database preference subcategory table id 71
+msgid "httpq"
+msgstr ""
+
+#: Database preference subcategory table id 78
+msgid "lastfm"
+msgstr ""
+
+#: Database preference subcategory table id 340
+msgid "lyrist lyrics"
+msgstr ""
+
+#: Database preference subcategory table id 326
+msgid "musicbrainz"
+msgstr ""
+
+#: Database preference subcategory table id 70
+msgid "mpd"
+msgstr ""
+
+#: Database preference subcategory table id 51
+msgid "query"
+msgstr ""
+
+#: Database preference subcategory table id 234
+msgid "personal favorites"
+msgstr ""
+
+#: Database preference subcategory table id 144
+msgid "podcast"
+msgstr ""
+
+#: Database preference subcategory table id 52
+msgid "transcoding"
+msgstr ""
+
+#: Database preference subcategory table id 274
+msgid "ratingmatch"
+msgstr ""
+
+#: Database preference subcategory table id 103
+msgid "share"
+msgstr ""
+
+#: Database preference subcategory table id 327
+msgid "sidebar"
+msgstr ""
+
+#: Database preference subcategory table id 141
+msgid "theme"
+msgstr ""
+
+#: Database preference subcategory table id 401
+msgid "vlc"
+msgstr ""
+
+#: Database preference subcategory table id 421
+msgid "xbmc"
 msgstr ""

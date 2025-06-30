@@ -3,7 +3,7 @@
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 30.05.2025 11:36:14 AEST 
+ # Last Update: 30.06.2025 14:45:22 AEST 
 
  #######################################################################
 
@@ -177,10 +177,6 @@ msgstr ""
 
 #: Database preference table id 151
 msgid "Custom blank album default image"
-msgstr ""
-
-#: Database preference table id 152
-msgid "Custom blank video default image"
 msgstr ""
 
 #: Database preference table id 155
@@ -533,6 +529,10 @@ msgstr ""
 
 #: Database preference table id 86
 msgid "Use Subsonic backend"
+msgstr ""
+
+#: Database preference table id 455
+msgid "Enable legacy Subsonic API responses for compatibility issues"
 msgstr ""
 
 #: Database preference table id 141
