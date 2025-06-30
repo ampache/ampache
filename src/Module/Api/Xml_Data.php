@@ -320,7 +320,7 @@ class Xml_Data
         foreach ($array as $object) {
             $string .= "\t<$item id=\"" . ($object['id'] ?? $object['name']) . "\">\n";
             foreach ($object as $name => $value) {
-                if ($name === 'widget' || $name === 'subtypes') {
+                if ($name === 'widget') {
                     $widget_type = $value[0];
                     $filter      = '';
                     if (is_array($value[1])) {
@@ -328,7 +328,7 @@ class Xml_Data
                             $filter .= "\t\t<$widget_type id=\"$key\"><![CDATA[" . $val . "]]></$widget_type>\n";
                         }
                     }
-                } elseif ($name === 'values' && is_array($value)) {
+                } elseif (($name === 'values' || $name === 'subtypes') && is_array($value)) {
                     $filter = '';
                     foreach ($value as $key => $val) {
                         $filter .= "\t\t<value id=\"$key\"><![CDATA[" . $val . "]]></value>\n";
