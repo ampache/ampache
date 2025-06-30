@@ -261,7 +261,7 @@ class Xml5_Data
         foreach ($array as $object) {
             $string .= "\t<$item id=\"" . $object['id'] . "\">\n";
             foreach ($object as $name => $value) {
-                if ($name === 'widget') {
+                if ($name === 'widget' || $name === 'subtypes') {
                     $widget_type = $value[0];
                     $filter      = '';
                     if (is_array($value[1])) {
