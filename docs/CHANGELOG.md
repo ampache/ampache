@@ -45,7 +45,9 @@ While this fully implements new features it does not include all the new data fi
 * Table counts did not count disabled catalogs or enabled songs correctly
 * Error fetching empty Democratic playlist
 * Public user errors when loading browses
-* Searching for `Live_Stream` object might not search the map table correctly
+* Search
+  * `Song` search for `bitrate` using index and not value
+  * Searching for `Live_Stream` object might not search the map table correctly
 * Don't look up an Album Artist when the Album doesn't exist
 * Error during Art lookup when it exists and is able to be overwritten
 * Error looking up lyrics when the song doesn't exist
