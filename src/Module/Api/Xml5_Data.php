@@ -261,7 +261,22 @@ class Xml5_Data
         foreach ($array as $object) {
             $string .= "\t<$item id=\"" . $object['id'] . "\">\n";
             foreach ($object as $name => $value) {
-                $filter = (is_numeric($value)) ? $value : "<![CDATA[" . $value . "]]>";
+                if ($name === 'widget') {
+                    $widget_type = $value[0];
+                    $filter      = '';
+                    if (is_array($value[1])) {
+                        foreach ($value[1] as $key => $val) {
+                            $filter .= "\t\t<$widget_type id=\"$key\"><![CDATA[" . $val . "]]></$widget_type>\n";
+                        }
+                    }
+                } elseif ($name === 'values' && is_array($value)) {
+                    $filter = '';
+                    foreach ($value as $key => $val) {
+                        $filter .= "\t\t<value id=\"$key\"><![CDATA[" . $val . "]]></value>\n";
+                    }
+                } else {
+                    $filter = (is_numeric($value)) ? $value : "<![CDATA[" . $value . "]]>";
+                }
                 $string .= ($name !== 'id') ? "\t\t<$name>$filter</$name>\n" : '';
             }
             $string .= "\t</$item>\n";
