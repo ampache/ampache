@@ -328,6 +328,10 @@ class Xml_Data
                             $filter .= "\t\t<$widget_type id=\"$key\"><![CDATA[" . $val . "]]></$widget_type>\n";
                         }
                     }
+                } elseif ($name === 'values' && is_array($value)) {
+                    foreach ($value as $val) {
+                        $filter .= "\t\t<value><![CDATA[" . $val . "]]></value>\n";
+                    }
                 } else {
                     $filter = (is_numeric($value)) ? $value : "<![CDATA[" . $value . "]]>";
                 }
