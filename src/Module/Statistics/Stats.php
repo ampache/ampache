@@ -456,7 +456,11 @@ class Stats
     {
         // change from a stream to a skip
         $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `date` = ? AND `agent` = ? AND `user` = ? AND `object_count`.`object_type` = ? ORDER BY `object_count`.`date` DESC";
-        Dba::write($sql, [$date, $agent, $user_id, $object_type]);
+        if (!Dba::write($sql, [$date, $agent, $user_id, $object_type], true)) {
+            // this is probably a duplicate / mass insert so delete it instead
+            $sql = "DELETE FROM `object_count` WHERE `date` = ? AND `agent` = ? AND `user` = ? AND `object_type` = ?";
+            Dba::write($sql, [$date, $agent, $user_id, $object_type]);
+        }
 
         // update the total counts (and total_skip counts) as well
         if ($user_id > 0 && $agent !== 'debug') {

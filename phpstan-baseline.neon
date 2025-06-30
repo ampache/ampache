@@ -581,11 +581,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/SystemUpdate5Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Tag5Method\\:\\:tag\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Tag5Method.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/UrlToSong5Method.php
@@ -4289,11 +4284,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:\\$album_artists type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:get_name_array_by_id\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$_mapcache type has no value type specified in iterable type array\\.$#"
