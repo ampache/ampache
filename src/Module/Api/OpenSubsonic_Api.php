@@ -3565,7 +3565,6 @@ class OpenSubsonic_Api
             $format = (string)($input['f'] ?? 'xml');
             if ($format === 'xml') {
                 $response = self::_addXmlResponse(__FUNCTION__);
-                $response = OpenSubsonic_Xml_Data::addScanStatus($response, $user);
                 if ($action == 'get') {
                     $response = OpenSubsonic_Xml_Data::addJukeboxPlaylist($response, $localplay);
                 } else {
@@ -3573,7 +3572,6 @@ class OpenSubsonic_Api
                 }
             } else {
                 $response = self::_addJsonResponse(__FUNCTION__);
-                $response = OpenSubsonic_Json_Data::addScanStatus($response, $user);
                 if ($action == 'get') {
                     $response = OpenSubsonic_Json_Data::addJukeboxPlaylist($response, $localplay);
                 } else {
