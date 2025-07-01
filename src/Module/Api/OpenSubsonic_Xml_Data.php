@@ -644,8 +644,6 @@ class OpenSubsonic_Xml_Data
                     $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
                 }
             }
-
-            return $xsong;
         }
 
         return $xml;
