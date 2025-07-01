@@ -37,10 +37,9 @@ This version is being released for Ampache7 **only**
   * bookmark_create: validate `include` bool with make_bool
   * bookmark_edit: validate `include` bool with make_bool
   * user_preference, user_preferences: Error with array special values
-  * system_preference, system_preferences:E rror with array special values
-API6
-  * `album` and `albums` include didn't always work correctly
-  * `artist` and `artists` include fixes
+  * system_preference, system_preferences: Error with array special values
+  * album, albums: include didn't always work correctly
+  * artist, artists, label_artists: include fixes
 API5
   * user_edit: incorrect parameter check for `filter` instead of `username`
   * bookmark: Bookmark is a valid `type`

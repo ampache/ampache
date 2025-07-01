@@ -466,10 +466,12 @@ class Catalog_remote extends Catalog
                             //debug_event('remote.catalog', 'DATA ' . print_r($data, true), 1);
                             if (!Song::insert($data)) {
                                 debug_event('remote.catalog', 'Insert failed for ' . $song->url, 1);
-                                /* HINT: Song Title */
-                                AmpError::add('general', T_(sprintf('Unable to insert song - %s', $song->title)));
-                                echo AmpError::display('general');
-                                flush();
+                                if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+                                    /* HINT: Song Title */
+                                    AmpError::add('general', T_(sprintf('Unable to insert song - %s', $song->title)));
+                                    echo AmpError::display('general');
+                                    flush();
+                                }
                             } else {
                                 $songsadded++;
                             }
@@ -480,9 +482,11 @@ class Catalog_remote extends Catalog
                 }
             } catch (Exception $error) {
                 debug_event('remote.catalog', 'Songs parsing error: ' . $error->getMessage(), 1);
-                AmpError::add('general', $error->getMessage());
-                echo AmpError::display('general');
-                flush();
+                if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+                    AmpError::add('general', $error->getMessage());
+                    echo AmpError::display('general');
+                    flush();
+                }
             }
         } // end while
 

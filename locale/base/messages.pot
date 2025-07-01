@@ -11769,7 +11769,7 @@ msgid "Show Album subtitle on links (if available)"
 msgstr ""
 
 #: Database preference table id 363
-msgid "Enable access to your personal "Spotify Wrapped" from your user page"
+msgid "Enable access to your personal \"Spotify Wrapped\" from your user page"
 msgstr ""
 
 #: Database preference table id 370

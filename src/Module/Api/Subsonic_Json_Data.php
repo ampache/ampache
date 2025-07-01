@@ -1199,14 +1199,20 @@ class Subsonic_Json_Data
         ];
 
         if ($bookmark->object_type == "song") {
-            $song          = new Song($bookmark->object_id);
-            $json['entry'] = self::_getChildSong($song);
+            $object = new Song($bookmark->object_id);
+            if ($object->isNew() === false && $object->enabled) {
+                $json['entry'] = self::_getChildSong($object);
+            }
         } elseif ($bookmark->object_type == "video") {
-            $video         = new Video($bookmark->object_id);
-            $json['entry'] = self::_getChildVideo($video);
+            $object = new Video($bookmark->object_id);
+            if ($object->isNew() === false && $object->enabled) {
+                $json['entry'] = self::_getChildVideo($object);
+            }
         } elseif ($bookmark->object_type == "podcast_episode") {
-            $episode       = new Podcast_Episode($bookmark->object_id);
-            $json['entry'] = self::_getChildPodcastEpisode($episode);
+            $object = new Podcast_Episode($bookmark->object_id);
+            if ($object->isNew() === false && $object->enabled) {
+                $json['entry'] = self::_getChildPodcastEpisode($object);
+            }
         }
 
         return $json;
@@ -1399,7 +1405,7 @@ class Subsonic_Json_Data
         }
 
         $json['duration'] = $song->time;
-        $json['bitrate']  = ((int)($song->bitrate / 1024));
+        $json['bitRate']  = ((int)($song->bitrate / 1024));
 
         $rating      = new Rating($song->id, 'song');
         $user_rating = ($rating->get_user_rating() ?? 0);
@@ -1578,7 +1584,7 @@ class Subsonic_Json_Data
         }
 
         $json['duration'] = $episode->time;
-        $json['bitrate']  = ((int)($episode->bitrate / 1024));
+        $json['bitRate']  = ((int)($episode->bitrate / 1024));
 
         $rating      = new Rating($episode->id, 'podcast_episode');
         $user_rating = ($rating->get_user_rating() ?? 0);
@@ -1734,7 +1740,7 @@ class Subsonic_Json_Data
         }
 
         $json['duration'] = $video->time;
-        $json['bitrate']  = ((int)($video->bitrate / 1024));
+        $json['bitRate']  = ((int)($video->bitrate / 1024));
 
         $rating      = new Rating($video->id, 'video');
         $user_rating = ($rating->get_user_rating() ?? 0);
@@ -2003,7 +2009,9 @@ class Subsonic_Json_Data
             $json['album'][] = self::_getChild($album_id, 'album');
         }
 
-        $response['subsonic-response']['albumList'] = $json;
+        if (!empty($json['album'])) {
+            $response['subsonic-response']['albumList'] = $json;
+        }
 
         return $response;
     }
@@ -2030,7 +2038,9 @@ class Subsonic_Json_Data
             $json[] = self::_getAlbumID3($album);
         }
 
-        $response['subsonic-response']['albumList2']['album'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['albumList2']['album'] = $json;
+        }
 
         return $response;
     }
@@ -2227,7 +2237,9 @@ class Subsonic_Json_Data
             $json[] = self::_getBookmark($bookmark);
         }
 
-        $response['subsonic-response']['bookmarks']['bookmark'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['bookmarks']['bookmark'] = $json;
+        }
 
         return $response;
     }
@@ -2258,7 +2270,9 @@ class Subsonic_Json_Data
             $json[] = self::_getChatMessage($chat, $user);
         }
 
-        $response['subsonic-response']['chatMessages']['chatMessage'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['chatMessages']['chatMessage'] = $json;
+        }
 
         return $response;
     }
@@ -2389,7 +2403,9 @@ class Subsonic_Json_Data
             $json[] = self::_getGenre($tag);
         }
 
-        $response['subsonic-response']['genres']['genre'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['genres']['genre'] = $json;
+        }
 
         return $response;
     }
@@ -2475,7 +2491,9 @@ class Subsonic_Json_Data
             $json[] = self::_getInternetRadioStation($radio);
         }
 
-        $response['subsonic-response']['internetRadioStations']['internetRadioStation'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['internetRadioStations']['internetRadioStation'] = $json;
+        }
 
         return $response;
     }
@@ -2534,7 +2552,7 @@ class Subsonic_Json_Data
     {
         $status = self::_getJukeboxStatus($localplay);
 
-        $response['subsonic-response']['jukeboxstatus'] = $status;
+        $response['subsonic-response']['jukeboxStatus'] = $status;
 
         return $response;
     }
@@ -2660,7 +2678,9 @@ class Subsonic_Json_Data
 
         }
 
-        $response['subsonic-response']['musicFolders']['musicFolder'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['musicFolders']['musicFolder'] = $json;
+        }
 
         return $response;
     }
@@ -2682,7 +2702,9 @@ class Subsonic_Json_Data
             $json[] = self::_getPodcastEpisode($episode);
         }
 
-        $response['subsonic-response']['newestPodcasts']['episode'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['newestPodcasts']['episode'] = $json;
+        }
 
         return $response;
     }
@@ -2708,7 +2730,7 @@ class Subsonic_Json_Data
         foreach ($data as $row) {
             if (
                 $row['media'] instanceof Song &&
-                !$row['media']->isNew() &&
+                $row['media']->isNew() === false &&
                 $row['media']->enabled
             ) {
                 $track               = self::_getChildSong($row['media']);
@@ -2716,10 +2738,14 @@ class Subsonic_Json_Data
                 $track['minutesAgo'] = (string)(abs((time() - ($row['expire'] - $row['media']->time)) / 60));
                 $track['playerId']   = 0;
                 $track['playerName'] = (string)$row['agent'];
+
+                $json[] = $track;
             }
         }
 
-        $response['subsonic-response']['nowPlaying']['entry'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['nowPlaying']['entry'] = $json;
+        }
 
         return $response;
     }
@@ -2750,7 +2776,9 @@ class Subsonic_Json_Data
             ];
         }
 
-        $response['subsonic-response']['openSubsonicExtensions'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['openSubsonicExtensions'] = $json;
+        }
 
         return $response;
     }
@@ -2765,10 +2793,10 @@ class Subsonic_Json_Data
     public static function addPlaylist(array $response, Playlist|Search $playlist, bool $songs = false): array
     {
         $json = [];
-        if ($playlist instanceof Playlist) {
+        if ($playlist instanceof Playlist && $playlist->isNew() === false) {
             $json = self::_getPlaylist_Playlist($playlist, $songs);
         }
-        if ($playlist instanceof Search) {
+        if ($playlist instanceof Search && $playlist->isNew() === false) {
             $json = self::_getPlaylist_Search($playlist, $songs);
         }
 
@@ -3004,7 +3032,9 @@ class Subsonic_Json_Data
             $json[] = self::_getChildSong($song);
         }
 
-        $response['subsonic-response']['randomSongs']['song'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['randomSongs']['song'] = $json;
+        }
 
         return $response;
     }
@@ -3070,7 +3100,9 @@ class Subsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['searchResult']['match'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['searchResult']['match'] = $json;
+        }
 
         return $response;
     }
@@ -3332,7 +3364,9 @@ class Subsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['shares']['share'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['shares']['share'] = $json;
+        }
 
         return $response;
     }
@@ -3363,7 +3397,9 @@ class Subsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['similarSongs2']['song'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['similarSongs']['song'] = $json;
+        }
 
         return $response;
     }
@@ -3394,7 +3430,9 @@ class Subsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['similarSongs2']['song'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['similarSongs2']['song'] = $json;
+        }
 
         return $response;
     }
@@ -3441,7 +3479,9 @@ class Subsonic_Json_Data
             $json[] = self::_getChildSong($song);
         }
 
-        $response['subsonic-response']['songsByGenre']['song'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['songsByGenre']['song'] = $json;
+        }
 
         return $response;
     }
@@ -3468,15 +3508,24 @@ class Subsonic_Json_Data
             $artist           = new Artist($artist_id);
             $json['artist'][] = self::_getArtist($artist);
         }
+        if (empty($json['artist'])) {
+            unset($json['artist']);
+        }
 
         foreach ($albums as $album_id) {
             $album           = new Album($album_id);
             $json['album'][] = self::_getChildAlbum($album);
         }
+        if (empty($json['album'])) {
+            unset($json['album']);
+        }
 
         foreach ($songs as $song_id) {
             $song           = new Song($song_id);
             $json['song'][] = self::_getChildSong($song);
+        }
+        if (empty($json['song'])) {
+            unset($json['song']);
         }
 
         $response['subsonic-response']['starred'] = $json;
@@ -3507,15 +3556,24 @@ class Subsonic_Json_Data
             $artist           = new Artist($artist_id);
             $json['artist'][] = self::_getArtistID3($artist);
         }
+        if (empty($json['artist'])) {
+            unset($json['artist']);
+        }
 
         foreach ($albums as $album_id) {
             $album           = new Album($album_id);
             $json['album'][] = self::_getAlbumID3($album);
         }
+        if (empty($json['album'])) {
+            unset($json['album']);
+        }
 
         foreach ($songs as $song_id) {
             $song           = new Song($song_id);
             $json['song'][] = self::_getChildSong($song);
+        }
+        if (empty($json['song'])) {
+            unset($json['song']);
         }
 
         $response['subsonic-response']['starred2'] = $json;
@@ -3557,7 +3615,9 @@ class Subsonic_Json_Data
             $json[] = self::_getChildSong($song);
         }
 
-        $response['subsonic-response']['topSongs']['song'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['topSongs']['song'] = $json;
+        }
 
         return $response;
     }
@@ -3597,7 +3657,9 @@ class Subsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['users']['user'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['users']['user'] = $json;
+        }
 
         return $response;
     }
@@ -3636,7 +3698,9 @@ class Subsonic_Json_Data
             $json[] = self::_getChildVideo($video);
         }
 
-        $response['subsonic-response']['videos']['video'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['videos']['video'] = $json;
+        }
 
         return $response;
     }
