@@ -569,8 +569,9 @@ class Subsonic_Xml_Data
 
     /**
      * addSong
+     * @param array<string, string> $attributes
      */
-    public static function addSong(SimpleXMLElement $xml, int $song_id, string $elementName = 'song'): SimpleXMLElement
+    public static function addSong(SimpleXMLElement $xml, int $song_id, string $elementName = 'song', array $attributes = []): SimpleXMLElement
     {
         $song = new Song($song_id);
         if ($song->isNew()) {
@@ -641,6 +642,9 @@ class Subsonic_Xml_Data
                     $xsong->addAttribute('transcodedSuffix', $transcode_type);
                     $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
                 }
+            }
+            foreach ($attributes as $key => $value) {
+                $xsong->addAttribute($key, $value);
             }
         }
 
@@ -1041,11 +1045,14 @@ class Subsonic_Xml_Data
                 $row['media']->isNew() === false &&
                 $row['media']->enabled
             ) {
-                $track = self::addSong($xplaynow, $row['media']->getId(), 'entry');
-                $track->addAttribute('username', (string)$row['client']->username);
-                $track->addAttribute('minutesAgo', (string)(abs((time() - ($row['expire'] - $row['media']->time)) / 60)));
-                $track->addAttribute('playerId', '0');
-                $track->addAttribute('playerName', (string)$row['agent']);
+                $attributes = [
+                    'username' => (string)$row['client']->username,
+                    'minutesAgo' => (string)(abs((time() - ($row['expire'] - $row['media']->time)) / 60)),
+                    'playerId' => '0',
+                    'playerName' => (string)$row['agent'],
+                ];
+
+                self::addSong($xplaynow, $row['media']->getId(), 'entry', $attributes);
             }
         }
 
