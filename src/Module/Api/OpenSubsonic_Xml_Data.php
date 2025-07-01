@@ -1336,7 +1336,7 @@ class OpenSubsonic_Xml_Data
         $xjbox->addAttribute('gain', (string)$status['volume']);
         $xjbox->addAttribute('position', '0'); // TODO Not supported
 
-        return $xjbox;
+        return $xml;
     }
 
     /**
