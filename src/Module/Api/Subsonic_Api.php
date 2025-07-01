@@ -2972,7 +2972,7 @@ class Subsonic_Api
         unset($user);
         if (!AmpConfig::get('show_similar')) {
             debug_event(self::class, $elementName . ': Enable: show_similar', 4);
-            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+            self::_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
 
             return;
         }
