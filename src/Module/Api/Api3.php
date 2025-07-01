@@ -41,7 +41,6 @@ class Api3
      */
     public const METHOD_LIST = [
         'advanced_search' => Method\Api3\AdvancedSearch3Method::class,
-        'search' => Method\Api3\AdvancedSearch3Method::class,
         'album' => Method\Api3\Album3Method::class,
         'album_songs' => Method\Api3\AlbumSongs3Method::class,
         'albums' => Method\Api3\Albums3Method::class,
@@ -65,6 +64,7 @@ class Api3
         'playlist_songs' => Method\Api3\PlaylistSongs3Method::class,
         'playlists' => Method\Api3\Playlists3Method::class,
         'rate' => Method\Api3\Rate3Method::class,
+        'search' => Method\Api3\Search3Method::class,
         'search_songs' => Method\Api3\SearchSongs3Method::class,
         'song' => Method\Api3\Song3Method::class,
         'songs' => Method\Api3\Songs3Method::class,
