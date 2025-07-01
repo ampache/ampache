@@ -2711,21 +2711,23 @@ class Subsonic_Json_Data
         $response['subsonic-response']['nowPlaying'] = [];
 
         $json = [];
-        foreach ($data as $row) {
-            if (
-                $row['media'] instanceof Song &&
-                !$row['media']->isNew() &&
-                $row['media']->enabled
-            ) {
-                $track               = self::_getChildSong($row['media']);
-                $track['username']   = (string)$row['client']->username;
-                $track['minutesAgo'] = (string)(abs((time() - ($row['expire'] - $row['media']->time)) / 60));
-                $track['playerId']   = 0;
-                $track['playerName'] = (string)$row['agent'];
+        if (!empty($data)) {
+            foreach ($data as $row) {
+                if (
+                    $row['media'] instanceof Song &&
+                    !$row['media']->isNew() &&
+                    $row['media']->enabled
+                ) {
+                    $track               = self::_getChildSong($row['media']);
+                    $track['username']   = (string)$row['client']->username;
+                    $track['minutesAgo'] = (string)(abs((time() - ($row['expire'] - $row['media']->time)) / 60));
+                    $track['playerId']   = 0;
+                    $track['playerName'] = (string)$row['agent'];
+                }
             }
-        }
 
-        $response['subsonic-response']['nowPlaying']['entry'] = $json;
+            $response['subsonic-response']['nowPlaying']['entry'] = $json;
+        }
 
         return $response;
     }

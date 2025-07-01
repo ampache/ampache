@@ -2084,7 +2084,9 @@ class OpenSubsonic_Json_Data
             $json['album'][] = self::_getChild($album_id, 'album');
         }
 
-        $response['subsonic-response']['albumList'] = $json;
+        if (!empty($json['album'])) {
+            $response['subsonic-response']['albumList'] = $json;
+        }
 
         return $response;
     }
@@ -2111,7 +2113,9 @@ class OpenSubsonic_Json_Data
             $json[] = self::_getAlbumID3($album);
         }
 
-        $response['subsonic-response']['albumList2']['album'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['albumList2']['album'] = $json;
+        }
 
         return $response;
     }
@@ -2809,21 +2813,23 @@ class OpenSubsonic_Json_Data
         $response['subsonic-response']['nowPlaying'] = [];
 
         $json = [];
-        foreach ($data as $row) {
-            if (
-                $row['media'] instanceof Song &&
-                !$row['media']->isNew() &&
-                $row['media']->enabled
-            ) {
-                $track               = self::_getChildSong($row['media']);
-                $track['username']   = (string)$row['client']->username;
-                $track['minutesAgo'] = (string)(abs((time() - ($row['expire'] - $row['media']->time)) / 60));
-                $track['playerId']   = 0;
-                $track['playerName'] = (string)$row['agent'];
+        if (!empty($data)) {
+            foreach ($data as $row) {
+                if (
+                    $row['media'] instanceof Song &&
+                    !$row['media']->isNew() &&
+                    $row['media']->enabled
+                ) {
+                    $track               = self::_getChildSong($row['media']);
+                    $track['username']   = (string)$row['client']->username;
+                    $track['minutesAgo'] = (string)(abs((time() - ($row['expire'] - $row['media']->time)) / 60));
+                    $track['playerId']   = 0;
+                    $track['playerName'] = (string)$row['agent'];
+                }
             }
-        }
 
-        $response['subsonic-response']['nowPlaying']['entry'] = $json;
+            $response['subsonic-response']['nowPlaying']['entry'] = $json;
+        }
 
         return $response;
     }
