@@ -1436,7 +1436,7 @@ class OpenSubsonic_Json_Data
         }
 
         $json['duration'] = $song->time;
-        $json['bitrate']  = ((int)($song->bitrate / 1024));
+        $json['bitRate']  = ((int)($song->bitrate / 1024));
 
         $rating      = new Rating($song->id, 'song');
         $user_rating = ($rating->get_user_rating() ?? 0);
@@ -1644,7 +1644,7 @@ class OpenSubsonic_Json_Data
         }
 
         $json['duration'] = $episode->time;
-        $json['bitrate']  = ((int)($episode->bitrate / 1024));
+        $json['bitRate']  = ((int)($episode->bitrate / 1024));
 
         $rating      = new Rating($episode->id, 'podcast_episode');
         $user_rating = ($rating->get_user_rating() ?? 0);
@@ -1807,7 +1807,7 @@ class OpenSubsonic_Json_Data
         }
 
         $json['duration'] = $video->time;
-        $json['bitrate']  = ((int)($video->bitrate / 1024));
+        $json['bitRate']  = ((int)($video->bitrate / 1024));
 
         $rating      = new Rating($video->id, 'video');
         $user_rating = ($rating->get_user_rating() ?? 0);
