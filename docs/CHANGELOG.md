@@ -6,7 +6,9 @@ Full OpenSubsonic rewrite to remove the weird JSON conversion class and fix up i
 
 This is hidden behind a preference but will eventually become the default Subsonic API version.
 
-While this fully implements new features it does not include all the new data fields in the responses yet
+While this fully implements new features it does not include all the new data fields in the responses yet.
+
+**NOTE** If you enable OpenSubsonic the id prefix for objects has changed and you may lose cached data depending on how it's stored.
 
 ### Added
 
