@@ -2630,7 +2630,7 @@ class OpenSubsonic_Json_Data
     {
         $status = self::_getJukeboxStatus($localplay);
 
-        $response['subsonic-response']['jukeboxstatus'] = $status;
+        $response['subsonic-response']['jukeboxStatus'] = $status;
 
         return $response;
     }
@@ -3485,7 +3485,7 @@ class OpenSubsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['similarSongs2']['song'] = $json;
+        $response['subsonic-response']['similarSongs']['song'] = $json;
 
         return $response;
     }
