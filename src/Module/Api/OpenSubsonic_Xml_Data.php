@@ -1044,7 +1044,7 @@ class OpenSubsonic_Xml_Data
         foreach ($data as $row) {
             if (
                 $row['media'] instanceof Song &&
-                !$row['media']->isNew() &&
+                $row['media']->isNew() === false &&
                 $row['media']->enabled
             ) {
                 $track = self::addSong($xplaynow, $row['media']->getId(), 'entry');
