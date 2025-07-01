@@ -63,14 +63,24 @@ final class Artist4Method
         $uid     = scrub_in((string) $input['filter']);
         $include = [];
         if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include'])));
+            if (!is_array($input['include'])) {
+                $input['include'] = explode(',', html_entity_decode((string)($input['include'])));
+            }
+            foreach ($input['include'] as $item) {
+                if ($item === 'songs' || $item == '1') {
+                    $include[] = 'songs';
+                }
+                if ($item === 'albums' || $item == '1') {
+                    $include[] = 'albums';
+                }
+            }
         }
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::artists([$uid], $include ?: [], $user);
+                echo Json4_Data::artists([$uid], $include, $user);
                 break;
             default:
-                echo Xml4_Data::artists([$uid], $include ?: [], $user);
+                echo Xml4_Data::artists([$uid], $include, $user);
         }
 
         return true;

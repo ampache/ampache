@@ -74,7 +74,17 @@ final class LabelArtists5Method
         }
         $include = [];
         if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include'])));
+            if (!is_array($input['include'])) {
+                $input['include'] = explode(',', html_entity_decode((string)($input['include'])));
+            }
+            foreach ($input['include'] as $item) {
+                if ($item === 'songs' || $item == '1') {
+                    $include[] = 'songs';
+                }
+                if ($item === 'albums' || $item == '1') {
+                    $include[] = 'albums';
+                }
+            }
         }
 
         $label = self::getLabelRepository()->findById((int) $input['filter']);
@@ -95,10 +105,10 @@ final class LabelArtists5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::artists($results, $include ?: [], $user);
+                echo Json5_Data::artists($results, $include, $user);
                 break;
             default:
-                echo Xml5_Data::artists($results, $include ?: [], $user);
+                echo Xml5_Data::artists($results, $include, $user);
         }
 
         return true;
