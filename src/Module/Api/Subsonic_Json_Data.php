@@ -1199,14 +1199,20 @@ class Subsonic_Json_Data
         ];
 
         if ($bookmark->object_type == "song") {
-            $song          = new Song($bookmark->object_id);
-            $json['entry'] = self::_getChildSong($song);
+            $object = new Song($bookmark->object_id);
+            if ($object->isNew() === false && $object->enabled) {
+                $json['entry'] = self::_getChildSong($object);
+            }
         } elseif ($bookmark->object_type == "video") {
-            $video         = new Video($bookmark->object_id);
-            $json['entry'] = self::_getChildVideo($video);
+            $object = new Video($bookmark->object_id);
+            if ($object->isNew() === false && $object->enabled) {
+                $json['entry'] = self::_getChildVideo($object);
+            }
         } elseif ($bookmark->object_type == "podcast_episode") {
-            $episode       = new Podcast_Episode($bookmark->object_id);
-            $json['entry'] = self::_getChildPodcastEpisode($episode);
+            $object = new Podcast_Episode($bookmark->object_id);
+            if ($object->isNew() === false && $object->enabled) {
+                $json['entry'] = self::_getChildPodcastEpisode($object);
+            }
         }
 
         return $json;
