@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types=0);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,43 +25,40 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\User;
 
 /**
- * Class Album3Method
+ * Class Search3Method
  */
-final class Album3Method
+final class Search3Method
 {
-    public const ACTION = 'album';
+    public const ACTION = 'search';
 
     /**
-     * album
-     * This returns a single album based on the UID provided
+     * search
+     * MINIMUM_API_VERSION=380001
+     *
+     * This returns the tags (Genres) based on the specified filter
+     *
+     * filter = (string) Alpha-numeric search term //optional
+     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      *
      * @param array{
-     *     filter: string,
-     *     include?: string|string[],
+     *     filter?: string,
+     *     exact?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
      * @param User $user
      */
-    public static function album(array $input, User $user): void
+    public static function search(array $input, User $user): void
     {
-        $uid     = scrub_in((string) $input['filter']);
-        $include = [];
-        if (array_key_exists('include', $input)) {
-            if (is_array($input['include'])) {
-                foreach ($input['include'] as $item) {
-                    if ($item === 'songs' || $item == '1') {
-                        $include[] = 'songs';
-                    }
-                }
-            } elseif ($input['include'] === 'songs' || $input['include'] == '1') {
-                $include[] = 'songs';
-            }
-        }
-        echo Xml3_Data::albums([$uid], $include, $user);
+        AdvancedSearch3Method::advanced_search($input, $user);
     }
 }

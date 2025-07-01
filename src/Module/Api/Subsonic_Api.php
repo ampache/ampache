@@ -2972,7 +2972,7 @@ class Subsonic_Api
         unset($user);
         if (!AmpConfig::get('show_similar')) {
             debug_event(self::class, $elementName . ': Enable: show_similar', 4);
-            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+            self::_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
 
             return;
         }
@@ -3563,7 +3563,6 @@ class Subsonic_Api
             $format = (string)($input['f'] ?? 'xml');
             if ($format === 'xml') {
                 $response = self::_addXmlResponse(__FUNCTION__);
-                $response = Subsonic_Xml_Data::addScanStatus($response, $user);
                 if ($action == 'get') {
                     $response = Subsonic_Xml_Data::addJukeboxPlaylist($response, $localplay);
                 } else {
@@ -3571,7 +3570,6 @@ class Subsonic_Api
                 }
             } else {
                 $response = self::_addJsonResponse(__FUNCTION__);
-                $response = Subsonic_Json_Data::addScanStatus($response, $user);
                 if ($action == 'get') {
                     $response = Subsonic_Json_Data::addJukeboxPlaylist($response, $localplay);
                 } else {

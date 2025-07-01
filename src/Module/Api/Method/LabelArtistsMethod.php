@@ -103,7 +103,17 @@ final class LabelArtistsMethod
 
         $include = [];
         if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include'])));
+            if (!is_array($input['include'])) {
+                $input['include'] = explode(',', html_entity_decode((string)($input['include'])));
+            }
+            foreach ($input['include'] as $item) {
+                if ($item === 'songs' || $item == '1') {
+                    $include[] = 'songs';
+                }
+                if ($item === 'albums' || $item == '1') {
+                    $include[] = 'albums';
+                }
+            }
         }
 
         ob_end_clean();
@@ -112,13 +122,13 @@ final class LabelArtistsMethod
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 Json_Data::set_count($browse->get_total());
-                echo Json_Data::artists($results, $include ?: [], $user);
+                echo Json_Data::artists($results, $include, $user);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 Xml_Data::set_count($browse->get_total());
-                echo Xml_Data::artists($results, $include ?: [], $user);
+                echo Xml_Data::artists($results, $include, $user);
         }
 
         return true;
