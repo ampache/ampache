@@ -3809,7 +3809,7 @@ class Subsonic_Api
             return;
         }
 
-        $submission = (array_key_exists('submission', $input) && ($input['submission'] === 'true' || $input['submission'] === '1'));
+        $submission = (array_key_exists('submission', $input) && (strtolower($input['submission']) === 'true' || $input['submission'] === '1'));
         $client     = scrub_in((string) ($input['c'] ?? 'Subsonic'));
 
         if (!is_array($sub_ids)) {
