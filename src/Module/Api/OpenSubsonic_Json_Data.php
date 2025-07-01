@@ -2315,7 +2315,9 @@ class OpenSubsonic_Json_Data
             $json[] = self::_getBookmark($bookmark);
         }
 
-        $response['subsonic-response']['bookmarks']['bookmark'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['bookmarks']['bookmark'] = $json;
+        }
 
         return $response;
     }
@@ -2347,7 +2349,9 @@ class OpenSubsonic_Json_Data
             $json[] = self::_getChatMessage($chat, $user);
         }
 
-        $response['subsonic-response']['chatMessages']['chatMessage'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['chatMessages']['chatMessage'] = $json;
+        }
 
         return $response;
     }
@@ -2482,7 +2486,9 @@ class OpenSubsonic_Json_Data
             $json[] = self::_getGenre($tag);
         }
 
-        $response['subsonic-response']['genres']['genre'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['genres']['genre'] = $json;
+        }
 
         return $response;
     }
@@ -2571,7 +2577,9 @@ class OpenSubsonic_Json_Data
             $json[] = self::_getInternetRadioStation($radio);
         }
 
-        $response['subsonic-response']['internetRadioStations']['internetRadioStation'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['internetRadioStations']['internetRadioStation'] = $json;
+        }
 
         return $response;
     }
@@ -2766,7 +2774,9 @@ class OpenSubsonic_Json_Data
 
         }
 
-        $response['subsonic-response']['musicFolders']['musicFolder'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['musicFolders']['musicFolder'] = $json;
+        }
 
         return $response;
     }
@@ -2789,7 +2799,9 @@ class OpenSubsonic_Json_Data
             $json[] = self::_getPodcastEpisode($episode);
         }
 
-        $response['subsonic-response']['newestPodcasts']['episode'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['newestPodcasts']['episode'] = $json;
+        }
 
         return $response;
     }
@@ -2862,7 +2874,9 @@ class OpenSubsonic_Json_Data
             ];
         }
 
-        $response['subsonic-response']['openSubsonicExtensions'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['openSubsonicExtensions'] = $json;
+        }
 
         return $response;
     }
@@ -3089,7 +3103,9 @@ class OpenSubsonic_Json_Data
             $json[] = self::_getPodcast($podcast, $includeEpisodes);
         }
 
-        $response['subsonic-response']['podcasts']['channel'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['podcasts']['channel'] = $json;
+        }
 
         return $response;
     }
@@ -3126,7 +3142,9 @@ class OpenSubsonic_Json_Data
             $json[] = self::_getChildSong($song);
         }
 
-        $response['subsonic-response']['randomSongs']['song'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['randomSongs']['song'] = $json;
+        }
 
         return $response;
     }
@@ -3195,7 +3213,9 @@ class OpenSubsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['searchResult']['match'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['searchResult']['match'] = $json;
+        }
 
         return $response;
     }
@@ -3459,7 +3479,9 @@ class OpenSubsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['shares']['share'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['shares']['share'] = $json;
+        }
 
         return $response;
     }
@@ -3491,7 +3513,9 @@ class OpenSubsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['similarSongs']['song'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['similarSongs']['song'] = $json;
+        }
 
         return $response;
     }
@@ -3522,7 +3546,9 @@ class OpenSubsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['similarSongs2']['song'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['similarSongs2']['song'] = $json;
+        }
 
         return $response;
     }
@@ -3572,7 +3598,9 @@ class OpenSubsonic_Json_Data
             $json[] = self::_getChildSong($song);
         }
 
-        $response['subsonic-response']['songsByGenre']['song'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['songsByGenre']['song'] = $json;
+        }
 
         return $response;
     }
@@ -3600,15 +3628,24 @@ class OpenSubsonic_Json_Data
             $artist           = new Artist($artist_id);
             $json['artist'][] = self::_getArtist($artist);
         }
+        if (empty($json['artist'])) {
+            unset($json['artist']);
+        }
 
         foreach ($albums as $album_id) {
             $album           = new Album($album_id);
             $json['album'][] = self::_getChildAlbum($album);
         }
+        if (empty($json['album'])) {
+            unset($json['album']);
+        }
 
         foreach ($songs as $song_id) {
             $song           = new Song($song_id);
             $json['song'][] = self::_getChildSong($song);
+        }
+        if (empty($json['song'])) {
+            unset($json['song']);
         }
 
         $response['subsonic-response']['starred'] = $json;
@@ -3639,15 +3676,24 @@ class OpenSubsonic_Json_Data
             $artist           = new Artist($artist_id);
             $json['artist'][] = self::_getArtistID3($artist);
         }
+        if (empty($json['artist'])) {
+            unset($json['artist']);
+        }
 
         foreach ($albums as $album_id) {
             $album           = new Album($album_id);
             $json['album'][] = self::_getAlbumID3($album);
         }
+        if (empty($json['album'])) {
+            unset($json['album']);
+        }
 
         foreach ($songs as $song_id) {
             $song           = new Song($song_id);
             $json['song'][] = self::_getChildSong($song);
+        }
+        if (empty($json['song'])) {
+            unset($json['song']);
         }
 
         $response['subsonic-response']['starred2'] = $json;
@@ -3691,7 +3737,9 @@ class OpenSubsonic_Json_Data
             $json[] = self::_getChildSong($song);
         }
 
-        $response['subsonic-response']['topSongs']['song'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['topSongs']['song'] = $json;
+        }
 
         return $response;
     }
@@ -3733,7 +3781,9 @@ class OpenSubsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['users']['user'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['users']['user'] = $json;
+        }
 
         return $response;
     }
@@ -3774,7 +3824,9 @@ class OpenSubsonic_Json_Data
             $json[] = self::_getChildVideo($video);
         }
 
-        $response['subsonic-response']['videos']['video'] = $json;
+        if (!empty($json)) {
+            $response['subsonic-response']['videos']['video'] = $json;
+        }
 
         return $response;
     }
