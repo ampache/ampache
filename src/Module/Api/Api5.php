@@ -88,6 +88,7 @@ class Api5
         Method\Api5\PlaylistAddSong5Method::ACTION => Method\Api5\PlaylistAddSong5Method::class,
         Method\Api5\PlaylistRemoveSong5Method::ACTION => Method\Api5\PlaylistRemoveSong5Method::class,
         Method\Api5\PlaylistGenerate5Method::ACTION => Method\Api5\PlaylistGenerate5Method::class,
+        Method\Api5\Search5Method::ACTION => Method\Api5\Search5Method::class,
         Method\Api5\SearchSongs5Method::ACTION => Method\Api5\SearchSongs5Method::class,
         Method\Api5\Shares5Method::ACTION => Method\Api5\Shares5Method::class,
         Method\Api5\Share5Method::ACTION => Method\Api5\Share5Method::class,

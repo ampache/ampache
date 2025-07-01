@@ -45,6 +45,7 @@ class Api4
      */
     public const METHOD_LIST = [
         'advanced_search' => Method\Api4\AdvancedSearch4Method::class,
+        'search' => Method\Api4\AdvancedSearch4Method::class,
         'album' => Method\Api4\Album4Method::class,
         'albums' => Method\Api4\Albums4Method::class,
         'album_songs' => Method\Api4\AlbumSongs4Method::class,
