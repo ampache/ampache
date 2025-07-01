@@ -93,6 +93,7 @@ class Api4
         'rate' => Method\Api4\Rate4Method::class,
         'record_play' => Method\Api4\RecordPlay4Method::class,
         'scrobble' => Method\Api4\Scrobble4Method::class,
+        'search' => Method\Api4\Search4Method::class,
         'search_songs' => Method\Api4\SearchSongs4Method::class,
         'share' => Method\Api4\Share4Method::class,
         'shares' => Method\Api4\Shares4Method::class,

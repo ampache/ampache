@@ -569,8 +569,9 @@ class Subsonic_Xml_Data
 
     /**
      * addSong
+     * @param array<string, string> $attributes
      */
-    public static function addSong(SimpleXMLElement $xml, int $song_id, string $elementName = 'song'): SimpleXMLElement
+    public static function addSong(SimpleXMLElement $xml, int $song_id, string $elementName = 'song', array $attributes = []): SimpleXMLElement
     {
         $song = new Song($song_id);
         if ($song->isNew()) {
@@ -642,8 +643,9 @@ class Subsonic_Xml_Data
                     $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
                 }
             }
-
-            return $xsong;
+            foreach ($attributes as $key => $value) {
+                $xsong->addAttribute($key, $value);
+            }
         }
 
         return $xml;
@@ -763,6 +765,10 @@ class Subsonic_Xml_Data
      */
     private static function _addVideo(SimpleXMLElement $xml, Video $video, string $elementName = 'video'): void
     {
+        if ($video->isNew()) {
+            return;
+        }
+
         $sub_id = Subsonic_Api::getVideoSubId($video->id);
         $xvideo = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
         $xvideo->addAttribute('id', $sub_id);
@@ -846,10 +852,10 @@ class Subsonic_Xml_Data
      */
     public static function addPlaylist(SimpleXMLElement $xml, Playlist|Search $playlist, bool $songs = false): SimpleXMLElement
     {
-        if ($playlist instanceof Playlist) {
+        if ($playlist instanceof Playlist && $playlist->isNew() === false) {
             $xml = self::_addPlaylist_Playlist($xml, $playlist, $songs);
         }
-        if ($playlist instanceof Search) {
+        if ($playlist instanceof Search && $playlist->isNew() === false) {
             $xml = self::_addPlaylist_Search($xml, $playlist, $songs);
         }
 
@@ -1036,14 +1042,17 @@ class Subsonic_Xml_Data
         foreach ($data as $row) {
             if (
                 $row['media'] instanceof Song &&
-                !$row['media']->isNew() &&
+                $row['media']->isNew() === false &&
                 $row['media']->enabled
             ) {
-                $track = self::addSong($xplaynow, $row['media']->getId(), 'entry');
-                $track->addAttribute('username', (string)$row['client']->username);
-                $track->addAttribute('minutesAgo', (string)(abs((time() - ($row['expire'] - $row['media']->time)) / 60)));
-                $track->addAttribute('playerId', '0');
-                $track->addAttribute('playerName', (string)$row['agent']);
+                $attributes = [
+                    'username' => (string)$row['client']->username,
+                    'minutesAgo' => (string)(abs((time() - ($row['expire'] - $row['media']->time)) / 60)),
+                    'playerId' => '0',
+                    'playerName' => (string)$row['agent'],
+                ];
+
+                self::addSong($xplaynow, $row['media']->getId(), 'entry', $attributes);
             }
         }
 
@@ -1326,7 +1335,7 @@ class Subsonic_Xml_Data
         $xjbox->addAttribute('gain', (string)$status['volume']);
         $xjbox->addAttribute('position', '0'); // TODO Not supported
 
-        return $xjbox;
+        return $xml;
     }
 
     /**
@@ -1616,6 +1625,10 @@ class Subsonic_Xml_Data
      */
     private static function _addPodcastEpisode(SimpleXMLElement $xml, Podcast_Episode $episode, string $elementName = 'episode'): void
     {
+        if ($episode->isNew()) {
+            return;
+        }
+
         $sub_id    = Subsonic_Api::getPodcastEpisodeSubId($episode->id);
         $subParent = Subsonic_Api::getPodcastSubId($episode->podcast);
         $xepisode  = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
