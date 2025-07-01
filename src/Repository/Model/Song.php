@@ -970,10 +970,10 @@ class Song extends database_object implements
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
      * @param array{
-     *      latitude?: float,
-     *      longitude?: float,
-     *      name?: string
-     *  } $location
+     *     latitude?: float,
+     *     longitude?: float,
+     *     name?: string
+     * } $location
      */
     public function set_played(int $user_id, string $agent, array $location, int $date): bool
     {
@@ -2106,6 +2106,7 @@ class Song extends database_object implements
 
     /**
      * Get lyrics.
+     * @return array{'text'?: string}
      */
     public function get_lyrics(): array
     {

@@ -287,8 +287,8 @@ class Podcast_Episode extends database_object implements
             return $min . ":" . $sec;
         }
 
-        $hour           = sprintf("%02d", floor($min / 60));
-        $min_h          = sprintf("%02d", ($min % 60));
+        $hour  = sprintf("%02d", floor($min / 60));
+        $min_h = sprintf("%02d", ($min % 60));
 
         return $hour . ":" . $min_h . ":" . $sec;
     }
@@ -306,8 +306,8 @@ class Podcast_Episode extends database_object implements
     public function getPodcastLink(): string
     {
         if ($this->podcast_link === null) {
-            $podcast              = $this->getPodcastRepository()->findById($this->podcast);
-            $this->podcast_link   = (string)$podcast?->get_f_link();
+            $podcast            = $this->getPodcastRepository()->findById($this->podcast);
+            $this->podcast_link = (string)$podcast?->get_f_link();
         }
 
         return $this->podcast_link;
@@ -435,24 +435,24 @@ class Podcast_Episode extends database_object implements
      * update
      * This takes a key'd array of data and updates the current podcast episode
      * @param array{
-     *      title?: string,
-     *      website?: string,
-     *      category: ?string,
-     *      description?: ?string,
-     *      author?: ?string,
-     *  } $data
+     *     title?: string,
+     *     website?: string,
+     *     category: ?string,
+     *     description?: ?string,
+     *     author?: ?string,
+     * } $data
      */
     public function update(array $data): int
     {
-        $title    = $data['title'] ?? $this->title;
-        $website  = (isset($data['website']))
+        $title   = $data['title'] ?? $this->title;
+        $website = (isset($data['website']))
             ? filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: null
             : null;
         $category = $data['category'] ?? null;
         /** @var string $description */
         $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string)$data['description'], 4096)) : null;
         /** @var string $author */
-        $author   = (isset($data['author'])) ? scrub_in(Dba::check_length((string)$data['author'], 64)) : null;
+        $author = (isset($data['author'])) ? scrub_in(Dba::check_length((string)$data['author'], 64)) : null;
 
         $sql = 'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?';
         Dba::write($sql, [$title, $website, $description, $author, $category, $this->id]);
@@ -471,10 +471,10 @@ class Podcast_Episode extends database_object implements
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
      * @param array{
-     *      latitude?: float,
-     *      longitude?: float,
-     *      name?: string
-     *  } $location
+     *     latitude?: float,
+     *     longitude?: float,
+     *     name?: string
+     * } $location
      */
     public function set_played(int $user_id, string $agent, array $location, int $date): bool
     {

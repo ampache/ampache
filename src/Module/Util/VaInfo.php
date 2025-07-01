@@ -109,21 +109,34 @@ final class VaInfo implements VaInfoInterface
 
     private const MBID_REGEX = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
 
-    public string $encoding      = '';
+    public string $encoding = '';
+
     public string $encodingId3v1 = '';
+
     public string $encodingId3v2 = '';
-    public string $filename      = '';
-    public string $type          = '';
-    public array $tags           = [];
-    public array $gatherTypes    = [];
+
+    public string $filename = '';
+
+    public string $type = '';
+
+    public array $tags = [];
+
+    /* @var string[] */
+    public array $gatherTypes = [];
+
     public bool $islocal;
 
-    protected array $_raw            = [];
-    protected ?getID3 $_getID3       = null;
-    protected int $_forcedSize       = 0;
+    protected array $_raw = [];
+
+    protected ?getID3 $_getID3 = null;
+
+    protected int $_forcedSize = 0;
+
     protected string $_file_encoding = '';
-    protected string $_file_pattern  = '';
-    protected string $_dir_pattern   = '';
+
+    protected string $_file_pattern = '';
+
+    protected string $_dir_pattern = '';
 
     private bool $_broken = false;
 
@@ -459,7 +472,11 @@ final class VaInfo implements VaInfoInterface
             switch ($key) {
                 case 'text':
                     foreach ($text as $tkey => $data) {
-                        $ndata['text'][] = ['data' => $data, 'description' => $tkey, 'encodingid' => 0];
+                        $ndata['text'][] = [
+                            'data' => $data,
+                            'description' => $tkey,
+                            'encodingid' => 0
+                        ];
                     }
                     break;
                 default:
@@ -505,7 +522,7 @@ final class VaInfo implements VaInfoInterface
      * everything in random order.
      * @param array $results
      * @param string $configKey
-     * @return array
+     * @return string[]
      */
     public static function get_tag_type(array $results, string $configKey = 'metadata_order'): array
     {
@@ -556,10 +573,71 @@ final class VaInfo implements VaInfoInterface
      * This function takes the array from vainfo along with the
      * key we've decided on and the filename and returns it in a
      * sanitized format that Ampache can actually use
-     * @param array $results
-     * @param array $keys
+     * @param array<string, mixed> $results
+     * @param string[] $keys
      * @param string|null $filename
-     * @return array<string, mixed>
+     * @return array{
+     *     'albumartist': ?string,
+     *     'album': ?string,
+     *     'artist': ?string,
+     *     'artists': ?string,
+     *     'art': ?string,
+     *     'audio_codec': ?string,
+     *     'barcode': ?string,
+     *     'bitrate': ?int,
+     *     'catalog_number': ?string,
+     *     'channels': ?string,
+     *     'comment': ?string,
+     *     'composer': ?string,
+     *     'description': ?string,
+     *     'disk': ?int,
+     *     'disksubtitle': ?string,
+     *     'display_x': ?int,
+     *     'display_y': ?int,
+     *     'encoding': ?string,
+     *     'file': ?string,
+     *     'frame_rate': ?float,
+     *     'genre': ?string,
+     *     'isrc': ?string,
+     *     'language': ?string,
+     *     'lyrics': ?string,
+     *     'mb_albumartistid': ?string,
+     *     'mb_albumartistid_array': ?array<string>,
+     *     'mb_albumid_group': ?string,
+     *     'mb_albumid': ?string,
+     *     'mb_artistid': ?string,
+     *     'mb_artistid_array': ?array<string>,
+     *     'mb_trackid': ?string,
+     *     'mime': ?string,
+     *     'mode': ?string,
+     *     'original_name': ?string,
+     *     'original_year': ?int,
+     *     'publisher': ?string,
+     *     'r128_album_gain': ?float,
+     *     'r128_track_gain': ?float,
+     *     'rate': ?int,
+     *     'rating': ?array<int, float>,
+     *     'release_date': ?string,
+     *     'release_status': ?string,
+     *     'release_type': ?string,
+     *     'replaygain_album_gain': ?float,
+     *     'replaygain_album_peak': ?float,
+     *     'replaygain_track_gain': ?float,
+     *     'replaygain_track_peak': ?float,
+     *     'resolution_x': ?int,
+     *     'resolution_y': ?int,
+     *     'size': ?int,
+     *     'version': ?string,
+     *     'summary': ?string,
+     *     'time': ?int,
+     *     'title': ?string,
+     *     'totaldisks': ?int,
+     *     'totaltracks': ?int,
+     *     'track': ?int,
+     *     'video_bitrate': ?int,
+     *     'video_codec': ?string,
+     *     'year': ?int
+     * }
      */
     public static function clean_tag_info(array $results, array $keys, ?string $filename = null): array
     {
@@ -658,7 +736,7 @@ final class VaInfo implements VaInfoInterface
             $info['video_codec']   = (!$info['video_codec'] && array_key_exists('video_codec', $tags)) ? trim((string)$tags['video_codec']) : $info['video_codec'];
             $info['description']   = (!$info['description'] && array_key_exists('description', $tags)) ? trim((string)$tags['description']) : $info['description'];
 
-            $info['art']               = (!$info['art'] && array_key_exists('art', $tags)) ? trim((string)$tags['art']) : $info['art'];
+            $info['art'] = (!$info['art'] && array_key_exists('art', $tags)) ? trim((string)$tags['art']) : $info['art'];
 
             if (self::getConfigContainer()->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) && is_array($tags)) {
                 // Add rest of the tags without typecast to the array
@@ -896,6 +974,7 @@ final class VaInfo implements VaInfoInterface
      *
      * Gather and return the general information about a file
      * (vbr/cbr, sample rate, channels, etc.)
+     * @return array<string, mixed>
      */
     private function _parse_general(array $tags): array
     {
@@ -1008,8 +1087,8 @@ final class VaInfo implements VaInfoInterface
      * _cleanup_generic
      *
      * This does generic cleanup.
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      * @throws Exception
      */
     private function _cleanup_generic($tags): array
@@ -1091,8 +1170,8 @@ final class VaInfo implements VaInfoInterface
      * _cleanup_lyrics
      *
      * This is supposed to handle lyrics3. FIXME: does it?
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      */
     private function _cleanup_lyrics($tags): array
     {
@@ -1112,8 +1191,8 @@ final class VaInfo implements VaInfoInterface
      * _cleanup_vorbiscomment
      *
      * Standardizes tag names from vorbis.
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      * @throws Exception
      */
     private function _cleanup_vorbiscomment($tags): array
@@ -1261,8 +1340,8 @@ final class VaInfo implements VaInfoInterface
      * _cleanup_id3v1
      *
      * Doesn't do much.
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      */
     private function _cleanup_id3v1($tags): array
     {
@@ -1281,8 +1360,8 @@ final class VaInfo implements VaInfoInterface
      * _cleanup_id3v2
      *
      * Whee, v2!
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      * @throws Exception
      */
     private function _cleanup_id3v2($tags): array
@@ -1503,10 +1582,10 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * _cleanup_riff
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      */
-    private function _cleanup_riff($tags): array
+    private function _cleanup_riff(array $tags): array
     {
         $parsed = [];
 
@@ -1526,8 +1605,8 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * _cleanup_quicktime
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      * @throws Exception
      */
     private function _cleanup_quicktime($tags): array
@@ -1635,8 +1714,8 @@ final class VaInfo implements VaInfoInterface
      * _cleanup_asf
      *
      * This does WMA cleanup.
-     * @param $tags
-     * @return array
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
      * @throws Exception
      */
     private function _cleanup_asf($tags): array

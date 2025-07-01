@@ -58,8 +58,8 @@ $current_user      = Core::get_global('user');
 $logo_url          = ($current_user instanceof User && Preference::get_by_user($current_user->getId(), 'custom_logo_user'))
     ? $current_user->get_avatar()['url_medium'] ?? Ui::get_logo_url()
     : Ui::get_logo_url();
-$is_session        = (User::is_registered() && !empty($current_user) && ($current_user->id ?? 0) > 0);
-$allow_upload      = $access25 && Upload::can_upload($current_user);
+$is_session   = (User::is_registered() && !empty($current_user) && ($current_user->id ?? 0) > 0);
+$allow_upload = $access25 && Upload::can_upload($current_user);
 
 $count_temp_playlist = (!empty($current_user->playlist) && $current_user->playlist instanceof Tmp_Playlist)
     ? count($current_user->playlist->get_items())
@@ -92,7 +92,7 @@ $albumString = (AmpConfig::get('album_group'))
         <link rel="alternate" href="<?php echo $web_path; ?>/rss.php?type=<?php echo RssFeedTypeEnum::LATEST_SHOUT->value; ?>" type="application/rss+xml" title="<?php echo T_('Newest Shouts'); ?>">
         <?php }
         } ?>
-        <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>">
+        <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset', 'UTF-8'); ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo $site_title; ?></title>
 

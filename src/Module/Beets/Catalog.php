@@ -178,7 +178,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if ($this->checkSong($song)) {
             debug_event(self::class, 'Skipping existing song ' . $song['file'], 5);
         } else {
-            $album_artist_id  = (isset($song['album_artist']))
+            $album_artist_id = (isset($song['album_artist']))
                 ? Artist::check($song['album_artist'], $song['mb_albumartistid'] ?? null)
                 : null;
             $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['mbid'] ?? null, $song['mb_releasegroupid'] ?? null, $album_artist_id, $song['release_type'] ?? null, $song['release_status'] ?? null, $song['original_year'] ?? null, $song['barcode'] ?? null, $song['catalog_number'] ?? null, $song['version'] ?? null);
@@ -211,9 +211,11 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         }
 
         debug_event(self::class, 'Insert failed for ' . $song['file'], 1);
-        /* HINT: filename (file path) */
-        AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
-        echo AmpError::display('general');
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+            /* HINT: filename (file path) */
+            AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
+            echo AmpError::display('general');
+        }
 
         return null;
     }

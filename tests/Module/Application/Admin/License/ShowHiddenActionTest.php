@@ -82,8 +82,8 @@ class ShowHiddenActionTest extends MockeryTestCase
         $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
         $browse     = $this->createMock(Browse::class);
 
-        $id          = 666;
-        $name        = 'some-name';
+        $id   = 666;
+        $name = 'some-name';
 
         $gatekeeper->expects(static::once())
             ->method('mayAccess')

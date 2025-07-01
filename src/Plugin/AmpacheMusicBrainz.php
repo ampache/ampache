@@ -47,15 +47,15 @@ use MusicBrainz\Objects\Tag;
 
 class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInterface
 {
-    public string $name        = 'MusicBrainz';
+    public string $name = 'MusicBrainz';
 
-    public string $categories  = 'metadata';
+    public string $categories = 'metadata';
 
     public string $description = 'MusicBrainz metadata integration';
 
-    public string $url         = 'http://www.musicbrainz.org';
+    public string $url = 'http://www.musicbrainz.org';
 
-    public string $version     = '000003';
+    public string $version = '000003';
 
     public string $min_ampache = '360003';
 
@@ -189,9 +189,9 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                         $results = $brainz->getObject($lookup, 'release-group');
                         break;
                     case 'artist':
-                        $lookup = $brainz->lookup($object_type, $mbid, ['release-groups', 'genres', 'tags']);
+                        $lookup = $brainz->lookup($object_type, $mbid, ['release-groups', 'genres', 'tags', 'url-rels']);
                         /**
-                         * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups+tags&fmt=json
+                         * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups+genres+tags+url-rels&fmt=json
                          * @var \MusicBrainz\Entities\Artist $results
                          */
                         $results = $brainz->getObject($lookup, $object_type);
@@ -328,6 +328,9 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
+     * @param string[] $gather_types
+     * @param array<string, mixed> $media_info
+     * @return array<string, mixed>
      */
     public function get_metadata(array $gather_types, array $media_info): array
     {

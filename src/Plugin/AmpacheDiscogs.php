@@ -34,15 +34,15 @@ use Exception;
 
 class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface, PluginGetMetadataInterface
 {
-    public string $name        = 'Discogs';
+    public string $name = 'Discogs';
 
-    public string $categories  = 'metadata';
+    public string $categories = 'metadata';
 
     public string $description = 'Discogs metadata integration';
 
-    public string $url         = 'http://www.discogs.com';
+    public string $url = 'http://www.discogs.com';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370021';
 
@@ -134,6 +134,9 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
+     * @param string[] $gather_types
+     * @param array<string, mixed> $media_info
+     * @return array<string, mixed>
      */
     public function get_metadata(array $gather_types, array $media_info): array
     {
@@ -276,6 +279,7 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
     /**
      * gather_arts
      * Returns art items for the requested media type
+     * @return array<array{url: string, mime: string, title: string}>
      */
     public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array
     {

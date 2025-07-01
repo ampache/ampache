@@ -40,7 +40,7 @@ final class Migration400008 extends AbstractMigration
     {
         $this->updatePreferences('cron_cache', 'Cache computed SQL data (eg. media hits stats) using a cron', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'catalog');
 
-        $tables    = [
+        $tables = [
             'cache_object_count',
             'cache_object_count_run',
         ];

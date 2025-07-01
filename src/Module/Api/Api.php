@@ -140,6 +140,7 @@ class Api
         Method\ScrobbleMethod::ACTION => Method\ScrobbleMethod::class,
         Method\SearchMethod::ACTION => Method\SearchMethod::class,
         Method\SearchGroupMethod::ACTION => Method\SearchGroupMethod::class,
+        Method\SearchRulesMethod::ACTION => Method\SearchRulesMethod::class,
         Method\SearchSongsMethod::ACTION => Method\SearchSongsMethod::class,
         Method\ShareCreateMethod::ACTION => Method\ShareCreateMethod::class,
         Method\ShareDeleteMethod::ACTION => Method\ShareDeleteMethod::class,
@@ -187,9 +188,9 @@ class Api
 
     public static string $auth_version = '350001';
 
-    public static string $version = '6.7.3'; // AMPACHE_VERSION
+    public static string $version = '6.8.0'; // AMPACHE_VERSION
 
-    public static string $version_numeric = '673000'; // AMPACHE_VERSION
+    public static string $version_numeric = '680000'; // AMPACHE_VERSION
 
     public static ?Browse $browse = null;
 

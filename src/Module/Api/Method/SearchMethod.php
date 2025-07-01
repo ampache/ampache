@@ -25,6 +25,10 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 
 /**
@@ -68,6 +72,30 @@ final class SearchMethod
      */
     public static function search(array $input, User $user): bool
     {
+        if (!Api::check_parameter($input, ['rule_1', 'rule_1_operator', 'rule_1_input'], self::ACTION)) {
+            return false;
+        }
+
+        $type = (isset($input['type'])) ? (string) $input['type'] : 'song';
+        // confirm the correct data
+        if (!in_array(strtolower($type), Search::VALID_TYPES)) {
+            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+
+            return false;
+        }
+
+        if (!AmpConfig::get('allow_video') && $type == 'video') {
+            Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+
+        if ($type == 'label' && !AmpConfig::get('label')) {
+            Api::error('Enable: label', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+
         return AdvancedSearchMethod::advanced_search($input, $user);
     }
 }

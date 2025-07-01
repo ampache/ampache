@@ -34,15 +34,15 @@ use Ampache\Module\Util\OAuth\OAuthSignatureMethod_HMAC_SHA1;
 
 class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterface
 {
-    public string $name        = '7digital';
+    public string $name = '7digital';
 
-    public string $categories  = 'preview';
+    public string $categories = 'preview';
 
     public string $description = 'Song preview from 7digital';
 
-    public string $url         = 'http://www.7digital.com';
+    public string $url = 'http://www.7digital.com';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370015';
 

@@ -69,6 +69,15 @@ final class ApiHandler implements ApiHandlerInterface
 
     private UserRepositoryInterface $userRepository;
 
+    /** @var string[] */
+    private array $deprecated = [
+        'tag_albums',
+        'tag_artists',
+        'tag',
+        'tag_songs',
+        'tags',
+    ];
+
     public function __construct(
         RequestParserInterface $requestParser,
         StreamFactoryInterface $streamFactory,
@@ -113,8 +122,8 @@ final class ApiHandler implements ApiHandlerInterface
             $input['auth'] = $gatekeeper->getAuth();
         }
 
-        $api_format  = $input['api_format'];
-        $version     = (isset($input['version']))
+        $api_format = $input['api_format'];
+        $version    = (isset($input['version']))
             ? $input['version']
             : Api::$version;
 
@@ -125,7 +134,7 @@ final class ApiHandler implements ApiHandlerInterface
         $api_version = (int)Preference::get_by_user($userId, 'api_force_version');
         if (!in_array($api_version, Api::API_VERSIONS)) {
             $api_session = Session::get_api_version($input['auth']);
-            $api_version = ($is_public)
+            $api_version = ($is_public || (isset($input['version']) && $header_auth))
                 ? (int)substr($version, 0, 1)
                 : $api_session;
             // Downgrade version 7 calls to 6. (You shouldn't use 7 but let it slide if you do.)
@@ -433,6 +442,20 @@ final class ApiHandler implements ApiHandlerInterface
                 }
                 break;
             case 5:
+                if (in_array($action, $this->deprecated)) {
+                    ob_end_clean();
+
+                    return $response->withBody(
+                        $this->streamFactory->createStream(
+                            $output->error5(
+                                ErrorCodeEnum::DEPRECATED,
+                                T_('Deprecated'),
+                                $action,
+                                'removed'
+                            )
+                        )
+                    );
+                }
                 $handlerClassName = Api5::METHOD_LIST[$action] ?? null;
                 if ($handlerClassName === null) {
                     ob_end_clean();
@@ -451,6 +474,20 @@ final class ApiHandler implements ApiHandlerInterface
                 break;
             case 6:
             default:
+                if (in_array($action, $this->deprecated)) {
+                    ob_end_clean();
+
+                    return $response->withBody(
+                        $this->streamFactory->createStream(
+                            $output->error(
+                                ErrorCodeEnum::DEPRECATED,
+                                T_('Deprecated'),
+                                $action,
+                                'removed'
+                            )
+                        )
+                    );
+                }
                 $handlerClassName = Api::METHOD_LIST[$action] ?? null;
                 if ($handlerClassName === null) {
                     ob_end_clean();

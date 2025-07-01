@@ -31,15 +31,15 @@ use Ampache\Repository\Model\User;
 
 class AmpacheGoogleAnalytics extends AmpachePlugin implements PluginDisplayOnFooterInterface
 {
-    public string $name        = 'GoogleAnalytics';
+    public string $name = 'GoogleAnalytics';
 
-    public string $categories  = 'stats';
+    public string $categories = 'stats';
 
     public string $description = 'Google Analytics statistics';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370034';
 

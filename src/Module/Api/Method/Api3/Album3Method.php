@@ -52,8 +52,16 @@ final class Album3Method
         $uid     = scrub_in((string) $input['filter']);
         $include = [];
         if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include'])));
+            if (is_array($input['include'])) {
+                foreach ($input['include'] as $item) {
+                    if ($item === 'songs' || $item == '1') {
+                        $include[] = 'songs';
+                    }
+                }
+            } elseif ($input['include'] === 'songs' || $input['include'] == '1') {
+                $include[] = 'songs';
+            }
         }
-        echo Xml3_Data::albums([$uid], $include ?: [], $user);
+        echo Xml3_Data::albums([$uid], $include, $user);
     }
 }

@@ -90,6 +90,10 @@ final readonly class ShowAction extends AbstractShowAction
 
         $objectId = (int)($queryParams['object_id'] ?? 0);
 
+        if (!$objectId) {
+            return null;
+        }
+
         $item = $this->libraryItemLoader->load(
             LibraryItemEnum::from($objectType),
             $objectId
@@ -105,8 +109,8 @@ final readonly class ShowAction extends AbstractShowAction
         }
 
         if ($item instanceof Podcast_Episode) {
-            $objectId        = $item->podcast;
-            $objectType      = 'podcast';
+            $objectId   = $item->podcast;
+            $objectType = 'podcast';
         }
 
         return [

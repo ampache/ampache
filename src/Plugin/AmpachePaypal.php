@@ -33,15 +33,15 @@ use Ampache\Repository\Model\User;
 
 class AmpachePaypal extends AmpachePlugin implements PluginDisplayUserFieldInterface
 {
-    public string $name        = 'Paypal';
+    public string $name = 'Paypal';
 
-    public string $categories  = 'user';
+    public string $categories = 'user';
 
     public string $description = 'PayPal donation button on user page';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '370034';
 

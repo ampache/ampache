@@ -121,8 +121,8 @@ final class ControlReplyApplication implements ApplicationInterface
             case 'search':
                 debug_event('control-reply', 'Searchcriteria: ' . $upnpRequest['searchcriteria'], 5);
                 debug_event('control-reply', 'Search filter : ' . $filter, 5);
-                $responseType             = 'u:SearchResponse';
-                [$totMatches, $items]     = Upnp_Api::_callSearch($upnpRequest['searchcriteria'], $filter, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
+                $responseType         = 'u:SearchResponse';
+                [$totMatches, $items] = Upnp_Api::_callSearch($upnpRequest['searchcriteria'], $filter, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                 break;
             case 'browse':
                 $responseType = 'u:BrowseResponse';
@@ -141,9 +141,9 @@ final class ControlReplyApplication implements ApplicationInterface
                     } else {
                         $filter = '*'; // Some devices don't seem to specify a sensible filter (may remove)
                         //$items[] = [];
-                        $items[]                  = Upnp_Api::_musicMetadata('');
-                        $items[]                  = Upnp_Api::_videoMetadata('');
-                        [$totMatches, $items]     = Upnp_Api::_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
+                        $items[]              = Upnp_Api::_musicMetadata('');
+                        $items[]              = Upnp_Api::_videoMetadata('');
+                        [$totMatches, $items] = Upnp_Api::_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                         debug_event('control-reply', 'Root items returning' . $items[0] . $items[1], 5);
                         //debug_event('control-reply', 'Root items detail ' . var_export($items, true), 5);
                         //debug_event('control-reply', 'Root items sort   ' . $upnpRequest['sortcriteria'], 5);
@@ -224,7 +224,7 @@ final class ControlReplyApplication implements ApplicationInterface
                 }
             }
 
-            $xmlDIDL  = $domDIDL->saveXML();
+            $xmlDIDL = $domDIDL->saveXML();
             if ($xmlDIDL) {
                 $xmlDIDLs = substr($xmlDIDL, strpos($xmlDIDL, '?>') + 2); // Remove the unnecessary <xml... > tag at the head of the DIDL
                 $domSOAP  = Upnp_Api::createSOAPEnvelope($xmlDIDLs, $numRet, $totMatches, $responseType);

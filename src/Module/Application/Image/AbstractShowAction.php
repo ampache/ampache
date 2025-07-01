@@ -76,7 +76,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 $salt
             );
 
-            $cookie = $_COOKIE[AmpConfig::get('session_name')] ?? '';
+            $cookie = $_COOKIE[AmpConfig::get('session_name', 'ampache')] ?? '';
 
             if (
                 !Session::exists(AccessTypeEnum::INTERFACE->value, $cookie) &&
@@ -103,7 +103,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
         $size  = ($thumb === 0)
             ? filter_input(INPUT_GET, 'size', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE) ?? 'original'
             : 'original';
-        $kind  = (array_key_exists('kind', $_GET) && $_GET['kind'] == 'preview')
+        $kind = (array_key_exists('kind', $_GET) && $_GET['kind'] == 'preview')
             ? 'preview'
             : 'default';
 
@@ -123,7 +123,8 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                     // If we need to pull the data out of the session
                     if (array_key_exists('form', $_SESSION)) {
                         $filename    = $this->requestParser->getFromRequest('image_index');
-                        $image       = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
+                        $object_type = $this->requestParser->getFromRequest('object_type');
+                        $image       = Art::get_from_source($_SESSION['form']['images'][$filename], $object_type);
                         $mime        = $_SESSION['form']['images'][$filename]['mime'];
                         $typeManaged = true;
                     }
@@ -156,15 +157,13 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                         ? $rootimg . "blankalbum_" . $size . ".png"
                         : $rootimg . "blankalbum.png";
                 }
-                $etag  = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))
+                $etag = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))
                     ? "EmptyMediaAlbum" . $size
                     : "EmptyMediaAlbum";
                 $image = file_get_contents($defaultimg);
             } else {
                 // show the original image or thumbnail
-                $etag = ($art->id > 0)
-                    ? $art->id
-                    : null;
+                $etag       = $type . '_' . $art->id . '_' . $size;
                 $thumb_data = [];
                 if ($has_size) {
                     if ($art->thumb && $art->thumb_mime) {
@@ -174,12 +173,12 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                     }
                 } elseif (array_key_exists('thumb', $_GET) && $thumb > 0) {
                     // thumbs should be avoided but can still be used
-                    $size       = Art::get_thumb_size($thumb);
-                    $thumb_data = $art->get_thumb($size);
-                    $etag       = null;
+                    $size_array = Art::get_thumb_size($thumb);
+                    $thumb_data = $art->get_thumb($size_array);
+                    $etag       = $type . '_' . $art->id . '_thumb_' . $thumb;
                 }
 
-                $mime  = (array_key_exists('thumb_mime', $thumb_data))
+                $mime = (array_key_exists('thumb_mime', $thumb_data))
                     ? $thumb_data['thumb_mime']
                     : $art->raw_mime;
                 $image = (array_key_exists('thumb', $thumb_data))

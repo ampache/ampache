@@ -41,31 +41,6 @@ parameters:
 			path: src/Config/Init/Init.php
 
 		-
-			message: "#^Function apache_request_headers\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function catalog_worker\\(\\) has parameter \\$catalogs with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function catalog_worker\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function get_themes\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function getallheaders\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
 			message: "#^Function pGraph_Yformat_bytes\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: src/Config/functions.php
@@ -341,11 +316,6 @@ parameters:
 			path: src/Module/Api/Method/Api3/Handshake3Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Tag3Method\\:\\:tag\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Tag3Method.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 3
 			path: src/Module/Api/Method/Api4/AdvancedSearch4Method.php
@@ -611,11 +581,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/SystemUpdate5Method.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\Tag5Method\\:\\:tag\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Tag5Method.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/UrlToSong5Method.php
@@ -871,44 +836,14 @@ parameters:
 			path: src/Module/Api/Output/XmlOutput.php
 
 		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Subsonic_Api', non\\-falsy\\-string\\} given\\.$#"
+			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\OpenSubsonic_Api', non\\-falsy\\-string\\} given\\.$#"
 			count: 1
 			path: src/Module/Api/SubsonicApiApplication.php
 
 		-
-			message: "#^Cannot access offset '' on array\\<string\\>\\|false\\.$#"
+			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Subsonic_Api', non\\-falsy\\-string\\} given\\.$#"
 			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_hasNestedArray\\(\\) has parameter \\$properties with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_output_body\\(\\) has parameter \\$curl with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_output_body\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_output_header\\(\\) has parameter \\$curl with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:_output_header\\(\\) has parameter \\$header with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
-			message: "#^Cannot cast array\\<int, string\\>\\|string\\|null to string\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
+			path: src/Module/Api/SubsonicApiApplication.php
 
 		-
 			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
@@ -1261,19 +1196,9 @@ parameters:
 			path: src/Module/Application/Installation/DefaultAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$action_index of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:run_custom_play_action\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<1, max\\>, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Parameter \\#1 \\$action_index of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:run_custom_play_action\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
 
 		-
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<1, max\\>, int given\\.$#"
@@ -1301,29 +1226,9 @@ parameters:
 			path: src/Module/Application/Stream/StreamItemAction.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\ArtCollector\\:\\:collect\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/ArtCollector.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\ArtCollectorInterface\\:\\:collect\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/ArtCollectorInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\CollectorModuleInterface\\:\\:collect\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/CollectorModuleInterface.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/LastFmCollectorModule.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:collect\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/MetaTagCollectorModule.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:gatherMediaTags\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
@@ -1331,32 +1236,7 @@ parameters:
 			path: src/Module/Art/Collector/MetaTagCollectorModule.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:gatherSongTags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/MetaTagCollectorModule.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:gatherSongTagsSingle\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/MetaTagCollectorModule.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:gatherVideoTags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/MetaTagCollectorModule.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:getArtTypePriority\\(\\) has parameter \\$priorities with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/MetaTagCollectorModule.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:sortArtByPriority\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/MetaTagCollectorModule.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:sortArtByPriority\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/MetaTagCollectorModule.php
 
@@ -1691,26 +1571,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_Seafile.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:download_metadata\\(\\) has parameter \\$gather_types with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:download_metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:get_media_tags\\(\\) has parameter \\$gather_types with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:get_media_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:insert_song\\(\\) has parameter \\$file with no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
@@ -1922,11 +1782,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:status\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:update_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
@@ -4126,86 +3981,6 @@ parameters:
 			path: src/Module/Util/Upload.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_asf\\(\\) has parameter \\$tags with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_asf\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_generic\\(\\) has parameter \\$tags with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_generic\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_id3v1\\(\\) has parameter \\$tags with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_id3v1\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_id3v2\\(\\) has parameter \\$tags with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_id3v2\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_lyrics\\(\\) has parameter \\$tags with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_lyrics\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_quicktime\\(\\) has parameter \\$tags with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_quicktime\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_riff\\(\\) has parameter \\$tags with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_riff\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_vorbiscomment\\(\\) has parameter \\$tags with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_vorbiscomment\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_detect_encoding\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -4216,27 +3991,7 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_parse_general\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:clean_tag_info\\(\\) has parameter \\$keys with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:clean_tag_info\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:get_tag_type\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:get_tag_type\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -4321,11 +4076,6 @@ parameters:
 			path: src/Module/Util/VaInfoInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:get_tag_type\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfoInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:prepare_metadata_for_writing\\(\\) has parameter \\$frames with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfoInterface.php
@@ -4357,11 +4107,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:gather_arts\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheAmazon.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:gather_arts\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheAmazon.php
 
@@ -4406,26 +4151,6 @@ parameters:
 			path: src/Plugin/AmpacheDiscogs.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:gather_arts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:get_metadata\\(\\) has parameter \\$gather_types with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:get_metadata\\(\\) has parameter \\$media_info with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:get_metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:\\$tracking_id has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheGoogleAnalytics.php
@@ -4446,11 +4171,6 @@ parameters:
 			path: src/Plugin/AmpacheLastfm.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLyristLyrics\\:\\:get_lyrics\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLyristLyrics.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:\\$matomo_url has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheMatomo.php
@@ -4462,21 +4182,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:get_artist\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:get_metadata\\(\\) has parameter \\$gather_types with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:get_metadata\\(\\) has parameter \\$media_info with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:get_metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheMusicBrainz.php
 
@@ -4511,26 +4216,6 @@ parameters:
 			path: src/Plugin/AmpacheTheaudiodb.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:gather_arts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:get_metadata\\(\\) has parameter \\$gather_types with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:get_metadata\\(\\) has parameter \\$media_info with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:get_metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheYourls\\:\\:\\$yourls_api_key has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheYourls.php
@@ -4546,17 +4231,7 @@ parameters:
 			path: src/Plugin/AmpacheYourls.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampachechartlyrics\\:\\:get_lyrics\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/Ampachechartlyrics.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:gather_arts\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/Ampacheflickr.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:gather_arts\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/Ampacheflickr.php
 
@@ -4579,31 +4254,6 @@ parameters:
 			message: "#^Method Ampache\\\\Plugin\\\\PluginGatherArtsInterface\\:\\:gather_arts\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/PluginGatherArtsInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\PluginGatherArtsInterface\\:\\:gather_arts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/PluginGatherArtsInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\PluginGetLyricsInterface\\:\\:get_lyrics\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/PluginGetLyricsInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\PluginGetMetadataInterface\\:\\:get_metadata\\(\\) has parameter \\$gather_types with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/PluginGetMetadataInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\PluginGetMetadataInterface\\:\\:get_metadata\\(\\) has parameter \\$media_info with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/PluginGetMetadataInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\PluginGetMetadataInterface\\:\\:get_metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/PluginGetMetadataInterface.php
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\PluginLocationInterface\\:\\:display_map\\(\\) has parameter \\$points with no value type specified in iterable type array\\.$#"
@@ -4634,16 +4284,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:\\$album_artists type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:gather_metadata_plugin\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:get_name_array_by_id\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$_mapcache type has no value type specified in iterable type array\\.$#"
@@ -4687,16 +4327,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:process_action\\(\\) has parameter \\$catalogs with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:process_action\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -4861,11 +4491,6 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:save_objects\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_type\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
@@ -4874,26 +4499,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Query\\:\\:\\$_state type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:advanced_results\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Random.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:advanced_results\\(\\) has parameter \\$sql_params with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Random.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:advanced_sql\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Random.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:advanced_sql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Random.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:_add_type_select\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
@@ -4971,11 +4576,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_lyrics\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:has_info\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -5041,27 +4641,12 @@ parameters:
 			path: src/Repository/Model/User_Playlist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:get_current_object\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Userflag.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:compare_video_information\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:get_release_item_art\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:get_subtitles\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 

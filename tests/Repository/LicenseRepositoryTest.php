@@ -113,7 +113,7 @@ class LicenseRepositoryTest extends TestCase
 
     public function testFindReturnsNullIfNothingWasFound(): void
     {
-        $value  = 'some-name';
+        $value = 'some-name';
 
         $this->connection->expects(static::exactly(2))
             ->method('fetchOne')

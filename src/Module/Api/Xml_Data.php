@@ -69,9 +69,9 @@ use DOMDocument;
 class Xml_Data
 {
     // This is added so that we don't pop any webservers
-    private static ?int $limit  = 5000;
+    private static ?int $limit = 5000;
 
-    private static int $offset  = 0;
+    private static int $offset = 0;
 
     private static ?int $count = null;
 
@@ -161,7 +161,7 @@ class Xml_Data
      */
     public static function empty(): string
     {
-        return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n</root>\n";
+        return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset', 'UTF-8') . "\" ?>\n<root>\n</root>\n";
     }
 
     /**
@@ -318,9 +318,24 @@ class Xml_Data
         $string = ($object_type == '') ? '' : "<$object_type>\n";
         // Foreach it
         foreach ($array as $object) {
-            $string .= "\t<$item id=\"" . $object['id'] . "\">\n";
+            $string .= "\t<$item id=\"" . ($object['id'] ?? $object['name']) . "\">\n";
             foreach ($object as $name => $value) {
-                $filter = (is_numeric($value)) ? $value : "<![CDATA[" . $value . "]]>";
+                if ($name === 'widget') {
+                    $widget_type = $value[0];
+                    $filter      = '';
+                    if (is_array($value[1])) {
+                        foreach ($value[1] as $key => $val) {
+                            $filter .= "\t\t<$widget_type id=\"$key\"><![CDATA[" . $val . "]]></$widget_type>\n";
+                        }
+                    }
+                } elseif (($name === 'values' || $name === 'subtypes') && is_array($value)) {
+                    $filter = '';
+                    foreach ($value as $key => $val) {
+                        $filter .= "\t\t<value id=\"$key\"><![CDATA[" . $val . "]]></value>\n";
+                    }
+                } else {
+                    $filter = (is_numeric($value)) ? $value : "<![CDATA[" . $value . "]]>";
+                }
                 $string .= ($name !== 'id') ? "\t\t<$name>$filter</$name>\n" : '';
             }
             $string .= "\t</$item>\n";
@@ -498,7 +513,7 @@ class Xml_Data
         // here is where we call the object type
         switch ($object_type) {
             case 'catalog':
-                $string .= self::catalogs($objects, $user);
+                $string .= self::catalogs($objects, $user, false);
                 break;
             case 'album_artist':
             case 'artist':
@@ -583,7 +598,7 @@ class Xml_Data
                 }
                 break;
             case 'share':
-                $string .= self::shares($objects, $user);
+                $string .= self::shares($objects, $user, false);
                 break;
             case 'podcast':
                 foreach ($objects as $object_id) {
@@ -602,13 +617,13 @@ class Xml_Data
                 }
                 break;
             case 'podcast_episode':
-                $string .= self::podcast_episodes($objects, $user);
+                $string .= self::podcast_episodes($objects, $user, false);
                 break;
             case 'video':
-                $string .= self::videos($objects, $user);
+                $string .= self::videos($objects, $user, false);
                 break;
             case 'live_stream':
-                $string .= self::live_streams($objects, $user);
+                $string .= self::live_streams($objects, $user, false);
         }
 
         return self::output_xml($string, $full_xml);
@@ -705,7 +720,7 @@ class Xml_Data
                     }
                     break;
                 case 'share':
-                    $string .= self::shares($objects, $user);
+                    $string .= self::shares($objects, $user, false);
                     break;
                 case 'podcast':
                     if (($count > self::$limit || self::$offset > 0) && self::$limit) {
@@ -1135,23 +1150,24 @@ class Xml_Data
      *
      * @param list<int|string> $objects Share id's to include
      * @param User $user
+     * @param bool $full_xml whether to return a full XML document or just the node.
      * @return string
      */
-    public static function shares(array $objects, User $user): string
+    public static function shares(array $objects, User $user, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
         if (($count > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('share', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('share', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         foreach ($objects as $share_id) {
             $share = new Share((int)$share_id);
             $string .= "<share id=\"$share_id\">\n\t<name><![CDATA[" . $share->getObjectName() . "]]></name>\n\t<user><![CDATA[" . $share->getUserName() . "]]></user>\n\t<allow_stream>" . $share->allow_stream . "</allow_stream>\n\t<allow_download>" . $share->allow_download . "</allow_download>\n\t<creation_date>" . $share->creation_date . "</creation_date>\n\t<lastvisit_date>" . $share->lastvisit_date . "</lastvisit_date>\n\t<object_type><![CDATA[" . $share->object_type . "]]></object_type>\n\t<object_id>" . $share->object_id . "</object_id>\n\t<expire_days>" . $share->expire_days . "</expire_days>\n\t<max_counter>" . $share->max_counter . "</max_counter>\n\t<counter>" . $share->counter . "</counter>\n\t<secret><![CDATA[" . $share->secret . "]]></secret>\n\t<public_url><![CDATA[" . $share->public_url . "]]></public_url>\n\t<description><![CDATA[" . $share->description . "]]></description>\n</share>\n";
         } // end foreach
 
-        return self::output_xml($string);
+        return self::output_xml($string, $full_xml);
     }
 
     /**
@@ -1204,16 +1220,17 @@ class Xml_Data
      *
      * @param list<int|string> $objects group of catalog id's
      * @param User $user
+     * @param bool $full_xml whether to return a full XML document or just the node.
      * @return string
      */
-    public static function catalogs(array $objects, User $user): string
+    public static function catalogs(array $objects, User $user, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
         if (($count > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('catalog', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('catalog', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         foreach ($objects as $catalog_id) {
             $catalog = Catalog::create_from_id((int)$catalog_id);
@@ -1223,7 +1240,7 @@ class Xml_Data
             $string .= "<catalog id=\"$catalog_id\">\n\t<name><![CDATA[" . $catalog->name . "]]></name>\n\t<type><![CDATA[" . $catalog->catalog_type . "]]></type>\n\t<gather_types><![CDATA[" . $catalog->gather_types . "]]></gather_types>\n\t<enabled>" . $catalog->enabled . "</enabled>\n\t<last_add>" . $catalog->last_add . "</last_add>\n\t<last_clean>" . $catalog->last_clean . "</last_clean>\n\t<last_update>" . $catalog->last_update . "</last_update>\n\t<path><![CDATA[" . $catalog->get_f_info() . "]]></path>\n\t<rename_pattern><![CDATA[" . $catalog->rename_pattern . "]]></rename_pattern>\n\t<sort_pattern><![CDATA[" . $catalog->sort_pattern . "]]></sort_pattern>\n</catalog>\n";
         } // end foreach
 
-        return self::output_xml($string);
+        return self::output_xml($string, $full_xml);
     }
 
     /**
@@ -1734,7 +1751,7 @@ class Xml_Data
      */
     private static function _header(): string
     {
-        return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n";
+        return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset', 'UTF-8') . "\" ?>\n<root>\n";
     }
 
     /**

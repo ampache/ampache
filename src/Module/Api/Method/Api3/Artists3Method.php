@@ -75,10 +75,20 @@ final class Artists3Method
         $results = $browse->get_objects();
         $include = [];
         if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include'])));
+            if (!is_array($input['include'])) {
+                $input['include'] = explode(',', html_entity_decode((string)($input['include'])));
+            }
+            foreach ($input['include'] as $item) {
+                if ($item === 'songs' || $item == '1') {
+                    $include[] = 'songs';
+                }
+                if ($item === 'albums' || $item == '1') {
+                    $include[] = 'albums';
+                }
+            }
         }
         // echo out the resulting xml document
         ob_end_clean();
-        echo Xml3_Data::artists($results, $include ?: [], $user);
+        echo Xml3_Data::artists($results, $include, $user);
     }
 }

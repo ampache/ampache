@@ -73,7 +73,7 @@ function set_memory_limit(int|string $new_limit): void
 function scrub_in($input)
 {
     if (!is_array($input)) {
-        return stripslashes(htmlspecialchars(strip_tags((string) $input), ENT_NOQUOTES, AmpConfig::get('site_charset')));
+        return stripslashes(htmlspecialchars(strip_tags((string) $input), ENT_NOQUOTES, AmpConfig::get('site_charset', 'UTF-8')));
     } else {
         $results = [];
         foreach ($input as $item) {
@@ -99,7 +99,7 @@ function scrub_out($string): string
         return '';
     }
 
-    return htmlentities((string) $string, ENT_QUOTES, AmpConfig::get('site_charset'));
+    return htmlentities((string) $string, ENT_QUOTES, AmpConfig::get('site_charset', 'UTF-8'));
 }
 
 /**
@@ -109,7 +109,7 @@ function scrub_out($string): string
  */
 function unhtmlentities($string): string
 {
-    return html_entity_decode((string) $string, ENT_QUOTES, AmpConfig::get('site_charset'));
+    return html_entity_decode((string) $string, ENT_QUOTES, AmpConfig::get('site_charset', 'UTF-8'));
 }
 
 /**
@@ -117,7 +117,7 @@ function unhtmlentities($string): string
  * This takes a value and returns what we consider to be the correct boolean
  * value. We need a special function because PHP considers "false" to be true.
  *
- * @param bool|null|string $string
+ * @param bool|null|string|int $string
  */
 function make_bool($string): bool
 {
@@ -127,11 +127,11 @@ function make_bool($string): bool
     if ($string === null) {
         return false;
     }
-    if (strcasecmp((string) $string, 'false') == 0 || $string == '0') {
+    if (strcasecmp((string)$string, 'false') == 0 || $string === '0' || $string === 0) {
         return false;
     }
 
-    return (bool) $string;
+    return (bool)$string;
 }
 
 /**
@@ -258,7 +258,7 @@ function is_rtl($locale): bool
 // Declare apache_request_headers and getallheaders if it don't exists (PHP <= 5.3 + FastCGI)
 if (!function_exists('apache_request_headers')) {
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     function apache_request_headers(): array
     {
@@ -279,7 +279,7 @@ if (!function_exists('apache_request_headers')) {
 }
 if (!function_exists('getallheaders')) {
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     function getallheaders(): array
     {
@@ -293,7 +293,7 @@ if (!function_exists('getallheaders')) {
  */
 function check_http_referer(): bool
 {
-    $referer  = Core::get_server('HTTP_REFERER');
+    $referer = Core::get_server('HTTP_REFERER');
 
     $web_path = AmpConfig::get_web_path();
 
@@ -596,10 +596,10 @@ function debug_event($type, $message, $level, $username = ''): bool
 
 /**
  * @param string $action
- * @param array|null $catalogs
- * @param array $options
+ * @param int[]|null $catalogs
+ * @param array<string, bool>|null $options
  */
-function catalog_worker($action, $catalogs = null, $options = null): void
+function catalog_worker(string $action, array $catalogs = null, array $options = null): void
 {
     if (AmpConfig::get('ajax_load')) {
         $sse_url = AmpConfig::get_web_path() . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs) ?: '');
@@ -893,10 +893,10 @@ function xoutput_headers(): void
 {
     $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
     if ($output == 'xml') {
-        header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
+        header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
         header("Content-Disposition: attachment; filename=ajax.xml");
     } else {
-        header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
+        header("Content-type: application/json; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
     }
 
     header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");
@@ -1026,7 +1026,7 @@ function nT_($original, $plural, $value): string
  * this looks in /themes and pulls all of the
  * theme.cfg.php files it can find and returns an
  * array of the results
- * @return array
+ * @return array<string, array<string, mixed>>
  */
 function get_themes(): array
 {

@@ -33,15 +33,15 @@ use WpOrg\Requests\Requests;
 
 class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
 {
-    public string $name        = 'Flickr';
+    public string $name = 'Flickr';
 
-    public string $categories  = 'slideshow';
+    public string $categories = 'slideshow';
 
     public string $description = 'Artist photos from Flickr';
 
-    public string $url         = 'http://www.flickr.com';
+    public string $url = 'http://www.flickr.com';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '360045';
 
@@ -113,6 +113,7 @@ class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
     /**
      * gather_arts
      * Returns art items for the requested media type
+     * @return array<array{url: string, mime: string, title: string}>
      */
     public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array
     {

@@ -79,7 +79,15 @@ final class Albums4Method
         $results = $browse->get_objects();
         $include = [];
         if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include'])));
+            if (is_array($input['include'])) {
+                foreach ($input['include'] as $item) {
+                    if ($item === 'songs' || $item == '1') {
+                        $include[] = 'songs';
+                    }
+                }
+            } elseif ($input['include'] === 'songs' || $input['include'] == '1') {
+                $include[] = 'songs';
+            }
         }
 
         ob_end_clean();
@@ -87,12 +95,12 @@ final class Albums4Method
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::albums($results, $include ?: [], $user);
+                echo Json4_Data::albums($results, $include, $user);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::albums($results, $include ?: [], $user);
+                echo Xml4_Data::albums($results, $include, $user);
         }
     }
 }

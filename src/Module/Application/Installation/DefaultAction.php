@@ -148,7 +148,7 @@ final class DefaultAction implements ApplicationActionInterface
         } else {
             load_gettext();
         }
-        header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset'));
+        header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset', 'UTF-8'));
 
         // Correct potential \ or / in the dirname
         $safe_dirname = get_web_path();

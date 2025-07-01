@@ -447,7 +447,7 @@ class Search extends playlist_object
             'description' => T_('Limit'),
             'sql' => '`date`',
         ];
-        $this->basetypes['recent_added'][]  = [
+        $this->basetypes['recent_added'][] = [
             'name' => 'add',
             'description' => T_('Limit'),
             'sql' => '`addition_time`',
@@ -691,22 +691,22 @@ class Search extends playlist_object
         $t_file_data = T_('File Data');
         $this->_add_type_text('file', T_('Filename'), $t_file_data);
         $bitrate_array = [
-            '32',
-            '40',
-            '48',
-            '56',
-            '64',
-            '80',
-            '96',
-            '112',
-            '128',
-            '160',
-            '192',
-            '224',
-            '256',
-            '320',
-            '640',
-            '1280',
+            '32' => '32',
+            '40' => '40',
+            '48' => '48',
+            '56' => '56',
+            '64' => '64',
+            '80' => '80',
+            '96' => '96',
+            '112' => '112',
+            '128' => '128',
+            '160' => '160',
+            '192' => '192',
+            '224' => '224',
+            '256' => '256',
+            '320' => '320',
+            '640' => '640',
+            '1280' => '1280',
         ];
         $this->_add_type_select('bitrate', T_('Bitrate'), 'numeric', $bitrate_array, $t_file_data);
         $this->_add_type_date('added', T_('Added'), $t_file_data);
@@ -1809,6 +1809,18 @@ class Search extends playlist_object
 
         return null;
     }
+
+    /**
+     * get_rule_types
+     *
+     * Return rule list for the current search type
+     * @return array<string, array<string, mixed>>
+     */
+    public function get_rule_types(): array
+    {
+        return $this->types;
+    }
+
 
     /**
      * set_rules

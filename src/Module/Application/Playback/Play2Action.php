@@ -97,7 +97,7 @@ final class Play2Action implements ApplicationActionInterface
         $use_auth         = AmpConfig::get('use_auth');
         $can_share        = AmpConfig::get('share');
         $player_customize = AmpConfig::get('transcode_player_customize');
-        $session_name     = AmpConfig::get('session_name');
+        $session_name     = AmpConfig::get('session_name', 'ampache');
         $require_session  = AmpConfig::get('require_session');
         $localnet_session = AmpConfig::get('require_localnet_session');
 
@@ -185,7 +185,7 @@ final class Play2Action implements ApplicationActionInterface
             $random  = (int)filter_input(INPUT_GET, 'random', FILTER_SANITIZE_NUMBER_INT);
 
             // run_custom_play_action... whatever that is
-            $cpaction = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
+            $cpaction = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_NUMBER_INT);
         }
         $this->logger->debug('Called for action: {' . $this->requestParser->getFromRequest('action') . '}', [LegacyLogger::CONTEXT_TYPE => self::class]);
         //$this->logger->debug('REQUEST: ' . print_r($_REQUEST, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
@@ -937,7 +937,7 @@ final class Play2Action implements ApplicationActionInterface
             $filepointer = $transcoder['handle'] ?? null;
             $media_name  = $media->get_artist_fullname() . " - " . $media->title . "." . ($transcoder['format'] ?? '');
         } elseif ($cpaction && $media instanceof Song) {
-            $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to ?? '');
+            $transcoder  = $media->run_custom_play_action((int)$cpaction, $transcode_to ?? '');
             $filepointer = $transcoder['handle'] ?? null;
             $transcode   = true;
         } else {

@@ -43,6 +43,14 @@ use SimpleXMLElement;
  */
 class Catalog_remote extends Catalog
 {
+    private const CMD_PING = 'ping';
+
+    private const CMD_SONG_TAGS = 'song_tags';
+
+    private const CMD_SONGS = 'songs';
+
+    private const CMD_URL_TO_SONG = 'url_to_song';
+
     private string $version     = '000001';
     private string $type        = 'remote';
     private string $description = 'Ampache Remote Catalog';
@@ -336,7 +344,7 @@ class Catalog_remote extends Catalog
             $current += $step;
             $song_tags = true;
             try {
-                $songs = $remote_handle->send_command('songs', ['offset' => $start, 'limit' => $step]);
+                $songs = $remote_handle->send_command(self::CMD_SONGS, ['offset' => $start, 'limit' => $step]);
                 // Iterate over the songs we retrieved and insert them
                 if ($songs instanceof SimpleXMLElement && $songs->song->count() > 0) {
                     foreach ($songs->song as $song) {
@@ -359,7 +367,7 @@ class Catalog_remote extends Catalog
 
                             $id   = (string)$song->attributes()->id;
                             $tags = ($song_tags)
-                                ? $remote_handle->send_command('song_tagss', ['filter' => $id])
+                                ? $remote_handle->send_command(self::CMD_SONG_TAGS, ['filter' => $id])
                                 : false;
                             // Iterate over the songs we retrieved and insert them
                             if ($tags instanceof SimpleXMLElement) {
@@ -458,10 +466,12 @@ class Catalog_remote extends Catalog
                             //debug_event('remote.catalog', 'DATA ' . print_r($data, true), 1);
                             if (!Song::insert($data)) {
                                 debug_event('remote.catalog', 'Insert failed for ' . $song->url, 1);
-                                /* HINT: Song Title */
-                                AmpError::add('general', T_(sprintf('Unable to insert song - %s', $song->title)));
-                                echo AmpError::display('general');
-                                flush();
+                                if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+                                    /* HINT: Song Title */
+                                    AmpError::add('general', T_(sprintf('Unable to insert song - %s', $song->title)));
+                                    echo AmpError::display('general');
+                                    flush();
+                                }
                             } else {
                                 $songsadded++;
                             }
@@ -472,9 +482,11 @@ class Catalog_remote extends Catalog
                 }
             } catch (Exception $error) {
                 debug_event('remote.catalog', 'Songs parsing error: ' . $error->getMessage(), 1);
-                AmpError::add('general', $error->getMessage());
-                echo AmpError::display('general');
-                flush();
+                if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+                    AmpError::add('general', $error->getMessage());
+                    echo AmpError::display('general');
+                    flush();
+                }
             }
         } // end while
 
@@ -514,7 +526,7 @@ class Catalog_remote extends Catalog
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event('remote.catalog', 'Starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
             try {
-                $song = $remote_handle->send_command('url_to_song', ['url' => $row['file']]);
+                $song = $remote_handle->send_command(self::CMD_URL_TO_SONG, ['url' => $row['file']]);
                 if (
                     $song instanceof SimpleXMLElement &&
                     count($song) == 1
@@ -581,7 +593,7 @@ class Catalog_remote extends Catalog
         if ($user_bit_rate > $max_bitrate) {
             $max_bitrate = $user_bit_rate;
         }
-        $handshake  = $remote_handle->info();
+        $handshake = $remote_handle->info();
         if (!$handshake instanceof SimpleXMLElement) {
             return false;
         }
@@ -619,7 +631,7 @@ class Catalog_remote extends Catalog
                 }
 
                 // keep alive just in case
-                $remote_handle->send_command('ping');
+                $remote_handle->send_command(self::CMD_PING);
             }
         }
 

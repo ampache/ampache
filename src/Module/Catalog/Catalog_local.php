@@ -452,7 +452,7 @@ class Catalog_local extends Catalog
 
             // Check to make sure the filename is of the expected charset
             if (function_exists('iconv')) {
-                $site_charset = AmpConfig::get('site_charset');
+                $site_charset = AmpConfig::get('site_charset', 'UTF-8');
                 $lc_charset   = $site_charset;
                 if (AmpConfig::get('lc_charset')) {
                     $lc_charset = AmpConfig::get('lc_charset');
@@ -905,8 +905,10 @@ class Catalog_local extends Catalog
                 true
             );
             debug_event('local.catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
-            AmpError::add('general', T_('Catalog root unreadable, stopping clean'));
-            echo AmpError::display('general');
+            if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+                AmpError::add('general', T_('Catalog root unreadable, stopping clean'));
+                echo AmpError::display('general');
+            }
 
             return 0;
         }
@@ -1216,7 +1218,7 @@ class Catalog_local extends Catalog
             }
 
             if ($this->getMetadataManager()->isCustomMetadataEnabled()) {
-                $song    = new Song($song_id);
+                $song = new Song($song_id);
                 $this->addMetadata($song, $results);
             }
             // disable dupes if catalog_check_duplicate is enabled
@@ -1356,8 +1358,10 @@ class Catalog_local extends Catalog
     {
         if (!Core::is_readable($this->path)) {
             // First sanity check; no point in proceeding with an unreadable catalog root.
-            AmpError::add('general', T_('Catalog root unreadable, stopping check'));
-            echo AmpError::display('general');
+            if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+                AmpError::add('general', T_('Catalog root unreadable, stopping check'));
+                echo AmpError::display('general');
+            }
 
             return [];
         }

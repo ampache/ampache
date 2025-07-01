@@ -1,5 +1,55 @@
 # API CHANGELOG
 
+## API 6.8.0
+
+This version is being released for Ampache7 **only**
+
+### Added
+
+* ALL
+  * Support regular handshake and ping actions with a Bearer Token
+* API6
+  * New Method: search_rules (Get a list of valid search rules per search type)
+  * user_playlists: Add include parameter to get song data
+  * user_smartlists: Add include parameter to get song data
+  * toggle_follow: Return errors when the users aren't found
+  * deprecation warnings from tag methods in the main API handler
+* API5
+  * toggle_follow: Return errors when the users aren't found
+
+### Changed
+
+* API6
+  * browse: don't require `catalog` when browsing a `catalog`
+
+### Fixed
+
+* ALL
+  * Incorrect data in the method docs
+  * user_update: incorrect parameter check for `filter` instead of `username`
+  * get_indexes: XML data may generate extra root elements
+  * user_create: validate `disable` bool with make_bool
+  * playlists: validate `show_dupes` bool with make_bool
+  * get_bookmark: validate `include` and `all` bools with make_bool
+  * flag: validate `include` bool with make_bool
+  * bookmarks: validate `include` bool with make_bool
+  * bookmark: validate `include` bool with make_bool
+  * bookmark_create: validate `include` bool with make_bool
+  * bookmark_edit: validate `include` bool with make_bool
+  * user_preference, user_preferences: Error with array special values
+  * system_preference, system_preferences: Error with array special values
+  * album, albums: include didn't always work correctly
+  * artist, artists, label_artists: include fixes
+API5
+  * user_edit: incorrect parameter check for `filter` instead of `username`
+  * bookmark: Bookmark is a valid `type`
+API3
+  * genres: fallback function missing
+  * genre: fallback function missing
+  * genre_songs: fallback function missing
+  * genre_artists: fallback function missing
+  * genre_albums: fallback function missing
+
 ## API 6.7.3
 
 This version is being released for Ampache7 **only**

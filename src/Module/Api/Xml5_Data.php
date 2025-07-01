@@ -155,7 +155,7 @@ class Xml5_Data
      */
     public static function empty(): string
     {
-        return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n</root>\n";
+        return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset', 'UTF-8') . "\" ?>\n<root>\n</root>\n";
     }
 
     /**
@@ -261,7 +261,22 @@ class Xml5_Data
         foreach ($array as $object) {
             $string .= "\t<$item id=\"" . $object['id'] . "\">\n";
             foreach ($object as $name => $value) {
-                $filter = (is_numeric($value)) ? $value : "<![CDATA[" . $value . "]]>";
+                if ($name === 'widget') {
+                    $widget_type = $value[0];
+                    $filter      = '';
+                    if (is_array($value[1])) {
+                        foreach ($value[1] as $key => $val) {
+                            $filter .= "\t\t<$widget_type id=\"$key\"><![CDATA[" . $val . "]]></$widget_type>\n";
+                        }
+                    }
+                } elseif (($name === 'values' || $name === 'subtypes') && is_array($value)) {
+                    $filter = '';
+                    foreach ($value as $key => $val) {
+                        $filter .= "\t\t<value id=\"$key\"><![CDATA[" . $val . "]]></value>\n";
+                    }
+                } else {
+                    $filter = (is_numeric($value)) ? $value : "<![CDATA[" . $value . "]]>";
+                }
                 $string .= ($name !== 'id') ? "\t\t<$name>$filter</$name>\n" : '';
             }
             $string .= "\t</$item>\n";
@@ -370,7 +385,7 @@ class Xml5_Data
                 }
                 break;
             case 'share':
-                $string .= self::shares($objects, $user);
+                $string .= self::shares($objects, $user, false);
                 break;
             case 'podcast':
                 foreach ($objects as $object_id) {
@@ -388,13 +403,13 @@ class Xml5_Data
                 }
                 break;
             case 'podcast_episode':
-                $string .= self::podcast_episodes($objects, $user);
+                $string .= self::podcast_episodes($objects, $user, false);
                 break;
             case 'video':
-                $string .= self::videos($objects, $user);
+                $string .= self::videos($objects, $user, false);
                 break;
             case 'live_stream':
-                $string .= self::live_streams($objects, $user);
+                $string .= self::live_streams($objects, $user, false);
         }
 
         return Xml_Data::output_xml($string, $full_xml);
@@ -465,14 +480,15 @@ class Xml5_Data
      *
      * @param list<int|string> $live_streams
      * @param User $user
+     * @param bool $full_xml whether to return a full XML document or just the node.
      * @return string
      */
-    public static function live_streams(array $live_streams, User $user): string
+    public static function live_streams(array $live_streams, User $user, bool $full_xml = true): string
     {
         if ((count($live_streams) > self::$limit || self::$offset > 0) && self::$limit) {
             $live_streams = array_splice($live_streams, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('live_stream', $user->id) . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('live_stream', $user->id) . "</total_count>\n" : '';
 
         foreach ($live_streams as $live_stream_id) {
             $live_stream = new Live_Stream((int)$live_stream_id);
@@ -483,7 +499,7 @@ class Xml5_Data
             $string .= "<live_stream id=\"" . $live_stream_id . "\">\n\t<name><![CDATA[" . $live_stream->get_fullname() . "]]></name>\n\t<url><![CDATA[" . $live_stream->url . "]]></url>\n\t<codec><![CDATA[" . $live_stream->codec . "]]></codec>\n\t<catalog>" . $live_stream->catalog . "</catalog>\n\t<site_url><![CDATA[" . $live_stream->site_url . "]]></site_url>\n</live_stream>\n";
         } // end foreach
 
-        return Xml_Data::output_xml($string);
+        return Xml_Data::output_xml($string, $full_xml);
     }
 
     /**
@@ -576,6 +592,7 @@ class Xml5_Data
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('album', $user->id) . "</total_count>\n" : '';
+
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
 
@@ -679,21 +696,22 @@ class Xml5_Data
      *
      * @param list<int|string> $shares Share id's to include
      * @param User $user
+     * @param bool $full_xml whether to return a full XML document or just the node.
      * @return string
      */
-    public static function shares(array $shares, User $user): string
+    public static function shares(array $shares, User $user, bool $full_xml = true): string
     {
         if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('share', $user->id) . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('share', $user->id) . "</total_count>\n" : '';
 
         foreach ($shares as $share_id) {
             $share = new Share((int)$share_id);
             $string .= "<share id=\"$share_id\">\n\t<name><![CDATA[" . $share->getObjectName() . "]]></name>\n\t<user><![CDATA[" . $share->getUserName() . "]]></user>\n\t<allow_stream>" . $share->allow_stream . "</allow_stream>\n\t<allow_download>" . $share->allow_download . "</allow_download>\n\t<creation_date>" . $share->creation_date . "</creation_date>\n\t<lastvisit_date>" . $share->lastvisit_date . "</lastvisit_date>\n\t<object_type><![CDATA[" . $share->object_type . "]]></object_type>\n\t<object_id>" . $share->object_id . "</object_id>\n\t<expire_days>" . $share->expire_days . "</expire_days>\n\t<max_counter>" . $share->max_counter . "</max_counter>\n\t<counter>" . $share->counter . "</counter>\n\t<secret><![CDATA[" . $share->secret . "]]></secret>\n\t<public_url><![CDATA[" . $share->public_url . "]]></public_url>\n\t<description><![CDATA[" . $share->description . "]]></description>\n</share>\n";
         } // end foreach
 
-        return Xml_Data::output_xml($string);
+        return Xml_Data::output_xml($string, $full_xml);
     }
 
     /**
@@ -904,14 +922,15 @@ class Xml5_Data
      *
      * @param list<int|string> $videos Video id's to include
      * @param User $user
+     * @param bool $full_xml whether to return a full XML document or just the node.
      * @return string
      */
-    public static function videos(array $videos, User $user): string
+    public static function videos(array $videos, User $user, bool $full_xml = true): string
     {
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('video', $user->id) . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('video', $user->id) . "</total_count>\n" : '';
 
         foreach ($videos as $video_id) {
             $video = new Video((int)$video_id);
@@ -926,7 +945,7 @@ class Xml5_Data
             $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->get_f_resolution() . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::genre_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string) $rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $video->total_count . "</playcount>\n</video>\n";
         } // end foreach
 
-        return Xml_Data::output_xml($string);
+        return Xml_Data::output_xml($string, $full_xml);
     }
 
     /**
@@ -1155,10 +1174,10 @@ class Xml5_Data
                 $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!-- XML Generated by Ampache v." . AmpConfig::get('version') . " -->\n";
                 break;
             case 'rss':
-                $header = "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n <!-- RSS Generated by Ampache v." . AmpConfig::get('version') . " on " . date("r", time()) . "-->\n<rss version=\"2.0\">\n<channel>\n";
+                $header = "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset', 'UTF-8') . "\" ?>\n <!-- RSS Generated by Ampache v." . AmpConfig::get('version') . " on " . date("r", time()) . "-->\n<rss version=\"2.0\">\n<channel>\n";
                 break;
             default:
-                $header = "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n";
+                $header = "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset', 'UTF-8') . "\" ?>\n<root>\n";
                 break;
         } // end switch
 

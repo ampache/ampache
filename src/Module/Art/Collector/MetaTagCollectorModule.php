@@ -74,17 +74,17 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * @param Art $art
      * @param int $limit
      * @param array{
-     *      mb_albumid?: string,
-     *      artist?: string,
-     *      album?: string,
-     *      cover?: ?string,
-     *      file?: string,
-     *      year_filter?: string,
-     *      search_limit?: int,
-     *  } $data
-     * @return array
+     *     mb_albumid?: string,
+     *     artist?: string,
+     *     album?: string,
+     *     cover?: ?string,
+     *     file?: string,
+     *     year_filter?: string,
+     *     search_limit?: int,
+     * } $data
+     * @return array<int, array{raw: string, mime: string, title: string}>
      */
-    public function collect(
+    public function collectArt(
         Art $art,
         int $limit = 5,
         array $data = []
@@ -121,9 +121,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Sort images in the data array using the ART_PRIORITY list for your art_type
-     * @param array $data
-     * @param string $art_type
-     * @return array
+     * @param array<int, array{raw: string, mime: string, title: string}> $data
+     * @return array<int, array{raw: string, mime: string, title: string}>
      */
     private static function sortArtByPriority(array $data, string $art_type): array
     {
@@ -142,6 +141,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Gather tags from video files.
+     * @return array<int, array{raw: string, mime: string, title: string}>
      */
     private function gatherVideoTags(Art $art): array
     {
@@ -154,7 +154,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * Gather tags from audio files.
      * @param Art $art
      * @param int $limit
-     * @return array
+     * @return array<int, array{raw: string, mime: string, title: string}>
      */
     private function gatherSongTags(Art $art, int $limit = 5): array
     {
@@ -170,6 +170,10 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         // Foreach songs in this album
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
+            if ($song->isNew()) {
+                continue;
+            }
+
             $data = $this->gatherMediaTags($song, $data);
 
             if ($limit && count($data) >= $limit) {
@@ -282,7 +286,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     /**
      * Gather tags from files. (rotate through existing images so you don't return a tone of dupes)
      * @param Song|Video $media
-     * @param array $data
+     * @param array|array<int, array{raw: string, mime: string, title: string}> $data
      * @return array<int, array{raw: string, mime: string, title: string}>
      */
     private function gatherMediaTags(Song|Video $media, array $data): array
@@ -316,7 +320,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * (taken from function gather_song_tags with some changes)
      * @param Art $art
      * @param int $limit
-     * @return array
+     * @return array<int, array{raw: string, mime: string, title: string}>
      */
     public function gatherSongTagsSingle(Art $art, int $limit = 5): array
     {

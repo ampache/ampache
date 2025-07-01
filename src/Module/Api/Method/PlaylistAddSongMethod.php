@@ -45,7 +45,7 @@ final class PlaylistAddSongMethod
      *
      * This adds a song to a playlist
      *
-     * This method is depreciated and will be removed in **API7** (Use playlist_add)
+     * This method is deprecated and will be removed in **API7** (Use playlist_add)
      *
      * filter = (string) UID of playlist
      * song   = (string) UID of song to add to playlist

@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -53,15 +54,45 @@ final class PlayItemAction extends AbstractStreamAction
         if ($this->preCheck($gatekeeper) === false) {
             return null;
         }
+        $object_type = $_REQUEST['object_type'] ?? '';
+        if ($object_type === 'browse') {
+            $browse     = new Browse((int)Core::get_get('object_id'));
+            $objectIds  = [];
+            $objectType = null;
+            $saved      = $browse->get_saved();
+            if (!empty($saved) && is_array($saved[0])) {
+                // search data is stored in arrays
+                foreach ($saved as $item) {
+                    if (isset($item['object_id'])) {
+                        $objectIds[] = (int)$item['object_id'];
+                    }
+                    if (
+                        !$objectType &&
+                        isset($item['object_type']) && (
+                            ($item['object_type'] instanceof LibraryItemEnum && in_array($item['object_type']->value, ['album', 'artist', 'song'])) ||
+                            (is_string($item['object_type']) && in_array($item['object_type'], ['album', 'artist', 'song']))
+                        )
+                    ) {
+                        $objectType = ($item['object_type'] instanceof LibraryItemEnum)
+                            ? $item['object_type']
+                            : LibraryItemEnum::tryFrom($item['object_type']);
+                    }
+                }
+            } else {
+                // other browse types store int lists
+                $objectIds  = $saved;
+                $objectType = LibraryItemEnum::tryFrom($browse->get_type());
+            }
+        } else {
+            $objectType = LibraryItemEnum::tryFrom($_REQUEST['object_type'] ?? '');
+            $objectIds  = explode(',', Core::get_get('object_id'));
+        }
 
-        $objectType = LibraryItemEnum::tryFrom($_REQUEST['object_type'] ?? '');
         if ($objectType === null) {
             return null;
         }
 
-        $objectIds = explode(',', Core::get_get('object_id'));
         $mediaIds  = [];
-
         foreach ($objectIds as $object_id) {
             $item = $this->libraryItemLoader->load(
                 $objectType,

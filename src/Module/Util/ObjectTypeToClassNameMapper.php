@@ -39,6 +39,7 @@ use Ampache\Repository\Model\ObjectTypeEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\PrivateMsg;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
@@ -72,6 +73,7 @@ final class ObjectTypeToClassNameMapper
         ObjectTypeEnum::PLAYLIST->value => Playlist::class,
         ObjectTypeEnum::PODCAST->value => Podcast::class,
         ObjectTypeEnum::PODCAST_EPISODE->value => Podcast_Episode::class,
+        ObjectTypeEnum::PRIVATE_MESSAGE->value => PrivateMsg::class,
         ObjectTypeEnum::SEARCH->value => Search::class,
         ObjectTypeEnum::SHARE->value => Share::class,
         ObjectTypeEnum::SONG->value => Song::class,

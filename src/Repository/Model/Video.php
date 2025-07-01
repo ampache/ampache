@@ -690,17 +690,6 @@ class Video extends database_object implements
     }
 
     /**
-     * Get release item art.
-     */
-    public function get_release_item_art(): array
-    {
-        return [
-            'object_type' => 'video',
-            'object_id' => $this->id,
-        ];
-    }
-
-    /**
      * generate_preview
      * Generate video preview image from a video file
      */
@@ -721,10 +710,10 @@ class Video extends database_object implements
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
      * @param array{
-     *      latitude?: float,
-     *      longitude?: float,
-     *      name?: string
-     *  } $location
+     *     latitude?: float,
+     *     longitude?: float,
+     *     name?: string
+     * } $location
      */
     public function set_played(int $user_id, string $agent, array $location, int $date): bool
     {
@@ -758,6 +747,11 @@ class Video extends database_object implements
     /**
      * get_subtitles
      * Get existing subtitles list for this video
+     * @return array<array{
+     *     file: string,
+     *     lang_code: string,
+     *     lang_name: string
+     * }>
      */
     public function get_subtitles(): array
     {
@@ -776,7 +770,11 @@ class Video extends database_object implements
                 }
             }
 
-            $subtitles[] = ['file' => ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $srt, 'lang_code' => $lang_code, 'lang_name' => $lang_name];
+            $subtitles[] = [
+                'file' => ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $srt,
+                'lang_code' => $lang_code,
+                'lang_name' => $lang_name
+            ];
         }
 
         return $subtitles;

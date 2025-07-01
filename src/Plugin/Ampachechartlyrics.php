@@ -32,15 +32,15 @@ use WpOrg\Requests\Requests;
 
 class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterface
 {
-    public string $name        = 'ChartLyrics';
+    public string $name = 'ChartLyrics';
 
-    public string $categories  = 'lyrics';
+    public string $categories = 'lyrics';
 
     public string $description = 'Get lyrics from ChartLyrics';
 
-    public string $url         = 'http://www.chartlyrics.com';
+    public string $url = 'http://www.chartlyrics.com';
 
-    public string $version     = '000001';
+    public string $version = '000001';
 
     public string $min_ampache = '360022';
 
@@ -96,6 +96,7 @@ class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterfa
     /**
      * get_lyrics
      * This will look web services for a song lyrics.
+     * @return null|array{'text': string, 'url': string}
      */
     public function get_lyrics(Song $song): ?array
     {
@@ -109,8 +110,8 @@ class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterfa
                 !empty($xml->Lyric)
             ) {
                 return [
-                    'text' => nl2br($xml->Lyric),
-                    'url' => $xml->LyricUrl
+                    'text' => nl2br((string)$xml->Lyric),
+                    'url' => (string)$xml->LyricUrl
                 ];
             }
         }

@@ -74,14 +74,24 @@ final class ArtistMethod
 
         $include = [];
         if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include'])));
+            if (!is_array($input['include'])) {
+                $input['include'] = explode(',', html_entity_decode((string)($input['include'])));
+            }
+            foreach ($input['include'] as $item) {
+                if ($item === 'songs' || $item == '1') {
+                    $include[] = 'songs';
+                }
+                if ($item === 'albums' || $item == '1') {
+                    $include[] = 'albums';
+                }
+            }
         }
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::artists([$object_id], $include ?: [], $user, true, false);
+                echo Json_Data::artists([$object_id], $include, $user, true, false);
                 break;
             default:
-                echo Xml_Data::artists([$object_id], $include ?: [], $user);
+                echo Xml_Data::artists([$object_id], $include, $user);
         }
 
         return true;

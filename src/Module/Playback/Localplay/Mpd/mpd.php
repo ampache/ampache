@@ -201,7 +201,7 @@ class mpd
     /** @property callable|null $_debug_callback */
     private $_debug_callback = null; // Optional callback to be run on debug
 
-    public bool $debugging        = false;
+    public bool $debugging = false;
 
     private $current_track_id;
 

@@ -61,7 +61,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
     $thumb = (isset($browse) && $browse->is_grid_view())
         ? ['width' => 150, 'height' => 150]
         : ['width' => 80, 'height' => 80];
-    $link  = ($extended_links && !empty($libitem->get_f_parent_link()))
+    $link = ($extended_links && !empty($libitem->get_f_parent_link()))
         ? $libitem->get_f_link() . '&nbsp;-&nbsp;' . $libitem->get_f_parent_link()
         : $libitem->get_f_link(); ?>
 <td class="cel_play">

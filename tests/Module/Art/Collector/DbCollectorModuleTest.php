@@ -42,14 +42,22 @@ class DbCollectorModuleTest extends MockeryTestCase
     {
         $art = Mockery::mock(Art::class);
 
+        $art->id = 6;
+
         $art->shouldReceive('has_db_info')
             ->withNoArgs()
             ->once()
             ->andReturnTrue();
 
         static::assertSame(
-            ['db' => true],
-            $this->subject->collect($art)
+            [
+                [
+                    'db' => 6,
+                    'title' => 'Art',
+                    'mime' => '',
+                ]
+            ],
+            $this->subject->collectArt($art)
         );
     }
 
@@ -64,7 +72,7 @@ class DbCollectorModuleTest extends MockeryTestCase
 
         static::assertSame(
             [],
-            $this->subject->collect($art)
+            $this->subject->collectArt($art)
         );
     }
 }

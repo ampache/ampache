@@ -34,15 +34,15 @@ use WpOrg\Requests\Requests;
 
 class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterface
 {
-    public string $name        = 'Lyrist Lyrics';
+    public string $name = 'Lyrist Lyrics';
 
-    public string $categories  = 'lyrics';
+    public string $categories = 'lyrics';
 
     public string $description = 'Get lyrics from a public Lyrist instance';
 
-    public string $url         = 'https://github.com/asrvd/lyrist';
+    public string $url = 'https://github.com/asrvd/lyrist';
 
-    public string $version     = '000002';
+    public string $version = '000002';
 
     public string $min_ampache = '360022';
 
@@ -110,6 +110,7 @@ class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterf
     /**
      * get_lyrics
      * This will look web services for a song lyrics.
+     * @return null|array{'text': string, 'url': string}
      */
     public function get_lyrics(Song $song): ?array
     {
@@ -123,8 +124,8 @@ class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterf
                 !empty($json->image)
             ) {
                 return [
-                    'text' => nl2br($json->lyrics),
-                    'url' => $json->image
+                    'text' => nl2br((string)$json->lyrics),
+                    'url' => (string)$json->image
                 ];
             }
         }

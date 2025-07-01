@@ -196,10 +196,14 @@ final class AlbumQuery implements QueryInterface
                 $filter_sql = " `album`.`id` IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "') AND ";
                 break;
             case 'album_artist':
-                $filter_sql = " `album`.`id` IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "' AND `album_map`.`object_type` = 'album') AND ";
+                $filter_sql = ($value == 0)
+                    ? " `album`.`id` NOT IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "' AND `album_map`.`object_type` = 'album') AND "
+                    : " `album`.`id` IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "' AND `album_map`.`object_type` = 'album') AND ";
                 break;
             case 'song_artist':
-                $filter_sql = " `album`.`id` IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "' AND `album_map`.`object_type` = 'song') AND ";
+                $filter_sql = ($value == 0)
+                    ? " `album`.`id` NOT IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "' AND `album_map`.`object_type` = 'song') AND "
+                    : " `album`.`id` IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "' AND `album_map`.`object_type` = 'song') AND ";
                 break;
             case 'add_lt':
                 $query->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);

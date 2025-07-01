@@ -1,5 +1,62 @@
 # CHANGELOG
 
+## Ampache 7.6.0
+
+Full OpenSubsonic rewrite to remove the weird JSON conversion class and fix up issues in responses.
+
+This is hidden behind a preference but will eventually become the default Subsonic API version.
+
+While this fully implements new features it does not include all the new data fields in the responses yet.
+
+**NOTE** If you enable OpenSubsonic the id prefix for objects has changed and you may lose cached data depending on how it's stored.
+
+### Added
+
+* Translations 2025-06-30
+* Restore thumbnail etag
+* Directplay for Searches and Smartlist pages
+* Set auto generation headers on emails
+* Search URL relationships with MusicBrainz (Spotify and Discogs linking TBC)
+* Add fallbacks for `session_name` and `site_charset`
+* Browse
+  * `song_artist` and `album_artist` negative sort conditions (e.g. `cond=song_artist,0` = not song_artist)
+* Database 760001
+  * Add `subsonic_legacy` preference. (Turn off to enable the new OpenSubsonic classes)
+* Subsonic
+  * Implemented all OpenSubsonic [api extentions](https://ampache.org/api/subsonic/#opensubsonic-api-extension)
+  * Add [API Key Authentication](https://opensubsonic.netlify.app/docs/extensions/apikeyauth/)
+  * Add [getPodcastEpisode](https://opensubsonic.netlify.app/docs/extensions/getpodcastepisode/) method
+  * Add [songLyrics](https://opensubsonic.netlify.app/docs/extensions/songlyrics/) support
+  * Add [Index based Queue](https://opensubsonic.netlify.app/docs/extensions/indexbasedqueue/)
+  * Expanded [subsonic-response error](https://opensubsonic.netlify.app/docs/responses/error/)
+
+### Changed
+
+* Update composer and NPM packages
+* Allow selecting the current Database art from the select art page
+* Use size parameters for Art URL generation
+
+### Removed
+
+* Don't generate any more image URLs with a thumb parameter
+
+### Fixed
+
+* Remote catalog function typo for `song_tags` function
+* Art selection only selected album as a type on insert
+* Table counts did not count disabled catalogs or enabled songs correctly
+* Error fetching empty Democratic playlist
+* Public user errors when loading browses
+* Search
+  * `Song` search for `bitrate` using index and not value
+  * Searching for `Live_Stream` object might not search the map table correctly
+* Don't look up an Album Artist when the Album doesn't exist
+* Error during Art lookup when it exists and is able to be overwritten
+* Error looking up lyrics when the song doesn't exist
+* Error loading up an image.php link without a valid URL
+* Default `composer_no_dev` fallback was false instead of true
+* Delete dupe `opbject_count` entries when the update fails
+
 ## Ampache 7.5.3
 
 ### Added
@@ -21,7 +78,7 @@
 ### Removed
 
 * Preference and references to `custom_blankmovie` which doesn't exist now
-* Correct AJAX urls when using `clear_art` and `show_art_dlg` actions
+* Correct AJAX URLs when using `clear_art` and `show_art_dlg` actions
 
 ### Fixed
 
@@ -418,7 +475,7 @@ Pre-translating files before loading media templates should speed those pages up
 * Require `mail` config or `user_no_email_confirm` to allow registration
 * PodcastEpisode loading errors for new files that aren't downloaded yet
 * NPM copyfile commands missing prettyPhoto files
-* External auth avatar update when enabled was not checking for blankuser.png urls
+* External auth avatar update when enabled was not checking for blankuser.png URLs
 * Don't cache `song_data` table from single column requests
 * Don't insert empty strings for null data in `song_data`
 * `SERVER_NAME` may not be set for Captcha
@@ -651,7 +708,7 @@ Fixed some slowdowns due to preference name and location look ups happening for 
 
 * Translations 2024-10-30
 * Album query sort `album_artist_title` (Sort by artist name then album title)
-* Validate URL input on Custom url preferences
+* Validate URL input on Custom URL preferences
   * `custom_favicon` (Custom URL - Favicon)
   * `custom_login_background` (Custom URL - Login page background)
   * `custom_login_logo` (Custom URL - Login page logo)
@@ -1418,7 +1475,7 @@ Use `php bin/installer htaccess -e` to update your htaccess files
 * Select uploaded artists using the artist instead of song
 * Missing column in Search::get_searches SQL
 * Updating artist_map too much
-* Last.fm lookup url was missing an `&` for albums
+* Last.fm lookup URL was missing an `&` for albums
 * Don't try to load an album_disk that doesn't have an album
 * Restore sorting on album lists and browses that aren't grouped by release_type
 * Catch Spotify runtime error on retry as well as initial attempt
@@ -1589,7 +1646,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Add extra types to the Information pages
 * Combined all Albums into single Album objects
 * Remove Channels from Ampache (Use [icecast](https://github.com/ampache/ampache/wiki/Ampache-Icecast-and-Liquidsoap) instead)
-* Download url parameter order matching "client, action, cache"
+* Download URL parameter order matching "client, action, cache"
 * Add `barcode`, `catalog_number` and `subtitle` to Album::check() for comparison checks
 * Rework user_playlists (used for Now Playing & Play Queue operations)
 * Workaround time for dsub playqueue by converting to UTC
@@ -1608,7 +1665,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Update Requests module to WpOrg\Requests
 * Show 20 genres in Song, Artist & Album edit windows (up from 10)
 * Process stream output and then send the content to the player
-* Play urls will rename the file name to the transcode output format
+* Play URLs will rename the file name to the transcode output format
 * open RSS links in a new tab
 * Dashboard pages have Newest on top now
 * Updated the default `.htaccess.dist` files
@@ -1641,7 +1698,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * For System preferences 'Apply to All' and 'Access Level' have no effect
 * Combined a lot of duplicate functions into one
 * Art from share page
-* Remove the auth parameter from image urls
+* Remove the auth parameter from image URLs
 * Option to 'Force Democratic Play' has been removed from the config page
   * Check the [wiki](https://github.com/ampache/ampache/wiki/ampache6-details#configure-democratic-playlist-options-directly) for details
 * Remove all reference to deleted database updates (not required)
@@ -1688,7 +1745,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Ampache Debug page didn't have all the possible boolean values to make pretty
 * Do not scrub title for RSS output
 * Repeating random play URL's could skip the first song
-* Send the final url for play_url's instead of figuring it on the fly
+* Send the final URL for play_url's instead of figuring it on the fly
 * Don't verify Podcast Episodes that don't have a file
 * Update song channels on tag update
 * ACL creation may lock you out without a system user
@@ -1747,7 +1804,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 ### Changed
 
 * Clean up the PlayAction class to make it a bit less complicated
-* Encode URL's with a + for segmented play urls
+* Encode URL's with a + for segmented play URLs
 
 ### Removed
 
@@ -1940,7 +1997,7 @@ This release fixes up all the issues I created with the bad release files as wel
 * Don't look at the transcode cache when downloading a raw file
 * If you are transcoding redirect to the transcoded file
 * Download stats for song, video, podcast_episode
-* Set the file extension for urls on generation
+* Set the file extension for URLs on generation
 * Don't overwrite artist art when searching for album art
 * Retrieve song art from tags the same way they are found ('invalid' art)
 * Searching from the search bar did not pickup up the rules for the search page
@@ -2049,7 +2106,7 @@ PHP8.1 has now been fixed up completely and is now fully supported.
 * A lot of browse filters were missing for certain object types
 * Don't try to load the playlist dialog from the webplayer when you can't add things
 * When using random/Democratic play send the additional parameters to the actual media
-* Respect play urls with transcode_to instead of format
+* Respect play URLs with transcode_to instead of format
 * Updated example `docs/examples/inotifywait.sh`
 * Podcast_episode browse may sent a camel case argument
 * Null max_upload_size could still be counted as a limit
@@ -2079,7 +2136,7 @@ PHP8.1 has now been fixed up completely and is now fully supported.
 ### Changed
 
 * Only enforce `subsonic_always_download` for song objects
-* Always insert podcast source urls. But mark them as skipped if out of date
+* Always insert podcast source URLs. But mark them as skipped if out of date
 * When adding a podcast feed, sync everything
 * Don't trim search input (e.g. allow single spaces for search)
 
@@ -2128,7 +2185,7 @@ PHP8.1 has now been fixed up completely and is now fully supported.
 * Artists array should overwrite artist_mbid arrays that are smaller
 * Some empty globals relating to user
 * More work on the forked Jplayer playlist code when using `play last`
-* DAAP play urls
+* DAAP play URLs
 * Single disk download links on group pages
 * CLI
   * cleanup:sortSongs was broken (It actually works again)
@@ -2377,7 +2434,7 @@ There have been a few fixes and changes to the module to make the webplayer a lo
 * Searching albums with special characters
 * Lots more PHP8 runtime errors
 * SQL for artists in catalog_map
-* Typo in url for update_all_file_tags
+* Typo in URL for update_all_file_tags
 * SQL error in database update 500013 (Not fatal)
 * Don't garbage_collect tags after merging
 * Create art URLs correctly when using rewrite rules and no auth
@@ -2596,8 +2653,8 @@ API3 is not recommended for use outside of running old applications and it is re
 * Light theme follow button color
 * Missing CSS on list headers
 * Templates with missing variables
-* Fix Stream_Playlist::_add_urls to stop mismatched query values
-* Fix stream.php downloads not sending their url parameters to PlayAction
+* Fix Stream_Playlist::_add_URLs to stop mismatched query values
+* Fix stream.php downloads not sending their URL parameters to PlayAction
 * Garbage collect object_count for the possible items
 * Do not drop catalog in table podcast_episode when it doesn't exist yet
 * AAC codec from itunes doesn't provide a bitrate_mode (assume vbr)
@@ -2736,9 +2793,9 @@ If you want to keep utf8 make sure you set it before running updates.
 * All localplay links use the type (e.g. mpd/upnp) as the agent to fix muti-client access
 * updateCatalog now implies add when using -i / --import by itself
 * Playlist Import checks for playlists by your user only in the UI (System for the cli)
-* Plugins: Use only https for building gravatar urls
+* Plugins: Use only https for building gravatar URLs
 * Scrobble actions now check for the exact time as well (different agents or scripts would insert)
-* If you call a play url without an action we assume stream
+* If you call a play URL without an action we assume stream
 * Use ISO 8601 date for podcast episode pubdate display
 * Database tables default to InnoDB engine with utf8mb4 charset & collation
 * Subsonic
@@ -3051,7 +3108,7 @@ There also a few API changes to enable a bit better control for older clients.
 
 ### Added
 
-* Use _add_urls when building a stream playlist
+* Use _add_URLs when building a stream playlist
 
 ### Changed
 
@@ -3301,12 +3358,12 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Search rules in UI failing to load with custom_metadata
 * Warn correctly when inserting art fails
 * Insert missing user preferences on login
-* When you had beautiful_urls enabled tracks would not parse in localplay making them all Unknown
+* When you had beautiful_URLs enabled tracks would not parse in localplay making them all Unknown
 * Podcast durations aren't always correct format, prep the time before trying to insert it
 * Subsonic playlist add/remove removing incorrect songs
 * Search/Smartlists need to have results to be used in lists
 * Auth issues with stats for recording and localplay
-* Stream_urls were generated with a typo when downloading
+* Stream_URLs were generated with a typo when downloading
 * Respect album grouping using of the moment plugin
 * Filter album title with grouping enabled. (seriously deadmau5, stop with the <> everywhere)
 * Share playback without a UID would fail to start
@@ -3435,7 +3492,7 @@ Finalize release procedure to make these updates a bit smoother
 * Fix API playlist commands and access checks relating to playlists
 * Access::check should be passing user id from the API
 * SQL query fixes for Album, Playlist methods
-* Remove spaces from play url extensions (Should help nginx users)
+* Remove spaces from play URL extensions (Should help nginx users)
 * Set play_type correctly in preferences pages
 
 ## 4.0.1
@@ -3800,7 +3857,7 @@ Notes about this release that can't be summed up in a log line
 * Removed album year display from album name if unset
 * Fixed Subsonic API Album/Artist song's link (thanks dhsc19 and daneren2005)
 * Added mysql database socket authentication support on web setup (thanks AsavarTzeth)
-* Fixed artist art url for mobile use (thanks dhsc19)
+* Fixed artist art URL for mobile use (thanks dhsc19)
 * Added Shoutbox home plugin
 * Added catalog favorites home plugin
 * Fixed search by rating (thanks iamnumbersix)
@@ -3928,7 +3985,7 @@ Notes about this release that can't be summed up in a log line
 * Added Music Clips, Movies and TV Shows support
 * Added media type information on catalog
 * Fixed get SmartPlaylist in XML-API (thanks opencrf)
-* Added beautiful url on arts
+* Added beautiful URL on arts
 * Improved browse list header (thanks Psy-Virus)
 * Fixed user online/offline information on Reborn theme (thanks thorsforge)
 * Added UPnP backend (thanks SeregaPru)
@@ -4022,7 +4079,7 @@ Notes about this release that can't be summed up in a log line
 * Updated French translation
 * Added options per browse view (alphabetic, infinite scroll, number of items per page...)
 * Fixed several Subsonic players (SubHub, Jamstash...)
-* Added option to get beautiful stream url with url rewriting
+* Added option to get beautiful stream URL with URL rewriting
 * Added check to use a new thread for scrobbling if available
 * Added confirmation option when closing the currently playing web player
 * Added auto-pause web player option between several browse tabs
@@ -4327,7 +4384,7 @@ Notes about this release that can't be summed up in a log line
   work with other methods (Thx kiehnet@netscape.net)
 * Add MusicBrainz MBID support to uniqly identify albums and
   also get more album art (Thx flowerysong)
-* Fix the url to song function
+* Fix the URL to song function
 * Add full path to the files needed by the installation just to
   make it a little clearer
 * Fixed potential endless loop with malformed genre tags in mp3s
@@ -4392,7 +4449,7 @@ Notes about this release that can't be summed up in a log line
 * Added proxy use for xmlrpcclient
 * Added Configuration 'Wizard' for democratic play
 * Fixed interface feedback issues with democratic play actions
-* Add extension to image urls for the API will add to others as
+* Add extension to image URLs for the API will add to others as
   needed due to additional query requirement. Needed to fix
   some DLNA devices
 * Fixed typo that caused the height of album art not to display
@@ -4430,7 +4487,7 @@ Notes about this release that can't be summed up in a log line
 * Moved Statistics to main menu, split out newest/popular/stats
 * Fixed bug where saved Thumbnails were almost never used
 * Fixed Localplay httpQ and MPD controls to recognize Live Stream
-  urls.
+  URLs.
 * Added Localplay controls to API
 * Added Added/Updated filters to API include the ability to specify
   a date range using ISO 8601 format with [START]/[END]
@@ -4472,7 +4529,7 @@ Notes about this release that can't be summed up in a log line
   IP(s) from session checks, see config.dist
 * Added Nusoap (<http://sourceforge.net/projects/nusoap/>) library
   for use with future lyrics feature
-* Fixed problem with flash player where random urls were not being
+* Fixed problem with flash player where random URLs were not being
   added correctly
 * Fixed problem with user creation using old method (Thx Purdyk)
 * Switched to SHA256() for API and passwords

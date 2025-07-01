@@ -245,7 +245,7 @@ class Random
      * This processes the results of a post from a form and returns an
      * array of song items that were returned from said randomness
      * @param string $type
-     * @param int[] $data
+     * @param array<string, mixed> $data
      * @return int[]
      */
     public static function advanced(string $type, array $data): array
@@ -307,8 +307,8 @@ class Random
      * advanced_results
      * Run the query generated above by self::advanced so we can while it
      * @param string $sql_query
-     * @param array $sql_params
-     * @param array $data
+     * @param array<int, mixed> $sql_params
+     * @param array<string, mixed> $data
      * @return int[]
      */
     private static function advanced_results(string $sql_query, array $sql_params, array $data): array
@@ -341,7 +341,7 @@ class Random
                 }
 
                 $size_total += $new_size;
-                $results[]  = (int)$row['id'];
+                $results[] = (int)$row['id'];
 
                 // If we are within 4mb of target then jump ship
                 if (($data['size_limit'] - floor($size_total)) < 4) {
@@ -365,7 +365,7 @@ class Random
                 }
 
                 $time_total += $new_time;
-                $results[]  = (int)$row['id'];
+                $results[] = (int)$row['id'];
 
                 // If there are less then 2 min of free space return
                 if (($data['length'] - $time_total) < 2) {
@@ -384,12 +384,12 @@ class Random
     /**
      * advanced_sql
      * Generate the sql query for self::advanced
-     * @param array $data
+     * @param array<string, mixed> $data
      * @param string $type
      * @param string $limit_sql
      * @return array{
      *     sql: string,
-     *     parameters: array
+     *     parameters: array<int, mixed>
      * }
      */
     private static function advanced_sql(array $data, string $type, string $limit_sql): array

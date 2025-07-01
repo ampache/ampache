@@ -263,8 +263,8 @@ class Art extends database_object
      */
     public function get_image(bool $fallback = false, ?string $size = null): bool
     {
-        $sql         = "SELECT `id`, `image`, `width`, `height`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = 'original' AND `kind` = ?";
-        $db_results  = Dba::read($sql, [$this->object_type, $this->object_id, $this->kind]);
+        $sql        = "SELECT `id`, `image`, `width`, `height`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = 'original' AND `kind` = ?";
+        $db_results = Dba::read($sql, [$this->object_type, $this->object_id, $this->kind]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             if (AmpConfig::get('album_art_store_disk')) {
@@ -453,8 +453,8 @@ class Art extends database_object
         if (AmpConfig::get('write_tags', false)) {
             $className = ObjectTypeToClassNameMapper::map($this->object_type);
             /** @var playable_item $object */
-            $object    = new $className($this->object_id);
-            $songs     = [];
+            $object = new $className($this->object_id);
+            $songs  = [];
             debug_event(self::class, 'Inserting ' . $this->object_type . ' image' . $object->get_fullname() . ' for song files.', 5);
             if ($this->object_type === 'album') {
                 /** Use special treatment for albums */
@@ -482,13 +482,13 @@ class Art extends database_object
                     : $data['id3v2']['APIC'];
 
                 /* is the file flac or mp3? */
-                $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg')
+                $apic_typeid = ($fileformat == 'flac' || $fileformat == 'ogg')
                     ? 'typeid'
                     : 'picturetypeid';
                 $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg')
                     ? 'image_mime'
                     : 'mime';
-                $new_pic       = [
+                $new_pic = [
                     'data' => $source,
                     'description' => $description,
                     'mime' => $mime,
@@ -1073,7 +1073,7 @@ class Art extends database_object
      *     file?: string,
      *     raw?: string,
      *     title?: string,
-     *     db?: bool,
+     *     db?: int,
      *     song?: string,
      * } $data
      * @param string $type
@@ -1092,15 +1092,15 @@ class Art extends database_object
 
         // If it came from the database
         if (isset($data['db'])) {
-            if (empty($type)) {
-                $type = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
+            $sql        = "SELECT * FROM `image` WHERE `id` = ?;";
+            $db_results = Dba::read($sql, [$data['db']]);
+            if ($row = Dba::fetch_assoc($db_results)) {
+                if (AmpConfig::get('album_art_store_disk')) {
+                    return (string)self::read_from_dir('original', $type, $row['object_id'], 'default', $row['mime']);
+                } else {
+                    return $row['image'];
+                }
             }
-
-            $sql        = "SELECT * FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size`='original'";
-            $db_results = Dba::read($sql, [$type, $data['db']]);
-            $row        = Dba::fetch_assoc($db_results);
-
-            return $row['art'];
         } // came from the db
 
         // Check to see if it's a URL
@@ -1196,12 +1196,18 @@ class Art extends database_object
             }
         }
 
-        $mime      = $thumb_mime ?? ($mime ?? null);
-        $extension = self::extension($mime);
+        $mime       = $thumb_mime ?? ($mime ?? null);
+        $extension  = self::extension($mime);
+        $size       = 'original';
+        if ($thumb !== null) {
+            $size_array = self::get_thumb_size($thumb);
+            $size       = $size_array['width'] . 'x' . $size_array['height'];
+        }
 
         if (
             $type !== 'user' &&
-            AmpConfig::get('stream_beautiful_url')
+            AmpConfig::get('stream_beautiful_url') &&
+            $size !== 'original'
         ) {
             if (
                 $extension === '' ||
@@ -1210,20 +1216,15 @@ class Art extends database_object
                 $extension = 'jpg';
             }
 
-            // e.g. https://demo.ampache.dev/play/art/{sessionid}/artist/1240/thumb2.png
-            $url = AmpConfig::get_web_path() . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . $uid . '/thumb';
-            if ($thumb !== null) {
-                $url .= $thumb;
-            }
-
-            $url .= '.' . $extension;
+            // e.g. https://demo.ampache.dev/play/art/{sessionid}/artist/1240/size400x400.png
+            $url = AmpConfig::get_web_path() . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . $uid . '/size' . $size . '.' . $extension;
         } else {
             $actionStr = ($type === 'user')
                     ? 'action=show_user_avatar&'
                     : '';
             $url = AmpConfig::get_web_path() . '/image.php?' . $actionStr . 'object_id=' . $uid . '&object_type=' . scrub_out($type);
-            if ($thumb !== null) {
-                $url .= '&thumb=' . $thumb; // @todo convert thumb links to size links after a period of timie to allow conversion of rules
+            if ($size !== 'original') {
+                $url .= '&size=' . $size;
             }
 
             if ($extension !== '' && $extension !== '0') {
@@ -1274,7 +1275,7 @@ class Art extends database_object
      * Gather metadata from plugin.
      * @param AmpacheDiscogs|AmpacheMusicBrainz|AmpacheTheaudiodb $plugin
      * @param string $type
-     * @param array $options
+     * @param array<string, mixed> $options
      * @return list<array{
      *     url: string,
      *     mime: string,
@@ -1309,6 +1310,12 @@ class Art extends database_object
                 $media_info['title']       = $options['artist'];
                 $gtypes[]                  = 'music';
                 $gtypes[]                  = 'artist';
+                break;
+            case 'label':
+                $media_info['mb_artistid'] = $options['mb_labelid'];
+                $media_info['title']       = $options['label'];
+                $gtypes[]                  = 'music';
+                $gtypes[]                  = 'label';
                 break;
         }
 
