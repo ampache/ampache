@@ -2771,10 +2771,10 @@ class Subsonic_Json_Data
     public static function addPlaylist(array $response, Playlist|Search $playlist, bool $songs = false): array
     {
         $json = [];
-        if ($playlist instanceof Playlist) {
+        if ($playlist instanceof Playlist && $playlist->isNew() === false) {
             $json = self::_getPlaylist_Playlist($playlist, $songs);
         }
-        if ($playlist instanceof Search) {
+        if ($playlist instanceof Search && $playlist->isNew() === false) {
             $json = self::_getPlaylist_Search($playlist, $songs);
         }
 

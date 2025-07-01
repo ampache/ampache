@@ -765,6 +765,10 @@ class OpenSubsonic_Xml_Data
      */
     private static function _addVideo(SimpleXMLElement $xml, Video $video, string $elementName = 'video'): void
     {
+        if ($video->isNew()) {
+            return;
+        }
+
         $sub_id = OpenSubsonic_Api::getVideoSubId($video->id);
         $xvideo = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
         $xvideo->addAttribute('id', $sub_id);
@@ -852,10 +856,10 @@ class OpenSubsonic_Xml_Data
      */
     public static function addPlaylist(SimpleXMLElement $xml, Playlist|Search $playlist, bool $songs = false): SimpleXMLElement
     {
-        if ($playlist instanceof Playlist) {
+        if ($playlist instanceof Playlist && $playlist->isNew() === false) {
             $xml = self::_addPlaylist_Playlist($xml, $playlist, $songs);
         }
-        if ($playlist instanceof Search) {
+        if ($playlist instanceof Search && $playlist->isNew() === false) {
             $xml = self::_addPlaylist_Search($xml, $playlist, $songs);
         }
 
@@ -1623,6 +1627,10 @@ class OpenSubsonic_Xml_Data
      */
     private static function _addPodcastEpisode(SimpleXMLElement $xml, Podcast_Episode $episode, string $elementName = 'episode'): void
     {
+        if ($episode->isNew()) {
+            return;
+        }
+
         $sub_id    = OpenSubsonic_Api::getPodcastEpisodeSubId($episode->id);
         $subParent = OpenSubsonic_Api::getPodcastSubId($episode->podcast);
         $xepisode  = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
