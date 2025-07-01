@@ -3158,7 +3158,7 @@ class OpenSubsonic_Json_Data
 
         $response['subsonic-response']['scanStatus'] = [
             'scanning' => false,
-            'count' => (string)$count,
+            'count' => $count,
         ];
 
         return $response;
