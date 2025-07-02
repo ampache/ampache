@@ -3940,8 +3940,7 @@ class Subsonic_Api
      */
     public static function search2(array $input, User $user): void
     {
-        $query = $input['query'] ?? '';
-
+        $query   = $input['query'] ?? '';
         $results = self::_search($query, $input, $user);
 
         $format = (string)($input['f'] ?? 'xml');
@@ -3965,11 +3964,7 @@ class Subsonic_Api
      */
     public static function search3(array $input, User $user): void
     {
-        $query = self::_check_parameter($input, 'query', __FUNCTION__);
-        if ($query === false) {
-            return;
-        }
-
+        $query   = $input['query'] ?? '';
         $results = self::_search($query, $input, $user);
 
         $format = (string)($input['f'] ?? 'xml');
