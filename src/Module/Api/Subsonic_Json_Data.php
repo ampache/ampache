@@ -3052,7 +3052,6 @@ class Subsonic_Json_Data
         $json = [];
 
         if (!empty($songs)) {
-            $json = [];
             foreach ($songs as $song_id) {
                 $json[] = self::_getChild($song_id, 'song');
             }

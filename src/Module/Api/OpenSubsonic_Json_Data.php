@@ -1490,7 +1490,7 @@ class OpenSubsonic_Json_Data
         foreach ($song->get_artists() as $artist_id) {
             $array = Artist::get_name_array_by_id($artist_id);
 
-            $album_artists[] = [
+            $artists[] = [
                 'id' => OpenSubsonic_Api::getArtistSubId($artist_id),
                 'name' => (string)$array['name'],
             ];
@@ -3161,7 +3161,6 @@ class OpenSubsonic_Json_Data
         $json = [];
 
         if (!empty($songs)) {
-            $json = [];
             foreach ($songs as $song_id) {
                 $json[] = self::_getChild($song_id, 'song');
             }
