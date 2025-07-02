@@ -2009,9 +2009,7 @@ class Subsonic_Json_Data
             $json['album'][] = self::_getChild($album_id, 'album');
         }
 
-        if (!empty($json['album'])) {
-            $response['subsonic-response']['albumList'] = $json;
-        }
+        $response['subsonic-response']['albumList'] = (empty($json['album'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -2027,20 +2025,16 @@ class Subsonic_Json_Data
      */
     public static function addAlbumList2(array $response, array $albums): array
     {
-        $response['subsonic-response']['albumList2'] = [];
-
-        $json = [];
+        $json = ['album' => []];
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
                 continue;
             }
-            $json[] = self::_getAlbumID3($album);
+            $json['album'][] = self::_getAlbumID3($album);
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['albumList2']['album'] = $json;
-        }
+        $response['subsonic-response']['albumList2'] = (empty($json['album'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -2230,16 +2224,12 @@ class Subsonic_Json_Data
      */
     public static function addBookmarks(array $response, array $bookmarks): array
     {
-        $response['subsonic-response']['bookmarks'] = [];
-
-        $json = [];
+        $json = ['bookmark' => []];
         foreach ($bookmarks as $bookmark) {
-            $json[] = self::_getBookmark($bookmark);
+            $json['bookmark'][] = self::_getBookmark($bookmark);
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['bookmarks']['bookmark'] = $json;
-        }
+        $response['subsonic-response']['bookmarks'] = (empty($json['bookmark'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -2254,25 +2244,18 @@ class Subsonic_Json_Data
      */
     public static function addChatMessages(array $response, array $messages): array
     {
-        if (empty($messages)) {
-            return $response;
-        }
-
-        $response['subsonic-response']['chatMessages'] = [];
-
-        $json = [];
+        $json = ['chatMessage' => []];
         foreach ($messages as $message) {
             $chat = new PrivateMsg($message);
             $user = new User($chat->getSenderUserId());
             if ($user->isNew()) {
                 continue;
             }
-            $json[] = self::_getChatMessage($chat, $user);
+            $json['chatMessage'][] = self::_getChatMessage($chat, $user);
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['chatMessages']['chatMessage'] = $json;
-        }
+        $response['subsonic-response']['chatMessages'] = (empty($json['chatMessage'])) ? (object)[] : $json;
+
 
         return $response;
     }
@@ -2396,16 +2379,12 @@ class Subsonic_Json_Data
      */
     public static function addGenres(array $response, array $tags): array
     {
-        $response['subsonic-response']['genres'] = [];
-
-        $json = [];
+        $json = ['genre' => []];
         foreach ($tags as $tag) {
-            $json[] = self::_getGenre($tag);
+            $json['genre'][] = self::_getGenre($tag);
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['genres']['genre'] = $json;
-        }
+        $response['subsonic-response']['genres'] = (empty($json['genre'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -2483,17 +2462,13 @@ class Subsonic_Json_Data
      */
     public static function addInternetRadioStations(array $response, array $radios): array
     {
-        $response['subsonic-response']['internetRadioStations'] = [];
-
-        $json = [];
+        $json = ['internetRadioStation' => []];
         foreach ($radios as $radio_id) {
-            $radio  = new Live_Stream($radio_id);
-            $json[] = self::_getInternetRadioStation($radio);
+            $radio                          = new Live_Stream($radio_id);
+            $json['internetRadioStation'][] = self::_getInternetRadioStation($radio);
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['internetRadioStations']['internetRadioStation'] = $json;
-        }
+        $response['subsonic-response']['internetRadioStations'] = (empty($json['internetRadioStation'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -2635,12 +2610,9 @@ class Subsonic_Json_Data
             return $response;
         }
 
-        $response['subsonic-response']['lyricsList'] = [];
-
         $json = self::_getStructuredLyrics($song);
-        if (!empty($json)) {
-            $response['subsonic-response']['lyricsList'][] = ['structuredLyrics' => $json];
-        }
+
+        $response['subsonic-response']['lyricsList'] = (empty($json)) ? (object)[] : ['structuredLyrics' => $json];
 
 
         return $response;
@@ -2664,13 +2636,11 @@ class Subsonic_Json_Data
      */
     public static function addMusicFolders(array $response, array $catalogs): array
     {
-        $response['subsonic-response']['musicFolders'] = [];
-
-        $json = [];
+        $json = ['musicFolder' => []];
         foreach ($catalogs as $folder_id) {
             $catalog = Catalog::create_from_id($folder_id);
             if ($catalog instanceof Catalog) {
-                $json[] = [
+                $json['musicFolder'][] = [
                     'id' => Subsonic_Api::getCatalogSubId($folder_id),
                     'name' => (string)$catalog->name,
                 ];
@@ -2678,9 +2648,7 @@ class Subsonic_Json_Data
 
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['musicFolders']['musicFolder'] = $json;
-        }
+        $response['subsonic-response']['musicFolders'] = (empty($json['musicFolder'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -2695,16 +2663,12 @@ class Subsonic_Json_Data
      */
     public static function addNewestPodcasts(array $response, array $episodes): array
     {
-        $response['subsonic-response']['newestPodcasts'] = [];
-
-        $json = [];
+        $json = ['episode' => []];
         foreach ($episodes as $episode) {
-            $json[] = self::_getPodcastEpisode($episode);
+            $json['episode'][] = self::_getPodcastEpisode($episode);
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['newestPodcasts']['episode'] = $json;
-        }
+        $response['subsonic-response']['newestPodcasts'] = (empty($json['episode'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -2726,7 +2690,7 @@ class Subsonic_Json_Data
     {
         $response['subsonic-response']['nowPlaying'] = [];
 
-        $json = [];
+        $json = ['entry' => []];
         foreach ($data as $row) {
             if (
                 $row['media'] instanceof Song &&
@@ -2739,13 +2703,11 @@ class Subsonic_Json_Data
                 $track['playerId']   = 0;
                 $track['playerName'] = (string)$row['agent'];
 
-                $json[] = $track;
+                $json['entry'][] = $track;
             }
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['nowPlaying']['entry'] = $json;
-        }
+        $response['subsonic-response']['nowPlaying'] = (empty($json['entry'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -2816,7 +2778,7 @@ class Subsonic_Json_Data
      */
     public static function addPlaylists(array $response, ?User $user, array $playlists): array
     {
-        $response['subsonic-response']['playlists']['playlist'] = [];
+        $json = ['playlist' => []];
         foreach ($playlists as $playlist_id) {
             /**
              * Strip smart_ from playlist id and compare to original
@@ -2828,15 +2790,17 @@ class Subsonic_Json_Data
                 if ($playlist->isNew()) {
                     continue;
                 }
-                $response['subsonic-response']['playlists']['playlist'][] = self::_getPlaylist_Search($playlist);
+                $json['playlist'][] = self::_getPlaylist_Search($playlist);
             } else {
                 $playlist = new Playlist((int)$playlist_id);
                 if ($playlist->isNew()) {
                     continue;
                 }
-                $response['subsonic-response']['playlists']['playlist'][] = self::_getPlaylist_Playlist($playlist);
+                $json['playlist'][] = self::_getPlaylist_Playlist($playlist);
             }
         }
+
+        $response['subsonic-response']['playlists'] = (empty($json['playlist'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -2990,14 +2954,12 @@ class Subsonic_Json_Data
      */
     public static function addPodcasts(array $response, array $podcasts, bool $includeEpisodes = true): array
     {
-        $response['subsonic-response']['podcasts'] = [];
-
-        $json = [];
+        $json = ['channel' => []];
         foreach ($podcasts as $podcast) {
-            $json[] = self::_getPodcast($podcast, $includeEpisodes);
+            $json['channel'][] = self::_getPodcast($podcast, $includeEpisodes);
         }
 
-        $response['subsonic-response']['podcasts']['channel'] = $json;
+        $response['subsonic-response']['podcasts'] = (empty($json['channel'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -3024,17 +2986,13 @@ class Subsonic_Json_Data
      */
     public static function addRandomSongs(array $response, array $songs): array
     {
-        $response['subsonic-response']['randomSongs'] = [];
-
-        $json = [];
+        $json = ['song' => []];
         foreach ($songs as $song_id) {
-            $song   = new Song($song_id);
-            $json[] = self::_getChildSong($song);
+            $song           = new Song($song_id);
+            $json['song'][] = self::_getChildSong($song);
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['randomSongs']['song'] = $json;
-        }
+        $response['subsonic-response']['randomSongs'] = (empty($json['song'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -3348,9 +3306,7 @@ class Subsonic_Json_Data
      */
     public static function addShares(array $response, array $shares): array
     {
-        $response['subsonic-response']['shares'] = [];
-
-        $json = [];
+        $json = ['share' => []];
         foreach ($shares as $share_id) {
             $share = new Share($share_id);
             // Don't add share with max counter already reached
@@ -3360,13 +3316,11 @@ class Subsonic_Json_Data
                     continue;
                 }
 
-                $json[] = self::_getShare($share, $user);
+                $json['share'][] = self::_getShare($share, $user);
             }
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['shares']['share'] = $json;
-        }
+        $response['subsonic-response']['shares'] = (empty($json['share'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -3387,19 +3341,15 @@ class Subsonic_Json_Data
      */
     public static function addSimilarSongs(array $response, array $similar_songs): array
     {
-        $response['subsonic-response']['similarSongs'] = [];
-
-        $json = [];
+        $json = ['song' => []];
         foreach ($similar_songs as $similar_song) {
             if ($similar_song['id'] !== null) {
-                $song   = new Song($similar_song['id']);
-                $json[] = self::_getChildSong($song);
+                $song           = new Song($similar_song['id']);
+                $json['song'][] = self::_getChildSong($song);
             }
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['similarSongs']['song'] = $json;
-        }
+        $response['subsonic-response']['similarSongs'] = (empty($json['song'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -3420,19 +3370,15 @@ class Subsonic_Json_Data
      */
     public static function addSimilarSongs2(array $response, array $similar_songs): array
     {
-        $response['subsonic-response']['similarSongs2'] = [];
-
-        $json = [];
+        $json = ['song' => []];
         foreach ($similar_songs as $similar_song) {
             if ($similar_song['id'] !== null) {
-                $song   = new Song($similar_song['id']);
-                $json[] = self::_getChildSong($song);
+                $song           = new Song($similar_song['id']);
+                $json['song'][] = self::_getChildSong($song);
             }
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['similarSongs2']['song'] = $json;
-        }
+        $response['subsonic-response']['similarSongs2'] = (empty($json['song'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -3468,20 +3414,16 @@ class Subsonic_Json_Data
      */
     public static function addSongsByGenre(array $response, array $songs): array
     {
-        $response['subsonic-response']['songsByGenre'] = [];
-
-        $json = [];
+        $json = ['song' => []];
         foreach ($songs as $song_id) {
             $song   = new Song($song_id);
             if ($song->isNew()) {
                 continue;
             }
-            $json[] = self::_getChildSong($song);
+            $json['song'][] = self::_getChildSong($song);
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['songsByGenre']['song'] = $json;
-        }
+        $response['subsonic-response']['songsByGenre'] = (empty($json['song'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -3607,17 +3549,13 @@ class Subsonic_Json_Data
      */
     public static function addTopSongs(array $response, array $songs): array
     {
-        $response['subsonic-response']['topSongs'] = [];
-
-        $json = [];
+        $json = ['song' => []];
         foreach ($songs as $song_id) {
-            $song   = new Song($song_id);
-            $json[] = self::_getChildSong($song);
+            $song           = new Song($song_id);
+            $json['song'][] = self::_getChildSong($song);
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['topSongs']['song'] = $json;
-        }
+        $response['subsonic-response']['topSongs'] = (empty($json['song'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -3647,19 +3585,15 @@ class Subsonic_Json_Data
      */
     public static function addUsers(array $response, array $users): array
     {
-        $response['subsonic-response']['users'] = [];
-
-        $json = [];
+        $json = ['user' => []];
         foreach ($users as $user_id) {
             $user = new User($user_id);
             if ($user->isNew() === false) {
-                $json[] = self::_getUser($user);
+                $json['user'][] = self::_getUser($user);
             }
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['users']['user'] = $json;
-        }
+        $response['subsonic-response']['users'] = (empty($json['user'])) ? (object)[] : $json;
 
         return $response;
     }
@@ -3691,16 +3625,12 @@ class Subsonic_Json_Data
      */
     public static function addVideos(array $response, array $videos): array
     {
-        $response['subsonic-response']['videos'] = [];
-
-        $json = [];
+        $json = ['video' => []];
         foreach ($videos as $video) {
-            $json[] = self::_getChildVideo($video);
+            $json['video'][] = self::_getChildVideo($video);
         }
 
-        if (!empty($json)) {
-            $response['subsonic-response']['videos']['video'] = $json;
-        }
+        $response['subsonic-response']['videos'] = (empty($json['video'])) ? (object)[] : $json;
 
         return $response;
     }
