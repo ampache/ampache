@@ -3142,7 +3142,7 @@ class Subsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['searchResult2'] = $json;
+        $response['subsonic-response']['searchResult2'] = ($json == []) ? (object)[] : $json;
 
         return $response;
     }
@@ -3191,7 +3191,7 @@ class Subsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['searchResult3'] = $json;
+        $response['subsonic-response']['searchResult3'] = ($json == []) ? (object)[] : $json;
 
         return $response;
     }
