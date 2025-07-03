@@ -64,8 +64,7 @@ final class HighestVideoAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
-        $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
+        $by_user = ((int)filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
 
         $this->ui->showHeader();
         $this->ui->show('show_form_highest.inc.php');
@@ -84,7 +83,7 @@ final class HighestVideoAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
             $this->videoRepository->getItemCount()
         ) {
-            $objects = Rating::get_highest('video', $limit, 0, $user_id);
+            $objects = Rating::get_highest('video', -1, 0, $user_id, $by_user);
             $browse  = $this->modelFactory->createBrowse();
             $browse->set_type('video');
             $browse->show_objects($objects);

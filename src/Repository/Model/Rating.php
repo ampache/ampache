@@ -242,7 +242,7 @@ class Rating extends database_object
     /**
      * get_highest_sql
      */
-    public static function get_highest_sql(string $input_type, ?int $user_id = null): string
+    public static function get_highest_sql(string $input_type, ?int $user_id = null, bool $by_user = false): string
     {
         $type    = Stats::validate_type($input_type);
         $user_id = (int)($user_id ?? -1);
@@ -252,6 +252,10 @@ class Rating extends database_object
         }
 
         $sql .= sprintf(' WHERE `object_type` = \'%s\'', $type);
+        if ($by_user && $user_id > 0) {
+            $sql .= sprintf(' WHERE `rating`.`user` = \'%s\'', $user_id);
+        }
+
         if (AmpConfig::get('catalog_disable') && in_array($input_type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
             $sql .= " AND " . Catalog::get_enable_filter($input_type, '`object_id`');
         }
@@ -278,7 +282,7 @@ class Rating extends database_object
      * Get objects with the highest average rating.
      * @return int[]
      */
-    public static function get_highest(string $input_type, int $count = 0, int $offset = 0, ?int $user_id = null): array
+    public static function get_highest(string $input_type, int $count = 0, int $offset = 0, ?int $user_id = null, bool $by_user = false): array
     {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -290,7 +294,7 @@ class Rating extends database_object
         }
 
         // Select Top objects counting by # of rows
-        $sql   = self::get_highest_sql($input_type, $user_id);
+        $sql   = self::get_highest_sql($input_type, $user_id, $by_user);
         $limit = ($offset < 1)
             ? $count
             : $offset . "," . $count;
