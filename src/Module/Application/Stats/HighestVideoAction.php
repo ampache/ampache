@@ -78,12 +78,11 @@ final class HighestVideoAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $user_id = $gatekeeper->getUser()?->id;;
-
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
             $this->videoRepository->getItemCount()
         ) {
+            $user_id = $gatekeeper->getUser()?->id;
             $objects = Rating::get_highest('video', -1, 0, $user_id, $by_user);
             $browse  = $this->modelFactory->createBrowse();
             $browse->set_type('video');

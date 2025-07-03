@@ -57,17 +57,24 @@ final class RecentAlbumAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $by_user = ((int)filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
 
         $this->ui->showHeader();
-        $this->ui->show('show_form_recent.inc.php');
+        show(
+            'show_form_recent.inc.php',
+            ['by_user' => $by_user]
+        );
 
         define('TABLE_RENDERED', 1);
 
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $objects = Stats::get_recent('album', -1);
+        $user = ($by_user)
+            ? $gatekeeper->getUser()
+            : null;
+
+        $objects = Stats::get_recent('album', -1, 0, $user);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_use_filters(false);
         $browse->set_type('album');
