@@ -78,9 +78,7 @@ final class HighestVideoAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $user_id = ($this->configContainer->get(ConfigurationKeyEnum::CATALOG_FILTER) && Core::get_global('user') instanceof User)
-            ? Core::get_global('user')->id
-            : null;
+        $user_id = $gatekeeper->getUser()?->id;;
 
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&

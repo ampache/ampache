@@ -53,7 +53,10 @@ final readonly class UserflagAlbumDiskAction implements ApplicationActionInterfa
         $by_user = ((int)filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
 
         $this->ui->showHeader();
-        $this->ui->show('show_form_userflag.inc.php');
+        $this->ui->show(
+            'show_form_userflag.inc.php',
+            ['by_user' => $by_user]
+        );
         $this->ui->showHeader();
 
         define('TABLE_RENDERED', 1);
