@@ -187,11 +187,9 @@ final class Mailer implements MailerInterface
     /**
      * send
      * This actually sends the mail, how amazing
-     * @param PHPMailer $phpmailer
-     * @return bool
      * @throws Exception
      */
-    public function send($phpmailer = null): bool
+    public function send(?PHPMailer $phpmailer = null): bool
     {
         $mailtype = AmpConfig::get('mail_type', 'php');
 
@@ -263,11 +261,9 @@ final class Mailer implements MailerInterface
     }
 
     /**
-     * @param string $group_name
-     * @return bool
      * @throws Exception
      */
-    public function send_to_group($group_name): bool
+    public function send_to_group(string $group_name): bool
     {
         $mail = new PHPMailer();
 

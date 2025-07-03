@@ -3177,7 +3177,7 @@ class Subsonic_Json_Data
             'id' => Subsonic_Api::getShareSubId($share->id),
             'url' => (string)$share->public_url,
             'description' => (string)$share->description,
-            'username' => (string)(string)$user->username,
+            'username' => (string)$user->username,
             'created' => date('c', (int)$share->creation_date),
         ];
 

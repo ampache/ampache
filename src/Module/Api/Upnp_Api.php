@@ -297,7 +297,7 @@ class Upnp_Api
         }
 
         while ($reader->read()) {
-            debug_event(self::class, $reader->localName . ' ' . (string) $reader->nodeType . ' ' . (string) XMLReader::ELEMENT . ' ' . (string) $reader->isEmptyElement, 5);
+            debug_event(self::class, $reader->localName . ' ' . $reader->nodeType . ' ' . (string) XMLReader::ELEMENT . ' ' . (string) $reader->isEmptyElement, 5);
 
             if (($reader->nodeType == XMLReader::ELEMENT)) {
                 switch ($reader->localName) {
@@ -1099,10 +1099,9 @@ class Upnp_Api
     }
 
     /**
-     * @param string $str
-     * @return array
+     * @return string[]
      */
-    private static function gettokens($str): array
+    private static function gettokens(string $str): array
     {
         $tokens        = [];
         $nospacetokens = [];
@@ -1142,11 +1141,11 @@ class Upnp_Api
                         $tokens[$index++] = $onetoken;
                         $onetoken         = "";
                     }
-                    $tokens[$index++] = $token;
+                    $tokens[$index++] = (string)$token;
                     break;
                 default:
                     if ($onetoken == "") {
-                        $onetoken = $token;
+                        $onetoken = (string)$token;
                     } else {
                         $onetoken = $onetoken . " " . $token;
                     }
@@ -1338,7 +1337,7 @@ class Upnp_Api
         $size     = sizeof($tokens);
         for ($i = 0; $i < $size; $i++) {
             if ($tokens[$i] != '') {
-                $rule = 'rule_' . (string) $rule_num;
+                $rule = 'rule_' . $rule_num;
                 $term = self::parse_upnp_search_term($tokens[$i], $data['type']);
                 if (!empty($term)) {
                     $data[$rule]               = $term['ruletype'];

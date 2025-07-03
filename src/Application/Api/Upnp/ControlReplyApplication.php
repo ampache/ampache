@@ -182,7 +182,7 @@ final class ControlReplyApplication implements ApplicationInterface
                                             $upnpRequest['requestedcount']
                                         );
                                         debug_event('control-reply', 'non-root items sort ' . $upnpRequest['sortcriteria'], 5);
-                                        //debug_event('control-reply', 'Listrequest '. (string) $upnpRequest['startingindex'] . ':' . (string) $upnpRequest['requestedcount'] . ':' . (string) $totMatches, 5);
+                                        //debug_event('control-reply', 'Listrequest '. (string) $upnpRequest['startingindex'] . ':' . (string) $upnpRequest['requestedcount'] . ':' . $totMatches, 5);
                                     }
 
                                     break;
