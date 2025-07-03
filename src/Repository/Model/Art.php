@@ -1474,6 +1474,10 @@ class Art extends database_object
             return false;
         }
 
+        if ($object_type === 'video' && $kind !== 'default') {
+            Video::generate_preview($object_id);
+        }
+
         $art    = new Art($object_id, $object_type, $kind);
         $has_db = $art->has_db_info();
         // Don't show any image if not available

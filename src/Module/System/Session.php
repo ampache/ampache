@@ -314,10 +314,10 @@ final class Session implements SessionInterface
                 $key  = $data['apikey'] ?? false;
                 break;
             case 'api':
-                $key = (isset($data['apikey'])) ? md5(($data['apikey'] . md5(uniqid((string) rand(), true)))) : md5(uniqid((string) rand(), true));
+                $key = (isset($data['apikey'])) ? md5(($data['apikey'] . md5(uniqid((string) random_int(), true)))) : md5(uniqid((string) random_int(), true));
                 break;
             case 'stream':
-                $key = (isset($data['sid'])) ? $data['sid'] : md5(uniqid((string)rand(), true));
+                $key = (isset($data['sid'])) ? $data['sid'] : md5(uniqid((string)random_int(), true));
                 break;
             case 'mysql':
             default:
