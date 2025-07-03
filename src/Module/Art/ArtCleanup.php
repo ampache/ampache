@@ -186,7 +186,7 @@ final class ArtCleanup implements ArtCleanupInterface
                 Art::delete_from_dir($thumbnail['object_type'], $thumbnail['object_id'], $thumbnail['kind'], $thumbnail['size']);
             }
             $sql = "DELETE FROM `image` WHERE `id` = ? AND `size` != 'original'";
-            Dba::write($sql, [$thumbnail]);
+            Dba::write($sql, [$thumbnail['id']]);
         }
     }
 }

@@ -816,7 +816,7 @@ class Art extends database_object
                         continue;
                     }
 
-                    debug_event(self::class, $file, 5);
+                    debug_event(self::class, 'Deleting ' . $file, 5);
                 }
                 
                 unlink($path . '/' . $file);
