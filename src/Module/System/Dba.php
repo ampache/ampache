@@ -550,9 +550,8 @@ class Dba
      * disconnect
      *
      * This nukes the dbh connection, this isn't used very often...
-     * @param string $database
      */
-    public static function disconnect($database = ''): bool
+    public static function disconnect(?string $database = ''): bool
     {
         if (!$database) {
             $database = AmpConfig::get('database_name');

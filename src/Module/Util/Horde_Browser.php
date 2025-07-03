@@ -717,7 +717,7 @@ class Horde_Browser
      *   - xmlhttpreq
      * @param bool|string|float|int $value Special capability parameter.
      */
-    public function setFeature($feature, $value = true): void
+    public function setFeature(string $feature, $value = true): void
     {
         if ($value) {
             $this->_features[$feature] = $value;

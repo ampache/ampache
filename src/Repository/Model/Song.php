@@ -1094,8 +1094,8 @@ class Song extends database_object implements
 
             // Represent the value as a string for simpler comparison. For array, ensure to sort similarly old/new values
             if (is_array($media->$key)) {
-                $arr = ($key === 'tags' && !empty($media->tags))
-                    ? array_column($media->tags, 'name')
+                $arr = ($key === 'tags' && !empty($media->get_tags()))
+                    ? array_column($media->get_tags(), 'name')
                     : $media->$key;
                 sort($arr);
                 $mediaData = implode(" ", $arr);
@@ -1114,8 +1114,8 @@ class Song extends database_object implements
             }
 
             if (is_array($new_media->$key)) {
-                $arr = ($key === 'tags' && !empty($new_media->tags))
-                    ? array_column($new_media->tags, 'name')
+                $arr = ($key === 'tags' && !empty($new_media->get_tags()))
+                    ? array_column($new_media->get_tags(), 'name')
                     : $new_media->$key;
                 sort($arr);
                 $newMediaData = implode(" ", $arr);

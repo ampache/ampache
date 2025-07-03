@@ -83,7 +83,7 @@ final class UpdateArtistInfoMethod
             array_key_exists('id', $info) && $info['id'] !== null ||
             count($like) > 0
         ) {
-            Api::message('Updated artist info: ' . (string) $object_id, $input['api_format']);
+            Api::message('Updated artist info: ' . $object_id, $input['api_format']);
 
             return true;
         }

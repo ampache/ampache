@@ -285,7 +285,7 @@ class Stats
         while ($row = Dba::fetch_assoc($db_results)) {
             // Stop double ups
             if ($row['object_id'] == $object_id) {
-                debug_event(self::class, 'Object already inserted {' . (string) $object_id . '} date: ' . (string) $time, 5);
+                debug_event(self::class, 'Object already inserted {' . $object_id . '} date: ' . $time, 5);
 
                 return true;
             }

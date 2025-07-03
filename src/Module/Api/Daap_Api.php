@@ -890,10 +890,7 @@ class Daap_Api
         header("Expires: -1");
     }
 
-    /**
-     * @param string $string
-     */
-    public static function apiOutput($string): void
+    public static function apiOutput(string $string): void
     {
         self::setHeaders();
 

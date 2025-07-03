@@ -105,9 +105,8 @@ function scrub_out($string): string
 /**
  * unhtmlentities
  * Undoes htmlentities()
- * @param string $string
  */
-function unhtmlentities($string): string
+function unhtmlentities(string $string): string
 {
     return html_entity_decode((string) $string, ENT_QUOTES, AmpConfig::get('site_charset', 'UTF-8'));
 }

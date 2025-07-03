@@ -98,7 +98,7 @@ final class UpdateArtMethod
         // update your object
 
         if (Catalog::gather_art_item($type, $object_id, $overwrite, true)) {
-            Api::message('Gathered new art for: ' . (string) $object_id . ' (' . $type . ')', $input['api_format'], ['art' => $art_url]);
+            Api::message('Gathered new art for: ' . $object_id . ' (' . $type . ')', $input['api_format'], ['art' => $art_url]);
 
             return true;
         }
