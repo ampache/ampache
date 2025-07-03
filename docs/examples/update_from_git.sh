@@ -19,31 +19,38 @@ cd $AMPACHEDIR
 ### Do you dev? if you're editing files you can check out the original before updating
 git checkout composer.json composer.lock public src bin config tests locale docs docker
 
+OLD_HASH=$(git rev-parse HEAD)
+
 ### Update your local branch
 git pull
 git checkout -f $BRANCH
 git reset --hard origin/$BRANCH
 git pull
 
-### Check for database updates
-php bin/cli admin:updateDatabase -e
+NEW_HASH=$(git rev-parse HEAD)
 
-### Check for config file updates
-php bin/cli admin:updateConfigFile -e
+### Only update if the git hash has changed
+if [ "$OLD_HASH" != "$NEW_HASH" ]; then
+  ### Check for database updates
+  php bin/cli admin:updateDatabase -e
 
-### Check for plugin updates
-php bin/cli admin:updatePlugins -e
+  ### Check for config file updates
+  php bin/cli admin:updateConfigFile -e
 
-### Clean up your garbage data
-php bin/cli run:updateCatalog -t
+  ### Check for plugin updates
+  php bin/cli admin:updatePlugins -e
 
-### Run a public site? you can forcibly set all preferences to admin and stop users changing things
-#php bin/cli admin:updatePreferenceAccessLevel -e -l admin
+  ### Clean up your garbage data
+  php bin/cli run:updateCatalog -t
 
-### You don't always need to do this but some people might want to keep composer packages updated here
-### You might want the dev packages as well so you can remove '--no-dev' to install those
-#composer install --no-dev --prefer-source --no-interaction
+  ### Run a public site? you can forcibly set all preferences to admin and stop users changing things
+  #php bin/cli admin:updatePreferenceAccessLevel -e -l admin
 
-### NPM is now required to handle all the javascript packages
-npm install
-npm run build
+  ### You don't always need to do this but some people might want to keep composer packages updated here
+  ### You might want the dev packages as well so you can remove '--no-dev' to install those
+  #composer install --no-dev --prefer-source --no-interaction
+
+  ### NPM is now required to handle all the javascript packages
+  npm install
+  npm run build
+fi
