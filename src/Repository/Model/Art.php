@@ -780,12 +780,12 @@ class Art extends database_object
     /**
      * delete_from_dir
      */
-    public static function delete_from_dir(string $type, int $uid, ?string $kind = ''): void
+    public static function delete_from_dir(string $type, int $uid, ?string $kind = '', ?string $size = ''): void
     {
         if ($type && $uid) {
             $path = self::get_dir_on_disk($type, $uid, (string)$kind);
             if ($path !== null) {
-                self::delete_rec_dir(rtrim($path, '/'));
+                self::delete_rec_dir(rtrim($path, '/'), $size);
             }
         }
     }
@@ -793,7 +793,7 @@ class Art extends database_object
     /**
      * delete_rec_dir
      */
-    private static function delete_rec_dir(string $path): void
+    private static function delete_rec_dir(string $path, ?string $size = ''): void
     {
         debug_event(self::class, 'Deleting ' . $path . ' directory...', 5);
 
@@ -803,13 +803,29 @@ class Art extends database_object
                 if ('.' === $file || '..' === $file) {
                     continue;
                 } elseif (is_dir($path . '/' . $file)) {
-                    self::delete_rec_dir(rtrim($path, '/') . '/' . $file);
-                } else {
-                    unlink($path . '/' . $file);
+                    self::delete_rec_dir(rtrim($path, '/') . '/' . $file, $size);
+                } elseif ($size && preg_match('/^[0-9]+x[0-9]+$/', $size)) {
+                    // If we are deleting a specific size, check the file name
+                    $dimensions = explode('x', $size);
+                    if (count($dimensions) !== 2) {
+                        continue;
+                    }
+                    $width  = (int)$dimensions[0];
+                    $height = (int)$dimensions[1];
+                    if (!str_ends_with($file, '-' . $width . 'x' . $height . '.' . self::extension($file))) {
+                        continue;
+                    }
+
+                    debug_event(self::class, $file, 5);
                 }
+                
+                unlink($path . '/' . $file);
             }
 
-            rmdir($path);
+            // Don't delete the whole directory if you're keeping the original image
+            if (empty($size) || $size === 'original') {
+                rmdir($path);
+            }
         }
     }
 

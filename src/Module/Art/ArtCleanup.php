@@ -162,11 +162,17 @@ final class ArtCleanup implements ArtCleanupInterface
      */
     public function deleteThumbnails(Interactor $interactor): void
     {
-        $sql        = "SELECT `id` FROM `image` WHERE `size` != 'original';";
+        $sql        = "SELECT * FROM `image` WHERE `size` != 'original';";
         $db_results = Dba::read($sql);
         $thumbnails = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $thumbnails[] = (int)$row['id'];
+            $thumbnails[] = [
+                'id' => $row['id'],
+                'object_id' => $row['object_id'],
+                'object_type' => $row['object_type'],
+                'kind' => $row['kind'],
+                'size' => $row['size'],
+            ];
         }
 
         $interactor->info(
@@ -177,7 +183,7 @@ final class ArtCleanup implements ArtCleanupInterface
         $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
         foreach ($thumbnails as $thumbnail) {
             if ($album_art_store_disk) {
-                Art::delete_from_dir($thumbnail['object_type'], $thumbnail['object_id'], $thumbnail['kind']);
+                Art::delete_from_dir($thumbnail['object_type'], $thumbnail['object_id'], $thumbnail['kind'], $thumbnail['size']);
             }
             $sql = "DELETE FROM `image` WHERE `id` = ? AND `size` != 'original'";
             Dba::write($sql, [$thumbnail]);
