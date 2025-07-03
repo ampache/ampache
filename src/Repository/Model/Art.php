@@ -780,12 +780,12 @@ class Art extends database_object
     /**
      * delete_from_dir
      */
-    public static function delete_from_dir(string $type, int $uid, ?string $kind = '', ?string $size = ''): void
+    public static function delete_from_dir(string $type, int $uid, ?string $kind = '', ?string $size = '', ?string $mime = ''): void
     {
         if ($type && $uid) {
             $path = self::get_dir_on_disk($type, $uid, (string)$kind);
             if ($path !== null) {
-                self::delete_rec_dir(rtrim($path, '/'), $size);
+                self::delete_rec_dir(rtrim($path, '/'), $size, $mime);
             }
         }
     }
@@ -793,9 +793,9 @@ class Art extends database_object
     /**
      * delete_rec_dir
      */
-    private static function delete_rec_dir(string $path, ?string $size = ''): void
+    private static function delete_rec_dir(string $path, ?string $size = '', ?string $mime = ''): void
     {
-        $has_size = $size && preg_match('/^[0-9]+x[0-9]+$/', $size);
+        $has_size = $size && $mime && preg_match('/^[0-9]+x[0-9]+$/', $size);
 
         if ($has_size) {
             debug_event(self::class, 'Deleting ' . $path . ' file size... ' . $size, 5);
@@ -812,13 +812,13 @@ class Art extends database_object
                     self::delete_rec_dir(rtrim($path, '/') . '/' . $file, $size);
                 } elseif ($has_size) {
                     // If we are deleting a specific size, check the file name
-                    if (!str_ends_with($file, '-' . $size . '.' . self::extension($file))) {
+                    if (!str_ends_with($file, '-' . $size . '.' . self::extension($mime))) {
                         continue;
                     }
 
                     debug_event(self::class, 'Deleting ' . $file, 5);
                 }
-                
+
                 unlink($path . '/' . $file);
             }
 

@@ -172,6 +172,7 @@ final class ArtCleanup implements ArtCleanupInterface
                 'object_type' => $row['object_type'],
                 'kind' => $row['kind'],
                 'size' => $row['size'],
+                'mime' => $row['mime'],
             ];
         }
 
@@ -183,7 +184,7 @@ final class ArtCleanup implements ArtCleanupInterface
         $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
         foreach ($thumbnails as $thumbnail) {
             if ($album_art_store_disk) {
-                Art::delete_from_dir($thumbnail['object_type'], $thumbnail['object_id'], $thumbnail['kind'], $thumbnail['size']);
+                Art::delete_from_dir($thumbnail['object_type'], $thumbnail['object_id'], $thumbnail['kind'], $thumbnail['size'], $thumbnail['mime']);
             }
             $sql = "DELETE FROM `image` WHERE `id` = ? AND `size` != 'original'";
             Dba::write($sql, [$thumbnail['id']]);
