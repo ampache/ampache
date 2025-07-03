@@ -85,7 +85,7 @@ final class RegisterMethod
         if ($user_id > 0) {
             if (!AmpConfig::get('user_no_email_confirm', false)) {
                 $client     = new User($user_id);
-                $validation = md5(uniqid((string) random_int(), true));
+                $validation = md5(uniqid((string) mt_rand(), true));
                 $client->update_validation($validation);
 
                 // Notify user and/or admins
