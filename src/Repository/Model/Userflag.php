@@ -280,7 +280,7 @@ class Userflag extends database_object
 
         $sql .= " WHERE `user_flag`.`object_type` = '" . $type . "'";
         if ($by_user && $user?->id > 0) {
-            $sql .= sprintf(' WHERE `user_flag`.`user` = \'%s\'', $user->id);
+            $sql .= sprintf(' AND `user_flag`.`user` = \'%s\'', $user->id);
         }
 
         if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
