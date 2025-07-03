@@ -823,6 +823,15 @@ class Art extends database_object
     }
 
     /**
+     * reset
+     * This resets the art in the database
+     */
+    public function deleteThumbnails(): void
+    {
+        $this->getArtCleanup()->deleteThumbnails();
+    }
+
+    /**
      * save_thumb
      * This saves the thumbnail that we're passed
      * @param string $source

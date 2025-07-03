@@ -96,8 +96,9 @@ final class ArtCleanup implements ArtCleanupInterface
             'video',
         ];
 
+        $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
         if (in_array($object_type, $types)) {
-            if ($this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK)) {
+            if ($album_art_store_disk) {
                 Art::delete_from_dir($object_type, $object_id);
             }
             $sql = "DELETE FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
@@ -153,5 +154,32 @@ final class ArtCleanup implements ArtCleanupInterface
         }
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ?";
         Dba::write($sql, [$art->object_id, $art->object_type, $art->kind]);
+    }
+
+    /**
+     * Remove all thumbnail art in the database keeping original images
+     */
+    public function deleteThumbnails(): void
+    {
+        $sql        = "SELECT * FROM `image` WHERE `size` != 'original';";
+        $db_results = Dba::read($sql);
+        $thumbnails = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $thumbnails[] = [
+                'id' => $row['id'],
+                'object_id' => $row['object_id'],
+                'object_type' => $row['object_type'],
+                'kind' => $row['kind']
+            ];
+        }
+
+        $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
+        foreach ($thumbnails as $thumbnail) {
+            if ($album_art_store_disk) {
+                Art::delete_from_dir($thumbnail['object_type'], $thumbnail['object_id'], $thumbnail['kind']);
+            }
+            $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ?";
+            Dba::write($sql, [$thumbnail['object_type'], $thumbnail['object_id'], $thumbnail['kind']]);
+        }
     }
 }

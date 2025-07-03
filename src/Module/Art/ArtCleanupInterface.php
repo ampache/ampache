@@ -46,4 +46,9 @@ interface ArtCleanupInterface
      * This resets the art in the database
      */
     public function deleteForArt(Art $art): void;
+
+    /**
+     * Remove all thumbnail art in the database keeping original images
+     */
+    public function deleteThumbnails(): void;
 }
