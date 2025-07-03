@@ -1550,7 +1550,7 @@ class Art extends database_object
         if ($size['width'] == 150 && $size['height'] == 150) {
             echo $item_art_play;
             echo Ajax::text(
-                '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '&kind=' . $kind . '\' + getPagePlaySettings() + \'',
+                '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'',
                 '<span class="item_art_play_icon" title="' . T_('Play') . '" />',
                 'directplay_art_' . $object_type . '_' . $object_id
             );
@@ -1571,7 +1571,7 @@ class Art extends database_object
                 echo "<a href=\"javascript:NavigateTo('" . $web_path . "/" . $ajax_str . "arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo Ui::get_material_symbol('edit', T_('Edit/Find Art'));
                 echo "</a>";
-                echo "<a href=\"javascript:NavigateTo('" . $web_path . "/" . $ajax_str . "arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
+                echo "<a href=\"javascript:NavigateTo('" . $web_path . "/" . $ajax_str . "arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . '&kind=' . $kind . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
                 echo Ui::get_material_symbol('close', T_('Reset Art'));
                 echo "</a>";
             }
