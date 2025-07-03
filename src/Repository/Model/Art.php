@@ -798,7 +798,7 @@ class Art extends database_object
         $has_size = $size && $mime && preg_match('/^[0-9]+x[0-9]+$/', $size);
 
         if ($has_size) {
-            debug_event(self::class, 'Deleting ' . $path . ' file size... ' . $size, 5);
+            debug_event(self::class, 'Deleting ' . $path . ' by file size... ' . $size, 5);
         } else {
             debug_event(self::class, 'Deleting ' . $path . ' directory...', 5);
         }
@@ -816,14 +816,14 @@ class Art extends database_object
                         continue;
                     }
 
-                    debug_event(self::class, 'Deleting ' . $file, 5);
+                    debug_event(self::class, 'Found ' . $file, 5);
                 }
 
                 unlink($path . '/' . $file);
             }
 
             // Don't delete the whole directory if you're keeping the original image
-            if (empty($size) || $size === 'original') {
+            if (!$has_size) {
                 rmdir($path);
             }
         }
