@@ -795,7 +795,13 @@ class Art extends database_object
      */
     private static function delete_rec_dir(string $path, ?string $size = ''): void
     {
-        debug_event(self::class, 'Deleting ' . $path . ' directory...', 5);
+        $has_size = $size && preg_match('/^[0-9]+x[0-9]+$/', $size);
+
+        if ($has_size) {
+            debug_event(self::class, 'Deleting ' . $path . ' file size... ' . $size, 5);
+        } else {
+            debug_event(self::class, 'Deleting ' . $path . ' directory...', 5);
+        }
 
         if (Core::is_readable($path)) {
             $scandir = scandir($path) ?: [];
@@ -804,15 +810,9 @@ class Art extends database_object
                     continue;
                 } elseif (is_dir($path . '/' . $file)) {
                     self::delete_rec_dir(rtrim($path, '/') . '/' . $file, $size);
-                } elseif ($size && preg_match('/^[0-9]+x[0-9]+$/', $size)) {
+                } elseif ($has_size) {
                     // If we are deleting a specific size, check the file name
-                    $dimensions = explode('x', $size);
-                    if (count($dimensions) !== 2) {
-                        continue;
-                    }
-                    $width  = (int)$dimensions[0];
-                    $height = (int)$dimensions[1];
-                    if (!str_ends_with($file, '-' . $width . 'x' . $height . '.' . self::extension($file))) {
+                    if (!str_ends_with($file, '-' . $size . '.' . self::extension($file))) {
                         continue;
                     }
 
