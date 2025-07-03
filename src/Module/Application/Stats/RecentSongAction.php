@@ -60,7 +60,7 @@ final class RecentSongAction implements ApplicationActionInterface
         $by_user = ((int)filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
 
         $this->ui->showHeader();
-        show(
+        $this->ui->show(
             'show_form_recent.inc.php',
             ['by_user' => $by_user]
         );
