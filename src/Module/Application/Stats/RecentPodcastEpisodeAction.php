@@ -70,16 +70,18 @@ final class RecentPodcastEpisodeAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $user = ($by_user)
-            ? $gatekeeper->getUser()
-            : null;
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST)) {
+            $user = ($by_user)
+                ? $gatekeeper->getUser()
+                : null;
 
-        $objects = Stats::get_recent('podcast_episode', -1, 0, $user);
-        $browse  = $this->modelFactory->createBrowse();
-        $browse->set_use_filters(false);
-        $browse->set_type('podcast_episode');
-        $browse->show_objects($objects);
-        $browse->store();
+            $objects = Stats::get_recent('podcast_episode', -1, 0, $user);
+            $browse  = $this->modelFactory->createBrowse();
+            $browse->set_use_filters(false);
+            $browse->set_type('podcast_episode');
+            $browse->show_objects($objects);
+            $browse->store();
+        }
 
         $this->ui->showBoxBottom();
 

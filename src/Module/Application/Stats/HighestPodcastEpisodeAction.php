@@ -27,10 +27,8 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -73,14 +71,15 @@ final class HighestPodcastEpisodeAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $user_id = $gatekeeper->getUser()?->id;;
-
-        $objects = Rating::get_highest('podcast_episode', -1, 0, $user_id, $by_user);
-        $browse  = $this->modelFactory->createBrowse();
-        $browse->set_use_filters(false);
-        $browse->set_type('podcast_episode');
-        $browse->show_objects($objects);
-        $browse->store();
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST)) {
+            $user_id = $gatekeeper->getUser()?->id;
+            $objects = Rating::get_highest('podcast_episode', -1, 0, $user_id, $by_user);
+            $browse  = $this->modelFactory->createBrowse();
+            $browse->set_use_filters(false);
+            $browse->set_type('podcast_episode');
+            $browse->show_objects($objects);
+            $browse->store();
+        }
 
         $this->ui->showBoxBottom();
 
