@@ -28,7 +28,6 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Art\ArtCleanupInterface;
-use Ampache\Repository\Model\Art;
 
 final class ArtCleanupCommand extends Command
 {
