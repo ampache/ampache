@@ -29,6 +29,7 @@ git pull
 
 NEW_HASH=$(git rev-parse HEAD)
 
+### Only update if the git hash has changed
 if [ "$OLD_HASH" != "$NEW_HASH" ]; then
   ### Check for database updates
   php bin/cli admin:updateDatabase -e
