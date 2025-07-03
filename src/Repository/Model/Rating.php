@@ -253,7 +253,7 @@ class Rating extends database_object
 
         $sql .= sprintf(' WHERE `object_type` = \'%s\'', $type);
         if ($by_user && $user_id > 0) {
-            $sql .= sprintf(' WHERE `rating`.`user` = \'%s\'', $user_id);
+            $sql .= sprintf(' AND `rating`.`user` = \'%s\'', $user_id);
         }
 
         if (AmpConfig::get('catalog_disable') && in_array($input_type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
