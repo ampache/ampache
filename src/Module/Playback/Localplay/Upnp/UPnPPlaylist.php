@@ -52,14 +52,14 @@ class UPnPPlaylist
 
     public function Add(string $name, string $link): void
     {
-        $this->_songs[] = ['name' => $name, 'link' => $link];
+        $this->_songs[] = [
+            'name' => $name,
+            'link' => $link
+        ];
         $this->PlayListSave();
     }
 
-    /**
-     * @param $track
-     */
-    public function RemoveTrack($track): void
+    public function RemoveTrack(int $track): void
     {
         unset($this->_songs[$track - 1]);
         $this->PlayListSave();

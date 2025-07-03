@@ -223,7 +223,11 @@ class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
         // while we have pages to search
         do {
             $raw_results = $amazon->search(
-                ['artist' => '', 'album' => '', 'keywords' => ($options['keyword'] ?? '')],
+                [
+                    'artist' => '',
+                    'album' => '',
+                    'keywords' => ($options['keyword'] ?? '')
+                ],
                 $mediaType
             );
             $total = count($raw_results) + count($search_results);

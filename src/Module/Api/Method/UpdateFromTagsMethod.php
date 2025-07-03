@@ -88,7 +88,7 @@ final class UpdateFromTagsMethod
         // update your object
         Catalog::update_single_item($type, $object_id, true);
 
-        Api::message('Updated tags for: ' . (string) $object_id . ' (' . $type . ')', $input['api_format']);
+        Api::message('Updated tags for: ' . $object_id . ' (' . $type . ')', $input['api_format']);
 
         return true;
     }

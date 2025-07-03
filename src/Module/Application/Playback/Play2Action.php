@@ -835,7 +835,7 @@ final class Play2Action implements ApplicationActionInterface
 
         if ($transcode_to) {
             $this->logger->debug(
-                'Transcode to {' . (string) $transcode_to . '}',
+                'Transcode to {' . $transcode_to . '}',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
@@ -847,7 +847,7 @@ final class Play2Action implements ApplicationActionInterface
                 if ($transcode_to) {
                     $transcode = true;
                     $this->logger->debug(
-                        'Transcoding due to explicit request for ' . (string) $transcode_to,
+                        'Transcoding due to explicit request for ' . $transcode_to,
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 } elseif ($transcode_cfg == 'always') {
