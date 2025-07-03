@@ -1550,7 +1550,7 @@ class Art extends database_object
         if ($size['width'] == 150 && $size['height'] == 150) {
             echo $item_art_play;
             echo Ajax::text(
-                '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'',
+                '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '&kind=' . $kind . '\' + getPagePlaySettings() + \'',
                 '<span class="item_art_play_icon" title="' . T_('Play') . '" />',
                 'directplay_art_' . $object_type . '_' . $object_id
             );
