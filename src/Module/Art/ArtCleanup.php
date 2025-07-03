@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Art;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Dba;
@@ -159,7 +160,7 @@ final class ArtCleanup implements ArtCleanupInterface
     /**
      * Remove all thumbnail art in the database keeping original images
      */
-    public function deleteThumbnails(): void
+    public function deleteThumbnails(Interactor $interactor): void
     {
         $sql        = "SELECT * FROM `image` WHERE `size` != 'original';";
         $db_results = Dba::read($sql);
@@ -172,6 +173,11 @@ final class ArtCleanup implements ArtCleanupInterface
                 'kind' => $row['kind']
             ];
         }
+
+        $interactor->info(
+            'Found ' . count($thumbnails) . ' thumbnails to delete',
+            true
+        );
 
         $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
         foreach ($thumbnails as $thumbnail) {

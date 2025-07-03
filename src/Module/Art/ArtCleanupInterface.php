@@ -23,6 +23,7 @@
 
 namespace Ampache\Module\Art;
 
+use Ahc\Cli\IO\Interactor;
 use Ampache\Repository\Model\Art;
 
 interface ArtCleanupInterface
@@ -50,5 +51,5 @@ interface ArtCleanupInterface
     /**
      * Remove all thumbnail art in the database keeping original images
      */
-    public function deleteThumbnails(): void;
+    public function deleteThumbnails(Interactor $interactor): void;
 }

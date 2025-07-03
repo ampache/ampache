@@ -106,7 +106,7 @@ final class ArtCleanupCommand extends Command
                 true
             );
 
-            $this->artCleanup->deleteThumbnails();
+            $this->artCleanup->deleteThumbnails($interactor);
         }
 
         $interactor->ok(
