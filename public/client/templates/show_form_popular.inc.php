@@ -24,9 +24,12 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\VideoRepositoryInterface;
 
 global $dic;
+
+/** @var bool $by_user */
 
 $web_path = AmpConfig::get_web_path('/client');
 
@@ -56,4 +59,19 @@ $albumString     = (AmpConfig::get('album_group'))
         <a class="category <?php echo ($filter_str == 'popular_video') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_video"><?php echo T_('Videos'); ?></a>
     <?php } ?>
     <a class="category <?php echo ($filter_str == 'popular_playlist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_playlist"><?php echo T_('Playlists'); ?></a>
+</div>
+<div id="information_actions">
+    <ul>
+        <li>
+            <?php if ($by_user) { ?>
+                <a href="<?php echo $web_path; ?>/stats.php?action=<?php echo $filter_str; ?>&by_user=0">
+                    <?php echo Ui::get_material_symbol('group', T_('Show All')); ?>
+                    <?php echo T_('Show All'); ?>
+                </a>
+            <?php } else { ?>
+                <a href="<?php echo $web_path; ?>/stats.php?action=<?php echo $filter_str; ?>&by_user=1">
+                    <?php echo Ui::get_material_symbol('person', T_('Personal')); ?>
+                    <?php echo T_('Personal'); ?>
+                </a>
+            <?php } ?>
 </div>

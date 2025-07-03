@@ -25,12 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Stats;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -45,24 +41,23 @@ final class HighestArtistAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ModelFactoryInterface $modelFactory
     ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
+        $this->ui           = $ui;
+        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $by_user = ((int)filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
 
         $this->ui->showHeader();
-        $this->ui->show('show_form_highest.inc.php');
+        $this->ui->show(
+            'show_form_highest.inc.php',
+            ['by_user' => $by_user]
+        );
         $this->ui->showHeader();
 
         define('TABLE_RENDERED', 1);
@@ -70,11 +65,9 @@ final class HighestArtistAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $user_id = ($this->configContainer->get(ConfigurationKeyEnum::CATALOG_FILTER) && Core::get_global('user') instanceof User)
-            ? Core::get_global('user')->id
-            : null;
+        $user_id = $gatekeeper->getUser()?->id;
 
-        $objects = Rating::get_highest('artist', -1, 0, $user_id);
+        $objects = Rating::get_highest('artist', -1, 0, $user_id, $by_user);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_use_filters(false);
         $browse->set_type('artist');

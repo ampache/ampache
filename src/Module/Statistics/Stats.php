@@ -581,7 +581,8 @@ class Stats
         bool $random = false,
         int $since = 0,
         int $before = 0,
-        bool $addAdditionalColumns = false
+        bool $addAdditionalColumns = false,
+        bool $by_user = false
     ): string {
         $type           = self::validate_type($input_type);
         $date           = $since ?: time() - (86400 * (int)$threshold);
@@ -599,6 +600,9 @@ class Stats
             }
             // playlist is now available in object_count too
             $sql .= "UNION SELECT `object_id` FROM `object_count` WHERE `object_type` = 'playlist'";
+            if ($by_user && $filter_user?->id > 0) {
+                $sql .= sprintf(' AND `object_count`.`user` = \'%s\'', $filter_user->id);
+            }
             if ($threshold > 0) {
                 $sql .= " AND `date` >= '" . $date . "' ";
             }
@@ -651,6 +655,9 @@ class Stats
             } else {
                 $sql .= " WHERE `object_count`.`object_type` = '" . $type . "' ";
             }
+            if ($by_user && $filter_user?->id > 0) {
+                $sql .= sprintf(' AND `object_count`.`user` = \'%s\'', $filter_user->id);
+            }
             if ($threshold > 0) {
                 $sql .= " AND `object_count`.`date` >= '" . $date . "'";
                 if ($before > 0) {
@@ -699,7 +706,8 @@ class Stats
         ?User $user = null,
         bool $random = false,
         int $since = 0,
-        int $before = 0
+        int $before = 0,
+        bool $by_user = false
     ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -708,7 +716,7 @@ class Stats
             $count  = 0;
             $offset = 0;
         }
-        $sql   = self::get_top_sql($input_type, $threshold, 'stream', $user, $random, $since, $before);
+        $sql   = self::get_top_sql($input_type, $threshold, 'stream', $user, $random, $since, $before, false, $by_user);
         $limit = ($offset < 1)
             ? $count
             : $offset . "," . $count;
