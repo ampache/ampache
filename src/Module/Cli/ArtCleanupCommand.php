@@ -52,6 +52,8 @@ final class ArtCleanupCommand extends Command
 
         $this->configContainer = $configContainer;
         $this->artCleanup      = $artCleanup;
+
+        $this->option('-t|--thumbnails', T_('Delete all thumbnails'), 'boolval', false);
     }
 
     public function execute(): void
@@ -61,39 +63,50 @@ final class ArtCleanupCommand extends Command
         }
 
         $interactor = $this->io();
-        $interactor->info(
-            'This file cleans the image table for items that don\'t fit into set dimensions',
-            true
-        );
+        $thumbnails = $this->values()['thumbnails'] === true;
 
-        $runable = (
-            (
-                !$this->configContainer->get('album_art_min_width') &&
-                $this->configContainer->get('album_art_min_height')
-            ) ||
-            (
-                !$this->configContainer->get('album_art_max_width') &&
-                !$this->configContainer->get('album_art_max_height')
-            )
-        );
-
-        if ($runable === false) {
-            $interactor->error(
-                T_('Error: A minimum OR maximum height/width must be specified in the config'),
+        if (!$thumbnails) {
+            $interactor->info(
+                'This file cleans the image table for items that don\'t fit into set dimensions',
                 true
             );
-            $interactor->error(
-                T_('Minimum Dimensions: album_art_min_width AND album_art_min_height'),
-                true
-            );
-            $interactor->error(
-                T_('Maximum Dimensions: album_art_max_width AND album_art_max_height')
+
+            $runable = (
+                (
+                    !$this->configContainer->get('album_art_min_width') &&
+                    $this->configContainer->get('album_art_min_height')
+                ) ||
+                (
+                    !$this->configContainer->get('album_art_max_width') &&
+                    !$this->configContainer->get('album_art_max_height')
+                )
             );
 
-            return;
+            if ($runable === false) {
+                $interactor->error(
+                    T_('Error: A minimum OR maximum height/width must be specified in the config'),
+                    true
+                );
+                $interactor->error(
+                    T_('Minimum Dimensions: album_art_min_width AND album_art_min_height'),
+                    true
+                );
+                $interactor->error(
+                    T_('Maximum Dimensions: album_art_max_width AND album_art_max_height')
+                );
+
+                return;
+            }
+
+            $this->artCleanup->cleanup();
+        } else {
+            $interactor->info(
+                'Delete art thumbnails keeping the original images',
+                true
+            );
+
+            $this->artCleanup->deleteThumbnails($interactor);
         }
-
-        $this->artCleanup->cleanup();
 
         $interactor->ok(
             'Clean Completed',
