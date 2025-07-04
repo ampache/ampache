@@ -2852,7 +2852,8 @@ class Subsonic_Api
         $genre         = $input['genre'] ?? '';
         $fromYear      = $input['fromYear'] ?? null;
         $toYear        = $input['toYear'] ?? null;
-        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($input['musicFolderId']) : 0;
+        $sub_id        = $input['musicFolderId'] ?? null;
+        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($sub_id) : 0;
 
         $data           = [];
         $data['limit']  = $size;
@@ -2878,19 +2879,19 @@ class Subsonic_Api
             ++$count;
         }
         if ($musicFolderId > 0) {
-            $type = self::getAmpacheType($musicFolderId);
+            $type = self::getAmpacheType($sub_id);
             if ($type === 'artist') {
-                $artist   = new Artist(self::getAmpacheId($musicFolderId));
+                $artist   = new Artist($musicFolderId);
                 $finput   = $artist->get_fullname();
                 $operator = 4;
                 $ftype    = "artist";
             } elseif ($type === 'album') {
-                $album    = new Album(self::getAmpacheId($musicFolderId));
+                $album    = new Album($musicFolderId);
                 $finput   = $album->get_fullname(true);
                 $operator = 4;
                 $ftype    = "artist";
             } else {
-                $finput   = (int)($musicFolderId);
+                $finput   = $musicFolderId;
                 $operator = 0;
                 $ftype    = "catalog";
             }
