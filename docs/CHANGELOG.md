@@ -2,7 +2,7 @@
 
 ## Ampache 7.6.1
 
-Issues with OpenSubsonic and 
+Fixes for issues with OpenSubsonic identified by Symfonium users
 
 ### Added
 
