@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Shoutbox;
 use Generator;
@@ -135,10 +136,14 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
                         `user_shout`.`object_type` = ?
                 SQL;
 
-                $this->connection->query(
-                    sprintf($query, $type),
-                    [$type]
-                );
+                try {
+                    $this->connection->query(
+                        sprintf($query, $type),
+                        [$type]
+                    );
+                } catch (DatabaseException) {
+                    // need to keep going
+                }
             }
         }
     }

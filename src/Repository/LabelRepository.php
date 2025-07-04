@@ -142,6 +142,6 @@ final readonly class LabelRepository implements LabelRepositoryInterface
             $this->connection->query('DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL');
         } catch (DatabaseException) {
             debug_event(self::class, 'collectGarbage error', 5);
-        };
+        }
     }
 }

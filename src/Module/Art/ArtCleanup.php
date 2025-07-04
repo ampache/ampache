@@ -103,7 +103,7 @@ final class ArtCleanup implements ArtCleanupInterface
                 Art::delete_from_dir($object_type, $object_id);
             }
             $sql = "DELETE FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-            Dba::write($sql, [$object_type, $object_id]);
+            Dba::write($sql, [$object_type, $object_id], true);
         } else {
             debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
         }
@@ -141,7 +141,7 @@ final class ArtCleanup implements ArtCleanupInterface
                 }
             }
             $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
-            Dba::write($sql);
+            Dba::write($sql, [], true);
         }
     }
 
