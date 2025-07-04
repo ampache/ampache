@@ -207,7 +207,7 @@ final readonly class WantedRepository implements WantedRepositoryInterface
             $this->connection->query('DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
         } catch (DatabaseException) {
             debug_event(self::class, 'collectGarbage error', 5);
-        };
+        }
     }
 
     /**

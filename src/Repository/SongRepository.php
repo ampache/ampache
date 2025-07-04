@@ -269,9 +269,9 @@ final readonly class SongRepository implements SongRepositoryInterface
             Album::check_album_map($song->album, 'song', $song_artist_id);
         }
 
-        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);");
-        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` NOT IN (SELECT `album` FROM `song`);");
-        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `song`);");
+        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);", [], true);
+        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` NOT IN (SELECT `album` FROM `song`);", [], true);
+        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `song`);", [], true);
     }
 
     /**
