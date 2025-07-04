@@ -780,12 +780,12 @@ class Art extends database_object
     /**
      * delete_from_dir
      */
-    public static function delete_from_dir(string $type, int $uid, ?string $kind = ''): void
+    public static function delete_from_dir(string $type, int $uid, ?string $kind = '', ?string $size = '', ?string $mime = ''): void
     {
         if ($type && $uid) {
             $path = self::get_dir_on_disk($type, $uid, (string)$kind);
             if ($path !== null) {
-                self::delete_rec_dir(rtrim($path, '/'));
+                self::delete_rec_dir(rtrim($path, '/'), $size, $mime);
             }
         }
     }
@@ -793,9 +793,15 @@ class Art extends database_object
     /**
      * delete_rec_dir
      */
-    private static function delete_rec_dir(string $path): void
+    private static function delete_rec_dir(string $path, ?string $size = '', ?string $mime = ''): void
     {
-        debug_event(self::class, 'Deleting ' . $path . ' directory...', 5);
+        $has_size = $size && $mime && preg_match('/^[0-9]+x[0-9]+$/', $size);
+
+        if ($has_size) {
+            debug_event(self::class, 'Deleting ' . $path . ' by file size... ' . $size, 5);
+        } else {
+            debug_event(self::class, 'Deleting ' . $path . ' directory...', 5);
+        }
 
         if (Core::is_readable($path)) {
             $scandir = scandir($path) ?: [];
@@ -803,13 +809,23 @@ class Art extends database_object
                 if ('.' === $file || '..' === $file) {
                     continue;
                 } elseif (is_dir($path . '/' . $file)) {
-                    self::delete_rec_dir(rtrim($path, '/') . '/' . $file);
-                } else {
-                    unlink($path . '/' . $file);
+                    self::delete_rec_dir(rtrim($path, '/') . '/' . $file, $size);
+                } elseif ($has_size) {
+                    // If we are deleting a specific size, check the file name
+                    if (!str_ends_with($file, '-' . $size . '.' . self::extension($mime))) {
+                        continue;
+                    }
+
+                    debug_event(self::class, 'Found ' . $file, 5);
                 }
+
+                unlink($path . '/' . $file);
             }
 
-            rmdir($path);
+            // Don't delete the whole directory if you're keeping the original image
+            if (!$has_size) {
+                rmdir($path);
+            }
         }
     }
 
@@ -1458,6 +1474,10 @@ class Art extends database_object
             return false;
         }
 
+        if ($object_type === 'video' && $kind !== 'default') {
+            Video::generate_preview($object_id);
+        }
+
         $art    = new Art($object_id, $object_type, $kind);
         $has_db = $art->has_db_info();
         // Don't show any image if not available
@@ -1555,7 +1575,7 @@ class Art extends database_object
                 echo "<a href=\"javascript:NavigateTo('" . $web_path . "/" . $ajax_str . "arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo Ui::get_material_symbol('edit', T_('Edit/Find Art'));
                 echo "</a>";
-                echo "<a href=\"javascript:NavigateTo('" . $web_path . "/" . $ajax_str . "arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
+                echo "<a href=\"javascript:NavigateTo('" . $web_path . "/" . $ajax_str . "arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . '&kind=' . $kind . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
                 echo Ui::get_material_symbol('close', T_('Reset Art'));
                 echo "</a>";
             }

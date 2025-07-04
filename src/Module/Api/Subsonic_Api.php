@@ -683,7 +683,7 @@ class Subsonic_Api
         $albumOffset   = $input['albumOffset'] ?? 0;
         $songCount     = $input['songCount'] ?? 20;
         $songOffset    = $input['songOffset'] ?? 0;
-        $musicFolderId = $input['musicFolderId'] ?? 0;
+        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($input['musicFolderId']) : 0;
 
         if ($artistCount > 0) {
             $data                    = [];
@@ -2031,7 +2031,7 @@ class Subsonic_Api
     public static function getartists(array $input, User $user): void
     {
         unset($user);
-        $musicFolderId = $input['musicFolderId'] ?? '';
+        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($input['musicFolderId']) : 0;
         $catalogs      = [];
         if (!empty($musicFolderId) && $musicFolderId != '-1') {
             $catalogs[] = $musicFolderId;
@@ -2852,7 +2852,8 @@ class Subsonic_Api
         $genre         = $input['genre'] ?? '';
         $fromYear      = $input['fromYear'] ?? null;
         $toYear        = $input['toYear'] ?? null;
-        $musicFolderId = $input['musicFolderId'] ?? 0;
+        $sub_id        = $input['musicFolderId'] ?? null;
+        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($sub_id) : 0;
 
         $data           = [];
         $data['limit']  = $size;
@@ -2878,19 +2879,19 @@ class Subsonic_Api
             ++$count;
         }
         if ($musicFolderId > 0) {
-            $type = self::getAmpacheType($musicFolderId);
+            $type = self::getAmpacheType($sub_id);
             if ($type === 'artist') {
-                $artist   = new Artist(self::getAmpacheId($musicFolderId));
+                $artist   = new Artist($musicFolderId);
                 $finput   = $artist->get_fullname();
                 $operator = 4;
                 $ftype    = "artist";
             } elseif ($type === 'album') {
-                $album    = new Album(self::getAmpacheId($musicFolderId));
+                $album    = new Album($musicFolderId);
                 $finput   = $album->get_fullname(true);
                 $operator = 4;
                 $ftype    = "artist";
             } else {
-                $finput   = (int)($musicFolderId);
+                $finput   = $musicFolderId;
                 $operator = 0;
                 $ftype    = "catalog";
             }
@@ -3940,8 +3941,7 @@ class Subsonic_Api
      */
     public static function search2(array $input, User $user): void
     {
-        $query = $input['query'] ?? '';
-
+        $query   = $input['query'] ?? '';
         $results = self::_search($query, $input, $user);
 
         $format = (string)($input['f'] ?? 'xml');
@@ -3965,11 +3965,7 @@ class Subsonic_Api
      */
     public static function search3(array $input, User $user): void
     {
-        $query = self::_check_parameter($input, 'query', __FUNCTION__);
-        if ($query === false) {
-            return;
-        }
-
+        $query   = $input['query'] ?? '';
         $results = self::_search($query, $input, $user);
 
         $format = (string)($input['f'] ?? 'xml');

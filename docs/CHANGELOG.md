@@ -1,5 +1,31 @@
 # CHANGELOG
 
+## Ampache 7.6.1
+
+Fixes for issues with OpenSubsonic identified by Symfonium users
+
+### Added
+
+* Updated `ampache.sql`
+* Allow filtering most Information actions by your own user account
+* Update `update_from_git.sh` example to skip additional commands if the git hash didn't change
+* Don't throw `DatabaseException` on failed query for garbage collection
+* CLI
+  * cleanup:art add option `-t|--thumbnails` to delete all generated thumbnails (keeping the original images)
+
+### Fixed
+
+* Video preview images were not being generated when cleared
+* Video preview images couldn't be cleared
+* CLI
+  * run:calculateArtSize could fail if `local_metadata_dir` wasn't set
+* Subsonic
+  * `musicFolderId` prefix data not being checked in some areas
+  * Error log information was appearing when checking site config caused an error
+  * Search3 didn't allow explicitly empty search
+  * Data with empty results was incorrectly arrayed
+  * OpenSubsonic `artist` array on child objects from the wrong variable
+
 ## Ampache 7.6.0
 
 Full OpenSubsonic rewrite to remove the weird JSON conversion class and fix up issues in responses.

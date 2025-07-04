@@ -52,6 +52,10 @@ final class ClearArtAction extends AbstractArtAction
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $object_type = (string)filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
+        $kind        = (string)filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_SPECIAL_CHARS);
+        if (!$kind) {
+            $kind = 'default';
+        }
 
         $burl = '';
         if (isset($_GET['burl'])) {
@@ -64,7 +68,7 @@ final class ClearArtAction extends AbstractArtAction
             throw new AccessDeniedException();
         }
 
-        $art = $this->modelFactory->createArt($item->getId(), $object_type);
+        $art = $this->modelFactory->createArt($item->getId(), $object_type, $kind);
         $art->reset();
 
         $this->ui->showHeader();

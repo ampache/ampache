@@ -50,8 +50,13 @@ final readonly class UserflagAlbumArtistAction implements ApplicationActionInter
     {
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
 
+        $by_user = ((int)filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
+
         $this->ui->showHeader();
-        $this->ui->show('show_form_userflag.inc.php');
+        $this->ui->show(
+            'show_form_userflag.inc.php',
+            ['by_user' => $by_user]
+        );
         $this->ui->showHeader();
 
         define('TABLE_RENDERED', 1);
@@ -59,7 +64,7 @@ final readonly class UserflagAlbumArtistAction implements ApplicationActionInter
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $objects = Userflag::get_latest('album_artist', $gatekeeper->getUser(), -1);
+        $objects = Userflag::get_latest('album_artist', $gatekeeper->getUser(), -1, 0, 0, 0, $by_user);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_use_filters(false);
         $browse->set_type('album_artist');

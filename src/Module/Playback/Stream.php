@@ -470,7 +470,7 @@ class Stream
     public static function get_image_preview($media): ?string
     {
         $image = null;
-        $sec   = ($media->time >= 30) ? 30 : (int) ($media->time / 2);
+        $sec   = mt_rand((int)($media->time * 0.2), (int)($media->time * 0.8));
         $frame = gmdate("H:i:s", $sec);
 
         if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {

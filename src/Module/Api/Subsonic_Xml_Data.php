@@ -982,7 +982,7 @@ class Subsonic_Xml_Data
             $date      = new DateTime($play_time);
             $date->setTimezone(new DateTimeZone('UTC'));
             $changedBy  = $playQueue->client ?? '';
-            $xplayqueue = self::_addChildToResultXml($xml, 'playQueue');
+            $xplayqueue = self::_addChildToResultXml($xml, 'playQueueByIndex');
             if (!empty($current)) {
                 $xplayqueue->addAttribute('currentIndex', (string)$current['current_track']);
                 $xplayqueue->addAttribute('position', (string)($current['current_time'] * 1000));

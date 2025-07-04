@@ -52,8 +52,13 @@ final readonly class PopularVideoAction implements ApplicationActionInterface
     {
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
 
+        $by_user = ((int)filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
+
         $this->ui->showHeader();
-        $this->ui->show('show_form_popular.inc.php');
+        $this->ui->show(
+            'show_form_popular.inc.php',
+            ['by_user' => $by_user]
+        );
         $this->ui->showHeader();
 
         define('TABLE_RENDERED', 1);
@@ -65,7 +70,7 @@ final readonly class PopularVideoAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
             $this->videoRepository->getItemCount()
         ) {
-            $objects = Stats::get_top('video', -1, $thresh_value, 0, $gatekeeper->getUser());
+            $objects = Stats::get_top('video', -1, $thresh_value, 0, $gatekeeper->getUser(), false, 0, 0, $by_user);
             $browse  = $this->modelFactory->createBrowse();
             $browse->set_threshold($thresh_value);
             $browse->set_type('video');

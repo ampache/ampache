@@ -253,7 +253,11 @@ class Catalog_subsonic extends Catalog
         while (true) {
             $albumList = $subsonic->querySubsonic(
                 'getAlbumList',
-                ['type' => 'alphabeticalByName', 'size' => 500, 'offset' => $offset]
+                [
+                    'type' => 'alphabeticalByName',
+                    'size' => 500,
+                    'offset' => $offset
+                ]
             );
             if (!is_array($albumList)) {
                 break;

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\User;
 use DateTimeInterface;
@@ -96,15 +97,19 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
             'podcast_episode',
         ];
         foreach ($types as $type) {
-            $this->connection->query(
-                sprintf(
-                    'DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `%s` ON `%s`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = \'%s\' AND `%s`.`id` IS NULL;',
-                    $type,
-                    $type,
-                    $type,
-                    $type
-                )
-            );
+            try {
+                $this->connection->query(
+                    sprintf(
+                        'DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `%s` ON `%s`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = \'%s\' AND `%s`.`id` IS NULL;',
+                        $type,
+                        $type,
+                        $type,
+                        $type
+                    )
+                );
+            } catch (DatabaseException) {
+                debug_event(self::class, 'collectGarbage error', 5);
+            }
         }
     }
 

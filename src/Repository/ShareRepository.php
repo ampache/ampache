@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
@@ -76,9 +77,13 @@ final readonly class ShareRepository implements ShareRepositoryInterface
      */
     public function collectGarbage(): void
     {
-        $this->connection->query(
-            'DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < UNIX_TIMESTAMP()) OR (`max_counter` > 0 AND `counter` >= `max_counter`)',
-        );
+        try {
+            $this->connection->query(
+                'DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < UNIX_TIMESTAMP()) OR (`max_counter` > 0 AND `counter` >= `max_counter`)',
+            );
+        } catch (DatabaseException) {
+            debug_event(self::class, 'collectGarbage error', 5);
+        }
     }
 
     /**

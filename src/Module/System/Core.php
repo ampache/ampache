@@ -144,7 +144,10 @@ class Core
         $expire = time() + $window;
 
         // Register it
-        $_SESSION['forms'][$sid] = ['name' => $name, 'expire' => $expire];
+        $_SESSION['forms'][$sid] = [
+            'name' => $name,
+            'expire' => $expire
+        ];
         if (!isset($_SESSION['forms'][$sid])) {
             debug_event(self::class, "Form $sid not found in session, failed to register!", 2);
         } else {
