@@ -2975,6 +2975,10 @@ class OpenSubsonic_Json_Data
                 $json['entry'][] = self::_getChildSong($song);
             }
 
+            if (empty($json['entry'])) {
+                unset($json['entry']);
+            }
+
             $response['subsonic-response']['playQueue'] = $json;
         }
 
@@ -3032,7 +3036,11 @@ class OpenSubsonic_Json_Data
                 $json['entry'][] = self::_getChildSong($song);
             }
 
-            $response['subsonic-response']['playQueue'] = $json;
+            if (empty($json['entry'])) {
+                unset($json['entry']);
+            }
+
+            $response['subsonic-response']['playQueueByIndex'] = $json;
         }
 
 
