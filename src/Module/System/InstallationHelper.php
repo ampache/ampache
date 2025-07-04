@@ -181,14 +181,14 @@ final class InstallationHelper implements InstallationHelperInterface
     {
         $final = $this->install_check_rewrite_rules($file, $web_path, true);
         if (empty($final)) {
-            AmpError::add('general', T_('Config file is not writable'));
+            AmpError::add('general', T_('Config file is not writable') . ': ' . $file);
 
             return false;
         }
 
         if (!$download) {
             if (!file_put_contents($file, $final)) {
-                AmpError::add('general', T_('Failed to write config file'));
+                AmpError::add('general', T_('Failed to write config file') . ': ' . $file);
 
                 return false;
             }

@@ -28,6 +28,7 @@ namespace Ampache\Repository;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
@@ -219,9 +220,13 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
      */
     public function collectGarbage(): void
     {
-        $this->connection->query(
-            'DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL'
-        );
+        try {
+            $this->connection->query(
+                'DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL'
+            );
+        } catch (DatabaseException) {
+            debug_event(self::class, 'collectGarbage error', 5);
+        }
     }
 
     /**

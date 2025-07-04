@@ -209,7 +209,7 @@ final readonly class UserRepository implements UserRepositoryInterface
         ];
         foreach ($user_tables as $table_id) {
             $sql = "DELETE FROM `" . $table_id . "` WHERE `user` IS NOT NULL AND `user` != -1 AND `user` != 0 AND `user` NOT IN (SELECT `id` FROM `user`);";
-            Dba::write($sql);
+            Dba::write($sql, [], true);
         }
 
         // reset their data to null if they've made custom changes
@@ -219,30 +219,30 @@ final readonly class UserRepository implements UserRepositoryInterface
         ];
         foreach ($user_tables as $table_id) {
             $sql = "UPDATE `" . $table_id . "` SET `user` = NULL WHERE `user` IS NOT NULL AND `user` != -1 AND `user` NOT IN (SELECT `id` FROM `user`);";
-            Dba::write($sql);
+            Dba::write($sql, [], true);
         }
 
         $sql = "UPDATE `song` SET `user_upload` = NULL WHERE `user_upload` IS NOT NULL AND `user_upload` != -1 AND `user_upload` NOT IN (SELECT `id` FROM `user`);";
-        Dba::write($sql);
+        Dba::write($sql, [], true);
 
         // Clean up the playlist data table
         $sql = "DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist`.`id` IS NULL";
-        Dba::write($sql);
+        Dba::write($sql, [], true);
 
         // Clean out the tags
         $sql = "DELETE FROM `tag` WHERE `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_map`) AND `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_merge`)";
-        Dba::write($sql);
+        Dba::write($sql, [], true);
 
         // Clean out the tag_merges that have been lost
         $sql = "DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` NOT IN (SELECT `id` FROM `tag`) OR `tag_merge`.`merged_to` NOT IN (SELECT `id` FROM `tag`)";
-        Dba::write($sql);
+        Dba::write($sql, [], true);
 
         // Delete their following/followers
         $sql = "DELETE FROM `user_follower` WHERE (`user` NOT IN (SELECT `id` FROM `user`)) OR (`follow_user` NOT IN (SELECT `id` FROM `user`))";
-        Dba::write($sql);
+        Dba::write($sql, [], true);
 
         $sql = "DELETE FROM `session` WHERE `username` IS NOT NULL AND `username` NOT IN (SELECT `username` FROM `user`);";
-        Dba::write($sql);
+        Dba::write($sql, [], true);
     }
 
     /**

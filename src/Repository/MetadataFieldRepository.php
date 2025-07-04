@@ -51,7 +51,7 @@ final readonly class MetadataFieldRepository implements MetadataFieldRepositoryI
             $this->connection->query('DELETE FROM `metadata_field` USING `metadata_field` LEFT JOIN `metadata` ON `metadata`.`field` = `metadata_field`.`id` WHERE `metadata`.`id` IS NULL;');
         } catch (DatabaseException) {
             debug_event(self::class, 'collectGarbage error', 5);
-        };
+        }
     }
 
     /**
