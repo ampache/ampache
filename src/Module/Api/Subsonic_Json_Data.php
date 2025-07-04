@@ -214,7 +214,11 @@ class Subsonic_Json_Data
             $json['entry'] = [];
             $allsongs      = $playlist->get_songs();
             foreach ($allsongs as $song_id) {
-                $json['entry'][] = self::_getChild($song_id, 'song');
+                $song = new Song($song_id);
+                if ($song->isNew() && !$song->enabled) {
+                    continue;
+                }
+                $json['entry'][] = self::_getChildSong($song);
             }
         }
 
@@ -259,7 +263,11 @@ class Subsonic_Json_Data
             $allsongs = $search->get_songs();
             $entries  = [];
             foreach ($allsongs as $song_id) {
-                $entries[] = self::_getChild($song_id, 'song');
+                $song = new Song($song_id);
+                if ($song->isNew() && !$song->enabled) {
+                    continue;
+                }
+                $entries[] = self::_getChildSong($song);
             }
             $json['entry'] = $entries;
         }
@@ -854,7 +862,11 @@ class Subsonic_Json_Data
             $allsongs = self::getAlbumRepository()->getSongs($album->getId());
             $entries  = [];
             foreach ($allsongs as $song_id) {
-                $entries[] = self::_getChild($song_id, 'song');
+                $song = new Song($song_id);
+                if ($song->isNew() && !$song->enabled) {
+                    continue;
+                }
+                $entries[] = self::_getChildSong($song);
             }
             $json['song'] = $entries;
         }
@@ -1867,7 +1879,10 @@ class Subsonic_Json_Data
         $allalbums     = self::getAlbumRepository()->getAlbumByArtist($artist_id);
         $json['child'] = [];
         foreach ($allalbums as $album_id) {
-            $album           = new Album($album_id);
+            $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
             $json['child'][] = self::_getChildAlbum($album);
         }
 
@@ -2006,7 +2021,11 @@ class Subsonic_Json_Data
     {
         $json = ['album' => []];
         foreach ($albums as $album_id) {
-            $json['album'][] = self::_getChild($album_id, 'album');
+            $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
+            $json['album'][] = self::_getChildAlbum($album);
         }
 
         $response['subsonic-response']['albumList'] = (empty($json['album'])) ? (object)[] : $json;
@@ -3053,7 +3072,11 @@ class Subsonic_Json_Data
 
         if (!empty($songs)) {
             foreach ($songs as $song_id) {
-                $json[] = self::_getChild($song_id, 'song');
+                $song = new Song($song_id);
+                if ($song->isNew() && !$song->enabled) {
+                    continue;
+                }
+                $json[] = self::_getChildSong($song);
             }
         }
 
@@ -3089,13 +3112,21 @@ class Subsonic_Json_Data
         if (!empty($albums)) {
             $json['album'] = [];
             foreach ($albums as $album_id) {
-                $json['album'][] = self::_getChild($album_id, 'album');
+                $album = new Album($album_id);
+                if ($album->isNew()) {
+                    continue;
+                }
+                $json['album'][] = self::_getChildAlbum($album);
             }
         }
         if (!empty($songs)) {
             $json['song'] = [];
             foreach ($songs as $song_id) {
-                $json['song'][] = self::_getChild($song_id, 'song');
+                $song = new Song($song_id);
+                if ($song->isNew() && !$song->enabled) {
+                    continue;
+                }
+                $json['song'][] = self::_getChildSong($song);
             }
         }
 
@@ -3144,7 +3175,11 @@ class Subsonic_Json_Data
         if (!empty($songs)) {
             $json['song'] = [];
             foreach ($songs as $song_id) {
-                $json['song'][] = self::_getChild($song_id, 'song');
+                $song = new Song($song_id);
+                if ($song->isNew() && !$song->enabled) {
+                    continue;
+                }
+                $json['song'][] = self::_getChildSong($song);
             }
         }
 
@@ -3193,17 +3228,28 @@ class Subsonic_Json_Data
 
         $json['entry'] = [];
         if ($share->object_type == 'song') {
-            $json['entry'][] = self::_getChild($share->object_id, 'song');
+            $song = new Song($share->object_id);
+            if ($song->isNew() === false && $song->enabled) {
+                $json['entry'][] = self::_getChildSong($song);
+            }
         } elseif ($share->object_type == 'playlist') {
             $playlist      = new Playlist($share->object_id);
             $songs         = $playlist->get_songs();
             foreach ($songs as $song_id) {
-                $json['entry'][] = self::_getChild($song_id, 'song');
+                $song = new Song($song_id);
+                if ($song->isNew() && !$song->enabled) {
+                    continue;
+                }
+                $json['entry'][] = self::_getChildSong($song);
             }
         } elseif ($share->object_type == 'album') {
             $songs = self::getSongRepository()->getByAlbum($share->object_id);
             foreach ($songs as $song_id) {
-                $json['entry'][] = self::_getChild($song_id, 'song');
+                $song = new Song($song_id);
+                if ($song->isNew() && !$song->enabled) {
+                    continue;
+                }
+                $json['entry'][] = self::_getChildSong($song);
             }
         }
 
@@ -3392,7 +3438,9 @@ class Subsonic_Json_Data
      */
     public static function addSong(array $response, int $song_id): array
     {
-        $response['subsonic-response']['song'] = self::_getChild($song_id, 'song');
+        $json = self::_getChild($song_id, 'song');
+
+        $response['subsonic-response']['song'] = (empty($json)) ? (object)[] : $json;
 
         return $response;
     }
@@ -3454,7 +3502,10 @@ class Subsonic_Json_Data
         }
 
         foreach ($albums as $album_id) {
-            $album           = new Album($album_id);
+            $album = new Album($album_id);
+            if ($album->isNew()) {
+                continue;
+            }
             $json['album'][] = self::_getChildAlbum($album);
         }
         if (empty($json['album'])) {
