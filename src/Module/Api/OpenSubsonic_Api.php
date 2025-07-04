@@ -683,7 +683,7 @@ class OpenSubsonic_Api
         $albumOffset   = $input['albumOffset'] ?? 0;
         $songCount     = $input['songCount'] ?? 20;
         $songOffset    = $input['songOffset'] ?? 0;
-        $musicFolderId = $input['musicFolderId'] ?? 0;
+        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($input['musicFolderId']) : 0;
 
         if ($artistCount > 0) {
             $data                    = [];
@@ -2033,7 +2033,7 @@ class OpenSubsonic_Api
     public static function getartists(array $input, User $user): void
     {
         unset($user);
-        $musicFolderId = $input['musicFolderId'] ?? '';
+        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($input['musicFolderId']) : 0;
         $catalogs      = [];
         if (!empty($musicFolderId) && $musicFolderId != '-1') {
             $catalogs[] = $musicFolderId;
@@ -2854,7 +2854,7 @@ class OpenSubsonic_Api
         $genre         = $input['genre'] ?? '';
         $fromYear      = $input['fromYear'] ?? null;
         $toYear        = $input['toYear'] ?? null;
-        $musicFolderId = $input['musicFolderId'] ?? 0;
+        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($input['musicFolderId']) : 0;
 
         $data           = [];
         $data['limit']  = $size;
