@@ -2303,7 +2303,7 @@ class Subsonic_Json_Data
             $json = self::_getDirectory_Catalog($object);
         }
 
-        $response['subsonic-response']['directory'] = $json;
+        $response['subsonic-response']['directory'] = (empty($json)) ? (object)[] : $json;
 
         return $response;
     }
@@ -3576,7 +3576,7 @@ class Subsonic_Json_Data
             unset($json['song']);
         }
 
-        $response['subsonic-response']['starred2'] = $json;
+        $response['subsonic-response']['starred2'] = (empty($json)) ? (object)[] : $json;
 
         return $response;
     }
