@@ -38,7 +38,6 @@ $dir       = $dir ?? 'ltr'; ?>
 <title><?php echo("Ampache Error Page"); ?></title>
 <link rel="stylesheet" href="themes/reborn/templates/default.css">
 <link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen">
 </head>
 <body>
