@@ -430,6 +430,8 @@ class Catalog_remote extends Catalog
                                 'disksubtitle' => (isset($song->disksubtitle)) ? (string)$song->disksubtitle : null,
                                 'file' => $db_url,
                                 'genre' => $genres,
+                                'mb_albumartistid_array' => null,
+                                'mb_artistid_array' => null,
                                 'mb_trackid' => (isset($song->mbid)) ? (string)$song->mbid : null,
                                 'mime' => (isset($song->mime)) ? (string)$song->mime : null,
                                 'mode' => (isset($song->mode)) ? (string)$song->mode : null,
