@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
@@ -44,6 +45,8 @@ use SimpleXMLElement;
  */
 class Catalog_remote extends Catalog
 {
+    private const CMD_ARTISTS = 'artists';
+
     private const CMD_PING = 'ping';
 
     private const CMD_SONG_TAGS = 'song_tags';
@@ -491,7 +494,7 @@ class Catalog_remote extends Catalog
                             $song_id = Catalog::get_id_from_file($db_url, 'song');
                             if ($song_id) {
                                 $current_song = new Song($song_id);
-                                $info = ($current_song->id) ? self::update_song_from_tags($data, $current_song) : [];
+                                $info         = ($current_song->id) ? self::update_song_from_tags($data, $current_song) : [];
                                 if ($info['change']) {
                                     debug_event('remote.catalog', 'Updated existing song ' . $db_url, 5);
                                     $songsadded++;
@@ -524,6 +527,58 @@ class Catalog_remote extends Catalog
                 }
             }
         } // end while
+
+        $total_artists = ($remote_catalog_info->artists > 0)
+            ? $remote_catalog_info->artists
+            : $remote_catalog_info->max_artist;
+
+        // Hardcoded for now
+        $step       = 500;
+        $current    = 0;
+        $artistsFound = true;
+
+        while (
+            $total_artists > $current &&
+            $artistsFound
+        ) {
+            $web_path = AmpConfig::get_web_path();
+
+            if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
+                $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
+            }
+            $start = $current;
+            $current += $step;
+            try {
+                $artists = $remote_handle->send_command(self::CMD_ARTISTS, ['offset' => $start, 'limit' => $step]);
+                // Iterate over the songs we retrieved and insert them
+                if ($artists instanceof SimpleXMLElement && $artists->artist->count() > 0) {
+                    foreach ($artists->artist as $artist) {
+                        if (
+                            !$artist instanceof SimpleXMLElement ||
+                            !$artist->art
+                        ) {
+                            continue;
+                        }
+
+                        $artist_id = Artist::check((string)$artist->name, (string)$artist->mbid, true);
+                        if (
+                            $artist_id &&
+                            $artist->has_art &&
+                            $artist->art
+                        ) {
+                            $art = new Art($artist_id, 'artist');
+                            if (!$art->has_db_info()) {
+                                $art->insert_url($artist->art);
+                            }
+                        }
+                    }
+                } else {
+                    $artistsFound = false;
+                }
+            } catch (Exception $error) {
+                debug_event('remote.catalog', 'Artists parsing error: ' . $error->getMessage(), 1);
+            }
+        }
 
         Ui::update_text(T_("Updated"), T_("Completed updating remote Catalog(s)."));
 
