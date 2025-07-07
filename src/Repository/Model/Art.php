@@ -556,6 +556,11 @@ class Art extends database_object
             $this->kind,
         ]);
 
+        // clear object cache on insert
+        if (parent::is_cached('art', $this->object_type . $this->object_id . 'original')) {
+            parent::clear_cache();
+        }
+
         return true;
     }
 
@@ -836,6 +841,8 @@ class Art extends database_object
     public function reset(): void
     {
         $this->getArtCleanup()->deleteForArt($this);
+
+        parent::clear_cache();
     }
 
     /**
@@ -1185,40 +1192,34 @@ class Art extends database_object
             $sid = 'none';
         }
 
-        $key = $type . $uid;
-
         $has_gd = self::_hasGD();
-        if ($has_gd && parent::is_cached('art', $key . '275x275')) {
-            $row  = parent::get_from_cache('art', $key . '275x275');
-            $mime = $row['mime'];
-        }
+        $art_id = null;
 
-        if (parent::is_cached('art', $key . 'original')) {
-            $row        = parent::get_from_cache('art', $key . 'original');
-            $thumb_mime = $row['mime'];
-        }
-
-        if (!isset($mime) && !isset($thumb_mime)) {
-            $sql        = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-            $db_results = Dba::read($sql, [$type, $uid]);
-
-            while ($row = Dba::fetch_assoc($db_results)) {
-                parent::add_to_cache('art', $key . $row['size'], $row);
-                if ($row['size'] == 'original') {
-                    $mime = $row['mime'];
-                } elseif ($has_gd && $row['size'] == '275x275') {
-                    $thumb_mime = $row['mime'];
-                }
-            }
-        }
-
-        $mime       = $thumb_mime ?? ($mime ?? null);
-        $extension  = self::extension($mime);
-        $size       = 'original';
+        $size = 'original';
         if ($has_gd && $thumb !== null) {
             $size_array = self::get_thumb_size($thumb);
             $size       = $size_array['width'] . 'x' . $size_array['height'];
         }
+
+        $key = $type . $uid . $size;
+        if (parent::is_cached('art', $key)) {
+            $row    = parent::get_from_cache('art', $key);
+            $mime   = $row['mime'];
+            $art_id = $row['id'] ?? null;
+        }
+
+        if (empty($mime)) {
+            $sql        = "SELECT `id`, `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ?;";
+            $db_results = Dba::read($sql, [$type, $uid, $size]);
+
+            if ($row = Dba::fetch_assoc($db_results)) {
+                parent::add_to_cache('art', $key, $row);
+                $mime   = $row['mime'];
+                $art_id = $row['id'];
+            }
+        }
+
+        $extension = self::extension($mime);
 
         if (
             $type !== 'user' &&
@@ -1241,6 +1242,10 @@ class Art extends database_object
             $url = AmpConfig::get_web_path() . '/image.php?' . $actionStr . 'object_id=' . $uid . '&object_type=' . scrub_out($type);
             if ($size !== 'original') {
                 $url .= '&size=' . $size;
+            }
+
+            if ($art_id !== null) {
+                $url .= '&id=' . $art_id;
             }
 
             if ($extension !== '' && $extension !== '0') {
