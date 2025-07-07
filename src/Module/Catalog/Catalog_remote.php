@@ -372,7 +372,7 @@ class Catalog_remote extends Catalog
                             ? $remote_handle->send_command(self::CMD_SONG_TAGS, ['filter' => $id])
                             : false;
                         // Iterate over the songs we retrieved and insert them
-                        if ($tags instanceof SimpleXMLElement) {
+                        if ($tags instanceof SimpleXMLElement && isset($tags->song_tag)) {
                             $song_tags = $tags->song_tag;
                             $data      = [];
                             foreach ($song_tags->children() as $name => $value) {
