@@ -427,6 +427,7 @@ class Catalog_remote extends Catalog
                                 'composer' => (isset($song->composer)) ? (string)$song->composer : null,
                                 'comment' => (isset($song->comment)) ? (string)$song->comment : null,
                                 'disk' => (isset($song->disk)) ? (string)$song->disk : null,
+                                'disksubtitle' => (isset($song->disksubtitle)) ? (string)$song->disksubtitle : null,
                                 'file' => $db_url,
                                 'genre' => $genres,
                                 'mb_trackid' => (isset($song->mbid)) ? (string)$song->mbid : null,
