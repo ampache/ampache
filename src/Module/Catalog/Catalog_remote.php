@@ -27,6 +27,7 @@ use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
@@ -354,6 +355,8 @@ class Catalog_remote extends Catalog
                             continue;
                         }
 
+                        $song_id = 0;
+
                         // Update URLS to the current format for remote catalogs
                         $old_url = (string)preg_replace('/ssid=[0-9a-z]*&/', '', $song->url);
                         $db_url  = (string)preg_replace('/ssid=[0-9a-z]*&/', 'client=' . urlencode($web_path) . '&', $song->url);
@@ -471,7 +474,8 @@ class Catalog_remote extends Catalog
                         }
 
                         if ($action === 'add' && !$existing_song) {
-                            if (!Song::insert($data)) {
+                            $song_id = Song::insert($data);
+                            if (!$song_id) {
                                 debug_event('remote.catalog', 'Insert failed for ' . $db_url, 1);
                                 if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                                     /* HINT: Song Title */
@@ -486,12 +490,24 @@ class Catalog_remote extends Catalog
                             // If we already have the song, update it
                             $song_id = Catalog::get_id_from_file($db_url, 'song');
                             if ($song_id) {
-                                $song = new Song($song_id);
-                                $info = ($song->id) ? self::update_song_from_tags($data, $song) : [];
+                                $current_song = new Song($song_id);
+                                $info = ($current_song->id) ? self::update_song_from_tags($data, $current_song) : [];
                                 if ($info['change']) {
                                     debug_event('remote.catalog', 'Updated existing song ' . $db_url, 5);
                                     $songsadded++;
                                 }
+                            }
+                        }
+
+                        if (
+                            $song_id &&
+                            $song instanceof SimpleXMLElement &&
+                            $song->has_art &&
+                            $song->art
+                        ) {
+                            $art = new Art($song_id, 'song');
+                            if (!$art->has_db_info()) {
+                                $art->insert_url($song->art);
                             }
                         }
                     }
