@@ -1,5 +1,31 @@
 # CHANGELOG
 
+## Ampache 7.6.2
+
+### Added
+
+* Remote Catalogs
+  * Allow verify for Remote catalogs
+  * Gather Art for album and Artist objects missing art
+* Put the ID back on Art links to make them unique
+
+### Changed
+
+* Use original art size when GD is disabled for URL links
+* Add the file mime to Art url links
+
+### Fixed
+
+* Art inserted from URL would insert as a PHP mime type
+* Remote Catalogs
+  * Could not add songs
+  * Ensure an ID is returned for cleaning
+  * Don't error on the first track when `song_tags` fails
+* Don't gather file art when the file is a url
+* Delete Art cache when the art is updated
+* Subsonic
+  * Ensure disabled songs are not added in more areas
+
 ## Ampache 7.6.1
 
 Fixes for issues with OpenSubsonic identified by Symfonium users
