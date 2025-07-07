@@ -1215,7 +1215,7 @@ class Art extends database_object
         $mime       = $thumb_mime ?? ($mime ?? null);
         $extension  = self::extension($mime);
         $size       = 'original';
-        if ($thumb !== null) {
+        if ($has_gd && $thumb !== null) {
             $size_array = self::get_thumb_size($thumb);
             $size       = $size_array['width'] . 'x' . $size_array['height'];
         }
