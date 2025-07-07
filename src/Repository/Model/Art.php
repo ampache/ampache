@@ -1217,23 +1217,30 @@ class Art extends database_object
                 parent::add_to_cache('art', $key, $row);
                 $mime   = $row['mime'];
                 $art_id = $row['id'];
+            } else {
+                $sql        = "SELECT `id`, `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ?;";
+                $db_results = Dba::read($sql, [$type, $uid, 'original']);
+
+                if ($row = Dba::fetch_assoc($db_results)) {
+                    parent::add_to_cache('art', $key, $row);
+                    $mime = $row['mime'];
+                }
             }
         }
 
         $extension = self::extension($mime);
+        if (
+            $extension === '' ||
+            $extension === '0'
+        ) {
+            $extension = 'jpg';
+        }
 
         if (
             $type !== 'user' &&
             AmpConfig::get('stream_beautiful_url') &&
             $size !== 'original'
         ) {
-            if (
-                $extension === '' ||
-                $extension === '0'
-            ) {
-                $extension = 'jpg';
-            }
-
             // e.g. https://demo.ampache.dev/play/art/{sessionid}/artist/1240/size400x400.png
             $url = AmpConfig::get_web_path() . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . $uid . '/size' . $size . '.' . $extension;
         } else {
