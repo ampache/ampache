@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-07-08 08:40+1000\n"
+"POT-Creation-Date: 2025-07-08 09:45+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -11090,180 +11090,12 @@ msgstr ""
 #: ../../src/Repository/Model/Wanted.php:314
 msgid "Add to wanted list"
 msgstr ""
-
-#: ./untranslated-strings.txt:3
-msgid "Connected Users"
-msgstr ""
-
-#: ./untranslated-strings.txt:7
-msgid "Catalog Size"
-msgstr ""
-
-#: ./untranslated-strings.txt:11
-msgid "Catalog Time"
-msgstr ""
-
-#: ./untranslated-strings.txt:15
-msgid "Total Users"
-msgstr ""
-
-#: ./untranslated-strings.txt:66
-msgid "lastfm"
-msgstr ""
-
-#: ./untranslated-strings.txt:106
-msgid "metadata"
-msgstr ""
-
-#: ./untranslated-strings.txt:118
-msgid "subsonic"
-msgstr ""
-
-#: ./untranslated-strings.txt:119
-msgid "7digital"
-msgstr ""
-
-#: ./untranslated-strings.txt:120
-msgid "Amazon"
-msgstr ""
-
-#: ./untranslated-strings.txt:121
-msgid "Bit.ly"
-msgstr ""
-
-#: ./untranslated-strings.txt:122
-msgid "Catalog Favorites"
-msgstr ""
-
-#: ./untranslated-strings.txt:123
-msgid "ChartLyrics"
-msgstr ""
-
-#: ./untranslated-strings.txt:124
-msgid "Discogs"
-msgstr ""
-
-#: ./untranslated-strings.txt:125
-msgid "Facebook"
-msgstr ""
-
-#: ./untranslated-strings.txt:126
-msgid "Flattr"
-msgstr ""
-
-#: ./untranslated-strings.txt:127
-msgid "Flickr"
-msgstr ""
-
-#: ./untranslated-strings.txt:129
-msgid "GoogleAnalytics"
-msgstr ""
-
-#: ./untranslated-strings.txt:130
-msgid "GoogleMaps"
-msgstr ""
-
-#: ./untranslated-strings.txt:131
-msgid "Gravatar"
-msgstr ""
-
-#: ./untranslated-strings.txt:132
-msgid "Headphones"
-msgstr ""
-
-#: ./untranslated-strings.txt:133
-msgid "Last.FM"
-msgstr ""
-
-#: ./untranslated-strings.txt:134
-msgid "Libravatar"
-msgstr ""
-
-#: ./untranslated-strings.txt:135
-msgid "Libre.FM"
-msgstr ""
-
-#: ./untranslated-strings.txt:136
-msgid "ListenBrainz"
-msgstr ""
-
-#: ./untranslated-strings.txt:137
-msgid "Lyrist Lyrics"
-msgstr ""
-
-#: ./untranslated-strings.txt:138
-msgid "Matomo"
-msgstr ""
-
-#: ./untranslated-strings.txt:141
-msgid "Paypal"
-msgstr ""
-
-#: ./untranslated-strings.txt:142
-msgid "Personal Favorites"
-msgstr ""
-
-#: ./untranslated-strings.txt:143
-msgid "Piwik"
-msgstr ""
-
-#: ./untranslated-strings.txt:144
-msgid "RatingMatch"
-msgstr ""
-
-#: ./untranslated-strings.txt:145
-msgid "RSSView"
-msgstr ""
-
-#: ./untranslated-strings.txt:146
-msgid "Shout Home"
-msgstr ""
-
-#: ./untranslated-strings.txt:147
-msgid "Stream Bandwidth"
-msgstr ""
-
-#: ./untranslated-strings.txt:148
-msgid "Stream Hits"
-msgstr ""
-
-#: ./untranslated-strings.txt:149
-msgid "Stream Time"
-msgstr ""
-
-#: ./untranslated-strings.txt:150
-msgid "TheAudioDb"
-msgstr ""
-
-#: ./untranslated-strings.txt:152
-msgid "Twitter"
-msgstr ""
-
-#: ./untranslated-strings.txt:153
-msgid "YOURLS"
-msgstr ""
-
-#: ./untranslated-strings.txt:154
-msgid "handshake"
-msgstr ""
-
-#: ./untranslated-strings.txt:155
-msgid "ping"
-msgstr ""
-
-#: ./untranslated-strings.txt:250
-msgid "Home Dashboard"
-msgstr ""
-
-#: ./untranslated-strings.txt:256
-msgid "average"
-msgstr ""
  #######################################################################
 
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 08.07.2025 08:40:14 AEST 
+ # Last Update: 08.07.2025 09:44:34 AEST 
 
  #######################################################################
 
@@ -11909,4 +11741,164 @@ msgstr ""
 
 #: Database preference subcategory table id 213
 msgid "cookies"
+msgstr ""
+
+#: ./untranslated-strings.txt:3
+msgid "Connected Users"
+msgstr ""
+
+#: ./untranslated-strings.txt:7
+msgid "Catalog Size"
+msgstr ""
+
+#: ./untranslated-strings.txt:11
+msgid "Catalog Time"
+msgstr ""
+
+#: ./untranslated-strings.txt:15
+msgid "Total Users"
+msgstr ""
+
+#: ./untranslated-strings.txt:118
+msgid "subsonic"
+msgstr ""
+
+#: ./untranslated-strings.txt:119
+msgid "7digital"
+msgstr ""
+
+#: ./untranslated-strings.txt:120
+msgid "Amazon"
+msgstr ""
+
+#: ./untranslated-strings.txt:121
+msgid "Bit.ly"
+msgstr ""
+
+#: ./untranslated-strings.txt:122
+msgid "Catalog Favorites"
+msgstr ""
+
+#: ./untranslated-strings.txt:123
+msgid "ChartLyrics"
+msgstr ""
+
+#: ./untranslated-strings.txt:124
+msgid "Discogs"
+msgstr ""
+
+#: ./untranslated-strings.txt:125
+msgid "Facebook"
+msgstr ""
+
+#: ./untranslated-strings.txt:126
+msgid "Flattr"
+msgstr ""
+
+#: ./untranslated-strings.txt:127
+msgid "Flickr"
+msgstr ""
+
+#: ./untranslated-strings.txt:129
+msgid "GoogleAnalytics"
+msgstr ""
+
+#: ./untranslated-strings.txt:130
+msgid "GoogleMaps"
+msgstr ""
+
+#: ./untranslated-strings.txt:131
+msgid "Gravatar"
+msgstr ""
+
+#: ./untranslated-strings.txt:132
+msgid "Headphones"
+msgstr ""
+
+#: ./untranslated-strings.txt:133
+msgid "Last.FM"
+msgstr ""
+
+#: ./untranslated-strings.txt:134
+msgid "Libravatar"
+msgstr ""
+
+#: ./untranslated-strings.txt:135
+msgid "Libre.FM"
+msgstr ""
+
+#: ./untranslated-strings.txt:136
+msgid "ListenBrainz"
+msgstr ""
+
+#: ./untranslated-strings.txt:137
+msgid "Lyrist Lyrics"
+msgstr ""
+
+#: ./untranslated-strings.txt:138
+msgid "Matomo"
+msgstr ""
+
+#: ./untranslated-strings.txt:141
+msgid "Paypal"
+msgstr ""
+
+#: ./untranslated-strings.txt:142
+msgid "Personal Favorites"
+msgstr ""
+
+#: ./untranslated-strings.txt:143
+msgid "Piwik"
+msgstr ""
+
+#: ./untranslated-strings.txt:144
+msgid "RatingMatch"
+msgstr ""
+
+#: ./untranslated-strings.txt:145
+msgid "RSSView"
+msgstr ""
+
+#: ./untranslated-strings.txt:146
+msgid "Shout Home"
+msgstr ""
+
+#: ./untranslated-strings.txt:147
+msgid "Stream Bandwidth"
+msgstr ""
+
+#: ./untranslated-strings.txt:148
+msgid "Stream Hits"
+msgstr ""
+
+#: ./untranslated-strings.txt:149
+msgid "Stream Time"
+msgstr ""
+
+#: ./untranslated-strings.txt:150
+msgid "TheAudioDb"
+msgstr ""
+
+#: ./untranslated-strings.txt:152
+msgid "Twitter"
+msgstr ""
+
+#: ./untranslated-strings.txt:153
+msgid "YOURLS"
+msgstr ""
+
+#: ./untranslated-strings.txt:154
+msgid "handshake"
+msgstr ""
+
+#: ./untranslated-strings.txt:155
+msgid "ping"
+msgstr ""
+
+#: ./untranslated-strings.txt:250
+msgid "Home Dashboard"
+msgstr ""
+
+#: ./untranslated-strings.txt:256
+msgid "average"
 msgstr ""
