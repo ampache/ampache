@@ -518,7 +518,7 @@ class Catalog_remote extends Catalog
                         if (
                             $song_id &&
                             $song instanceof SimpleXMLElement &&
-                            $song->has_art &&
+                            (int)$song->has_art === 1 &&
                             $song->art
                         ) {
                             $current_song = new Song($song_id);
