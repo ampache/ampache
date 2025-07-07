@@ -533,8 +533,8 @@ class Catalog_remote extends Catalog
             : $remote_catalog_info->max_artist;
 
         // Hardcoded for now
-        $step       = 500;
-        $current    = 0;
+        $step         = 500;
+        $current      = 0;
         $artistsFound = true;
 
         while (

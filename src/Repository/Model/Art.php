@@ -409,7 +409,7 @@ class Art extends database_object
             ? pathinfo($query['name'])
             : pathinfo($url);
 
-            $ext  = (isset($rurl['extension']) && !str_starts_with($rurl['extension'], 'php')) ? $rurl['extension'] : 'jpeg';
+        $ext  = (isset($rurl['extension']) && !str_starts_with($rurl['extension'], 'php')) ? $rurl['extension'] : 'jpeg';
         $mime = "image/" . $ext;
         $this->insert($image, $mime);
     }
