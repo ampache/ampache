@@ -430,8 +430,6 @@ class Catalog_remote extends Catalog
                                 'disksubtitle' => (isset($song->disksubtitle)) ? (string)$song->disksubtitle : null,
                                 'file' => $db_url,
                                 'genre' => $genres,
-                                'mb_albumartistid_array' => null,
-                                'mb_artistid_array' => null,
                                 'mb_trackid' => (isset($song->mbid)) ? (string)$song->mbid : null,
                                 'mime' => (isset($song->mime)) ? (string)$song->mime : null,
                                 'mode' => (isset($song->mode)) ? (string)$song->mode : null,
@@ -447,7 +445,20 @@ class Catalog_remote extends Catalog
                                 'time' => (isset($song->time)) ? (string)$song->time : null,
                                 'title' => (isset($song->title)) ? (string)$song->title : null,
                                 'track' => (isset($song->track)) ? (string)$song->track : null,
-                                'year' => (isset($song->year)) ? (string)$song->year : null
+                                'year' => (isset($song->year)) ? (string)$song->year : null,
+                                'lyrics' => null,
+                                'language' => null,
+                                'mb_artistid' => null,
+                                'mb_artistid_array' => null,
+                                'mb_albumartistid' => null,
+                                'mb_albumartistid_array' => null,
+                                'mb_albumid' => null,
+                                'mb_albumid_group' => null,
+                                'release_type' => null,
+                                'release_status' => null,
+                                'barcode' => null,
+                                'catalog_number' => null,
+                                'version' => null,
                             ];
                         }
 
