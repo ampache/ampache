@@ -126,10 +126,13 @@ final class FolderCollectorModule implements CollectorModuleInterface
             }
 
             if (filter_var($dir, FILTER_VALIDATE_URL)) {
+                $processed[$dir] = true;
+
                 $this->logger->debug(
                     "gather_folder: Skipping URL path $dir",
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
+
                 continue;
             }
 
