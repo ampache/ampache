@@ -293,10 +293,9 @@ class Catalog_remote extends Catalog
      * update_remote_catalog
      *
      * Pulls the data from a remote catalog and adds any missing songs to the database.
-     * @return int
      * @throws Exception
      */
-    public function update_remote_catalog(): int
+    public function update_remote_catalog(string $action = 'add'): int
     {
         set_time_limit(0);
 
@@ -358,122 +357,141 @@ class Catalog_remote extends Catalog
                         // Update URLS to the current format for remote catalogs
                         $old_url = (string)preg_replace('/ssid=[0-9a-z]*&/', '', $song->url);
                         $db_url  = (string)preg_replace('/ssid=[0-9a-z]*&/', 'client=' . urlencode($web_path) . '&', $song->url);
+
+                        if (!$db_url) {
+                            continue;
+                        }
+
+                        $existing_song = false;
                         if ($this->check_remote_song([$old_url], $db_url)) {
-                            debug_event('remote.catalog', 'Skipping existing song ' . $song->url, 5);
-                        } else {
-                            if (!$db_url) {
-                                continue;
+                            $existing_song = true;
+                        }
+
+                        $id   = (string)$song->attributes()->id;
+                        $tags = ($song_tags)
+                            ? $remote_handle->send_command(self::CMD_SONG_TAGS, ['filter' => $id])
+                            : false;
+                        // Iterate over the songs we retrieved and insert them
+                        if ($tags instanceof SimpleXMLElement) {
+                            $song_tags = $tags->song_tag;
+                            $data      = [];
+                            foreach ($song_tags->children() as $name => $value) {
+                                if (count($song_tags->$name) > 1) {
+                                    // arrays of objects
+                                    if (!isset($data[$name])) {
+                                        $data[$name] = [];
+                                    }
+                                    foreach ($value as $child) {
+                                        if (!empty((string)$child)) {
+                                            $data[$name][] = (string)$child;
+                                        }
+                                    }
+                                } else {
+                                    // single value
+                                    $data[$name] = (!empty((string)$value))
+                                        ? (string)$value
+                                        : null;
+                                }
                             }
 
-                            $id   = (string)$song->attributes()->id;
-                            $tags = ($song_tags)
-                                ? $remote_handle->send_command(self::CMD_SONG_TAGS, ['filter' => $id])
-                                : false;
-                            // Iterate over the songs we retrieved and insert them
-                            if ($tags instanceof SimpleXMLElement) {
-                                $data = [
-                                    'albumartist' => $tags->albumartist,
-                                    'album' => $tags->album,
-                                    'artist' => $tags->artist,
-                                    'artists' => $tags->artists,
-                                    'art' => $tags->art,
-                                    'audio_codec' => $tags->audio_codec,
-                                    'barcode' => $tags->barcode,
-                                    'bitrate' => $tags->bitrate,
-                                    'catalog' => $this->catalog_id,
-                                    'catalog_number' => $tags->catalog_number,
-                                    'channels' => $tags->channels,
-                                    'comment' => $tags->comment,
-                                    'composer' => $tags->composer,
-                                    'description' => $tags->description,
-                                    'disk' => $tags->disk,
-                                    'disksubtitle' => $tags->disksubtitle,
-                                    'file' => $db_url,
-                                    'genre' => $tags->genre,
-                                    'isrc' => $tags->isrc,
-                                    'language' => $tags->language,
-                                    'lyrics' => $tags->lyrics,
-                                    'mb_albumartistid' => $tags->mb_albumartistid,
-                                    'mb_albumartistid_array' => $tags->mb_albumartistid_array,
-                                    'mb_albumid_group' => $tags->mb_albumid_group,
-                                    'mb_albumid' => $tags->mb_albumid,
-                                    'mb_artistid' => $tags->mb_artistid,
-                                    'mb_artistid_array' => $tags->mb_artistid_array,
-                                    'mb_trackid' => $tags->mb_trackid,
-                                    'mime' => $tags->mime,
-                                    'mode' => $tags->mode,
-                                    'original_name' => $tags->original_name,
-                                    'original_year' => $tags->original_year,
-                                    'publisher' => $tags->publisher,
-                                    'r128_album_gain' => $tags->r128_album_gain,
-                                    'r128_track_gain' => $tags->r128_track_gain,
-                                    'rate' => $tags->rate,
-                                    'rating' => $tags->rating,
-                                    'release_date' => $tags->release_date,
-                                    'release_status' => $tags->release_status,
-                                    'release_type' => $tags->release_type,
-                                    'replaygain_album_gain' => $tags->replaygain_album_gain,
-                                    'replaygain_album_peak' => $tags->replaygain_album_peak,
-                                    'replaygain_track_gain' => $tags->replaygain_track_gain,
-                                    'replaygain_track_peak' => $tags->replaygain_track_peak,
-                                    'size' => $tags->size,
-                                    'version' => $tags->version,
-                                    'summary' => $tags->summary,
-                                    'time' => $tags->time,
-                                    'title' => $tags->title,
-                                    'totaldisks' => $tags->totaldisks,
-                                    'totaltracks' => $tags->totaltracks,
-                                    'track' => $tags->track,
-                                    'year' => $tags->year,
-                                ];
-                            } else {
-                                $song_tags = false;
-                                $genres    = [];
-                                foreach ($song->genre as $genre) {
-                                    $genres[] = $genre->name;
-                                }
-                                $data = [
-                                    'albumartist' => $song->albumartist->name,
-                                    'album' => $song->album->name,
-                                    'artist' => $song->artist->name,
-                                    'artists' => null,
-                                    'bitrate' => $song->bitrate ?? null,
-                                    'catalog' => $this->catalog_id,
-                                    'channels' => $song->channels ?? null,
-                                    'composer' => $song->composer ?? null,
-                                    'comment' => null,
-                                    'disk' => $song->disk ?? null,
-                                    'file' => $db_url,
-                                    'genre' => $genres,
-                                    'mb_trackid' => $song->mbid ?? null,
-                                    'mime' => $song->mime ?? null,
-                                    'mode' => $song->mode ?? null,
-                                    'publisher' => $song->publisher ?? null,
-                                    'r128_album_gain' => null,
-                                    'r128_track_gain' => null,
-                                    'rate' => $song->bitrate ?? null,
-                                    'replaygain_album_gain' => null,
-                                    'replaygain_album_peak' => null,
-                                    'replaygain_track_gain' => null,
-                                    'replaygain_track_peak' => null,
-                                    'size' => $song->size ?? null,
-                                    'time' => $song->time ?? null,
-                                    'title' => $song->title ?? null,
-                                    'track' => $song->track ?? null,
-                                    'year' => $song->year ?? null
-                                ];
+                            if (empty($data['albumartist']) && !empty($data['artist'])) {
+                                $data['albumartist'] = $data['artist'];
                             }
-                            //debug_event('remote.catalog', 'DATA ' . print_r($data, true), 1);
+                            if (is_string($data['artists'])) {
+                                $data['artists'] = (!empty($data['artists']))
+                                    ? [$data['artists']]
+                                    : null;
+                            }
+                            if (is_string($data['genre'])) {
+                                $data['genre'] = (!empty($data['genre']))
+                                    ? [$data['genre']]
+                                    : null;
+                            }
+                            if (is_string($data['mb_albumartistid_array'])) {
+                                $data['mb_albumartistid_array'] = (!empty($data['mb_albumartistid_array']))
+                                    ? [$data['mb_albumartistid_array']]
+                                    : null;
+                            }
+                            if (is_string($data['mb_artistid_array'])) {
+                                $data['mb_artistid_array'] = (!empty($data['mb_artistid_array']))
+                                    ? [$data['mb_artistid_array']]
+                                    : null;
+                            }
+
+                            $data['catalog'] = $this->catalog_id;
+                            $data['file']    = $db_url;
+                        } else {
+                            $song_tags = false;
+                            $genres    = [];
+                            foreach ($song->genre as $genre) {
+                                $genres[] = $genre->name;
+                            }
+                            $data = [
+                                'albumartist' => $song->albumartist->name,
+                                'album' => $song->album->name,
+                                'artist' => $song->artist->name,
+                                'artists' => null,
+                                'bitrate' => $song->bitrate ?? null,
+                                'catalog' => $this->catalog_id,
+                                'channels' => $song->channels ?? null,
+                                'composer' => $song->composer ?? null,
+                                'comment' => null,
+                                'disk' => $song->disk ?? null,
+                                'file' => $db_url,
+                                'genre' => $genres,
+                                'mb_trackid' => $song->mbid ?? null,
+                                'mime' => $song->mime ?? null,
+                                'mode' => $song->mode ?? null,
+                                'publisher' => $song->publisher ?? null,
+                                'r128_album_gain' => null,
+                                'r128_track_gain' => null,
+                                'rate' => $song->bitrate ?? null,
+                                'replaygain_album_gain' => null,
+                                'replaygain_album_peak' => null,
+                                'replaygain_track_gain' => null,
+                                'replaygain_track_peak' => null,
+                                'size' => $song->size ?? null,
+                                'time' => $song->time ?? null,
+                                'title' => $song->title ?? null,
+                                'track' => $song->track ?? null,
+                                'year' => $song->year ?? null
+                            ];
+                        }
+
+                        // If we don't have an album artist, use the artist
+                        if (empty($data['albumartist']) && !empty($data['artist'])) {
+                            $data['albumartist'] = $data['artist'];
+                        }
+
+                        //debug_event('remote.catalog', 'DATA ' . print_r($data, true), 1);
+                        if (empty($data['title']) || empty($data['artist']) || empty($data['album'])) {
+                            debug_event('remote.catalog', 'Skipping song with no title, artist or album: ' . $db_url, 5);
+
+                            continue;
+                        }
+
+                        if ($action === 'add' && !$existing_song) {
                             if (!Song::insert($data)) {
-                                debug_event('remote.catalog', 'Insert failed for ' . $song->url, 1);
+                                debug_event('remote.catalog', 'Insert failed for ' . $db_url, 1);
                                 if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                                     /* HINT: Song Title */
-                                    AmpError::add('general', T_(sprintf('Unable to insert song - %s', $song->title)));
+                                    AmpError::add('general', T_(sprintf('Unable to insert song - %s', $data['title'])));
                                     echo AmpError::display('general');
                                     flush();
                                 }
                             } else {
                                 $songsadded++;
+                            }
+                        } elseif ($action === 'verify' && $existing_song) {
+                            // If we already have the song, update it
+                            $song_id = Catalog::get_id_from_file($db_url, 'song');
+                            if ($song_id) {
+                                $song = new Song($song_id);
+                                $info = ($song->id) ? self::update_song_from_tags($data, $song) : [];
+                                if ($info['change']) {
+                                    debug_event('remote.catalog', 'Updated existing song ' . $db_url, 5);
+                                    $songsadded++;
+                                }
                             }
                         }
                     }
@@ -503,7 +521,15 @@ class Catalog_remote extends Catalog
      */
     public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
     {
-        return 0;
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+            Ui::show_box_top(T_('Running Remote Update'));
+        }
+        $songsupdated = $this->update_remote_catalog('verify');
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+            Ui::show_box_bottom();
+        }
+
+        return $songsupdated;
     }
 
     /**
@@ -529,7 +555,8 @@ class Catalog_remote extends Catalog
                 $song = $remote_handle->send_command(self::CMD_URL_TO_SONG, ['url' => $row['file']]);
                 if (
                     $song instanceof SimpleXMLElement &&
-                    count($song) == 1
+                    $song->song &&
+                    ((int)$song->song->attributes()->id) > 0
                 ) {
                     debug_event('remote.catalog', 'keeping song', 5);
                 } else {
