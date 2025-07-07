@@ -233,7 +233,7 @@ class Catalog_remote extends Catalog
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Remote Update'));
         }
-        $songsadded = $this->update_remote_catalog();
+        $songsadded = $this->_update_remote_catalog();
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
         }
@@ -299,7 +299,7 @@ class Catalog_remote extends Catalog
      * Pulls the data from a remote catalog and adds any missing songs to the database.
      * @throws Exception
      */
-    public function update_remote_catalog(string $action = 'add'): int
+    private function _update_remote_catalog(string $action = 'add'): int
     {
         set_time_limit(0);
 
@@ -400,73 +400,83 @@ class Catalog_remote extends Catalog
                                 }
                             }
 
-                            if (empty($data['albumartist']) && !empty($data['artist'])) {
-                                $data['albumartist'] = $data['artist'];
-                            }
-                            if (is_string($data['artists'])) {
-                                $data['artists'] = (!empty($data['artists']))
-                                    ? [$data['artists']]
-                                    : null;
-                            }
-                            if (is_string($data['genre'])) {
-                                $data['genre'] = (!empty($data['genre']))
-                                    ? [$data['genre']]
-                                    : null;
-                            }
-                            if (is_string($data['mb_albumartistid_array'])) {
-                                $data['mb_albumartistid_array'] = (!empty($data['mb_albumartistid_array']))
-                                    ? [$data['mb_albumartistid_array']]
-                                    : null;
-                            }
-                            if (is_string($data['mb_artistid_array'])) {
-                                $data['mb_artistid_array'] = (!empty($data['mb_artistid_array']))
-                                    ? [$data['mb_artistid_array']]
-                                    : null;
-                            }
-
                             $data['catalog'] = $this->catalog_id;
                             $data['file']    = $db_url;
                         } else {
                             $song_tags = false;
                             $genres    = [];
                             foreach ($song->genre as $genre) {
-                                $genres[] = $genre->name;
+                                $genres[] = (string)$genre->name;
+                            }
+                            $albumartists = [];
+                            foreach ($song->albumartist as $albumartist) {
+                                $albumartists[] = (string)$albumartist->name;
+                            }
+                            $artists = [];
+                            foreach ($song->artist as $artist) {
+                                $artists[] = (string)$artist->name;
                             }
                             $data = [
-                                'albumartist' => $song->albumartist->name,
-                                'album' => $song->album->name,
-                                'artist' => $song->artist->name,
-                                'artists' => null,
-                                'bitrate' => $song->bitrate ?? null,
+                                'albumartist' => (!empty($albumartists)) ? $albumartists[0] : null,
+                                'album' => (isset($song->album)) ? (string)$song->album->name : null,
+                                'artist' => (!empty($artists)) ? $artists[0] : null,
+                                'artists' => $artists,
+                                'bitrate' => (isset($song->bitrate)) ? (string)$song->bitrate : null,
                                 'catalog' => $this->catalog_id,
-                                'channels' => $song->channels ?? null,
-                                'composer' => $song->composer ?? null,
-                                'comment' => null,
-                                'disk' => $song->disk ?? null,
+                                'channels' => (isset($song->channels)) ? (string)$song->channels : null,
+                                'composer' => (isset($song->composer)) ? (string)$song->composer : null,
+                                'comment' => (isset($song->comment)) ? (string)$song->comment : null,
+                                'disk' => (isset($song->disk)) ? (string)$song->disk : null,
                                 'file' => $db_url,
                                 'genre' => $genres,
-                                'mb_trackid' => $song->mbid ?? null,
-                                'mime' => $song->mime ?? null,
-                                'mode' => $song->mode ?? null,
-                                'publisher' => $song->publisher ?? null,
-                                'r128_album_gain' => null,
-                                'r128_track_gain' => null,
-                                'rate' => $song->bitrate ?? null,
-                                'replaygain_album_gain' => null,
-                                'replaygain_album_peak' => null,
-                                'replaygain_track_gain' => null,
-                                'replaygain_track_peak' => null,
-                                'size' => $song->size ?? null,
-                                'time' => $song->time ?? null,
-                                'title' => $song->title ?? null,
-                                'track' => $song->track ?? null,
-                                'year' => $song->year ?? null
+                                'mb_trackid' => (isset($song->mbid)) ? (string)$song->mbid : null,
+                                'mime' => (isset($song->mime)) ? (string)$song->mime : null,
+                                'mode' => (isset($song->mode)) ? (string)$song->mode : null,
+                                'publisher' => (isset($song->publisher)) ? (string)$song->publisher : null,
+                                'r128_album_gain' => (isset($song->r128_album_gain)) ? (string)$song->r128_album_gain : null,
+                                'r128_track_gain' => (isset($song->r128_track_gain)) ? (string)$song->r128_track_gain : null,
+                                'rate' => (isset($song->rate)) ? (string)$song->rate : null,
+                                'replaygain_album_gain' => (isset($song->replaygain_album_gain)) ? (string)$song->replaygain_album_gain : null,
+                                'replaygain_album_peak' => (isset($song->replaygain_album_peak)) ? (string)$song->replaygain_album_peak : null,
+                                'replaygain_track_gain' => (isset($song->replaygain_track_gain)) ? (string)$song->replaygain_track_gain : null,
+                                'replaygain_track_peak' => (isset($song->replaygain_track_peak)) ? (string)$song->replaygain_track_peak : null,
+                                'size' => (isset($song->size)) ? (string)$song->size : null,
+                                'time' => (isset($song->time)) ? (string)$song->time : null,
+                                'title' => (isset($song->title)) ? (string)$song->title : null,
+                                'track' => (isset($song->track)) ? (string)$song->track : null,
+                                'year' => (isset($song->year)) ? (string)$song->year : null
                             ];
                         }
 
                         // If we don't have an album artist, use the artist
                         if (empty($data['albumartist']) && !empty($data['artist'])) {
                             $data['albumartist'] = $data['artist'];
+                        }
+
+                        // different name for the mbid
+                        if (empty($data['mb_trackid']) && !empty($data['mbid'])) {
+                            $data['mb_trackid'] = $data['mbid'];
+                        }
+
+                        if (is_string($data['artists'])) {
+                            $data['artists'] = (!empty($data['artists']))
+                                ? [$data['artists']]
+                                : null;
+                        }
+                        if (is_string($data['genre'])) {
+                            $data['genre'] = (!empty($data['genre']))
+                                ? [$data['genre']]
+                                : null;
+                        }
+                        if (is_string($data['mb_albumartistid_array'])) {
+                            $data['mb_albumartistid_array'] = (!empty($data['mb_albumartistid_array']))
+                                ? [$data['mb_albumartistid_array']]
+                                : null;
+                        }
+                        if (is_string($data['mb_artistid_array'])) {
+                            $data['mb_artistid_array'] = (!empty($data['mb_artistid_array']))
+                                ? [$data['mb_artistid_array']]
+                                : null;
                         }
 
                         //debug_event('remote.catalog', 'DATA ' . print_r($data, true), 1);
@@ -533,7 +543,6 @@ class Catalog_remote extends Catalog
             : $remote_catalog_info->max_artist;
 
         // Hardcoded for now
-        $step         = 500;
         $current      = 0;
         $artistsFound = true;
 
@@ -541,11 +550,6 @@ class Catalog_remote extends Catalog
             $total_artists > $current &&
             $artistsFound
         ) {
-            $web_path = AmpConfig::get_web_path();
-
-            if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
-                $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
-            }
             $start = $current;
             $current += $step;
             try {
@@ -596,7 +600,7 @@ class Catalog_remote extends Catalog
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Remote Update'));
         }
-        $songsupdated = $this->update_remote_catalog('verify');
+        $songsupdated = $this->_update_remote_catalog('verify');
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
         }
