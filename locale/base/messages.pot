@@ -11895,96 +11895,12 @@ msgstr ""
 msgid "Enable legacy Subsonic API responses for compatibility issues"
 msgstr ""
 
-#: Database preference subcategory table id 1
-msgid "feature"
-msgstr ""
-
-#: Database preference subcategory table id 4
-msgid "query"
-msgstr ""
-
-#: Database preference subcategory table id 19
-msgid "transcoding"
-msgstr ""
-
-#: Database preference subcategory table id 22
-msgid "custom"
-msgstr ""
-
-#: Database preference subcategory table id 33
-msgid "theme"
-msgstr ""
-
-#: Database preference subcategory table id 40
-msgid "localplay"
-msgstr ""
-
-#: Database preference subcategory table id 69
-msgid "player"
-msgstr ""
-
-#: Database preference subcategory table id 70
-msgid "mpd"
-msgstr ""
-
-#: Database preference subcategory table id 71
-msgid "httpq"
-msgstr ""
-
 #: Database preference subcategory table id 77
 msgid "last.fm"
 msgstr ""
 
-#: Database preference subcategory table id 82
-msgid "home"
-msgstr ""
-
-#: Database preference subcategory table id 83
-msgid "library"
-msgstr ""
-
-#: Database preference subcategory table id 84
-msgid "browse"
-msgstr ""
-
-#: Database preference subcategory table id 86
-msgid "backend"
-msgstr ""
-
-#: Database preference subcategory table id 90
-msgid "privacy"
-msgstr ""
-
-#: Database preference subcategory table id 95
-msgid "update"
-msgstr ""
-
-#: Database preference subcategory table id 103
-msgid "share"
-msgstr ""
-
-#: Database preference subcategory table id 113
-msgid "upload"
-msgstr ""
-
-#: Database preference subcategory table id 131
-msgid "notification"
-msgstr ""
-
 #: Database preference subcategory table id 138
 msgid "interface"
-msgstr ""
-
-#: Database preference subcategory table id 144
-msgid "podcast"
-msgstr ""
-
-#: Database preference subcategory table id 148
-msgid "catalog"
-msgstr ""
-
-#: Database preference subcategory table id 150
-msgid "sidebar"
 msgstr ""
 
 #: Database preference subcategory table id 164
