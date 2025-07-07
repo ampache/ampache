@@ -1252,7 +1252,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [187, 'home_recently_played_all', '1', 'Show all media types in Recently Played', AccessLevelEnum::USER->value, 'bool', 'interface', 'home']);
                     break;
                 case 'show_wrapped':
-                    Dba::write($pref_sql, [188, 'show_wrapped', '1', 'Enable access to your personal \"Spotify Wrapped\" from your user page', AccessLevelEnum::USER->value, 'bool', 'interface', 'privacy']);
+                    Dba::write($pref_sql, [188, 'show_wrapped', '1', 'Enable access to your personal "Spotify Wrapped" from your user page', AccessLevelEnum::USER->value, 'bool', 'interface', 'privacy']);
                     break;
                 case 'sidebar_hide_switcher':
                     Dba::write($pref_sql, [189, 'sidebar_hide_switcher', '0', 'Hide sidebar switcher arrows', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
