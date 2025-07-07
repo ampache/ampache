@@ -1193,6 +1193,7 @@ class Art extends database_object
         }
 
         $has_gd = self::_hasGD();
+        $mime   = null;
         $art_id = null;
 
         $size = 'original';
