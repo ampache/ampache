@@ -402,7 +402,15 @@ class Art extends database_object
         $image = self::get_from_source(['url' => $url], $this->object_type);
         $rurl  = pathinfo($url);
         $ext   = (isset($rurl['extension']) && !str_starts_with($rurl['extension'], 'php')) ? $rurl['extension'] : 'jpeg';
-        $mime  = "image/" . $ext;
+        $parts = parse_url($url);
+
+        parse_str($parts['query'] ?? '', $query);
+        $rurl = (isset($query['name']))
+            ? pathinfo($query['name'])
+            : pathinfo($url);
+
+            $ext  = (isset($rurl['extension']) && !str_starts_with($rurl['extension'], 'php')) ? $rurl['extension'] : 'jpeg';
+        $mime = "image/" . $ext;
         $this->insert($image, $mime);
     }
 
