@@ -506,7 +506,7 @@ class Catalog_remote extends Catalog
                             $song->art
                         ) {
                             $current_song = new Song($song_id);
-                            $art          = new Art($song->album, 'album');
+                            $art          = new Art($current_song->album, 'album');
                             if (!$art->has_db_info()) {
                                 $art->insert_url($song->art);
                             }
