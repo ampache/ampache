@@ -384,6 +384,14 @@ class Catalog_remote extends Catalog
                             $existing_song = true;
                         }
 
+                        // stop checking everything depending on the action taken
+                        if (
+                            ($action === 'add' && $existing_song) ||
+                            ($action === 'verify' && !$existing_song)
+                        ) {
+                            continue;
+                        }
+
                         $id   = (string)$song->attributes()->id;
                         $tags = ($song_tags)
                             ? $this->remote_handle->send_command(self::CMD_SONG_TAGS, ['filter' => $id])
