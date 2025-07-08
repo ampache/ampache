@@ -386,8 +386,15 @@ class Catalog_remote extends Catalog
 
                         // stop checking everything depending on the action taken
                         if (
-                            ($action === 'add' && $existing_song) ||
-                            ($action === 'verify' && !$existing_song)
+                            $action === 'add' &&
+                            $existing_song
+                        ) {
+                            debug_event('remote.catalog', 'Skip existing song: ' . $db_url, 5);
+                            continue;
+                        }
+                        if (
+                            $action === 'verify' &&
+                            !$existing_song
                         ) {
                             continue;
                         }
