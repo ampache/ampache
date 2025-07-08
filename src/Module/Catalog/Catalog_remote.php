@@ -581,7 +581,9 @@ class Catalog_remote extends Catalog
                             $song_id = Catalog::get_id_from_file($db_url, 'song');
                             if ($song_id) {
                                 $current_song = new Song($song_id);
-                                $info         = ($current_song->id) ? self::update_song_from_tags($data, $current_song) : [];
+                                $current_song->_get_ext_info();
+
+                                $info = ($current_song->id) ? self::update_song_from_tags($data, $current_song) : [];
                                 if ($info['change']) {
                                     debug_event('remote.catalog', 'Updated existing song ' . $db_url, 5);
                                     $songsadded++;
@@ -662,8 +664,12 @@ class Catalog_remote extends Catalog
 
         Ui::update_text(T_("Updated"), T_("Completed updating remote Catalog(s)."));
 
-        // Update the last update value
-        $this->update_last_update($date);
+        // Update the last update value based on the action
+        if ($action === 'verify') {
+            $this->update_last_update($date);
+        } else {
+            $this->update_last_add();
+        }
 
         return $songsadded;
     }
