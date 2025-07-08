@@ -140,7 +140,8 @@ final class VaInfo implements VaInfoInterface
 
     private bool $_broken = false;
 
-    private string|array $_pathinfo;
+    /** @var array{dirname?: string, basename: string, extension?: string, filename: string}  */
+    private array $_pathinfo;
 
     private UserRepositoryInterface $userRepository;
 
