@@ -13,7 +13,8 @@ declare(strict_types=0);
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it
+* Bad `ampache.sql` file will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
@@ -743,7 +744,7 @@ class Json_Data
             $flag        = new Userflag($artist->id, 'artist');
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get_web_path('/client') . '/image.php?object_id=' . $artist_id . '&object_type=artist';
+            $art_url = Art::url($artist->id, 'artist');
 
             // Handle includes
             $albums = (in_array("albums", $include))
@@ -831,7 +832,7 @@ class Json_Data
                 : $album->year;
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get_web_path('/client') . '/image.php?object_id=' . $album->id . '&object_type=album';
+            $art_url = Art::url($album->id, 'album');
 
             $objArray = [];
 

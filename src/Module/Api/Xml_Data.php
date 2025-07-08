@@ -983,7 +983,7 @@ class Xml_Data
             $tag_string  = self::genre_string($artist->get_tags());
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get_web_path('/client') . '/image.php?object_id=' . $artist_id . '&object_type=artist';
+            $art_url = Art::url($artist->id, 'artist');
 
             // Handle includes
             $albums = (in_array("albums", $include)) ? self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, false) : '';
@@ -1055,7 +1055,7 @@ class Xml_Data
             $songs = (in_array("songs", $include)) ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false) : '';
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get_web_path('/client') . '/image.php?object_id=' . $album->id . '&object_type=album';
+            $art_url = Art::url($album->id, 'album');
             $string .= "\t<time>" . $album->time . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<diskcount>" . $album->disk_count . "</diskcount>\n\t<type>" . $album->release_type . "</type>\n" . self::genre_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($album->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n\t<mbid_group><![CDATA[" . $album->mbid_group . "]]></mbid_group>\n</album>\n";
         } // end foreach
 
