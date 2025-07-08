@@ -625,7 +625,7 @@ class Song extends database_object implements
      * This function gathers information from the song_ext_info table and adds it to the current object
      * @return array<string, scalar>
      */
-    public function _get_ext_info(string $select = ''): array
+    private function _get_ext_info(string $select = ''): array
     {
         if (parent::is_cached('song_data', $this->id)) {
             return parent::get_from_cache('song_data', $this->id);
