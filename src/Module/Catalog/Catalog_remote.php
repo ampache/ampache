@@ -581,7 +581,7 @@ class Catalog_remote extends Catalog
                             $song_id = Catalog::get_id_from_file($db_url, 'song');
                             if ($song_id) {
                                 $current_song = new Song($song_id);
-                                $current_song->_get_ext_info();
+                                $current_song->fill_ext_info();
 
                                 $info = ($current_song->id) ? self::update_song_from_tags($data, $current_song) : [];
                                 if ($info['change']) {
