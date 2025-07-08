@@ -1688,7 +1688,7 @@ class Subsonic_Xml_Data
         $xbookmark->addAttribute('changed', date("c", (int)$bookmark->update_date));
         if ($bookmark->object_type == "song") {
             $song = new Song($bookmark->object_id);
-            if ($song->isNew() === false  && $song->enabled) {
+            if ($song->isNew() === false && $song->enabled) {
                 self::addSong($xbookmark, $song, 'entry');
             }
         } elseif ($bookmark->object_type == "video") {
