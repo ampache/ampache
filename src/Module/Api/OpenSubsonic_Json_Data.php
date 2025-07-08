@@ -2383,7 +2383,7 @@ class OpenSubsonic_Json_Data
             $json = self::_getDirectory_Catalog($object);
         }
 
-        $response['subsonic-response']['directory'] = (empty($json)) ? (object)[] : $json;
+        $response['subsonic-response']['directory'] = $json;
 
         return $response;
     }

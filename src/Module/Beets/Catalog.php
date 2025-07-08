@@ -71,9 +71,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param int $catalog_id
      */
-    public function __construct($catalog_id = null)
+    public function __construct(?int $catalog_id = null)
     {
         // TODO: Basic constructor should be provided from parent
         if ($catalog_id) {

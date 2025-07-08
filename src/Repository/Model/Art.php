@@ -405,7 +405,7 @@ class Art extends database_object
         $parts = parse_url($url);
 
         parse_str($parts['query'] ?? '', $query);
-        $rurl = (isset($query['name']))
+        $rurl = (isset($query['name']) && is_string($query['name']))
             ? pathinfo($query['name'])
             : pathinfo($url);
 
@@ -1265,10 +1265,7 @@ class Art extends database_object
                 $url .= '&id=' . $art_id;
             }
 
-            if ($extension !== '' && $extension !== '0') {
-                $name = 'art.' . $extension;
-                $url .= '&name=' . $name;
-            }
+            $url .= '&name=' . 'art.' . $extension;
         }
 
         return $url;
