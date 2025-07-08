@@ -380,7 +380,8 @@ class Catalog_remote extends Catalog
                         }
 
                         $existing_song = false;
-                        if ($this->check_remote_song([$old_url], $db_url)) {
+                        $song_id_check = $this->check_remote_song([$old_url], $db_url);
+                        if ($song_id_check) {
                             $existing_song = true;
                         }
 
@@ -389,7 +390,7 @@ class Catalog_remote extends Catalog
                             $action === 'add' &&
                             $existing_song
                         ) {
-                            debug_event('remote.catalog', 'Skip existing song: ' . $db_url, 5);
+                            debug_event('remote.catalog', 'Skip existing song: ' . $song_id_check, 5);
                             continue;
                         }
                         if (
@@ -600,7 +601,7 @@ class Catalog_remote extends Catalog
 
                                 $info = ($current_song->id) ? self::update_song_from_tags($data, $current_song) : [];
                                 if ($info['change']) {
-                                    debug_event('remote.catalog', 'Updated existing song ' . $db_url, 5);
+                                    debug_event('remote.catalog', 'Updated existing song ' . $song_id, 5);
                                     $songsadded++;
                                 }
                             }
