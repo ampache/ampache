@@ -3453,13 +3453,10 @@ abstract class Catalog extends database_object
 
     /**
      * get_media_tags
-     * @param Podcast_Episode|Song|Video $media
      * @param string[] $gather_types
-     * @param string $sort_pattern
-     * @param string $rename_pattern
      * @return array<string, mixed>
      */
-    public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern): array
+    public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern, string $file_override = null): array
     {
         // Check for patterns
         if (!$sort_pattern || !$rename_pattern) {
@@ -3467,12 +3464,14 @@ abstract class Catalog extends database_object
             $rename_pattern = $this->rename_pattern;
         }
 
-        if ($media->file === null) {
+        $media_file = $file_override ?? $media->file;
+
+        if (!$media_file) {
             return [];
         }
 
         $vainfo = $this->getUtilityFactory()->createVaInfo(
-            $media->file,
+            $media_file,
             $gather_types,
             '',
             '',
@@ -3489,7 +3488,7 @@ abstract class Catalog extends database_object
 
         $key = VaInfo::get_tag_type($vainfo->tags);
 
-        return VaInfo::clean_tag_info($vainfo->tags, $key, $media->file);
+        return VaInfo::clean_tag_info($vainfo->tags, $key, $media_file);
     }
 
     /**

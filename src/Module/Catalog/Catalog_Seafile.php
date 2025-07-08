@@ -494,22 +494,20 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Video $media
      * @param string[] $gather_types
-     * @param string $sort_pattern
-     * @param string $rename_pattern
      * @return array<string, mixed>
      * @throws Exception
      */
-    public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern): array
+    public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern, string $file_override = null): array
     {
         // if you have the file it's all good
-        /** @var Song $media */
-        if (!empty($media->file) && is_file($media->file)) {
-            return $this->download_metadata($media->file, $sort_pattern, $rename_pattern, $gather_types);
+        $media_file = $file_override ?? $media->file;
+
+        if (!empty($media_file) && is_file($media_file)) {
+            return $this->download_metadata($media_file, $sort_pattern, $rename_pattern, $gather_types);
         }
         if ($this->seafile->prepare()) {
-            $fileinfo = $this->seafile->from_virtual_path((string)$media->file);
+            $fileinfo = $this->seafile->from_virtual_path((string)$media_file);
 
             $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
 
