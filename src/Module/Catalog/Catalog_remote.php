@@ -828,7 +828,6 @@ class Catalog_remote extends Catalog
         $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) AS `extension` FROM `song` WHERE `catalog` = ?;";
         $db_results = Dba::read($sql, [$this->catalog_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $remote_url  = $row['file'] . '&ssid=' . $handshake->auth . '&format=' . $cache_target . '&bitrate=' . $max_bitrate;
             $file_target = ($row['id'] && $cache_target === $row['extension'])
                 ? Catalog::get_cache_path($row['id'], $this->catalog_id, $cache_path, $cache_target)
                 : null;
@@ -838,31 +837,41 @@ class Catalog_remote extends Catalog
             }
 
             if (!is_file($file_target) || Core::get_filesize($file_target) == 0) {
-                debug_event('remote.catalog', 'Saving ' . $row['id'] . ' to (' . $file_target . ')', 5);
-                try {
-                    $filehandle = fopen($file_target, 'w');
-                    if (!$filehandle) {
-                        debug_event('remote.catalog', 'Could not open file: ' . $file_target, 5);
-                        continue;
-                    }
+                $old_target_file = rtrim(trim($cache_path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $row['extension'];
+                $old_file_exists = is_file($old_target_file);
+                if ($old_file_exists) {
+                    // check for the old path first
+                    rename($old_target_file, $file_target);
+                    debug_event('remote.catalog', 'Moved: ' . $row['id'] . ' from: {' . $old_target_file . '}' . ' to: {' . $file_target . '}', 5);
+                } else {
+                    debug_event('remote.catalog', 'Saving ' . $row['id'] . ' to (' . $file_target . ')', 5);
+                    try {
+                        $filehandle = fopen($file_target, 'w');
+                        if (!$filehandle) {
+                            debug_event('remote.catalog', 'Could not open file: ' . $file_target, 5);
+                            continue;
+                        }
 
-                    $curl = curl_init();
-                    curl_setopt_array(
-                        $curl,
-                        [
-                            CURLOPT_RETURNTRANSFER => 1,
-                            CURLOPT_FILE => $filehandle,
-                            CURLOPT_TIMEOUT => 0,
-                            CURLOPT_PIPEWAIT => 1,
-                            CURLOPT_URL => $remote_url,
-                        ]
-                    );
-                    curl_exec($curl);
-                    curl_close($curl);
-                    fclose($filehandle);
-                    debug_event('remote.catalog', 'Saved: ' . $row['id'] . ' to: {' . $file_target . '}', 5);
-                } catch (Exception $error) {
-                    debug_event('remote.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
+                        $remote_url = $row['file'] . '&ssid=' . $handshake->auth . '&format=' . $cache_target . '&bitrate=' . $max_bitrate;
+
+                        $curl = curl_init();
+                        curl_setopt_array(
+                            $curl,
+                            [
+                                CURLOPT_RETURNTRANSFER => 1,
+                                CURLOPT_FILE => $filehandle,
+                                CURLOPT_TIMEOUT => 0,
+                                CURLOPT_PIPEWAIT => 1,
+                                CURLOPT_URL => $remote_url,
+                            ]
+                        );
+                        curl_exec($curl);
+                        curl_close($curl);
+                        fclose($filehandle);
+                        debug_event('remote.catalog', 'Saved: ' . $row['id'] . ' to: {' . $file_target . '}', 5);
+                    } catch (Exception $error) {
+                        debug_event('remote.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
+                    }
                 }
 
                 // keep alive just in case
