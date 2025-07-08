@@ -1546,7 +1546,7 @@ final class VaInfo implements VaInfoInterface
                     default:
                         $frame = strtolower($this->trimAscii($txxx['description']));
                         if ($enable_custom_metadata && !isset(self::DEFAULT_INFO[$frame]) && !in_array($frame, $parsed)) {
-                            $parsed[strtolower($this->trimAscii($txxx['description']))] = $id3v2['comments']['text'][$txxx['description']];
+                            $parsed[strtolower($this->trimAscii($txxx['description']))] = $id3v2['comments']['text'][$txxx['description']] ?? $txxx['data'];
                         }
                         break;
                 }
