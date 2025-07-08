@@ -797,15 +797,26 @@ class Catalog_remote extends Catalog
             return false;
         }
 
-        $remote = AmpConfig::get('cache_remote');
-        $path   = (string)AmpConfig::get('cache_path', '');
-        $target = (string)AmpConfig::get('cache_target', '');
+        try {
+            $handshake = $this->remote_handle->info();
+        } catch (Exception) {
+            return false;
+        }
+
+        if (!$handshake instanceof SimpleXMLElement) {
+            return false;
+        }
+
+        $remote       = AmpConfig::get('cache_remote');
+        $cache_path   = (string)AmpConfig::get('cache_path', '');
+        $cache_target = (string)AmpConfig::get('cache_target', '');
         // need a destination, source and target format
-        if (!is_dir($path) || !$remote || !$target) {
+        if (!is_dir($cache_path) || !$remote || !$cache_target) {
             debug_event('remote.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);
 
             return false;
         }
+
         $max_bitrate   = (int)AmpConfig::get('max_bit_rate', 128);
         $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
 
@@ -813,21 +824,25 @@ class Catalog_remote extends Catalog
         if ($user_bit_rate > $max_bitrate) {
             $max_bitrate = $user_bit_rate;
         }
-        $handshake = $this->remote_handle->info();
-        if (!$handshake instanceof SimpleXMLElement) {
-            return false;
-        }
+
         $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) AS `extension` FROM `song` WHERE `catalog` = ?;";
         $db_results = Dba::read($sql, [$this->catalog_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $row['extension'];
-            $remote_url  = $row['file'] . '&ssid=' . $handshake->auth . '&format=' . $target . '&bitrate=' . $max_bitrate;
-            if (!is_file($target_file) || (int)Core::get_filesize($target_file) == 0) {
-                debug_event('remote.catalog', 'Saving ' . $row['id'] . ' to (' . $target_file . ')', 5);
+            $remote_url  = $row['file'] . '&ssid=' . $handshake->auth . '&format=' . $cache_target . '&bitrate=' . $max_bitrate;
+            $file_target = ($row['id'] && $cache_target === $row['extension'])
+                ? Catalog::get_cache_path($row['id'], $this->catalog_id, $cache_path, $cache_target)
+                : null;
+            if (empty($file_target)) {
+                debug_event('remote.catalog', 'Cache error: no target for ' . $row['id'], 5);
+                continue;
+            }
+
+            if (!is_file($file_target) || Core::get_filesize($file_target) == 0) {
+                debug_event('remote.catalog', 'Saving ' . $row['id'] . ' to (' . $file_target . ')', 5);
                 try {
-                    $filehandle = fopen($target_file, 'w');
+                    $filehandle = fopen($file_target, 'w');
                     if (!$filehandle) {
-                        debug_event('remote.catalog', 'Could not open file: ' . $target_file, 5);
+                        debug_event('remote.catalog', 'Could not open file: ' . $file_target, 5);
                         continue;
                     }
 
@@ -845,7 +860,7 @@ class Catalog_remote extends Catalog
                     curl_exec($curl);
                     curl_close($curl);
                     fclose($filehandle);
-                    debug_event('remote.catalog', 'Saved: ' . $row['id'] . ' to: {' . $target_file . '}', 5);
+                    debug_event('remote.catalog', 'Saved: ' . $row['id'] . ' to: {' . $file_target . '}', 5);
                 } catch (Exception $error) {
                     debug_event('remote.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
                 }
