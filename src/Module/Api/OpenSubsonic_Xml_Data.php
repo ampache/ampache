@@ -379,6 +379,82 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
+     * addChildSong
+     * @param array<string, string> $attributes
+     */
+    private static function _addChildSong(SimpleXMLElement $xml, Song $song, string $elementName, array $attributes = []): SimpleXMLElement
+    {
+        $sub_id    = OpenSubsonic_Api::getSongSubId($song->id);
+        $subParent = OpenSubsonic_Api::getAlbumSubId($song->album);
+        $xsong     = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
+        $xsong->addAttribute('id', $sub_id);
+        $xsong->addAttribute('parent', $subParent);
+        //$xsong->addAttribute('created', );
+        $xsong->addAttribute('title', (string)$song->title);
+        $xsong->addAttribute('isDir', 'false');
+        $xsong->addAttribute('isVideo', 'false');
+        $xsong->addAttribute('type', 'music');
+        $xsong->addAttribute('albumId', $subParent);
+        $xsong->addAttribute('album', (string)$song->get_album_fullname());
+        $xsong->addAttribute('artistId', ($song->artist) ? OpenSubsonic_Api::getArtistSubId($song->artist) : '');
+        $xsong->addAttribute('artist', (string)$song->get_artist_fullname());
+        if ($song->has_art()) {
+            $art_id = (AmpConfig::get('show_song_art', false)) ? $sub_id : $subParent;
+            $xsong->addAttribute('coverArt', $art_id);
+        }
+        $xsong->addAttribute('duration', (string)$song->time);
+        $xsong->addAttribute('bitRate', (string)((int)($song->bitrate / 1024)));
+        $rating      = new Rating($song->id, 'song');
+        $user_rating = ($rating->get_user_rating() ?? 0);
+        if ($user_rating > 0) {
+            $xsong->addAttribute('userRating', (string)ceil($user_rating));
+        }
+        $avg_rating = $rating->get_average_rating();
+        if ($avg_rating > 0) {
+            $xsong->addAttribute('averageRating', (string)$avg_rating);
+        }
+        self::_setIfStarred($xsong, 'song', $song->id);
+        if ($song->track > 0) {
+            $xsong->addAttribute('track', (string)$song->track);
+        }
+        if ($song->year > 0) {
+            $xsong->addAttribute('year', (string)$song->year);
+        }
+        $tags = Tag::get_object_tags('song', $song->id);
+        if (!empty($tags)) {
+            $xsong->addAttribute('genre', implode(',', array_column($tags, 'name')));
+        }
+        $xsong->addAttribute('size', (string)$song->size);
+        $disk = $song->disk;
+        if ($disk > 0) {
+            $xsong->addAttribute('discNumber', (string)$disk);
+        }
+        $xsong->addAttribute('suffix', (string)$song->type);
+        $xsong->addAttribute('contentType', (string)$song->mime);
+        // Always return the original filename, not the transcoded one
+        $xsong->addAttribute('path', (string)$song->file);
+        if (AmpConfig::get('transcode', 'default') != 'never') {
+            $cache_path     = (string)AmpConfig::get('cache_path', '');
+            $cache_target   = (string)AmpConfig::get('cache_target', '');
+            $file_target    = Catalog::get_cache_path($song->getId(), $song->getCatalogId(), $cache_path, $cache_target);
+            $transcode_type = ($file_target !== null && is_file($file_target))
+                ? $cache_target
+                : Stream::get_transcode_format($song->type, null, 'api');
+
+            if (!empty($transcode_type) && $song->type !== $transcode_type) {
+                // Set transcoding information
+                $xsong->addAttribute('transcodedSuffix', $transcode_type);
+                $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
+            }
+        }
+        foreach ($attributes as $key => $value) {
+            $xsong->addAttribute($key, $value);
+        }
+
+        return $xml;
+    }
+
+    /**
      * addArtistArray
      * @param array{
      *     id: int,
@@ -497,7 +573,11 @@ class OpenSubsonic_Xml_Data
         if ($songs) {
             $media_ids = self::getAlbumRepository()->getSongs($album->id);
             foreach ($media_ids as $song_id) {
-                self::addSong($xalbum, $song_id);
+                $song = new Song($song_id);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xalbum, $song);
             }
         }
 
@@ -564,7 +644,11 @@ class OpenSubsonic_Xml_Data
         if ($songs) {
             $media_ids = self::getAlbumRepository()->getSongs($album->id);
             foreach ($media_ids as $song_id) {
-                self::addSong($xalbum, $song_id);
+                $song = new Song($song_id);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xalbum, $song);
             }
         }
     }
@@ -573,84 +657,9 @@ class OpenSubsonic_Xml_Data
      * addSong
      * @param array<string, string> $attributes
      */
-    public static function addSong(SimpleXMLElement $xml, int $song_id, string $elementName = 'song', array $attributes = []): SimpleXMLElement
+    public static function addSong(SimpleXMLElement $xml, Song $song, string $elementName = 'song', array $attributes = []): SimpleXMLElement
     {
-        $song = new Song($song_id);
-        if ($song->isNew()) {
-            return $xml;
-        }
-
-        // Don't create entries for disabled songs
-        if ($song->enabled) {
-            $sub_id    = OpenSubsonic_Api::getSongSubId($song->id);
-            $subParent = OpenSubsonic_Api::getAlbumSubId($song->album);
-            $xsong     = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
-            $xsong->addAttribute('id', $sub_id);
-            $xsong->addAttribute('parent', $subParent);
-            //$xsong->addAttribute('created', );
-            $xsong->addAttribute('title', (string)$song->title);
-            $xsong->addAttribute('isDir', 'false');
-            $xsong->addAttribute('isVideo', 'false');
-            $xsong->addAttribute('type', 'music');
-            $xsong->addAttribute('albumId', $subParent);
-            $xsong->addAttribute('album', (string)$song->get_album_fullname());
-            $xsong->addAttribute('artistId', ($song->artist) ? OpenSubsonic_Api::getArtistSubId($song->artist) : '');
-            $xsong->addAttribute('artist', (string)$song->get_artist_fullname());
-            if ($song->has_art()) {
-                $art_id = (AmpConfig::get('show_song_art', false)) ? $sub_id : $subParent;
-                $xsong->addAttribute('coverArt', $art_id);
-            }
-            $xsong->addAttribute('duration', (string)$song->time);
-            $xsong->addAttribute('bitRate', (string)((int)($song->bitrate / 1024)));
-            $rating      = new Rating($song->id, 'song');
-            $user_rating = ($rating->get_user_rating() ?? 0);
-            if ($user_rating > 0) {
-                $xsong->addAttribute('userRating', (string)ceil($user_rating));
-            }
-            $avg_rating = $rating->get_average_rating();
-            if ($avg_rating > 0) {
-                $xsong->addAttribute('averageRating', (string)$avg_rating);
-            }
-            self::_setIfStarred($xsong, 'song', $song->id);
-            if ($song->track > 0) {
-                $xsong->addAttribute('track', (string)$song->track);
-            }
-            if ($song->year > 0) {
-                $xsong->addAttribute('year', (string)$song->year);
-            }
-            $tags = Tag::get_object_tags('song', $song->id);
-            if (!empty($tags)) {
-                $xsong->addAttribute('genre', implode(',', array_column($tags, 'name')));
-            }
-            $xsong->addAttribute('size', (string)$song->size);
-            $disk = $song->disk;
-            if ($disk > 0) {
-                $xsong->addAttribute('discNumber', (string)$disk);
-            }
-            $xsong->addAttribute('suffix', (string)$song->type);
-            $xsong->addAttribute('contentType', (string)$song->mime);
-            // Always return the original filename, not the transcoded one
-            $xsong->addAttribute('path', (string)$song->file);
-            if (AmpConfig::get('transcode', 'default') != 'never') {
-                $cache_path     = (string)AmpConfig::get('cache_path', '');
-                $cache_target   = (string)AmpConfig::get('cache_target', '');
-                $file_target    = Catalog::get_cache_path($song->getId(), $song->getCatalogId(), $cache_path, $cache_target);
-                $transcode_type = ($file_target !== null && is_file($file_target))
-                    ? $cache_target
-                    : Stream::get_transcode_format($song->type, null, 'api');
-
-                if (!empty($transcode_type) && $song->type !== $transcode_type) {
-                    // Set transcoding information
-                    $xsong->addAttribute('transcodedSuffix', $transcode_type);
-                    $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
-                }
-            }
-            foreach ($attributes as $key => $value) {
-                $xsong->addAttribute($key, $value);
-            }
-        }
-
-        return $xml;
+        return self::_addChildSong($xml, $song, $elementName, $attributes);
     }
 
     /**
@@ -689,7 +698,11 @@ class OpenSubsonic_Xml_Data
         $media_ids = self::getAlbumRepository()->getSongs($album->id);
         foreach ($media_ids as $song_id) {
             // TODO addChild || use addChildArray
-            self::addSong($xdir, $song_id, 'child');
+            $song = new Song($song_id);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+            self::addSong($xdir, $song, 'child');
         }
     }
 
@@ -892,7 +905,11 @@ class OpenSubsonic_Xml_Data
         if ($songs) {
             $allsongs = $playlist->get_songs();
             foreach ($allsongs as $song_id) {
-                self::addSong($xplaylist, $song_id, 'entry');
+                $song = new Song($song_id);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xplaylist, $song, 'entry');
             }
         }
 
@@ -920,7 +937,11 @@ class OpenSubsonic_Xml_Data
             $xplaylist->addAttribute('duration', (string)$duration);
             $xplaylist->addAttribute('coverArt', $sub_id);
             foreach ($allitems as $item) {
-                self::addSong($xplaylist, (int)$item['object_id'], 'entry');
+                $song = new Song((int)$item['object_id']);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xplaylist, $song, 'entry');
             }
         } else {
             $xplaylist->addAttribute('songCount', (string)$search->last_count);
@@ -954,7 +975,11 @@ class OpenSubsonic_Xml_Data
             }
 
             foreach ($items as $row) {
-                self::addSong($xplayqueue, (int)$row['object_id'], 'entry');
+                $song = new Song((int)$row['object_id']);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xplayqueue, $song, 'entry');
             }
         }
 
@@ -969,7 +994,11 @@ class OpenSubsonic_Xml_Data
     {
         $xsongs = self::_addChildToResultXml($xml, 'randomSongs');
         foreach ($songs as $song_id) {
-            self::addSong($xsongs, $song_id);
+            $song = new Song($song_id);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+            self::addSong($xsongs, $song);
         }
 
         return $xml;
@@ -999,7 +1028,11 @@ class OpenSubsonic_Xml_Data
             $xplayqueue->addAttribute('changedBy', $changedBy);
 
             foreach ($items as $row) {
-                self::addSong($xplayqueue, (int)$row['object_id'], 'entry');
+                $song = new Song((int)$row['object_id']);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xplayqueue, $song, 'entry');
             }
         }
 
@@ -1014,7 +1047,11 @@ class OpenSubsonic_Xml_Data
     {
         $xsongs = self::_addChildToResultXml($xml, 'songsByGenre');
         foreach ($songs as $song_id) {
-            self::addSong($xsongs, $song_id);
+            $song = new Song($song_id);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+            self::addSong($xsongs, $song);
         }
 
         return $xml;
@@ -1028,7 +1065,11 @@ class OpenSubsonic_Xml_Data
     {
         $xsongs = self::_addChildToResultXml($xml, 'topSongs');
         foreach ($songs as $song_id) {
-            self::addSong($xsongs, $song_id);
+            $song = new Song($song_id);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+            self::addSong($xsongs, $song);
         }
 
         return $xml;
@@ -1059,7 +1100,7 @@ class OpenSubsonic_Xml_Data
                     'playerName' => (string)$row['agent'],
                 ];
 
-                self::addSong($xplaynow, $row['media']->getId(), 'entry', $attributes);
+                self::addSong($xplaynow, $row['media'], 'entry', $attributes);
             }
         }
 
@@ -1076,7 +1117,11 @@ class OpenSubsonic_Xml_Data
         $xresult->addAttribute('offset', (string)$offset);
         $xresult->addAttribute('totalHits', (string)$total);
         foreach ($songs as $song_id) {
-            self::addSong($xresult, $song_id, 'match');
+            $song = new Song($song_id);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+            self::addSong($xresult, $song, 'match');
         }
 
         return $xml;
@@ -1101,7 +1146,11 @@ class OpenSubsonic_Xml_Data
             self::addAlbum($xresult, $album);
         }
         foreach ($songs as $song_id) {
-            self::addSong($xresult, $song_id);
+            $song = new Song($song_id);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+            self::addSong($xresult, $song);
         }
 
         return $xml;
@@ -1126,7 +1175,11 @@ class OpenSubsonic_Xml_Data
             self::addAlbumID3($xresult, $album);
         }
         foreach ($songs as $song_id) {
-            self::addSong($xresult, $song_id);
+            $song = new Song($song_id);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+            self::addSong($xresult, $song);
         }
 
         return $xml;
@@ -1153,7 +1206,11 @@ class OpenSubsonic_Xml_Data
         }
 
         foreach ($songs as $song_id) {
-            self::addSong($xstarred, $song_id);
+            $song = new Song($song_id);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+            self::addSong($xstarred, $song);
         }
 
         return $xml;
@@ -1180,7 +1237,11 @@ class OpenSubsonic_Xml_Data
         }
 
         foreach ($songs as $song_id) {
-            self::addSong($xstarred, $song_id);
+            $song = new Song($song_id);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+            self::addSong($xstarred, $song);
         }
 
         return $xml;
@@ -1295,17 +1356,29 @@ class OpenSubsonic_Xml_Data
         $xshare->addAttribute('visitCount', (string)$share->counter);
 
         if ($share->object_type == 'song') {
-            self::addSong($xshare, $share->object_id, 'entry');
+            $song = new Song($share->object_id);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+            self::addSong($xshare, $song, 'entry');
         } elseif ($share->object_type == 'playlist') {
             $playlist = new Playlist($share->object_id);
             $songs    = $playlist->get_songs();
             foreach ($songs as $song_id) {
-                self::addSong($xshare, $song_id, 'entry');
+                $song = new Song($song_id);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xshare, $song, 'entry');
             }
         } elseif ($share->object_type == 'album') {
             $songs = self::getSongRepository()->getByAlbum($share->object_id);
             foreach ($songs as $song_id) {
-                self::addSong($xshare, $song_id, 'entry');
+                $song = new Song($song_id);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xshare, $song, 'entry');
             }
         }
     }
@@ -1319,7 +1392,11 @@ class OpenSubsonic_Xml_Data
         $tracks = $localplay->get();
         foreach ($tracks as $track) {
             if (array_key_exists('oid', $track)) {
-                self::addSong($xjbox, (int)$track['oid'], 'entry');
+                $song = new Song((int)$track['oid']);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xjbox, $song, 'entry');
             }
             // TODO This can be random play, democratic, podcasts, etc. not just songs
         }
@@ -1350,7 +1427,7 @@ class OpenSubsonic_Xml_Data
      */
     public static function addLyrics(SimpleXMLElement $xml, string $artist, string $title, Song $song): SimpleXMLElement
     {
-        if ($song->isNew()) {
+        if ($song->isNew() || !$song->enabled) {
             return $xml;
         }
 
@@ -1378,7 +1455,7 @@ class OpenSubsonic_Xml_Data
      */
     public static function addLyricsList(SimpleXMLElement $xml, Song $song): SimpleXMLElement
     {
-        if ($song->isNew()) {
+        if ($song->isNew() || !$song->enabled) {
             return $xml;
         }
 
@@ -1510,7 +1587,11 @@ class OpenSubsonic_Xml_Data
         $xsimilar = self::_addChildToResultXml($xml, 'similarSongs');
         foreach ($similar_songs as $similar_song) {
             if ($similar_song['id'] !== null) {
-                self::addSong($xsimilar, $similar_song['id']);
+                $song = new Song($similar_song['id']);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xsimilar, $song);
             }
         }
 
@@ -1531,7 +1612,11 @@ class OpenSubsonic_Xml_Data
         $xsimilar = self::_addChildToResultXml($xml, 'similarSongs2');
         foreach ($similar_songs as $similar_song) {
             if ($similar_song['id'] !== null) {
-                self::addSong($xsimilar, $similar_song['id']);
+                $song = new Song($similar_song['id']);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xsimilar, $song);
             }
         }
 
@@ -1620,7 +1705,11 @@ class OpenSubsonic_Xml_Data
         $xbookmark->addAttribute('created', date("c", (int)$bookmark->creation_date));
         $xbookmark->addAttribute('changed', date("c", (int)$bookmark->update_date));
         if ($bookmark->object_type == "song") {
-            self::addSong($xbookmark, $bookmark->object_id, 'entry');
+            $song = new Song($bookmark->object_id);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+            self::addSong($xbookmark, $song, 'entry');
         } elseif ($bookmark->object_type == "video") {
             self::_addVideo($xbookmark, new Video($bookmark->object_id), 'entry');
         } elseif ($bookmark->object_type == "podcast_episode") {
