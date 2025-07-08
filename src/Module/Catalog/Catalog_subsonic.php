@@ -490,7 +490,7 @@ class Catalog_subsonic extends Catalog
         $cache_target = (string)AmpConfig::get('cache_target', '');
         // need a destination, source and target format
         if (!$remote || !is_dir($cache_path) || !$cache_target) {
-            debug_event('local.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);
+            debug_event('subsonic.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);
 
             return false;
         }

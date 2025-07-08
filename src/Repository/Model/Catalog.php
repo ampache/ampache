@@ -1047,35 +1047,63 @@ abstract class Catalog extends database_object
     /**
      * Run the cache_catalog_proc() on music catalogs.
      */
-    public static function cache_catalogs(): void
+    public static function cache_catalogs(Interactor $interactor = null): void
     {
         $path   = (string)AmpConfig::get('cache_path', '');
         $target = (string)AmpConfig::get('cache_target', '');
         // need a destination and target filetype
-        if (is_dir($path) && $target) {
+        if (is_dir($path) && Core::is_readable($path)) {
             $catalogs = self::get_all_catalogs('music');
-            foreach ($catalogs as $catalogid) {
-                debug_event(self::class, 'cache_catalogs: ' . $catalogid, 5);
-                $catalog = self::create_from_id($catalogid);
-                if ($catalog === null) {
-                    break;
-                }
-
-                $catalog->cache_catalog_proc();
-            }
-
-            $catalog_dirs = new RecursiveDirectoryIterator($path);
-            $dir_files    = new RecursiveIteratorIterator($catalog_dirs);
-            $cache_files  = new RegexIterator($dir_files, sprintf('/\.%s/i', $target));
-            debug_event(self::class, 'cache_catalogs: cleaning old files', 5);
-            foreach ($cache_files as $file) {
-                $path    = pathinfo((string) $file);
-                $song_id = $path['filename'];
-                if (!Song::has_id($song_id)) {
-                    unlink($file);
-                    debug_event(self::class, 'cache_catalogs: removed {' . $file . '}', 4);
+            $scandir  = scandir($path) ?: [];
+            foreach ($scandir as $file) {
+                // check for lost catalogs
+                if ('.' === $file || '..' === $file) {
+                    continue;
+                } elseif (is_dir($path . '/' . $file) && !in_array($file, $catalogs)) {
+                    debug_event(self::class, 'WARNING: Orphaned catalog cache ' . $path . '/' . $file, 5);
+                    $interactor?->warn(
+                        sprintf('WARNING: Orphaned catalog cache %s/%s', $path, $file),
+                        true
+                    );
                 }
             }
+            if ($target) {
+                foreach ($catalogs as $catalogid) {
+                    $catalog = self::create_from_id($catalogid);
+                    if ($catalog === null) {
+                        break;
+                    }
+                    debug_event(self::class, 'cache_catalogs: ' . $catalogid, 5);
+                    $interactor?->info(
+                        sprintf('cache_catalogs: %s', $catalogid),
+                        true
+                    );
+
+                    $catalog->cache_catalog_proc();
+                }
+
+                $catalog_dirs = new RecursiveDirectoryIterator($path);
+                $dir_files    = new RecursiveIteratorIterator($catalog_dirs);
+                $cache_files  = new RegexIterator($dir_files, sprintf('/\.%s/i', $target));
+                debug_event(self::class, 'cache_catalogs: cleaning old files', 5);
+                $interactor?->info(
+                    'cache_catalogs: cleaning old files',
+                    true
+                );
+                foreach ($cache_files as $file) {
+                    $path    = pathinfo((string)$file);
+                    $song_id = $path['filename'];
+                    if (!Song::has_id($song_id)) {
+                        unlink($file);
+                        debug_event(self::class, 'cache_catalogs: removed {' . $file . '}', 4);
+                        $interactor?->info(
+                            sprintf('cache_catalogs: removed {%s}', $file),
+                            true
+                        );
+                    }
+                }
+            }
+
         }
     }
 
