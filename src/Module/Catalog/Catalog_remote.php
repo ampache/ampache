@@ -382,19 +382,20 @@ class Catalog_remote extends Catalog
                             $song_tags = $tags->song_tag;
                             $data      = [];
                             foreach ($song_tags->children() as $name => $value) {
+                                $key = (string)$name;
                                 if (count($song_tags->$name) > 1) {
                                     // arrays of objects
-                                    if (!isset($data[$name])) {
-                                        $data[$name] = [];
+                                    if (!isset($data[$key]) || !$data[$key] || !is_array($data[$key])) {
+                                        $data[$key] = [];
                                     }
                                     foreach ($value as $child) {
-                                        if (!empty((string)$child)) {
-                                            $data[$name][] = (string)$child;
+                                        if (!empty((string)$child) && is_array($data[$key])) {
+                                            $data[$key][] = (string)$child;
                                         }
                                     }
                                 } else {
                                     // single value
-                                    $data[$name] = (!empty((string)$value))
+                                    $data[$key] = (!empty((string)$value))
                                         ? (string)$value
                                         : null;
                                 }
@@ -506,7 +507,7 @@ class Catalog_remote extends Catalog
                                 debug_event('remote.catalog', 'Insert failed for ' . $db_url, 1);
                                 if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                                     /* HINT: Song Title */
-                                    AmpError::add('general', T_(sprintf('Unable to insert song - %s', $data['title'])));
+                                    AmpError::add('general', T_(sprintf('Unable to insert song - %s', $db_url)));
                                     echo AmpError::display('general');
                                     flush();
                                 }
