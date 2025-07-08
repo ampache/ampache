@@ -286,7 +286,7 @@ class Catalog_subsonic extends Catalog
                                     $action === 'add' &&
                                     $existing_song
                                 ) {
-                                    debug_event('subsonic.catalog', 'Skipping existing song ' . $song['path'], 5);
+                                    debug_event('subsonic.catalog', 'Skipping existing song ' . $song_id_check, 5);
                                     continue;
                                 }
 
@@ -485,15 +485,16 @@ class Catalog_subsonic extends Catalog
      */
     public function cache_catalog_proc(): bool
     {
-        $remote = AmpConfig::get('cache_remote');
-        $path   = (string)AmpConfig::get('cache_path', '');
-        $target = (string)AmpConfig::get('cache_target', '');
+        $remote       = AmpConfig::get('cache_remote');
+        $cache_path   = (string)AmpConfig::get('cache_path', '');
+        $cache_target = (string)AmpConfig::get('cache_target', '');
         // need a destination, source and target format
-        if (!is_dir($path) || !$remote || !$target) {
+        if (!$remote || !is_dir($cache_path) || !$cache_target) {
             debug_event('local.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);
 
             return false;
         }
+
         $max_bitrate   = (int)AmpConfig::get('max_bit_rate', 128);
         $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
 
@@ -502,37 +503,40 @@ class Catalog_subsonic extends Catalog
             $max_bitrate = $user_bit_rate;
         }
         $options = [
-            'format' => $target,
+            'format' => $cache_target,
             'maxBitRate' => $max_bitrate,
         ];
-        $cache_path   = (string)AmpConfig::get('cache_path', '');
-        $cache_target = (string)AmpConfig::get('cache_target', '');
 
         $this->_createClient();
 
         $sql          = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?;";
         $db_results   = Dba::read($sql, [$this->catalog_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $target_file = Catalog::get_cache_path($row['id'], $this->catalog_id, $cache_path, $cache_target);
-            if ($target_file === null) {
+            $file_target = ($row['id'] && $cache_target === $row['extension'])
+                ? Catalog::get_cache_path($row['id'], $this->catalog_id, $cache_path, $cache_target)
+                : null;
+            if (empty($file_target)) {
+                debug_event('subsonic.catalog', 'Cache error: no target for ' . $row['id'], 5);
                 continue;
             }
-            $file_exists = is_file($target_file);
-            $remote_url  = $this->subsonic?->parameterize($row['file'] . '&', $options);
-            if (!$file_exists || (int)Core::get_filesize($target_file) == 0) {
-                $old_target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $target;
+
+            $file_exists = is_file($file_target);
+            if (!$file_exists || (int)Core::get_filesize($file_target) == 0) {
+                $old_target_file = rtrim(trim($cache_path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $cache_target;
                 $old_file_exists = is_file($old_target_file);
                 if ($old_file_exists) {
                     // check for the old path first
-                    rename($old_target_file, $target_file);
-                    debug_event('subsonic.catalog', 'Moved: ' . $row['id'] . ' from: {' . $old_target_file . '}' . ' to: {' . $target_file . '}', 5);
+                    rename($old_target_file, $file_target);
+                    debug_event('subsonic.catalog', 'Moved: ' . $row['id'] . ' from: {' . $old_target_file . '}' . ' to: {' . $file_target . '}', 5);
                 } else {
                     try {
-                        $filehandle = fopen($target_file, 'w');
+                        $filehandle = fopen($file_target, 'w');
                         if (!is_resource($filehandle)) {
-                            debug_event('subsonic.catalog', 'Could not open file: ' . $target_file, 5);
+                            debug_event('subsonic.catalog', 'Could not open file: ' . $file_target, 5);
                             continue;
                         }
+
+                        $remote_url = $this->subsonic?->parameterize($row['file'] . '&', $options);
 
                         $curl = curl_init();
                         curl_setopt_array(
@@ -548,7 +552,7 @@ class Catalog_subsonic extends Catalog
                         curl_exec($curl);
                         curl_close($curl);
                         fclose($filehandle);
-                        debug_event('subsonic.catalog', 'Saved: ' . $row['id'] . ' to: {' . $target_file . '}', 5);
+                        debug_event('subsonic.catalog', 'Saved: ' . $row['id'] . ' to: {' . $file_target . '}', 5);
                     } catch (Exception $error) {
                         debug_event('subsonic.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
                     }
