@@ -338,7 +338,16 @@ class Catalog_remote extends Catalog
             sprintf(nT_('%s song was found', '%s songs were found', $total), $total)
         );
 
+        $cache_path   = (string)AmpConfig::get('cache_path', '');
+        $cache_target = (string)AmpConfig::get('cache_target', '');
+        $web_path     = AmpConfig::get_web_path();
+
+        if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
+            $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
+        }
+
         $date = time();
+
         // Hardcoded for now
         $step       = 500;
         $current    = 0;
@@ -349,11 +358,6 @@ class Catalog_remote extends Catalog
             $total > $current &&
             $songsFound
         ) {
-            $web_path = AmpConfig::get_web_path();
-
-            if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
-                $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
-            }
             $start = $current;
             $current += $step;
             $song_tags = true;
@@ -400,145 +404,160 @@ class Catalog_remote extends Catalog
                             continue;
                         }
 
-                        $id   = (string)$song->attributes()->id;
-                        $tags = ($song_tags)
-                            ? $this->remote_handle->send_command(self::CMD_SONG_TAGS, ['filter' => $id])
-                            : false;
-                        // Iterate over the songs we retrieved and insert them
-                        if ($tags instanceof SimpleXMLElement && isset($tags->song_tag)) {
-                            $song_tags = $tags->song_tag;
-                            $data      = [];
-                            foreach ($song_tags->children() as $name => $value) {
-                                $key = (string)$name;
-                                if (count($song_tags->$name) > 1) {
-                                    // arrays of objects
-                                    if (!isset($data[$key]) || !$data[$key] || !is_array($data[$key])) {
-                                        $data[$key] = [];
-                                    }
-                                    foreach ($value as $child) {
-                                        if (!empty((string)$child) && is_array($data[$key])) {
-                                            $data[$key][] = (string)$child;
-                                        }
-                                    }
-                                } else {
-                                    // single value
-                                    $data[$key] = (!empty((string)$value))
-                                        ? (string)$value
-                                        : null;
-                                }
-                            }
+                        $file_target  = ($song_id_check && !empty($cache_target) && $cache_target === (string)$song->stream_format)
+                            ? Catalog::get_cache_path($song_id_check, $this->catalog_id, $cache_path, $cache_target)
+                            : null;
 
-                            $data['catalog'] = $this->catalog_id;
-                            $data['file']    = $db_url;
+                        if (
+                            $action === 'verify' &&
+                            $file_target !== null &&
+                            is_file($file_target)
+                        ) {
+                            // get file tags directly from the cached file
+                            $media = new Song($song_id_check);
+                            $data  = $this->get_media_tags($media, ['music'], '', '');
                         } else {
-                            // Older servers do not have access to song_tags function
-                            $song_tags = false;
-                            $genres    = [];
-                            foreach ($song->genre as $genre) {
-                                $genres[] = (string)$genre->name;
-                            }
+                            // get tag data from the remote object
+                            $remote_id = (string)$song->attributes()->id;
+                            $tags      = ($song_tags)
+                                ? $this->remote_handle->send_command(self::CMD_SONG_TAGS, ['filter' => $remote_id])
+                                : false;
+                            // Iterate over the songs we retrieved and insert them
+                            if ($tags instanceof SimpleXMLElement && isset($tags->song_tag)) {
+                                $song_tags = $tags->song_tag;
+                                $data      = [];
+                                foreach ($song_tags->children() as $name => $value) {
+                                    $key = (string)$name;
+                                    if (count($song_tags->$name) > 1) {
+                                        // arrays of objects
+                                        if (!isset($data[$key]) || !$data[$key] || !is_array($data[$key])) {
+                                            $data[$key] = [];
+                                        }
+                                        foreach ($value as $child) {
+                                            if (!empty((string)$child) && is_array($data[$key])) {
+                                                $data[$key][] = (string)$child;
+                                            }
+                                        }
+                                    } else {
+                                        // single value
+                                        $data[$key] = (!empty((string)$value))
+                                            ? (string)$value
+                                            : null;
+                                    }
+                                }
 
-                            $albumartistids = [];
-                            $albumartists   = [];
-                            foreach ($song->albumartist as $albumartist) {
-                                $albumartistids[] = (string)$albumartist->attributes()->id;
-                                $albumartists[]   = (string)$albumartist->name;
-                            }
+                                $data['catalog'] = $this->catalog_id;
+                                $data['file']    = $db_url;
+                            } else {
+                                // Older servers do not have access to song_tags function
+                                $song_tags = false;
+                                $genres    = [];
+                                foreach ($song->genre as $genre) {
+                                    $genres[] = (string)$genre->name;
+                                }
 
-                            $artistids = [];
-                            $artists   = [];
-                            foreach ($song->artist as $artist) {
-                                $artistids[] = (string)$artist->attributes()->id;
-                                $artists[]   = (string)$artist->name;
-                            }
-
-                            $albumid = (isset($song->album)) ? (int)$song->album->attributes()->id : null;
-                            $album   = ($albumid) ? $this->remote_handle->send_command(self::CMD_ALBUM, ['filter' => $albumid]) : null;
-
-                            $album_data = (object)[];
-                            if ($album instanceof SimpleXMLElement && $album->album->count() > 0) {
                                 $albumartistids = [];
-                                $album_data     = $album->album;
-                                foreach ($album_data->albumartist as $albumartist) {
+                                $albumartists   = [];
+                                foreach ($song->albumartist as $albumartist) {
                                     $albumartistids[] = (string)$albumartist->attributes()->id;
                                     $albumartists[]   = (string)$albumartist->name;
                                 }
-                            }
 
-                            $mb_artistid       = null;
-                            $mb_artistid_array = [];
-                            foreach ($artistids as $artistid) {
-                                $artist = $this->remote_handle->send_command(self::CMD_ARTIST, ['filter' => $artistid]);
-                                if ($artist instanceof SimpleXMLElement && $artist->artist->count() > 0) {
-                                    $artist_data = $artist->artist;
-                                    $mb_artistid = (isset($artist_data[0])) ? $artist_data[0]->mbid : null;
-                                    foreach ($artist_data->artist as $artist) {
-                                        if (!empty($artist->mbid)) {
-                                            $mb_artistid_array[] = (string)$artist->mbid;
+                                $artistids = [];
+                                $artists   = [];
+                                foreach ($song->artist as $artist) {
+                                    $artistids[] = (string)$artist->attributes()->id;
+                                    $artists[]   = (string)$artist->name;
+                                }
+
+                                $albumid = (isset($song->album)) ? (int)$song->album->attributes()->id : null;
+                                $album   = ($albumid) ? $this->remote_handle->send_command(self::CMD_ALBUM, ['filter' => $albumid]) : null;
+
+                                $album_data = (object)[];
+                                if ($album instanceof SimpleXMLElement && $album->album->count() > 0) {
+                                    $albumartistids = [];
+                                    $album_data     = $album->album;
+                                    foreach ($album_data->albumartist as $albumartist) {
+                                        $albumartistids[] = (string)$albumartist->attributes()->id;
+                                        $albumartists[]   = (string)$albumartist->name;
+                                    }
+                                }
+
+                                $mb_artistid       = null;
+                                $mb_artistid_array = [];
+                                foreach ($artistids as $artistid) {
+                                    $artist = $this->remote_handle->send_command(self::CMD_ARTIST, ['filter' => $artistid]);
+                                    if ($artist instanceof SimpleXMLElement && $artist->artist->count() > 0) {
+                                        $artist_data = $artist->artist;
+                                        $mb_artistid = (isset($artist_data[0])) ? $artist_data[0]->mbid : null;
+                                        foreach ($artist_data->artist as $artist) {
+                                            if (!empty($artist->mbid)) {
+                                                $mb_artistid_array[] = (string)$artist->mbid;
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            $mb_albumartistid       = null;
-                            $mb_albumartistid_array = [];
-                            foreach ($albumartistids as $artistid) {
-                                $artist = $this->remote_handle->send_command(self::CMD_ARTIST, ['filter' => $artistid]);
-                                if ($artist instanceof SimpleXMLElement && $artist->artist->count() > 0) {
-                                    $artist_data      = $artist->artist;
-                                    $mb_albumartistid = (isset($artist_data[0])) ? $artist_data[0]->mbid : null;
-                                    foreach ($artist_data->artist as $artist) {
-                                        if (!empty($artist->mbid)) {
-                                            $mb_albumartistid_array[] = (string)$artist->mbid;
+                                $mb_albumartistid       = null;
+                                $mb_albumartistid_array = [];
+                                foreach ($albumartistids as $artistid) {
+                                    $artist = $this->remote_handle->send_command(self::CMD_ARTIST, ['filter' => $artistid]);
+                                    if ($artist instanceof SimpleXMLElement && $artist->artist->count() > 0) {
+                                        $artist_data      = $artist->artist;
+                                        $mb_albumartistid = (isset($artist_data[0])) ? $artist_data[0]->mbid : null;
+                                        foreach ($artist_data->artist as $artist) {
+                                            if (!empty($artist->mbid)) {
+                                                $mb_albumartistid_array[] = (string)$artist->mbid;
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            $data = [
-                                'albumartist' => (!empty($albumartists)) ? $albumartists[0] : null,
-                                'album' => (isset($song->album)) ? (string)$song->album->name : null,
-                                'artist' => (!empty($artists)) ? $artists[0] : null,
-                                'artists' => $artists,
-                                'bitrate' => (isset($song->bitrate)) ? (string)$song->bitrate : null,
-                                'catalog' => $this->catalog_id,
-                                'channels' => (isset($song->channels)) ? (string)$song->channels : null,
-                                'composer' => (isset($song->composer)) ? (string)$song->composer : null,
-                                'comment' => (isset($song->comment)) ? (string)$song->comment : null,
-                                'disk' => (isset($song->disk)) ? (string)$song->disk : null,
-                                'disksubtitle' => (isset($song->disksubtitle)) ? (string)$song->disksubtitle : null,
-                                'file' => $db_url,
-                                'genre' => $genres,
-                                'mb_trackid' => (isset($song->mbid)) ? (string)$song->mbid : null,
-                                'mime' => (isset($song->mime)) ? (string)$song->mime : null,
-                                'mode' => (isset($song->mode)) ? (string)$song->mode : null,
-                                'publisher' => (isset($song->publisher)) ? (string)$song->publisher : null,
-                                'r128_album_gain' => (isset($song->r128_album_gain)) ? (string)$song->r128_album_gain : null,
-                                'r128_track_gain' => (isset($song->r128_track_gain)) ? (string)$song->r128_track_gain : null,
-                                'rate' => (isset($song->rate)) ? (string)$song->rate : null,
-                                'replaygain_album_gain' => (isset($song->replaygain_album_gain)) ? (string)$song->replaygain_album_gain : null,
-                                'replaygain_album_peak' => (isset($song->replaygain_album_peak)) ? (string)$song->replaygain_album_peak : null,
-                                'replaygain_track_gain' => (isset($song->replaygain_track_gain)) ? (string)$song->replaygain_track_gain : null,
-                                'replaygain_track_peak' => (isset($song->replaygain_track_peak)) ? (string)$song->replaygain_track_peak : null,
-                                'size' => (isset($song->size)) ? (string)$song->size : null,
-                                'time' => (isset($song->time)) ? (string)$song->time : null,
-                                'title' => (isset($song->title)) ? (string)$song->title : null,
-                                'track' => (isset($song->track)) ? (string)$song->track : null,
-                                'year' => (isset($song->year)) ? (string)$song->year : null,
-                                'lyrics' => null,
-                                'language' => null,
-                                'mb_artistid' => $mb_artistid,
-                                'mb_artistid_array' => (!empty($mb_artistid_array)) ? $mb_artistid_array : null,
-                                'mb_albumartistid' => $mb_albumartistid,
-                                'mb_albumartistid_array' => (!empty($mb_albumartistid_array)) ? $mb_albumartistid_array : null,
-                                'mb_albumid' => (isset($album_data->mbid)) ? (string)$album_data->mbid : null,
-                                'mb_albumid_group' => (isset($album_data->mbid_group)) ? (string)$album_data->mbid_group : null,
-                                'release_type' => null,
-                                'release_status' => null,
-                                'barcode' => null,
-                                'catalog_number' => null,
-                                'version' => null,
-                            ];
+                                $data = [
+                                    'albumartist' => (!empty($albumartists)) ? $albumartists[0] : null,
+                                    'album' => (isset($song->album)) ? (string)$song->album->name : null,
+                                    'artist' => (!empty($artists)) ? $artists[0] : null,
+                                    'artists' => $artists,
+                                    'bitrate' => (isset($song->bitrate)) ? (string)$song->bitrate : null,
+                                    'catalog' => $this->catalog_id,
+                                    'channels' => (isset($song->channels)) ? (string)$song->channels : null,
+                                    'composer' => (isset($song->composer)) ? (string)$song->composer : null,
+                                    'comment' => (isset($song->comment)) ? (string)$song->comment : null,
+                                    'disk' => (isset($song->disk)) ? (string)$song->disk : null,
+                                    'disksubtitle' => (isset($song->disksubtitle)) ? (string)$song->disksubtitle : null,
+                                    'file' => $db_url,
+                                    'genre' => $genres,
+                                    'mb_trackid' => (isset($song->mbid)) ? (string)$song->mbid : null,
+                                    'mime' => (isset($song->mime)) ? (string)$song->mime : null,
+                                    'mode' => (isset($song->mode)) ? (string)$song->mode : null,
+                                    'publisher' => (isset($song->publisher)) ? (string)$song->publisher : null,
+                                    'r128_album_gain' => (isset($song->r128_album_gain)) ? (string)$song->r128_album_gain : null,
+                                    'r128_track_gain' => (isset($song->r128_track_gain)) ? (string)$song->r128_track_gain : null,
+                                    'rate' => (isset($song->rate)) ? (string)$song->rate : null,
+                                    'replaygain_album_gain' => (isset($song->replaygain_album_gain)) ? (string)$song->replaygain_album_gain : null,
+                                    'replaygain_album_peak' => (isset($song->replaygain_album_peak)) ? (string)$song->replaygain_album_peak : null,
+                                    'replaygain_track_gain' => (isset($song->replaygain_track_gain)) ? (string)$song->replaygain_track_gain : null,
+                                    'replaygain_track_peak' => (isset($song->replaygain_track_peak)) ? (string)$song->replaygain_track_peak : null,
+                                    'size' => (isset($song->size)) ? (string)$song->size : null,
+                                    'time' => (isset($song->time)) ? (string)$song->time : null,
+                                    'title' => (isset($song->title)) ? (string)$song->title : null,
+                                    'track' => (isset($song->track)) ? (string)$song->track : null,
+                                    'year' => (isset($song->year)) ? (string)$song->year : null,
+                                    'lyrics' => null,
+                                    'language' => null,
+                                    'mb_artistid' => $mb_artistid,
+                                    'mb_artistid_array' => (!empty($mb_artistid_array)) ? $mb_artistid_array : null,
+                                    'mb_albumartistid' => $mb_albumartistid,
+                                    'mb_albumartistid_array' => (!empty($mb_albumartistid_array)) ? $mb_albumartistid_array : null,
+                                    'mb_albumid' => (isset($album_data->mbid)) ? (string)$album_data->mbid : null,
+                                    'mb_albumid_group' => (isset($album_data->mbid_group)) ? (string)$album_data->mbid_group : null,
+                                    'release_type' => null,
+                                    'release_status' => null,
+                                    'barcode' => null,
+                                    'catalog_number' => null,
+                                    'version' => null,
+                                ];
+                            }
                         }
 
                         // If we don't have an album artist, use the artist
