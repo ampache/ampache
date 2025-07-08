@@ -4,6 +4,8 @@
 
 ### Added
 
+* Translations 2025-07-08
+* Don't show the clear art button when there isn't art there
 * Remote Catalogs
   * Allow verify for Remote catalogs
   * Gather Art for album and Artist objects missing art
@@ -16,6 +18,7 @@
 
 ### Fixed
 
+* Bad `ampache.sql` file
 * Art inserted from URL would insert as a PHP mime type
 * Remote Catalogs
   * Could not add songs
@@ -25,6 +28,7 @@
 * Delete Art cache when the art is updated
 * Subsonic
   * Ensure disabled songs are not added in more areas
+  * Look for other possible empty arrays
 
 ## Ampache 7.6.1
 
