@@ -47,6 +47,8 @@ class Catalog_subsonic extends Catalog
 
     private int $catalog_id;
 
+    private ?SubsonicClient $subsonic = null;
+
     public string $uri = '';
     public string $username;
     public string $password;
@@ -219,7 +221,7 @@ class Catalog_subsonic extends Catalog
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Subsonic Remote Update'));
         }
-        $songsadded = $this->update_remote_catalog();
+        $songsadded = $this->_update_remote_catalog();
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
         }
@@ -230,9 +232,9 @@ class Catalog_subsonic extends Catalog
     /**
      * createClient
      */
-    public function createClient(): SubsonicClient
+    private function _createClient(): void
     {
-        return (new SubsonicClient($this->username, $this->password, $this->uri));
+        $this->subsonic = (new SubsonicClient($this->username, $this->password, $this->uri));
     }
 
     /**
@@ -240,18 +242,18 @@ class Catalog_subsonic extends Catalog
      *
      * Pulls the data from a remote catalog and adds any missing songs to the database.
      */
-    public function update_remote_catalog(): int
+    private function _update_remote_catalog(string $action = 'add'): int
     {
         debug_event('subsonic.catalog', 'Updating remote catalog...', 5);
 
-        $subsonic = $this->createClient();
+        $this->_createClient();
 
         $date       = time();
         $songsadded = 0;
         // Get all albums
         $offset = 0;
         while (true) {
-            $albumList = $subsonic->querySubsonic(
+            $albumList = $this->subsonic?->querySubsonic(
                 'getAlbumList',
                 [
                     'type' => 'alphabeticalByName',
@@ -268,12 +270,11 @@ class Catalog_subsonic extends Catalog
                     break;
                 }
                 foreach ($albumList['data']['albumList']['album'] as $anAlbum) {
-                    $album = $subsonic->querySubsonic('getMusicDirectory', ['id' => $anAlbum['id']]);
-
+                    $album = $this->subsonic?->querySubsonic('getMusicDirectory', ['id' => $anAlbum['id']]);
                     if (is_array($album) && $album['success']) {
                         foreach ($album['data']['directory']['child'] as $song) {
-                            $artistInfo  = $subsonic->querySubsonic('getArtistInfo', ['id' => $song['artistId']]);
-                            $albumartist = $subsonic->querySubsonic('getArtist', ['id' => $album['data']['directory']['parent']]);
+                            $artistInfo  = $this->subsonic?->querySubsonic('getArtistInfo', ['id' => $song['artistId']]);
+                            $albumartist = $this->subsonic?->querySubsonic('getArtist', ['id' => $album['data']['directory']['parent']]);
                             if (Catalog::is_audio_file($song['path'])) {
                                 $data = [];
                                 // album_artist isn't included in the song response
@@ -347,7 +348,15 @@ class Catalog_subsonic extends Catalog
      */
     public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
     {
-        return 0;
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+            Ui::show_box_top(T_('Running Remote Update'));
+        }
+        $songsupdated = $this->_update_remote_catalog('verify');
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+            Ui::show_box_bottom();
+        }
+
+        return $songsupdated;
     }
 
     /**
@@ -355,15 +364,17 @@ class Catalog_subsonic extends Catalog
      */
     public function insertArt(array $data, ?int $song_Id): bool
     {
-        $subsonic = $this->createClient();
-        $song     = new Song($song_Id);
-        $art      = new Art($song->album, 'album');
+        $this->_createClient();
+
+        $song = new Song($song_Id);
+        $art  = new Art($song->album, 'album');
         if (AmpConfig::get('album_art_max_height') && AmpConfig::get('album_art_max_width')) {
             $size = (int)max(AmpConfig::get('album_art_max_width'), AmpConfig::get('album_art_max_height'));
         } else {
             $size = 275;
         }
-        $image = $subsonic->querySubsonic('getCoverArt', ['id' => (string)$data['coverArt'], 'size' => $size], true);
+
+        $image = $this->subsonic?->querySubsonic('getCoverArt', ['id' => (string)$data['coverArt'], 'size' => $size], true);
 
         return (
             is_string($image) &&
@@ -378,7 +389,7 @@ class Catalog_subsonic extends Catalog
      */
     public function clean_catalog_proc(?Interactor $interactor = null): int
     {
-        $subsonic = $this->createClient();
+        $this->_createClient();
 
         $dead = 0;
 
@@ -389,7 +400,7 @@ class Catalog_subsonic extends Catalog
             $remove = false;
             try {
                 $songid = $this->url_to_songid($row['file']);
-                $song   = $subsonic->querySubsonic('getSong', ['id' => $songid]);
+                $song   = $this->subsonic?->querySubsonic('getSong', ['id' => $songid]);
                 if (!is_array($song) || !$song['success']) {
                     $remove = true;
                 }
@@ -453,7 +464,9 @@ class Catalog_subsonic extends Catalog
         ];
         $cache_path   = (string)AmpConfig::get('cache_path', '');
         $cache_target = (string)AmpConfig::get('cache_target', '');
-        $subsonic     = $this->createClient();
+
+        $this->_createClient();
+
         $sql          = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?;";
         $db_results   = Dba::read($sql, [$this->catalog_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -462,7 +475,7 @@ class Catalog_subsonic extends Catalog
                 continue;
             }
             $file_exists = is_file($target_file);
-            $remote_url  = $subsonic->parameterize($row['file'] . '&', $options);
+            $remote_url  = $this->subsonic?->parameterize($row['file'] . '&', $options);
             if (!$file_exists || (int)Core::get_filesize($target_file) == 0) {
                 $old_target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $target;
                 $old_file_exists = is_file($old_target_file);
@@ -575,8 +588,8 @@ class Catalog_subsonic extends Catalog
      */
     public function getRemoteStreamingUrl(Podcast_Episode|Video|Song $media): ?string
     {
-        $subsonic = $this->createClient();
+        $this->_createClient();
 
-        return $subsonic->parameterize($media->file . '&');
+        return $this->subsonic?->parameterize($media->file . '&');
     }
 }
