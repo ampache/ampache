@@ -1034,6 +1034,7 @@ class Song extends database_object implements
             'comment',
             'composer',
             'lyrics',
+            'publisher',
             'tags',
             'time',
             'title',
