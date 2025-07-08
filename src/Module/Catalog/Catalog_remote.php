@@ -45,6 +45,10 @@ use SimpleXMLElement;
  */
 class Catalog_remote extends Catalog
 {
+    private const CMD_ALBUM = 'album';
+
+    private const CMD_ARTIST = 'artist';
+
     private const CMD_ARTISTS = 'artists';
 
     private const CMD_PING = 'ping';
@@ -159,9 +163,8 @@ class Catalog_remote extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param int $catalog_id
      */
-    public function __construct($catalog_id = null)
+    public function __construct(?int $catalog_id = null)
     {
         if ($catalog_id) {
             $info = $this->get_info($catalog_id, static::DB_TABLENAME);
@@ -404,19 +407,70 @@ class Catalog_remote extends Catalog
                             $data['catalog'] = $this->catalog_id;
                             $data['file']    = $db_url;
                         } else {
+                            // Older servers do not have access to song_tags function
                             $song_tags = false;
                             $genres    = [];
                             foreach ($song->genre as $genre) {
                                 $genres[] = (string)$genre->name;
                             }
-                            $albumartists = [];
+
+                            $albumartistids = [];
+                            $albumartists   = [];
                             foreach ($song->albumartist as $albumartist) {
-                                $albumartists[] = (string)$albumartist->name;
+                                $albumartistids[] = (string)$albumartist->attributes()->id;
+                                $albumartists[]   = (string)$albumartist->name;
                             }
-                            $artists = [];
+
+                            $artistids = [];
+                            $artists   = [];
                             foreach ($song->artist as $artist) {
-                                $artists[] = (string)$artist->name;
+                                $artistids[] = (string)$artist->attributes()->id;
+                                $artists[]   = (string)$artist->name;
                             }
+
+                            $albumid = (isset($song->album)) ? (int)$song->album->attributes()->id : null;
+                            $album   = ($albumid) ? $remote_handle->send_command(self::CMD_ALBUM, ['filter' => $albumid]) : null;
+
+                            $album_data = (object)[];
+                            if ($album instanceof SimpleXMLElement && $album->album->count() > 0) {
+                                $albumartistids = [];
+                                $album_data     = $album->album;
+                                foreach ($album_data->albumartist as $albumartist) {
+                                    $albumartistids[] = (string)$albumartist->attributes()->id;
+                                    $albumartists[]   = (string)$albumartist->name;
+                                }
+                            }
+
+                            $mb_artistid       = null;
+                            $mb_artistid_array = [];
+                            foreach ($artistids as $artistid) {
+                                $artist = $remote_handle->send_command(self::CMD_ARTIST, ['filter' => $artistid]);
+                                if ($artist instanceof SimpleXMLElement && $artist->artist->count() > 0) {
+                                    $artist_data = $artist->artist;
+                                    $mb_artistid = (isset($artist_data[0])) ? $artist_data[0]->mbid : null;
+                                    foreach ($artist_data->artist as $artist) {
+                                        if (!empty($artist->mbid)) {
+                                            $mb_artistid_array[] = (string)$artist->mbid;
+                                        }
+                                    }
+                                }
+                            }
+
+                            $mb_albumartistid       = null;
+                            $mb_albumartistid_array = [];
+                            foreach ($albumartistids as $artistid) {
+                                $artist = $remote_handle->send_command(self::CMD_ARTIST, ['filter' => $artistid]);
+                                if ($artist instanceof SimpleXMLElement && $artist->artist->count() > 0) {
+                                    $artist_data      = $artist->artist;
+                                    $mb_albumartistid = (isset($artist_data[0])) ? $artist_data[0]->mbid : null;
+                                    foreach ($artist_data->artist as $artist) {
+                                        if (!empty($artist->mbid)) {
+                                            $mb_albumartistid_array[] = (string)$artist->mbid;
+                                        }
+                                    }
+                                }
+                            }
+
                             $data = [
                                 'albumartist' => (!empty($albumartists)) ? $albumartists[0] : null,
                                 'album' => (isset($song->album)) ? (string)$song->album->name : null,
@@ -449,12 +503,12 @@ class Catalog_remote extends Catalog
                                 'year' => (isset($song->year)) ? (string)$song->year : null,
                                 'lyrics' => null,
                                 'language' => null,
-                                'mb_artistid' => null,
-                                'mb_artistid_array' => null,
-                                'mb_albumartistid' => null,
-                                'mb_albumartistid_array' => null,
-                                'mb_albumid' => null,
-                                'mb_albumid_group' => null,
+                                'mb_artistid' => $mb_artistid,
+                                'mb_artistid_array' => (!empty($mb_artistid_array)) ? $mb_artistid_array : null,
+                                'mb_albumartistid' => $mb_albumartistid,
+                                'mb_albumartistid_array' => (!empty($mb_albumartistid_array)) ? $mb_albumartistid_array : null,
+                                'mb_albumid' => (isset($album_data->mbid)) ? (string)$album_data->mbid : null,
+                                'mb_albumid_group' => (isset($album_data->mbid_group)) ? (string)$album_data->mbid_group : null,
                                 'release_type' => null,
                                 'release_status' => null,
                                 'barcode' => null,
@@ -504,10 +558,10 @@ class Catalog_remote extends Catalog
                         if ($action === 'add' && !$existing_song) {
                             $song_id = Song::insert($data);
                             if (!$song_id) {
-                                debug_event('remote.catalog', 'Insert failed for ' . $db_url, 1);
+                                debug_event('remote.catalog', 'Insert failed for ' . $old_url, 1);
                                 if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                                     /* HINT: Song Title */
-                                    AmpError::add('general', T_(sprintf('Unable to insert song - %s', $db_url)));
+                                    AmpError::add('general', T_(sprintf('Unable to insert song - %s', $old_url)));
                                     echo AmpError::display('general');
                                     flush();
                                 }
@@ -529,7 +583,6 @@ class Catalog_remote extends Catalog
 
                         if (
                             $song_id &&
-                            $song instanceof SimpleXMLElement &&
                             (int)$song->has_art === 1 &&
                             $song->art
                         ) {

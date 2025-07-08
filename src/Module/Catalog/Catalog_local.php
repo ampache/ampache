@@ -163,9 +163,8 @@ class Catalog_local extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param int $catalog_id
      */
-    public function __construct($catalog_id = null)
+    public function __construct(?int $catalog_id = null)
     {
         if ($catalog_id) {
             $info = $this->get_info($catalog_id, static::DB_TABLENAME);
