@@ -1356,6 +1356,9 @@ class Preference extends database_object
                 case 'show_playlist_media_parent':
                     Dba::write($pref_sql, [230, 'show_playlist_media_parent', '0', 'Show Artist column on playlist media rows', AccessLevelEnum::USER->value, 'boolean', 'playlist', null]);
                     break;
+                case 'subsonic_legacy':
+                    Dba::write($pref_sql, [231, 'subsonic_legacy', '1', 'Enable legacy Subsonic API responses for compatibility issues', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
+                    break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
             }
