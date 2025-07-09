@@ -141,7 +141,7 @@ final class ArtCleanup implements ArtCleanupInterface
                     // check if this even exists in the database
                     $className = ObjectTypeToClassNameMapper::map($type);
                     $item      = new $className($object_id);
-                    $exists    = $item->isNew() !== false;
+                    $exists    = $item->isNew() === false;
                     if (!$exists) {
                         $interactor->info(
                             sprintf(
