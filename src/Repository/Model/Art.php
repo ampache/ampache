@@ -795,6 +795,9 @@ class Art extends database_object
             // move old art thumbnails to the new location
             $base_path = self::get_dir_on_disk($type, $uid, 'original', $kind, true);
             if ($base_path && Core::is_readable($base_path)) {
+                if (!Core::is_readable(dirname($path))) {
+                    mkdir(dirname($path), 0775, true);
+                }
                 $base_path .= "art-" . $sizetext . "." . self::extension($mime);
                 if (Core::is_readable($base_path) && !Core::is_readable($path)) {
                     rename($base_path, $path);
