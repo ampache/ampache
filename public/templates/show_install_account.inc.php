@@ -30,7 +30,7 @@ use Ampache\Module\System\AmpError;
 /** @var string $charset */
 
 require __DIR__ . '/install_header.inc.php'; ?>
-    <div class="jumbotron" style="margin-top: 70px">
+    <div class="alert alert-dark" style="margin-top: 70px">
         <h1><?php echo T_('Install Progress'); ?></h1>
         <div class="progress">
             <div class="progress-bar progress-bar-warning"
@@ -55,17 +55,23 @@ require __DIR__ . '/install_header.inc.php'; ?>
     <h2 id="forms"><?php echo T_('Create Admin Account'); ?></h2>
     <form method="post" action="<?php echo $web_path . "/install.php?action=create_account&htmllang=$htmllang&charset=$charset"; ?>" enctype="multipart/form-data">
 
-        <div class="form-group">
-            <label for="local_username" class="col-sm-2 control-label"><?php echo T_('Username'); ?></label>
-            <input type="text" class="form-control-plaintext" id="local_username" name="local_username" size="32" maxlength="128" value="admin">
+        <div class="row mb-3">
+            <label for="local_username" class="col-sm-4 form-label"><?php echo T_('Username'); ?></label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control" id="local_username" name="local_username" size="32" maxlength="128" value="admin">
+			</div>
         </div>
-        <div class="form-group">
-            <label for="local_pass" class="col-sm-2 control-label"><?php echo T_('Password'); ?></label>
-            <input type="password" class="form-control-plaintext" id="local_pass" name="local_pass" size="32" maxlength="64" placeholder="<?php echo T_("Password"); ?>">
+        <div class="row mb-3">
+            <label for="local_pass" class="col-sm-4 form-label"><?php echo T_('Password'); ?></label>
+			<div class="col-sm-8">
+				<input type="password" class="form-control" id="local_pass" name="local_pass" size="32" maxlength="64" placeholder="<?php echo T_("Password"); ?>">
+			</div>
         </div>
-        <div class="form-group">
-            <label for="local_pass2" class="col-sm-2 control-label"><?php echo T_('Confirm Password'); ?></label>
-            <input type="password" class="form-control-plaintext" id="local_pass2" name="local_pass2" size="32" maxlength="64" placeholder="<?php echo T_("Confirm Password"); ?>">
+        <div class="row mb-3">
+            <label for="local_pass2" class="col-sm-4 form-label"><?php echo T_('Confirm Password'); ?></label>
+			<div class="col-sm-8">
+				<input type="password" class="form-control" id="local_pass2" name="local_pass2" size="32" maxlength="64" placeholder="<?php echo T_("Confirm Password"); ?>">
+			</div>
         </div>
         <br />
         <div class="col-sm-5">
