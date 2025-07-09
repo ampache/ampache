@@ -135,7 +135,11 @@ final class ArtCleanup implements ArtCleanupInterface
                     }
 
                     // check if this even exists in the database
-                    $sql        = 'SELECT `id` FROM `$type` WHERE `id` = ?';
+                    $sql        = 'SELECT `id` FROM `$type` WHERE `id` = ?;';
+                    $interactor->info(
+                        "SELECT `id` FROM `$type` WHERE `id` = ?;",
+                        true
+                    );
                     $db_results = Dba::read($sql, [(int)$object_id]);
                     $exists     = Dba::num_rows($db_results) > 0;
                     if (!$exists) {
