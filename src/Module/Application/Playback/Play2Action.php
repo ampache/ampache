@@ -674,10 +674,12 @@ final class Play2Action implements ApplicationActionInterface
                     $media_file = $catalog->getRemoteStreamingUrl($media);
                     if ($media_file) {
                         $catalog->cache_catalog_file($file_target, $media_file);
+                        sleep(5);
                     }
                 }
                 if ($catalog instanceof Catalog_local) {
                     $catalog->cache_catalog_file($file_target, $media, $cache_target);
+                    sleep(5);
                 }
             }
             if (
