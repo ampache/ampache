@@ -31,6 +31,8 @@
 * Bad `ampache.sql` file
 * Insert rows for Songs missing from the `song_data` table
 * Art inserted from URL would insert as a PHP mime type
+* Search
+  * Local image (`has_image`) search didn't count missing joins
 * Ampache Remote Catalogs
   * Ampache PHP API didn't like `song_tags`
   * Could not add songs
