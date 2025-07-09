@@ -411,11 +411,12 @@ class Catalog_remote extends Catalog
                         if (
                             $action === 'verify' &&
                             $file_target !== null &&
-                            is_file($file_target)
+                            is_file($file_target) &&
+                            filemtime($file_target) > ($date - (60 * 60 * 24 * 30)) // 30 day
                         ) {
                             // get file tags directly from the cached file
                             $media = new Song($song_id_check);
-                            $data  = $this->get_media_tags($media, ['music'], '', '');
+                            $data  = $this->get_media_tags($media, ['music'], $this->sort_pattern, $this->rename_pattern, $file_target);
                         } else {
                             // get tag data from the remote object
                             $remote_id = (string)$song->attributes()->id;
