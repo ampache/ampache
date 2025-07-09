@@ -668,28 +668,17 @@ final class Play2Action implements ApplicationActionInterface
             $file_target  = (!empty($cache_target) && $cache_target === $transcode_to)
                 ? Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target)
                 : null;
-            if ($catalog && $file_target !== null && !is_file($file_target)) {
-                // try to cache the media files before playing the stream
-                $cache_download = false;
+
+            $has_cache = ($file_target !== null && is_file($file_target));
+            if ($catalog && !$has_cache) {
                 if (($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic) && AmpConfig::get('cache_remote', '')) {
                     $media_file = $catalog->getRemoteStreamingUrl($media);
                     if ($media_file) {
                         $catalog->cache_catalog_file($file_target, $media_file);
-                        $cache_download = true;
                     }
                 }
                 if ($catalog instanceof Catalog_local) {
                     $catalog->cache_catalog_file($file_target, $media, $cache_target);
-                    $cache_download = true;
-                }
-
-                if ($cache_download) {
-                    $size = Core::get_filesize($file_target);
-                    while ($size > 0 && $size !== Core::get_filesize($file_target)) {
-                        sleep(2);
-                        $size = Core::get_filesize($file_target);
-                        sleep(2);
-                    }
                 }
             }
             if (
