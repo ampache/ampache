@@ -67,7 +67,7 @@ final class ArtCleanupCommand extends Command
 
         $interactor = $this->io();
         $cleanup    = $this->values()['cleanup'] === true;
-        $delete     = $this->values()['execute'] === true;
+        $execute    = $this->values()['execute'] === true;
         $thumbnails = $this->values()['thumbnails'] === true;
 
         if (!$thumbnails && !$cleanup) {
@@ -103,7 +103,7 @@ final class ArtCleanupCommand extends Command
                 return;
             }
 
-            if ($delete === true) {
+            if ($execute === false) {
                 $interactor->info(
                     T_('Running in Test Mode. Use -x to execute'),
                     true
@@ -114,7 +114,7 @@ final class ArtCleanupCommand extends Command
 
             $this->artCleanup->cleanup();
         } else {
-            if ($delete === true) {
+            if ($execute === false) {
                 $interactor->info(
                     T_('Running in Test Mode. Use -x to execute'),
                     true
@@ -131,7 +131,7 @@ final class ArtCleanupCommand extends Command
                     true
                 );
 
-                $this->artCleanup->deleteThumbnails($interactor, $delete);
+                $this->artCleanup->deleteThumbnails($interactor, $execute);
             }
             if ($cleanup) {
                 $interactor->info(
@@ -139,7 +139,7 @@ final class ArtCleanupCommand extends Command
                     true
                 );
 
-                $this->artCleanup->migrateThumbnails($interactor, $delete);
+                $this->artCleanup->migrateThumbnails($interactor, $execute);
             }
         }
 
