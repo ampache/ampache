@@ -31,10 +31,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Song;
 
 /**
  * Provides methods for the cleanup/deletion of art-items
@@ -237,22 +234,24 @@ final class ArtCleanup implements ArtCleanupInterface
                 }
             }
 
-            $interactor->info(
-                'Migrating thumbnails to their correct location',
-                true
-            );
-            $sql        = "SELECT `object_id`, `object_type`, `kind`, `size`, `mime` FROM `image` WHERE `size` != 'original'";
-            $db_results = Dba::read($sql);
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $art_path = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], $row['size'], $row['kind'], true);
-                $old_path = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], 'original', $row['kind']);
+            if ($delete) {
+                $interactor->info(
+                    'Migrating thumbnails to their correct location',
+                    true
+                );
+                $sql        = "SELECT `object_id`, `object_type`, `kind`, `size`, `mime` FROM `image` WHERE `size` != 'original'";
+                $db_results = Dba::read($sql);
+                while ($row = Dba::fetch_assoc($db_results)) {
+                    $art_path = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], $row['size'], $row['kind'], true);
+                    $old_path = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], 'original', $row['kind']);
 
-                $art_path .= "art-" . $row['size'] . "." . Art::extension($row['mime']);
-                $old_path .= "art-" . $row['size'] . "." . Art::extension($row['mime']);
-                if (Core::is_readable($old_path) && !Core::is_readable($art_path)) {
-                    rename($old_path, $art_path);
-                } elseif (Core::is_readable($old_path)) {
-                    unlink($old_path);
+                    $art_path .= "art-" . $row['size'] . "." . Art::extension($row['mime']);
+                    $old_path .= "art-" . $row['size'] . "." . Art::extension($row['mime']);
+                    if (Core::is_readable($old_path) && !Core::is_readable($art_path)) {
+                        rename($old_path, $art_path);
+                    } elseif (Core::is_readable($old_path)) {
+                        unlink($old_path);
+                    }
                 }
             }
         }
