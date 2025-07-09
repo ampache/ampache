@@ -659,6 +659,16 @@ final class PlayAction implements ApplicationActionInterface
                     $catalog->cache_catalog_file($file_target, $media, $cache_target);
                 }
             }
+
+            if ($has_cache) {
+                $size = Core::get_filesize($file_target);
+                while ($size > 0 && $size !== Core::get_filesize($file_target)) {
+                    sleep(2);
+                    $size = Core::get_filesize($file_target);
+                    sleep(2);
+                }
+            }
+
             if (
                 $transcode_cfg != 'never' &&
                 $transcode_to &&
