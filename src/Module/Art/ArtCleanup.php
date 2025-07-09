@@ -253,7 +253,28 @@ final class ArtCleanup implements ArtCleanupInterface
                         unlink($old_path);
                     }
                 }
+
+                $interactor->info(
+                    'Delete art that is missing on disk',
+                    true
+                );
+                $sql        = "SELECT `object_id`, `object_type`, `kind`, `size`, `mime` FROM `image`;";
+                $db_results = Dba::read($sql);
+                while ($row = Dba::fetch_assoc($db_results)) {
+                    $art_path = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], $row['size'], $row['kind'], true);
+                    $art_path .= "art-" . $row['size'] . "." . Art::extension($row['mime']);
+                    if (!Core::is_readable($art_path)) {
+                        // If this art is gone stop trying to find it
+                        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ? AND `size` = ?";
+                        Dba::write($sql, [(int)$row['object_id'], $row['object_type'], $row['kind'], $row['size']], true);
+                    }
+                }
             }
+        } else {
+            $interactor->error(
+                'No local metadata directory configured, skipping thumbnail migration',
+                true
+            );
         }
     }
 
