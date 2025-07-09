@@ -54,7 +54,7 @@ $has_usecase  = array_key_exists('usecase', $_REQUEST);
 $has_backends = array_key_exists('backends', $_REQUEST);
 
 require __DIR__ . '/install_header.inc.php'; ?>
-    <div class="jumbotron" style="margin-top: 70px">
+    <div class="alert alert-dark" style="margin-top: 70px">
         <h1><?php echo T_('Install Progress'); ?></h1>
         <div class="progress">
             <div class="progress-bar progress-bar-warning"
@@ -79,32 +79,44 @@ require __DIR__ . '/install_header.inc.php'; ?>
     <form method="post" action="<?php echo $web_path . "/install.php?action=create_config"; ?>" enctype="multipart/form-data" autocomplete="off">
         <h2 id="forms"><?php echo T_('Generate Configuration File'); ?></h2>
         <legend><?php echo T_('Various'); ?></legend>
-        <div class="form-group">
-            <label for="web_path" class="col-sm-2 control-label"><?php echo T_('Web Path'); ?></label>
-            <input type="text" class="form-control-plaintext" id="web_path" name="web_path" size="32" value="<?php echo scrub_out($web_path_guess); ?>">
+        <div class="row mb-3">
+            <label for="web_path" class="col-sm-2 form-label"><?php echo T_('Web Path'); ?></label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" id="web_path" name="web_path" size="32" value="<?php echo scrub_out($web_path_guess); ?>">
+			</div>
         </div>
         <br />
         <legend><?php echo T_('Database Connection'); ?></legend>
         <?php echo AmpError::display('config'); ?>
-        <div class="form-group">
-            <label for="local_db" class="col-sm-2 control-label"><?php echo T_('Database Name'); ?></label>
-            <input type="text" class="form-control-plaintext" id="local_db" name="local_db" size="32" value="<?php echo scrub_out($_REQUEST['local_db']); ?>">
+        <div class="row mb-3">
+            <label for="local_db" class="col-sm-2 form-label"><?php echo T_('Database Name'); ?></label>
+			<div class="col-sm-10">
+            	<input type="text" class="form-control" id="local_db" name="local_db" size="32" value="<?php echo scrub_out($_REQUEST['local_db']); ?>">
+			</div>
         </div>
-        <div class="form-group">
-            <label for="local_host" class="col-sm-2 control-label"><?php echo T_('MySQL Hostname'); ?></label>
-            <input type="text" class="form-control-plaintext" id="local_host" name="local_host" size="32" value="<?php echo scrub_out($_REQUEST['local_host']); ?>">
+        <div class="row mb-3">
+            <label for="local_host" class="col-sm-2 form-label"><?php echo T_('MySQL Hostname'); ?></label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" id="local_host" name="local_host" size="32" value="<?php echo scrub_out($_REQUEST['local_host']); ?>">
+			</div>
         </div>
-        <div class="form-group">
-            <label for="local_port" class="col-sm-2 control-label"><?php echo T_('MySQL Port (optional)'); ?></label>
-            <input type="text" class="form-control-plaintext" id="local_port" name="local_port" size="32" value="<?php echo scrub_out($_REQUEST['local_port']); ?>"/>
+        <div class="row mb-3">
+            <label for="local_port" class="col-sm-2 form-label"><?php echo T_('MySQL Port (optional)'); ?></label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" id="local_port" name="local_port" size="32" value="<?php echo scrub_out($_REQUEST['local_port']); ?>"/>
+			</div>
         </div>
-        <div class="form-group">
-            <label for="local_username" class="col-sm-2 control-label"><?php echo T_('MySQL Username'); ?></label>
-            <input type="text" class="form-control-plaintext" id="local_username" name="local_username" size="32" value="<?php echo $local_username; ?>"/>
+        <div class="row mb-3">
+            <label for="local_username" class="col-sm-2 form-label"><?php echo T_('MySQL Username'); ?></label>
+			<div class="col-sm-10">
+           		<input type="text" class="form-control" id="local_username" name="local_username" size="32" value="<?php echo $local_username; ?>"/>
+			</div>
         </div>
-        <div class="form-group">
-            <label for="local_pass" class="col-sm-2 control-label"><?php echo T_('MySQL Password'); ?></label>
-            <input type="password" class="form-control-plaintext" id="local_pass" name="local_pass" size="32" value="<?php echo $local_pass; ?>" placeholder="<?php echo T_("Password") . ' (' . T_("required") . ')'; ?>">
+        <div class="row mb-3">
+            <label for="local_pass" class="col-sm-2 form-label"><?php echo T_('MySQL Password'); ?></label>
+			<div class="col-sm-10">
+            	<input type="password" class="form-control" id="local_pass" name="local_pass" size="32" value="<?php echo $local_pass; ?>" placeholder="<?php echo T_("Password") . ' (' . T_("required") . ')'; ?>">
+			</div>
         </div>
 
         <input type="hidden" name="htmllang" value="<?php echo $htmllang; ?>" />
@@ -114,7 +126,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
         <legend><?php echo T_('Installation Type'); ?></legend>
         <div><?php echo T_('Optimize Ampache for your use case. The installer will enable/disable features automatically.'); ?></div>
         <br />
-        <div class="form-group">
+        <div class="row mb-3">
             <div class="radio">
                 <label><input type="radio" name="usecase" value="default" <?php if (!$has_usecase || $_REQUEST['usecase'] == 'default') {
                     echo 'checked';
@@ -140,8 +152,8 @@ require __DIR__ . '/install_header.inc.php'; ?>
             <?php echo T_('This section applies the default transcoding configuration according to the application you want to use. You may need to customize settings once setup has ended.'); ?> <a href="https://github.com/ampache/ampache/wiki/Transcoding" target="_blank"><?php echo T_('See wiki page'); ?></a>
         </div>
         <br />
-        <div class="form-group">
-            <label for="transcode_template" class="col-sm-2 control-label"><?php echo T_('Template Configuration'); ?></label>
+        <div class="row mb-3">
+            <label for="transcode_template" class="col-sm-2 form-label"><?php echo T_('Template Configuration'); ?></label>
             <div class="col-sm-10">
                 <select class="form-control" id="transcode_template" name="transcode_template">
                     <option value=""><?php echo T_('None'); ?></option>
@@ -165,113 +177,135 @@ foreach ($modes as $mode) { ?>
         <div><?php echo T_('Ampache is more than only a web interface. Several backends are implemented to ensure you can stream your media to any player.'); ?></div>
         <div><?php echo T_('Select each backend to enable. Depending on the backend, you may need to perform additional configuration.'); ?> <a href="https://github.com/ampache/ampache/wiki/API" target="_blank"><?php echo T_('See wiki page'); ?></a></div>
         <br />
-        <div class="form-group">
-            <div class="checkbox-inline disabled">
-                <label><input type="checkbox" value="1" checked disabled>Web Interface</label>
-            </div>
-            <div class="checkbox-inline disabled">
-                <label><input type="checkbox" value="1" checked disabled>Ampache API</label>
-            </div>
-            <div class="checkbox-inline">
-                <label><input type="checkbox" name="backends[]" value="subsonic" <?php if (!$has_backends || in_array('subsonic', $_REQUEST['backends'])) {
-                    echo 'checked';
-                } ?>>Subsonic</label>
-            </div>
-            <div class="checkbox-inline">
-                <label><input type="checkbox" name="backends[]" value="upnp" <?php if ($has_backends && in_array('upnp', $_REQUEST['backends'])) {
-                    echo 'checked';
-                } ?>>UPnP</label>
-            </div>
-            <div class="checkbox-inline">
-                <label><input type="checkbox" name="backends[]" value="daap" <?php if ($has_backends && in_array('daap', $_REQUEST['backends'])) {
-                    echo 'checked';
-                } ?>>DAAP (iTunes)</label>
-            </div>
-            <div class="checkbox-inline">
-                <label><input type="checkbox" name="backends[]" value="webdav" <?php if ($has_backends && in_array('webdav', $_REQUEST['backends'])) {
-                    echo 'checked';
-                } ?>>WebDAV</label>
-            </div>
-        </div>
+		
+		<div class="form-check form-check-inline disabled">
+			<label class="form-check-label"><input type="checkbox" value="1" checked disabled>Web Interface</label>
+		</div>
+		<div class="form-check form-check-inline disabled">
+			<label><input type="checkbox" value="1" checked disabled>Ampache API</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<label><input type="checkbox" name="backends[]" value="subsonic" <?php if (!$has_backends || in_array('subsonic', $_REQUEST['backends'])) {
+				echo 'checked';
+			} ?>>Subsonic</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<label><input type="checkbox" name="backends[]" value="upnp" <?php if ($has_backends && in_array('upnp', $_REQUEST['backends'])) {
+				echo 'checked';
+			} ?>>UPnP</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<label><input type="checkbox" name="backends[]" value="daap" <?php if ($has_backends && in_array('daap', $_REQUEST['backends'])) {
+				echo 'checked';
+			} ?>>DAAP (iTunes)</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<label><input type="checkbox" name="backends[]" value="webdav" <?php if ($has_backends && in_array('webdav', $_REQUEST['backends'])) {
+				echo 'checked';
+			} ?>>WebDAV</label>
+		</div>
 
         <br /><br />
-        <div class="panel-group" id="accordion">
-            <div id="config_files" class="panel panel-default">
-                <div class="panel-heading">
-                    <legend class="panel-title"><a data-toggle="collapse" data-target="#collapseConfigFiles" href="#collapseConfigFiles"><?php echo T_('File Insight'); ?></a></legend>
-                </div>
-                <div id="collapseConfigFiles" class="panel-collapse collapse <?php if (isset($created_config) && !$created_config) {
-                    echo "in";
-                } ?>">
-                    <div class="panel-body">
-                        <?php if ($this->installationHelper->install_check_server_apache()) { ?>
-                            <div class="col-sm-2 control-label">
-                                <?php echo T_('rest/.htaccess action'); ?>
-                            </div>
-                            <div class="col-sm-10">
-                                <button type="submit" class="btn btn-warning" name="download_htaccess_rest"><?php echo T_('Download'); ?></button>
-                                <button type="submit" class="btn btn-warning" name="write_htaccess_rest" <?php if (!check_htaccess_rest_writable()) {
-                                    echo "disabled ";
-                                } ?>>
-                                    <?php echo T_('Write'); ?>
-                                </button>
-                            </div>
-                            <div class="col-sm-2 control-label"><?php echo T_('rest/.htaccess exists?'); ?></div>
-                            <div class="col-sm-10"><?php echo debug_result(is_readable($htaccess_rest_file)); ?></div>
-                            <div class="col-sm-2 control-label"><?php echo T_('rest/.htaccess configured?'); ?></div>
-                            <div class="col-sm-10"><?php echo debug_result($this->installationHelper->install_check_rewrite_rules($htaccess_rest_file, $web_path_guess)); ?></div>
+		
+		<div class="accordion" id="accordionExample">
+			<div class="accordion-item">
+				<h2 class="">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+						<?php echo T_('File Insight'); ?>
+					</button>
+				</h2>
+				<div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+					<div class="accordion-body">
+						<?php if ($this->installationHelper->install_check_server_apache()) { ?>
+							<div class="row">
+								<div class="col-sm-4 form-label">
+									<?php echo T_('rest/.htaccess action'); ?>
+								</div>
+								<div class="col-sm-8">
+									<button type="submit" class="btn btn-warning" name="download_htaccess_rest"><?php echo T_('Download'); ?></button>
+									<button type="submit" class="btn btn-warning" name="write_htaccess_rest" <?php if (!check_htaccess_rest_writable()) {
+																													echo "disabled ";
+																												} ?>>
+										<?php echo T_('Write'); ?>
+									</button>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4 form-label"><?php echo T_('rest/.htaccess exists?'); ?></div>
+								<div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_rest_file)); ?></div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4 form-label"><?php echo T_('rest/.htaccess configured?'); ?></div>
+								<div class="col-sm-8"><?php echo debug_result($this->installationHelper->install_check_rewrite_rules($htaccess_rest_file, $web_path_guess)); ?></div>
+							</div>
 
-                            <div class="col-sm-2 control-label">
-                                <?php echo T_('play/.htaccess action'); ?>
-                            </div>
-                            <div class="col-sm-10">
-                                <button type="submit" class="btn btn-warning" name="download_htaccess_play"><?php echo T_('Download'); ?></button>
-                                <button type="submit" class="btn btn-warning" name="write_htaccess_play" <?php if (!check_htaccess_play_writable()) {
-                                    echo "disabled ";
-                                } ?>>
-                                    <?php echo T_('Write'); ?>
-                                </button>
-                            </div>
-                            <div class="col-sm-2 control-label"><?php echo T_('play/.htaccess exists?'); ?></div>
-                            <div class="col-sm-10"><?php echo debug_result(is_readable($htaccess_play_file)); ?></div>
-                            <div class="col-sm-2 control-label"><?php echo T_('play/.htaccess configured?'); ?></div>
-                            <div class="col-sm-10"><?php echo debug_result($this->installationHelper->install_check_rewrite_rules($htaccess_play_file, $web_path_guess)); ?></div>
-                        <?php } ?>
+							<div class="row">
+								<div class="col-sm-4 form-label">
+									<?php echo T_('play/.htaccess action'); ?>
+								</div>
+								<div class="col-sm-8">
+									<button type="submit" class="btn btn-warning" name="download_htaccess_play"><?php echo T_('Download'); ?></button>
+									<button type="submit" class="btn btn-warning" name="write_htaccess_play" <?php if (!check_htaccess_play_writable()) {
+																													echo "disabled ";
+																												} ?>>
+										<?php echo T_('Write'); ?>
+									</button>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4 form-label"><?php echo T_('play/.htaccess exists?'); ?></div>
+								<div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_play_file)); ?></div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4 form-label"><?php echo T_('play/.htaccess configured?'); ?></div>
+								<div class="col-sm-8"><?php echo debug_result($this->installationHelper->install_check_rewrite_rules($htaccess_play_file, $web_path_guess)); ?></div>
+							</div>
+						<?php } ?>
 
-                        &nbsp;
-                        <div class="col-sm-4">
-                            <?php echo T_('config/ampache.cfg.php action'); ?>
-                        </div>
-                        <div class="col-sm-10">
-                            <button type="submit" class="btn btn-warning" name="download"><?php echo T_('Download'); ?></button>
-                            <button type="submit" class="btn btn-warning" name="write" <?php if (!check_config_writable()) {
-                                echo T_('Disabled');
-                            } ?>>
-                                <?php echo T_('Write'); ?>
-                            </button>
-                        </div>
-                        <div class="col-sm-2 control-label"><?php echo T_('config/ampache.cfg.php exists?'); ?></div>
-                        <div class="col-sm-10"><?php echo debug_result(is_readable($configfile)); ?></div>
-                        <div class="col-sm-2 control-label"><?php echo T_('config/ampache.cfg.php configured?'); ?></div>
-                        <div class="col-sm-10"><?php $results = (is_readable($configfile) && parse_ini_file($configfile)) ? parse_ini_file($configfile) : [];
-echo debug_result(check_config_values($results)); ?></div>
-                        &nbsp;
-                        <div class="col-sm-4"></div>
-                        <?php $check_url = $web_path . "/install.php?action=show_create_config&htmllang=$htmllang&charset=$charset&local_db=" . ($_REQUEST['local_db'] ?? '') . "&local_host=" . ($_REQUEST['local_host'] ?? ''); ?>
-                        <div class="col-sm-10">
-                            <a href="<?php echo $check_url; ?>">[<?php echo T_('Recheck Config'); ?>]</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+						&nbsp;
+						<div class="row">
+							<div class="col-sm-4">
+								<?php echo T_('config/ampache.cfg.php action'); ?>
+							</div>
+							<div class="col-sm-8">
+								<button type="submit" class="btn btn-warning" name="download"><?php echo T_('Download'); ?></button>
+								<button type="submit" class="btn btn-warning" name="write" <?php if (!check_config_writable()) {
+																								echo T_('Disabled');
+																							} ?>>
+									<?php echo T_('Write'); ?>
+								</button>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4 form-label"><?php echo T_('config/ampache.cfg.php exists?'); ?></div>
+							<div class="col-sm-8"><?php echo debug_result(is_readable($configfile)); ?></div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4 form-label"><?php echo T_('config/ampache.cfg.php configured?'); ?></div>
+							<div class="col-sm-8"><?php $results = (is_readable($configfile) && parse_ini_file($configfile)) ? parse_ini_file($configfile) : [];
+													echo debug_result(check_config_values($results)); ?></div>
+						</div>
+						&nbsp;
+						<div class="row">
+							<div class="col-sm-4"></div>
+							<?php $check_url = $web_path . "/install.php?action=show_create_config&htmllang=$htmllang&charset=$charset&local_db=" . ($_REQUEST['local_db'] ?? '') . "&local_host=" . ($_REQUEST['local_host'] ?? ''); ?>
+							<div class="col-sm-8">
+								<a href="<?php echo $check_url; ?>">[<?php echo T_('Recheck Config'); ?>]</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <div class="col-sm-1">
-            <button type="submit" class="btn btn-warning" name="skip_config"><?php echo T_('Skip'); ?></button>
-        </div>
-        <div class="col-sm-4">
-            <button type="submit" class="btn btn-warning" name="create_all"><?php echo T_('Create Config'); ?></button>
-        </div>
+		<div class="row">
+			<div class="col-sm-4">
+				<button type="submit" class="btn btn-warning" name="skip_config"><?php echo T_('Skip'); ?></button>
+			</div>
+			<div class="col-sm-8">
+				<button type="submit" class="btn btn-warning" name="create_all"><?php echo T_('Create Config'); ?></button>
+			</div>
+		</div>
     </form>
     <br /><br />
 <?php require __DIR__ . '/install_footer.inc.php'; ?>
