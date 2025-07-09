@@ -659,6 +659,9 @@ class Art extends database_object
 
         if ($size !== 'original') {
             $path .= $slash_type . 'thumbnail';
+            if ($autocreate && !Core::is_readable($path)) {
+                mkdir($path);
+            }
         }
 
         $path .= $slash_type . $type;
@@ -795,7 +798,7 @@ class Art extends database_object
                 $base_path .= "art-" . $sizetext . "." . self::extension($mime);
                 if (Core::is_readable($base_path) && !Core::is_readable($path)) {
                     rename($base_path, $path);
-                } else {
+                } elseif (Core::is_readable($base_path)) {
                     unlink($base_path);
                 }
             }
