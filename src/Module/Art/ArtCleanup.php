@@ -32,6 +32,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\library_item;
 
 /**
  * Provides methods for the cleanup/deletion of art-items
@@ -138,7 +139,8 @@ final class ArtCleanup implements ArtCleanupInterface
                     // check if this even exists in the database
                     $className = ObjectTypeToClassNameMapper::map($type);
                     $item      = new $className($object_id);
-                    $exists    = $item->isNew() === false;
+                    /** @var library_item $item */
+                    $exists = $item->isNew() === false;
                     if (!$exists) {
                         $interactor->info(
                             sprintf(
