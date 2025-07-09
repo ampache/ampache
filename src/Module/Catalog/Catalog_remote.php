@@ -849,7 +849,7 @@ class Catalog_remote extends Catalog
                     rename($old_target_file, $file_target);
                     debug_event('remote.catalog', 'Moved: ' . $row['id'] . ' from: {' . $old_target_file . '}' . ' to: {' . $file_target . '}', 5);
                 } else {
-                    $remote_url = $row['file'] . '&ssid=' . $handshake->auth . '&format=' . $cache_target . '&bitrate=' . $max_bitrate;
+                    $remote_url = $row['file'] . '&cache=1&ssid=' . $handshake->auth . '&format=' . $cache_target . '&bitrate=' . $max_bitrate;
                     if (Catalog::cache_remote_file($file_target, $remote_url)) {
                         debug_event('remote.catalog', 'Saved: ' . $row['id'] . ' to: {' . $file_target . '}', 5);
                     } else {
