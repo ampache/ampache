@@ -186,22 +186,22 @@ foreach ($modes as $mode) { ?>
 		</div>
 		<div class="form-check form-check-inline">
 			<label><input type="checkbox" name="backends[]" value="subsonic" <?php if (!$has_backends || in_array('subsonic', $_REQUEST['backends'])) {
-				echo 'checked';
+			    echo 'checked';
 			} ?>>Subsonic</label>
 		</div>
 		<div class="form-check form-check-inline">
 			<label><input type="checkbox" name="backends[]" value="upnp" <?php if ($has_backends && in_array('upnp', $_REQUEST['backends'])) {
-				echo 'checked';
+			    echo 'checked';
 			} ?>>UPnP</label>
 		</div>
 		<div class="form-check form-check-inline">
 			<label><input type="checkbox" name="backends[]" value="daap" <?php if ($has_backends && in_array('daap', $_REQUEST['backends'])) {
-				echo 'checked';
+			    echo 'checked';
 			} ?>>DAAP (iTunes)</label>
 		</div>
 		<div class="form-check form-check-inline">
 			<label><input type="checkbox" name="backends[]" value="webdav" <?php if ($has_backends && in_array('webdav', $_REQUEST['backends'])) {
-				echo 'checked';
+			    echo 'checked';
 			} ?>>WebDAV</label>
 		</div>
 
@@ -224,8 +224,8 @@ foreach ($modes as $mode) { ?>
 								<div class="col-sm-8">
 									<button type="submit" class="btn btn-warning" name="download_htaccess_rest"><?php echo T_('Download'); ?></button>
 									<button type="submit" class="btn btn-warning" name="write_htaccess_rest" <?php if (!check_htaccess_rest_writable()) {
-																													echo "disabled ";
-																												} ?>>
+									    echo "disabled ";
+									} ?>>
 										<?php echo T_('Write'); ?>
 									</button>
 								</div>
@@ -246,8 +246,8 @@ foreach ($modes as $mode) { ?>
 								<div class="col-sm-8">
 									<button type="submit" class="btn btn-warning" name="download_htaccess_play"><?php echo T_('Download'); ?></button>
 									<button type="submit" class="btn btn-warning" name="write_htaccess_play" <?php if (!check_htaccess_play_writable()) {
-																													echo "disabled ";
-																												} ?>>
+									    echo "disabled ";
+									} ?>>
 										<?php echo T_('Write'); ?>
 									</button>
 								</div>
@@ -270,8 +270,8 @@ foreach ($modes as $mode) { ?>
 							<div class="col-sm-8">
 								<button type="submit" class="btn btn-warning" name="download"><?php echo T_('Download'); ?></button>
 								<button type="submit" class="btn btn-warning" name="write" <?php if (!check_config_writable()) {
-																								echo T_('Disabled');
-																							} ?>>
+								    echo T_('Disabled');
+								} ?>>
 									<?php echo T_('Write'); ?>
 								</button>
 							</div>
@@ -283,7 +283,7 @@ foreach ($modes as $mode) { ?>
 						<div class="row">
 							<div class="col-sm-4 form-label"><?php echo T_('config/ampache.cfg.php configured?'); ?></div>
 							<div class="col-sm-8"><?php $results = (is_readable($configfile) && parse_ini_file($configfile)) ? parse_ini_file($configfile) : [];
-													echo debug_result(check_config_values($results)); ?></div>
+echo debug_result(check_config_values($results)); ?></div>
 						</div>
 						&nbsp;
 						<div class="row">
