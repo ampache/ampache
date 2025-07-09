@@ -1,5 +1,14 @@
 # API CHANGELOG
 
+## API 6.8.1
+
+This version is being released for Ampache7 **only**
+
+### Changed
+
+* API6
+  * Send a full Art url in responses
+
 ## API 6.8.0
 
 This version is being released for Ampache7 **only**

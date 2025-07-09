@@ -1,5 +1,51 @@
 # CHANGELOG
 
+## Ampache 7.6.2
+
+### Added
+
+* Translations 2025-07-08
+* Don't show the clear art button when there isn't art there
+* CLI
+  * cleanup:art
+    * Add option `-c|--cleanup` (Delete orphaned art files when the file is missing from local_metadata_folder)
+    * Add option `-x|--execute` (Don't delete unless you explicitly choose to delete)
+  * Add a warning for orphan catalog cache folders during run:cacheProcess
+* Ampache Remote Catalogs
+  * Allow verify for Remote catalogs
+  * Gather art for Album and Artist objects missing art
+  * Get more tage data from API6 servers that don't have the `song_tags` method
+  * Use cached files for tag updates if created in the last 30 days
+* Try to pre-cache missing files in the transcode cache on play (When enabled)
+* Put the ID back on Art links to make them unique
+
+### Changed
+
+* Update composer packages
+* Use original art size when GD is disabled for URL links
+* Add the file mime to Art url links
+* Stop automatically creating thumbnails when inserting new art
+
+### Fixed
+
+* Bad `ampache.sql` file
+* Insert rows for Songs missing from the `song_data` table
+* Art inserted from URL would insert as a PHP mime type
+* Search
+  * Local image (`has_image`) search didn't count missing joins
+* Ampache Remote Catalogs
+  * Ampache PHP API didn't like `song_tags`
+  * Could not add songs
+  * Ensure an ID is returned for cleaning
+  * Don't error on the first track when `song_tags` fails
+  * Cache path was using the base folder instead of the numbered subfolders
+* Don't gather file art when the file is a url
+* Delete Art cache when the art is updated
+* Subsonic
+  * Ensure disabled songs are not added in more areas
+  * Look for other possible empty arrays
+  * Subsonic Remote catalogs can verify existing Song data
+
 ## Ampache 7.6.1
 
 Fixes for issues with OpenSubsonic identified by Symfonium users

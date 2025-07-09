@@ -140,7 +140,8 @@ final class VaInfo implements VaInfoInterface
 
     private bool $_broken = false;
 
-    private string|array $_pathinfo;
+    /** @var array{dirname?: string, basename: string, extension?: string, filename: string}  */
+    private array $_pathinfo;
 
     private UserRepositoryInterface $userRepository;
 
@@ -1545,7 +1546,7 @@ final class VaInfo implements VaInfoInterface
                     default:
                         $frame = strtolower($this->trimAscii($txxx['description']));
                         if ($enable_custom_metadata && !isset(self::DEFAULT_INFO[$frame]) && !in_array($frame, $parsed)) {
-                            $parsed[strtolower($this->trimAscii($txxx['description']))] = $id3v2['comments']['text'][$txxx['description']];
+                            $parsed[strtolower($this->trimAscii($txxx['description']))] = $id3v2['comments']['text'][$txxx['description']] ?? $txxx['data'];
                         }
                         break;
                 }

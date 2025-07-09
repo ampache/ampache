@@ -33,6 +33,9 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\Catalog_local;
+use Ampache\Module\Catalog\Catalog_remote;
+use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Stats;
@@ -658,11 +661,36 @@ final class Play2Action implements ApplicationActionInterface
                     return null;
                 }
             }
+
+            $catalog      = Catalog::create_from_id($mediaCatalogId);
             $cache_path   = (string)AmpConfig::get('cache_path', '');
             $cache_target = (string)AmpConfig::get('cache_target', '');
             $file_target  = (!empty($cache_target) && $cache_target === $transcode_to)
                 ? Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target)
                 : null;
+
+            $has_cache = ($file_target !== null && is_file($file_target));
+            if ($catalog && !$has_cache) {
+                if (($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic) && AmpConfig::get('cache_remote', '')) {
+                    $media_file = $catalog->getRemoteStreamingUrl($media);
+                    if ($file_target && $media_file) {
+                        $catalog->cache_catalog_file($file_target, $media_file);
+                    }
+                }
+                if ($catalog instanceof Catalog_local && $file_target) {
+                    $catalog->cache_catalog_file($file_target, $media, $cache_target);
+                }
+            }
+
+            if ($has_cache) {
+                $size = Core::get_filesize($file_target);
+                sleep(2);
+                while ($size > 0 && $size !== Core::get_filesize($file_target)) {
+                    $size = Core::get_filesize($file_target);
+                    sleep(2);
+                }
+            }
+
             if (
                 $transcode_cfg != 'never' &&
                 $transcode_to &&
@@ -680,16 +708,12 @@ final class Play2Action implements ApplicationActionInterface
                 $streamConfiguration = [
                     'file_path' => $file_target,
                     'file_name' => $media->getFileName(),
-                    'file_size' => Core::get_filesize($file_target),
+                    'file_size' => ($media->file && preg_match('/^https?:\/\//i', $media->file)) ? $media->size : Core::get_filesize($file_target),
                     'file_type' => $cache_target,
                 ];
+            } elseif ($catalog === null) {
+                return null;
             } else {
-                // Build up the catalog for our current object
-                $catalog = Catalog::create_from_id($mediaCatalogId);
-                if ($catalog === null) {
-                    return null;
-                }
-
                 // Some catalogs redirect you to the remote url so stop here
                 $remoteStreamingUrl = $catalog->getRemoteStreamingUrl($media);
                 if ($remoteStreamingUrl !== null) {
@@ -946,26 +970,32 @@ final class Play2Action implements ApplicationActionInterface
 
         //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
         if ($transcode) {
-            // At this point, the bitrate has already been decided inside Stream::start_transcode
-            // so we just try to emulate that logic here
-            $stream_rate = 0;
-            if (isset($troptions['bitrate'])) {
-                $stream_rate = $troptions['bitrate'] / 1024;
-            } elseif (!empty($transcode_settings)) {
-                $stream_rate = Stream::get_max_bitrate($media, $transcode_settings, $troptions);
-            }
-
-            if ($media->time > 0 && $stream_rate > 0) {
-                $stream_size = (int)(($media->time * $stream_rate * 1024) / 8);
+            if ($cache_file) {
+                $stream_size = Core::get_filesize($stream_file);
             } else {
-                $this->logger->debug(
-                    'Bad media duration / stream bitrate. Content-length calculation skipped.',
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-                $stream_size = 0;
+                // At this point, the bitrate has already been decided inside Stream::start_transcode
+                // so we just try to emulate that logic here
+                $stream_rate = 0;
+                if (isset($troptions['bitrate'])) {
+                    $stream_rate = $troptions['bitrate'] / 1024;
+                } elseif (!empty($transcode_settings)) {
+                    $stream_rate = Stream::get_max_bitrate($media, $transcode_settings, $troptions);
+                }
+
+                if ($media->time > 0 && $stream_rate > 0) {
+                    $stream_size = (int)(($media->time * $stream_rate * 1024) / 8);
+                } else {
+                    $this->logger->debug(
+                        'Bad media duration / stream bitrate. Content-length calculation skipped.',
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
+                    $stream_size = 0;
+                }
             }
         } else {
-            $stream_size = $streamConfiguration['file_size'];
+            $stream_size = ($cache_file)
+                ? Core::get_filesize($stream_file)
+                : $streamConfiguration['file_size'];
         }
 
         if (!is_resource($filepointer)) {

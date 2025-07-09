@@ -464,6 +464,9 @@ class Song extends database_object implements
         // also clean up some bad data that might creep in
         Dba::write("UPDATE `song` SET `composer` = NULL WHERE `composer` = '';");
         Dba::write("UPDATE `song` SET `mbid` = NULL WHERE `mbid` = '';");
+
+        Dba::write("INSERT IGNORE INTO `song_data` (`song_id`) SELECT `id` FROM `song` WHERE `id` NOT IN (SELECT `song_id` FROM `song_data`);");
+
         Dba::write("UPDATE `song_data` SET `comment` = NULL WHERE `comment` = '';");
         Dba::write("UPDATE `song_data` SET `lyrics` = NULL WHERE `lyrics` = '';");
         Dba::write("UPDATE `song_data` SET `label` = NULL WHERE `label` = '';");
@@ -625,7 +628,7 @@ class Song extends database_object implements
      * This function gathers information from the song_ext_info table and adds it to the current object
      * @return array<string, scalar>
      */
-    public function _get_ext_info(string $select = ''): array
+    private function _get_ext_info(string $select = ''): array
     {
         if (parent::is_cached('song_data', $this->id)) {
             return parent::get_from_cache('song_data', $this->id);
@@ -1034,6 +1037,7 @@ class Song extends database_object implements
             'comment',
             'composer',
             'lyrics',
+            'publisher',
             'tags',
             'time',
             'title',
@@ -1289,6 +1293,9 @@ class Song extends database_object implements
 
         $sql = "UPDATE `song` SET `album` = ?, `album_disk` = ?, `disk` = ?, `year` = ?, `artist` = ?, `title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `size` = ?, `time` = ?, `track` = ?, `mbid` = ?, `update_time` = ? WHERE `id` = ?";
         Dba::write($sql, [$new_song->album, $new_song->album_disk, $new_song->disk, $new_song->year, $new_song->artist, $new_song->title, $new_song->composer ?: null, $new_song->bitrate, $new_song->rate, $new_song->mode, $new_song->channels, $new_song->size, $new_song->time, $new_song->track, $new_song->mbid, $update_time, $song_id]);
+
+        // did you miss the insert? it'll never come back if we don't check
+        Dba::write("INSERT IGNORE INTO `song_data` (`song_id`) SELECT `id` from `song` where `id` = ? AND `id` NOT IN (SELECT `song_id` FROM `song_data`);", [$song_id]);
 
         $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `disksubtitle` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, `replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ? WHERE `song_id` = ?";
         Dba::write($sql, [$new_song->label ?: null, $new_song->lyrics ?: null, $new_song->language ?: null, $new_song->disksubtitle ?: null, $new_song->comment ?: null, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id]);

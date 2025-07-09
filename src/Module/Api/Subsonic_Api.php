@@ -3082,10 +3082,17 @@ class Subsonic_Api
             return;
         }
 
+        $song = new Song($song_id);
+        if ($song->isNew() || !$song->enabled) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addSong($response, $song_id);
+            $response = Subsonic_Xml_Data::addSong($response, $song);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
             $response = Subsonic_Json_Data::addSong($response, $song_id);

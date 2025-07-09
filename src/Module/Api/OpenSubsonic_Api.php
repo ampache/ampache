@@ -1290,8 +1290,12 @@ class OpenSubsonic_Api
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $catalogs = $user->get_catalogs('podcast');
             if (count($catalogs) > 0) {
-                /** @var Catalog $catalog */
                 $catalog = Catalog::create_from_id($catalogs[0]);
+                if (!$catalog instanceof Catalog) {
+                    self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+                    return;
+                }
 
                 try {
                     self::getPodcastCreator()->create($url, $catalog);
@@ -3084,10 +3088,17 @@ class OpenSubsonic_Api
             return;
         }
 
+        $song = new Song($song_id);
+        if ($song->isNew() || !$song->enabled) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addSong($response, $song_id);
+            $response = OpenSubsonic_Xml_Data::addSong($response, $song);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
             $response = OpenSubsonic_Json_Data::addSong($response, $song_id);

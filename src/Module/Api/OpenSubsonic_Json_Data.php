@@ -216,7 +216,7 @@ class OpenSubsonic_Json_Data
             $allsongs      = $playlist->get_songs();
             foreach ($allsongs as $song_id) {
                 $song = new Song($song_id);
-                if ($song->isNew() && !$song->enabled) {
+                if ($song->isNew() || !$song->enabled) {
                     continue;
                 }
                 $json['entry'][] = self::_getChildSong($song);
@@ -265,7 +265,7 @@ class OpenSubsonic_Json_Data
             $entries  = [];
             foreach ($allsongs as $song_id) {
                 $song = new Song($song_id);
-                if ($song->isNew() && !$song->enabled) {
+                if ($song->isNew() || !$song->enabled) {
                     continue;
                 }
                 $entries[] = self::_getChildSong($song);
@@ -892,7 +892,7 @@ class OpenSubsonic_Json_Data
             $entries  = [];
             foreach ($allsongs as $song_id) {
                 $song = new Song($song_id);
-                if ($song->isNew() && !$song->enabled) {
+                if ($song->isNew() || !$song->enabled) {
                     continue;
                 }
                 $entries[] = self::_getChildSong($song);
@@ -2383,7 +2383,7 @@ class OpenSubsonic_Json_Data
             $json = self::_getDirectory_Catalog($object);
         }
 
-        $response['subsonic-response']['directory'] = (empty($json)) ? (object)[] : $json;
+        $response['subsonic-response']['directory'] = $json;
 
         return $response;
     }
@@ -2612,7 +2612,7 @@ class OpenSubsonic_Json_Data
         foreach ($tracks as $track) {
             if (array_key_exists('oid', $track)) {
                 $song = new Song((int)$track['oid']);
-                if ($song->isNew() && !$song->enabled) {
+                if ($song->isNew() || !$song->enabled) {
                     continue;
                 }
                 $status['entry'][] = self::_getChildSong($song);
@@ -2679,7 +2679,7 @@ class OpenSubsonic_Json_Data
      */
     public static function addLyrics(array $response, string $artist, string $title, Song $song): array
     {
-        if ($song->isNew()) {
+        if ($song->isNew() || !$song->enabled) {
             return $response;
         }
 
@@ -2718,7 +2718,7 @@ class OpenSubsonic_Json_Data
      */
     public static function addLyricsList(array $response, Song $song): array
     {
-        if ($song->isNew()) {
+        if ($song->isNew() || !$song->enabled) {
             return $response;
         }
 
@@ -2969,7 +2969,7 @@ class OpenSubsonic_Json_Data
 
             foreach ($items as $row) {
                 $song = new Song((int)$row['object_id']);
-                if ($song->isNew()) {
+                if ($song->isNew() || !$song->enabled) {
                     continue;
                 }
                 $json['entry'][] = self::_getChildSong($song);
@@ -3030,7 +3030,7 @@ class OpenSubsonic_Json_Data
 
             foreach ($items as $row) {
                 $song = new Song((int)$row['object_id']);
-                if ($song->isNew()) {
+                if ($song->isNew() || !$song->enabled) {
                     continue;
                 }
                 $json['entry'][] = self::_getChildSong($song);
@@ -3190,7 +3190,7 @@ class OpenSubsonic_Json_Data
         if (!empty($songs)) {
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
-                if ($song->isNew() && !$song->enabled) {
+                if ($song->isNew() || !$song->enabled) {
                     continue;
                 }
                 $json[] = self::_getChildSong($song);
@@ -3240,7 +3240,7 @@ class OpenSubsonic_Json_Data
             $json['song'] = [];
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
-                if ($song->isNew() && !$song->enabled) {
+                if ($song->isNew() || !$song->enabled) {
                     continue;
                 }
                 $json['song'][] = self::_getChildSong($song);
@@ -3293,7 +3293,7 @@ class OpenSubsonic_Json_Data
             $json['song'] = [];
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
-                if ($song->isNew() && !$song->enabled) {
+                if ($song->isNew() || !$song->enabled) {
                     continue;
                 }
                 $json['song'][] = self::_getChildSong($song);
@@ -3354,7 +3354,7 @@ class OpenSubsonic_Json_Data
             $songs         = $playlist->get_songs();
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
-                if ($song->isNew() && !$song->enabled) {
+                if ($song->isNew() || !$song->enabled) {
                     continue;
                 }
                 $json['entry'][] = self::_getChildSong($song);
@@ -3363,7 +3363,7 @@ class OpenSubsonic_Json_Data
             $songs = self::getSongRepository()->getByAlbum($share->object_id);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
-                if ($song->isNew() && !$song->enabled) {
+                if ($song->isNew() || !$song->enabled) {
                     continue;
                 }
                 $json['entry'][] = self::_getChildSong($song);
@@ -3587,7 +3587,7 @@ class OpenSubsonic_Json_Data
         $json = ['song' => []];
         foreach ($songs as $song_id) {
             $song   = new Song($song_id);
-            if ($song->isNew()) {
+            if ($song->isNew() || !$song->enabled) {
                 continue;
             }
             $json['song'][] = self::_getChildSong($song);

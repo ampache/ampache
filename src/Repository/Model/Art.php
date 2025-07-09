@@ -401,7 +401,16 @@ class Art extends database_object
         debug_event(self::class, 'Insert art from url ' . $url, 4);
         $image = self::get_from_source(['url' => $url], $this->object_type);
         $rurl  = pathinfo($url);
-        $mime  = "image/" . ($rurl['extension'] ?? 'jpg');
+        $ext   = (isset($rurl['extension']) && !str_starts_with($rurl['extension'], 'php')) ? $rurl['extension'] : 'jpeg';
+        $parts = parse_url($url);
+
+        parse_str($parts['query'] ?? '', $query);
+        $rurl = (isset($query['name']) && is_string($query['name']))
+            ? pathinfo($query['name'])
+            : pathinfo($url);
+
+        $ext  = (isset($rurl['extension']) && !str_starts_with($rurl['extension'], 'php')) ? $rurl['extension'] : 'jpeg';
+        $mime = "image/" . $ext;
         $this->insert($image, $mime);
     }
 
@@ -556,6 +565,11 @@ class Art extends database_object
             $this->kind,
         ]);
 
+        // clear object cache on insert
+        if (parent::is_cached('art', $this->object_type . $this->object_id . 'original')) {
+            parent::clear_cache();
+        }
+
         return true;
     }
 
@@ -631,7 +645,7 @@ class Art extends database_object
     /**
      * get_dir_on_disk
      */
-    public static function get_dir_on_disk(string $type, int $uid, string $kind = '', bool $autocreate = false): ?string
+    public static function get_dir_on_disk(string $type, int $uid, string $size, string $kind = '', bool $autocreate = false): ?string
     {
         $path = AmpConfig::get('local_metadata_dir');
         if (!$path) {
@@ -642,6 +656,13 @@ class Art extends database_object
 
         // Correctly detect the slash we need to use here
         $slash_type = (str_contains((string) $path, '/')) ? '/' : '\\';
+
+        if ($size !== 'original') {
+            $path .= $slash_type . 'thumbnail';
+            if ($autocreate && !Core::is_readable($path)) {
+                mkdir($path);
+            }
+        }
 
         $path .= $slash_type . $type;
         if ($autocreate && !Core::is_readable($path)) {
@@ -674,7 +695,7 @@ class Art extends database_object
         string $kind,
         ?string $mime
     ): bool {
-        $path = self::get_dir_on_disk($type, $uid, $kind, true);
+        $path = self::get_dir_on_disk($type, $uid, $sizetext, $kind, true);
         if (!$path) {
             return false;
         }
@@ -683,6 +704,17 @@ class Art extends database_object
             debug_event(self::class, 'Local image art directory ' . $path . ' does not exist.', 1);
 
             return false;
+        }
+
+        if ($sizetext !== 'original') {
+            // remove old art thumbnails if they still exist
+            $base_path = self::get_dir_on_disk($type, $uid, 'original', $kind);
+            if ($base_path && Core::is_readable($base_path)) {
+                $base_path .= "art-" . $sizetext . "." . self::extension($mime);
+                if (Core::is_readable($base_path)) {
+                    unlink($base_path);
+                }
+            }
         }
 
         $path .= "art-" . $sizetext . "." . self::extension($mime);
@@ -752,12 +784,29 @@ class Art extends database_object
      */
     private static function read_from_dir(string $sizetext, string $type, int $uid, string $kind, string $mime): ?string
     {
-        $path = self::get_dir_on_disk($type, $uid, $kind);
+        $path = self::get_dir_on_disk($type, $uid, $sizetext, $kind);
         if (!$path) {
             return null;
         }
 
         $path .= "art-" . $sizetext . '.' . self::extension($mime);
+
+        if ($sizetext !== 'original') {
+            // move old art thumbnails to the new location
+            $base_path = self::get_dir_on_disk($type, $uid, 'original', $kind);
+            if ($base_path && Core::is_readable($base_path)) {
+                if (!Core::is_readable(dirname($path))) {
+                    mkdir(dirname($path), 0775, true);
+                }
+                $base_path .= "art-" . $sizetext . "." . self::extension($mime);
+                if (Core::is_readable($base_path) && !Core::is_readable($path)) {
+                    rename($base_path, $path);
+                } elseif (Core::is_readable($base_path)) {
+                    unlink($base_path);
+                }
+            }
+        }
+
         if (!Core::is_readable($path)) {
             debug_event(self::class, 'Local image art ' . $path . ' cannot be read.', 1);
 
@@ -783,7 +832,15 @@ class Art extends database_object
     public static function delete_from_dir(string $type, int $uid, ?string $kind = '', ?string $size = '', ?string $mime = ''): void
     {
         if ($type && $uid) {
-            $path = self::get_dir_on_disk($type, $uid, (string)$kind);
+            // there are 2 paths to clear for thumbs and art.
+            if (empty($size)) {
+                $path = self::get_dir_on_disk($type, $uid, 'thumbnail', (string)$kind);
+                if ($path !== null) {
+                    self::delete_rec_dir(rtrim($path, '/'), $size, $mime);
+                }
+                $size = 'original';
+            }
+            $path = self::get_dir_on_disk($type, $uid, $size, (string)$kind);
             if ($path !== null) {
                 self::delete_rec_dir(rtrim($path, '/'), $size, $mime);
             }
@@ -836,6 +893,8 @@ class Art extends database_object
     public function reset(): void
     {
         $this->getArtCleanup()->deleteForArt($this);
+
+        parent::clear_cache();
     }
 
     /**
@@ -1185,39 +1244,48 @@ class Art extends database_object
             $sid = 'none';
         }
 
-        $key = $type . $uid;
-
         $has_gd = self::_hasGD();
-        if ($has_gd && parent::is_cached('art', $key . '275x275')) {
-            $row  = parent::get_from_cache('art', $key . '275x275');
-            $mime = $row['mime'];
+        $mime   = null;
+        $art_id = null;
+
+        $size = 'original';
+        if ($has_gd && $thumb !== null) {
+            $size_array = self::get_thumb_size($thumb);
+            $size       = $size_array['width'] . 'x' . $size_array['height'];
         }
 
-        if (parent::is_cached('art', $key . 'original')) {
-            $row        = parent::get_from_cache('art', $key . 'original');
-            $thumb_mime = $row['mime'];
+        $key = $type . $uid . $size;
+        if (parent::is_cached('art', $key)) {
+            $row    = parent::get_from_cache('art', $key);
+            $mime   = $row['mime'];
+            $art_id = $row['id'] ?? null;
         }
 
-        if (!isset($mime) && !isset($thumb_mime)) {
-            $sql        = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-            $db_results = Dba::read($sql, [$type, $uid]);
+        if (empty($mime)) {
+            $sql        = "SELECT `id`, `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ?;";
+            $db_results = Dba::read($sql, [$type, $uid, $size]);
 
-            while ($row = Dba::fetch_assoc($db_results)) {
-                parent::add_to_cache('art', $key . $row['size'], $row);
-                if ($row['size'] == 'original') {
+            if ($row = Dba::fetch_assoc($db_results)) {
+                parent::add_to_cache('art', $key, $row);
+                $mime   = $row['mime'];
+                $art_id = $row['id'];
+            } else {
+                $sql        = "SELECT `id`, `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ?;";
+                $db_results = Dba::read($sql, [$type, $uid, 'original']);
+
+                if ($row = Dba::fetch_assoc($db_results)) {
+                    parent::add_to_cache('art', $key, $row);
                     $mime = $row['mime'];
-                } elseif ($has_gd && $row['size'] == '275x275') {
-                    $thumb_mime = $row['mime'];
                 }
             }
         }
 
-        $mime       = $thumb_mime ?? ($mime ?? null);
-        $extension  = self::extension($mime);
-        $size       = 'original';
-        if ($thumb !== null) {
-            $size_array = self::get_thumb_size($thumb);
-            $size       = $size_array['width'] . 'x' . $size_array['height'];
+        $extension = self::extension($mime);
+        if (
+            $extension === '' ||
+            $extension === '0'
+        ) {
+            $extension = 'jpg';
         }
 
         if (
@@ -1225,13 +1293,6 @@ class Art extends database_object
             AmpConfig::get('stream_beautiful_url') &&
             $size !== 'original'
         ) {
-            if (
-                $extension === '' ||
-                $extension === '0'
-            ) {
-                $extension = 'jpg';
-            }
-
             // e.g. https://demo.ampache.dev/play/art/{sessionid}/artist/1240/size400x400.png
             $url = AmpConfig::get_web_path() . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . $uid . '/size' . $size . '.' . $extension;
         } else {
@@ -1243,10 +1304,11 @@ class Art extends database_object
                 $url .= '&size=' . $size;
             }
 
-            if ($extension !== '' && $extension !== '0') {
-                $name = 'art.' . $extension;
-                $url .= '&name=' . $name;
+            if ($art_id !== null) {
+                $url .= '&id=' . $art_id;
             }
+
+            $url .= '&name=' . 'art.' . $extension;
         }
 
         return $url;
@@ -1575,9 +1637,11 @@ class Art extends database_object
                 echo "<a href=\"javascript:NavigateTo('" . $web_path . "/" . $ajax_str . "arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo Ui::get_material_symbol('edit', T_('Edit/Find Art'));
                 echo "</a>";
-                echo "<a href=\"javascript:NavigateTo('" . $web_path . "/" . $ajax_str . "arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . '&kind=' . $kind . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
-                echo Ui::get_material_symbol('close', T_('Reset Art'));
-                echo "</a>";
+                if ($has_db) {
+                    echo "<a href=\"javascript:NavigateTo('" . $web_path . "/" . $ajax_str . "arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . '&kind=' . $kind . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
+                    echo Ui::get_material_symbol('close', T_('Reset Art'));
+                    echo "</a>";
+                }
             }
 
             echo "</div>";
