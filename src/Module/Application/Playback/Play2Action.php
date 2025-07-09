@@ -693,6 +693,9 @@ final class Play2Action implements ApplicationActionInterface
                     flush();
                     sleep(2);
                 }
+                ob_end_clean();
+                flush();
+                sleep(2);
             }
 
             if (
