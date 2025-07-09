@@ -651,29 +651,22 @@ final class PlayAction implements ApplicationActionInterface
             if ($catalog && !$has_cache) {
                 if (($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic) && AmpConfig::get('cache_remote', '')) {
                     $media_file = $catalog->getRemoteStreamingUrl($media);
-                    if ($media_file) {
+                    if ($file_target && $media_file) {
                         $catalog->cache_catalog_file($file_target, $media_file);
                     }
                 }
-                if ($catalog instanceof Catalog_local) {
+                if ($catalog instanceof Catalog_local && $file_target) {
                     $catalog->cache_catalog_file($file_target, $media, $cache_target);
                 }
             }
 
             if ($has_cache) {
                 $size = Core::get_filesize($file_target);
-                ob_end_clean();
-                flush();
                 sleep(2);
                 while ($size > 0 && $size !== Core::get_filesize($file_target)) {
                     $size = Core::get_filesize($file_target);
-                    ob_end_clean();
-                    flush();
                     sleep(2);
                 }
-                ob_end_clean();
-                flush();
-                sleep(2);
             }
 
             if (
@@ -693,7 +686,7 @@ final class PlayAction implements ApplicationActionInterface
                 $streamConfiguration = [
                     'file_path' => $file_target,
                     'file_name' => $media->getFileName(),
-                    'file_size' => Core::get_filesize($file_target),
+                    'file_size' => (($media->file && preg_match('/^https?:\/\//i', $media->file)) || time() - filemtime($file_target) < 30) ? $media->size : Core::get_filesize($file_target),
                     'file_type' => $cache_target,
                 ];
             } elseif ($catalog === null) {
