@@ -130,7 +130,7 @@ final class ArtCleanup implements ArtCleanupInterface
                     }
 
                     $files = scandir($object_path);
-                    if ($files === false) {
+                    if ($files === false || $files === ['.', '..']) {
                         continue;
                     }
 
