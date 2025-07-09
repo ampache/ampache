@@ -708,7 +708,7 @@ class Art extends database_object
 
         if ($sizetext !== 'original') {
             // remove old art thumbnails if they still exist
-            $base_path = self::get_dir_on_disk($type, $uid, 'original', $kind, true);
+            $base_path = self::get_dir_on_disk($type, $uid, 'original', $kind);
             if ($base_path && Core::is_readable($base_path)) {
                 $base_path .= "art-" . $sizetext . "." . self::extension($mime);
                 if (Core::is_readable($base_path)) {
@@ -793,7 +793,7 @@ class Art extends database_object
 
         if ($sizetext !== 'original') {
             // move old art thumbnails to the new location
-            $base_path = self::get_dir_on_disk($type, $uid, 'original', $kind, true);
+            $base_path = self::get_dir_on_disk($type, $uid, 'original', $kind);
             if ($base_path && Core::is_readable($base_path)) {
                 if (!Core::is_readable(dirname($path))) {
                     mkdir(dirname($path), 0775, true);

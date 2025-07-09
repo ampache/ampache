@@ -28,6 +28,7 @@ namespace Ampache\Module\Art;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Art;
 
@@ -37,6 +38,22 @@ use Ampache\Repository\Model\Art;
 final class ArtCleanup implements ArtCleanupInterface
 {
     private ConfigContainerInterface $configContainer;
+
+    private const TYPES = [
+        'album_disk',
+        'album',
+        'artist',
+        'catalog',
+        'label',
+        'live_stream',
+        'playlist',
+        'podcast_episode',
+        'podcast',
+        'song',
+        'tag',
+        'user',
+        'video',
+    ];
 
     public function __construct(
         ConfigContainerInterface $configContainer
@@ -77,25 +94,142 @@ final class ArtCleanup implements ArtCleanupInterface
     }
 
     /**
+     * clean up the local metadata folder by moving thumbnails to their correct location
+     */
+    public function migrateThumbnails(Interactor $interactor, bool $delete): void
+    {
+        $metadata_dir = $this->configContainer->get(ConfigurationKeyEnum::LOCAL_METADATA_DIR);
+        if ($metadata_dir) {
+            // Now check for orhpaned art files
+            $interactor->info(
+                'Checking for orhpaned art files',
+                true
+            );
+
+            $types = self::TYPES;
+
+            foreach ($types as $type) {
+                $type_path = $metadata_dir . DIRECTORY_SEPARATOR . $type;
+                if (!Core::is_readable($type_path)) {
+                    continue;
+                }
+
+                $object_dirs = scandir($type_path);
+                if ($object_dirs === false) {
+                    continue;
+                }
+
+                foreach ($object_dirs as $object_id) {
+                    if ($object_id === '.' || $object_id === '..') {
+                        continue;
+                    }
+
+                    $object_path = $type_path . DIRECTORY_SEPARATOR . $object_id . DIRECTORY_SEPARATOR . 'default';
+                    if (!is_dir($object_path)) {
+                        continue;
+                    }
+
+                    $files = scandir($object_path);
+                    if ($files === false) {
+                        continue;
+                    }
+
+                    // check if this even exists in the database
+                    $sql        = 'SELECT `id` FROM `$type` WHERE `id` = ?';
+                    $db_results = Dba::read($sql, [(int)$object_id]);
+                    $exists     = Dba::num_rows($db_results) > 0;
+                    if (!$exists) {
+                        $interactor->info(
+                            sprintf(
+                                'Object does not exist in the database: %s/%s',
+                                $type,
+                                $object_id
+                            ),
+                            true
+                        );
+                    }
+
+                    foreach ($files as $file) {
+                        // Look for art files with size in the filename (e.g., art-128x128.jpg)
+                        if (preg_match('/^art-(\d+x\d+)\./', $file, $matches)) {
+                            if (!$exists) {
+                                if ($delete) {
+                                    unlink($object_path . DIRECTORY_SEPARATOR . $file);
+                                }
+                                continue;
+                            }
+                            $size = $matches[1];
+                            if (!Art::has_db((int)$object_id, $type, 'default', $size)) {
+                                $interactor->info(
+                                    sprintf(
+                                        'Thumbnail is not in the database: %s/%s/%s (size: %s)',
+                                        $type,
+                                        $object_id,
+                                        $file,
+                                        $size
+                                    ),
+                                    true
+                                );
+                                if ($delete) {
+                                    unlink($object_path . DIRECTORY_SEPARATOR . $file);
+                                }
+                            }
+                        }
+                        if (preg_match('/^art-(original)\./', $file, $matches)) {
+                            if (!$exists) {
+                                if ($delete) {
+                                    unlink($object_path . DIRECTORY_SEPARATOR . $file);
+                                }
+                                continue;
+                            }
+                            $size = $matches[1];
+                            if (!Art::has_db((int)$object_id, $type, 'default', $size)) {
+                                $interactor->info(
+                                    sprintf(
+                                        'Image is not in the database: %s/%s/%s (size: %s)',
+                                        $type,
+                                        $object_id,
+                                        $file,
+                                        $size
+                                    ),
+                                    true
+                                );
+                                if ($delete) {
+                                    unlink($object_path . DIRECTORY_SEPARATOR . $file);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $interactor->info(
+                'Migrating thumbnails to their correct location',
+                true
+            );
+            $sql        = "SELECT `object_id`, `object_type`, `kind`, `size`, `mime` FROM `image` WHERE `size` != 'original'";
+            $db_results = Dba::read($sql);
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $art_path = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], $row['size'], $row['kind'], true);
+                $old_path = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], 'original', $row['kind']);
+
+                $art_path .= "art-" . $row['size'] . "." . Art::extension($row['mime']);
+                $old_path .= "art-" . $row['size'] . "." . Art::extension($row['mime']);
+                if (Core::is_readable($old_path) && !Core::is_readable($art_path)) {
+                    rename($old_path, $art_path);
+                } elseif (Core::is_readable($old_path)) {
+                    unlink($old_path);
+                }
+            }
+        }
+    }
+
+    /**
      * This cleans up art that no longer has a corresponding object
      */
     public function collectGarbageForObject(string $object_type, int $object_id): void
     {
-        $types = [
-            'album_disk',
-            'album',
-            'artist',
-            'catalog',
-            'label',
-            'live_stream',
-            'playlist',
-            'podcast_episode',
-            'podcast',
-            'song',
-            'tag',
-            'user',
-            'video',
-        ];
+        $types = self::TYPES;
 
         $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
         if (in_array($object_type, $types)) {
@@ -114,21 +248,7 @@ final class ArtCleanup implements ArtCleanupInterface
      */
     public function collectGarbage(): void
     {
-        $types = [
-            'album_disk',
-            'album',
-            'artist',
-            'catalog',
-            'label',
-            'live_stream',
-            'playlist',
-            'podcast_episode',
-            'podcast',
-            'song',
-            'tag',
-            'user',
-            'video',
-        ];
+        $types = self::TYPES;
 
         $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
         // iterate over our types and delete the images
@@ -160,7 +280,7 @@ final class ArtCleanup implements ArtCleanupInterface
     /**
      * Remove all thumbnail art in the database keeping original images
      */
-    public function deleteThumbnails(Interactor $interactor): void
+    public function deleteThumbnails(Interactor $interactor, bool $delete): void
     {
         $sql        = "SELECT * FROM `image` WHERE `size` != 'original';";
         $db_results = Dba::read($sql);
@@ -181,13 +301,15 @@ final class ArtCleanup implements ArtCleanupInterface
             true
         );
 
-        $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
-        foreach ($thumbnails as $thumbnail) {
-            if ($album_art_store_disk) {
-                Art::delete_from_dir($thumbnail['object_type'], $thumbnail['object_id'], $thumbnail['kind'], $thumbnail['size'], $thumbnail['mime']);
+        if ($delete) {
+            $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
+            foreach ($thumbnails as $thumbnail) {
+                if ($album_art_store_disk) {
+                    Art::delete_from_dir($thumbnail['object_type'], $thumbnail['object_id'], $thumbnail['kind'], $thumbnail['size'], $thumbnail['mime']);
+                }
+                $sql = "DELETE FROM `image` WHERE `id` = ? AND `size` != 'original'";
+                Dba::write($sql, [$thumbnail['id']]);
             }
-            $sql = "DELETE FROM `image` WHERE `id` = ? AND `size` != 'original'";
-            Dba::write($sql, [$thumbnail['id']]);
         }
     }
 }

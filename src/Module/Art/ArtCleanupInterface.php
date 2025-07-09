@@ -34,6 +34,11 @@ interface ArtCleanupInterface
     public function cleanup(): void;
 
     /**
+     * clean up the local metadata folder by moving thumbnails to their correct location
+     */
+    public function migrateThumbnails(Interactor $interactor, bool $delete): void;
+
+    /**
      * This cleans up art that no longer has a corresponding object
      */
     public function collectGarbageForObject(string $object_type, int $object_id): void;
@@ -51,5 +56,5 @@ interface ArtCleanupInterface
     /**
      * Remove all thumbnail art in the database keeping original images
      */
-    public function deleteThumbnails(Interactor $interactor): void;
+    public function deleteThumbnails(Interactor $interactor, bool $delete): void;
 }
