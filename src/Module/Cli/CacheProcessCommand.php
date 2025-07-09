@@ -65,7 +65,7 @@ final class CacheProcessCommand extends Command
          * Pre-cache any new files
          */
         if ($this->configContainer->get('cache_path') && $this->configContainer->get('cache_target')) {
-            Catalog::cache_catalogs();
+            Catalog::cache_catalogs($interactor);
         }
 
         debug_event('cache', 'finished cache process', 4);

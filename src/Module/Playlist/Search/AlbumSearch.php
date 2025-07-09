@@ -414,8 +414,9 @@ final class AlbumSearch implements SearchInterface
                     $join['song'] = true;
                     break;
                 case 'has_image':
-                    $where[]            = ($operator_sql == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
-                    $table['has_image'] = "LEFT JOIN (SELECT `object_id` FROM `image` WHERE `object_type` = 'album') AS `has_image` ON `album`.`id` = `has_image`.`object_id`";
+                    $where[] = ($operator_sql == '1')
+                        ? "`album`.`id` IN (SELECT `object_id` FROM `image` WHERE `object_type` = 'album' AND `size` = 'original')"
+                        : "`album`.`id` NOT IN (SELECT `object_id` FROM `image` WHERE `object_type` = 'album' AND `size` = 'original')";
                     break;
                 case 'image_height':
                 case 'image_width':

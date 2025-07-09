@@ -45,6 +45,7 @@ use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Metadata\MetadataEnabledInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
@@ -1047,36 +1048,113 @@ abstract class Catalog extends database_object
     /**
      * Run the cache_catalog_proc() on music catalogs.
      */
-    public static function cache_catalogs(): void
+    public static function cache_catalogs(Interactor $interactor = null): void
     {
         $path   = (string)AmpConfig::get('cache_path', '');
         $target = (string)AmpConfig::get('cache_target', '');
         // need a destination and target filetype
-        if (is_dir($path) && $target) {
+        if (is_dir($path) && Core::is_readable($path)) {
             $catalogs = self::get_all_catalogs('music');
-            foreach ($catalogs as $catalogid) {
-                debug_event(self::class, 'cache_catalogs: ' . $catalogid, 5);
-                $catalog = self::create_from_id($catalogid);
-                if ($catalog === null) {
-                    break;
-                }
-
-                $catalog->cache_catalog_proc();
-            }
-
-            $catalog_dirs = new RecursiveDirectoryIterator($path);
-            $dir_files    = new RecursiveIteratorIterator($catalog_dirs);
-            $cache_files  = new RegexIterator($dir_files, sprintf('/\.%s/i', $target));
-            debug_event(self::class, 'cache_catalogs: cleaning old files', 5);
-            foreach ($cache_files as $file) {
-                $path    = pathinfo((string) $file);
-                $song_id = $path['filename'];
-                if (!Song::has_id($song_id)) {
-                    unlink($file);
-                    debug_event(self::class, 'cache_catalogs: removed {' . $file . '}', 4);
+            $scandir  = scandir($path) ?: [];
+            foreach ($scandir as $file) {
+                // check for lost catalogs
+                if ('.' === $file || '..' === $file) {
+                    continue;
+                } elseif (is_dir($path . '/' . $file) && !in_array($file, $catalogs)) {
+                    debug_event(self::class, 'WARNING: Orphaned catalog cache ' . $path . '/' . $file, 5);
+                    $interactor?->warn(
+                        sprintf('WARNING: Orphaned catalog cache %s/%s', $path, $file),
+                        true
+                    );
                 }
             }
+            if ($target) {
+                foreach ($catalogs as $catalogid) {
+                    $catalog = self::create_from_id($catalogid);
+                    if ($catalog === null) {
+                        break;
+                    }
+                    debug_event(self::class, 'cache_catalogs: ' . $catalogid, 5);
+                    $interactor?->info(
+                        sprintf('cache_catalogs: %s', $catalogid),
+                        true
+                    );
+
+                    $catalog->cache_catalog_proc();
+                }
+
+                $catalog_dirs = new RecursiveDirectoryIterator($path);
+                $dir_files    = new RecursiveIteratorIterator($catalog_dirs);
+                $cache_files  = new RegexIterator($dir_files, sprintf('/\.%s/i', $target));
+                debug_event(self::class, 'cache_catalogs: cleaning old files', 5);
+                $interactor?->info(
+                    'cache_catalogs: cleaning old files',
+                    true
+                );
+                foreach ($cache_files as $file) {
+                    $path    = pathinfo((string)$file);
+                    $song_id = $path['filename'];
+                    if (!Song::has_id($song_id)) {
+                        unlink($file);
+                        debug_event(self::class, 'cache_catalogs: removed {' . $file . '}', 4);
+                        $interactor?->info(
+                            sprintf('cache_catalogs: removed {%s}', $file),
+                            true
+                        );
+                    }
+                }
+            }
+
         }
+    }
+
+    /**
+     * cache_remote_file
+     */
+    public static function cache_remote_file(string $file_target, string $remote_url): bool
+    {
+        try {
+            $filehandle = fopen($file_target, 'w');
+            if (!is_resource($filehandle)) {
+                debug_event(self::class, 'Could not open file: ' . $file_target, 5);
+
+                return false;
+            }
+
+            $curl = curl_init();
+            curl_setopt_array(
+                $curl,
+                [
+                    CURLOPT_RETURNTRANSFER => 1,
+                    CURLOPT_FILE => $filehandle,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_PIPEWAIT => 1,
+                    CURLOPT_URL => $remote_url,
+                ]
+            );
+            curl_exec($curl);
+            curl_close($curl);
+            fclose($filehandle);
+
+            return true;
+        } catch (Exception $error) {
+            debug_event(self::class, 'CURL error: ' . $error->getMessage(), 5);
+
+            return false;
+        }
+    }
+
+    /**
+     * cache_remote_file
+     */
+    public static function cache_local_file(Podcast_Episode|Song|Video $media, string $target_file, string $cache_target): void
+    {
+        // transcode to the new path
+        $transcode_settings = $media->get_transcode_settings($cache_target);
+
+        Stream::start_transcode($media, $transcode_settings, $target_file);
+
+        debug_event(self::class, 'Saved: ' . $media->id . ' to: {' . $target_file . '}', 5);
     }
 
     /**
@@ -2060,15 +2138,6 @@ abstract class Catalog extends database_object
             $image = Art::get_from_source($result, $type);
             if (strlen($image) > '5') {
                 $inserted = $art->insert($image, $result['mime']);
-                // If they've enabled resizing of images generate a thumbnail
-                if (AmpConfig::get('resize_images')) {
-                    $size  = ['width' => 275, 'height' => 275];
-                    $thumb = $art->generate_thumb($image, $size, $result['mime']);
-                    if ($thumb !== []) {
-                        $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], $size);
-                    }
-                }
-
                 if ($inserted === true) {
                     break;
                 }
@@ -3453,13 +3522,10 @@ abstract class Catalog extends database_object
 
     /**
      * get_media_tags
-     * @param Podcast_Episode|Song|Video $media
      * @param string[] $gather_types
-     * @param string $sort_pattern
-     * @param string $rename_pattern
      * @return array<string, mixed>
      */
-    public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern): array
+    public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern, string $file_override = null): array
     {
         // Check for patterns
         if (!$sort_pattern || !$rename_pattern) {
@@ -3467,12 +3533,14 @@ abstract class Catalog extends database_object
             $rename_pattern = $this->rename_pattern;
         }
 
-        if ($media->file === null) {
+        $media_file = $file_override ?? $media->file;
+
+        if (!$media_file) {
             return [];
         }
 
         $vainfo = $this->getUtilityFactory()->createVaInfo(
-            $media->file,
+            $media_file,
             $gather_types,
             '',
             '',
@@ -3489,7 +3557,7 @@ abstract class Catalog extends database_object
 
         $key = VaInfo::get_tag_type($vainfo->tags);
 
-        return VaInfo::clean_tag_info($vainfo->tags, $key, $media->file);
+        return VaInfo::clean_tag_info($vainfo->tags, $key, $media_file);
     }
 
     /**

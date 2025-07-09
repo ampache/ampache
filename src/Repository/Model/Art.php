@@ -645,7 +645,7 @@ class Art extends database_object
     /**
      * get_dir_on_disk
      */
-    public static function get_dir_on_disk(string $type, int $uid, string $kind = '', bool $autocreate = false): ?string
+    public static function get_dir_on_disk(string $type, int $uid, string $size, string $kind = '', bool $autocreate = false): ?string
     {
         $path = AmpConfig::get('local_metadata_dir');
         if (!$path) {
@@ -656,6 +656,13 @@ class Art extends database_object
 
         // Correctly detect the slash we need to use here
         $slash_type = (str_contains((string) $path, '/')) ? '/' : '\\';
+
+        if ($size !== 'original') {
+            $path .= $slash_type . 'thumbnail';
+            if ($autocreate && !Core::is_readable($path)) {
+                mkdir($path);
+            }
+        }
 
         $path .= $slash_type . $type;
         if ($autocreate && !Core::is_readable($path)) {
@@ -688,7 +695,7 @@ class Art extends database_object
         string $kind,
         ?string $mime
     ): bool {
-        $path = self::get_dir_on_disk($type, $uid, $kind, true);
+        $path = self::get_dir_on_disk($type, $uid, $sizetext, $kind, true);
         if (!$path) {
             return false;
         }
@@ -697,6 +704,17 @@ class Art extends database_object
             debug_event(self::class, 'Local image art directory ' . $path . ' does not exist.', 1);
 
             return false;
+        }
+
+        if ($sizetext !== 'original') {
+            // remove old art thumbnails if they still exist
+            $base_path = self::get_dir_on_disk($type, $uid, 'original', $kind);
+            if ($base_path && Core::is_readable($base_path)) {
+                $base_path .= "art-" . $sizetext . "." . self::extension($mime);
+                if (Core::is_readable($base_path)) {
+                    unlink($base_path);
+                }
+            }
         }
 
         $path .= "art-" . $sizetext . "." . self::extension($mime);
@@ -766,12 +784,29 @@ class Art extends database_object
      */
     private static function read_from_dir(string $sizetext, string $type, int $uid, string $kind, string $mime): ?string
     {
-        $path = self::get_dir_on_disk($type, $uid, $kind);
+        $path = self::get_dir_on_disk($type, $uid, $sizetext, $kind);
         if (!$path) {
             return null;
         }
 
         $path .= "art-" . $sizetext . '.' . self::extension($mime);
+
+        if ($sizetext !== 'original') {
+            // move old art thumbnails to the new location
+            $base_path = self::get_dir_on_disk($type, $uid, 'original', $kind);
+            if ($base_path && Core::is_readable($base_path)) {
+                if (!Core::is_readable(dirname($path))) {
+                    mkdir(dirname($path), 0775, true);
+                }
+                $base_path .= "art-" . $sizetext . "." . self::extension($mime);
+                if (Core::is_readable($base_path) && !Core::is_readable($path)) {
+                    rename($base_path, $path);
+                } elseif (Core::is_readable($base_path)) {
+                    unlink($base_path);
+                }
+            }
+        }
+
         if (!Core::is_readable($path)) {
             debug_event(self::class, 'Local image art ' . $path . ' cannot be read.', 1);
 
@@ -797,7 +832,15 @@ class Art extends database_object
     public static function delete_from_dir(string $type, int $uid, ?string $kind = '', ?string $size = '', ?string $mime = ''): void
     {
         if ($type && $uid) {
-            $path = self::get_dir_on_disk($type, $uid, (string)$kind);
+            // there are 2 paths to clear for thumbs and art.
+            if (empty($size)) {
+                $path = self::get_dir_on_disk($type, $uid, 'thumbnail', (string)$kind);
+                if ($path !== null) {
+                    self::delete_rec_dir(rtrim($path, '/'), $size, $mime);
+                }
+                $size = 'original';
+            }
+            $path = self::get_dir_on_disk($type, $uid, $size, (string)$kind);
             if ($path !== null) {
                 self::delete_rec_dir(rtrim($path, '/'), $size, $mime);
             }

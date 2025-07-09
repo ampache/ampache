@@ -190,8 +190,9 @@ final class ArtistSearch implements SearchInterface
                     $join['song'] = true;
                     break;
                 case 'has_image':
-                    $where[]            = ($operator_sql == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
-                    $table['has_image'] = "LEFT JOIN (SELECT `object_id` FROM `image` WHERE `object_type` = 'artist') AS `has_image` ON `artist`.`id` = `has_image`.`object_id`";
+                    $where[] = ($operator_sql == '1')
+                        ? "`artist`.`id` IN (SELECT `object_id` FROM `image` WHERE `object_type` = 'artist' AND `size` = 'original')"
+                        : "`artist`.`id` NOT IN (SELECT `object_id` FROM `image` WHERE `object_type` = 'artist' AND `size` = 'original')";
                     break;
                 case 'image_height':
                 case 'image_width':
