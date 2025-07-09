@@ -684,9 +684,13 @@ final class Play2Action implements ApplicationActionInterface
 
             if ($has_cache) {
                 $size = Core::get_filesize($file_target);
+                ob_end_clean();
+                flush();
+                sleep(2);
                 while ($size > 0 && $size !== Core::get_filesize($file_target)) {
-                    sleep(2);
                     $size = Core::get_filesize($file_target);
+                    ob_end_clean();
+                    flush();
                     sleep(2);
                 }
             }
@@ -970,26 +974,32 @@ final class Play2Action implements ApplicationActionInterface
 
         //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
         if ($transcode) {
-            // At this point, the bitrate has already been decided inside Stream::start_transcode
-            // so we just try to emulate that logic here
-            $stream_rate = 0;
-            if (isset($troptions['bitrate'])) {
-                $stream_rate = $troptions['bitrate'] / 1024;
-            } elseif (!empty($transcode_settings)) {
-                $stream_rate = Stream::get_max_bitrate($media, $transcode_settings, $troptions);
-            }
-
-            if ($media->time > 0 && $stream_rate > 0) {
-                $stream_size = (int)(($media->time * $stream_rate * 1024) / 8);
+            if ($cache_file) {
+                $stream_size = Core::get_filesize($stream_file);
             } else {
-                $this->logger->debug(
-                    'Bad media duration / stream bitrate. Content-length calculation skipped.',
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-                $stream_size = 0;
+                // At this point, the bitrate has already been decided inside Stream::start_transcode
+                // so we just try to emulate that logic here
+                $stream_rate = 0;
+                if (isset($troptions['bitrate'])) {
+                    $stream_rate = $troptions['bitrate'] / 1024;
+                } elseif (!empty($transcode_settings)) {
+                    $stream_rate = Stream::get_max_bitrate($media, $transcode_settings, $troptions);
+                }
+
+                if ($media->time > 0 && $stream_rate > 0) {
+                    $stream_size = (int)(($media->time * $stream_rate * 1024) / 8);
+                } else {
+                    $this->logger->debug(
+                        'Bad media duration / stream bitrate. Content-length calculation skipped.',
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
+                    $stream_size = 0;
+                }
             }
         } else {
-            $stream_size = $streamConfiguration['file_size'];
+            $stream_size = ($cache_file)
+                ? Core::get_filesize($stream_file)
+                : $streamConfiguration['file_size'];
         }
 
         if (!is_resource($filepointer)) {
