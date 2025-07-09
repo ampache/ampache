@@ -145,7 +145,7 @@ final class ArtCleanup implements ArtCleanupInterface
                     if (!$exists) {
                         $interactor->info(
                             sprintf(
-                                'Object does not exist in the database: %s/%s',
+                                'Object does not exist: %s/%s',
                                 $type,
                                 $object_id
                             ),
@@ -186,7 +186,7 @@ final class ArtCleanup implements ArtCleanupInterface
                                             'Thumbnail is not in the database: %s/%s/%s (size: %s)',
                                             $type,
                                             $object_id,
-                                            $object_path . DIRECTORY_SEPARATOR . $file,
+                                            $file,
                                             $size
                                         ),
                                         true
@@ -225,7 +225,7 @@ final class ArtCleanup implements ArtCleanupInterface
                                             'Image is not in the database: %s/%s/%s (size: %s)',
                                             $type,
                                             $object_id,
-                                            $object_path . DIRECTORY_SEPARATOR . $file,
+                                            $file,
                                             $size
                                         ),
                                         true
