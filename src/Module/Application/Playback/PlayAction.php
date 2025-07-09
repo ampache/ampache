@@ -660,12 +660,16 @@ final class PlayAction implements ApplicationActionInterface
                 }
             }
 
+            $size = ($has_cache) ? Core::get_filesize($file_target) : 0;
             if ($has_cache) {
-                $size = Core::get_filesize($file_target);
                 while ($size > 0 && $size !== Core::get_filesize($file_target)) {
                     sleep(2);
+                    ob_flush();
+                    flush();
                     $size = Core::get_filesize($file_target);
                     sleep(2);
+                    ob_flush();
+                    flush();
                 }
             }
 
@@ -686,7 +690,7 @@ final class PlayAction implements ApplicationActionInterface
                 $streamConfiguration = [
                     'file_path' => $file_target,
                     'file_name' => $media->getFileName(),
-                    'file_size' => Core::get_filesize($file_target),
+                    'file_size' => $size,
                     'file_type' => $cache_target,
                 ];
             } elseif ($catalog === null) {

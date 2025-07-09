@@ -682,12 +682,16 @@ final class Play2Action implements ApplicationActionInterface
                 }
             }
 
+            $size = ($has_cache) ? Core::get_filesize($file_target) : 0;
             if ($has_cache) {
-                $size = Core::get_filesize($file_target);
                 while ($size > 0 && $size !== Core::get_filesize($file_target)) {
                     sleep(2);
+                    ob_flush();
+                    flush();
                     $size = Core::get_filesize($file_target);
                     sleep(2);
+                    ob_flush();
+                    flush();
                 }
             }
 
@@ -695,7 +699,7 @@ final class Play2Action implements ApplicationActionInterface
                 $transcode_cfg != 'never' &&
                 $transcode_to &&
                 ($bitrate === 0 || $bitrate = (int)AmpConfig::get('transcode_bitrate', 128) * 1000) &&
-                ($file_target !== null && is_file($file_target))
+                $has_cache
             ) {
                 $this->logger->debug(
                     'Found pre-cached file {' . $file_target . '}',
@@ -708,7 +712,7 @@ final class Play2Action implements ApplicationActionInterface
                 $streamConfiguration = [
                     'file_path' => $file_target,
                     'file_name' => $media->getFileName(),
-                    'file_size' => Core::get_filesize($file_target),
+                    'file_size' => $size,
                     'file_type' => $cache_target,
                 ];
             } elseif ($catalog === null) {
