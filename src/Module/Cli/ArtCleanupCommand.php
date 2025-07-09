@@ -135,7 +135,7 @@ final class ArtCleanupCommand extends Command
             }
             if ($cleanup) {
                 $interactor->info(
-                    'Delete art thumbnails keeping the original images',
+                    'Delete orphaned art files from the local metadata folder and migrate thumbnails to the correct location',
                     true
                 );
 
