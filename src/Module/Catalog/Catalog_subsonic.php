@@ -480,6 +480,11 @@ class Catalog_subsonic extends Catalog
         return false;
     }
 
+    public function cache_catalog_file(string $file_target, string $media_file): bool
+    {
+        return Catalog::cache_remote_file($file_target, $media_file);
+    }
+
     /**
      * cache_catalog_proc
      */
@@ -494,18 +499,6 @@ class Catalog_subsonic extends Catalog
 
             return false;
         }
-
-        $max_bitrate   = (int)AmpConfig::get('max_bit_rate', 128);
-        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
-
-        // If the user's crazy, that's no skin off our back
-        if ($user_bit_rate > $max_bitrate) {
-            $max_bitrate = $user_bit_rate;
-        }
-        $options = [
-            'format' => $cache_target,
-            'maxBitRate' => $max_bitrate,
-        ];
 
         $this->_createClient();
 
@@ -529,32 +522,26 @@ class Catalog_subsonic extends Catalog
                     rename($old_target_file, $file_target);
                     debug_event('subsonic.catalog', 'Moved: ' . $row['id'] . ' from: {' . $old_target_file . '}' . ' to: {' . $file_target . '}', 5);
                 } else {
-                    try {
-                        $filehandle = fopen($file_target, 'w');
-                        if (!is_resource($filehandle)) {
-                            debug_event('subsonic.catalog', 'Could not open file: ' . $file_target, 5);
-                            continue;
-                        }
+                    $max_bitrate   = (int)AmpConfig::get('max_bit_rate', 128);
+                    $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
 
-                        $remote_url = $this->subsonic?->parameterize($row['file'] . '&', $options);
+                    // If the user's crazy, that's no skin off our back
+                    if ($user_bit_rate > $max_bitrate) {
+                        $max_bitrate = $user_bit_rate;
+                    }
+                    $options = [
+                        'format' => $cache_target,
+                        'maxBitRate' => $max_bitrate,
+                    ];
 
-                        $curl = curl_init();
-                        curl_setopt_array(
-                            $curl,
-                            [
-                                CURLOPT_RETURNTRANSFER => 1,
-                                CURLOPT_FILE => $filehandle,
-                                CURLOPT_TIMEOUT => 0,
-                                CURLOPT_PIPEWAIT => 1,
-                                CURLOPT_URL => $remote_url,
-                            ]
-                        );
-                        curl_exec($curl);
-                        curl_close($curl);
-                        fclose($filehandle);
+                    $remote_url = $this->subsonic?->parameterize($row['file'] . '&', $options);
+                    if (
+                        $remote_url &&
+                        Catalog::cache_remote_file($file_target, $remote_url)
+                    ) {
                         debug_event('subsonic.catalog', 'Saved: ' . $row['id'] . ' to: {' . $file_target . '}', 5);
-                    } catch (Exception $error) {
-                        debug_event('subsonic.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
+                    } else {
+                        debug_event('subsonic.catalog', 'Cache error: ' . $row['id'], 5);
                     }
                 }
             }

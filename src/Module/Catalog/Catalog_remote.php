@@ -783,6 +783,11 @@ class Catalog_remote extends Catalog
         return false;
     }
 
+    public function cache_catalog_file(string $file_target, string $media_file): bool
+    {
+        return Catalog::cache_remote_file($file_target, $media_file);
+    }
+
     /**
      * cache_catalog_proc
      */
@@ -844,38 +849,22 @@ class Catalog_remote extends Catalog
                     rename($old_target_file, $file_target);
                     debug_event('remote.catalog', 'Moved: ' . $row['id'] . ' from: {' . $old_target_file . '}' . ' to: {' . $file_target . '}', 5);
                 } else {
-                    debug_event('remote.catalog', 'Saving ' . $row['id'] . ' to (' . $file_target . ')', 5);
-                    try {
-                        $filehandle = fopen($file_target, 'w');
-                        if (!$filehandle) {
-                            debug_event('remote.catalog', 'Could not open file: ' . $file_target, 5);
-                            continue;
-                        }
-
-                        $remote_url = $row['file'] . '&ssid=' . $handshake->auth . '&format=' . $cache_target . '&bitrate=' . $max_bitrate;
-
-                        $curl = curl_init();
-                        curl_setopt_array(
-                            $curl,
-                            [
-                                CURLOPT_RETURNTRANSFER => 1,
-                                CURLOPT_FILE => $filehandle,
-                                CURLOPT_TIMEOUT => 0,
-                                CURLOPT_PIPEWAIT => 1,
-                                CURLOPT_URL => $remote_url,
-                            ]
-                        );
-                        curl_exec($curl);
-                        curl_close($curl);
-                        fclose($filehandle);
+                    $remote_url = $row['file'] . '&ssid=' . $handshake->auth . '&format=' . $cache_target . '&bitrate=' . $max_bitrate;
+                    if (Catalog::cache_remote_file($file_target, $remote_url)) {
                         debug_event('remote.catalog', 'Saved: ' . $row['id'] . ' to: {' . $file_target . '}', 5);
-                    } catch (Exception $error) {
-                        debug_event('remote.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
+                    } else {
+                        debug_event('remote.catalog', 'Cache error: ' . $row['id'], 5);
                     }
                 }
 
-                // keep alive just in case
-                $this->remote_handle->send_command(self::CMD_PING);
+                try {
+                    // keep alive just in case
+                    $this->remote_handle->send_command(self::CMD_PING);
+                } catch (Exception $error) {
+                    debug_event(self::class, 'PING error: ' . $error->getMessage(), 5);
+
+                    return false;
+                }
             }
         }
 

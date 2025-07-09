@@ -33,6 +33,9 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\Catalog_local;
+use Ampache\Module\Catalog\Catalog_remote;
+use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Stats;
@@ -658,11 +661,25 @@ final class Play2Action implements ApplicationActionInterface
                     return null;
                 }
             }
+
+            $catalog      = Catalog::create_from_id($mediaCatalogId);
             $cache_path   = (string)AmpConfig::get('cache_path', '');
             $cache_target = (string)AmpConfig::get('cache_target', '');
             $file_target  = (!empty($cache_target) && $cache_target === $transcode_to)
                 ? Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target)
                 : null;
+            if ($catalog && $file_target !== null && !is_file($file_target)) {
+                // try to cache the media files before playing the stream
+                if (($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic) && AmpConfig::get('cache_remote', '')) {
+                    $media_file = $catalog->getRemoteStreamingUrl($media);
+                    if ($media_file) {
+                        $catalog->cache_catalog_file($file_target, $media_file);
+                    }
+                }
+                if ($catalog instanceof Catalog_local) {
+                    $catalog->cache_catalog_file($file_target, $media, $cache_target);
+                }
+            }
             if (
                 $transcode_cfg != 'never' &&
                 $transcode_to &&
@@ -683,13 +700,9 @@ final class Play2Action implements ApplicationActionInterface
                     'file_size' => Core::get_filesize($file_target),
                     'file_type' => $cache_target,
                 ];
+            } elseif ($catalog === null) {
+                return null;
             } else {
-                // Build up the catalog for our current object
-                $catalog = Catalog::create_from_id($mediaCatalogId);
-                if ($catalog === null) {
-                    return null;
-                }
-
                 // Some catalogs redirect you to the remote url so stop here
                 $remoteStreamingUrl = $catalog->getRemoteStreamingUrl($media);
                 if ($remoteStreamingUrl !== null) {

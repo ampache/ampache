@@ -45,6 +45,7 @@ use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Metadata\MetadataEnabledInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
@@ -1105,6 +1106,55 @@ abstract class Catalog extends database_object
             }
 
         }
+    }
+
+    /**
+     * cache_remote_file
+     */
+    public static function cache_remote_file(string $file_target, string $remote_url): bool
+    {
+        try {
+            $filehandle = fopen($file_target, 'w');
+            if (!is_resource($filehandle)) {
+                debug_event(self::class, 'Could not open file: ' . $file_target, 5);
+
+                return false;
+            }
+
+            $curl = curl_init();
+            curl_setopt_array(
+                $curl,
+                [
+                    CURLOPT_RETURNTRANSFER => 1,
+                    CURLOPT_FILE => $filehandle,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_PIPEWAIT => 1,
+                    CURLOPT_URL => $remote_url,
+                ]
+            );
+            curl_exec($curl);
+            curl_close($curl);
+            fclose($filehandle);
+
+            return true;
+        } catch (Exception $error) {
+            debug_event(self::class, 'CURL error: ' . $error->getMessage(), 5);
+
+            return false;
+        }
+    }
+
+    /**
+     * cache_remote_file
+     */
+    public static function cache_local_file(Podcast_Episode|Song|Video $media, string $target_file, string $cache_target): void
+    {
+        // transcode to the new path
+        $transcode_settings = $media->get_transcode_settings($cache_target);
+
+        Stream::start_transcode($media, $transcode_settings, $target_file);
+
+        debug_event(self::class, 'Saved: ' . $media->id . ' to: {' . $target_file . '}', 5);
     }
 
     /**
