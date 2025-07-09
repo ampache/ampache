@@ -253,20 +253,41 @@ final class ArtCleanup implements ArtCleanupInterface
                         unlink($old_path);
                     }
                 }
+            }
 
-                $interactor->info(
-                    'Delete art that is missing on disk',
-                    true
-                );
-                $sql        = "SELECT `object_id`, `object_type`, `kind`, `size`, `mime` FROM `image`;";
-                $db_results = Dba::read($sql);
-                while ($row = Dba::fetch_assoc($db_results)) {
-                    $art_path = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], $row['size'], $row['kind'], true);
-                    $art_path .= "art-" . $row['size'] . "." . Art::extension($row['mime']);
-                    if (!Core::is_readable($art_path)) {
+            $interactor->info(
+                'Delete art that is missing on disk',
+                true
+            );
+            $sql        = "SELECT `object_id`, `object_type`, `kind`, `size`, `mime` FROM `image`;";
+            $db_results = Dba::read($sql);
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $art_path = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], $row['size'], $row['kind'], true);
+                $art_path .= "art-" . $row['size'] . "." . Art::extension($row['mime']);
+                if (!Core::is_readable($art_path)) {
+                    if ($delete) {
                         // If this art is gone stop trying to find it
                         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ? AND `size` = ?";
                         Dba::write($sql, [(int)$row['object_id'], $row['object_type'], $row['kind'], $row['size']], true);
+                        $interactor->info(
+                            sprintf(
+                                'DELETE: %s/%s',
+                                $row['object_type'],
+                                $row['object_id']
+                            ),
+                            true
+                        );
+                    } else {
+                        $interactor->info(
+                            sprintf(
+                                'Database Art is missing on disk: %s/%s (size: %s, kind: %s)',
+                                $row['object_type'],
+                                $row['object_id'],
+                                $row['size'],
+                                $row['kind']
+                            ),
+                            true
+                        );
                     }
                 }
             }
