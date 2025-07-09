@@ -155,23 +155,38 @@ final class ArtCleanup implements ArtCleanupInterface
                             if (!$exists) {
                                 if ($delete) {
                                     unlink($object_path . DIRECTORY_SEPARATOR . $file);
+                                    $interactor->info(
+                                        sprintf(
+                                            'DELETE: %s',
+                                            $object_path . DIRECTORY_SEPARATOR . $file
+                                        ),
+                                        true
+                                    );
                                 }
                                 continue;
                             }
                             $size = $matches[1];
                             if (!Art::has_db((int)$object_id, $type, 'default', $size)) {
-                                $interactor->info(
-                                    sprintf(
-                                        'Thumbnail is not in the database: %s/%s/%s (size: %s)',
-                                        $type,
-                                        $object_id,
-                                        $file,
-                                        $size
-                                    ),
-                                    true
-                                );
                                 if ($delete) {
                                     unlink($object_path . DIRECTORY_SEPARATOR . $file);
+                                    $interactor->info(
+                                        sprintf(
+                                            'DELETE: %s',
+                                            $object_path . DIRECTORY_SEPARATOR . $file
+                                        ),
+                                        true
+                                    );
+                                } else {
+                                    $interactor->info(
+                                        sprintf(
+                                            'Thumbnail is not in the database: %s/%s/%s (size: %s)',
+                                            $type,
+                                            $object_id,
+                                            $object_path . DIRECTORY_SEPARATOR . $file,
+                                            $size
+                                        ),
+                                        true
+                                    );
                                 }
                             }
                         }
@@ -179,23 +194,38 @@ final class ArtCleanup implements ArtCleanupInterface
                             if (!$exists) {
                                 if ($delete) {
                                     unlink($object_path . DIRECTORY_SEPARATOR . $file);
+                                    $interactor->info(
+                                        sprintf(
+                                            'DELETE: %s',
+                                            $object_path . DIRECTORY_SEPARATOR . $file
+                                        ),
+                                        true
+                                    );
                                 }
                                 continue;
                             }
                             $size = $matches[1];
                             if (!Art::has_db((int)$object_id, $type, 'default', $size)) {
-                                $interactor->info(
-                                    sprintf(
-                                        'Image is not in the database: %s/%s/%s (size: %s)',
-                                        $type,
-                                        $object_id,
-                                        $file,
-                                        $size
-                                    ),
-                                    true
-                                );
                                 if ($delete) {
                                     unlink($object_path . DIRECTORY_SEPARATOR . $file);
+                                    $interactor->info(
+                                        sprintf(
+                                            'DELETE: %s',
+                                            $object_path . DIRECTORY_SEPARATOR . $file
+                                        ),
+                                        true
+                                    );
+                                } else {
+                                    $interactor->info(
+                                        sprintf(
+                                            'Image is not in the database: %s/%s/%s (size: %s)',
+                                            $type,
+                                            $object_id,
+                                            $object_path . DIRECTORY_SEPARATOR . $file,
+                                            $size
+                                        ),
+                                        true
+                                    );
                                 }
                             }
                         }
