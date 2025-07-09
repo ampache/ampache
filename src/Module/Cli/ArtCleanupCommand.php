@@ -67,7 +67,7 @@ final class ArtCleanupCommand extends Command
 
         $interactor = $this->io();
         $cleanup    = $this->values()['cleanup'] === true;
-        $delete     = $this->values()['delete'] === true;
+        $delete     = $this->values()['execute'] === true;
         $thumbnails = $this->values()['thumbnails'] === true;
 
         if (!$thumbnails && !$cleanup) {
