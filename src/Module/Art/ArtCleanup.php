@@ -30,7 +30,11 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Song;
 
 /**
  * Provides methods for the cleanup/deletion of art-items
@@ -135,9 +139,9 @@ final class ArtCleanup implements ArtCleanupInterface
                     }
 
                     // check if this even exists in the database
-                    $sql        = "SELECT `id` FROM `$type` WHERE `id` = ?;";
-                    $db_results = Dba::read($sql, [(int)$object_id]);
-                    $exists     = Dba::num_rows($db_results) > 0;
+                    $className = ObjectTypeToClassNameMapper::map($type);
+                    $item      = new $className($object_id);
+                    $exists    = $item->isNew() !== false;
                     if (!$exists) {
                         $interactor->info(
                             sprintf(
