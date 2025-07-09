@@ -1412,28 +1412,36 @@ class Catalog_local extends Catalog
         return true;
     }
 
+    public function cache_catalog_file(string $target_file, Podcast_Episode|Song|Video $media, string $cache_target): void
+    {
+        $transcode_settings = $media->get_transcode_settings($cache_target);
+        Stream::start_transcode($media, $transcode_settings, $target_file);
+        debug_event('local.catalog', 'Saved: ' . $media->getId() . ' to: {' . $target_file . '}', 5);
+    }
+
     /**
      * cache_catalog_proc
      */
     public function cache_catalog_proc(): bool
     {
-        $m4a    = AmpConfig::get('cache_m4a');
-        $flac   = AmpConfig::get('cache_flac');
-        $mpc    = AmpConfig::get('cache_mpc');
-        $ogg    = AmpConfig::get('cache_ogg');
-        $oga    = AmpConfig::get('cache_oga');
-        $opus   = AmpConfig::get('cache_opus');
-        $wav    = AmpConfig::get('cache_wav');
-        $wma    = AmpConfig::get('cache_wma');
-        $aif    = AmpConfig::get('cache_aif');
-        $aiff   = AmpConfig::get('cache_aiff');
-        $ape    = AmpConfig::get('cache_ape');
-        $shn    = AmpConfig::get('cache_shn');
-        $mp3    = AmpConfig::get('cache_mp3');
-        $path   = (string)AmpConfig::get('cache_path', '');
-        $target = (string)AmpConfig::get('cache_target', '');
+        $m4a  = AmpConfig::get('cache_m4a');
+        $flac = AmpConfig::get('cache_flac');
+        $mpc  = AmpConfig::get('cache_mpc');
+        $ogg  = AmpConfig::get('cache_ogg');
+        $oga  = AmpConfig::get('cache_oga');
+        $opus = AmpConfig::get('cache_opus');
+        $wav  = AmpConfig::get('cache_wav');
+        $wma  = AmpConfig::get('cache_wma');
+        $aif  = AmpConfig::get('cache_aif');
+        $aiff = AmpConfig::get('cache_aiff');
+        $ape  = AmpConfig::get('cache_ape');
+        $shn  = AmpConfig::get('cache_shn');
+        $mp3  = AmpConfig::get('cache_mp3');
+
+        $cache_path   = (string)AmpConfig::get('cache_path', '');
+        $cache_target = (string)AmpConfig::get('cache_target', '');
         // need a destination and target filetype
-        if (!is_dir($path) || empty($target)) {
+        if (!is_dir($cache_path) || empty($cache_target)) {
             debug_event('local.catalog', 'Check your cache_path and cache_target settings', 5);
 
             return false;
@@ -1521,8 +1529,8 @@ class Catalog_local extends Catalog
             $results[] = (int)$row['id'];
         }
         foreach ($results as $song_id) {
-            $target_file     = Catalog::get_cache_path($song_id, $this->catalog_id, $path, $target);
-            $old_target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $song_id . '.' . $target;
+            $target_file     = Catalog::get_cache_path($song_id, $this->catalog_id, $cache_path, $cache_target);
+            $old_target_file = rtrim(trim($cache_path), '/') . '/' . $this->catalog_id . '/' . $song_id . '.' . $cache_target;
             if ($target_file !== null && is_file($old_target_file)) {
                 // check for the old path first
                 rename($old_target_file, $target_file);
@@ -1561,7 +1569,7 @@ class Catalog_local extends Catalog
 
             if (!$file_exists) {
                 // transcode to the new path
-                $transcode_settings = $media->get_transcode_settings($target);
+                $transcode_settings = $media->get_transcode_settings($cache_target);
                 Stream::start_transcode($media, $transcode_settings, (string)$target_file);
                 debug_event('local.catalog', 'Saved: ' . $song_id . ' to: {' . $target_file . '}', 5);
             }

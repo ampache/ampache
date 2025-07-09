@@ -131,6 +131,7 @@ final class ConfigurationKeyEnum
     public const LIBITEM_BROWSE_ALPHA                  = 'libitem_browse_alpha';
     public const LIBITEM_CONTEXTMENU                   = 'libitem_contextmenu';
     public const LICENSING                             = 'licensing';
+    public const LOCAL_METADATA_DIR                    = 'local_metadata_dir';
     public const LOCALPLAY_CONTROLLER                  = 'localplay_controller';
     public const LOCALPLAY_LEVEL                       = 'localplay_level';
     public const LOCK_SONGS                            = 'lock_songs';
