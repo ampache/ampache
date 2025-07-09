@@ -42,7 +42,6 @@ $web_path = AmpConfig::get_web_path(); ?>
         <title><?php echo T_('Ampache') . ' -- ' . T_("Debug Page"); ?></title>
         <?php Ui::show_custom_style(); ?>
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap.min.css">
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen">
     </head>
     <body>

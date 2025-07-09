@@ -7,7 +7,6 @@
         <title>Ampache -- Debug Page</title>
         <link rel="icon" href="./public/favicon.ico">
         <link rel="stylesheet" href="./public/lib/components/bootstrap/css/bootstrap.min.css">
-        <link rel="stylesheet" href="./public/lib/components/bootstrap/css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="./public/templates/install.css" type="text/css" media="screen">
     </head>
     <body>
