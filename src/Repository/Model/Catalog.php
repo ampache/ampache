@@ -2138,15 +2138,6 @@ abstract class Catalog extends database_object
             $image = Art::get_from_source($result, $type);
             if (strlen($image) > '5') {
                 $inserted = $art->insert($image, $result['mime']);
-                // If they've enabled resizing of images generate a thumbnail
-                if (AmpConfig::get('resize_images')) {
-                    $size  = ['width' => 275, 'height' => 275];
-                    $thumb = $art->generate_thumb($image, $size, $result['mime']);
-                    if ($thumb !== []) {
-                        $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], $size);
-                    }
-                }
-
                 if ($inserted === true) {
                     break;
                 }
