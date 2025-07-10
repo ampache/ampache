@@ -32,6 +32,9 @@
 * Installer Bootstrap code updated to support v5 changes
 * Insert rows for Songs missing from the `song_data` table
 * Art inserted from URL would insert as a PHP mime type
+* Garbage Collection from the Web UI didn't send catalogs correctly
+* Filename checked as a change in tag comparison
+* Bad regex in MusicBrainz art collector 
 * Search
   * Local image `has_image` search didn't count missing joins
 * Ampache Remote Catalogs
