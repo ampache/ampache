@@ -165,8 +165,8 @@ final class PlaylistQuery implements QueryInterface
                 break;
             case 'user_flag':
                 $filter_sql = ($value === 0)
-                    ? " `playlist`.`id` NOT IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'playlist' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `playlist`.`id` IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'playlist' AND `user` = " . (int)$query->user_id . ") AND ";
+                    ? " `playlist`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'playlist' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `playlist`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'playlist' AND `user` = " . (int)$query->user_id . ") AND ";
                 break;
             case 'user_rating':
                 $filter_sql = ($value === 0)

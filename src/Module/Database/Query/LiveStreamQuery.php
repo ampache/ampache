@@ -154,8 +154,8 @@ final class LiveStreamQuery implements QueryInterface
                 break;
             case 'user_flag':
                 $filter_sql = ($value === 0)
-                    ? " `live_stream`.`id` NOT IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `live_stream`.`id` IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . ") AND ";
+                    ? " `live_stream`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `live_stream`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . ") AND ";
                 break;
             case 'user_rating':
                 $filter_sql = ($value === 0)

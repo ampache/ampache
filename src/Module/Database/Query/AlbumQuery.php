@@ -233,8 +233,8 @@ final class AlbumQuery implements QueryInterface
                 break;
             case 'user_flag':
                 $filter_sql = ($value === 0)
-                    ? " `album`.`id` NOT IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'album' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `album`.`id` IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'album' AND `user` = " . (int)$query->user_id . ") AND ";
+                    ? " `album`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'album' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `album`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'album' AND `user` = " . (int)$query->user_id . ") AND ";
                 break;
             case 'user_rating':
                 $filter_sql = ($value === 0)
