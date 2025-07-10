@@ -177,7 +177,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
         $coverartsites[] = [
             'name' => "Jamendo",
             'domain' => "www.jamendo.com",
-            'regexp' => '/http:\/\/www\.jamendo\.com\/(\w\w/)?album\/(\d+)/',
+            'regexp' => '/http:\/\/www\.jamendo\.com\/(\w\w)?album\/(\d+)/',
             'imguri' => 'http://img.jamendo.com/albums/$matches[2]/covers/1.200.jpg',
             'releaseuri' => 'http://www.jamendo.com/album/$matches[2]',
         ];
@@ -224,7 +224,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
 
-                    if (preg_match($casite['regexp'], $arurl, $matches)) {
+                    if (preg_match($casite['regexp'], $arurl)) {
                         $num_found++;
                         $url = $casite['imguri'];
 
