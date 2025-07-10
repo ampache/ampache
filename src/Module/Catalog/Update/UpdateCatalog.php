@@ -439,7 +439,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         );
         if ($catalogName !== null) {
             $where = sprintf(
-                '%s AND name = \'%s\'',
+                '%s AND `name` = \'%s\'',
                 $where,
                 Dba::escape($catalogName)
             );

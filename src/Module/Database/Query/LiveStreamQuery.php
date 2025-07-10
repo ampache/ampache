@@ -45,6 +45,8 @@ final class LiveStreamQuery implements QueryInterface
         'regex_not_match',
         'starts_with',
         'user_catalog',
+        'user_flag',
+        'user_rating',
     ];
 
     /** @var string[] $sorts */
@@ -149,6 +151,16 @@ final class LiveStreamQuery implements QueryInterface
                 break;
             case 'user_catalog':
                 $filter_sql = " `live_stream`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
+                break;
+            case 'user_flag':
+                $filter_sql = ($value === 0)
+                    ? " `live_stream`.`id` NOT IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `live_stream`.`id` IN IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . ") AND ";
+                break;
+            case 'user_rating':
+                $filter_sql = ($value === 0)
+                    ? " `live_stream`.`id` NOT IN (SELECT `id` FROM `rating` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `live_stream`.`id` IN IN (SELECT `id` FROM `rating` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`live_stream`.`catalog`', 100);

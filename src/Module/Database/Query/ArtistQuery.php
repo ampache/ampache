@@ -57,6 +57,8 @@ final class ArtistQuery implements QueryInterface
         'update_gt',
         'update_lt',
         'user_catalog',
+        'user_flag',
+        'user_rating',
     ];
 
     /** @var string[] $sorts */
@@ -222,6 +224,16 @@ final class ArtistQuery implements QueryInterface
                     $query->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 100);
                     $filter_sql = " (`catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ")) AND ";
                 }
+                break;
+            case 'user_flag':
+                $filter_sql = ($value === 0)
+                    ? " `artist`.`id` NOT IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'artist' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `artist`.`id` IN IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'artist' AND `user` = " . (int)$query->user_id . ") AND ";
+                break;
+            case 'user_rating':
+                $filter_sql = ($value === 0)
+                    ? " `artist`.`id` NOT IN (SELECT `id` FROM `rating` WHERE `object_type` = 'artist' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `artist`.`id` IN IN (SELECT `id` FROM `rating` WHERE `object_type` = 'artist' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $type = '\'artist\'';

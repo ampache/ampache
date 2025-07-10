@@ -45,6 +45,8 @@ final class SmartplaylistQuery implements QueryInterface
         'regex_match',
         'regex_not_match',
         'starts_with',
+        'user_flag',
+        'user_rating',
     ];
 
     /** @var string[] $sorts */
@@ -162,6 +164,16 @@ final class SmartplaylistQuery implements QueryInterface
                     $query->set_join_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', "CONCAT('smart_', `search`.`id`)", "`user_playlist_map`.`user_id`", (string)$user_id, 100);
                     $filter_sql = " (`search`.`type` = 'public' OR `search`.`user`=" . $user_id . " OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
                 }
+                break;
+            case 'user_flag':
+                $filter_sql = ($value === 0)
+                    ? " `search`.`id` NOT IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'search' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `search`.`id` IN IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'search' AND `user` = " . (int)$query->user_id . ") AND ";
+                break;
+            case 'user_rating':
+                $filter_sql = ($value === 0)
+                    ? " `search`.`id` NOT IN (SELECT `id` FROM `rating` WHERE `object_type` = 'search' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `search`.`id` IN IN (SELECT `id` FROM `rating` WHERE `object_type` = 'search' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
         }
 
