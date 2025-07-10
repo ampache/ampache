@@ -171,12 +171,12 @@ final class PodcastEpisodeQuery implements QueryInterface
                 $filter_sql = " `podcast_episode`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
                 break;
             case 'user_flag':
-                $filter_sql = ($value === 0)
+                $filter_sql = ((int)$value === 0)
                     ? " `podcast_episode`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int)$query->user_id . ") AND "
                     : " `podcast_episode`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int)$query->user_id . ") AND ";
                 break;
             case 'user_rating':
-                $filter_sql = ($value === 0)
+                $filter_sql = ((int)$value === 0)
                     ? " `podcast_episode`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int)$query->user_id . ") AND "
                     : " `podcast_episode`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;

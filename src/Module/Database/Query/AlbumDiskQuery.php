@@ -236,12 +236,12 @@ final class AlbumDiskQuery implements QueryInterface
                 $filter_sql = " `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
                 break;
             case 'user_flag':
-                $filter_sql = ($value === 0)
+                $filter_sql = ((int)$value === 0)
                     ? " `album_disk`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'album_disk' AND `user` = " . (int)$query->user_id . ") AND "
                     : " `album_disk`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'album_disk' AND `user` = " . (int)$query->user_id . ") AND ";
                 break;
             case 'user_rating':
-                $filter_sql = ($value === 0)
+                $filter_sql = ((int)$value === 0)
                     ? " `album_disk`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album_disk' AND `user` = " . (int)$query->user_id . ") AND "
                     : " `album_disk`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album_disk' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
