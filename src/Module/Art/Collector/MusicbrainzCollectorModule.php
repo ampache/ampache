@@ -156,14 +156,14 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
         $coverartsites[] = [
             'name' => "CD Baby",
             'domain' => "cdbaby.com",
-            'regexp' => '@http://cdbaby\.com/cd/(\w)(\w)(\w*)@',
+            'regexp' => '@http:\/\/cdbaby\.com\/cd\/(\w)(\w)(\w*)@',
             'imguri' => 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[1]$matches[2]$matches[3].jpg',
             'releaseuri' => 'http://cdbaby.com/cd/$matches[1]$matches[2]$matches[3]/from/musicbrainz',
         ];
         $coverartsites[] = [
             'name' => "CD Baby",
             'domain' => "cdbaby.name",
-            'regexp' => "@http://cdbaby\.name/([a-z0-9])/([a-z0-9])/([A-Za-z0-9]*).jpg@",
+            'regexp' => "@http:\/\/cdbaby\.name\/([a-z0-9])\/([a-z0-9])\/([A-Za-z0-9]*).jpg@",
             'imguri' => 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[3].jpg',
             'releaseuri' => 'http://cdbaby.com/cd/$matches[3]/from/musicbrainz',
         ];
