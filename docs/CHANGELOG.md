@@ -14,7 +14,7 @@
 * Ampache Remote Catalogs
   * Allow verify for Remote catalogs
   * Gather art for Album and Artist objects missing art
-  * Get more tage data from API6 servers that don't have the `song_tags` method
+  * Get more tag data from API6 servers that don't have the `song_tags` method
   * Use cached files for tag updates if created in the last 30 days
 * Try to pre-cache missing files in the transcode cache on play (When enabled)
 * Put the ID back on Art links to make them unique
@@ -29,10 +29,11 @@
 ### Fixed
 
 * Bad `ampache.sql` file
+* Installer Bootstrap code updated to support v5 changes
 * Insert rows for Songs missing from the `song_data` table
 * Art inserted from URL would insert as a PHP mime type
 * Search
-  * Local image (`has_image`) search didn't count missing joins
+  * Local image `has_image` search didn't count missing joins
 * Ampache Remote Catalogs
   * Ampache PHP API didn't like `song_tags`
   * Could not add songs

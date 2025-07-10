@@ -33,13 +33,13 @@ require __DIR__ . '/install_header.inc.php'; ?>
         <div class="page-header requirements">
             <h1><?php echo T_('Requirements'); ?></h1>
         </div>
-        <div class="well">
+        <div class="alert alert-dark">
             <p style="padding: 10px;">
                 <?php echo T_('This page handles the installation of the Ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following prerequisites:'); ?>
             </p>
             <ul>
                 <li><?php echo T_('A MySQL server with a username and password that can create/modify databases'); ?></li>
-                <li><?php /* HINT: %1 and %2 refer to Ampache configuration files */ echo sprintf(T_('Your webserver has read access to the files "%1$s" and "%2%s"'), __DIR__ . '/../resources/sql/ampache.sql', __DIR__ . '/../config/ampache.cfg.php.dist'); ?></li>
+                <li><?php /* HINT: %1 and %2 refer to Ampache configuration files */ echo sprintf(T_('Your webserver has read access to the files "%1$s" and "%2$s"'), __DIR__ . '/../resources/sql/ampache.sql', __DIR__ . '/../config/ampache.cfg.php.dist'); ?></li>
             </ul>
             <p>
                 <?php echo sprintf(T_("Once you have ensured that the above requirements are met please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your Ampache install at a later date simply edit %s"), __DIR__ . '/../config/ampache.cfg.php'); ?>

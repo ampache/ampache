@@ -36,7 +36,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
         </div>
         <p><?php echo AmpError::display('general'); ?></p>
         <form role="form" method="post" action="<?php echo $web_path . "/install.php?action=check"; ?>" enctype="multipart/form-data" >
-            <div class="form-group">
+            <div class="row mb-3">
         <?php $languages = get_languages();
 $var_name                = $htmllang . "_lang";
 
