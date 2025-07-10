@@ -105,7 +105,7 @@ class Stats
         $sql    = "UPDATE IGNORE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
         $params = [$new_object_id, $object_type, $old_object_id];
         if ((int)$child_id > 0) {
-            $sql .= " AND `date` IN (SELECT `date` FROM (SELECT `date` FROM `object_count` WHERE `object_type` = 'song' AND object_id = ?) AS `song_date`)";
+            $sql .= " AND `date` IN (SELECT `date` FROM (SELECT `date` FROM `object_count` WHERE `object_type` = 'song' AND `object_id` = ?) AS `song_date`)";
             $params[] = $child_id;
         }
 

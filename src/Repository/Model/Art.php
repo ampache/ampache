@@ -876,7 +876,9 @@ class Art extends database_object
                     debug_event(self::class, 'Found ' . $file, 5);
                 }
 
-                unlink($path . '/' . $file);
+                if (is_file($path . '/' . $file)) {
+                    unlink($path . '/' . $file);
+                }
             }
 
             // Don't delete the whole directory if you're keeping the original image

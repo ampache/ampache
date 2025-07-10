@@ -156,14 +156,14 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
         $coverartsites[] = [
             'name' => "CD Baby",
             'domain' => "cdbaby.com",
-            'regexp' => '@http://cdbaby\.com/cd/(\w)(\w)(\w*)@',
+            'regexp' => '@http:\/\/cdbaby\.com\/cd\/(\w)(\w)(\w*)@',
             'imguri' => 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[1]$matches[2]$matches[3].jpg',
             'releaseuri' => 'http://cdbaby.com/cd/$matches[1]$matches[2]$matches[3]/from/musicbrainz',
         ];
         $coverartsites[] = [
             'name' => "CD Baby",
             'domain' => "cdbaby.name",
-            'regexp' => "@http://cdbaby\.name/([a-z0-9])/([a-z0-9])/([A-Za-z0-9]*).jpg@",
+            'regexp' => "@http:\/\/cdbaby\.name\/([a-z0-9])\/([a-z0-9])\/([A-Za-z0-9]*).jpg@",
             'imguri' => 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[3].jpg',
             'releaseuri' => 'http://cdbaby.com/cd/$matches[3]/from/musicbrainz',
         ];
@@ -177,7 +177,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
         $coverartsites[] = [
             'name' => "Jamendo",
             'domain' => "www.jamendo.com",
-            'regexp' => '/http://www\.jamendo\.com/(\w\w/)?album/(\d+)/',
+            'regexp' => '/http:\/\/www\.jamendo\.com\/(\w\w)?album\/(\d+)/',
             'imguri' => 'http://img.jamendo.com/albums/$matches[2]/covers/1.200.jpg',
             'releaseuri' => 'http://www.jamendo.com/album/$matches[2]',
         ];
@@ -191,7 +191,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
         $coverartsites[] = [
             'name' => 'Encyclopédisque',
             'domain' => 'encyclopedisque.fr',
-            'regexp' => '/http://www.encyclopedisque.fr/images/imgdb/(thumb250|main)/(\d+).jpg/',
+            'regexp' => '/http:\/\/www.encyclopedisque.fr\/images\/imgdb\/(thumb250|main)\/(\d+).jpg/',
             'imguri' => 'http://www.encyclopedisque.fr/images/imgdb/thumb250/$matches[2].jpg',
             'releaseuri' => 'http://www.encyclopedisque.fr/',
         ];
@@ -224,7 +224,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
 
-                    if (preg_match($casite['regexp'], $arurl, $matches)) {
+                    if (preg_match($casite['regexp'], $arurl)) {
                         $num_found++;
                         $url = $casite['imguri'];
 

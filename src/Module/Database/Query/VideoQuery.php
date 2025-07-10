@@ -53,6 +53,8 @@ final class VideoQuery implements QueryInterface
         'update_gt',
         'update_lt',
         'user_catalog',
+        'user_flag',
+        'user_rating',
     ];
 
     /** @var string[] $sorts */
@@ -186,6 +188,16 @@ final class VideoQuery implements QueryInterface
                 break;
             case 'user_catalog':
                 $filter_sql = " `video`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
+                break;
+            case 'user_flag':
+                $filter_sql = ((int)$value === 0)
+                    ? " `video`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'video' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `video`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'video' AND `user` = " . (int)$query->user_id . ") AND ";
+                break;
+            case 'user_rating':
+                $filter_sql = ((int)$value === 0)
+                    ? " `video`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'video' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `video`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'video' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`video`.`catalog`', 100);

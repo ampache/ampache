@@ -46,6 +46,8 @@ final class PodcastQuery implements QueryInterface
         'starts_with',
         'unplayed',
         'user_catalog',
+        'user_flag',
+        'user_rating',
     ];
 
     /** @var string[] $sorts */
@@ -149,6 +151,16 @@ final class PodcastQuery implements QueryInterface
                 break;
             case 'user_catalog':
                 $filter_sql = " `podcast`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
+                break;
+            case 'user_flag':
+                $filter_sql = ((int)$value === 0)
+                    ? " `podcast`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'podcast' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `podcast`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'podcast' AND `user` = " . (int)$query->user_id . ") AND ";
+                break;
+            case 'user_rating':
+                $filter_sql = ((int)$value === 0)
+                    ? " `podcast`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'podcast' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `podcast`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'podcast' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`podcast`.`catalog`', 100);

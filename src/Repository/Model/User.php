@@ -1053,7 +1053,7 @@ class User extends database_object
     {
         // Before we do anything make sure that they aren't the last admin
         if ($this->has_access(AccessLevelEnum::ADMIN)) {
-            $sql        = "SELECT `id` FROM `user` WHERE `access`= ? AND id != ?";
+            $sql        = "SELECT `id` FROM `user` WHERE `access`= ? AND `id` != ?";
             $params     = [AccessLevelEnum::ADMIN->value, $this->id];
             $db_results = Dba::read($sql, $params);
             if (Dba::num_rows($db_results) === 0) {
