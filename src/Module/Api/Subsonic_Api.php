@@ -2600,7 +2600,7 @@ class Subsonic_Api
      * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getOpenSubsonicExtensions(array $input, User $user): void
+    public static function getopensubsonicextensions(array $input, User $user): void
     {
         unset($user);
 
