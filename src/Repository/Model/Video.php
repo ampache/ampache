@@ -1126,6 +1126,7 @@ class Video extends database_object implements
             'catalog',
             'disabledMetadataFields',
             'enabled',
+            'file',
             'id',
             'mime',
             'played',
