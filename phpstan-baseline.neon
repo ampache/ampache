@@ -1246,16 +1246,6 @@ parameters:
 			path: src/Module/Art/Collector/MetaTagCollectorModule.php
 
 		-
-			message: "#^Regex pattern is invalid\\: Unknown modifier '/' in pattern\\: /http\\://www\\.encyclopedisque\\.fr/images/imgdb/\\(thumb250\\|main\\)/\\(\\\\d\\+\\)\\.jpg/$#"
-			count: 1
-			path: src/Module/Art/Collector/MusicbrainzCollectorModule.php
-
-		-
-			message: "#^Regex pattern is invalid\\: Unknown modifier '/' in pattern\\: /http\\://www\\\\\\.jamendo\\\\\\.com/\\(\\\\w\\\\w/\\)\\?album/\\(\\\\d\\+\\)/$#"
-			count: 1
-			path: src/Module/Art/Collector/MusicbrainzCollectorModule.php
-
-		-
 			message: "#^Expression in empty\\(\\) is always falsy\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/SpotifyCollectorModule.php
@@ -1697,11 +1687,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\SeafileAdapter\\:\\:\\$server has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: "#^Regex pattern is invalid\\: Unknown modifier 'c' in pattern\\: \\(\\\\d\\+\\) sec$#"
 			count: 1
 			path: src/Module/Catalog/SeafileAdapter.php
 
