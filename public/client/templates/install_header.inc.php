@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=0);
 
 /**
@@ -47,7 +46,6 @@ $htmllang = str_replace("_", "-", $lang);
     <title><?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music') . ' - ' . T_('Installation'); ?></title>
     <link rel="stylesheet" href="themes/reborn/templates/default.css">
     <link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen">
     <script src="lib/components/jquery/jquery.min.js"></script>
     <script src="lib/components/bootstrap/js/bootstrap.min.js"></script>

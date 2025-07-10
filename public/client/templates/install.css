@@ -62,3 +62,12 @@ body#install-page {
 .database-update {
     text-align: center;
 }
+
+ol, ul, #rightbar ul {
+    list-style: inherit;
+}
+
+input[type="password"], input[type="text"], input[type="url"], input[type="number"] {
+    height: inherit;
+    border-radius: 0.375rem;
+}
