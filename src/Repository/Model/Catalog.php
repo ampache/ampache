@@ -4430,12 +4430,12 @@ abstract class Catalog extends database_object
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null && !in_array($catalog->gather_types, $catalog_media_types)) {
-                            $catalog_media_types[] = $catalog_media_types;
+                            $catalog_media_types[] = (string)$catalog->gather_types;
                         }
                     }
 
                     foreach ($catalog_media_types as $catalog_media_type) {
-                        if ($catalog_media_types == 'music') {
+                        if ($catalog_media_type == 'music') {
                             self::clean_empty_albums();
                             Album::update_album_artist();
                         }
