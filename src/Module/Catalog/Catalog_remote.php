@@ -417,6 +417,8 @@ class Catalog_remote extends Catalog
                             // get file tags directly from the cached file
                             $media = new Song($song_id_check);
                             $data  = $this->get_media_tags($media, ['music'], $this->sort_pattern ?? '', $this->rename_pattern ?? '', $file_target);
+                            // don't overwtrite the database path
+                            $data['file'] = $db_url;
                         } else {
                             // get tag data from the remote object
                             $remote_id = (string)$song->attributes()->id;
