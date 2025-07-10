@@ -14,7 +14,7 @@
 * Ampache Remote Catalogs
   * Allow verify for Remote catalogs
   * Gather art for Album and Artist objects missing art
-  * Get more tage data from API6 servers that don't have the `song_tags` method
+  * Get more tag data from API6 servers that don't have the `song_tags` method
   * Use cached files for tag updates if created in the last 30 days
 * Try to pre-cache missing files in the transcode cache on play (When enabled)
 * Put the ID back on Art links to make them unique
