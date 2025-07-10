@@ -177,7 +177,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
         $coverartsites[] = [
             'name' => "Jamendo",
             'domain' => "www.jamendo.com",
-            'regexp' => '/http://www\.jamendo\.com/(\w\w/)?album/(\d+)/',
+            'regexp' => '/http:\/\/www\.jamendo\.com\/(\w\w/)?album\/(\d+)/',
             'imguri' => 'http://img.jamendo.com/albums/$matches[2]/covers/1.200.jpg',
             'releaseuri' => 'http://www.jamendo.com/album/$matches[2]',
         ];
@@ -191,7 +191,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
         $coverartsites[] = [
             'name' => 'Encyclopédisque',
             'domain' => 'encyclopedisque.fr',
-            'regexp' => '/http://www.encyclopedisque.fr/images/imgdb/(thumb250|main)/(\d+).jpg/',
+            'regexp' => '/http:\/\/www.encyclopedisque.fr\/images\/imgdb\/(thumb250|main)\/(\d+).jpg/',
             'imguri' => 'http://www.encyclopedisque.fr/images/imgdb/thumb250/$matches[2].jpg',
             'releaseuri' => 'http://www.encyclopedisque.fr/',
         ];
