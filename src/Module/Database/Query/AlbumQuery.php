@@ -234,12 +234,12 @@ final class AlbumQuery implements QueryInterface
             case 'user_flag':
                 $filter_sql = ($value === 0)
                     ? " `album`.`id` NOT IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'album' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `album`.`id` IN IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'album' AND `user` = " . (int)$query->user_id . ") AND ";
+                    : " `album`.`id` IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'album' AND `user` = " . (int)$query->user_id . ") AND ";
                 break;
             case 'user_rating':
                 $filter_sql = ($value === 0)
                     ? " `album`.`id` NOT IN (SELECT `id` FROM `rating` WHERE `object_type` = 'album' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `album`.`id` IN IN (SELECT `id` FROM `rating` WHERE `object_type` = 'album' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                    : " `album`.`id` IN (SELECT `id` FROM `rating` WHERE `object_type` = 'album' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`album`.`catalog`', 100);

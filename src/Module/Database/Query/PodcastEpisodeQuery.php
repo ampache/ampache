@@ -173,12 +173,12 @@ final class PodcastEpisodeQuery implements QueryInterface
             case 'user_flag':
                 $filter_sql = ($value === 0)
                     ? " `podcast_episode`.`id` NOT IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `podcast_episode`.`id` IN IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int)$query->user_id . ") AND ";
+                    : " `podcast_episode`.`id` IN (SELECT `id` FROM `user_flag` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int)$query->user_id . ") AND ";
                 break;
             case 'user_rating':
                 $filter_sql = ($value === 0)
                     ? " `podcast_episode`.`id` NOT IN (SELECT `id` FROM `rating` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `podcast_episode`.`id` IN IN (SELECT `id` FROM `rating` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                    : " `podcast_episode`.`id` IN (SELECT `id` FROM `rating` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`podcast_episode`.`catalog`', 100);
