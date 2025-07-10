@@ -196,8 +196,8 @@ final class VideoQuery implements QueryInterface
                 break;
             case 'user_rating':
                 $filter_sql = ($value === 0)
-                    ? " `video`.`id` NOT IN (SELECT `id` FROM `rating` WHERE `object_type` = 'video' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `video`.`id` IN (SELECT `id` FROM `rating` WHERE `object_type` = 'video' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                    ? " `video`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'video' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `video`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'video' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`video`.`catalog`', 100);

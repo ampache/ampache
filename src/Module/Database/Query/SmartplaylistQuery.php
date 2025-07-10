@@ -172,8 +172,8 @@ final class SmartplaylistQuery implements QueryInterface
                 break;
             case 'user_rating':
                 $filter_sql = ($value === 0)
-                    ? " `search`.`id` NOT IN (SELECT `id` FROM `rating` WHERE `object_type` = 'search' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `search`.`id` IN (SELECT `id` FROM `rating` WHERE `object_type` = 'search' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                    ? " `search`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'search' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `search`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'search' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
         }
 

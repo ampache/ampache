@@ -186,8 +186,8 @@ final class PlaylistSearchQuery implements QueryInterface
                 break;
             case 'user_rating':
                 $filter_sql = ($value === 0)
-                    ? " `playlist`.`int_id` NOT IN (SELECT `id` FROM `rating` WHERE `object_type` = `playlist`.`object_type` AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `playlist`.`int_id` IN (SELECT `id` FROM `rating` WHERE `object_type` = `playlist`.`object_type` AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                    ? " `playlist`.`int_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = `playlist`.`object_type` AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `playlist`.`int_id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = `playlist`.`object_type` AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
         }
 

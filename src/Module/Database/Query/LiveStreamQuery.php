@@ -159,8 +159,8 @@ final class LiveStreamQuery implements QueryInterface
                 break;
             case 'user_rating':
                 $filter_sql = ($value === 0)
-                    ? " `live_stream`.`id` NOT IN (SELECT `id` FROM `rating` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `live_stream`.`id` IN (SELECT `id` FROM `rating` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                    ? " `live_stream`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . ") AND "
+                    : " `live_stream`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`live_stream`.`catalog`', 100);
