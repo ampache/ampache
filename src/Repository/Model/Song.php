@@ -1053,6 +1053,7 @@ class Song extends database_object implements
             'catalog',
             'disabledMetadataFields',
             'enabled',
+            'file',
             'id',
             'mb_albumid_group',
             'mbid',
