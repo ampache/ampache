@@ -85,12 +85,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ampache/ampacheapi-php.git",
-                "reference": "af81424be66e03bdba781e46c6ac1f96881c015a"
+                "reference": "70718ff8c6fd7ac805d223660da3afbd983fcee8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ampache/ampacheapi-php/zipball/af81424be66e03bdba781e46c6ac1f96881c015a",
-                "reference": "af81424be66e03bdba781e46c6ac1f96881c015a",
+                "url": "https://api.github.com/repos/ampache/ampacheapi-php/zipball/70718ff8c6fd7ac805d223660da3afbd983fcee8",
+                "reference": "70718ff8c6fd7ac805d223660da3afbd983fcee8",
                 "shasum": ""
             },
             "require": {
@@ -125,7 +125,7 @@
                 "issues": "https://github.com/ampache/ampacheapi-php/issues",
                 "source": "https://github.com/ampache/ampacheapi-php/tree/master"
             },
-            "time": "2025-07-10T07:50:49+00:00"
+            "time": "2025-07-10T23:45:04+00:00"
         },
         {
             "name": "ampache/php-discogs-api",
