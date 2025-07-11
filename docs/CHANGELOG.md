@@ -6,6 +6,8 @@
 
 * Translations 2025-07-08
 * Don't show the clear art button when there isn't art there
+* Browse
+  * New filters `user_flag`, `user_rating` on library items
 * CLI
   * cleanup:art
     * Add option `-c|--cleanup` (Delete orphaned art files when the file is missing from local_metadata_folder)
@@ -18,6 +20,7 @@
   * Use cached files for tag updates if created in the last 30 days
 * Try to pre-cache missing files in the transcode cache on play (When enabled)
 * Put the ID back on Art links to make them unique
+* Add ssid to art links if auth enabled
 
 ### Changed
 
@@ -46,6 +49,7 @@
 * Don't gather file art when the file is a url
 * Delete Art cache when the art is updated
 * Subsonic
+  * Incorrect case for `getOpenSubsonicExtensions` on old Subsonic class
   * Ensure disabled songs are not added in more areas
   * Look for other possible empty arrays
   * Subsonic Remote catalogs can verify existing Song data
