@@ -784,10 +784,10 @@ final class VaInfo implements VaInfoInterface
     /**
      * parse_mbid_array
      * Return only valid mbid data
-     * @param string[]|string $mbid
+     * @param string[]|string|null $mbid
      * @return string[]
      */
-    public static function parse_mbid_array(array|string $mbid): array
+    public static function parse_mbid_array(array|string|null $mbid): array
     {
         if (empty($mbid)) {
             return [];
