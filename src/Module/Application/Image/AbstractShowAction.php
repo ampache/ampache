@@ -143,7 +143,10 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             $itemConfig = $this->getFileName($request);
 
             if ($itemConfig === null) {
-                return $response;
+                return $response->withStatus(
+                    StatusCode\RFC\RFC7231::NOT_FOUND,
+                    'Bad Request: Invalid URL'
+                );
             }
 
             [$filename, $objectId, $type] = $itemConfig;
