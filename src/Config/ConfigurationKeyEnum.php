@@ -158,6 +158,7 @@ final class ConfigurationKeyEnum
     public const PROXY_PASS                            = 'proxy_pass';
     public const PROXY_PORT                            = 'proxy_port';
     public const PROXY_USER                            = 'proxy_user';
+    public const PUBLIC_IMAGES                         = 'public_images';
     public const RADIO                                 = 'live_stream';
     public const RATE_LIMIT                            = 'rate_limit';
     public const RATING_FILE_TAG_USER                  = 'rating_file_tag_user';

@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 82
+config_version = 83
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -665,6 +665,14 @@ album_art_min_height = 30
 ; Specify the maximum height for arts (in pixel).
 ; DEFAULT: none
 ;album_art_max_height = 1024
+
+; Public Images
+; Disable this option to require a valid user session for viewing images.
+; When enabled, images can be displayed without checking for an active session,
+; bypassing `use_auth` and `require_session` settings.
+; If disabled, image links will require a valid session to be accessed.
+; DEFAULT: "true"
+public_images = "true"
 
 ; Resize Images * Requires PHP-GD *
 ; Set this to true if you want Ampache to resize the Album
