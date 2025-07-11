@@ -84,10 +84,10 @@ final class Playlist5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::playlists([$object_id], $user, false, false);
+                echo Json5_Data::playlists([$object_id], $user, $input['auth'], false, false);
                 break;
             default:
-                echo Xml5_Data::playlists([$object_id], $user);
+                echo Xml5_Data::playlists([$object_id], $user, $input['auth']);
         }
 
         return true;

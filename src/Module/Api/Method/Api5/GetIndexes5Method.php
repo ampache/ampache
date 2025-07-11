@@ -161,12 +161,12 @@ final class GetIndexes5Method
             case 'json':
                 Json5_Data::set_offset((int)($input['offset'] ?? 0));
                 Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::indexes($results, $type, $user, $include);
+                echo Json5_Data::indexes($results, $type, $user, $input['auth'], $include);
                 break;
             default:
                 Xml5_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::indexes($results, $type, $user, true, $include);
+                echo Xml5_Data::indexes($results, $type, $user, $input['auth'], true, $include);
         }
 
         return true;

@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
@@ -77,7 +77,7 @@ final class UpdateArtMethod
         $type      = (string)$input['type'];
         $object_id = (int)$input['id'];
         $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
-        $art_url   = AmpConfig::get_web_path('/client') . '/image.php?object_id=' . $object_id . '&object_type=' . $type;
+        $art_url   = Art::url($object_id, $type, $input['auth']);
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['artist', 'album'])) {
@@ -89,7 +89,7 @@ final class UpdateArtMethod
         $className = ObjectTypeToClassNameMapper::map($type);
         /** @var Artist|Album $item */
         $item = new $className($object_id);
-        if ($item->isNew()) {
+        if ($item->isNew() || $art_url === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
 

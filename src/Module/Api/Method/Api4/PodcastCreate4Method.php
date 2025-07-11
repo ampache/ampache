@@ -98,10 +98,10 @@ final class PodcastCreate4Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::podcasts([$podcast->getId()], $user);
+                echo Json4_Data::podcasts([$podcast->getId()], $user, $input['auth']);
                 break;
             default:
-                echo Xml4_Data::podcasts([$podcast->getId()], $user);
+                echo Xml4_Data::podcasts([$podcast->getId()], $user, $input['auth']);
         }
 
         return true;

@@ -27,7 +27,6 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
@@ -639,6 +638,7 @@ class Xml_Data
      * @param array{string?: list<int|string>} $searches Array of object_ids by object type
      * @param array{string?: int} $counts Array of counts for each object type
      * @param User $user
+     * @param string $auth
      * @return string
      */
     public static function searches(array $searches, array $counts, User $user, string $auth): string
@@ -1350,7 +1350,7 @@ class Xml_Data
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         Song::build_cache($objects);
-        Stream::set_session(Core::get_request('auth'));
+        Stream::set_session($auth);
 
         $playlist_track = 0;
 
@@ -1424,10 +1424,11 @@ class Xml_Data
      *
      * @param list<int|string> $objects
      * @param User $user
+     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node.
      * @return string
      */
-    public static function song_tags(array $objects, User $user, bool $full_xml = true): string
+    public static function song_tags(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         if (($count > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
@@ -1435,7 +1436,7 @@ class Xml_Data
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song', $user->id) . "</total_count>\n<md5>" . md5(serialize($objects)) . "</md5>\n" : '';
 
-        Stream::set_session(Core::get_request('auth'));
+        Stream::set_session($auth);
 
         foreach ($objects as $song_id) {
             $song = new Song((int)$song_id);
@@ -1513,6 +1514,7 @@ class Xml_Data
      *     track_id: int,
      *     track: int}> $object_ids Object IDs
      * @param User $user
+     * @param string $auth
      * @return string
      */
     public static function democratic(array $object_ids, User $user, string $auth): string

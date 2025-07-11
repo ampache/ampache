@@ -80,10 +80,10 @@ final class LicenseSongs5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::songs($results, $user);
+                echo Json5_Data::songs($results, $user, $input['auth']);
                 break;
             default:
-                echo Xml5_Data::songs($results, $user);
+                echo Xml5_Data::songs($results, $user, $input['auth']);
         }
 
         return true;

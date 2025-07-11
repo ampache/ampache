@@ -133,10 +133,10 @@ final class Democratic5Method
                 Democratic::build_vote_cache($democratic->vote_ids);
                 switch ($input['api_format']) {
                     case 'json':
-                        echo Json5_Data::democratic($results, $user);
+                        echo Json5_Data::democratic($results, $user, $input['auth']);
                         break;
                     default:
-                        echo Xml5_Data::democratic($results, $user);
+                        echo Xml5_Data::democratic($results, $user, $input['auth']);
                 }
                 break;
             case 'play':

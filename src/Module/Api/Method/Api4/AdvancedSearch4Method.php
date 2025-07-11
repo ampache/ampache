@@ -90,22 +90,22 @@ final class AdvancedSearch4Method
                     case 'song_artist':
                     case 'album_artist':
                     case 'artist':
-                        echo Json4_Data::artists($results, [], $user);
+                        echo Json4_Data::artists($results, [], $user, $input['auth']);
                         break;
                     case 'album':
-                        echo Json4_Data::albums($results, [], $user);
+                        echo Json4_Data::albums($results, [], $user, $input['auth']);
                         break;
                     case 'playlist':
-                        echo Json4_Data::playlists($results, $user);
+                        echo Json4_Data::playlists($results, $user, $input['auth']);
                         break;
                     case 'user':
                         echo Json4_Data::users($results);
                         break;
                     case 'video':
-                        echo Json4_Data::videos($results, $user);
+                        echo Json4_Data::videos($results, $user, $input['auth']);
                         break;
                     default:
-                        echo Json4_Data::songs($results, $user);
+                        echo Json4_Data::songs($results, $user, $input['auth']);
                         break;
                 }
                 break;
@@ -114,22 +114,22 @@ final class AdvancedSearch4Method
                 Xml4_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'artist':
-                        echo Xml4_Data::artists($results, [], $user);
+                        echo Xml4_Data::artists($results, [], $user, $input['auth']);
                         break;
                     case 'album':
-                        echo Xml4_Data::albums($results, [], $user);
+                        echo Xml4_Data::albums($results, [], $user, $input['auth']);
                         break;
                     case 'playlist':
-                        echo Xml4_Data::playlists($results, $user);
+                        echo Xml4_Data::playlists($results, $user, $input['auth']);
                         break;
                     case 'user':
                         echo Xml4_Data::users($results);
                         break;
                     case 'video':
-                        echo Xml4_Data::videos($results, $user);
+                        echo Xml4_Data::videos($results, $user, $input['auth']);
                         break;
                     default:
-                        echo Xml4_Data::songs($results, $user);
+                        echo Xml4_Data::songs($results, $user, $input['auth']);
                         break;
                 }
         }
