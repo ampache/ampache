@@ -1235,7 +1235,7 @@ class Art extends database_object
             return null;
         }
 
-        if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
+        if (AmpConfig::get('public_images') && AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             $sid = ($sid)
                 ? scrub_out($sid)
                 : scrub_out(session_id() ?: 'none');
@@ -1575,7 +1575,7 @@ class Art extends database_object
             : $size['width'] . 'x' . $size['height'];
 
         $web_path = AmpConfig::get_web_path();
-        $use_auth = (AmpConfig::get('use_auth') && AmpConfig::get('require_session'));
+        $use_auth = (AmpConfig::get('public_images') && AmpConfig::get('use_auth') && AmpConfig::get('require_session'));
 
         $prettyPhoto = ($link === null);
         if ($link === null) {

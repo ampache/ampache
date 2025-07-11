@@ -43,6 +43,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Teapot\StatusCode;
 
 abstract readonly class AbstractShowAction implements ApplicationActionInterface
 {
@@ -62,35 +63,42 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
         $response = $this->responseFactory->createResponse();
 
         if (
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PUBLIC_IMAGES) === false &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_AUTH) === true &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::REQUIRE_SESSION) === true
         ) {
-            $auth  = $this->requestParser->getFromRequest('auth');
-            $user  = $this->requestParser->getFromRequest('u');
-            $token = $this->requestParser->getFromRequest('t');
-            $salt  = $this->requestParser->getFromRequest('s');
-            // Check to see if they've got an interface session or a valid API session
+            // regular auth
+            $auth = $this->requestParser->getFromRequest('auth');
+            // subsonic apiKey auth
+            $apiKey = $this->requestParser->getFromRequest('apiKey');
+            // subsonic token and salt auth
             $token_check = $this->authenticationManager->tokenLogin(
-                $user,
-                $token,
-                $salt
+                $this->requestParser->getFromRequest('u'),
+                $this->requestParser->getFromRequest('t'),
+                $this->requestParser->getFromRequest('s')
             );
 
-            $cookie = $_COOKIE[AmpConfig::get('session_name', 'ampache')] ?? '';
+            $cookie = $_COOKIE[AmpConfig::get('session_name', 'ampache')] ?? null;
 
+            // Check to see if they've got an interface session or a valid API session
             if (
-                !Session::exists(AccessTypeEnum::INTERFACE->value, $cookie) &&
-                !Session::exists(AccessTypeEnum::API->value, $auth) &&
-                !empty($token_check)
+                Session::exists(AccessTypeEnum::INTERFACE->value, $cookie ?? $auth) ||
+                Session::exists(AccessTypeEnum::API->value, (empty($auth)) ? $apiKey : $auth) ||
+                (isset($token_check['success']) && $token_check['success'] === true)
             ) {
-                $auth = ($auth !== '') ? $auth : $token;
+                // authentication succeeded
+            } else {
                 $this->logger->warning(
-                    sprintf('Access denied, checked cookie session:%s and auth:%s', $cookie, $auth),
+                    'Access denied: No valid session found',
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
-                return $response;
+                return $response->withStatus(
+                    StatusCode\RFC\RFC7231::FORBIDDEN,
+                    'Access denied: No valid session found'
+                );
             }
+
         }
 
         // If we aren't resizing just trash thumb
@@ -211,7 +219,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             // That means the client has a cached version of the image
             $reqheaders = getallheaders();
             if (is_array($reqheaders) && array_key_exists('If-Modified-Since', $reqheaders) && array_key_exists('If-None-Match', $reqheaders)) {
-                if (!array_key_exists('Cache-Control', $reqheaders) || (array_key_exists('Cache-Control', $reqheaders) && $reqheaders['Cache-Control'] != 'no-cache')) {
+                if (!array_key_exists('Cache-Control', $reqheaders) || ($reqheaders['Cache-Control'] != 'no-cache')) {
                     $cetag = str_replace('"', '', $reqheaders['If-None-Match']);
                     // Same image than the cached one? Use the cache.
                     if (
