@@ -1302,6 +1302,10 @@ class Art extends database_object
                     ? 'action=show_user_avatar&'
                     : '';
             $url = AmpConfig::get_web_path() . '/image.php?' . $actionStr . 'object_id=' . $uid . '&object_type=' . scrub_out($type);
+            if ($sid !== 'none') {
+                $url .= '&auth=' . $sid;
+            }
+
             if ($size !== 'original') {
                 $url .= '&size=' . $size;
             }
