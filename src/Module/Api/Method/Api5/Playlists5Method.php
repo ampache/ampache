@@ -119,12 +119,12 @@ final class Playlists5Method
             case 'json':
                 Json5_Data::set_offset((int)($input['offset'] ?? 0));
                 Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::playlists($results, $user);
+                echo Json5_Data::playlists($results, $user, $input['auth']);
                 break;
             default:
                 Xml5_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::playlists($results, $user);
+                echo Xml5_Data::playlists($results, $user, $input['auth']);
         }
 
         return true;

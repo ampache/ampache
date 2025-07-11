@@ -1403,7 +1403,7 @@ class Json_Data
             "md5" => md5(serialize($objects)),
         ];
 
-        Stream::set_session($_REQUEST['auth'] ?? '');
+        Stream::set_session($auth);
         $playlist_track = 0;
 
         if (($count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
@@ -1547,7 +1547,7 @@ class Json_Data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "song"
      */
-    public static function song_tags(array $objects, User $user, bool $encode = true, bool $object = true): string
+    public static function song_tags(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): string
     {
         $count  = self::$count ?? count($objects);
         $output = [
@@ -1555,7 +1555,7 @@ class Json_Data
             "md5" => md5(serialize($objects)),
         ];
 
-        Stream::set_session($_REQUEST['auth'] ?? '');
+        Stream::set_session($auth);
         $playlist_track = 0;
 
         if (($count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {

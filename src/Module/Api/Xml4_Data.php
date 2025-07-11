@@ -26,7 +26,6 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
@@ -159,7 +158,6 @@ class Xml4_Data
      *
      * This returns the header
      *
-     * @param string|null $title
      * @see _header()
      */
     public static function header(?string $title = null): string
@@ -257,11 +255,12 @@ class Xml4_Data
      * @param list<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'
      * @param User $user
+     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
      * @param bool $include include episodes from podcasts or tracks in a playlist
      * @return string
      */
-    public static function indexes(array $objects, string $object_type, User $user, bool $full_xml = true, bool $include = false): string
+    public static function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
     {
         if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -273,7 +272,7 @@ class Xml4_Data
             case 'artist':
                 foreach ($objects as $object_id) {
                     if ($include) {
-                        $string .= self::artists([(int)$object_id], ['songs', 'albums'], $user, false);
+                        $string .= self::artists([(int)$object_id], ['songs', 'albums'], $user, $auth, false);
                     } else {
                         $artist = new Artist((int)$object_id);
                         if ($artist->isNew()) {
@@ -294,7 +293,7 @@ class Xml4_Data
             case 'album':
                 foreach ($objects as $object_id) {
                     if ($include) {
-                        $string .= self::albums([(int)$object_id], ['songs'], $user, false);
+                        $string .= self::albums([(int)$object_id], ['songs'], $user, $auth, false);
                     } else {
                         $album = new Album((int)$object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n"
@@ -357,7 +356,7 @@ class Xml4_Data
                         if ($include) {
                             $episodes = $podcast->getEpisodeIds();
                             foreach ($episodes as $episode_id) {
-                                $string .= self::podcast_episodes([$episode_id], $user, false);
+                                $string .= self::podcast_episodes([$episode_id], $user, $auth, false);
                             }
                         }
                         $string .= "\t</podcast>\n";
@@ -365,10 +364,10 @@ class Xml4_Data
                 }
                 break;
             case 'podcast_episode':
-                $string .= self::podcast_episodes($objects, $user, false);
+                $string .= self::podcast_episodes($objects, $user, $auth, false);
                 break;
             case 'video':
-                $string .= self::videos($objects, $user, false);
+                $string .= self::videos($objects, $user, $auth, false);
                 break;
         }
 
@@ -432,10 +431,11 @@ class Xml4_Data
      * @param list<int|string> $artists
      * @param string[] $include Array of other items to include
      * @param User $user
+     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
      * @return string
      */
-    public static function artists(array $artists, array $include, User $user, bool $full_xml = true): string
+    public static function artists(array $artists, array $include, User $user, string $auth, bool $full_xml = true): string
     {
         if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $artists = array_splice($artists, self::$offset, self::$limit);
@@ -456,16 +456,16 @@ class Xml4_Data
             $tag_string  = self::tags_string($artist->get_tags());
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $artist_id . '&object_type=artist';
+            $art_url = Art::url($artist->id, 'artist', $auth);
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, false);
+                $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, $auth, false);
             } else {
                 $albums = $artist->album_count;
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs(self::getSongRepository()->getByArtist($artist->id), $user, false);
+                $songs = self::songs(self::getSongRepository()->getByArtist($artist->id), $user, $auth, false);
             } else {
                 $songs = $artist->song_count;
             }
@@ -484,10 +484,11 @@ class Xml4_Data
      * @param list<int|string> $albums
      * @param string[] $include Array of other items to include
      * @param User $user
+     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
      * @return string
      */
-    public static function albums(array $albums, array $include, User $user, bool $full_xml = true): string
+    public static function albums(array $albums, array $include, User $user, string $auth, bool $full_xml = true): string
     {
         if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $albums = array_splice($albums, self::$offset, self::$limit);
@@ -507,7 +508,7 @@ class Xml4_Data
             $flag        = new Userflag($album->id, 'album');
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $album->id . '&object_type=album';
+            $art_url = Art::url($album->id, 'album', $auth);
 
             $string .= "<album id=\"" . $album->id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n";
 
@@ -516,7 +517,7 @@ class Xml4_Data
             }
             // Handle includes
             if (in_array("songs", $include) && isset($album->id)) {
-                $songs = self::songs(self::getAlbumRepository()->getSongs($album->id), $user, false);
+                $songs = self::songs(self::getAlbumRepository()->getSongs($album->id), $user, $auth, false);
             } else {
                 $songs = $album->song_count;
             }
@@ -534,9 +535,10 @@ class Xml4_Data
      *
      * @param list<int|string> $playlists Playlist id's to include
      * @param User $user
+     * @param string $auth
      * @return string
      */
-    public static function playlists(array $playlists, User $user): string
+    public static function playlists(array $playlists, User $user, string $auth): string
     {
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
@@ -566,7 +568,7 @@ class Xml4_Data
                 $object_type    = 'playlist';
                 $playitem_total = $playlist->get_media_count('song');
             }
-            $art_url       = Art::url($playlist->id, $object_type, Core::get_request('auth'));
+            $art_url       = Art::url($playlist->id, $object_type, $auth);
             $playlist_name = $playlist->get_fullname();
             $playlist_user = $playlist->username;
             $playlist_type = $playlist->type;
@@ -638,11 +640,12 @@ class Xml4_Data
      *
      * @param list<int|string> $podcasts
      * @param User $user
+     * @param string $auth
      * @param bool $episodes include the episodes of the podcast //optional
      * @param bool $full_xml whether to return a full XML document or just the node
      * @return string
      */
-    public static function podcasts(array $podcasts, User $user, bool $episodes = false, bool $full_xml = true): string
+    public static function podcasts(array $podcasts, User $user, string $auth, bool $episodes = false, bool $full_xml = true): string
     {
         if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
@@ -659,12 +662,12 @@ class Xml4_Data
             $rating      = new Rating($podcast->getId(), 'podcast');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($podcast->getId(), 'podcast');
-            $art_url     = Art::url($podcast->getId(), 'podcast', Core::get_request('auth'));
+            $art_url     = Art::url($podcast->getId(), 'podcast', $auth);
             $string .= "<podcast id=\"$podcast_id\">\n\t<name><![CDATA[" . $podcast->get_fullname() . "]]></name>\n\t<description><![CDATA[" . $podcast->get_description() . "]]></description>\n\t<language><![CDATA[" . scrub_out($podcast->getLanguage()) . "]]></language>\n\t<copyright><![CDATA[" . scrub_out($podcast->getCopyright()) . "]]></copyright>\n\t<feed_url><![CDATA[" . $podcast->getFeedUrl() . "]]></feed_url>\n\t<generator><![CDATA[" . scrub_out($podcast->getGenerator()) . "]]></generator>\n\t<website><![CDATA[" . scrub_out($podcast->getWebsite()) . "]]></website>\n\t<build_date><![CDATA[" . $podcast->getLastBuildDate()->format(DATE_ATOM) . "]]></build_date>\n\t<sync_date><![CDATA[" . $podcast->getLastSyncDate()->format(DATE_ATOM) . "]]></sync_date>\n\t<public_url><![CDATA[" . $podcast->get_link() . "]]></public_url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n";
             if ($episodes) {
                 $results = $podcast->getEpisodeIds();
                 if (!empty($results)) {
-                    $string .= self::podcast_episodes($results, $user, false);
+                    $string .= self::podcast_episodes($results, $user, $auth, false);
                 }
             }
             $string .= "\t</podcast>\n";
@@ -680,10 +683,11 @@ class Xml4_Data
      *
      * @param list<int|string> $podcast_episodes Podcast_Episode id's to include
      * @param User $user
+     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
      * @return string
      */
-    public static function podcast_episodes(array $podcast_episodes, User $user, bool $full_xml = true): string
+    public static function podcast_episodes(array $podcast_episodes, User $user, string $auth, bool $full_xml = true): string
     {
         if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
@@ -699,7 +703,7 @@ class Xml4_Data
             $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($episode->id, 'podcast_episode');
-            $art_url     = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
+            $art_url     = Art::url($episode->podcast, 'podcast', $auth);
             $string .= "\t<podcast_episode id=\"$episode_id\">\n\t\t<title><![CDATA[" . $episode->get_fullname() . "]]></title>\n\t\t<name><![CDATA[" . $episode->get_fullname() . "]]></name>\n\t\t<description><![CDATA[" . $episode->get_description() . "]]></description>\n\t\t<category><![CDATA[" . $episode->getCategory() . "]]></category>\n\t\t<author><![CDATA[" . $episode->getAuthor() . "]]></author>\n\t\t<author_full><![CDATA[" . $episode->getAuthor() . "]]></author_full>\n\t\t<website><![CDATA[" . $episode->getWebsite() . "]]></website>\n\t\t<pubdate><![CDATA[" . $episode->getPubDate()->format(DATE_ATOM) . "]]></pubdate>\n\t\t<state><![CDATA[" . $episode->getState()->toDescription() . "]]></state>\n\t\t<filelength><![CDATA[" . $episode->get_f_time(true) . "]]></filelength>\n\t\t<filesize><![CDATA[" . $episode->getSizeFormatted() . "]]></filesize>\n\t\t<filename><![CDATA[" . $episode->getFileName() . "]]></filename>\n\t\t<mime><![CDATA[" . ((isset($episode->mime)) ? $episode->mime : '') . "]]></mime>\n\t\t<public_url><![CDATA[" . $episode->get_link() . "]]></public_url>\n\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t\t<catalog>" . $episode->catalog . "</catalog>\n\t\t<art><![CDATA[" . $art_url . "]]></art>\n\t\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t\t<preciserating>" . $user_rating . "</preciserating>\n\t\t<rating>" . $user_rating . "</rating>\n\t\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n\t\t<played>" . $episode->played . "</played>\n\t</podcast_episode>\n";
         } // end foreach
 
@@ -712,10 +716,11 @@ class Xml4_Data
      * This returns an xml document from an array of song ids. (Spiffy isn't it!)
      * @param list<int|string> $songs
      * @param User $user
+     * @param string $auth
      * @param bool $full_xml
      * @return string
      */
-    public static function songs(array $songs, User $user, bool $full_xml = true): string
+    public static function songs(array $songs, User $user, string $auth, bool $full_xml = true): string
     {
         if ((count($songs) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -723,7 +728,7 @@ class Xml4_Data
         $string = ($full_xml) ? "<total_count>" . count($songs) . "</total_count>\n" : '';
 
         Song::build_cache($songs);
-        Stream::set_session(Core::get_request('auth'));
+        Stream::set_session($auth);
 
         $playlist_track = 0;
 
@@ -741,7 +746,7 @@ class Xml4_Data
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($song->id, 'song');
-            $art_url     = Art::url($song->album, 'album', Core::get_request('auth'));
+            $art_url     = Art::url($song->album, 'album', $auth);
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
@@ -782,10 +787,11 @@ class Xml4_Data
      *
      * @param list<int|string> $videos
      * @param User $user
+     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
      * @return string
      */
-    public static function videos(array $videos, User $user, bool $full_xml = true): string
+    public static function videos(array $videos, User $user, string $auth, bool $full_xml = true): string
     {
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
@@ -800,7 +806,7 @@ class Xml4_Data
             $rating      = new Rating($video->id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($video->id, 'video');
-            $art_url     = Art::url($video->id, 'video', Core::get_request('auth'));
+            $art_url     = Art::url($video->id, 'video', $auth);
 
             $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->get_f_resolution() . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n</video>\n";
         } // end foreach
@@ -820,9 +826,10 @@ class Xml4_Data
      *     track_id: int,
      *     track: int}> $object_ids Object IDs
      * @param User $user
+     * @param string $auth
      * @return string
      */
-    public static function democratic(array $object_ids, User $user): string
+    public static function democratic(array $object_ids, User $user, string $auth): string
     {
         $democratic = Democratic::get_current_playlist($user);
         $string     = '';
@@ -840,7 +847,7 @@ class Xml4_Data
             $tag        = new Tag((int)($song->get_tags()[0]['id'] ?? 0));
             $tag_string = self::tags_string($song->get_tags());
             $rating     = new Rating($song->id, 'song');
-            $art_url    = Art::url($song->album, 'album', Core::get_request('auth'));
+            $art_url    = Art::url($song->album, 'album', $auth);
             $songMime   = $song->mime;
             $play_url   = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
 

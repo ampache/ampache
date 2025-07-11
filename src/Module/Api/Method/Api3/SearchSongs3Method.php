@@ -60,6 +60,6 @@ final class SearchSongs3Method
         $query      = Search::query($search_sql);
         $results    = $query['results'];
 
-        echo Xml3_Data::songs($results, $user);
+        echo Xml3_Data::songs($results, $user, $input['auth']);
     }
 }

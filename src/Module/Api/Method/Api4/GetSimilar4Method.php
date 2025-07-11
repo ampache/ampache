@@ -92,12 +92,12 @@ final class GetSimilar4Method
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::indexes($results, $type, $user);
+                echo Json4_Data::indexes($results, $type, $user, $input['auth']);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::indexes($results, $type, $user);
+                echo Xml4_Data::indexes($results, $type, $user, $input['auth']);
         }
 
         return true;

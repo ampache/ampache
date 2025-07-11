@@ -75,10 +75,10 @@ final class Album4Method
         }
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::albums([$uid], $include, $user);
+                echo Json4_Data::albums([$uid], $include, $user, $input['auth']);
                 break;
             default:
-                echo Xml4_Data::albums([$uid], $include, $user);
+                echo Xml4_Data::albums([$uid], $include, $user, $input['auth']);
         }
 
         return true;

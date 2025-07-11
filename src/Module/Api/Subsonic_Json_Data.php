@@ -2707,8 +2707,6 @@ class Subsonic_Json_Data
      */
     public static function addNowPlaying(array $response, array $data): array
     {
-        $response['subsonic-response']['nowPlaying'] = [];
-
         $json = ['entry' => []];
         foreach ($data as $row) {
             if (

@@ -75,10 +75,10 @@ final class Video5Method
 
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::videos([$object_id], $user, false);
+                echo Json5_Data::videos([$object_id], $user, $input['auth'], false);
                 break;
             default:
-                echo Xml5_Data::videos([$object_id], $user);
+                echo Xml5_Data::videos([$object_id], $user, $input['auth']);
         }
 
         return true;

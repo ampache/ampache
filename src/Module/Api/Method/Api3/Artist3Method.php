@@ -64,6 +64,6 @@ final class Artist3Method
                 }
             }
         }
-        echo Xml3_Data::artists([$uid], $include, $user);
+        echo Xml3_Data::artists([$uid], $include, $user, $input['auth']);
     }
 }
