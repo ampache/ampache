@@ -154,7 +154,8 @@ final class AlbumsMethod implements MethodInterface
         $result = $output->albums(
             $results,
             $include,
-            $user
+            $user,
+            $input['auth']
         );
 
         return $response->withBody(

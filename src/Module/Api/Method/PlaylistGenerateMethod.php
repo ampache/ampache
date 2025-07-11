@@ -191,20 +191,20 @@ final class PlaylistGenerateMethod
             case 'index':
                 switch ($input['api_format']) {
                     case 'json':
-                        echo Json_Data::indexes($results, 'song', $user);
+                        echo Json_Data::indexes($results, 'song', $user, $input['auth']);
                         break;
                     default:
-                        echo Xml_Data::indexes($results, 'song', $user);
+                        echo Xml_Data::indexes($results, 'song', $user, $input['auth']);
                 }
                 break;
             case 'song':
             default:
                 switch ($input['api_format']) {
                     case 'json':
-                        echo Json_Data::songs($results, $user);
+                        echo Json_Data::songs($results, $user, $input['auth']);
                         break;
                     default:
-                        echo Xml_Data::songs($results, $user);
+                        echo Xml_Data::songs($results, $user, $input['auth']);
                 }
         }
 

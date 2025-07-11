@@ -120,24 +120,24 @@ final class AdvancedSearchMethod
                 Json_Data::set_count($count);
                 switch ($type) {
                     case 'album':
-                        echo Json_Data::albums($results, [], $user);
+                        echo Json_Data::albums($results, [], $user, $input['auth']);
                         break;
                     case 'song_artist':
                     case 'album_artist':
                     case 'artist':
-                        echo Json_Data::artists($results, [], $user);
+                        echo Json_Data::artists($results, [], $user, $input['auth']);
                         break;
                     case 'label':
                         echo Json_Data::labels($results);
                         break;
                     case 'playlist':
-                        echo Json_Data::playlists($results, $user);
+                        echo Json_Data::playlists($results, $user, $input['auth']);
                         break;
                     case 'podcast':
-                        echo Json_Data::podcasts($results, $user);
+                        echo Json_Data::podcasts($results, $user, $input['auth']);
                         break;
                     case 'podcast_episode':
-                        echo Json_Data::podcast_episodes($results, $user);
+                        echo Json_Data::podcast_episodes($results, $user, $input['auth']);
                         break;
                     case 'genre':
                     case 'tag':
@@ -147,10 +147,10 @@ final class AdvancedSearchMethod
                         echo Json_Data::users($results);
                         break;
                     case 'video':
-                        echo Json_Data::videos($results, $user);
+                        echo Json_Data::videos($results, $user, $input['auth']);
                         break;
                     default:
-                        echo Json_Data::songs($results, $user);
+                        echo Json_Data::songs($results, $user, $input['auth']);
                         break;
                 }
                 break;
@@ -160,22 +160,22 @@ final class AdvancedSearchMethod
                 Xml_Data::set_count($count);
                 switch ($type) {
                     case 'album':
-                        echo Xml_Data::albums($results, [], $user);
+                        echo Xml_Data::albums($results, [], $user, $input['auth']);
                         break;
                     case 'artist':
-                        echo Xml_Data::artists($results, [], $user);
+                        echo Xml_Data::artists($results, [], $user, $input['auth']);
                         break;
                     case 'label':
                         echo Xml_Data::labels($results, $user);
                         break;
                     case 'playlist':
-                        echo Xml_Data::playlists($results, $user);
+                        echo Xml_Data::playlists($results, $user, $input['auth']);
                         break;
                     case 'podcast':
-                        echo Xml_Data::podcasts($results, $user);
+                        echo Xml_Data::podcasts($results, $user, $input['auth']);
                         break;
                     case 'podcast_episode':
-                        echo Xml_Data::podcast_episodes($results, $user);
+                        echo Xml_Data::podcast_episodes($results, $user, $input['auth']);
                         break;
                     case 'genre':
                     case 'tag':
@@ -185,10 +185,10 @@ final class AdvancedSearchMethod
                         echo Xml_Data::users($results);
                         break;
                     case 'video':
-                        echo Xml_Data::videos($results, $user);
+                        echo Xml_Data::videos($results, $user, $input['auth']);
                         break;
                     default:
-                        echo Xml_Data::songs($results, $user);
+                        echo Xml_Data::songs($results, $user, $input['auth']);
                         break;
                 }
         }
