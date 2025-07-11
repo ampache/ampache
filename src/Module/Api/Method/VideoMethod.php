@@ -76,10 +76,10 @@ final class VideoMethod
 
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::videos([$object_id], $user, true, false);
+                echo Json_Data::videos([$object_id], $user, $input['auth'], true, false);
                 break;
             default:
-                echo Xml_Data::videos([$object_id], $user);
+                echo Xml_Data::videos([$object_id], $user, $input['auth']);
         }
 
         return true;

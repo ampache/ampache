@@ -35,9 +35,9 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * @param list<int|string> $result
      */
-    public function podcastEpisodes(array $result, User $user): string
+    public function podcastEpisodes(array $result, User $user, string $auth): string
     {
-        return Json_Data::podcast_episodes($result, $user);
+        return Json_Data::podcast_episodes($result, $user, $auth);
     }
 
     public function setOffset(int $offset): void
@@ -112,8 +112,9 @@ final class JsonOutput implements ApiOutputInterface
      * At the moment, this method just acts as a proxy
      *
      * @param list<int|string> $albums
-     * @param array $include
+     * @param string[] $include
      * @param User $user
+     * @param string $auth
      * @param bool $encode
      * @param bool $asObject
      *
@@ -123,10 +124,11 @@ final class JsonOutput implements ApiOutputInterface
         array $albums,
         array $include,
         User $user,
+        string $auth,
         bool $encode = true,
         bool $asObject = true
-    ) {
-        return Json_Data::albums($albums, $include, $user, $encode, $asObject);
+    ): array|string {
+        return Json_Data::albums($albums, $include, $user, $auth, $encode, $asObject);
     }
 
     /**

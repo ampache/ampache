@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -475,7 +476,7 @@ class Xml3_Data
             $tag_string            = self::tags_string(Tag::get_top_tags('song', $song->id));
             $rating                = new Rating($song->id, 'song');
             $user_rating           = $rating->get_user_rating($user->getId());
-            $art_url               = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
+            $art_url               = Art::url($song->album, 'album', Core::get_request('auth'));
             $songMime              = $song->mime;
             $songBitrate           = $song->bitrate;
             $play_url              = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
@@ -563,7 +564,7 @@ class Xml3_Data
             $tag_string  = self::tags_string($song->get_tags());
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
-            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
+            $art_url     = Art::url($song->album, 'album', Core::get_request('auth'));
             $songMime    = $song->mime;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
 

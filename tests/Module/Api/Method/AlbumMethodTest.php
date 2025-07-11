@@ -136,6 +136,7 @@ class AlbumMethodTest extends MockeryTestCase
                 [$albumId],
                 $include,
                 $user,
+                'stringauth',
                 true,
                 false
             )
@@ -160,7 +161,8 @@ class AlbumMethodTest extends MockeryTestCase
                 $output,
                 [
                     'filter' => (string) $albumId,
-                    'include' => $include
+                    'include' => $include,
+                    'auth' => 'stringauth',
                 ],
                 $user
             )

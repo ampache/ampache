@@ -63,7 +63,7 @@ final class ShowAction implements ApplicationActionInterface
         $configfile = __DIR__ . '/../../../../config/ampache.cfg.php';
         if (!file_exists($configfile)) {
             return $this->responseFactory
-                ->createResponse(StatusCode::FOUND)
+                ->createResponse(StatusCode\RFC\RFC7231::FOUND)
                 ->withHeader(
                     'Location',
                     '/install.php'

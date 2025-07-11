@@ -237,12 +237,12 @@ final class StatsMethod
                     case 'json':
                         Json_Data::set_offset($offset);
                         Json_Data::set_limit($limit);
-                        echo Json_Data::songs($results, $user);
+                        echo Json_Data::songs($results, $user, $input['auth']);
                         break;
                     default:
                         Xml_Data::set_offset($offset);
                         Xml_Data::set_limit($limit);
-                        echo Xml_Data::songs($results, $user);
+                        echo Xml_Data::songs($results, $user, $input['auth']);
                 }
                 break;
             case 'artist':
@@ -250,12 +250,12 @@ final class StatsMethod
                     case 'json':
                         Json_Data::set_offset($offset);
                         Json_Data::set_limit($limit);
-                        echo Json_Data::artists($results, [], $user);
+                        echo Json_Data::artists($results, [], $user, $input['auth']);
                         break;
                     default:
                         Xml_Data::set_offset($offset);
                         Xml_Data::set_limit($limit);
-                        echo Xml_Data::artists($results, [], $user);
+                        echo Xml_Data::artists($results, [], $user, $input['auth']);
                 }
                 break;
             case 'album':
@@ -263,12 +263,12 @@ final class StatsMethod
                     case 'json':
                         Json_Data::set_offset($offset);
                         Json_Data::set_limit($limit);
-                        echo Json_Data::albums($results, [], $user);
+                        echo Json_Data::albums($results, [], $user, $input['auth']);
                         break;
                     default:
                         Xml_Data::set_offset($offset);
                         Xml_Data::set_limit($limit);
-                        echo Xml_Data::albums($results, [], $user);
+                        echo Xml_Data::albums($results, [], $user, $input['auth']);
                 }
                 break;
             case 'playlist':
@@ -276,12 +276,12 @@ final class StatsMethod
                     case 'json':
                         Json_Data::set_offset($offset);
                         Json_Data::set_limit($limit);
-                        echo Json_Data::playlists($results, $user);
+                        echo Json_Data::playlists($results, $user, $input['auth']);
                         break;
                     default:
                         Xml_Data::set_offset($offset);
                         Xml_Data::set_limit($limit);
-                        echo Xml_Data::playlists($results, $user);
+                        echo Xml_Data::playlists($results, $user, $input['auth']);
                 }
                 break;
             case 'video':
@@ -289,12 +289,12 @@ final class StatsMethod
                     case 'json':
                         Json_Data::set_offset($offset);
                         Json_Data::set_limit($limit);
-                        echo Json_Data::videos($results, $user);
+                        echo Json_Data::videos($results, $user, $input['auth']);
                         break;
                     default:
                         Xml_Data::set_offset($offset);
                         Xml_Data::set_limit($limit);
-                        echo Xml_Data::videos($results, $user);
+                        echo Xml_Data::videos($results, $user, $input['auth']);
                 }
                 Session::extend($input['auth'], AccessTypeEnum::API->value);
                 break;
@@ -303,12 +303,12 @@ final class StatsMethod
                     case 'json':
                         Json_Data::set_offset($offset);
                         Json_Data::set_limit($limit);
-                        echo Json_Data::podcasts($results, $user);
+                        echo Json_Data::podcasts($results, $user, $input['auth']);
                         break;
                     default:
                         Xml_Data::set_offset($offset);
                         Xml_Data::set_limit($limit);
-                        echo Xml_Data::podcasts($results, $user);
+                        echo Xml_Data::podcasts($results, $user, $input['auth']);
                 }
                 break;
             case 'podcast_episode':
@@ -316,12 +316,12 @@ final class StatsMethod
                     case 'json':
                         Json_Data::set_offset($offset);
                         Json_Data::set_limit($limit);
-                        echo Json_Data::podcast_episodes($results, $user);
+                        echo Json_Data::podcast_episodes($results, $user, $input['auth']);
                         break;
                     default:
                         Xml_Data::set_offset($offset);
                         Xml_Data::set_limit($limit);
-                        echo Xml_Data::podcast_episodes($results, $user);
+                        echo Xml_Data::podcast_episodes($results, $user, $input['auth']);
                 }
                 break;
         }

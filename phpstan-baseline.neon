@@ -806,19 +806,9 @@ parameters:
 			path: src/Module/Api/Method/VideosMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\ApiOutputInterface\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Output/ApiOutputInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\ApiOutputInterface\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Output/ApiOutputInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\JsonOutput\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Output/JsonOutput.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\JsonOutput\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -829,11 +819,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\JsonOutput\\:\\:podcastEpisodes\\(\\) should return string but returns array\\|string\\.$#"
 			count: 1
 			path: src/Module/Api/Output/JsonOutput.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\XmlOutput\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Output/XmlOutput.php
 
 		-
 			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\OpenSubsonic_Api', non\\-falsy\\-string\\} given\\.$#"
@@ -1152,11 +1137,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:object_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:rss_feed\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml5_Data.php
 

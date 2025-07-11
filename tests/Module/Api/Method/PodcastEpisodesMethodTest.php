@@ -113,7 +113,7 @@ class PodcastEpisodesMethodTest extends TestCase
                 $this->gatekeeper,
                 $this->response,
                 $this->output,
-                [],
+                ['auth' => ''],
                 $this->user
             )
         );
@@ -135,7 +135,7 @@ class PodcastEpisodesMethodTest extends TestCase
                 $this->gatekeeper,
                 $this->response,
                 $this->output,
-                [],
+                ['auth' => ''],
                 $this->user
             )
         );
@@ -166,6 +166,7 @@ class PodcastEpisodesMethodTest extends TestCase
                 $this->output,
                 [
                     'filter' => (string) $podcastId,
+                    'auth' => '',
                 ],
                 $this->user
             )
@@ -211,6 +212,7 @@ class PodcastEpisodesMethodTest extends TestCase
                 $this->output,
                 [
                     'filter' => (string) $podcastId,
+                    'auth' => '',
                 ],
                 $this->user
             )
@@ -275,7 +277,7 @@ class PodcastEpisodesMethodTest extends TestCase
 
         $this->output->expects(static::once())
             ->method('podcastEpisodes')
-            ->with([$episodeId], $this->user)
+            ->with([$episodeId], $this->user, '')
             ->willReturn($result);
 
         static::assertSame(
@@ -288,6 +290,7 @@ class PodcastEpisodesMethodTest extends TestCase
                     'filter' => (string) $podcastId,
                     'limit' => (string) $limit,
                     'offset' => (string) $offset,
+                    'auth' => '',
                 ],
                 $this->user
             )

@@ -836,7 +836,9 @@ class Subsonic_Api
             // client.
             $headers      = apache_request_headers();
             $reqheaders   = [];
-            $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
+            if (isset($headers['User-Agent'])) {
+                $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
+            }
             if (isset($headers['Range'])) {
                 $reqheaders[] = "Range: " . $headers['Range'];
             }
@@ -2600,7 +2602,7 @@ class Subsonic_Api
      * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getOpenSubsonicExtensions(array $input, User $user): void
+    public static function getopensubsonicextensions(array $input, User $user): void
     {
         unset($user);
 

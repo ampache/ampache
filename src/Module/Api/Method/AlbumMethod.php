@@ -115,6 +115,7 @@ final class AlbumMethod implements MethodInterface
             [$album->getId()],
             $include,
             $user,
+            $input['auth'],
             true,
             false
         );

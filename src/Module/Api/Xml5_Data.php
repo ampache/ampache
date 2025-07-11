@@ -1081,31 +1081,6 @@ class Xml5_Data
     }
 
     /**
-     * rss_feed
-     *
-     * returns xml for rss types that aren't podcasts (Feed generation of plays/albums/etc)
-     *
-     * @param array $data Keyed array of information to RSS'ify
-     * @param string $title RSS feed title
-     * @param string $date publish date
-     */
-    public static function rss_feed($data, $title, $date = null): string
-    {
-        $string = "\t<title>" . $title . "</title>\n\t<link>" . AmpConfig::get_web_path() . "</link>\n\t";
-        if (is_numeric($date)) {
-            $string .= "<pubDate>" . date("r", (int)$date) . "</pubDate>\n";
-        }
-
-        // Pass it to the keyed array xml function
-        foreach ($data as $item) {
-            // We need to enclose it in an item tag
-            $string .= self::keyed_array(['item' => $item], true);
-        }
-
-        return self::_header() . $string . self::_footer();
-    }
-
-    /**
      * deleted
      *
      * This takes an array of deleted objects and return XML based on the type of object

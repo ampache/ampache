@@ -102,10 +102,10 @@ final class GetSimilarMethod
                 Json_Data::set_count(count($results));
                 switch ($type) {
                     case 'artist':
-                        echo Json_Data::artists($results, [], $user);
+                        echo Json_Data::artists($results, [], $user, $input['auth']);
                         break;
                     case 'song':
-                        echo Json_Data::songs($results, $user);
+                        echo Json_Data::songs($results, $user, $input['auth']);
                 }
                 break;
             default:
@@ -114,10 +114,10 @@ final class GetSimilarMethod
                 Xml_Data::set_count(count($results));
                 switch ($type) {
                     case 'artist':
-                        echo Xml_Data::artists($results, [], $user);
+                        echo Xml_Data::artists($results, [], $user, $input['auth']);
                         break;
                     case 'song':
-                        echo Xml_Data::songs($results, $user);
+                        echo Xml_Data::songs($results, $user, $input['auth']);
                 }
         }
 

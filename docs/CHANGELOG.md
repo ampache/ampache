@@ -1,11 +1,15 @@
 # CHANGELOG
 
-## Ampache 7.6.2
+## Ampache 7.7.0
 
 ### Added
 
 * Translations 2025-07-08
 * Don't show the clear art button when there isn't art there
+* Browse
+  * New filters `user_flag`, `user_rating` on library items
+* Config version 83
+  * Add `public_images` Disable this option to require a valid user session for viewing images
 * CLI
   * cleanup:art
     * Add option `-c|--cleanup` (Delete orphaned art files when the file is missing from local_metadata_folder)
@@ -18,6 +22,7 @@
   * Use cached files for tag updates if created in the last 30 days
 * Try to pre-cache missing files in the transcode cache on play (When enabled)
 * Put the ID back on Art links to make them unique
+* Add ssid to art links if auth enabled
 
 ### Changed
 
@@ -35,6 +40,7 @@
 * Garbage Collection from the Web UI didn't send catalogs correctly
 * Filename checked as a change in tag comparison
 * Bad regex in MusicBrainz art collector 
+* Null values in `parse_mbid_array`
 * Search
   * Local image `has_image` search didn't count missing joins
 * Ampache Remote Catalogs
@@ -45,7 +51,10 @@
   * Cache path was using the base folder instead of the numbered subfolders
 * Don't gather file art when the file is a url
 * Delete Art cache when the art is updated
+* Art urls were not sending auth session correctly
+* Enforce session requirements on art URLs correctly
 * Subsonic
+  * Incorrect case for `getOpenSubsonicExtensions` on old Subsonic class
   * Ensure disabled songs are not added in more areas
   * Look for other possible empty arrays
   * Subsonic Remote catalogs can verify existing Song data

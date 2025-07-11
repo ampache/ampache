@@ -79,10 +79,10 @@ final class PlaylistCreateMethod
         Catalog::count_table('playlist');
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::playlists([$object_id], $user, false, true, false);
+                echo Json_Data::playlists([$object_id], $user, $input['auth'], false, true, false);
                 break;
             default:
-                echo Xml_Data::playlists([$object_id], $user);
+                echo Xml_Data::playlists([$object_id], $user, $input['auth']);
         }
 
         return true;
