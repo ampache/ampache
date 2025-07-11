@@ -1575,6 +1575,7 @@ class Art extends database_object
             : $size['width'] . 'x' . $size['height'];
 
         $web_path = AmpConfig::get_web_path();
+        $use_auth = (AmpConfig::get('use_auth') && AmpConfig::get('require_session'));
 
         $prettyPhoto = ($link === null);
         if ($link === null) {
@@ -1582,13 +1583,15 @@ class Art extends database_object
             if ($thumb_link) {
                 $link .= "&size=" . $out_size;
             }
-            if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
+
+            if ($use_auth) {
                 $link .= "&auth=" . session_id();
             }
 
             if ($kind != 'default') {
                 $link .= '&kind=' . $kind;
             }
+
             if ($has_db) {
                 $link .= '&id=' . $art->id;
             }
@@ -1602,8 +1605,16 @@ class Art extends database_object
 
         echo ">";
         $imgurl = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&size=" . $out_size;
+        if ($use_auth) {
+            $imgurl .= "&auth=" . session_id();
+        }
+
         if ($kind != 'default') {
             $imgurl .= '&kind=' . $kind;
+        }
+
+        if ($has_db) {
+            $imgurl .= '&id=' . $art->id;
         }
 
         // This to keep browser cache feature but force a refresh in case image just changed
