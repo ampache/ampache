@@ -117,7 +117,7 @@ final class ExternalShareAction implements ApplicationActionInterface
         $share = new Share($share_id);
 
         return $this->responseFactory
-            ->createResponse(StatusCode::FOUND)
+            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 $plugin->_plugin->external_share($share->public_url, $share->getObjectName())

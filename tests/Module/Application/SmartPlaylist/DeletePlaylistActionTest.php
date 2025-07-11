@@ -135,7 +135,7 @@ class DeletePlaylistActionTest extends MockeryTestCase
             ->once();
 
         $this->responseFactory->shouldReceive('createResponse')
-            ->with(StatusCode::FOUND)
+            ->with(StatusCode\RFC\RFC7231::FOUND)
             ->once()
             ->andReturn($respone);
 
