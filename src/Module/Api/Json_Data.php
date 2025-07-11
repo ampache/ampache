@@ -743,7 +743,7 @@ class Json_Data
             $flag        = new Userflag($artist->id, 'artist');
 
             // Build the Art URL, include session
-            $art_url = Art::url($artist->id, 'artist');
+            $art_url = Art::url($artist->id, 'artist', Core::get_request('auth'));
 
             // Handle includes
             $albums = (in_array("albums", $include))
@@ -831,7 +831,7 @@ class Json_Data
                 : $album->year;
 
             // Build the Art URL, include session
-            $art_url = Art::url($album->id, 'album');
+            $art_url = Art::url($album->id, 'album', Core::get_request('auth'));
 
             $objArray = [];
 
@@ -1415,7 +1415,7 @@ class Json_Data
             $rating       = new Rating((int)$song_id, 'song');
             $user_rating  = $rating->get_user_rating($user->getId());
             $flag         = new Userflag((int)$song_id, 'song');
-            $art_url      = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
+            $art_url      = Art::url($song->album, 'album', Core::get_request('auth'));
             $songType     = $song->type;
             $songMime     = $song->mime;
             $songBitrate  = $song->bitrate;
@@ -1737,7 +1737,7 @@ class Json_Data
 
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
-            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
+            $art_url     = Art::url($song->album, 'album', Core::get_request('auth'));
             $songType    = $song->type;
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
@@ -1788,7 +1788,7 @@ class Json_Data
      */
     public static function user(User $user, bool $fullinfo, ?bool $object = true): string
     {
-        $art_url = Art::url($user->id, 'user', $_REQUEST['auth'] ?? '');
+        $art_url = Art::url($user->id, 'user', Core::get_request('auth'));
         if ($fullinfo) {
             $JSON = [
                 "id" => (string)$user->id,
