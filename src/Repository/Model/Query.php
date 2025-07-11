@@ -256,6 +256,8 @@ class Query
             case 'update_gt':
             case 'update_lt':
             case 'user':
+            case 'user_flag':
+            case 'user_rating':
             case 'year_eq':
             case 'year_gt':
             case 'year_lg':
