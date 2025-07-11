@@ -100,7 +100,7 @@ final class Democratic3Method
                 $results = $democratic->get_items();
                 Song::build_cache($democratic->object_ids);
                 Democratic::build_vote_cache($democratic->vote_ids);
-                echo Xml3_Data::democratic($results, $user);
+                echo Xml3_Data::democratic($results, $user, $input['auth']);
                 break;
             case 'play':
                 $url     = $democratic->play_url($user);

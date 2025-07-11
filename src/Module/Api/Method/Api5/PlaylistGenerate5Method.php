@@ -190,20 +190,20 @@ final class PlaylistGenerate5Method
             case 'index':
                 switch ($input['api_format']) {
                     case 'json':
-                        echo Json5_Data::indexes($results, 'song', $user);
+                        echo Json5_Data::indexes($results, 'song', $user, $input['auth']);
                         break;
                     default:
-                        echo Xml5_Data::indexes($results, 'song', $user);
+                        echo Xml5_Data::indexes($results, 'song', $user, $input['auth']);
                 }
                 break;
             case 'song':
             default:
                 switch ($input['api_format']) {
                     case 'json':
-                        echo Json5_Data::songs($results, $user);
+                        echo Json5_Data::songs($results, $user, $input['auth']);
                         break;
                     default:
-                        echo Xml5_Data::songs($results, $user);
+                        echo Xml5_Data::songs($results, $user, $input['auth']);
                 }
         }
 

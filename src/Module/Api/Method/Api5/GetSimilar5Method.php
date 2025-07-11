@@ -98,12 +98,12 @@ final class GetSimilar5Method
             case 'json':
                 Json5_Data::set_offset($input['offset'] ?? 0);
                 Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::indexes($results, $type, $user);
+                echo Json5_Data::indexes($results, $type, $user, $input['auth']);
                 break;
             default:
                 Xml5_Data::set_offset($input['offset'] ?? 0);
                 Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::indexes($results, $type, $user);
+                echo Xml5_Data::indexes($results, $type, $user, $input['auth']);
         }
 
         return true;

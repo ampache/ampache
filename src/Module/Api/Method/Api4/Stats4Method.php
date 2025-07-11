@@ -158,28 +158,28 @@ final class Stats4Method
         if ($type === 'song') {
             switch ($input['api_format']) {
                 case 'json':
-                    echo Json4_Data::songs($results, $user);
+                    echo Json4_Data::songs($results, $user, $input['auth']);
                     break;
                 default:
-                    echo Xml4_Data::songs($results, $user);
+                    echo Xml4_Data::songs($results, $user, $input['auth']);
             }
         }
         if ($type === 'artist') {
             switch ($input['api_format']) {
                 case 'json':
-                    echo Json4_Data::artists($results, [], $user);
+                    echo Json4_Data::artists($results, [], $user, $input['auth']);
                     break;
                 default:
-                    echo Xml4_Data::artists($results, [], $user);
+                    echo Xml4_Data::artists($results, [], $user, $input['auth']);
             }
         }
         if ($type === 'album') {
             switch ($input['api_format']) {
                 case 'json':
-                    echo Json4_Data::albums($results, [], $user);
+                    echo Json4_Data::albums($results, [], $user, $input['auth']);
                     break;
                 default:
-                    echo Xml4_Data::albums($results, [], $user);
+                    echo Xml4_Data::albums($results, [], $user, $input['auth']);
             }
         }
 

@@ -72,10 +72,10 @@ final class Song5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::songs([(int) $object_id], $user, true, false);
+                echo Json5_Data::songs([(int) $object_id], $user, $input['auth'], true, false);
                 break;
             default:
-                echo Xml5_Data::songs([(int) $object_id], $user);
+                echo Xml5_Data::songs([(int) $object_id], $user, $input['auth']);
         }
 
         return true;

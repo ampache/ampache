@@ -85,10 +85,10 @@ final class Playlist4Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::playlists([$list_id], $user);
+                echo Json4_Data::playlists([$list_id], $user, $input['auth']);
                 break;
             default:
-                echo Xml4_Data::playlists([$list_id], $user);
+                echo Xml4_Data::playlists([$list_id], $user, $input['auth']);
         }
 
         return true;
