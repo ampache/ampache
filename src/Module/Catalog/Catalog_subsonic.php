@@ -502,7 +502,7 @@ class Catalog_subsonic extends Catalog
 
         $this->_createClient();
 
-        $sql          = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?;";
+        $sql          = "SELECT `id`, `file`, substring_index(file,'.',-1) AS `extension` FROM `song` WHERE `catalog` = ?;";
         $db_results   = Dba::read($sql, [$this->catalog_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $file_target = ($row['id'] && $cache_target === $row['extension'])
