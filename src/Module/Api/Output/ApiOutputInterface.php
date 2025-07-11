@@ -87,7 +87,7 @@ interface ApiOutputInterface
 
     /**
      * @param list<int|string> $albums
-     * @param array $include
+     * @param string[] $include
      * @param User $user
      * @param string $auth
      * @param bool $encode
@@ -102,7 +102,7 @@ interface ApiOutputInterface
         string $auth,
         bool $encode = true,
         bool $asObject = true
-    );
+    ): array|string;
 
     /**
      * This generates a standard JSON Success message

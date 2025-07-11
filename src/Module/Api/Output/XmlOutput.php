@@ -117,7 +117,7 @@ final class XmlOutput implements ApiOutputInterface
      * At the moment, this method just acts as a proxy
      *
      * @param list<int|string> $albums
-     * @param array $include
+     * @param string[] $include
      * @param User $user
      * @param string $auth
      * @param bool $encode
