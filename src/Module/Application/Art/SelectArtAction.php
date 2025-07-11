@@ -102,7 +102,7 @@ final class SelectArtAction extends AbstractArtAction
         $art->insert($image, $mime);
 
         return $this->responseFactory
-            ->createResponse(StatusCode::FOUND)
+            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 $burl

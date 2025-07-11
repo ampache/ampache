@@ -166,13 +166,13 @@ final class GetIndexesMethod
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 Json_Data::set_count($browse->get_total());
-                echo Json_Data::indexes($results, $type, $user, $include);
+                echo Json_Data::indexes($results, $type, $user, $input['auth'], $include);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 Xml_Data::set_count($browse->get_total());
-                echo Xml_Data::indexes($results, $type, $user, true, $include);
+                echo Xml_Data::indexes($results, $type, $user, $input['auth'], true, $include);
         }
 
         return true;

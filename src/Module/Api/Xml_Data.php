@@ -493,11 +493,12 @@ class Xml_Data
      * @param list<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $object_type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param User $user
+     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node.
      * @param bool $include include episodes from podcasts or tracks in a playlist
      * @return string
      */
-    public static function indexes(array $objects, string $object_type, User $user, bool $full_xml = true, bool $include = false): string
+    public static function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -520,7 +521,7 @@ class Xml_Data
             case 'song_artist':
                 foreach ($objects as $object_id) {
                     if ($include) {
-                        $string .= self::artists([(int)$object_id], ['songs', 'albums'], $user, false);
+                        $string .= self::artists([(int)$object_id], ['songs', 'albums'], $user, $auth, false);
                     } else {
                         $artist = new Artist((int)$object_id);
                         if ($artist->isNew()) {
@@ -541,7 +542,7 @@ class Xml_Data
             case 'album':
                 foreach ($objects as $object_id) {
                     if ($include) {
-                        $string .= self::albums([(int)$object_id], ['songs'], $user, false);
+                        $string .= self::albums([(int)$object_id], ['songs'], $user, $auth, false);
                     } else {
                         $album = new Album((int)$object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
@@ -609,7 +610,7 @@ class Xml_Data
                         if ($include) {
                             $episodes = $podcast->getEpisodeIds();
                             foreach ($episodes as $episode_id) {
-                                $string .= self::podcast_episodes([$episode_id], $user, false);
+                                $string .= self::podcast_episodes([$episode_id], $user, $auth, false);
                             }
                         }
                         $string .= "\t</podcast>\n";
@@ -617,10 +618,10 @@ class Xml_Data
                 }
                 break;
             case 'podcast_episode':
-                $string .= self::podcast_episodes($objects, $user, false);
+                $string .= self::podcast_episodes($objects, $user, $auth, false);
                 break;
             case 'video':
-                $string .= self::videos($objects, $user, false);
+                $string .= self::videos($objects, $user, $auth, false);
                 break;
             case 'live_stream':
                 $string .= self::live_streams($objects, $user, false);
@@ -640,7 +641,7 @@ class Xml_Data
      * @param User $user
      * @return string
      */
-    public static function searches(array $searches, array $counts, User $user): string
+    public static function searches(array $searches, array $counts, User $user, string $auth): string
     {
         $string = "<search>\n";
 
@@ -737,10 +738,10 @@ class Xml_Data
                     if (($count > self::$limit || self::$offset > 0) && self::$limit) {
                         $objects = array_splice($objects, self::$offset, self::$limit);
                     }
-                    $string .= self::podcast_episodes($objects, $user, false);
+                    $string .= self::podcast_episodes($objects, $user, $auth, false);
                     break;
                 case 'video':
-                    $string .= self::videos($objects, $user, false);
+                    $string .= self::videos($objects, $user, $auth, false);
                     break;
                 case 'live_stream':
                     $string .= self::live_streams($objects, $user, false);
@@ -957,10 +958,11 @@ class Xml_Data
      * @param list<int|string> $objects Artist id's to include
      * @param string[] $include Array of other items to include.
      * @param User $user
+     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node.
      * @return string
      */
-    public static function artists(array $objects, array $include, User $user, bool $full_xml = true): string
+    public static function artists(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -983,11 +985,11 @@ class Xml_Data
             $tag_string  = self::genre_string($artist->get_tags());
 
             // Build the Art URL, include session
-            $art_url = Art::url($artist->id, 'artist');
+            $art_url = Art::url($artist->id, 'artist', $auth);
 
             // Handle includes
-            $albums = (in_array("albums", $include)) ? self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, false) : '';
-            $songs  = (in_array("songs", $include)) ? self::songs(self::getSongRepository()->getByArtist($artist->id), $user, false) : '';
+            $albums = (in_array("albums", $include)) ? self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, $auth, false) : '';
+            $songs  = (in_array("songs", $include)) ? self::songs(self::getSongRepository()->getByArtist($artist->id), $user, $auth, false) : '';
 
             $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<albumcount>" . $artist->album_count . "</albumcount>\n\t<songs>" . $songs . "</songs>\n\t<songcount>" . $artist->song_count . "</songcount>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($artist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<time><![CDATA[" . $artist->time . "]]></time>\n\t<yearformed>" . (int)$artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
         } // end foreach artists
@@ -1003,10 +1005,11 @@ class Xml_Data
      * @param list<int|string> $objects Album id's to include
      * @param string[] $include Array of other items to include.
      * @param User $user
+     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node.
      * @return string
      */
-    public static function albums(array $objects, array $include, User $user, bool $full_xml = true): string
+    public static function albums(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1052,10 +1055,10 @@ class Xml_Data
             }
 
             // Handle includes
-            $songs = (in_array("songs", $include)) ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false) : '';
+            $songs = (in_array("songs", $include)) ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, $auth, false) : '';
 
             // Build the Art URL, include session
-            $art_url = Art::url($album->id, 'album');
+            $art_url = Art::url($album->id, 'album', $auth);
             $string .= "\t<time>" . $album->time . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<diskcount>" . $album->disk_count . "</diskcount>\n\t<type>" . $album->release_type . "</type>\n" . self::genre_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($album->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n\t<mbid_group><![CDATA[" . $album->mbid_group . "]]></mbid_group>\n</album>\n";
         } // end foreach
 
@@ -1069,10 +1072,11 @@ class Xml_Data
      *
      * @param list<int|string> $objects Playlist id's to include
      * @param User $user
+     * @param string $auth
      * @param bool $songs
      * @return string
      */
-    public static function playlists(array $objects, User $user, bool $songs = false): string
+    public static function playlists(array $objects, User $user, string $auth, bool $songs = false): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1123,7 +1127,7 @@ class Xml_Data
                 $md5   = null;
             }
 
-            $art_url           = Art::url($playlist->id, $object_type, Core::get_request('auth'));
+            $art_url           = Art::url($playlist->id, $object_type, $auth);
             $playlist_name     = $playlist->get_fullname();
             $playlist_user     = $playlist->user;
             $playlist_username = $playlist->username;
@@ -1178,7 +1182,7 @@ class Xml_Data
      * @param list<int> $bookmarks Bookmark id's to include
      * @param bool $include if true include the object in the bookmark
      */
-    public static function bookmarks(array $bookmarks, bool $include = false): string
+    public static function bookmarks(array $bookmarks, string $auth, bool $include = false): string
     {
         $bookmarkRepository = self::getBookmarkRepository();
 
@@ -1197,13 +1201,13 @@ class Xml_Data
             ) {
                 switch ($bookmark->object_type) {
                     case 'song':
-                        $string .= self::songs([$bookmark->object_id], $user, false);
+                        $string .= self::songs([$bookmark->object_id], $user, $auth, false);
                         break;
                     case 'podcast_episode':
-                        $string .= self::podcast_episodes([$bookmark->object_id], $user, false);
+                        $string .= self::podcast_episodes([$bookmark->object_id], $user, $auth, false);
                         break;
                     case 'video':
-                        $string .= self::videos([$bookmark->object_id], $user, false);
+                        $string .= self::videos([$bookmark->object_id], $user, $auth, false);
                         break;
                 }
             }
@@ -1250,10 +1254,11 @@ class Xml_Data
      *
      * @param list<int|string> $objects Podcast id's to include
      * @param User $user
+     * @param string $auth
      * @param bool $episodes include the episodes of the podcast //optional
      * @return string
      */
-    public static function podcasts(array $objects, User $user, bool $episodes = false): string
+    public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1274,12 +1279,12 @@ class Xml_Data
             $rating      = new Rating($podcast->getId(), 'podcast');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($podcast->getId(), 'podcast');
-            $art_url     = Art::url($podcast->getId(), 'podcast', Core::get_request('auth'));
+            $art_url     = Art::url($podcast->getId(), 'podcast', $auth);
             $string .= "<podcast id=\"$podcast_id\">\n\t<name><![CDATA[" . $podcast->get_fullname() . "]]></name>\n\t<description><![CDATA[" . $podcast->get_description() . "]]></description>\n\t<language><![CDATA[" . scrub_out($podcast->getLanguage()) . "]]></language>\n\t<copyright><![CDATA[" . scrub_out($podcast->getCopyright()) . "]]></copyright>\n\t<feed_url><![CDATA[" . $podcast->getFeedUrl() . "]]></feed_url>\n\t<generator><![CDATA[" . scrub_out($podcast->getGenerator()) . "]]></generator>\n\t<website><![CDATA[" . scrub_out($podcast->getWebsite()) . "]]></website>\n\t<build_date><![CDATA[" . $podcast->getLastBuildDate()->format(DATE_ATOM) . "]]></build_date>\n\t<sync_date><![CDATA[" . $podcast->getLastSyncDate()->format(DATE_ATOM) . "]]></sync_date>\n\t<public_url><![CDATA[" . $podcast->get_link() . "]]></public_url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($podcast->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n";
             if ($episodes) {
                 $results = $podcast->getEpisodeIds();
                 if (!empty($results)) {
-                    $string .= self::podcast_episodes($results, $user, false);
+                    $string .= self::podcast_episodes($results, $user, $auth, false);
                 }
             }
             $string .= "\t</podcast>\n";
@@ -1295,10 +1300,11 @@ class Xml_Data
      *
      * @param list<int|string> $objects Podcast_Episode id's to include
      * @param User $user
+     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node.
      * @return string
      */
-    public static function podcast_episodes(array $objects, User $user, bool $full_xml = true): string
+    public static function podcast_episodes(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1316,7 +1322,7 @@ class Xml_Data
             $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($episode->id, 'podcast_episode');
-            $art_url     = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
+            $art_url     = Art::url($episode->podcast, 'podcast', $auth);
             $string .= "\t<podcast_episode id=\"$episode_id\">\n\t\t<title><![CDATA[" . $episode->get_fullname() . "]]></title>\n\t\t<name><![CDATA[" . $episode->get_fullname() . "]]></name>\n\t\t<podcast id=\"$episode->podcast\">\n\t\t\t<name><![CDATA[" . $episode->getPodcastName() . "]]></name></podcast>\n\t\t<description><![CDATA[" . $episode->get_description() . "]]></description>\n\t\t<category><![CDATA[" . $episode->getCategory() . "]]></category>\n\t\t<author><![CDATA[" . $episode->getAuthor() . "]]></author>\n\t\t<author_full><![CDATA[" . $episode->getAuthor() . "]]></author_full>\n\t\t<website><![CDATA[" . $episode->getWebsite() . "]]></website>\n\t\t<pubdate><![CDATA[" . $episode->getPubDate()->format(DATE_ATOM) . "]]></pubdate>\n\t\t<state><![CDATA[" . $episode->getState()->toDescription() . "]]></state>\n\t\t<filelength><![CDATA[" . $episode->get_f_time(true) . "]]></filelength>\n\t\t<filesize><![CDATA[" . $episode->getSizeFormatted() . "]]></filesize>\n\t\t<filename><![CDATA[" . $episode->getFileName() . "]]></filename>\n\t\t<mime><![CDATA[" . ((isset($episode->mime)) ? $episode->mime : '') . "]]></mime>\n\t\t<time>" . (int)$episode->time . "</time>\n\t\t<size>" . (int)$episode->size . "</size>\n\t<bitrate>" . $episode->bitrate . "</bitrate>\n\t<stream_bitrate>" . $episode->bitrate . "</stream_bitrate>\n\t<rate>" . $episode->rate . "</rate>\n\t<mode><![CDATA[" . $episode->mode . "]]></mode>\n\t<channels>" . $episode->channels . "</channels>\n\t\t<public_url><![CDATA[" . $episode->get_link() . "]]></public_url>\n\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t\t<catalog>" . $episode->catalog . "</catalog>\n\t\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($episode->has_art() ? 1 : 0) . "</has_art>\n\t\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t\t\t<rating>" . $user_rating . "</rating>\n\t\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t\t<playcount>" . $episode->total_count . "</playcount>\n\t\t<played>" . $episode->played . "</played>\n\t</podcast_episode>\n";
         } // end foreach
 
@@ -1330,10 +1336,11 @@ class Xml_Data
      * (Spiffy isn't it!)
      * @param list<int|string> $objects
      * @param User $user
+     * @param string $auth
      * @param bool $full_xml
      * @return string
      */
-    public static function songs(array $objects, User $user, bool $full_xml = true): string
+    public static function songs(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1371,7 +1378,7 @@ class Xml_Data
             $has_art       = Art::has_db($song->id, 'song');
             $art_object    = ($show_song_art && $has_art) ? $song->id : $song->album;
             $art_type      = ($show_song_art && $has_art) ? 'song' : 'album';
-            $art_url       = Art::url($art_object, $art_type, Core::get_request('auth'));
+            $art_url       = Art::url($art_object, $art_type, $auth);
             $songType      = $song->type;
             $songMime      = $song->mime;
             $songBitrate   = $song->bitrate;
@@ -1465,10 +1472,11 @@ class Xml_Data
      *
      * @param list<int|string> $objects Video id's to include
      * @param User $user
+     * @param string $auth
      * @param bool $full_xml
      * @return string
      */
-    public static function videos(array $objects, User $user, bool $full_xml = true): string
+    public static function videos(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
         $count = self::$count ?? count($objects);
         $md5   = md5(serialize($objects));
@@ -1485,7 +1493,7 @@ class Xml_Data
             $rating      = new Rating($video->id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($video->id, 'video');
-            $art_url     = Art::url($video->id, 'video', Core::get_request('auth'));
+            $art_url     = Art::url($video->id, 'video', $auth);
 
             $string .= "<video id=\"" . $video->id . "\">\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->get_f_resolution() . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::genre_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($video->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $video->total_count . "</playcount>\n</video>\n";
         } // end foreach
@@ -1507,7 +1515,7 @@ class Xml_Data
      * @param User $user
      * @return string
      */
-    public static function democratic(array $object_ids, User $user): string
+    public static function democratic(array $object_ids, User $user, string $auth): string
     {
         $democratic = Democratic::get_current_playlist($user);
         $string     = '';
@@ -1528,7 +1536,7 @@ class Xml_Data
             $tag_string  = self::genre_string($song->get_tags());
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
-            $art_url     = Art::url($song->album, 'album', Core::get_request('auth'));
+            $art_url     = Art::url($song->album, 'album', $auth);
             $songType    = $song->type;
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
@@ -1549,9 +1557,9 @@ class Xml_Data
      *
      * This handles creating an xml document for a user
      */
-    public static function user(User $user, bool $fullinfo): string
+    public static function user(User $user, bool $fullinfo, string $auth): string
     {
-        $art_url = Art::url($user->id, 'user', $_REQUEST['auth'] ?? '');
+        $art_url = Art::url($user->id, 'user', $auth);
         $string  = "<user id=\"" . $user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n";
         if ($fullinfo) {
             $string .= "\t<auth><![CDATA[" . $user->apikey . "]]></auth>\n\t<email><![CDATA[" . $user->email . "]]></email>\n\t<access>" . (int)$user->access . "</access>\n\t<streamtoken>" . $user->streamtoken . "</streamtoken>\n\t<fullname_public>" . (int)$user->fullname_public . "</fullname_public>\n\t<validation><![CDATA[" . $user->validation . "]]></validation>\n\t<disabled>" . (int)$user->disabled . "</disabled>\n";

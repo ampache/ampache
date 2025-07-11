@@ -36,9 +36,9 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
 {
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
-    private const VERSION = '7.6.2'; // AMPACHE_VERSION
+    private const VERSION = '7.7.0'; // AMPACHE_VERSION
 
-    private const CONFIG_VERSION = '82';
+    private const CONFIG_VERSION = '83';
 
     private const STRUCTURE = 'client'; // Project release is using either the public html folder or squashed structure
 

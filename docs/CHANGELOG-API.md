@@ -4,6 +4,11 @@
 
 This version is being released for Ampache7 **only**
 
+### Added
+
+* ALL
+  * Browse filter conditions `user_flag`, `user_rating`. (e.g. `cond=user_rating,5` `cond=user_flag,1`)
+
 ### Changed
 
 * API6

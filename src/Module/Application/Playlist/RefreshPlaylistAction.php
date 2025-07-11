@@ -74,7 +74,7 @@ final class RefreshPlaylistAction implements ApplicationActionInterface
 
         // Go elsewhere
         return $this->responseFactory
-            ->createResponse(StatusCode::FOUND)
+            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf('%s/browse.php?action=playlist', $this->configContainer->getWebPath('/client'))

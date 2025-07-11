@@ -75,7 +75,7 @@ final class AdminUpdatePreferencesAction implements ApplicationActionInterface
         $this->preferencesFromRequestUpdater->update((int) Core::get_post('user_id'));
 
         return $this->responseFactory
-            ->createResponse(StatusCode::FOUND)
+            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf(

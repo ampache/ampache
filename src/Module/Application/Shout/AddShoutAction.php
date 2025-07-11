@@ -108,7 +108,7 @@ final class AddShoutAction implements ApplicationActionInterface
         );
 
         return $this->responseFactory
-            ->createResponse(StatusCode::FOUND)
+            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf(

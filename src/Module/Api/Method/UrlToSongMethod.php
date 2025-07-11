@@ -73,10 +73,10 @@ final class UrlToSongMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::songs([(int)$url_data['id']], $user, true, false);
+                echo Json_Data::songs([(int)$url_data['id']], $user, $input['auth'], true, false);
                 break;
             default:
-                echo Xml_Data::songs([(int)$url_data['id']], $user);
+                echo Xml_Data::songs([(int)$url_data['id']], $user, $input['auth']);
         }
 
         return true;

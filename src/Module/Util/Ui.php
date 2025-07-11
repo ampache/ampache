@@ -82,11 +82,14 @@ class Ui implements UiInterface
             $rsstoken = "&rsstoken=" . $user->getRssToken();
         }
 
-        $string = '<a class="nohtml" href="' . AmpConfig::get(
-            'web_path'
-        ) . '/rss.php?type=' . $type->value . $rsstoken . $strparams . '" target="_blank">' . self::get_material_symbol(
-            'rss_feed',
-            T_('RSS Feed')
+        $string = (
+            '<a class="nohtml" href="' . AmpConfig::get('web_path') .
+            '/rss.php?type=' . $type->value .
+            $rsstoken . $strparams . '" target="_blank">' .
+            self::get_material_symbol(
+                'rss_feed',
+                T_('RSS Feed')
+            )
         );
         if (!empty($title)) {
             $string .= '&nbsp;' . $title;

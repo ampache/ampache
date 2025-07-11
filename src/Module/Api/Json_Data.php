@@ -28,7 +28,6 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -370,10 +369,11 @@ class Json_Data
      * @param list<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param User $user
+     * @param string $auth
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
-    public static function indexes(array $objects, string $type, User $user, bool $include = false): string
+    public static function indexes(array $objects, string $type, User $user, string $auth, bool $include = false): string
     {
         // here is where we call the object type
         switch ($type) {
@@ -383,36 +383,36 @@ class Json_Data
                 break;
             case 'song':
                 /** @var string $results */
-                $results = self::songs($objects, $user);
+                $results = self::songs($objects, $user, $auth);
                 break;
             case 'album':
                 $include_array = ($include) ? ['songs'] : [];
                 /** @var string $results */
-                $results = self::albums($objects, $include_array, $user);
+                $results = self::albums($objects, $include_array, $user, $auth);
                 break;
             case 'album_artist':
             case 'artist':
             case 'song_artist':
                 $include_array = ($include) ? ['songs', 'albums'] : [];
                 /** @var string $results */
-                $results = self::artists($objects, $include_array, $user);
+                $results = self::artists($objects, $include_array, $user, $auth);
                 break;
             case 'playlist':
-                $results = self::playlists($objects, $user, $include);
+                $results = self::playlists($objects, $user, $auth, $include);
                 break;
             case 'share':
                 $results = self::shares($objects);
                 break;
             case 'podcast':
-                $results = self::podcasts($objects, $user, $include);
+                $results = self::podcasts($objects, $user, $auth, $include);
                 break;
             case 'podcast_episode':
                 /** @var string $results */
-                $results = self::podcast_episodes($objects, $user);
+                $results = self::podcast_episodes($objects, $user, $auth);
                 break;
             case 'video':
                 /** @var string $results */
-                $results = self::videos($objects, $user);
+                $results = self::videos($objects, $user, $auth);
                 break;
             case 'live_stream':
                 $results = self::live_streams($objects);
@@ -716,11 +716,12 @@ class Json_Data
      * @param list<int|string> $objects Artist id's to include
      * @param string[] $include
      * @param User $user
+     * @param string $auth
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "artist"
      */
-    public static function artists(array $objects, array $include, User $user, bool $encode = true, bool $object = true): array|string
+    public static function artists(array $objects, array $include, User $user, string $auth, bool $encode = true, bool $object = true): array|string
     {
         $count  = self::$count ?? count($objects);
         $output = [
@@ -744,14 +745,14 @@ class Json_Data
             $flag        = new Userflag($artist->id, 'artist');
 
             // Build the Art URL, include session
-            $art_url = Art::url($artist->id, 'artist');
+            $art_url = Art::url($artist->id, 'artist', $auth);
 
             // Handle includes
             $albums = (in_array("albums", $include))
-                ? self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, false)
+                ? self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, $auth, false)
                 : [];
             $songs = (in_array("songs", $include))
-                ? self::songs(self::getSongRepository()->getByArtist($artist->id), $user, false)
+                ? self::songs(self::getSongRepository()->getByArtist($artist->id), $user, $auth, false)
                 : [];
 
             $JSON[] = [
@@ -798,11 +799,12 @@ class Json_Data
      * @param list<int|string> $objects Album id's to include
      * @param string[] $include
      * @param User $user
+     * @param string $auth
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "album"
      */
-    public static function albums(array $objects, array $include, User $user, bool $encode = true, bool $object = true): array|string
+    public static function albums(array $objects, array $include, User $user, string $auth, bool $encode = true, bool $object = true): array|string
     {
         $count  = self::$count ?? count($objects);
         $output = [
@@ -832,7 +834,7 @@ class Json_Data
                 : $album->year;
 
             // Build the Art URL, include session
-            $art_url = Art::url($album->id, 'album');
+            $art_url = Art::url($album->id, 'album', $auth);
 
             $objArray = [];
 
@@ -861,7 +863,7 @@ class Json_Data
 
             // Handle includes
             $songs = (in_array("songs", $include))
-                ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false)
+                ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, $auth, false)
                 : [];
 
             $objArray['time']          = (int)$album->time;
@@ -902,12 +904,13 @@ class Json_Data
      *
      * @param list<int|string> $objects Playlist id's to include
      * @param User $user
+     * @param string $auth
      * @param bool $songs
      * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "playlist"
      */
-    public static function playlists(array $objects, User $user, bool $songs = false, bool $encode = true, bool $object = true): array|string
+    public static function playlists(array $objects, User $user, string $auth, bool $songs = false, bool $encode = true, bool $object = true): array|string
     {
         $count  = self::$count ?? count($objects);
         $output = [
@@ -941,7 +944,7 @@ class Json_Data
                 $object_type    = 'playlist';
                 $playitem_total = $playlist->get_media_count('song');
             }
-            $art_url           = Art::url($playlist->id, $object_type, Core::get_request('auth'));
+            $art_url           = Art::url($playlist->id, $object_type, $auth);
             $playlist_name     = $playlist->get_fullname();
             $playlist_user     = $playlist->user;
             $playlist_username = $playlist->username;
@@ -1080,7 +1083,7 @@ class Json_Data
      * @param bool $include if true include the object in the bookmark
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function bookmarks(array $objects, bool $include = false, bool $object = true): string
+    public static function bookmarks(array $objects, string $auth, bool $include = false, bool $object = true): string
     {
         $count  = self::$count ?? count($objects);
         $output = [
@@ -1128,13 +1131,13 @@ class Json_Data
             ) {
                 switch ($bookmark_object_type) {
                     case 'song':
-                        $JSON[$count]['song'] = self::songs([(int)$bookmark_object_id], $user, false, false);
+                        $JSON[$count]['song'] = self::songs([(int)$bookmark_object_id], $user, $auth, false, false);
                         break;
                     case 'podcast_episode':
-                        $JSON[$count]['podcast_episode'] = self::podcast_episodes([(int)$bookmark_object_id], $user, false, false);
+                        $JSON[$count]['podcast_episode'] = self::podcast_episodes([(int)$bookmark_object_id], $user, $auth, false, false);
                         break;
                     case 'video':
-                        $JSON[$count]['video'] = self::videos([(int)$bookmark_object_id], $user, false, false);
+                        $JSON[$count]['video'] = self::videos([(int)$bookmark_object_id], $user, $auth, false, false);
                         break;
                 }
             }
@@ -1215,12 +1218,13 @@ class Json_Data
      *
      * @param list<int|string> $objects Podcast id's to include
      * @param User $user
+     * @param string $auth
      * @param bool $episodes include the episodes of the podcast
      * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast"
      */
-    public static function podcasts(array $objects, User $user, bool $episodes = false, bool $encode = true, bool $object = true): array|string
+    public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false, bool $encode = true, bool $object = true): array|string
     {
         $count  = self::$count ?? count($objects);
         $output = [
@@ -1244,7 +1248,7 @@ class Json_Data
             $rating              = new Rating((int)$podcast_id, 'podcast');
             $user_rating         = $rating->get_user_rating($user->getId());
             $flag                = new Userflag((int)$podcast_id, 'podcast');
-            $art_url             = Art::url((int)$podcast_id, 'podcast', Core::get_request('auth'));
+            $art_url             = Art::url((int)$podcast_id, 'podcast', $auth);
             $podcast_name        = $podcast->get_fullname();
             $podcast_description = $podcast->get_description();
             $podcast_language    = scrub_out($podcast->getLanguage());
@@ -1258,7 +1262,7 @@ class Json_Data
             $podcast_episodes    = [];
             if ($episodes) {
                 $results          = $podcast->getEpisodeIds();
-                $podcast_episodes = self::podcast_episodes($results, $user, false);
+                $podcast_episodes = self::podcast_episodes($results, $user, $auth, false);
             }
 
             // Build this element
@@ -1303,11 +1307,12 @@ class Json_Data
      *
      * @param list<int|string> $objects Podcast_Episode id's to include
      * @param User $user
+     * @param string $auth
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast_episode"
      */
-    public static function podcast_episodes(array $objects, User $user, bool $encode = true, bool $object = true): array|string
+    public static function podcast_episodes(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): array|string
     {
         $count  = self::$count ?? count($objects);
         $output = [
@@ -1328,7 +1333,7 @@ class Json_Data
             $rating      = new Rating($episode->id, 'podcast_episode');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($episode->id, 'podcast_episode');
-            $art_url     = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
+            $art_url     = Art::url($episode->podcast, 'podcast', $auth);
             $JSON[]      = [
                 "id" => (string)$episode_id,
                 "title" => $episode->get_fullname(),
@@ -1386,11 +1391,12 @@ class Json_Data
      * (Spiffy isn't it!)
      * @param list<int|string> $objects
      * @param User $user
+     * @param string $auth
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "song"
      */
-    public static function songs(array $objects, User $user, bool $encode = true, bool $object = true): array|string
+    public static function songs(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): array|string
     {
         $count  = self::$count ?? count($objects);
         $output = [
@@ -1416,7 +1422,7 @@ class Json_Data
             $rating       = new Rating((int)$song_id, 'song');
             $user_rating  = $rating->get_user_rating($user->getId());
             $flag         = new Userflag((int)$song_id, 'song');
-            $art_url      = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
+            $art_url      = Art::url($song->album, 'album', $auth);
             $songType     = $song->type;
             $songMime     = $song->mime;
             $songBitrate  = $song->bitrate;
@@ -1648,11 +1654,12 @@ class Json_Data
      *
      * @param list<int|string> $objects Video id's to include
      * @param User $user
+     * @param string $auth
      * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "video"
      */
-    public static function videos(array $objects, User $user, bool $encode = true, bool $object = true): array|string
+    public static function videos(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): array|string
     {
         $count  = self::$count ?? count($objects);
         $output = [
@@ -1672,7 +1679,7 @@ class Json_Data
             $rating      = new Rating($video->id, 'video');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($video->id, 'video');
-            $art_url     = Art::url($video->id, 'video', Core::get_request('auth'));
+            $art_url     = Art::url($video->id, 'video', $auth);
             $JSON[]      = [
                 "id" => (string)$video->id,
                 "title" => $video->title,
@@ -1716,10 +1723,11 @@ class Json_Data
      *    track_id: int,
      *    track: int}> $object_ids Object IDs
      * @param User $user
+     * @param string $auth
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string
      */
-    public static function democratic(array $object_ids, User $user, bool $object = true): string
+    public static function democratic(array $object_ids, User $user, string $auth, bool $object = true): string
     {
         if (!is_array($object_ids)) {
             $object_ids = [];
@@ -1738,7 +1746,7 @@ class Json_Data
 
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
-            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
+            $art_url     = Art::url($song->album, 'album', $auth);
             $songType    = $song->type;
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
@@ -1787,9 +1795,9 @@ class Json_Data
      *
      * This handles creating an JSON document for a user
      */
-    public static function user(User $user, bool $fullinfo, ?bool $object = true): string
+    public static function user(User $user, bool $fullinfo, string $auth, ?bool $object = true): string
     {
-        $art_url = Art::url($user->id, 'user', $_REQUEST['auth'] ?? '');
+        $art_url = Art::url($user->id, 'user', $auth);
         if ($fullinfo) {
             $JSON = [
                 "id" => (string)$user->id,
