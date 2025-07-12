@@ -62,7 +62,8 @@ usage() {
 # Generate/overwrite messages.pot file from Source-Strings
 generate_pot() {
     echo "Generating/updating pot-file"
-    xgettext    --from-code=UTF-8 \
+    xgettext    --no-location \
+                --from-code=UTF-8 \
                 --add-comment=HINT: \
                 --msgid-bugs-address="https://www.transifex.com/projects/p/ampache/" \
                 -L php \
@@ -85,7 +86,8 @@ generate_pot_utds() {
     echo ""
     echo "Generating/updating pot-file"
     echo ""
-    xgettext    --from-code=UTF-8 \
+    xgettext    --no-location \
+                --from-code=UTF-8 \
                 --add-comment=HINT: \
                 --msgid-bugs-address="https://www.transifex.com/projects/p/ampache/" \
                 -L php \
