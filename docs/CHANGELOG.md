@@ -4,7 +4,7 @@
 
 ### Added
 
-* Translations 2025-07-08
+* Translations 2025-07-12
 * Don't show the clear art button when there isn't art there
 * Browse
   * New filters `user_flag`, `user_rating` on library items
@@ -30,6 +30,10 @@
 * Use original art size when GD is disabled for URL links
 * Add the file mime to Art url links
 * Stop automatically creating thumbnails when inserting new art
+
+### Removed
+
+* Don't include log lines in translation files to reduce line changes
 
 ### Fixed
 
