@@ -36,7 +36,7 @@ This section contains all of the preferences directly relating to the interface 
 
 ### Streaming
 
-This section defines how Ampache streams your Music. Some options in here require additional configuration in the _/config/amapche.cfg.php_
+This section defines how Ampache streams your Music. Some options in here require additional configuration in the _/config/ampache.cfg.php_
 
 * **Transcode Bitrate** - This defines the bitrate you would like Ampache to attempt to transcode at. The default is 32kbps.
 

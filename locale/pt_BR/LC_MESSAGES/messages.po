@@ -1761,7 +1761,7 @@ msgstr "Um servidor MySQL com um nome de usuário e senha que possa criar/modifi
 #. HINT: %1 and %2 refer to Ampache configuration files
 #, php-format
 msgid "Your webserver has read access to the files \"%1$s\" and \"%2$s\""
-msgstr ""
+msgstr "Seu servidor web tem acesso de leitura aos arquivos \"%1$s\" e \"%2$s\""
 
 #, php-format
 msgid ""
@@ -1838,7 +1838,7 @@ msgstr "Tipo de Instalação"
 msgid ""
 "Optimize Ampache for your use case. The installer will enable/disable "
 "features automatically."
-msgstr "Otimizar o Ampache para seu caso. O instalador irá ativar/desativar recursos automaticamente."
+msgstr "Otimizar o Ampache para seu caso. O instalador irá habilitar/desabilitar recursos automaticamente."
 
 msgid "Ampache is configured for personal use with the best features."
 msgstr "O Ampache está configurado para uso pessoal com os melhores recursos."
@@ -1893,7 +1893,7 @@ msgstr "Ampache é mais do que apenas uma interface web. Vários backends são i
 msgid ""
 "Select each backend to enable. Depending on the backend, you may need to "
 "perform additional configuration."
-msgstr "Selecione cada backend a ativar. Dependendo do backend, pode ser necessário executar configurações adicionais."
+msgstr "Selecione cada backend a habilitar. Dependendo do backend, pode ser necessário executar configurações adicionais."
 
 msgid "File Insight"
 msgstr "Detalhes do arquivo"
@@ -2097,7 +2097,7 @@ msgid "Mail Inactive Users"
 msgstr "Mandar E-mail para Usuários Inativos"
 
 msgid "Inactive Users"
-msgstr "Inativar usuários"
+msgstr "Desativar usuários"
 
 msgid "From"
 msgstr "De"
@@ -2694,7 +2694,7 @@ msgid ""
 "is not strictly necessary, but enabling Ampache ID3 tag write support "
 "(disabled by default) along with mbstring.func_overload may result in "
 "irreversible corruption of your music files."
-msgstr "Isso testa se o PHP %s está definido, pois pode interromper o suporte à tag ID3. Isso não é estritamente necessário, mas ativar o suporte à gravação de tags Ampache ID3 (desativado por padrão) junto com mbstring.func_overload pode resultar em uma corrupção irreversível de seus arquivos de música."
+msgstr "Isso testa se o PHP %s está definido, pois pode interromper o suporte à tag ID3. Isso não é estritamente necessário, mas habilitar o suporte à gravação de tags Ampache ID3 (desativado por padrão) junto com mbstring.func_overload pode resultar em uma corrupção irreversível de seus arquivos de música."
 
 msgid "Configuration file readability"
 msgstr "Legibilidade do arquivo de configuração"
@@ -3253,34 +3253,34 @@ msgid "Failed to sync episodes for podcast: "
 msgstr "Falha ao sincronizar episódios para podcast:"
 
 msgid "Enable: video"
-msgstr "Ativar: vídeo"
+msgstr "Habilitar: vídeo"
 
 msgid "Not Found"
 msgstr "Não Encontrado"
 
 msgid "Enable: delete_from_disk"
-msgstr "Ativar: delete_from_disk"
+msgstr "Habilitar: delete_from_disk"
 
 msgid "Enable: podcast"
-msgstr "Ativar: podcast"
+msgstr "Habilitar: podcast"
 
 msgid "Enable: ratings"
-msgstr "Ativar: ratings"
+msgstr "Habilitar: ratings"
 
 msgid "Enable: sociable"
-msgstr "Ativar: sociable"
+msgstr "Habilitar: sociable"
 
 msgid "Enable: share"
-msgstr "Ativar: share"
+msgstr "Habilitar: share"
 
 msgid "Enable: live_stream"
-msgstr "Ativar: live_stream"
+msgstr "Habilitar: live_stream"
 
 msgid "Enable: label"
-msgstr "Ativar: label"
+msgstr "Habilitar: label"
 
 msgid "Enable: licensing"
-msgstr "Ativar: licensing"
+msgstr "Habilitar: licensing"
 
 msgid "Unable to connect to localplay controller"
 msgstr "Não foi possível conectar o controlador localplay"
@@ -3458,16 +3458,16 @@ msgid "This will disable the Localplay module"
 msgstr "Isso irá desativar o módulo Localplay"
 
 msgid "This will disable the Plugin and remove your settings"
-msgstr "Isso irá desativar o Plugin e remover suas configurações"
+msgstr "Isso irá desabilitar o Plugin e remover suas configurações"
 
 msgid "Failed to enable the Catalog module"
-msgstr "Erro ao ativar o módulo catálogo"
+msgstr "Erro ao habilitar o módulo catálogo"
 
 msgid "The Module has been enabled"
 msgstr "O Módulo foi ativado"
 
 msgid "Failed to enable the Localplay module"
-msgstr "Erro ao ativar o módulo Localplay"
+msgstr "Erro ao habilitar o módulo Localplay"
 
 msgid "Localplay has been enabled"
 msgstr "LocalPlay foi ativado"
@@ -3479,7 +3479,7 @@ msgid "The Plugin has been enabled"
 msgstr "O Plugin foi ativado"
 
 msgid "Unable to disable the Catalog module."
-msgstr "Não foi possível desativar o módulo catálogo."
+msgstr "Não foi possível desabilitar o módulo catálogo."
 
 msgid "The Module has been disabled"
 msgstr "O Módulo foi desativado"
@@ -3550,12 +3550,12 @@ msgstr "O token foi excluído"
 #. HINT: User Fullname
 #, php-format
 msgid "This will disable the user \"%s\""
-msgstr "Isso desativará o usuário \"%s\""
+msgstr "Isso desabilitará o usuário \"%s\""
 
 #. HINT: User Fullname
 #, php-format
 msgid "This will enable the user \"%s\""
-msgstr "Isso ativará o usuário \"%s\""
+msgstr "Isso habilitará o usuário \"%s\""
 
 msgid "A new user API Key has been generated"
 msgstr "Uma nova Chave API de usuário foi gerada"
@@ -4403,7 +4403,7 @@ msgid "Delete all thumbnails"
 msgstr "Excluir todas as miniaturas"
 
 msgid "Disables dry-run"
-msgstr "Desativar simulação"
+msgstr "Desabilitar simulação"
 
 msgid ""
 "Error: A minimum OR maximum height/width must be specified in the config"
@@ -6617,7 +6617,7 @@ msgstr "Tempo de inatividade da apresentação de slides do artista"
 
 #: Database preference table id 105
 msgid "Broadcast web player by default"
-msgstr "Transmita o web player por padrão"
+msgstr "Transmita o player web por padrão"
 
 #: Database preference table id 108
 msgid "Album - Group multiple disks"
@@ -6709,11 +6709,11 @@ msgstr "Álbum - Classificar por tipo de lançamento"
 
 #: Database preference table id 131
 msgid "Web Player browser notifications"
-msgstr "Notificações do navegador Web Player"
+msgstr "Notificações do navegador Player Web"
 
 #: Database preference table id 132
 msgid "Web Player browser notifications timeout (seconds)"
-msgstr "Timeout das notificações do navegador Web Player (sgundos)"
+msgstr "Timeout das notificações do navegador Player Web (segundos)"
 
 #: Database preference table id 133
 msgid "Allow Geolocation"
@@ -6810,11 +6810,11 @@ msgstr "Cache calculou os dados SQL (ex. estatísticas de cliques em mídia) usa
 
 #: Database preference table id 157
 msgid "Only add unique items to playlists"
-msgstr ""
+msgstr "Adicione apenas itens exclusivos às listas de reprodução"
 
 #: Database preference table id 158
 msgid "Set the amount of items Album/Video of the Moment will display"
-msgstr ""
+msgstr "Defina a quantidade de itens que o Álbum/Vídeo do Momento exibirá"
 
 #: Database preference table id 159
 msgid "Custom URL - Login page background"
@@ -6826,21 +6826,21 @@ msgstr "Mostrar Licença"
 
 #: Database preference table id 161
 msgid "Browse by Original Year for albums (falls back to Year)"
-msgstr ""
+msgstr "Navegar por Ano Original para álbuns (retorna ao ano)"
 
 #: Database preference table id 162
 msgid "Hide the Song Artist column for Albums with one Artist"
-msgstr ""
+msgstr "Ocultar a coluna Artista da Música para Álbuns com um artista"
 
 #: Database preference table id 163
 msgid "Hide the Genre column in browse table rows"
-msgstr ""
+msgstr "Ocultar a coluna Gênero nas linhas da tabela de navegação"
 
 #: Database preference table id 164
 msgid ""
 "Force Subsonic streams to download. (Enable scrobble in your client to "
 "record stats)"
-msgstr ""
+msgstr "Forçar o download de transmissões do Subsonic. (Ative o scrobble no seu cliente para gravar estatísticas)"
 
 #: Database preference table id 165
 msgid "Allow Ampache API3 responses"
@@ -6860,7 +6860,7 @@ msgstr "Forçar uma resposta específica da API, independentemente da versão qu
 
 #: Database preference table id 169
 msgid "Show playlist owner username in titles"
-msgstr ""
+msgstr "Mostrar nome do proprietário da playlist nos títulos"
 
 #: Database preference table id 170
 msgid "Hide playlists in Subsonic and API clients that start with this string"
@@ -6872,11 +6872,11 @@ msgstr "Ocultar listas inteligentes que correspondam aos nomes das playlists em 
 
 #: Database preference table id 172
 msgid "Show 'Album Artists' link in the main sidebar"
-msgstr ""
+msgstr "Mostrar link 'Artistas do Álbum' na barra lateral principal"
 
 #: Database preference table id 173
 msgid "Show 'Artists' link in the main sidebar"
-msgstr ""
+msgstr "Mostrar link 'Artistas' na barra lateral principal"
 
 #: Database preference table id 174
 msgid "Democratic - Use smartlists for base playlist"
@@ -6885,7 +6885,7 @@ msgstr "Democrático - Usar listas inteligentes para a playlist base"
 #: Database preference table id 175
 msgid ""
 "Remove tracks before the current playlist item in the webplayer when played"
-msgstr ""
+msgstr "Remover faixas antes do item da playlist atual no player web quando reproduzido"
 
 #: Database preference table id 176
 msgid "Allow Ampache API6 responses"
@@ -6893,25 +6893,25 @@ msgstr "Permitir respostas Ampache API6"
 
 #: Database preference table id 177
 msgid "Upload Access Level"
-msgstr ""
+msgstr "Nível de Acesso para Upload"
 
 #: Database preference table id 178
 msgid "Show Album subtitle on links (if available)"
-msgstr ""
+msgstr "Mostrar legenda do Álbum nos links (se disponível)"
 
 #: Database preference table id 179
 msgid "Show Album original year on links (if available)"
-msgstr ""
+msgstr "Mostrar o ano original do Álbum nos links (se disponível)"
 
 #: Database preference table id 180
 msgid "Show the login / registration links in the site header"
-msgstr ""
+msgstr "Mostrar os links de login/registro no cabeçalho do site"
 
 #: Database preference table id 181
 msgid ""
 "Use an alternative playback action for streaming if you have issues with "
 "playing music"
-msgstr ""
+msgstr "Use uma ação de reprodução alternativa para streaming se tiver problemas para reproduzir música"
 
 #: Database preference table id 182
 msgid "Custom timezone (Override PHP date.timezone)"
@@ -6923,47 +6923,47 @@ msgstr "Manter apenas o marcador de mídia mais recente"
 
 #: Database preference table id 184
 msgid "Default webplayer volume"
-msgstr ""
+msgstr "Volume padrão do player web"
 
 #: Database preference table id 185
 msgid "API sessions do not expire"
-msgstr ""
+msgstr "As sessões API não expiram"
 
 #: Database preference table id 186
 msgid "Show all media types in Recently Played"
-msgstr ""
+msgstr "Mostrar todos os tipos de mídia em Reproduzidos Recentemente"
 
 #: Database preference table id 187
 msgid "Enable access to your personal \"Spotify Wrapped\" from your user page"
-msgstr ""
+msgstr "Habilitar o acesso ao seu \"Spotify Wrapped\" pessoal a partir da sua página de usuário"
 
 #: Database preference table id 188
 msgid "Hide sidebar switcher arrows"
-msgstr ""
+msgstr "Ocultar setas do alternador da barra lateral"
 
 #: Database preference table id 189
 msgid "Hide the Browse menu in the sidebar"
-msgstr ""
+msgstr "Ocultar o menu Navegar na barra lateral"
 
 #: Database preference table id 190
 msgid "Hide the Dashboard menu in the sidebar"
-msgstr ""
+msgstr "Ocultar o menu Painel na barra lateral"
 
 #: Database preference table id 191
 msgid "Hide the Video menu in the sidebar"
-msgstr ""
+msgstr "Ocultar o menu Vídeo na barra lateral"
 
 #: Database preference table id 192
 msgid "Hide the Search menu in the sidebar"
-msgstr ""
+msgstr "Ocultar o menu Pesquisar na barra lateral"
 
 #: Database preference table id 193
 msgid "Hide the Playlist menu in the sidebar"
-msgstr ""
+msgstr "Ocultar o menu Playlist na barra lateral"
 
 #: Database preference table id 194
 msgid "Hide the Information menu in the sidebar"
-msgstr ""
+msgstr "Ocultar o menu Informação na barra lateral"
 
 #: Database preference table id 195
 msgid "Destination catalog"
@@ -6975,31 +6975,31 @@ msgstr "Personalizar URL - Usar seu avatar para logo do cabeçalho"
 
 #: Database preference table id 197
 msgid "Use Dashboard links for the index page header"
-msgstr ""
+msgstr "Use links do Painel para o cabeçalho da página de índice"
 
 #: Database preference table id 198
 msgid "Custom CSS Order - Browse"
-msgstr ""
+msgstr "Ordem CSS personalizada - Navegação"
 
 #: Database preference table id 199
 msgid "Custom CSS Order - Dashboard"
-msgstr ""
+msgstr "Ordem CSS personalizada - Painel"
 
 #: Database preference table id 200
 msgid "Custom CSS Order - Video"
-msgstr ""
+msgstr "Ordem CSS personalizada - Vídeo"
 
 #: Database preference table id 201
 msgid "Custom CSS Order - Playlist"
-msgstr ""
+msgstr "Ordem CSS personalizada - Playlist"
 
 #: Database preference table id 202
 msgid "Custom CSS Order - Search"
-msgstr ""
+msgstr "Ordem CSS personalizada - Pesquisa"
 
 #: Database preference table id 203
 msgid "Custom CSS Order - Information"
-msgstr ""
+msgstr "Ordem CSS personalizada - Informação"
 
 #: Database preference table id 204
 msgid ""
@@ -7077,11 +7077,11 @@ msgstr "Forçar Visão de Grade ao navegar pelo Episódio de Podcast"
 
 #: Database preference table id 222
 msgid "Show Artist column on playlist media rows"
-msgstr ""
+msgstr "Mostrar coluna Artista nas linhas de mídia da playlist"
 
 #: Database preference table id 223
 msgid "Enable legacy Subsonic API responses for compatibility issues"
-msgstr ""
+msgstr "Habilitar respostas da API Subsonic legada para problemas de compatibilidade"
 
 #: Database preference subcategory table id 77
 msgid "last.fm"

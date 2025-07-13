@@ -28,7 +28,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var bool $validationResult */
 
-$t_ampache = T_('Amapche');
+$t_ampache = T_('Ampache');
 $htmllang  = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
 $web_path  = AmpConfig::get_web_path('/client'); ?>
 <!DOCTYPE html>

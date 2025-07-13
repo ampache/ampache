@@ -4,7 +4,7 @@
 
 ### Added
 
-* Translations 2025-07-12
+* Translations 2025-07-14
 * Don't show the clear art button when there isn't art there
 * Browse
   * New filters `user_flag`, `user_rating` on library items
@@ -3139,7 +3139,7 @@ There also a few API changes to enable a bit better control for older clients.
 * Don't allow duplicate podcast feeds
 * Updated the gather art process
 * Searches will order by file/name instead of id (unless random)
-* Updated amapche.sql
+* Updated ampache.sql
 * Updated composer requirements
 * Default false config option text changed to true (no more typing, just uncomment!)
 * Compressed PNG and JPG images
