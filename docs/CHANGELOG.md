@@ -4,7 +4,7 @@
 
 ### Added
 
-* Translations 2025-07-12
+* Translations 2025-07-14
 * Don't show the clear art button when there isn't art there
 * Browse
   * New filters `user_flag`, `user_rating` on library items
