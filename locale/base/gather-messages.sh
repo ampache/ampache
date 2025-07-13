@@ -99,7 +99,7 @@ generate_pot_utds() {
         ampconf='../../config/ampache.cfg.php'
 
         echo -e "\033[32m Pot creation/update successful\033[0m\n"
-        echo -e "Reading database login information from Amapche config file\n"
+        echo -e "Reading database login information from Ampache config file\n"
 
         dbhost=$(grep -oP "(?<=database_hostname = \")[^\"\n]+" $ampconf)
         if [ ! $dbhost ]; then
@@ -150,7 +150,7 @@ generate_pot_utds() {
 
             dbpass=$(grep -oP "(?<=database_password = \")[^\"\n]+" $ampconf)
         if [ ! $dbpass ]; then
-            echo -e "\n\033[32m Info\033[0m: You haven't set a database password in your Amapche config."
+            echo -e "\n\033[32m Info\033[0m: You haven't set a database password in your Ampache config."
             echo "If this is OK, simply press enter to continue."
             read -r -p "Otherwise type one in for temporary use: " dbpass
             if [ ! $dbpass ]; then
