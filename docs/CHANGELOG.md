@@ -3135,7 +3135,7 @@ There also a few API changes to enable a bit better control for older clients.
 * Don't allow duplicate podcast feeds
 * Updated the gather art process
 * Searches will order by file/name instead of id (unless random)
-* Updated amapche.sql
+* Updated ampache.sql
 * Updated composer requirements
 * Default false config option text changed to true (no more typing, just uncomment!)
 * Compressed PNG and JPG images
