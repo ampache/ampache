@@ -3485,7 +3485,7 @@ class Subsonic_Api
         $controller = AmpConfig::get('localplay_controller', '');
         $localplay  = ($controller) ? new LocalPlay($controller) : null;
         $return     = false;
-        if (empty($controller) || empty($localplay->type) || !$localplay->connect()) {
+        if (empty($controller) || empty($localplay) || empty($localplay->type) || !$localplay->connect()) {
             debug_event(self::class, 'Error Localplay controller: ' . (empty($controller) ? 'Is not set' : $controller), 3);
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
