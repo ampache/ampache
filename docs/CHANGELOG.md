@@ -5,16 +5,15 @@
 ### Added
 
 * Translations 2025-07-14
-* Don't show the clear art button when there isn't art there
 * Browse
   * New filters `user_flag`, `user_rating` on library items
 * Config version 83
   * Add `public_images` Disable this option to require a valid user session for viewing images
 * CLI
   * cleanup:art
-    * Add option `-c|--cleanup` (Delete orphaned art files when the file is missing from local_metadata_folder)
+    * Add option `-c|--cleanup` (Delete orphaned art files when the file is missing from `local_metadata_folder`)
     * Add option `-x|--execute` (Don't delete unless you explicitly choose to delete)
-  * Add a warning for orphan catalog cache folders during run:cacheProcess
+  * Add a warning for orphan catalog cache folders during `run:cacheProcess`
 * Ampache Remote Catalogs
   * Allow verify for Remote catalogs
   * Gather art for Album and Artist objects missing art
@@ -22,13 +21,14 @@
   * Use cached files for tag updates if created in the last 30 days
 * Try to pre-cache missing files in the transcode cache on play (When enabled)
 * Put the ID back on Art links to make them unique
-* Add ssid to art links if auth enabled
+* Add session id to art links if auth is enabled
 
 ### Changed
 
+* Don't show the clear art button when there isn't art there
 * Update composer packages
-* Use original art size when GD is disabled for URL links
-* Add the file mime to Art url links
+* Use original art size when GD resizing is disabled for URL links
+* Add the file mime to Art URL links
 * Stop automatically creating thumbnails when inserting new art
 
 ### Removed
@@ -54,9 +54,9 @@
   * Ensure an ID is returned for cleaning
   * Don't error on the first track when `song_tags` fails
   * Cache path was using the base folder instead of the numbered subfolders
-* Don't gather file art when the file is a url
+* Don't gather file art when the file is a URL
 * Delete Art cache when the art is updated
-* Art urls were not sending auth session correctly
+* Art URLs were not sending auth session correctly
 * Enforce session requirements on art URLs correctly
 * Subsonic
   * Incorrect case for `getOpenSubsonicExtensions` on old Subsonic class
@@ -832,7 +832,7 @@ Fixed some slowdowns due to preference name and location look ups happening for 
 * Respect geolocation setting in stats calls and only check valid data
 * Align 'Post Shout' and 'Graphs' text on artist page
 * Missing 'default' string for album_sort (Should match on default but be explicit)
-* Double `/` in JS url
+* Double `/` in JS URL
 * Sidebar cookie, JavaScript and visual state were a bit of a disaster
 * Look for the expanded class in the sidebar before toggling collapse
 
@@ -1441,7 +1441,7 @@ As an end of year bonus you can access your own Ampache Wrapped from the user pa
 ### Fixed
 
 * Empty global error on index page
-* Check the file/url before importing with `import_playlist`
+* Check the file/URL before importing with `import_playlist`
 * Large docstring cleanup: remove unneeded tags and trim names
 * Correct ip history rendering in case of a invalid user
 * Make sure something is also unplayed when total_count is 0
@@ -2549,7 +2549,7 @@ API3 is not recommended for use outside of running old applications and it is re
 
 * Get image from more tag types
 * Translation Updates Nov 2021
-* Added the ability to play random songs from a playlist with a play url
+* Added the ability to play random songs from a playlist with a play URL
 * Update AmpacheRatingMatch.php to allow writing ratings to file tags
   * Enable 'Save ratings to file tags when changed' on the plugin page
   * write_tags must be enabled in the config file
@@ -2599,7 +2599,7 @@ API3 is not recommended for use outside of running old applications and it is re
 * garbage collection for playlist images
 * Stats when skipping songs with 0 plays
 * More PHP8 runtime errors
-* Fixed single song random playback using a play url
+* Fixed single song random playback using a play URL
 * Make sure we error if php_intl module isn't found
 
 ## Ampache 5.1.1-release
@@ -2641,7 +2641,7 @@ API3 is not recommended for use outside of running old applications and it is re
 * Setting Localplay instance would not update the preference
 * Advanced search (Random) wasn't working in php8
 * Fixed returning the correct objects for advanced search (Random)
-* Some objects would add transcode_to to their play url
+* Some objects would add transcode_to to their play URL
 * Set system prefs for mb and tadb plugins
 * Updating a channel in php8
 * Get tmp_playlist by session (could get confused and never retrieve items)
@@ -3805,7 +3805,7 @@ Notes about this release that can't be summed up in a log line
 * Enabled use of cache in PHPCs
 * All files now use UTF8 without BOM
 * Now require Exact catalog name match on catalog update
-* Port 443 removed from play url
+* Port 443 removed from play URL
 * Now test all images found to select the one with the good dimensions
 * Rewrote LDAP class
 * Song count in handshake now matches the number returned from songs
