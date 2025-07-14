@@ -1246,22 +1246,12 @@ parameters:
 			path: src/Module/Authentication/AuthenticationManager.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\AuthenticationManager\\:\\:tokenLogin\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/AuthenticationManager.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\AuthenticationManagerInterface\\:\\:login\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/AuthenticationManagerInterface.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\AuthenticationManagerInterface\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/AuthenticationManagerInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\AuthenticationManagerInterface\\:\\:tokenLogin\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/AuthenticationManagerInterface.php
 

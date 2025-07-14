@@ -83,7 +83,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         return $result;
     }
 
-    /*
+    /**
      * @return array{
      *     success?: bool,
      *     type?: string,
