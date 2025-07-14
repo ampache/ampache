@@ -77,7 +77,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     public ?string $link = null;
 
-    /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
+    /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
     private ?string $f_link = null;
@@ -483,7 +483,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Get item tags.
-     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
      */
     public function get_tags(): array
     {

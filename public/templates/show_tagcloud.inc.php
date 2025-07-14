@@ -39,7 +39,7 @@ $ui = $dic->get(UiInterface::class);
 
 /** @var UiInterface $ui */
 /** @var Browse $browse */
-/** @var list<array{id: int, name: string, is_hidden: int, count: int}> $object_ids */
+/** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $object_ids */
 /** @var string $browse_type */
 /** @var string $countOrder */
 

@@ -58,7 +58,7 @@ class Broadcast extends database_object implements library_item
 
     public int $song_position = 0;
 
-    /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
+    /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
     private ?string $f_link = null;
@@ -199,7 +199,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get item tags.
-     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
      */
     public function get_tags(): array
     {

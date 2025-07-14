@@ -140,7 +140,7 @@ class Json4_Data
      * tags_array
      *
      * This returns the formatted 'tags' array for a JSON document
-     * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
+     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      * @param bool $simple
      * @return array<array{id?: string, name?: string}>
      */

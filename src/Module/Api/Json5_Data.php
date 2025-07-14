@@ -161,7 +161,7 @@ class Json5_Data
      * genre_array
      *
      * This returns the formatted 'genre' array for a JSON document
-     * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
+     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      */
     private static function genre_array(array $tags): array
     {

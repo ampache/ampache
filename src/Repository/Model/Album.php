@@ -109,7 +109,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /** @var int[] $album_artists */
     private ?array $album_artists = null;
 
-    /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
+    /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
     private ?string $f_artist_name = null;
@@ -516,7 +516,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Get item tags.
-     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
      */
     public function get_tags(): array
     {
