@@ -202,7 +202,7 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addIndexes
-     * @param list<array{
+     * @param array<int, array{
      *     id: int,
      *     f_name: string,
      *     name: string,
@@ -211,7 +211,7 @@ class OpenSubsonic_Xml_Data
      *     has_art: int
      * }> $artists
      */
-    public static function addIndexes(SimpleXMLElement $xml, array $artists, int $lastModified = 0): SimpleXMLElement
+    public static function addIndexes(SimpleXMLElement $xml, array $artists, ?int $lastModified = 0): SimpleXMLElement
     {
         $xindexes = self::_addChildToResultXml($xml, 'indexes');
         $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));
@@ -235,7 +235,7 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addIndex
-     * @param list<array{
+     * @param array<int, array{
      *     id: int,
      *     f_name: string,
      *     name: string,
@@ -301,7 +301,7 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addArtists
-     * @param list<array{
+     * @param array<int, array{
      *     id: int,
      *     f_name: string,
      *     name: string,
@@ -745,7 +745,7 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addGenres
-     * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
+     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      */
     public static function addGenres(SimpleXMLElement $xml, array $tags): SimpleXMLElement
     {
@@ -1076,7 +1076,7 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addNowPlaying
-     * @param list<array{
+     * @param array<int, array{
      *     media: library_item,
      *     client: User,
      *     agent: string,
@@ -1518,7 +1518,7 @@ class OpenSubsonic_Xml_Data
      *     mediumphoto: ?string,
      *     megaphoto: ?string
      * } $info
-     * @param list<array{
+     * @param array<int, array{
      *     id: ?int,
      *     name: string,
      *     rel?: ?string,
@@ -1559,7 +1559,7 @@ class OpenSubsonic_Xml_Data
           *     mediumphoto: ?string,
           *     megaphoto: ?string
           * } $info
-     * @param list<array{
+     * @param array<int, array{
           *     id: ?int,
           *     name: string,
           *     rel?: ?string,
@@ -1573,7 +1573,7 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addSimilarSongs
-     * @param list<array{
+     * @param array<int, array{
      *     id: ?int,
      *     name?: ?string,
      *     rel?: ?string,
@@ -1598,7 +1598,7 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addSimilarSongs2
-     * @param list<array{
+     * @param array<int, array{
      *     id: ?int,
      *     name?: ?string,
      *     rel?: ?string,

@@ -187,7 +187,7 @@ class OpenSubsonic_Json_Data
      *     'created': string,
      *     'changed': string,
      *     'coverArt'?: string,
-     *     'entry'?: list<array<string, mixed>>
+     *     'entry'?: array<int, array<string, mixed>>
      * }// todo add allowedUser	Array of string
      */
     private static function _getPlaylist_Playlist(Playlist $playlist, bool $songs = false): array
@@ -238,7 +238,7 @@ class OpenSubsonic_Json_Data
      *     'created': string,
      *     'changed': string,
      *     'coverArt'?: string,
-     *     'entry'?: list<array<string, mixed>>
+     *     'entry'?: array<int, array<string, mixed>>
      * }// todo add allowedUser	Array of string
      */
     private static function _getPlaylist_Search(Search $search, bool $songs = false): array
@@ -1064,7 +1064,7 @@ class OpenSubsonic_Json_Data
      *     mediumphoto: ?string,
      *     megaphoto: ?string
      * } $info
-     * @param list<array{
+     * @param array<int, array{
      *     id: ?int,
      *     name: string,
      *     rel?: ?string,
@@ -1264,7 +1264,7 @@ class OpenSubsonic_Json_Data
      * _getIndex
      *
      * An indexed artist list.
-     * @param list<array{
+     * @param array<int, array{
      *     id: int,
      *     f_name: string,
      *     name: string,
@@ -2224,7 +2224,7 @@ class OpenSubsonic_Json_Data
      *     mediumphoto: ?string,
      *     megaphoto: ?string
      * } $info
-     * @param list<array{
+     * @param array<int, array{
      *     id: ?int,
      *     name: string,
      *     rel?: ?string,
@@ -2255,7 +2255,7 @@ class OpenSubsonic_Json_Data
      *     mediumphoto: ?string,
      *     megaphoto: ?string
      * } $info
-     * @param list<array{
+     * @param array<int, array{
      *     id: ?int,
      *     name: string,
      *     rel?: ?string,
@@ -2276,7 +2276,7 @@ class OpenSubsonic_Json_Data
      * A list of indexed Artists.
      * https://opensubsonic.netlify.app/docs/responses/artistsid3/
      * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param list<array{
+     * @param array<int, array{
      *     id: int,
      *     f_name: string,
      *     name: string,
@@ -2475,7 +2475,7 @@ class OpenSubsonic_Json_Data
      * Genres list.
      * https://opensubsonic.netlify.app/docs/responsesq
      * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
+     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      * @return array{'subsonic-response': array<string, mixed>}
      */
     public static function addGenres(array $response, array $tags): array
@@ -2496,7 +2496,7 @@ class OpenSubsonic_Json_Data
      * Artist list.
      * https://opensubsonic.netlify.app/docs/responses/indexes/
      * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param list<array{
+     * @param array<int, array{
      *     id: int,
      *     f_name: string,
      *     name: string,
@@ -2793,7 +2793,7 @@ class OpenSubsonic_Json_Data
      * nowPlaying.
      * https://opensubsonic.netlify.app/docs/responses/nowplaying/
      * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param list<array{
+     * @param array<int, array{
      *     media: library_item,
      *     client: User,
      *     agent: string,
@@ -3320,7 +3320,7 @@ class OpenSubsonic_Json_Data
      *     'visitCount': int,
      *     'object_id'?: int|string,
      *     'object_type'?: string,
-     *     'entry'?: list<array<string, mixed>>
+     *     'entry'?: array<int, array<string, mixed>>
      * }
      */
     private static function _getShare(Share $share, User $user): array
@@ -3496,7 +3496,7 @@ class OpenSubsonic_Json_Data
      * SimilarSongs list.
      * https://opensubsonic.netlify.app/docs/responses/similarsongs/
      * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param list<array{
+     * @param array<int, array{
      *     id: ?int,
      *     name?: ?string,
      *     rel?: ?string,
@@ -3525,7 +3525,7 @@ class OpenSubsonic_Json_Data
      * SimilarSongs2 list.
      * https://opensubsonic.netlify.app/docs/responses/similarsongs2/
      * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param list<array{
+     * @param array<int, array{
      *     id: ?int,
      *     name?: ?string,
      *     rel?: ?string,

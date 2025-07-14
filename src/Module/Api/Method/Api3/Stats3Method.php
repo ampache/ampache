@@ -67,7 +67,7 @@ final class Stats3Method
         if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
             $user = User::get_from_username($input['username']);
         }
-        $results = null;
+        $results = [];
         if ($type == "newest") {
             $results = Stats::get_newest("album", $limit, $offset);
         } elseif ($type == "highest") {
@@ -93,7 +93,7 @@ final class Stats3Method
             $results = self::getAlbumRepository()->getRandom($user->id, $limit);
         }
 
-        if ($results !== null) {
+        if (!empty($results)) {
             ob_end_clean();
             echo Xml3_Data::albums($results, [], $user, $input['auth']);
         }

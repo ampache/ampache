@@ -59,6 +59,7 @@ final class SongTagsMethod
      */
     public static function song_tags(array $input, User $user): bool
     {
+        unset($user);
         if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
@@ -74,10 +75,10 @@ final class SongTagsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::song_tags([$object_id], $user, $input['auth'], true, false);
+                echo Json_Data::song_tags([$object_id], $input['auth'], false);
                 break;
             default:
-                echo Xml_Data::song_tags([$object_id], $user, $input['auth']);
+                echo Xml_Data::song_tags([$object_id], $input['auth']);
         }
 
         return true;
