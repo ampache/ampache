@@ -515,7 +515,7 @@ class OpenSubsonic_Api
     {
         $size          = (int)($input['size'] ?? 10);
         $offset        = (int)($input['offset'] ?? 0);
-        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($input['musicFolderId']) : 0;
+        $musicFolderId = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($input['musicFolderId']) : 0;
         $catalogFilter = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'));
 
         // Get albums from all catalogs by default Catalog filter is not supported for all request types for now.
@@ -683,7 +683,7 @@ class OpenSubsonic_Api
         $albumOffset   = $input['albumOffset'] ?? 0;
         $songCount     = $input['songCount'] ?? 20;
         $songOffset    = $input['songOffset'] ?? 0;
-        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($input['musicFolderId']) : 0;
+        $musicFolderId = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($input['musicFolderId']) : 0;
 
         if ($artistCount > 0) {
             $data                    = [];
@@ -2039,7 +2039,7 @@ class OpenSubsonic_Api
     public static function getartists(array $input, User $user): void
     {
         unset($user);
-        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($input['musicFolderId']) : 0;
+        $musicFolderId = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($input['musicFolderId']) : 0;
         $catalogs      = [];
         if (!empty($musicFolderId) && $musicFolderId != 0) {
             $catalogs[] = $musicFolderId;
@@ -2290,12 +2290,12 @@ class OpenSubsonic_Api
     {
         set_time_limit(300);
 
-        $musicFolderId   = (isset($input['musicFolderId'])) ? self::getAmpacheId($input['musicFolderId']) : 0;
+        $musicFolderId   = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($input['musicFolderId']) : 0;
         $ifModifiedSince = $input['ifModifiedSince'] ?? '';
 
         $catalogs = [];
         if (!empty($musicFolderId) && $musicFolderId != 0) {
-            $catalogs[] = (int)$musicFolderId;
+            $catalogs[] = $musicFolderId;
         } else {
             $catalogs = $user->get_catalogs('music');
         }
@@ -2861,7 +2861,7 @@ class OpenSubsonic_Api
         $fromYear      = $input['fromYear'] ?? null;
         $toYear        = $input['toYear'] ?? null;
         $sub_id        = $input['musicFolderId'] ?? null;
-        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($sub_id) : 0;
+        $musicFolderId = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($sub_id) : 0;
 
         $data           = [];
         $data['limit']  = $size;
