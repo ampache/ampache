@@ -214,7 +214,14 @@ class Ldap
      *
      * @param string $username
      * @param string $password
-     * @return array
+     * @return array{
+     *     success: bool,
+     *     type?: string,
+     *     username?: string,
+     *     name?: string,
+     *     email?: string,
+     *     error?: string
+     * }
      */
     public static function auth($username, $password): array
     {

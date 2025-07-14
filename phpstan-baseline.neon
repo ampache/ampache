@@ -1236,11 +1236,6 @@ parameters:
 			path: src/Module/Authentication/AuthenticationManager.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\AuthenticationManager\\:\\:login\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/AuthenticationManager.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\AuthenticationManager\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/AuthenticationManager.php
@@ -1256,19 +1251,9 @@ parameters:
 			path: src/Module/Authentication/AuthenticationManagerInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\AuthenticatorInterface\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/AuthenticatorInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\AuthenticatorInterface\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/Authenticator/AuthenticatorInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\DatabaseAuthenticator\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/DatabaseAuthenticator.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\DatabaseAuthenticator\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -1276,19 +1261,9 @@ parameters:
 			path: src/Module/Authentication/Authenticator/DatabaseAuthenticator.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\ExternalAuthenticator\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/ExternalAuthenticator.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\ExternalAuthenticator\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/Authenticator/ExternalAuthenticator.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\HttpAuthenticator\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/HttpAuthenticator.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\HttpAuthenticator\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -1296,19 +1271,9 @@ parameters:
 			path: src/Module/Authentication/Authenticator/HttpAuthenticator.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\LdapAuthenticator\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/LdapAuthenticator.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\LdapAuthenticator\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/Authenticator/LdapAuthenticator.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\PamAuthenticator\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/PamAuthenticator.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\PamAuthenticator\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -1322,11 +1287,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:array_filter_key\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Ldap/Ldap.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 

@@ -45,6 +45,16 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         $this->authenticatorList = $authenticatorList;
     }
 
+    /**
+     * @return array{
+     *     success?: bool,
+     *     type?: string,
+     *     username?: string,
+     *     name?: string,
+     *     email?: string,
+     *     error?: string
+     * }
+     */
     public function login(
         string $username,
         string $password,
@@ -61,6 +71,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
 
             $result = $authenticator->auth($username, $password);
             if ($result['success'] || ($allow_ui && !empty($result['ui_required']))) {
+                // todo what is this ui_required thing?
                 break;
             }
         }

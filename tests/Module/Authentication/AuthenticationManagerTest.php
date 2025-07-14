@@ -92,7 +92,10 @@ class AuthenticationManagerTest extends MockeryTestCase
     {
         $username = 'some-username';
         $password = 'some-password';
-        $result   = ['success' => false, 'ui_required' => true];
+        $result   = [
+            'success' => false,
+            'ui_required' => true
+        ];
 
         $this->authenticator->shouldReceive('auth')
             ->with($username, $password)
