@@ -1428,16 +1428,72 @@ class Xml_Data
      * @param bool $full_xml whether to return a full XML document or just the node.
      * @return string
      */
-    public static function song_tags(array $objects, User $user, string $auth, bool $full_xml = true): string
+    public static function song_tags(array $objects,string $auth): string
     {
         $count = self::$count ?? count($objects);
-        if (($count > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
-        }
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song', $user->id) . "</total_count>\n<md5>" . md5(serialize($objects)) . "</md5>\n" : '';
+        $string = "<total_count>" . $count . "</total_count>\n<md5>" . md5(serialize($objects)) . "</md5>\n";
 
         Stream::set_session($auth);
 
+        $valid_tags = [
+            'albumartist',
+            'album',
+            'artist',
+            'artists',
+            'art',
+            'audio_codec',
+            'barcode',
+            'bitrate',
+            'catalog',
+            'catalog_number',
+            'channels',
+            'comment',
+            'composer',
+            'description',
+            'disk',
+            'disksubtitle',
+            'display_x',
+            'display_y',
+            'encoding',
+            'file',
+            'frame_rate',
+            'genre',
+            'isrc',
+            'language',
+            'lyrics',
+            'mb_albumartistid',
+            'mb_albumartistid_array',
+            'mb_albumid_group',
+            'mb_albumid',
+            'mb_artistid',
+            'mb_artistid_array',
+            'mb_trackid',
+            'mime',
+            'mode',
+            'original_name',
+            'original_year',
+            'publisher',
+            'r128_album_gain',
+            'r128_track_gain',
+            'rate',
+            'rating',
+            'release_date',
+            'release_status',
+            'release_type',
+            'replaygain_album_gain',
+            'replaygain_album_peak',
+            'replaygain_track_gain',
+            'replaygain_track_peak',
+            'size',
+            'version',
+            'summary',
+            'time',
+            'title',
+            'totaldisks',
+            'totaltracks',
+            'track',
+            'year',
+        ];
         foreach ($objects as $song_id) {
             $song = new Song((int)$song_id);
             if ($song->isNew()) {
@@ -1451,6 +1507,9 @@ class Xml_Data
             $string .= "<song_tag id=\"" . $song_id . "\">\n";
 
             foreach ($results as $tag => $value) {
+                if (!in_array($tag, $valid_tags, true)) {
+                    continue;
+                }
                 if (is_array($value)) {
                     foreach ($value as $item) {
                         $string .= "\t<" . $tag . "><![CDATA[" . $item . "]]></" . $tag . ">\n";
@@ -1463,7 +1522,7 @@ class Xml_Data
             $string .= "</song_tag>\n";
         }
 
-        return self::output_xml($string, $full_xml);
+        return self::output_xml($string);
     }
 
     /**
