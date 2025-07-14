@@ -82,7 +82,7 @@ class Query
 
     public int|string $id = 0;
 
-    public ?int $catalog = null;
+    public int $catalog = 0;
 
     public ?int $user_id = null;
 
