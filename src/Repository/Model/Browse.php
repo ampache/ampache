@@ -597,7 +597,7 @@ class Browse extends Query
                 }
             }
 
-            $name = 'browse_' . $type . '_grid_view';
+            //$name = 'browse_' . $type . '_grid_view';
             //if ((isset($_COOKIE[$name]))) {
             //    $this->set_grid_view(Core::get_cookie($name) == 'true', false);
             //}

@@ -439,7 +439,7 @@ class Dba
 
         try {
             $dbh->exec('USE `' . $database . '`');
-        } catch (PDOException $error) {
+        } catch (PDOException) {
             self::$_error = (string)json_encode($dbh->errorInfo());
             debug_event(self::class, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
         }

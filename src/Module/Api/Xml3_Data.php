@@ -544,6 +544,7 @@ class Xml3_Data
      *     track_id: int,
      *     track: int}> $object_ids Object IDs
      * @param User $user
+     * @param string $auth
      * @return string
      */
     public static function democratic(array $object_ids, User $user, string $auth): string

@@ -49,7 +49,7 @@ class AmpConfig
      * This returns a config value.
      * @return mixed|null
      */
-    public static function get(string $name, mixed $default = null)
+    public static function get(string $name, mixed $default = null): mixed
     {
         if (isset(self::$_global[$name])) {
             return self::$_global[$name];

@@ -401,7 +401,6 @@ class Art extends database_object
         debug_event(self::class, 'Insert art from url ' . $url, 4);
         $image = self::get_from_source(['url' => $url], $this->object_type);
         $rurl  = pathinfo($url);
-        $ext   = (isset($rurl['extension']) && !str_starts_with($rurl['extension'], 'php')) ? $rurl['extension'] : 'jpeg';
         $parts = parse_url($url);
 
         parse_str($parts['query'] ?? '', $query);
