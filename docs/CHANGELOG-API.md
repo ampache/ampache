@@ -11,8 +11,8 @@ This version is being released for Ampache7 **only**
 
 ### Changed
 
-* API6
-  * Send a full Art url in responses
+* ALL
+  * Send a full Art URL in responses
 
 ## API 6.8.0
 
@@ -448,8 +448,8 @@ Inconsistency with the return of object arrays and single items have been fixed 
   * New Method: user_smartlists (return user smartlists (searches) and does not include playlists)
   * New Method: playlist_add (add songs to a playlist, allowing different song parent types)
   * New Method: index (replaces get_indexes with a simpler list of id's. children can be included)
-  * Add `has_art` parameter to any object with an `art` url
-  * Add avatar url to user objects
+  * Add `has_art` parameter to any object with an `art` URL
+  * Add avatar URL to user objects
 
 ### Changed
 
@@ -493,9 +493,9 @@ Inconsistency with the return of object arrays and single items have been fixed 
 ### Fixed
 
 * ALL
-  * UrlToSong couldn't handle encoded urls
+  * UrlToSong couldn't handle encoded URLs
 * API3
-  * Video data would get an incorrect stream url
+  * Video data would get an incorrect stream URL
 * API5
   * bookmark_create: type is mandatory
 * API6
@@ -726,7 +726,7 @@ Stream token's will let you design permalinked streams and allow users to stream
   * advanced_search methods were breaking with various offset and limits
   * playlists methods parameter 'exact' always ending up false
 * Api5
-  * update_art hardcoded url to artist
+  * update_art hardcoded URL to artist
   * Typo in song bitrate xml
 
 ## API 5.5.7
@@ -757,7 +757,7 @@ Fix various runtime errors and incorrect parameters for responses.
   * `timeline` incorrect JSON attribute `data` instead of `date`
   * `catalogs` JSON had incorrect data for `last_add` and missing `enabled`
   * `albums` return an empty response with a bad artist id
-  * `download` url parameter order matching "client, action, cache"
+  * `download` URL parameter order matching "client, action, cache"
   * `catalogs` undefined filter check
   * `podcast` undefined filter check
   * `podcast_edit` undefined filter check
@@ -1105,7 +1105,7 @@ This version of the API is the first semantic version. "5.0.0"
 * get_indexes: 'playlist' now requires include=1 for xml calls if you want the tracks
 * Make filter optional in shares
 * Api::podcast_episodes
-  * "url" is now a play url (instead of a link to the episode)
+  * "url" is now a play URL (instead of a link to the episode)
   * "public_url" is now the old episode link
 
 ### Fixed
