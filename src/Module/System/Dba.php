@@ -493,6 +493,18 @@ class Dba
             return false;
         }
 
+        $sql        = "SELECT `id` FROM `preference`";
+        $db_results = self::read($sql);
+
+        if (!$db_results) {
+            return false;
+        }
+
+        // Make sure the table is there and preferences are inserted
+        if (self::num_rows($db_results) < 100) {
+            return false;
+        }
+
         return true;
     }
 

@@ -515,7 +515,7 @@ class Subsonic_Api
     {
         $size          = (int)($input['size'] ?? 10);
         $offset        = (int)($input['offset'] ?? 0);
-        $musicFolderId = (int)($input['musicFolderId'] ?? 0);
+        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($input['musicFolderId']) : 0;
         $catalogFilter = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'));
 
         // Get albums from all catalogs by default Catalog filter is not supported for all request types for now.
@@ -2035,7 +2035,7 @@ class Subsonic_Api
         unset($user);
         $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($input['musicFolderId']) : 0;
         $catalogs      = [];
-        if (!empty($musicFolderId) && $musicFolderId != '-1') {
+        if (!empty($musicFolderId) && $musicFolderId != 0) {
             $catalogs[] = $musicFolderId;
         }
 
@@ -2284,12 +2284,12 @@ class Subsonic_Api
     {
         set_time_limit(300);
 
-        $musicFolderId   = $input['musicFolderId'] ?? '-1';
+        $musicFolderId   = (isset($input['musicFolderId'])) ? self::getAmpacheId($input['musicFolderId']) : 0;
         $ifModifiedSince = $input['ifModifiedSince'] ?? '';
 
         $catalogs = [];
-        if (!empty($musicFolderId) && $musicFolderId != '-1') {
-            $catalogs[] = (int)$musicFolderId;
+        if (!empty($musicFolderId) && $musicFolderId != 0) {
+            $catalogs[] = $musicFolderId;
         } else {
             $catalogs = $user->get_catalogs('music');
         }

@@ -38,6 +38,7 @@
 ### Fixed
 
 * Bad `ampache.sql` file
+* Check the preference table has data on database insert checks
 * Installer Bootstrap code updated to support v5 changes
 * Insert rows for Songs missing from the `song_data` table
 * Art inserted from URL would insert as a PHP mime type
@@ -62,6 +63,7 @@
   * Ensure disabled songs are not added in more areas
   * Look for other possible empty arrays
   * Subsonic Remote catalogs can verify existing Song data
+  * Some lookups for `MusicFolderId` were still expecting int values
 
 ## Ampache 7.6.1
 
