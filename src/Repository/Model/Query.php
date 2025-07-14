@@ -694,9 +694,9 @@ class Query
     /**
      * set_catalog
      */
-    public function set_catalog(?int $catalog_number): void
+    public function set_catalog(?int $catalog_number = 0): void
     {
-        $this->catalog = $catalog_number;
+        $this->catalog = (int)$catalog_number;
     }
 
     /**

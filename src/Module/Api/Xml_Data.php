@@ -1423,14 +1423,12 @@ class Xml_Data
      * This returns an array of song tags populated from an array of song ids.
      *
      * @param list<int|string> $objects
-     * @param User $user
      * @param string $auth
-     * @param bool $full_xml whether to return a full XML document or just the node.
      * @return string
      */
-    public static function song_tags(array $objects,string $auth): string
+    public static function song_tags(array $objects, string $auth): string
     {
-        $count = self::$count ?? count($objects);
+        $count  = self::$count ?? count($objects);
         $string = "<total_count>" . $count . "</total_count>\n<md5>" . md5(serialize($objects)) . "</md5>\n";
 
         Stream::set_session($auth);

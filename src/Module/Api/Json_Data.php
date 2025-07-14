@@ -1542,8 +1542,7 @@ class Json_Data
      * This returns an array of song tags populated from an array of song ids.
      *
      * @param list<int|string> $objects
-     * @param User $user
-     * @param bool $encode
+     * @param string $auth
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "song"
      */
