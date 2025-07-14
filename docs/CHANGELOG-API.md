@@ -14,6 +14,11 @@ This version is being released for Ampache7 **only**
 * ALL
   * Send a full Art URL in responses
 
+### Fixed
+
+* API6
+  * song_tags: ensure only VaInfo tags are sent
+
 ## API 6.8.0
 
 This version is being released for Ampache7 **only**

@@ -1542,12 +1542,11 @@ class Json_Data
      * This returns an array of song tags populated from an array of song ids.
      *
      * @param list<int|string> $objects
-     * @param User $user
-     * @param bool $encode
+     * @param string $auth
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "song"
      */
-    public static function song_tags(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): string
+    public static function song_tags(array $objects, string $auth, bool $object = true): string
     {
         $count  = self::$count ?? count($objects);
         $output = [
@@ -1556,11 +1555,6 @@ class Json_Data
         ];
 
         Stream::set_session($auth);
-        $playlist_track = 0;
-
-        if (($count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
 
         $JSON = [];
         foreach ($objects as $song_id) {

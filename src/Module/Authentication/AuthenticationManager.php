@@ -105,7 +105,10 @@ final class AuthenticationManager implements AuthenticationManagerInterface
             }
         }
 
-        return [];
+        return [
+            'success' => false,
+            'error' => 'Token login attempt failed',
+        ];
     }
 
     /**

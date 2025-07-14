@@ -762,7 +762,7 @@ class Subsonic_Api
     /**
      * _getAmpacheIdArrays
      * @param string[] $sub_ids
-     * @return list<array{
+     * @return array<int, array{
      *     object_id: int,
      *     object_type: string,
      *     track: int
@@ -2855,7 +2855,7 @@ class Subsonic_Api
         $fromYear      = $input['fromYear'] ?? null;
         $toYear        = $input['toYear'] ?? null;
         $sub_id        = $input['musicFolderId'] ?? null;
-        $musicFolderId = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($sub_id) : 0;
+        $musicFolderId = ($sub_id) ? (int)self::getAmpacheId($sub_id) : 0;
 
         $data           = [];
         $data['limit']  = $size;
@@ -2881,7 +2881,7 @@ class Subsonic_Api
             ++$count;
         }
         if ($musicFolderId > 0) {
-            $type = self::getAmpacheType($sub_id);
+            $type = ($sub_id) ? self::getAmpacheType($sub_id) : '';
             if ($type === 'artist') {
                 $artist   = new Artist($musicFolderId);
                 $finput   = $artist->get_fullname();
@@ -3483,9 +3483,9 @@ class Subsonic_Api
 
         $object_id  = $input['id'] ?? [];
         $controller = AmpConfig::get('localplay_controller', '');
-        $localplay  = new LocalPlay($controller);
+        $localplay  = ($controller) ? new LocalPlay($controller) : null;
         $return     = false;
-        if (empty($controller) || empty($localplay->type) || !$localplay->connect()) {
+        if (empty($controller) || empty($localplay) || empty($localplay->type) || !$localplay->connect()) {
             debug_event(self::class, 'Error Localplay controller: ' . (empty($controller) ? 'Is not set' : $controller), 3);
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 

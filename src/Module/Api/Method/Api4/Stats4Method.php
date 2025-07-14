@@ -105,6 +105,7 @@ final class Stats4Method
             $limit = (int) AmpConfig::get('popular_threshold', 10);
         }
 
+        $results = [];
         switch ($input['filter'] ?? 'random') {
             case 'newest':
                 $results = Stats::get_newest($type, $limit, $offset);
@@ -149,7 +150,7 @@ final class Stats4Method
         }
 
         ob_end_clean();
-        if (!isset($results)) {
+        if (empty($results)) {
             Api4::message('error', 'No Results', '404', $input['api_format']);
 
             return false;
