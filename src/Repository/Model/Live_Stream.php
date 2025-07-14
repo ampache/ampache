@@ -114,7 +114,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
             $this->link = $web_path . '/radio.php?action=show&radio=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**

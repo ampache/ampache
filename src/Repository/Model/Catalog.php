@@ -422,7 +422,7 @@ abstract class Catalog extends database_object
     /**
      * Get item link.
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
@@ -430,7 +430,7 @@ abstract class Catalog extends database_object
             $this->link = $admin_path . '/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**

@@ -207,7 +207,7 @@ class Video extends database_object implements
             $this->has_art = Art::has_db($this->id, 'video');
         }
 
-        return $this->has_art;
+        return $this->has_art ?? false;
     }
 
     /**
@@ -245,7 +245,7 @@ class Video extends database_object implements
             $this->link = $web_path . "/video.php?action=show_video&video_id=" . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**
@@ -258,7 +258,7 @@ class Video extends database_object implements
             $this->tags = Tag::get_top_tags('video', $this->id);
         }
 
-        return $this->tags;
+        return $this->tags ?? [];
     }
 
     /**

@@ -253,7 +253,7 @@ class Song_Preview extends database_object implements Media, playable_item
             $this->link = "#";
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**

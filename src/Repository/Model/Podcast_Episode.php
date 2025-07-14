@@ -209,7 +209,7 @@ class Podcast_Episode extends database_object implements
             $this->has_art = Art::has_db($this->podcast, 'podcast');
         }
 
-        return $this->has_art;
+        return $this->has_art ?? false;
     }
 
     /**
@@ -252,7 +252,7 @@ class Podcast_Episode extends database_object implements
             $this->link = $web_path . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**

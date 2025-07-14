@@ -409,7 +409,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $this->has_art = Art::has_db($this->id, 'album');
         }
 
-        return $this->has_art;
+        return $this->has_art ?? false;
     }
 
     /**
@@ -498,7 +498,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $this->link = $web_path . '/albums.php?action=show&album=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**
@@ -524,7 +524,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $this->tags = Tag::get_top_tags('album', $this->id);
         }
 
-        return $this->tags;
+        return $this->tags ?? [];
     }
 
     /**

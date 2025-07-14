@@ -866,7 +866,7 @@ class Song extends database_object implements
             $this->artist_full_name = Artist::get_fullname_by_id($this->artist);
         }
 
-        return $this->artist_full_name;
+        return $this->artist_full_name ?? '';
     }
 
     /**
@@ -1641,7 +1641,7 @@ class Song extends database_object implements
             $this->has_art = (AmpConfig::get('show_song_art', false) && Art::has_db($this->id, 'song') || Art::has_db($this->album, 'album'));
         }
 
-        return $this->has_art;
+        return $this->has_art ?? false;
     }
 
     /**
@@ -1697,7 +1697,7 @@ class Song extends database_object implements
             $this->link = $web_path . "/song.php?action=show_song&song_id=" . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**
@@ -1710,7 +1710,7 @@ class Song extends database_object implements
             $this->tags = Tag::get_top_tags('song', $this->id);
         }
 
-        return $this->tags;
+        return $this->tags ?? [];
     }
 
     /**
@@ -1783,7 +1783,7 @@ class Song extends database_object implements
             $this->artists = self::get_parent_array($this->id);
         }
 
-        return $this->artists;
+        return $this->artists ?? [];
     }
 
     /**
@@ -1806,7 +1806,7 @@ class Song extends database_object implements
             $this->f_albumartist_link = rtrim($this->f_albumartist_link, ",&nbsp");
         }
 
-        return $this->f_albumartist_link;
+        return $this->f_albumartist_link ?? '';
     }
 
     /**
@@ -1822,7 +1822,7 @@ class Song extends database_object implements
             $this->f_album_link = "<a href=\"" . $web_path . "/albums.php?action=show&album=" . $this->album . "\" title=\"" . scrub_out($this->get_album_fullname()) . "\"> " . scrub_out($this->get_album_fullname()) . "</a>";
         }
 
-        return $this->f_album_link;
+        return $this->f_album_link ?? '';
     }
 
     /**
@@ -1838,7 +1838,7 @@ class Song extends database_object implements
             $this->f_album_disk_link = "<a href=\"" . $web_path . "/albums.php?action=show_disk&album_disk=" . $this->album_disk . "\" title=\"" . scrub_out($this->get_album_disk_fullname()) . "\"> " . scrub_out($this->get_album_disk_fullname()) . "</a>";
         }
 
-        return $this->f_album_disk_link;
+        return $this->f_album_disk_link ?? '';
     }
 
     /**

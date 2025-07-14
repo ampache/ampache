@@ -478,7 +478,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
             $this->link = $web_path . '/artists.php?action=show&artist=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**
@@ -491,7 +491,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
             $this->tags = Tag::get_top_tags('artist', $this->id);
         }
 
-        return $this->tags;
+        return $this->tags ?? [];
     }
 
     /**

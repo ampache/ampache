@@ -194,7 +194,7 @@ class Broadcast extends database_object implements library_item
             $this->link = $web_path . '/broadcast.php?id=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**
@@ -207,7 +207,7 @@ class Broadcast extends database_object implements library_item
             $this->tags = Tag::get_top_tags('broadcast', $this->id);
         }
 
-        return $this->tags;
+        return $this->tags ?? [];
     }
 
     /**
