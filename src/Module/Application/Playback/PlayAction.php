@@ -670,11 +670,11 @@ final class PlayAction implements ApplicationActionInterface
             }
 
             if (
-                $file_target &&
                 $transcode_cfg != 'never' &&
                 $transcode_to &&
                 ($bitrate === 0 || $bitrate = (int)AmpConfig::get('transcode_bitrate', 128) * 1000) &&
-                $has_cache
+                $has_cache &&
+                ($file_target !== null && is_file($file_target))
             ) {
                 $this->logger->debug(
                     'Found pre-cached file {' . $file_target . '}',
