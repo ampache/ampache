@@ -836,7 +836,9 @@ class OpenSubsonic_Api
             // client.
             $headers      = apache_request_headers();
             $reqheaders   = [];
-            $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
+            if (isset($headers['User-Agent'])) {
+                $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
+            }
             if (isset($headers['Range'])) {
                 $reqheaders[] = "Range: " . $headers['Range'];
             }
