@@ -31,14 +31,21 @@ namespace Ampache\Config;
  */
 final class ConfigContainer implements ConfigContainerInterface
 {
+    /** @var array<string, mixed> $configuration */
     private array $configuration;
 
+    /**
+     * @param array<string, mixed> $configuration
+     */
     public function __construct(
         array $configuration
     ) {
         $this->configuration = $configuration;
     }
 
+    /**
+     * @param array<string, mixed> $configuration
+     */
     public function updateConfig(array $configuration): ConfigContainerInterface
     {
         $this->configuration = array_merge(
@@ -49,7 +56,7 @@ final class ConfigContainer implements ConfigContainerInterface
         return $this;
     }
 
-    public function get(string $configKey)
+    public function get(string $configKey): mixed
     {
         return $this->configuration[$configKey] ?? null;
     }

@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Config;
 
 use Ampache\Module\System\AmpError;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Config Class
@@ -119,6 +121,10 @@ class AmpConfig
      * set_by_array
      *
      * This is the same as the set function except it takes an array as input.
+     * @param array<string, mixed> $array
+     * @param bool $clobber
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public static function set_by_array(array $array, bool $clobber = false): void
     {
