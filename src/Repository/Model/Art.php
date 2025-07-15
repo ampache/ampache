@@ -1611,10 +1611,6 @@ class Art extends database_object
             $imgurl .= '&kind=' . $kind;
         }
 
-        if ($has_db) {
-            $imgurl .= '&id=' . $art->id;
-        }
-
         // This to keep browser cache feature but force a refresh in case image just changed
         if ($has_db) {
             if ($art->has_db_info($out_size)) {
