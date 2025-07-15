@@ -57,6 +57,8 @@ use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
+use Ampache\Plugin\AmpacheMusicBrainz;
+use Ampache\Plugin\AmpacheTheaudiodb;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
@@ -692,10 +694,8 @@ abstract class Catalog extends database_object
 
     /**
      * Get catalog info from table.
-     * @param int $object_id
-     * @param string $table_name
      */
-    public function get_info($object_id, $table_name = 'catalog'): array
+    public function get_info(int $object_id, ?string $table_name = 'catalog'): array
     {
         $info = parent::get_info($object_id, $table_name);
 
@@ -2308,7 +2308,7 @@ abstract class Catalog extends database_object
             if (in_array($plugin_name, $plugin_list)) {
                 // only load metadata plugins you enable
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null && $plugin->load($user) && $overwrites) {
+                if (($plugin->_plugin instanceof AmpacheMusicBrainz || $plugin->_plugin instanceof AmpacheTheaudiodb) && $plugin->load($user) && $overwrites) {
                     debug_event(self::class, "get_external_metadata with: " . $plugin_name, 3);
                     // Run through items and refresh info
                     switch ($object_type) {

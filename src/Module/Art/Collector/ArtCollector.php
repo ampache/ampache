@@ -27,6 +27,7 @@ namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Plugin\PluginGatherArtsInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
@@ -76,7 +77,7 @@ final class ArtCollector implements ArtCollectorInterface
      * @param int $limit
      * @return array<int, array{
      *     'raw'?: string,
-     *     'db'?: bool,
+     *     'db'?: int,
      *     'url'?: string,
      *     'title'?: string,
      *     'mime'?: string
@@ -148,7 +149,7 @@ final class ArtCollector implements ArtCollectorInterface
                 $plugin            = new Plugin($method);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version > 0) {
-                    if ($plugin->_plugin !== null && $plugin->load($user)) {
+                    if ($plugin->_plugin instanceof PluginGatherArtsInterface && $plugin->load($user)) {
                         $data = $plugin->_plugin->gather_arts($type, $options, $limit);
                     }
                 }

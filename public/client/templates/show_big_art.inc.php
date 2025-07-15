@@ -26,7 +26,9 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Art;
 
+$art_url  = Art::url((int)Core::get_get('id'), 'album');
 $htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US')); ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
@@ -39,7 +41,7 @@ $htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US')); ?>
 <body onload="self.resizeTo(document.images[0].width+30, document.images[0].height+70)">
 <?php
 echo '<a href="javascript:window.close()" title="' . T_('Click to close window') . '">';
-echo '<img src="' . AmpConfig::get_web_path('/client') . '/image.php?object_id=' . scrub_out(Core::get_get('id')) . '&object_type=album" alt="" />';
+echo '<img src="' . $art_url . '" alt="" />';
 echo "</a>"; ?>
 </body>
 </html>

@@ -4396,16 +4396,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_artists\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_custom_play_actions\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:has_info\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -4442,11 +4432,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:get_user_data\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:has_info\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 

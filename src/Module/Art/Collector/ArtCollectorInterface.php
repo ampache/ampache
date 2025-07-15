@@ -34,7 +34,7 @@ interface ArtCollectorInterface
      * @param int $limit
      * @return array<int, array{
      *     'raw'?: string,
-     *     'db'?: bool,
+     *     'db'?: int,
      *     'url'?: string,
      *     'title'?: string,
      *     'mime'?: string

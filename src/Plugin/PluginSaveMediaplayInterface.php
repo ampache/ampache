@@ -32,4 +32,10 @@ interface PluginSaveMediaplayInterface extends AmpachePluginInterface
      * This takes care of queueing and then submitting the tracks.
      */
     public function save_mediaplay(Song $song): bool;
+
+    /**
+     * set_flag
+     * This takes care of spreading your love on ListenBrainz
+     */
+    public function set_flag(Song $song, bool $flagged): void;
 }

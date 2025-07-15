@@ -34,6 +34,8 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
 use Ampache\Module\Wanted\WantedManagerInterface;
+use Ampache\Plugin\PluginProcessWantedInterface;
+use Ampache\Plugin\PluginSongPreviewInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
@@ -266,7 +268,7 @@ class Wanted extends database_object
             $user = Core::get_global('user');
             foreach (Plugin::get_plugins(PluginTypeEnum::WANTED_LOOKUP) as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null && $plugin->load($user)) {
+                if ($plugin->_plugin instanceof PluginProcessWantedInterface && $plugin->load($user)) {
                     debug_event(self::class, 'Using Wanted Process plugin: ' . $plugin_name, 5);
                     $plugin->_plugin->process_wanted($this);
                 }
@@ -399,7 +401,7 @@ class Wanted extends database_object
 
                                 if ($this->artist) {
                                     $artist      = new Artist($this->artist);
-                                    $artist_name = $artist->name;
+                                    $artist_name = (string)$artist->name;
                                 } elseif ($this->artist_mbid !== null) {
                                     $wartist     = self::getMissingArtistRetriever()->retrieve($this->artist_mbid);
                                     $artist_name = $wartist['name'] ?? '';
@@ -410,7 +412,7 @@ class Wanted extends database_object
                                 $song['file'] = null;
                                 foreach ($preview_plugins as $plugin_name) {
                                     $plugin = new Plugin($plugin_name);
-                                    if ($plugin->_plugin !== null && $plugin->load($user)) {
+                                    if ($plugin->_plugin instanceof PluginSongPreviewInterface && $plugin->load($user)) {
                                         $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name, $track->title);
                                         if ($song['file'] !== null) {
                                             break;
