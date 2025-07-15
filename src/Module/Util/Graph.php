@@ -27,6 +27,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Plugin\PluginLocationInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\UserRepositoryInterface;
@@ -835,7 +836,7 @@ class Graph
         }
         foreach (Plugin::get_plugins(PluginTypeEnum::GEO_MAP) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null && $plugin->load($user)) {
+            if ($plugin->_plugin instanceof PluginLocationInterface && $plugin->load($user)) {
                 if ($plugin->_plugin->display_map($pts)) {
                     return true;
                 }

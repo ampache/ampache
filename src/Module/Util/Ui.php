@@ -31,6 +31,7 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
+use Ampache\Plugin\PluginDisplayOnFooterInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
@@ -583,7 +584,7 @@ class Ui implements UiInterface
             $plugins = Plugin::get_plugins(PluginTypeEnum::FOOTER_WIDGET);
             foreach ($plugins as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null && $plugin->load($user)) {
+                if ($plugin->_plugin instanceof PluginDisplayOnFooterInterface && $plugin->load($user)) {
                     $plugin->_plugin->display_on_footer();
                 }
             }

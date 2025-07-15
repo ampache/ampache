@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Plugin\PluginGetMetadataInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -950,7 +951,7 @@ final class VaInfo implements VaInfoInterface
                 $plugin            = new Plugin($tag_source);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version > 0) {
-                    if ($plugin->_plugin !== null && $plugin->load($user)) {
+                    if ($plugin->_plugin instanceof PluginGetMetadataInterface && $plugin->load($user)) {
                         $this->tags[$tag_source] = $plugin->_plugin->get_metadata(
                             $this->gatherTypes,
                             self::clean_tag_info(

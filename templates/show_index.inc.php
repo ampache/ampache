@@ -26,6 +26,7 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Plugin\PluginDisplayHomeInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
@@ -45,7 +46,7 @@ $header_form = (AmpConfig::get('index_dashboard_form', false))
 if ($user instanceof User) {
     foreach (Plugin::get_plugins(PluginTypeEnum::HOMEPAGE_WIDGET) as $plugin_name) {
         $plugin = new Plugin($plugin_name);
-        if ($plugin->_plugin !== null && $plugin->load($user)) {
+        if ($plugin->_plugin instanceof PluginDisplayHomeInterface && $plugin->load($user)) {
             $plugin->_plugin->display_home();
         }
     }

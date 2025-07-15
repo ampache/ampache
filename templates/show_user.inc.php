@@ -34,6 +34,7 @@ use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
+use Ampache\Plugin\PluginDisplayUserFieldInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
@@ -78,7 +79,7 @@ Ui::show_box_top(scrub_out($client->get_fullname())); ?>
     <ul id="plugins_user_field">
 <?php foreach ($plugins as $plugin_name) {
     $plugin = new Plugin($plugin_name);
-    if ($plugin->_plugin !== null && $plugin->load($client)) { ?>
+    if ($plugin->_plugin instanceof PluginDisplayUserFieldInterface && $plugin->load($client)) { ?>
         <li><?php $plugin->_plugin->display_user_field(); ?> </li>
 <?php } ?>
 <?php

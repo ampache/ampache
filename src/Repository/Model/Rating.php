@@ -32,6 +32,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
+use Ampache\Plugin\AmpacheRatingMatch;
 use Exception;
 
 /**
@@ -369,8 +370,8 @@ class Rating extends database_object
             foreach (Plugin::get_plugins(PluginTypeEnum::RATING_SAVER) as $plugin_name) {
                 try {
                     $plugin = new Plugin($plugin_name);
-                    if ($plugin->_plugin !== null && $plugin->load($user)) {
-                        debug_event(self::class, 'save_rating... ' . $plugin->_plugin->name, 5);
+                    if ($plugin->_plugin instanceof AmpacheRatingMatch && $plugin->load($user)) {
+                        debug_event(self::class, 'save_rating... ' . $plugin_name, 5);
                         $plugin->_plugin->save_rating($rating, $new_rating);
                     }
                 } catch (Exception $error) {
