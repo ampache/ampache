@@ -1156,7 +1156,7 @@ class Song extends database_object implements
     /**
      * clean_string_field_value
      */
-    private static function clean_string_field_value(string $value): string
+    private static function clean_string_field_value(?string $value = null): string
     {
         if (!$value) {
             return '';
