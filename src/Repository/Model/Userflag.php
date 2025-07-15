@@ -32,7 +32,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
-use Ampache\Plugin\AmpachePlugin;
 use Ampache\Plugin\PluginSaveMediaplayInterface;
 use Exception;
 
