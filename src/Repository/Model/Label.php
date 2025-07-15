@@ -163,7 +163,7 @@ class Label extends database_object implements library_item
             $this->link = $web_path . '/labels.php?action=show&label=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**

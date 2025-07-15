@@ -29,6 +29,14 @@ use Ampache\Config\AmpConfig;
 
 final class ExternalAuthenticator implements AuthenticatorInterface
 {
+    /**
+     * @return array{
+     *     success: bool,
+     *     type?: string,
+     *     username?: string,
+     *     error?: string
+     * }
+     */
     public function auth(string $username, string $password): array
     {
         $authenticator = AmpConfig::get('external_authenticator');

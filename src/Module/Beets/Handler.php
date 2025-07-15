@@ -63,7 +63,7 @@ abstract class Handler
      * @param array $song
      * @return array
      */
-    protected function mapFields($song): array
+    protected function mapFields(array $song): array
     {
         foreach ($this->fieldMapping as $from => $to) {
             list($key, $format) = $to;
@@ -77,11 +77,8 @@ abstract class Handler
     /**
      * Get a command to get songs with a timestamp in $tag newer than $time.
      * For example: 'ls added:2014-10-02..'
-     * @param string $command
-     * @param string $tag
-     * @param int $time
      */
-    public function getTimedCommand($command, $tag, $time): string
+    public function getTimedCommand(string $command, string $tag, int $time): string
     {
         $commandParts = [$command];
         if ($time > 0) {

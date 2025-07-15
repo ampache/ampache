@@ -29,6 +29,16 @@ use Ampache\Module\Authentication\Ldap\Ldap;
 
 final class LdapAuthenticator implements AuthenticatorInterface
 {
+    /**
+     * @return array{
+     *     success: bool,
+     *     type?: string,
+     *     username?: string,
+     *     name?: string,
+     *     email?: string,
+     *     error?: string
+     * }
+     */
     public function auth(string $username, string $password): array
     {
         return Ldap::auth($username, $password);

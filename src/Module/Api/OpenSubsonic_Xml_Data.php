@@ -56,6 +56,7 @@ use Ampache\Repository\Model\Video;
 use Ampache\Repository\SongRepositoryInterface;
 use DateTime;
 use DateTimeZone;
+use Exception;
 use SimpleXMLElement;
 
 /**
@@ -1014,7 +1015,13 @@ class OpenSubsonic_Xml_Data
         if (!empty($items)) {
             $current   = $playQueue->get_current_object();
             $play_time = date("Y-m-d H:i:s", $playQueue->get_time());
-            $date      = new DateTime($play_time);
+            try {
+                $date = new DateTime($play_time);
+            } catch (Exception $error) {
+                debug_event(self::class, 'DateTime error: ' . $error->getMessage(), 5);
+
+                return $xml;
+            }
             $date->setTimezone(new DateTimeZone('UTC'));
             $changedBy  = $playQueue->client ?? '';
             $xplayqueue = self::_addChildToResultXml($xml, 'playQueueByIndex');
@@ -1265,7 +1272,7 @@ class OpenSubsonic_Xml_Data
         $xuser->addAttribute('commentRole', (AmpConfig::get('social')) ? 'true' : 'false');
         $xuser->addAttribute('podcastRole', (AmpConfig::get('podcast')) ? 'true' : 'false');
         $xuser->addAttribute('streamRole', 'true');
-        $xuser->addAttribute('jukeboxRole', (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST)) ? 'true' : 'false');
+        $xuser->addAttribute('jukeboxRole', (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST, $user->getId())) ? 'true' : 'false');
         $xuser->addAttribute('shareRole', Preference::get_by_user($user->id, 'share') ? 'true' : 'false');
         $xuser->addAttribute('videoConversionRole', 'false');
 

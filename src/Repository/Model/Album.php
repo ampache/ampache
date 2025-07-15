@@ -95,8 +95,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /** @var int[] $song_artists */
     public ?array $song_artists = null;
 
-    /** @var int $catalog_id */
-    public $catalog_id;
+    public int $catalog_id = 0;
 
     /** @var string $artist_prefix */
     public $artist_prefix;
@@ -109,7 +108,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /** @var int[] $album_artists */
     private ?array $album_artists = null;
 
-    /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
+    /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
     private ?string $f_artist_name = null;
@@ -409,7 +408,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $this->has_art = Art::has_db($this->id, 'album');
         }
 
-        return $this->has_art;
+        return $this->has_art ?? false;
     }
 
     /**
@@ -498,7 +497,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $this->link = $web_path . '/albums.php?action=show&album=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**
@@ -516,7 +515,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Get item tags.
-     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
      */
     public function get_tags(): array
     {
@@ -524,7 +523,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $this->tags = Tag::get_top_tags('album', $this->id);
         }
 
-        return $this->tags;
+        return $this->tags ?? [];
     }
 
     /**

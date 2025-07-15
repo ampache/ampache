@@ -122,7 +122,7 @@ class CliHandler extends Handler
      * @param string $command beets command (e.g. 'ls myArtist')
      * @param bool $disableCostomFields disables the -f switch for this time
      */
-    protected function assembleCommand($command, $disableCostomFields = false): string
+    protected function assembleCommand(string $command, bool $disableCostomFields = false): string
     {
         $commandParts = [
             escapeshellcmd($this->beetsCommand),

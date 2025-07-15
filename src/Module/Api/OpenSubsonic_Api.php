@@ -3923,7 +3923,6 @@ class OpenSubsonic_Api
             $data['rule_' . $rule_count]               = 'added';
             $data['rule_' . $rule_count . '_operator'] = 1; // after
             $data['rule_' . $rule_count . '_input']    = date('Y-m-d\TH:i', (int)($newerThan / 1000)); // e.g. 2025-08-12T10:15
-            $rule_count++;
         }
 
         $search_sql = Search::prepare($data, $user);

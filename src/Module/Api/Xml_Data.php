@@ -167,7 +167,7 @@ class Xml_Data
      * genre_string
      *
      * This returns the formatted 'genre' string for an xml document
-     * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
+     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      */
     private static function genre_string(array $tags): string
     {
@@ -1577,8 +1577,8 @@ class Xml_Data
     public static function democratic(array $object_ids, User $user, string $auth): string
     {
         $democratic = Democratic::get_current_playlist($user);
-        $string     = '';
 
+        $string     = '';
         foreach ($object_ids as $row_id => $data) {
             $className = ObjectTypeToClassNameMapper::map($data['object_type']->value);
             /** @var Song $song */

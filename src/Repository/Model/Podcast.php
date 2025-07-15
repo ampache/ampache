@@ -112,7 +112,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
             $this->has_art = Art::has_db($this->id, 'podcast');
         }
 
-        return $this->has_art;
+        return $this->has_art ?? false;
     }
 
     /**
@@ -150,7 +150,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
             $this->link = $web_path . '/podcast.php?action=show&podcast=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**

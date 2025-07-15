@@ -133,7 +133,7 @@ class Plugin
      */
     public function is_valid(): bool
     {
-        if ($this->_plugin === null) {
+        if (!$this->_plugin instanceof AmpachePlugin) {
             return false;
         }
 

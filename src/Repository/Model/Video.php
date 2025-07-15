@@ -100,7 +100,7 @@ class Video extends database_object implements
 
     public string $type;
 
-    /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
+    /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
     private ?string $f_link = null;
@@ -207,7 +207,7 @@ class Video extends database_object implements
             $this->has_art = Art::has_db($this->id, 'video');
         }
 
-        return $this->has_art;
+        return $this->has_art ?? false;
     }
 
     /**
@@ -245,12 +245,12 @@ class Video extends database_object implements
             $this->link = $web_path . "/video.php?action=show_video&video_id=" . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**
      * Get item tags.
-     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
      */
     public function get_tags(): array
     {
@@ -258,7 +258,7 @@ class Video extends database_object implements
             $this->tags = Tag::get_top_tags('video', $this->id);
         }
 
-        return $this->tags;
+        return $this->tags ?? [];
     }
 
     /**
@@ -441,13 +441,8 @@ class Video extends database_object implements
      * play_url
      * This returns a "PLAY" url for the video in question here, this currently feels a little
      * like a hack, might need to adjust it in the future
-     * @param string $additional_params
-     * @param string $player
-     * @param bool $local
-     * @param int|string|false $uid
-     * @param null|string $streamToken
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
+    public function play_url(string $additional_params = '', string $player = '', bool $local = false, int|string|null $uid = null, ?string $streamToken = null): string
     {
         if ($this->isNew()) {
             return '';

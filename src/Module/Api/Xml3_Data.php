@@ -169,7 +169,7 @@ class Xml3_Data
      * tags_string
      *
      * This returns the formatted 'tags' string for an xml document
-     * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
+     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      */
     private static function tags_string(array $tags): string
     {
@@ -544,6 +544,7 @@ class Xml3_Data
      *     track_id: int,
      *     track: int}> $object_ids Object IDs
      * @param User $user
+     * @param string $auth
      * @return string
      */
     public static function democratic(array $object_ids, User $user, string $auth): string

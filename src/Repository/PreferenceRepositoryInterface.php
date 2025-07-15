@@ -47,7 +47,7 @@ interface PreferenceRepositoryInterface
      *     category: string,
      *     subcategory: string,
      *     has_access?: bool,
-     *     values?: string[],
+     *     values?: string[]|int[],
      * }>
      */
     public function getAll(

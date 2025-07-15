@@ -74,7 +74,7 @@ class UPnPFind
      * @param int $timeout Timeout to wait for responses
      * @return array Response
      */
-    private static function discover($timeout = 2): array
+    private static function discover(int $timeout = 2): array
     {
         $msg = 'M-SEARCH * HTTP/1.1' . "\r\n";
         $msg .= 'HOST: 239.255.255.250:1900' . "\r\n";

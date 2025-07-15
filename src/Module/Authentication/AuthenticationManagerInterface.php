@@ -35,6 +35,13 @@ interface AuthenticationManagerInterface
 
     public function postAuth(string $method): ?array;
 
+    /**
+     * @return array{
+     *     success?: bool,
+     *     type?: string,
+     *     username?: string
+     * }
+     */
     public function tokenLogin(
         string $username,
         string $token,
