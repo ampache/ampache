@@ -168,13 +168,13 @@ abstract class Catalog extends database_object
 
     /**
      * This is a private var that's used during catalog builds
-     * @var array $_playlists
+     * @var string[] $_playlists
      */
     protected $_playlists = [];
 
     /**
      * Cache all files in catalog for quick lookup during add
-     * @var array $_filecache
+     * @var array<string, int|string> $_filecache
      */
     protected $_filecache = [];
 
@@ -422,7 +422,7 @@ abstract class Catalog extends database_object
     /**
      * Get item link.
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
@@ -430,7 +430,7 @@ abstract class Catalog extends database_object
             $this->link = $admin_path . '/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**

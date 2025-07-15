@@ -25,6 +25,17 @@ namespace Ampache\Module\Authentication\Authenticator;
 
 interface AuthenticatorInterface
 {
+    /**
+     * @return array{
+     *     success: bool,
+     *     type?: string,
+     *     username?: string,
+     *     name?: string,
+     *     email?: string,
+     *     error?: string,
+     *      ui_required?: bool
+     * }
+     */
     public function auth(string $username, string $password): array;
 
     public function postAuth(): ?array;

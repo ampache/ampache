@@ -76,7 +76,7 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * intl
   * simplexml
   * curl
-  * zip (Required in Ampache 7.0.0 and higher)
+  * zip ([Required](https://github.com/ampache/ampache/wiki/ampache7-for-admins#php-zip-extension-is-required) in Ampache 7.0.0 and higher)
 
 * For FreeBSD The following php modules must be loaded:
   * php-xml

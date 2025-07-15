@@ -87,6 +87,7 @@ class Search extends playlist_object
 
     public $types = []; // rules that are available to the objectType (title, year, rating, etc)
 
+    /** @var array<string, array<int, array{name: string, description: string, sql: string, preg_match?: string|array{string, string}, preg_replace?:string|array{string, string}}>> $basetypes */
     public $basetypes = []; // rule operator subtypes (numeric, text, boolean, etc)
 
     private SearchInterface $searchType;
@@ -1201,6 +1202,7 @@ class Search extends playlist_object
      * get_searches
      *
      * Return the IDs of all saved searches accessible by the current user.
+     * @return array<int, array{id: int, name: string}>
      */
     public static function get_searches(?int $user_id = null): array
     {
@@ -1227,7 +1229,10 @@ class Search extends playlist_object
         $db_results = Dba::read($sql, $params);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = $row['name'];
+            $results[] = [
+                'id' => (int)$row['id'],
+                'name' => $row['name']
+            ];
         }
 
         parent::add_to_cache($key, $user_id, $results);
@@ -1990,9 +1995,9 @@ class Search extends playlist_object
      * @param string $data
      * @param string $type
      * @param array{
-     *     name: string,
-     *     description: string,
-     *     sql: string,
+     *     name?: string,
+     *     description?: string,
+     *     sql?: string,
      *     preg_match?: string|array,
      *     preg_replace?: string|array,
      * } $operator

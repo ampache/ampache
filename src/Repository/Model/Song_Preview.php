@@ -253,7 +253,7 @@ class Song_Preview extends database_object implements Media, playable_item
             $this->link = "#";
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**
@@ -351,11 +351,8 @@ class Song_Preview extends database_object implements Media, playable_item
      * This function takes all the song information and correctly formats a
      * stream URL taking into account the downsampling mojo and everything
      * else, this is the true function
-     * @param string $additional_params
-     * @param string $player
-     * @param bool $local
      */
-    public function play_url($additional_params = '', $player = '', $local = false): string
+    public function play_url(string $additional_params = '', string $player = '', bool $local = false): string
     {
         $user_id = (Core::get_global('user') instanceof User)
             ? (string)Core::get_global('user')->getId()

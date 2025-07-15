@@ -27,6 +27,14 @@ namespace Ampache\Module\Authentication\Authenticator;
 
 final class PamAuthenticator implements AuthenticatorInterface
 {
+    /**
+     * @return array{
+     *     success: bool,
+     *     type?: string,
+     *     username?: string,
+     *     error?: string
+     * }
+     */
     public function auth(string $username, string $password): array
     {
         $results = [];

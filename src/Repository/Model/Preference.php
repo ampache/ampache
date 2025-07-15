@@ -556,6 +556,7 @@ class Preference extends database_object
      * get_categories
      * This returns an array of the names of the different possible sections
      * it ignores the 'internal' category
+     * @return string[]
      */
     public static function get_categories(): array
     {
@@ -575,6 +576,7 @@ class Preference extends database_object
     /**
      * get_special_values
      * This returns an array of the values for special preferences which are not kept in the database
+     * @return array<int|string>|null
      */
     public static function get_special_values(string $name, User $user): ?array
     {

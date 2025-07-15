@@ -938,7 +938,7 @@ class User extends database_object
             $this->has_art = Art::has_db($this->id, 'user');
         }
 
-        return $this->has_art;
+        return $this->has_art ?? false;
     }
 
     /**
@@ -1129,7 +1129,7 @@ class User extends database_object
     /**
      * Get item link.
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if ($this->link === null && $this->id > 0) {
@@ -1138,7 +1138,7 @@ class User extends database_object
             $this->link = $web_path . '/stats.php?action=show_user&user_id=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**
