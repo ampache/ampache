@@ -95,8 +95,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /** @var int[] $song_artists */
     public ?array $song_artists = null;
 
-    /** @var int $catalog_id */
-    public $catalog_id;
+    public int $catalog_id = 0;
 
     /** @var string $artist_prefix */
     public $artist_prefix;

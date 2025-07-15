@@ -1577,8 +1577,8 @@ class Xml_Data
     public static function democratic(array $object_ids, User $user, string $auth): string
     {
         $democratic = Democratic::get_current_playlist($user);
-        $string     = '';
 
+        $string     = '';
         foreach ($object_ids as $row_id => $data) {
             $className = ObjectTypeToClassNameMapper::map($data['object_type']->value);
             /** @var Song $song */

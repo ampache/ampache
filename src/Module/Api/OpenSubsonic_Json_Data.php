@@ -281,7 +281,7 @@ class OpenSubsonic_Json_Data
      *
      * A Podcast episode
      * https://opensubsonic.netlify.app/docs/responses/podcastepisode/
-     * @see self::_getChild()
+     * @see self::_getChildPodcastEpisode()
      * @return array{
      *     'id': string,
      *     'parent': string,
@@ -444,140 +444,6 @@ class OpenSubsonic_Json_Data
         $json['artist'] = (string)$child['f_name'];
         if (array_key_exists('has_art', $child) && !empty($child['has_art'])) {
             $json['coverArt'] = $sub_id;
-        }
-
-        return $json;
-    }
-
-    /**
-     * _getChild
-     *
-     * A media.
-     * https://opensubsonic.netlify.app/docs/responses/child/
-     * @return array{}|array{
-     *     'id': string,
-     *     'parent'?: string,
-     *     'isDir': bool,
-     *     'title': string,
-     *     'album'?: string,
-     *     'artist'?: string,
-     *     'track'?: int,
-     *     'year'?: int,
-     *     'genre'?: string,
-     *     'coverArt'?: string,
-     *     'size'?: int,
-     *     'contentType'?: string,
-     *     'suffix'?: string,
-     *     'transcodedContentType'?: string,
-     *     'transcodedSuffix'?: string,
-     *     'duration'?: int,
-     *     'bitRate'?: int,
-     *     'bitDepth'?: int,
-     *     'samplingRate'?: int,
-     *     'channelCount'?: int,
-     *     'path'?: string,
-     *     'isVideo'?: bool,
-     *     'userRating'?: int,
-     *     'averageRating'?: float,
-     *     'playCount'?: int,
-     *     'discNumber'?: int,
-     *     'created'?: string,
-     *     'starred'?: string,
-     *     'albumId'?: string,
-     *     'artistId'?: string,
-     *     'type'?: string,
-     *     'mediaType'?: string,
-     *     'bookmarkPosition'?: int,
-     *     'originalWidth'?: int,
-     *     'originalHeight'?: int,
-     *     'played'?: string,
-     *     'bpm'?: int,
-     *     'comment'?: string,
-     *     'sortName'?: string,
-     *     'musicBrainzId'?: string,
-     *     'isrc'?: string[],
-     *     'genres'?: array<int, array{'name': string}>,
-     *     'artists'?: array<int, array{
-     *         'id': string,
-     *         'name': string,
-     *         'coverArt'?: string,
-     *         'artistImageUrl'?: string,
-     *         'albumCount'?: int,
-     *         'starred'?: string,
-     *         'musicBrainzId'?: string,
-     *         'sortName'?: string,
-     *         'roles'?: array<string>
-     *     }>,
-     *     'displayArtist'?: string,
-     *     'albumArtists'?: array<int, array{
-     *         'id': string,
-     *         'name': string,
-     *         'coverArt'?: string,
-     *         'artistImageUrl'?: string,
-     *         'albumCount'?: int,
-     *         'starred'?: string,
-     *         'musicBrainzId'?: string,
-     *         'sortName'?: string,
-     *         'roles'?: array<string>
-     *     }>,
-     *     'displayAlbumArtist'?: string,
-     *     'contributors'?: array{
-     *         'contributor', array{
-     *             'role': string,
-     *             'subRole': string,
-     *             'artist': array<int, array{
-     *                 'id': string,
-     *                 'name': string,
-     *                 'coverArt'?: string,
-     *                 'artistImageUrl'?: string,
-     *                 'albumCount'?: int,
-     *                 'starred'?: string,
-     *                 'musicBrainzId'?: string,
-     *                 'sortName'?: string,
-     *                 'roles'?: array<string>
-     *             }>
-     *         }
-     *     },
-     *     'displayComposer'?: string,
-     *     'moods'?: string[],
-     *     'replayGain'?: array{
-     *         'trackGain': float,
-     *         'albumGain': float,
-     *         'trackPeak': float,
-     *         'albumPeak': float,
-     *         'baseGain': float
-     *     },
-     *     'explicitStatus'?: string
-     * }
-     */
-    private static function _getChild(int $object_id, string $object_type): array
-    {
-        $json = [];
-        switch ($object_type) {
-            case 'song':
-                $song = new Song($object_id);
-                if ($song->isNew() === false && $song->enabled) {
-                    $json = self::_getChildSong($song);
-                }
-                break;
-            case 'album':
-                $album = new Album($object_id);
-                if ($album->isNew() === false) {
-                    $json = self::_getChildAlbum($album);
-                }
-                break;
-            case 'podcast_episode':
-                $episode = new Podcast_Episode($object_id);
-                if ($episode->isNew() === false && $episode->enabled) {
-                    $json = self::_getChildPodcastEpisode($episode);
-                }
-                break;
-            case 'video':
-                $video = new Video($object_id);
-                if ($video->isNew() === false && $video->enabled) {
-                    $json = self::_getChildVideo($video);
-                }
-                break;
         }
 
         return $json;
@@ -2590,7 +2456,8 @@ class OpenSubsonic_Json_Data
      *
      * A genre returned in list of genres for an item.
      * https://opensubsonic.netlify.app/docs/responses/itemgenre/
-     * @see self::_getChild()
+     * @see self::_getChildAlbum()
+     * @see self::_getChildsong()
      * @see self::addAlbumID3()
      *
      */
@@ -2830,7 +2697,7 @@ class OpenSubsonic_Json_Data
      *
      * NowPlayingEntry.
      * https://opensubsonic.netlify.app/docs/responses/nowplayingentry/
-     * @see self::_getChild()
+     * @see self::_getChildSong()
      */
 
     /**
@@ -3144,7 +3011,7 @@ class OpenSubsonic_Json_Data
      *
      * The replay gain data of a song.
      * https://opensubsonic.netlify.app/docs/responses/replaygain/
-     * @see self::_getChild()
+     * @see self::_getChildSong()
      */
 
 
@@ -3453,7 +3320,7 @@ class OpenSubsonic_Json_Data
             'commentRole' => (bool)AmpConfig::get('social'),
             'podcastRole' => (bool)AmpConfig::get('podcast'),
             'streamRole' => true,
-            'jukeboxRole' => (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST)),
+            'jukeboxRole' => (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST, $user->getId())),
             'shareRole' => (bool)Preference::get_by_user($user->id, 'share'),
             'videoConversionRole' => false,
         ];
@@ -3559,7 +3426,11 @@ class OpenSubsonic_Json_Data
      */
     public static function addSong(array $response, int $song_id): array
     {
-        $json = self::_getChild($song_id, 'song');
+        $json = [];
+        $song = new Song($song_id);
+        if ($song->isNew() === false && $song->enabled) {
+            $json = self::_getChildSong($song);
+        }
 
         $response['subsonic-response']['song'] = (empty($json)) ? (object)[] : $json;
 

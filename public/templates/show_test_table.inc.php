@@ -32,11 +32,8 @@ use Ampache\Module\Util\Ui;
  * debug_wresult
  *
  * Convenience function to format the output.
- * @param bool $status
- * @param string $value
- * @param string $comment
  */
-function debug_wresult($status = false, $value = null, $comment = ''): string
+function debug_wresult(bool $status = false, ?string $value = null, string $comment = ''): string
 {
     $class = ($status) ? 'success' : 'warning';
 

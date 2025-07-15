@@ -109,7 +109,7 @@ interface VaInfoInterface
      *
      * This fills all tag types with Unknown (Broken)
      *
-     * @return array Return broken title, album, artist
+     * @return array<string, array<string, string>> Return broken title, album, artist
      */
     public function set_broken(): array;
 }

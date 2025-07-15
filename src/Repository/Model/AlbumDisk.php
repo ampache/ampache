@@ -93,9 +93,9 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public ?string $link = null;
 
-    /** @var int $catalog_id */
-    public $catalog_id;
+    public int $catalog_id = 0;
 
+    /** @var int[] $album_artists */
     private ?array $album_artists = null;
 
     /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */

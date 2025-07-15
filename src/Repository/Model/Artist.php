@@ -764,9 +764,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * check_mbid
      *
      * Checks for an existing artist by mbid; if none exists, insert one.
-     * @param string $mbid
      */
-    public static function check_mbid($mbid): int
+    public static function check_mbid(?string $mbid): int
     {
         $artist_id   = 0;
         $parsed_mbid = VaInfo::parse_mbid($mbid);
@@ -986,12 +985,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Update artist information.
-     * @param string|null $summary
-     * @param null|string $placeformed
-     * @param null|int $yearformed
-     * @param bool $manual
      */
-    public function update_artist_info($summary, $placeformed, $yearformed, $manual = false): void
+    public function update_artist_info(?string $summary, ?string $placeformed, ?int $yearformed, bool $manual = false): void
     {
         // set null values if missing
         $summary     = (empty($summary)) ? null : $summary;
@@ -1017,7 +1012,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * Update artist associated user_id.
      * @param int $user_id
      */
-    public function update_artist_user($user_id): void
+    public function update_artist_user(int $user_id): void
     {
         $sql = "UPDATE `artist` SET `user` = ? WHERE `id` = ?";
         Dba::write($sql, [$user_id, $this->id]);
@@ -1026,9 +1021,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /**
      * Update artist associated user.
      * @param string $name
-     * @param null|string $prefix
+     * @param string|null $prefix
      */
-    public function update_artist_name($name, $prefix): void
+    public function update_artist_name(string $name, ?string $prefix): void
     {
         $sql = "UPDATE `artist` SET `prefix` = ?, `name` = ? WHERE `id` = ?";
         Dba::write($sql, [$prefix, $name, $this->id]);
@@ -1091,7 +1086,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * Update artist last_update time.
      * @param int $object_id
      */
-    public static function set_last_update($object_id): void
+    public static function set_last_update(int $object_id): void
     {
         $sql = "UPDATE `artist` SET `last_update` = ? WHERE `id` = ?";
         Dba::write($sql, [time(), $object_id]);

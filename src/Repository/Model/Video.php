@@ -441,13 +441,8 @@ class Video extends database_object implements
      * play_url
      * This returns a "PLAY" url for the video in question here, this currently feels a little
      * like a hack, might need to adjust it in the future
-     * @param string $additional_params
-     * @param string $player
-     * @param bool $local
-     * @param int|string|false $uid
-     * @param null|string $streamToken
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
+    public function play_url(string $additional_params = '', string $player = '', bool $local = false, int|string|null $uid = null, ?string $streamToken = null): string
     {
         if ($this->isNew()) {
             return '';

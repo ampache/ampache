@@ -534,9 +534,9 @@ class Podcast_Episode extends database_object implements
      * It takes a field, value podcast_episode_id and level. first and foremost it checks the level
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
-     * @param string|int $value
+     * @param int|string $value
      */
-    private static function _update_item(string $field, $value, int $episode_id): void
+    private static function _update_item(string $field, int|string $value, int $episode_id): void
     {
         /* Check them Rights! */
         if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
@@ -585,13 +585,8 @@ class Podcast_Episode extends database_object implements
      * This function takes all the song information and correctly formats a
      * stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
-     * @param string $additional_params
-     * @param string $player
-     * @param bool $local
-     * @param int|string|false $uid
-     * @param null|string $streamToken
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
+    public function play_url(string $additional_params = '', string $player = '', bool $local = false, int|string|null $uid = null, ?string $streamToken = null): string
     {
         if ($this->isNew() || !isset($this->type)) {
             return '';

@@ -1722,9 +1722,6 @@ class Json_Data
      */
     public static function democratic(array $object_ids, User $user, string $auth, bool $object = true): string
     {
-        if (!is_array($object_ids)) {
-            $object_ids = [];
-        }
         $democratic = Democratic::get_current_playlist($user);
 
         $JSON = [];

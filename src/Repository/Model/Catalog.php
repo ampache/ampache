@@ -168,13 +168,13 @@ abstract class Catalog extends database_object
 
     /**
      * This is a private var that's used during catalog builds
-     * @var array $_playlists
+     * @var string[] $_playlists
      */
     protected $_playlists = [];
 
     /**
      * Cache all files in catalog for quick lookup during add
-     * @var array $_filecache
+     * @var array<string, int|string> $_filecache
      */
     protected $_filecache = [];
 

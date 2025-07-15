@@ -2081,11 +2081,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:xmltoarray\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
@@ -3931,11 +3926,6 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:set_broken\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:write_id3\\(\\) has parameter \\$tagData with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -3987,11 +3977,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:read_id3\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfoInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:set_broken\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfoInterface.php
 
@@ -4181,11 +4166,6 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:\\$album_artists type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$_mapcache type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
@@ -4281,16 +4261,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$_filecache type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$_playlists type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$albums type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -4316,29 +4286,9 @@ parameters:
 			path: src/Repository/Model/Label.php
 
 		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Cannot access property \\$max_ampache on class\\-string\\|object\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Cannot access property \\$min_ampache on class\\-string\\|object\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Cannot access property \\$name on class\\-string\\|object\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:\\$_plugin has no type specified\\.$#"
@@ -4347,16 +4297,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:fix_preferences\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Preference.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:get_categories\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Preference.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:get_special_values\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Preference.php
 
@@ -4416,11 +4356,6 @@ parameters:
 			path: src/Repository/Model/Search.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:get_searches\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:prepare\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
@@ -4432,11 +4367,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:year_search\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$basetypes has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
