@@ -42,6 +42,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Recommendation;
+use Ampache\Plugin\PluginGetLyricsInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
@@ -1753,6 +1754,7 @@ class Song extends database_object implements
 
     /**
      * Get item album_artists array
+     * @return int[]
      */
     public function get_artists(): array
     {
@@ -2102,7 +2104,7 @@ class Song extends database_object implements
         if ($user instanceof User) {
             foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null && $plugin->load($user)) {
+                if ($plugin->_plugin instanceof PluginGetLyricsInterface && $plugin->load($user)) {
                     $lyrics = $plugin->_plugin->get_lyrics($this);
                     if (!empty($lyrics)) {
                         // save the lyrics if not set before
@@ -2167,6 +2169,7 @@ class Song extends database_object implements
 
     /**
      * Get custom play actions.
+     * @return array<int, array{index: int, title: string, icon: string, run: string}>
      */
     public static function get_custom_play_actions(): array
     {
