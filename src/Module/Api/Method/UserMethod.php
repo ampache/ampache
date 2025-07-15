@@ -86,10 +86,10 @@ final class UserMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::user($check_user, $fullinfo, false);
+                echo Json_Data::user($check_user, $fullinfo, $input['auth'], false);
                 break;
             default:
-                echo Xml_Data::user($check_user, $fullinfo);
+                echo Xml_Data::user($check_user, $fullinfo, $input['auth']);
         }
 
         return true;

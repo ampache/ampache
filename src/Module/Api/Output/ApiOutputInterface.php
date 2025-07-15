@@ -38,7 +38,8 @@ interface ApiOutputInterface
      */
     public function podcastEpisodes(
         array $result,
-        User $user
+        User $user,
+        string $auth,
     ): string;
 
     /**
@@ -86,8 +87,9 @@ interface ApiOutputInterface
 
     /**
      * @param list<int|string> $albums
-     * @param array $include
+     * @param string[] $include
      * @param User $user
+     * @param string $auth
      * @param bool $encode
      * @param bool $asObject
      *
@@ -97,9 +99,10 @@ interface ApiOutputInterface
         array $albums,
         array $include,
         User $user,
+        string $auth,
         bool $encode = true,
         bool $asObject = true
-    );
+    ): array|string;
 
     /**
      * This generates a standard JSON Success message

@@ -77,7 +77,7 @@ final class ShowAction implements ApplicationActionInterface
             $response = $response->withHeader(
                 'Location',
                 $target
-            )->withStatus(StatusCode::FOUND);
+            )->withStatus(StatusCode\RFC\RFC7231::FOUND);
         } else {
             // Prevent the update query as it's pointless
             define('NO_SESSION_UPDATE', '1');

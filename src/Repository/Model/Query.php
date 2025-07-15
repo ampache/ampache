@@ -82,7 +82,7 @@ class Query
 
     public int|string $id = 0;
 
-    public ?int $catalog = null;
+    public int $catalog = 0;
 
     public ?int $user_id = null;
 
@@ -256,6 +256,8 @@ class Query
             case 'update_gt':
             case 'update_lt':
             case 'user':
+            case 'user_flag':
+            case 'user_rating':
             case 'year_eq':
             case 'year_gt':
             case 'year_lg':
@@ -692,9 +694,9 @@ class Query
     /**
      * set_catalog
      */
-    public function set_catalog(?int $catalog_number): void
+    public function set_catalog(?int $catalog_number = 0): void
     {
-        $this->catalog = $catalog_number;
+        $this->catalog = (int)$catalog_number;
     }
 
     /**
@@ -922,7 +924,8 @@ class Query
             if ($this->queryType === null) {
                 $this->queryType = new SongQuery();
             }
-            $this->_state['select'] = [$this->queryType->get_select()];
+
+            $this->set_select($this->queryType->get_select());
 
             // tag state should be set as they aren't really separate objects
             if (in_array($this->get_type(), ['license_hidden', 'tag_hidden'])) {
@@ -932,7 +935,7 @@ class Query
                 $this->set_filter('hidden', 0);
             }
 
-            $this->_state['base'] = $this->queryType->get_base_sql();
+            $this->_state['base'] = $this->queryType?->get_base_sql();
         }
     }
 
@@ -1295,7 +1298,7 @@ class Query
             $object_ids = $this->get_saved();
 
             // If there's nothing there don't do anything
-            if ($object_ids === [] || !is_array($object_ids)) {
+            if ($object_ids === []) {
                 return;
             }
 

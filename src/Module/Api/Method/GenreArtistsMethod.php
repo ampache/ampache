@@ -100,13 +100,13 @@ final class GenreArtistsMethod
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 Json_Data::set_count($browse->get_total());
-                echo Json_Data::artists($results, [], $user);
+                echo Json_Data::artists($results, [], $user, $input['auth']);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 Xml_Data::set_count($browse->get_total());
-                echo Xml_Data::artists($results, [], $user);
+                echo Xml_Data::artists($results, [], $user, $input['auth']);
         }
 
         return true;

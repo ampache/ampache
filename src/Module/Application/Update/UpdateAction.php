@@ -88,7 +88,7 @@ final class UpdateAction implements ApplicationActionInterface
             Preference::translate_db();
 
             return $this->responseFactory
-                ->createResponse(StatusCode::FOUND)
+                ->createResponse(StatusCode\RFC\RFC7231::FOUND)
                 ->withHeader(
                     'Location',
                     $this->configContainer->getWebPath()

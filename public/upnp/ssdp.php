@@ -32,7 +32,7 @@ $socket->on('message', function ($data, $remote) use ($socket) {
     }
 });
 
-function ssdpShutdown($signal)
+function ssdpShutdown($signal): void
 {
     debug_event('upnp', 'SSDP server being shut down by signal ' . $signal, 5);
     // Send a couple of times as UDP is unreliable
@@ -41,7 +41,7 @@ function ssdpShutdown($signal)
     exit(1);
 }
 
-function sayAlive()
+function sayAlive(): void
 {
     // Send a couple of times as UDP is unreliable
     Upnp_Api::sddpSend(1);

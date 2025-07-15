@@ -59,7 +59,7 @@ final class TagSongs3Method
         Xml3_Data::set_limit($input['limit'] ?? 0);
 
         ob_end_clean();
-        echo Xml3_Data::songs($results, $user);
+        echo Xml3_Data::songs($results, $user, $input['auth']);
     }
 
     /**

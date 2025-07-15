@@ -76,10 +76,10 @@ final class Podcast4Method
             ob_end_clean();
             switch ($input['api_format']) {
                 case 'json':
-                    echo Json4_Data::podcasts([$object_id], $user, $episodes);
+                    echo Json4_Data::podcasts([$object_id], $user, $input['auth'], $episodes);
                     break;
                 default:
-                    echo Xml4_Data::podcasts([$object_id], $user, $episodes);
+                    echo Xml4_Data::podcasts([$object_id], $user, $input['auth'], $episodes);
             }
         } else {
             Api4::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['api_format']);

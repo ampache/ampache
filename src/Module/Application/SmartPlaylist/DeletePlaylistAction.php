@@ -67,7 +67,7 @@ final class DeletePlaylistAction implements ApplicationActionInterface
 
                     // Go elsewhere
                     return $this->responseFactory
-                        ->createResponse(StatusCode::FOUND)
+                        ->createResponse(StatusCode\RFC\RFC7231::FOUND)
                         ->withHeader(
                             'Location',
                             sprintf(

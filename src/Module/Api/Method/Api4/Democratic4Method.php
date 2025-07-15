@@ -130,10 +130,10 @@ final class Democratic4Method
                 Democratic::build_vote_cache($democratic->vote_ids);
                 switch ($input['api_format']) {
                     case 'json':
-                        echo Json4_Data::democratic($results, $user);
+                        echo Json4_Data::democratic($results, $user, $input['auth']);
                         break;
                     default:
-                        echo Xml4_Data::democratic($results, $user);
+                        echo Xml4_Data::democratic($results, $user, $input['auth']);
                 }
                 break;
             case 'play':

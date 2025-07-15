@@ -336,7 +336,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
      */
     private static function get_id_from_title(int $podcast_id, string $title, int $time): int
     {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND title = ? AND `time` = ?";
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND `title` = ? AND `time` = ?";
         $db_results = Dba::read($sql, [$podcast_id, $title, $time]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -353,7 +353,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
      */
     private static function get_id_from_pubdate(int $podcast_id, int $pubdate): int
     {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND pubdate = ?";
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND `pubdate` = ?";
         $db_results = Dba::read($sql, [$podcast_id, $pubdate]);
 
         if ($results = Dba::fetch_assoc($db_results)) {

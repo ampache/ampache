@@ -62,6 +62,6 @@ final class Album3Method
                 $include[] = 'songs';
             }
         }
-        echo Xml3_Data::albums([$uid], $include, $user);
+        echo Xml3_Data::albums([$uid], $include, $user, $input['auth']);
     }
 }

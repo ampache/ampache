@@ -127,7 +127,7 @@ class WriteConfigActionTest extends MockeryTestCase
             ->andReturnTrue();
 
         $this->responseFactory->shouldReceive('createResponse')
-            ->with(StatusCode::FOUND)
+            ->with(StatusCode\RFC\RFC7231::FOUND)
             ->once()
             ->andReturn($response);
 
@@ -182,7 +182,7 @@ class WriteConfigActionTest extends MockeryTestCase
             );
 
         $this->responseFactory->shouldReceive('createResponse')
-            ->with(StatusCode::FOUND)
+            ->with(StatusCode\RFC\RFC7231::FOUND)
             ->once()
             ->andReturn($response);
 

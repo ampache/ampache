@@ -32,6 +32,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
+use Ampache\Plugin\PluginSaveMediaplayInterface;
 use Exception;
 
 /**
@@ -252,8 +253,8 @@ class Userflag extends database_object
         foreach (Plugin::get_plugins(PluginTypeEnum::USER_FLAG_MANAGER) as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null && $plugin->load($user)) {
-                    debug_event(self::class, 'save_flag...' . $plugin->_plugin->name, 5);
+                if ($plugin->_plugin instanceof PluginSaveMediaplayInterface && $plugin->load($user)) {
+                    debug_event(self::class, 'save_flag...' . $plugin_name, 5);
                     $plugin->_plugin->set_flag($song, $flagged);
                 }
             } catch (Exception $error) {

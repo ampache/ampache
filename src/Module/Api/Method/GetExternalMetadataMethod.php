@@ -30,6 +30,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Plugin\PluginGetMetadataInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
@@ -130,7 +131,7 @@ final class GetExternalMetadataMethod
             $plugin            = new Plugin($tag_source);
             $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
             if ($installed_version > 0) {
-                if ($plugin->_plugin !== null && $plugin->load($user)) {
+                if ($plugin->_plugin instanceof PluginGetMetadataInterface && $plugin->load($user)) {
                     $results['plugin'][$tag_source] = $plugin->_plugin->get_metadata(
                         ['music', $type],
                         $data,

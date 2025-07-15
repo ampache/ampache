@@ -182,7 +182,7 @@ Translations are stored here.
 
 #### `public`
 
-This is the public web root for Amapche and where your webserver should point to.
+This is the public web root for Ampache and where your webserver should point to.
 
 #### `resources`
 

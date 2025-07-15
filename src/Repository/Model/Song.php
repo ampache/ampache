@@ -42,6 +42,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Recommendation;
+use Ampache\Plugin\PluginGetLyricsInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
@@ -147,8 +148,7 @@ class Song extends database_object implements
 
     public ?string $link = null;
 
-    /** @var string $type */
-    public $type;
+    public string $type;
 
     public ?string $mime = null;
 
@@ -163,7 +163,7 @@ class Song extends database_object implements
 
     public ?int $albumartist = null;
 
-    /** @var null|list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
+    /** @var null|array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     public ?array $tags = null;
 
     /** @var int[] $artists */
@@ -464,6 +464,9 @@ class Song extends database_object implements
         // also clean up some bad data that might creep in
         Dba::write("UPDATE `song` SET `composer` = NULL WHERE `composer` = '';");
         Dba::write("UPDATE `song` SET `mbid` = NULL WHERE `mbid` = '';");
+
+        Dba::write("INSERT IGNORE INTO `song_data` (`song_id`) SELECT `id` FROM `song` WHERE `id` NOT IN (SELECT `song_id` FROM `song_data`);");
+
         Dba::write("UPDATE `song_data` SET `comment` = NULL WHERE `comment` = '';");
         Dba::write("UPDATE `song_data` SET `lyrics` = NULL WHERE `lyrics` = '';");
         Dba::write("UPDATE `song_data` SET `label` = NULL WHERE `label` = '';");
@@ -625,7 +628,7 @@ class Song extends database_object implements
      * This function gathers information from the song_ext_info table and adds it to the current object
      * @return array<string, scalar>
      */
-    public function _get_ext_info(string $select = ''): array
+    private function _get_ext_info(string $select = ''): array
     {
         if (parent::is_cached('song_data', $this->id)) {
             return parent::get_from_cache('song_data', $this->id);
@@ -766,10 +769,8 @@ class Song extends database_object implements
     /**
      * get_album_fullname
      * gets the name of $this->album, allows passing of id
-     * @param int $album_id
-     * @param bool $simple
      */
-    public function get_album_fullname($album_id = 0, $simple = false): string
+    public function get_album_fullname(int $album_id = 0, bool $simple = false): string
     {
         if ($this->f_album_full !== null && $album_id == 0) {
             return $this->f_album_full;
@@ -808,9 +809,9 @@ class Song extends database_object implements
     /**
      * get_album_catalog_number
      * gets the catalog_number of $this->album, allows passing of id
-     * @param int $album_id
+     * @param int|null $album_id
      */
-    public function get_album_catalog_number($album_id = null): ?string
+    public function get_album_catalog_number(int $album_id = null): ?string
     {
         if ($album_id === null) {
             $album_id = $this->album;
@@ -824,9 +825,9 @@ class Song extends database_object implements
     /**
      * get_album_original_year
      * gets the original_year of $this->album, allows passing of id
-     * @param int $album_id
+     * @param int|null $album_id
      */
-    public function get_album_original_year($album_id = null): ?int
+    public function get_album_original_year(int $album_id = null): ?int
     {
         if ($album_id === null) {
             $album_id = $this->album;
@@ -840,9 +841,9 @@ class Song extends database_object implements
     /**
      * get_album_barcode
      * gets the barcode of $this->album, allows passing of id
-     * @param int $album_id
+     * @param int|null $album_id
      */
-    public function get_album_barcode($album_id = null): ?string
+    public function get_album_barcode(int $album_id = null): ?string
     {
         if (!$album_id) {
             $album_id = $this->album;
@@ -863,15 +864,14 @@ class Song extends database_object implements
             $this->artist_full_name = Artist::get_fullname_by_id($this->artist);
         }
 
-        return $this->artist_full_name;
+        return $this->artist_full_name ?? '';
     }
 
     /**
      * get_album_artist_fullname
      * gets the name of $this->albumartist, allows passing of id
-     * @param int $album_artist_id
      */
-    public function get_album_artist_fullname($album_artist_id = 0): ?string
+    public function get_album_artist_fullname(int $album_artist_id = 0): ?string
     {
         if ($album_artist_id) {
             return Artist::get_fullname_by_id($album_artist_id);
@@ -1034,6 +1034,7 @@ class Song extends database_object implements
             'comment',
             'composer',
             'lyrics',
+            'publisher',
             'tags',
             'time',
             'title',
@@ -1049,6 +1050,7 @@ class Song extends database_object implements
             'catalog',
             'disabledMetadataFields',
             'enabled',
+            'file',
             'id',
             'mb_albumid_group',
             'mbid',
@@ -1067,12 +1069,10 @@ class Song extends database_object implements
 
     /**
      * compare_media_information
-     * @param Song|Video $media
-     * @param Song|Video $new_media
      * @param string[] $string_array
      * @param string[] $skip_array
      */
-    public static function compare_media_information($media, $new_media, $string_array, $skip_array): array
+    public static function compare_media_information(Video|Song $media, Video|Song $new_media, array $string_array, array $skip_array): array
     {
         $array            = [];
         $array['change']  = false;
@@ -1156,9 +1156,8 @@ class Song extends database_object implements
 
     /**
      * clean_string_field_value
-     * @param string $value
      */
-    private static function clean_string_field_value($value): string
+    private static function clean_string_field_value(?string $value = null): string
     {
         if (!$value) {
             return '';
@@ -1290,6 +1289,9 @@ class Song extends database_object implements
         $sql = "UPDATE `song` SET `album` = ?, `album_disk` = ?, `disk` = ?, `year` = ?, `artist` = ?, `title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `size` = ?, `time` = ?, `track` = ?, `mbid` = ?, `update_time` = ? WHERE `id` = ?";
         Dba::write($sql, [$new_song->album, $new_song->album_disk, $new_song->disk, $new_song->year, $new_song->artist, $new_song->title, $new_song->composer ?: null, $new_song->bitrate, $new_song->rate, $new_song->mode, $new_song->channels, $new_song->size, $new_song->time, $new_song->track, $new_song->mbid, $update_time, $song_id]);
 
+        // did you miss the insert? it'll never come back if we don't check
+        Dba::write("INSERT IGNORE INTO `song_data` (`song_id`) SELECT `id` from `song` where `id` = ? AND `id` NOT IN (SELECT `song_id` FROM `song_data`);", [$song_id]);
+
         $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `disksubtitle` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, `replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ? WHERE `song_id` = ?";
         Dba::write($sql, [$new_song->label ?: null, $new_song->lyrics ?: null, $new_song->language ?: null, $new_song->disksubtitle ?: null, $new_song->comment ?: null, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id]);
     }
@@ -1300,7 +1302,7 @@ class Song extends database_object implements
      * @param int $new_disk
      * @param int $song_id
      */
-    public static function update_disk($new_disk, $song_id): void
+    public static function update_disk(int $new_disk, int $song_id): void
     {
         self::_update_item('disk', $new_disk, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
@@ -1311,7 +1313,7 @@ class Song extends database_object implements
      * @param int $new_year
      * @param int $song_id
      */
-    public static function update_year($new_year, $song_id): void
+    public static function update_year(int $new_year, int $song_id): void
     {
         self::_update_item('year', $new_year, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
@@ -1322,7 +1324,7 @@ class Song extends database_object implements
      * @param string $new_value
      * @param int $song_id
      */
-    public static function update_label($new_value, $song_id): void
+    public static function update_label(string $new_value, int $song_id): void
     {
         self::_update_ext_item('label', $new_value, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
@@ -1333,7 +1335,7 @@ class Song extends database_object implements
      * @param string $new_lang
      * @param int $song_id
      */
-    public static function update_language($new_lang, $song_id): void
+    public static function update_language(string $new_lang, int $song_id): void
     {
         self::_update_ext_item('language', $new_lang, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
@@ -1344,7 +1346,7 @@ class Song extends database_object implements
      * @param string $new_comment
      * @param int $song_id
      */
-    public static function update_comment($new_comment, $song_id): void
+    public static function update_comment(string $new_comment, int $song_id): void
     {
         self::_update_ext_item('comment', $new_comment, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
@@ -1355,7 +1357,7 @@ class Song extends database_object implements
      * @param string $new_lyrics
      * @param int $song_id
      */
-    public static function update_lyrics($new_lyrics, $song_id): void
+    public static function update_lyrics(string $new_lyrics, int $song_id): void
     {
         self::_update_ext_item('lyrics', $new_lyrics, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
@@ -1366,7 +1368,7 @@ class Song extends database_object implements
      * @param string $new_title
      * @param int $song_id
      */
-    public static function update_title($new_title, $song_id): void
+    public static function update_title(string $new_title, int $song_id): void
     {
         self::_update_item('title', $new_title, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
@@ -1377,7 +1379,7 @@ class Song extends database_object implements
      * @param string $new_composer
      * @param int $song_id
      */
-    public static function update_composer($new_composer, $song_id): void
+    public static function update_composer(string $new_composer, int $song_id): void
     {
         self::_update_item('composer', $new_composer, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
@@ -1388,7 +1390,7 @@ class Song extends database_object implements
      * @param int $new_bitrate
      * @param int $song_id
      */
-    public static function update_bitrate($new_bitrate, $song_id): void
+    public static function update_bitrate(int $new_bitrate, int $song_id): void
     {
         self::_update_item('bitrate', $new_bitrate, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
@@ -1399,7 +1401,7 @@ class Song extends database_object implements
      * @param int $new_rate
      * @param int $song_id
      */
-    public static function update_rate($new_rate, $song_id): void
+    public static function update_rate(int $new_rate, int $song_id): void
     {
         self::_update_item('rate', $new_rate, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
@@ -1410,7 +1412,7 @@ class Song extends database_object implements
      * @param string $new_mode
      * @param int $song_id
      */
-    public static function update_mode($new_mode, $song_id): void
+    public static function update_mode(string $new_mode, int $song_id): void
     {
         self::_update_item('mode', $new_mode, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
@@ -1421,7 +1423,7 @@ class Song extends database_object implements
      * @param int $new_size
      * @param int $song_id
      */
-    public static function update_size($new_size, $song_id): void
+    public static function update_size(int $new_size, int $song_id): void
     {
         self::_update_item('size', $new_size, $song_id, AccessLevelEnum::CONTENT_MANAGER);
     }
@@ -1432,7 +1434,7 @@ class Song extends database_object implements
      * @param int $new_time
      * @param int $song_id
      */
-    public static function update_time($new_time, $song_id): void
+    public static function update_time(int $new_time, int $song_id): void
     {
         self::_update_item('time', $new_time, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
@@ -1443,7 +1445,7 @@ class Song extends database_object implements
      * @param int $new_track
      * @param int $song_id
      */
-    public static function update_track($new_track, $song_id): void
+    public static function update_track(int $new_track, int $song_id): void
     {
         self::_update_item('track', $new_track, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
@@ -1454,7 +1456,7 @@ class Song extends database_object implements
      * @param string $new_mbid
      * @param int $song_id
      */
-    public static function update_mbid($new_mbid, $song_id): void
+    public static function update_mbid(string $new_mbid, int $song_id): void
     {
         self::_update_item('mbid', $new_mbid, $song_id, AccessLevelEnum::CONTENT_MANAGER);
     }
@@ -1465,7 +1467,7 @@ class Song extends database_object implements
      * @param int|null $new_license
      * @param int $song_id
      */
-    public static function update_license($new_license, $song_id): void
+    public static function update_license(?int $new_license, int $song_id): void
     {
         self::_update_item('license', $new_license, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
@@ -1473,12 +1475,8 @@ class Song extends database_object implements
     /**
      * update_artist
      * updates the artist field
-     * @param int $new_artist
-     * @param int $song_id
-     * @param int|null $old_artist
-     * @param bool $update_counts
      */
-    public static function update_artist($new_artist, $song_id, $old_artist, $update_counts = true): bool
+    public static function update_artist(int $new_artist, int $song_id, ?int $old_artist, bool $update_counts = true): bool
     {
         if ($old_artist != $new_artist && self::_update_item('artist', $new_artist, $song_id, AccessLevelEnum::CONTENT_MANAGER) !== false) {
             if ($update_counts && $old_artist) {
@@ -1495,12 +1493,8 @@ class Song extends database_object implements
     /**
      * update_album
      * updates the album field
-     * @param int $new_album
-     * @param int $song_id
-     * @param int $old_album
-     * @param bool $update_counts
      */
-    public static function update_album($new_album, $song_id, $old_album, $update_counts = true): bool
+    public static function update_album(int $new_album, int $song_id, int $old_album, bool $update_counts = true): bool
     {
         if ($old_album != $new_album && self::_update_item('album', $new_album, $song_id, AccessLevelEnum::CONTENT_MANAGER, true) !== false) {
             self::migrate_album($new_album, $song_id, $old_album);
@@ -1520,7 +1514,7 @@ class Song extends database_object implements
      * @param int $song_id
      * @param int $time
      */
-    public static function update_utime($song_id, $time = 0): void
+    public static function update_utime(int $song_id, int $time = 0): void
     {
         if (!$time) {
             $time = time();
@@ -1536,7 +1530,7 @@ class Song extends database_object implements
      * @param bool $new_played
      * @param int $song_id
      */
-    public static function update_played($new_played, $song_id): void
+    public static function update_played(bool $new_played, int $song_id): void
     {
         self::_update_item('played', (($new_played) ? 1 : 0), $song_id, AccessLevelEnum::USER);
     }
@@ -1547,7 +1541,7 @@ class Song extends database_object implements
      * @param bool $new_enabled
      * @param int $song_id
      */
-    public static function update_enabled($new_enabled, $song_id): void
+    public static function update_enabled(bool $new_enabled, int $song_id): void
     {
         self::_update_item('enabled', (($new_enabled) ? 1 : 0), $song_id, AccessLevelEnum::MANAGER, true);
     }
@@ -1558,12 +1552,8 @@ class Song extends database_object implements
      * It takes a field, value song id and level. first and foremost it checks the level
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
-     * @param string $field
-     * @param string|int|null $value
-     * @param int $song_id
-     * @param bool $check_owner
      */
-    private static function _update_item($field, $value, $song_id, AccessLevelEnum $level, $check_owner = false): bool
+    private static function _update_item(string $field, int|string|null $value, int $song_id, AccessLevelEnum $level, bool $check_owner = false): bool
     {
         if ($check_owner && Core::get_global('user') instanceof User) {
             $item = new Song($song_id);
@@ -1591,12 +1581,8 @@ class Song extends database_object implements
      * _update_ext_item
      * This updates a song record that is housed in the song_ext_info table
      * These are items that aren't used normally, and often large/informational only
-     * @param string $field
-     * @param string $value
-     * @param int $song_id
-     * @param bool $check_owner
      */
-    private static function _update_ext_item($field, $value, $song_id, AccessLevelEnum $level, $check_owner = false): void
+    private static function _update_ext_item(string $field, string $value, int $song_id, AccessLevelEnum $level, bool $check_owner = false): void
     {
         if ($check_owner) {
             $item = new Song($song_id);
@@ -1633,7 +1619,7 @@ class Song extends database_object implements
             $this->has_art = (AmpConfig::get('show_song_art', false) && Art::has_db($this->id, 'song') || Art::has_db($this->album, 'album'));
         }
 
-        return $this->has_art;
+        return $this->has_art ?? false;
     }
 
     /**
@@ -1689,12 +1675,12 @@ class Song extends database_object implements
             $this->link = $web_path . "/song.php?action=show_song&song_id=" . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**
      * Get item tags.
-     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
      */
     public function get_tags(): array
     {
@@ -1702,7 +1688,7 @@ class Song extends database_object implements
             $this->tags = Tag::get_top_tags('song', $this->id);
         }
 
-        return $this->tags;
+        return $this->tags ?? [];
     }
 
     /**
@@ -1768,6 +1754,7 @@ class Song extends database_object implements
 
     /**
      * Get item album_artists array
+     * @return int[]
      */
     public function get_artists(): array
     {
@@ -1775,7 +1762,7 @@ class Song extends database_object implements
             $this->artists = self::get_parent_array($this->id);
         }
 
-        return $this->artists;
+        return $this->artists ?? [];
     }
 
     /**
@@ -1798,7 +1785,7 @@ class Song extends database_object implements
             $this->f_albumartist_link = rtrim($this->f_albumartist_link, ",&nbsp");
         }
 
-        return $this->f_albumartist_link;
+        return $this->f_albumartist_link ?? '';
     }
 
     /**
@@ -1814,7 +1801,7 @@ class Song extends database_object implements
             $this->f_album_link = "<a href=\"" . $web_path . "/albums.php?action=show&album=" . $this->album . "\" title=\"" . scrub_out($this->get_album_fullname()) . "\"> " . scrub_out($this->get_album_fullname()) . "</a>";
         }
 
-        return $this->f_album_link;
+        return $this->f_album_link ?? '';
     }
 
     /**
@@ -1830,7 +1817,7 @@ class Song extends database_object implements
             $this->f_album_disk_link = "<a href=\"" . $web_path . "/albums.php?action=show_disk&album_disk=" . $this->album_disk . "\" title=\"" . scrub_out($this->get_album_disk_fullname()) . "\"> " . scrub_out($this->get_album_disk_fullname()) . "</a>";
         }
 
-        return $this->f_album_disk_link;
+        return $this->f_album_disk_link ?? '';
     }
 
     /**
@@ -1970,13 +1957,8 @@ class Song extends database_object implements
      * This function takes all the song information and correctly formats a
      * stream URL taking into account the downsampling mojo and everything
      * else, this is the true function
-     * @param string $additional_params
-     * @param string $player
-     * @param bool $local
-     * @param int|string|false $uid
-     * @param null|string $streamToken
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
+    public function play_url(string $additional_params = '', string $player = '', bool $local = false, int|string|null $uid = null, ?string $streamToken = null): string
     {
         if ($this->isNew()) {
             return '';
@@ -2122,7 +2104,7 @@ class Song extends database_object implements
         if ($user instanceof User) {
             foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null && $plugin->load($user)) {
+                if ($plugin->_plugin instanceof PluginGetLyricsInterface && $plugin->load($user)) {
                     $lyrics = $plugin->_plugin->get_lyrics($this);
                     if (!empty($lyrics)) {
                         // save the lyrics if not set before
@@ -2141,10 +2123,8 @@ class Song extends database_object implements
 
     /**
      * Run custom play action.
-     * @param int $action_index
-     * @param string $codec
      */
-    public function run_custom_play_action($action_index, $codec = ''): array
+    public function run_custom_play_action(int $action_index, string $codec = ''): array
     {
         $transcoder = [];
         $actions    = self::get_custom_play_actions();
@@ -2189,6 +2169,7 @@ class Song extends database_object implements
 
     /**
      * Get custom play actions.
+     * @return array<int, array{index: int, title: string, icon: string, run: string}>
      */
     public static function get_custom_play_actions(): array
     {
@@ -2267,10 +2248,8 @@ class Song extends database_object implements
 
     /**
      * Migrate an artist data to a new object
-     * @param int $new_artist
-     * @param int $old_artist
      */
-    public static function migrate_artist($new_artist, $old_artist): bool
+    public static function migrate_artist(int $new_artist, int $old_artist): bool
     {
         if ($old_artist != $new_artist) {
             // migrate stats for the old artist
@@ -2314,11 +2293,8 @@ class Song extends database_object implements
 
     /**
      * Migrate an album data to a new object
-     * @param int $new_album
-     * @param int $song_id
-     * @param int $old_album
      */
-    public static function migrate_album($new_album, $song_id, $old_album): bool
+    public static function migrate_album(int $new_album, int $song_id, int $old_album): bool
     {
         // migrate stats for the old album
         Stats::migrate('album', $old_album, $new_album, $song_id);

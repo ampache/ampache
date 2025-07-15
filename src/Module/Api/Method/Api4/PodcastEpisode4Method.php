@@ -75,10 +75,10 @@ final class PodcastEpisode4Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::podcast_episodes([$object_id], $user);
+                echo Json4_Data::podcast_episodes([$object_id], $user, $input['auth']);
                 break;
             default:
-                echo Xml4_Data::podcast_episodes([$object_id], $user);
+                echo Xml4_Data::podcast_episodes([$object_id], $user, $input['auth']);
         }
 
         return true;

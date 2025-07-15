@@ -48,11 +48,8 @@ interface Media
      * play_url
      *
      * Returns the url to stream the specified object
-     * @param string $additional_params
-     * @param string $player
-     * @param bool $local
      */
-    public function play_url($additional_params = '', $player = '', $local = false): string;
+    public function play_url(string $additional_params = '', string $player = '', bool $local = false): string;
 
     /**
      * get_stream_name

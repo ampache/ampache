@@ -79,7 +79,7 @@ final class ArtSizeCalculationCommand extends Command
 
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($inDisk && $localDir) {
-                $folder = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], 'default');
+                $folder = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], $row['size'], 'default');
                 if ($folder === null) {
                     continue;
                 }

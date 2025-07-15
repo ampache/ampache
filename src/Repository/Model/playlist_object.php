@@ -203,7 +203,7 @@ abstract class playlist_object extends database_object implements library_item
                 : Art::has_db($this->id, 'playlist');
         }
 
-        return $this->has_art;
+        return $this->has_art ?? false;
     }
 
     /**
@@ -327,7 +327,7 @@ abstract class playlist_object extends database_object implements library_item
                 : $web_path . '/playlist.php?action=show&playlist_id=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**

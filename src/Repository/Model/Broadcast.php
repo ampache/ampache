@@ -58,7 +58,7 @@ class Broadcast extends database_object implements library_item
 
     public int $song_position = 0;
 
-    /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
+    /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
     private ?string $f_link = null;
@@ -194,12 +194,12 @@ class Broadcast extends database_object implements library_item
             $this->link = $web_path . '/broadcast.php?id=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**
      * Get item tags.
-     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
      */
     public function get_tags(): array
     {
@@ -207,7 +207,7 @@ class Broadcast extends database_object implements library_item
             $this->tags = Tag::get_top_tags('broadcast', $this->id);
         }
 
-        return $this->tags;
+        return $this->tags ?? [];
     }
 
     /**
@@ -418,12 +418,8 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get play url.
-     *
-     * @param string $additional_params
-     * @param string $player
-     * @param bool $local
      */
-    public function play_url($additional_params = '', $player = '', $local = false): string
+    public function play_url(string $additional_params = '', string $player = '', bool $local = false): string
     {
         unset($additional_params, $player, $local);
 

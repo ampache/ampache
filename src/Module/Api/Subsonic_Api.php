@@ -515,7 +515,7 @@ class Subsonic_Api
     {
         $size          = (int)($input['size'] ?? 10);
         $offset        = (int)($input['offset'] ?? 0);
-        $musicFolderId = (int)($input['musicFolderId'] ?? 0);
+        $musicFolderId = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($input['musicFolderId']) : 0;
         $catalogFilter = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'));
 
         // Get albums from all catalogs by default Catalog filter is not supported for all request types for now.
@@ -683,7 +683,7 @@ class Subsonic_Api
         $albumOffset   = $input['albumOffset'] ?? 0;
         $songCount     = $input['songCount'] ?? 20;
         $songOffset    = $input['songOffset'] ?? 0;
-        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($input['musicFolderId']) : 0;
+        $musicFolderId = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($input['musicFolderId']) : 0;
 
         if ($artistCount > 0) {
             $data                    = [];
@@ -762,7 +762,7 @@ class Subsonic_Api
     /**
      * _getAmpacheIdArrays
      * @param string[] $sub_ids
-     * @return list<array{
+     * @return array<int, array{
      *     object_id: int,
      *     object_type: string,
      *     track: int
@@ -836,7 +836,9 @@ class Subsonic_Api
             // client.
             $headers      = apache_request_headers();
             $reqheaders   = [];
-            $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
+            if (isset($headers['User-Agent'])) {
+                $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
+            }
             if (isset($headers['Range'])) {
                 $reqheaders[] = "Range: " . $headers['Range'];
             }
@@ -2031,9 +2033,9 @@ class Subsonic_Api
     public static function getartists(array $input, User $user): void
     {
         unset($user);
-        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($input['musicFolderId']) : 0;
+        $musicFolderId = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($input['musicFolderId']) : 0;
         $catalogs      = [];
-        if (!empty($musicFolderId) && $musicFolderId != '-1') {
+        if (!empty($musicFolderId) && $musicFolderId != 0) {
             $catalogs[] = $musicFolderId;
         }
 
@@ -2282,12 +2284,12 @@ class Subsonic_Api
     {
         set_time_limit(300);
 
-        $musicFolderId   = $input['musicFolderId'] ?? '-1';
+        $musicFolderId   = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($input['musicFolderId']) : 0;
         $ifModifiedSince = $input['ifModifiedSince'] ?? '';
 
         $catalogs = [];
-        if (!empty($musicFolderId) && $musicFolderId != '-1') {
-            $catalogs[] = (int)$musicFolderId;
+        if (!empty($musicFolderId) && $musicFolderId != 0) {
+            $catalogs[] = $musicFolderId;
         } else {
             $catalogs = $user->get_catalogs('music');
         }
@@ -2600,7 +2602,7 @@ class Subsonic_Api
      * @param array<string, mixed> $input
      * @param User $user
      */
-    public static function getOpenSubsonicExtensions(array $input, User $user): void
+    public static function getopensubsonicextensions(array $input, User $user): void
     {
         unset($user);
 
@@ -2853,7 +2855,7 @@ class Subsonic_Api
         $fromYear      = $input['fromYear'] ?? null;
         $toYear        = $input['toYear'] ?? null;
         $sub_id        = $input['musicFolderId'] ?? null;
-        $musicFolderId = (isset($input['musicFolderId'])) ? self::getAmpacheId($sub_id) : 0;
+        $musicFolderId = ($sub_id) ? (int)self::getAmpacheId($sub_id) : 0;
 
         $data           = [];
         $data['limit']  = $size;
@@ -2879,7 +2881,7 @@ class Subsonic_Api
             ++$count;
         }
         if ($musicFolderId > 0) {
-            $type = self::getAmpacheType($sub_id);
+            $type = ($sub_id) ? self::getAmpacheType($sub_id) : '';
             if ($type === 'artist') {
                 $artist   = new Artist($musicFolderId);
                 $finput   = $artist->get_fullname();
@@ -3082,10 +3084,17 @@ class Subsonic_Api
             return;
         }
 
+        $song = new Song($song_id);
+        if ($song->isNew() || !$song->enabled) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addSong($response, $song_id);
+            $response = Subsonic_Xml_Data::addSong($response, $song);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
             $response = Subsonic_Json_Data::addSong($response, $song_id);
@@ -3474,9 +3483,9 @@ class Subsonic_Api
 
         $object_id  = $input['id'] ?? [];
         $controller = AmpConfig::get('localplay_controller', '');
-        $localplay  = new LocalPlay($controller);
+        $localplay  = ($controller) ? new LocalPlay($controller) : null;
         $return     = false;
-        if (empty($controller) || empty($localplay->type) || !$localplay->connect()) {
+        if (empty($controller) || empty($localplay) || empty($localplay->type) || !$localplay->connect()) {
             debug_event(self::class, 'Error Localplay controller: ' . (empty($controller) ? 'Is not set' : $controller), 3);
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
@@ -3908,7 +3917,6 @@ class Subsonic_Api
             $data['rule_' . $rule_count]               = 'added';
             $data['rule_' . $rule_count . '_operator'] = 1; // after
             $data['rule_' . $rule_count . '_input']    = date('Y-m-d\TH:i', (int)($newerThan / 1000)); // e.g. 2025-08-12T10:15
-            $rule_count++;
         }
 
         $search_sql = Search::prepare($data, $user);

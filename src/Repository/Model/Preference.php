@@ -556,6 +556,7 @@ class Preference extends database_object
      * get_categories
      * This returns an array of the names of the different possible sections
      * it ignores the 'internal' category
+     * @return string[]
      */
     public static function get_categories(): array
     {
@@ -575,6 +576,7 @@ class Preference extends database_object
     /**
      * get_special_values
      * This returns an array of the values for special preferences which are not kept in the database
+     * @return array<int|string>|null
      */
     public static function get_special_values(string $name, User $user): ?array
     {
@@ -1252,7 +1254,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [187, 'home_recently_played_all', '1', 'Show all media types in Recently Played', AccessLevelEnum::USER->value, 'bool', 'interface', 'home']);
                     break;
                 case 'show_wrapped':
-                    Dba::write($pref_sql, [188, 'show_wrapped', '1', 'Enable access to your personal \"Spotify Wrapped\" from your user page', AccessLevelEnum::USER->value, 'bool', 'interface', 'privacy']);
+                    Dba::write($pref_sql, [188, 'show_wrapped', '1', 'Enable access to your personal "Spotify Wrapped" from your user page', AccessLevelEnum::USER->value, 'bool', 'interface', 'privacy']);
                     break;
                 case 'sidebar_hide_switcher':
                     Dba::write($pref_sql, [189, 'sidebar_hide_switcher', '0', 'Hide sidebar switcher arrows', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
@@ -1355,6 +1357,9 @@ class Preference extends database_object
                     break;
                 case 'show_playlist_media_parent':
                     Dba::write($pref_sql, [230, 'show_playlist_media_parent', '0', 'Show Artist column on playlist media rows', AccessLevelEnum::USER->value, 'boolean', 'playlist', null]);
+                    break;
+                case 'subsonic_legacy':
+                    Dba::write($pref_sql, [231, 'subsonic_legacy', '1', 'Enable legacy Subsonic API responses for compatibility issues', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);

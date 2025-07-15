@@ -426,7 +426,7 @@ class VlcPlayer
      * @param $contents
      * @param int $get_attributes
      * @param string $priority
-     * @return array
+     * @return array<string, mixed>
      */
     private function xmltoarray($contents, $get_attributes = 1, $priority = 'attribute'): array
     {

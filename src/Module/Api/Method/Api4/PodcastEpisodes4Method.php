@@ -89,12 +89,12 @@ final class PodcastEpisodes4Method
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::podcast_episodes($results, $user, true, false);
+                echo Json4_Data::podcast_episodes($results, $user, $input['auth'], true, false);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::podcast_episodes($results, $user);
+                echo Xml4_Data::podcast_episodes($results, $user, $input['auth']);
         }
 
         return true;

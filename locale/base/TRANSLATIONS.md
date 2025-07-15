@@ -95,5 +95,39 @@ Finally, to build all the mo files which Ampache uses you need to install gettex
 Now you can forcibly rebuild all the mo files with this command
 
 ```shell
+cd base/locale
 bash gather-messages.sh -fa
 ```
+
+### Gathering new translations
+
+Generate a new messages.pot using the generate command.
+
+This file is used by Transifex to generate the messages for each language file.
+
+```shell
+cd base/locale
+bash gather-messages.sh -g
+```
+
+You can regenerate database strings by adding `u`
+
+```shell
+cd base/locale
+bash gather-messages.sh -gu
+```
+
+Check for duplicate message id's in the pot
+
+```shell
+sort messages.pot | uniq -d | grep msgid
+```
+
+msgid "" is the only dupe you want to see. (This is used for multiline translations)
+
+I used a regex to delete the dupes, alter to match your issues. Dupes will generally come from these generated files.
+
+```txt
+\n+#:\s*(?:Database preference subcategory table id [0-9]+|\.\/untranslated-strings\.txt:[0-9]+)\nmsgid "(?:backend|browse|catalog|custom|feature|home|httpq|lastfm|library|localplay|mpd|metadata|notification|player|podcast|privacy|query|share|Show current song in Web Player page title|sidebar|theme|transcoding|update|upload)"\nmsgstr "[^"]*"
+```
+

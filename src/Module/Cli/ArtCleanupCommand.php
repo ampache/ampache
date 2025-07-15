@@ -53,7 +53,10 @@ final class ArtCleanupCommand extends Command
         $this->configContainer = $configContainer;
         $this->artCleanup      = $artCleanup;
 
-        $this->option('-t|--thumbnails', T_('Delete all thumbnails'), 'boolval', false);
+        $this
+            ->option('-c|--cleanup', T_('Removes missing files from the database'), 'boolval', false)
+            ->option('-t|--thumbnails', T_('Delete all thumbnails'), 'boolval', false)
+            ->option('-x|--execute', T_('Disables dry-run'), 'boolval', false);
     }
 
     public function execute(): void
@@ -63,9 +66,11 @@ final class ArtCleanupCommand extends Command
         }
 
         $interactor = $this->io();
+        $cleanup    = $this->values()['cleanup'] === true;
+        $execute    = $this->values()['execute'] === true;
         $thumbnails = $this->values()['thumbnails'] === true;
 
-        if (!$thumbnails) {
+        if (!$thumbnails && !$cleanup) {
             $interactor->info(
                 'This file cleans the image table for items that don\'t fit into set dimensions',
                 true
@@ -98,14 +103,44 @@ final class ArtCleanupCommand extends Command
                 return;
             }
 
+            if ($execute === false) {
+                $interactor->info(
+                    T_('Running in Test Mode. Use -x to execute'),
+                    true
+                );
+
+                return;
+            }
+
             $this->artCleanup->cleanup();
         } else {
-            $interactor->info(
-                'Delete art thumbnails keeping the original images',
-                true
-            );
+            if ($execute === false) {
+                $interactor->info(
+                    T_('Running in Test Mode. Use -x to execute'),
+                    true
+                );
+            } else {
+                $interactor->warn(
+                    "***" . T_("WARNING") . "*** " . T_('Running in Write Mode. Make sure you\'ve tested first!'),
+                    true
+                );
+            }
+            if ($thumbnails) {
+                $interactor->info(
+                    'Delete art thumbnails keeping the original images',
+                    true
+                );
 
-            $this->artCleanup->deleteThumbnails($interactor);
+                $this->artCleanup->deleteThumbnails($interactor, $execute);
+            }
+            if ($cleanup) {
+                $interactor->info(
+                    'Delete orphaned art files from the local metadata folder and migrate thumbnails to the correct location',
+                    true
+                );
+
+                $this->artCleanup->migrateThumbnails($interactor, $execute);
+            }
         }
 
         $interactor->ok(

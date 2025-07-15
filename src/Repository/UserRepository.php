@@ -316,8 +316,8 @@ final readonly class UserRepository implements UserRepositoryInterface
 
             // check for api sessions
             $sql = (AmpConfig::get('perpetual_api_session'))
-                ? "SELECT `username` FROM `session` WHERE `id` = ? AND (`expire` = 0 OR `expire` > ?) AND type = 'api'"
-                : "SELECT `username` FROM `session` WHERE `id` = ? AND `expire` > ? AND type = 'api'";
+                ? "SELECT `username` FROM `session` WHERE `id` = ? AND (`expire` = 0 OR `expire` > ?) AND `type` = 'api'"
+                : "SELECT `username` FROM `session` WHERE `id` = ? AND `expire` > ? AND `type` = 'api'";
             $db_results = Dba::read($sql, [$apikey, time()]);
             $results    = Dba::fetch_assoc($db_results);
 

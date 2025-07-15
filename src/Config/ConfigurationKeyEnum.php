@@ -131,6 +131,7 @@ final class ConfigurationKeyEnum
     public const LIBITEM_BROWSE_ALPHA                  = 'libitem_browse_alpha';
     public const LIBITEM_CONTEXTMENU                   = 'libitem_contextmenu';
     public const LICENSING                             = 'licensing';
+    public const LOCAL_METADATA_DIR                    = 'local_metadata_dir';
     public const LOCALPLAY_CONTROLLER                  = 'localplay_controller';
     public const LOCALPLAY_LEVEL                       = 'localplay_level';
     public const LOCK_SONGS                            = 'lock_songs';
@@ -157,6 +158,7 @@ final class ConfigurationKeyEnum
     public const PROXY_PASS                            = 'proxy_pass';
     public const PROXY_PORT                            = 'proxy_port';
     public const PROXY_USER                            = 'proxy_user';
+    public const PUBLIC_IMAGES                         = 'public_images';
     public const RADIO                                 = 'live_stream';
     public const RATE_LIMIT                            = 'rate_limit';
     public const RATING_FILE_TAG_USER                  = 'rating_file_tag_user';

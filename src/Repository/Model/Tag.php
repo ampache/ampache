@@ -324,7 +324,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * get_merged_tags
      * Get merged tags to this tag.
-     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
      */
     public function get_merged_tags(): array
     {
@@ -555,7 +555,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * get_top_tags
      * This gets the top tags for the specified object using limit
-     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
      */
     public static function get_top_tags(string $type, int $object_id, ?int $limit = 10): array
     {
@@ -699,7 +699,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * get_tags
      * This is a non-object non type dependent function that just returns tags
      * we've got, it can take filters (this is used by the tag cloud)
-     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
      */
     public static function get_tags(?string $type = '', ?int $limit = 0, ?string $order = 'count'): array
     {
@@ -766,7 +766,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * This returns a csv formatted version of the tags that we are given
      * it also takes a type so that it knows how to return it, this is used
      * by the formatting functions of the different objects
-     * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
+     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      * @param bool $link
      * @param string|null $filter_type
      * @return string

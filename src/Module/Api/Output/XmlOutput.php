@@ -37,9 +37,9 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * @param list<int|string> $result
      */
-    public function podcastEpisodes(array $result, User $user): string
+    public function podcastEpisodes(array $result, User $user, string $auth): string
     {
-        return Xml_Data::podcast_episodes($result, $user);
+        return Xml_Data::podcast_episodes($result, $user, $auth);
     }
 
     public function setOffset(int $offset): void
@@ -117,8 +117,9 @@ final class XmlOutput implements ApiOutputInterface
      * At the moment, this method just acts as a proxy
      *
      * @param list<int|string> $albums
-     * @param array $include
+     * @param string[] $include
      * @param User $user
+     * @param string $auth
      * @param bool $encode
      * @param bool $asObject
      *
@@ -128,10 +129,11 @@ final class XmlOutput implements ApiOutputInterface
         array $albums,
         array $include,
         User $user,
+        string $auth,
         bool $encode = true,
         bool $asObject = true
     ): string {
-        return Xml_Data::albums($albums, $include, $user, $encode);
+        return Xml_Data::albums($albums, $include, $user, $auth, $encode);
     }
 
     /**

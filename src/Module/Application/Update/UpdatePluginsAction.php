@@ -61,7 +61,7 @@ final class UpdatePluginsAction implements ApplicationActionInterface
         Plugin::update_all();
 
         return $this->responseFactory
-            ->createResponse(StatusCode::FOUND)
+            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 $this->configContainer->getWebPath()

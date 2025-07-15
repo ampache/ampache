@@ -114,7 +114,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
             $this->link = $web_path . '/radio.php?action=show&radio=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**
@@ -338,6 +338,8 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
         $catalog = Catalog::create_from_id($data['catalog']);
         if ($catalog === null) {
             AmpError::add('catalog', T_('Catalog is invalid'));
+
+            return null;
         }
 
         if (AmpError::occurred()) {
@@ -370,13 +372,8 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     /**
      * play_url
      * This is needed by the media interface
-     * @param string $additional_params
-     * @param string $player
-     * @param bool $local
-     * @param string $sid
-     * @param string $force_http
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $sid = '', $force_http = ''): string
+    public function play_url(string $additional_params = '', string $player = '', bool $local = false, ?string $sid = '', ?string $force_http = ''): string
     {
         return $this->url . $additional_params;
     }

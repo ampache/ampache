@@ -68,7 +68,7 @@ final class UpdateInstanceAction extends AbstractLocalPlayAction
         $localplay->update_instance((int)$_REQUEST['instance'], $_POST);
 
         return $this->responseFactory
-            ->createResponse(StatusCode::FOUND)
+            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf('%s/localplay.php?action=show_instances', $this->configContainer->getWebPath())

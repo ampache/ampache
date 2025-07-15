@@ -169,7 +169,7 @@ class Xml3_Data
      * tags_string
      *
      * This returns the formatted 'tags' string for an xml document
-     * @param list<array{id: int, name: string, is_hidden: int, count: int}> $tags
+     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      */
     private static function tags_string(array $tags): string
     {
@@ -292,10 +292,11 @@ class Xml3_Data
      * @param list<int|string> $artists
      * @param string[] $include Array of other items to include
      * @param User $user
+     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
      * @return string
      */
-    public static function artists(array $artists, array $include, User $user, bool $full_xml = true): string
+    public static function artists(array $artists, array $include, User $user, string $auth, bool $full_xml = true): string
     {
         if (null == $include) {
             $include = [];
@@ -323,16 +324,16 @@ class Xml3_Data
             $tag_string  = self::tags_string($artist->get_tags());
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $artist_id . '&object_type=artist';
+            $art_url = Art::url($artist->id, 'artist', $auth);
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), $include, $user, false);
+                $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), $include, $user, $auth, false);
             } else {
                 $albums = $artist->album_count;
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs(self::getSongRepository()->getByArtist($artist->id), $user, [], false);
+                $songs = self::songs(self::getSongRepository()->getByArtist($artist->id), $user, $auth, [], false);
             } else {
                 $songs = $artist->song_count;
             }
@@ -351,10 +352,11 @@ class Xml3_Data
      * @param list<int|string> $albums
      * @param string[] $include Array of other items to include
      * @param User $user
+     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
      * @return string
      */
-    public static function albums(array $albums, array $include, User $user, bool $full_xml = true): string
+    public static function albums(array $albums, array $include, User $user, string $auth, bool $full_xml = true): string
     {
         $string = "<total_count>" . count($albums) . "</total_count>\n";
 
@@ -378,7 +380,7 @@ class Xml3_Data
             $user_rating = $rating->get_user_rating($user->getId());
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $album->id . '&object_type=album';
+            $art_url = Art::url($album->id, 'album', $auth);
 
             $string .= "<album id=\"" . $album->id . "\">\n\t<name><![CDATA[" . $album->name . "]]></name>\n";
 
@@ -388,7 +390,7 @@ class Xml3_Data
 
             // Handle includes
             if (in_array("songs", $include)) {
-                $songs = self::songs(self::getSongRepository()->getByAlbum($album->id), $user, [], false);
+                $songs = self::songs(self::getSongRepository()->getByAlbum($album->id), $user, $auth, [], false);
             } else {
                 $songs = $album->song_count;
             }
@@ -446,7 +448,7 @@ class Xml3_Data
      *     track: int
      * }> $playlist_data
      */
-    public static function songs(array $songs, User $user, ?array $playlist_data = [], bool $full_xml = true): string
+    public static function songs(array $songs, User $user, string $auth, ?array $playlist_data = [], bool $full_xml = true): string
     {
         $string = "<total_count>" . count($songs) . "</total_count>\n";
 
@@ -459,7 +461,7 @@ class Xml3_Data
         }
 
         Song::build_cache($songs);
-        Stream::set_session($_REQUEST['auth'] ?? '');
+        Stream::set_session($auth);
 
         // Foreach the ids!
         foreach ($songs as $song_id) {
@@ -475,7 +477,7 @@ class Xml3_Data
             $tag_string            = self::tags_string(Tag::get_top_tags('song', $song->id));
             $rating                = new Rating($song->id, 'song');
             $user_rating           = $rating->get_user_rating($user->getId());
-            $art_url               = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
+            $art_url               = Art::url($song->album, 'album', $auth);
             $songMime              = $song->mime;
             $songBitrate           = $song->bitrate;
             $play_url              = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
@@ -542,9 +544,10 @@ class Xml3_Data
      *     track_id: int,
      *     track: int}> $object_ids Object IDs
      * @param User $user
+     * @param string $auth
      * @return string
      */
-    public static function democratic(array $object_ids, User $user): string
+    public static function democratic(array $object_ids, User $user, string $auth): string
     {
         $democratic = Democratic::get_current_playlist($user);
         $string     = '';
@@ -563,7 +566,7 @@ class Xml3_Data
             $tag_string  = self::tags_string($song->get_tags());
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
-            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
+            $art_url     = Art::url($song->album, 'album', $auth);
             $songMime    = $song->mime;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
 

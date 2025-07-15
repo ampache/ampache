@@ -102,7 +102,7 @@ final class DefaultAction implements ApplicationActionInterface
             }
             if ($auth) {
                 return $this->responseFactory
-                    ->createResponse(StatusCode::FOUND)
+                    ->createResponse(StatusCode\RFC\RFC7231::FOUND)
                     ->withHeader(
                         'Location',
                         $this->configContainer->getWebPath()
@@ -352,7 +352,7 @@ final class DefaultAction implements ApplicationActionInterface
                 strpos($_POST['referrer'], 'admin') === false
             ) {
                 return $this->responseFactory
-                    ->createResponse(StatusCode::FOUND)
+                    ->createResponse(StatusCode\RFC\RFC7231::FOUND)
                     ->withHeader(
                         'Location',
                         $_POST['referrer']
@@ -360,7 +360,7 @@ final class DefaultAction implements ApplicationActionInterface
             } // if we've got a referrer
 
             return $this->responseFactory
-                ->createResponse(StatusCode::FOUND)
+                ->createResponse(StatusCode\RFC\RFC7231::FOUND)
                 ->withHeader(
                     'Location',
                     sprintf('%s/index.php', $this->configContainer->getWebPath())

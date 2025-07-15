@@ -806,19 +806,9 @@ parameters:
 			path: src/Module/Api/Method/VideosMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\ApiOutputInterface\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Output/ApiOutputInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\ApiOutputInterface\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Output/ApiOutputInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\JsonOutput\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Output/JsonOutput.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\JsonOutput\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -829,11 +819,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\JsonOutput\\:\\:podcastEpisodes\\(\\) should return string but returns array\\|string\\.$#"
 			count: 1
 			path: src/Module/Api/Output/JsonOutput.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\XmlOutput\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Output/XmlOutput.php
 
 		-
 			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\OpenSubsonic_Api', non\\-falsy\\-string\\} given\\.$#"
@@ -1156,11 +1141,6 @@ parameters:
 			path: src/Module/Api/Xml5_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:rss_feed\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:keyed_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
@@ -1246,16 +1226,6 @@ parameters:
 			path: src/Module/Art/Collector/MetaTagCollectorModule.php
 
 		-
-			message: "#^Regex pattern is invalid\\: Unknown modifier '/' in pattern\\: /http\\://www\\.encyclopedisque\\.fr/images/imgdb/\\(thumb250\\|main\\)/\\(\\\\d\\+\\)\\.jpg/$#"
-			count: 1
-			path: src/Module/Art/Collector/MusicbrainzCollectorModule.php
-
-		-
-			message: "#^Regex pattern is invalid\\: Unknown modifier '/' in pattern\\: /http\\://www\\\\\\.jamendo\\\\\\.com/\\(\\\\w\\\\w/\\)\\?album/\\(\\\\d\\+\\)/$#"
-			count: 1
-			path: src/Module/Art/Collector/MusicbrainzCollectorModule.php
-
-		-
 			message: "#^Expression in empty\\(\\) is always falsy\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/SpotifyCollectorModule.php
@@ -1266,17 +1236,7 @@ parameters:
 			path: src/Module/Authentication/AuthenticationManager.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\AuthenticationManager\\:\\:login\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/AuthenticationManager.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\AuthenticationManager\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/AuthenticationManager.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\AuthenticationManager\\:\\:tokenLogin\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/AuthenticationManager.php
 
@@ -1291,24 +1251,9 @@ parameters:
 			path: src/Module/Authentication/AuthenticationManagerInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\AuthenticationManagerInterface\\:\\:tokenLogin\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/AuthenticationManagerInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\AuthenticatorInterface\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/AuthenticatorInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\AuthenticatorInterface\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/Authenticator/AuthenticatorInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\DatabaseAuthenticator\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/DatabaseAuthenticator.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\DatabaseAuthenticator\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -1316,19 +1261,9 @@ parameters:
 			path: src/Module/Authentication/Authenticator/DatabaseAuthenticator.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\ExternalAuthenticator\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/ExternalAuthenticator.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\ExternalAuthenticator\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/Authenticator/ExternalAuthenticator.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\HttpAuthenticator\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/HttpAuthenticator.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\HttpAuthenticator\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -1336,19 +1271,9 @@ parameters:
 			path: src/Module/Authentication/Authenticator/HttpAuthenticator.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\LdapAuthenticator\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/LdapAuthenticator.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\LdapAuthenticator\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/Authenticator/LdapAuthenticator.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\PamAuthenticator\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/PamAuthenticator.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\PamAuthenticator\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -1362,11 +1287,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:array_filter_key\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Ldap/Ldap.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 
@@ -1697,11 +1617,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\SeafileAdapter\\:\\:\\$server has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: "#^Regex pattern is invalid\\: Unknown modifier 'c' in pattern\\: \\(\\\\d\\+\\) sec$#"
 			count: 1
 			path: src/Module/Catalog/SeafileAdapter.php
 
@@ -2162,11 +2077,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:xmltoarray\\(\\) has parameter \\$contents with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:xmltoarray\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
@@ -4016,22 +3926,12 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:set_broken\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:write_id3\\(\\) has parameter \\$tagData with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
 		-
 			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:splitSlashedlist\\(\\) expects string, array\\<int, string\\>\\|string given\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$_pathinfo type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -4077,11 +3977,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:read_id3\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfoInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:set_broken\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfoInterface.php
 
@@ -4271,11 +4166,6 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:\\$album_artists type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:\\$_mapcache type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
@@ -4371,16 +4261,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$_filecache type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$_playlists type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$albums type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -4406,29 +4286,9 @@ parameters:
 			path: src/Repository/Model/Label.php
 
 		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Cannot access property \\$max_ampache on class\\-string\\|object\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Cannot access property \\$min_ampache on class\\-string\\|object\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Cannot access property \\$name on class\\-string\\|object\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:\\$_plugin has no type specified\\.$#"
@@ -4437,16 +4297,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:fix_preferences\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Preference.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:get_categories\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Preference.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:get_special_values\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Preference.php
 
@@ -4506,11 +4356,6 @@ parameters:
 			path: src/Repository/Model/Search.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:get_searches\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:prepare\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
@@ -4522,11 +4367,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:year_search\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$basetypes has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
@@ -4552,16 +4392,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:compare_song_information\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_artists\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_custom_play_actions\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -4602,11 +4432,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:get_user_data\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:has_info\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 

@@ -93,12 +93,12 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public ?string $link = null;
 
-    /** @var int $catalog_id */
-    public $catalog_id;
+    public int $catalog_id = 0;
 
+    /** @var int[] $album_artists */
     private ?array $album_artists = null;
 
-    /** @var list<array{id: int, name: string, is_hidden: int, count: int}> $tags */
+    /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
     private ?string $f_artist_name = null;
@@ -336,12 +336,12 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             $this->link = $web_path . '/albums.php?action=show_disk&album_disk=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**
      * Get item tags.
-     * @return list<array{id: int, name: string, is_hidden: int, count: int}>
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
      */
     public function get_tags(): array
     {
@@ -349,7 +349,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             $this->tags = Tag::get_top_tags('album', $this->album_id);
         }
 
-        return $this->tags;
+        return $this->tags ?? [];
     }
 
     /**
@@ -434,13 +434,13 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     /**
      * Get item album_artist fullname.
      */
-    public function get_artist_fullname(): ?string
+    public function get_artist_fullname(): string
     {
         if ($this->f_artist_name === null) {
             $this->f_artist_name = $this->album->get_artist_fullname();
         }
 
-        return $this->f_artist_name;
+        return $this->f_artist_name ?? '';
     }
 
     /**
@@ -584,7 +584,9 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         }
 
         if ($album_id !== null && $type !== null) {
-            $title = '[' . ($this->get_artist_fullname() ?? $this->get_artist_fullname()) . '] ' . $this->get_fullname();
+            $title = (!empty($this->get_artist_fullname()))
+                ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
+                : $this->get_fullname();
             Art::display($type, $album_id, $title, $size, $this->get_link());
         }
     }

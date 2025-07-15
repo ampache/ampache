@@ -1,5 +1,70 @@
 # CHANGELOG
 
+## Ampache 7.7.0
+
+### Added
+
+* Translations 2025-07-14
+* Browse
+  * New filters `user_flag`, `user_rating` on library items
+* Config version 83
+  * Add `public_images` Disable this option to require a valid user session for viewing images
+* CLI
+  * cleanup:art
+    * Add option `-c|--cleanup` (Delete orphaned art files when the file is missing from `local_metadata_folder`)
+    * Add option `-x|--execute` (Don't delete unless you explicitly choose to delete)
+  * Add a warning for orphan catalog cache folders during `run:cacheProcess`
+* Ampache Remote Catalogs
+  * Allow verify for Remote catalogs
+  * Gather art for Album and Artist objects missing art
+  * Get more tag data from API6 servers that don't have the `song_tags` method
+  * Use cached files for tag updates if created in the last 30 days
+* Try to pre-cache missing files in the transcode cache on play (When enabled)
+* Put the ID back on Art links to make them unique
+* Add session id to art links if auth is enabled
+
+### Changed
+
+* Don't show the clear art button when there isn't art there
+* Update composer packages
+* Use original art size when GD resizing is disabled for URL links
+* Add the file mime to Art URL links
+* Stop automatically creating thumbnails when inserting new art
+
+### Removed
+
+* Don't include log lines in translation files to reduce line changes
+
+### Fixed
+
+* Bad `ampache.sql` file
+* Check the preference table has data on database insert checks
+* Installer Bootstrap code updated to support v5 changes
+* Insert rows for Songs missing from the `song_data` table
+* Art inserted from URL would insert as a PHP mime type
+* Garbage Collection from the Web UI didn't send catalogs correctly
+* Filename checked as a change in tag comparison
+* Bad regex in MusicBrainz art collector 
+* Null values in `parse_mbid_array`
+* Search
+  * Local image `has_image` search didn't count missing joins
+* Ampache Remote Catalogs
+  * Ampache PHP API didn't like `song_tags`
+  * Could not add songs
+  * Ensure an ID is returned for cleaning
+  * Don't error on the first track when `song_tags` fails
+  * Cache path was using the base folder instead of the numbered subfolders
+* Don't gather file art when the file is a URL
+* Delete Art cache when the art is updated
+* Art URLs were not sending auth session correctly
+* Enforce session requirements on art URLs correctly
+* Subsonic
+  * Incorrect case for `getOpenSubsonicExtensions` on old Subsonic class
+  * Ensure disabled songs are not added in more areas
+  * Look for other possible empty arrays
+  * Subsonic Remote catalogs can verify existing Song data
+  * Some lookups for `MusicFolderId` were still expecting int values
+
 ## Ampache 7.6.1
 
 Fixes for issues with OpenSubsonic identified by Symfonium users
@@ -767,7 +832,7 @@ Fixed some slowdowns due to preference name and location look ups happening for 
 * Respect geolocation setting in stats calls and only check valid data
 * Align 'Post Shout' and 'Graphs' text on artist page
 * Missing 'default' string for album_sort (Should match on default but be explicit)
-* Double `/` in JS url
+* Double `/` in JS URL
 * Sidebar cookie, JavaScript and visual state were a bit of a disaster
 * Look for the expanded class in the sidebar before toggling collapse
 
@@ -1376,7 +1441,7 @@ As an end of year bonus you can access your own Ampache Wrapped from the user pa
 ### Fixed
 
 * Empty global error on index page
-* Check the file/url before importing with `import_playlist`
+* Check the file/URL before importing with `import_playlist`
 * Large docstring cleanup: remove unneeded tags and trim names
 * Correct ip history rendering in case of a invalid user
 * Make sure something is also unplayed when total_count is 0
@@ -2484,7 +2549,7 @@ API3 is not recommended for use outside of running old applications and it is re
 
 * Get image from more tag types
 * Translation Updates Nov 2021
-* Added the ability to play random songs from a playlist with a play url
+* Added the ability to play random songs from a playlist with a play URL
 * Update AmpacheRatingMatch.php to allow writing ratings to file tags
   * Enable 'Save ratings to file tags when changed' on the plugin page
   * write_tags must be enabled in the config file
@@ -2534,7 +2599,7 @@ API3 is not recommended for use outside of running old applications and it is re
 * garbage collection for playlist images
 * Stats when skipping songs with 0 plays
 * More PHP8 runtime errors
-* Fixed single song random playback using a play url
+* Fixed single song random playback using a play URL
 * Make sure we error if php_intl module isn't found
 
 ## Ampache 5.1.1-release
@@ -2576,7 +2641,7 @@ API3 is not recommended for use outside of running old applications and it is re
 * Setting Localplay instance would not update the preference
 * Advanced search (Random) wasn't working in php8
 * Fixed returning the correct objects for advanced search (Random)
-* Some objects would add transcode_to to their play url
+* Some objects would add transcode_to to their play URL
 * Set system prefs for mb and tadb plugins
 * Updating a channel in php8
 * Get tmp_playlist by session (could get confused and never retrieve items)
@@ -3076,7 +3141,7 @@ There also a few API changes to enable a bit better control for older clients.
 * Don't allow duplicate podcast feeds
 * Updated the gather art process
 * Searches will order by file/name instead of id (unless random)
-* Updated amapche.sql
+* Updated ampache.sql
 * Updated composer requirements
 * Default false config option text changed to true (no more typing, just uncomment!)
 * Compressed PNG and JPG images
@@ -3740,7 +3805,7 @@ Notes about this release that can't be summed up in a log line
 * Enabled use of cache in PHPCs
 * All files now use UTF8 without BOM
 * Now require Exact catalog name match on catalog update
-* Port 443 removed from play url
+* Port 443 removed from play URL
 * Now test all images found to select the one with the good dimensions
 * Rewrote LDAP class
 * Song count in handshake now matches the number returned from songs

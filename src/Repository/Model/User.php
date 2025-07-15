@@ -35,6 +35,9 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Plugin\PluginGetAvatarUrlInterface;
+use Ampache\Plugin\PluginSaveMediaplayInterface;
+use Ampache\Plugin\PluginStreamControlInterface;
 use Ampache\Repository\IpHistoryRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Exception;
@@ -109,13 +112,9 @@ class User extends database_object
             return;
         }
 
-        $info = $this->has_info((int)$user_id);
-        if ($info === []) {
+        $info = $this->set_info((int)$user_id);
+        if (!$info) {
             return;
-        }
-
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
         }
 
         // Make sure the Full name is always filled
@@ -135,18 +134,16 @@ class User extends database_object
     }
 
     /**
-     * has_info
-     * This function returns the information for this object
+     * set_info
+     * This function gets the information for this object
      */
-    private function has_info(int $user_id): array
+    private function set_info(int $user_id): bool
     {
         if (self::is_cached('user', $user_id)) {
-            return self::get_from_cache('user', $user_id);
-        }
-
-        // If the ID is -1 then send back generic data
-        if ($user_id === -1) {
-            return [
+            $data = self::get_from_cache('user', $user_id);
+        } elseif ($user_id === -1) {
+            // If the ID is -1 then send back generic data
+            $data = [
                 'id' => -1,
                 'username' => 'System',
                 'fullname' => 'Ampache User',
@@ -161,16 +158,23 @@ class User extends database_object
                 'rsstoken' => null,
                 'streamtoken' => null,
             ];
+        } else {
+            $sql        = "SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `catalog_filter_group` FROM `user` WHERE `id` = ?;";
+            $db_results = Dba::read($sql, [$user_id]);
+
+            $data = Dba::fetch_assoc($db_results);
         }
 
-        $sql        = "SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `catalog_filter_group` FROM `user` WHERE `id` = ?;";
-        $db_results = Dba::read($sql, [$user_id]);
-
-        $data = Dba::fetch_assoc($db_results);
+        if (empty($data)) {
+            return false;
+        }
 
         self::add_to_cache('user', $user_id, $data);
+        foreach ($data as $key => $value) {
+            $this->$key = $value;
+        }
 
-        return $data;
+        return true;
     }
 
     /**
@@ -771,8 +775,8 @@ class User extends database_object
         foreach (Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY) as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null && $plugin->load($user)) {
-                    debug_event(self::class, 'save_mediaplay... ' . $plugin->_plugin->name, 5);
+                if ($plugin->_plugin instanceof PluginSaveMediaplayInterface && $plugin->load($user)) {
+                    debug_event(self::class, 'save_mediaplay... ' . $plugin_name, 5);
                     $plugin->_plugin->save_mediaplay($media);
                 }
             } catch (Exception $error) {
@@ -938,7 +942,7 @@ class User extends database_object
             $this->has_art = Art::has_db($this->id, 'user');
         }
 
-        return $this->has_art;
+        return $this->has_art ?? false;
     }
 
     /**
@@ -1053,7 +1057,7 @@ class User extends database_object
     {
         // Before we do anything make sure that they aren't the last admin
         if ($this->has_access(AccessLevelEnum::ADMIN)) {
-            $sql        = "SELECT `id` FROM `user` WHERE `access`= ? AND id != ?";
+            $sql        = "SELECT `id` FROM `user` WHERE `access`= ? AND `id` != ?";
             $params     = [AccessLevelEnum::ADMIN->value, $this->id];
             $db_results = Dba::read($sql, $params);
             if (Dba::num_rows($db_results) === 0) {
@@ -1129,7 +1133,7 @@ class User extends database_object
     /**
      * Get item link.
      */
-    public function get_link(): ?string
+    public function get_link(): string
     {
         // don't do anything if it's formatted
         if ($this->link === null && $this->id > 0) {
@@ -1138,7 +1142,7 @@ class User extends database_object
             $this->link = $web_path . '/stats.php?action=show_user&user_id=' . $this->id;
         }
 
-        return $this->link;
+        return $this->link ?? '';
     }
 
     /**
@@ -1237,12 +1241,12 @@ class User extends database_object
             if ($user instanceof User) {
                 foreach (Plugin::get_plugins(PluginTypeEnum::AVATAR_PROVIDER) as $plugin_name) {
                     $plugin = new Plugin($plugin_name);
-                    if ($plugin->_plugin !== null && $plugin->load($user)) {
+                    if ($plugin->_plugin instanceof PluginGetAvatarUrlInterface && $plugin->load($user)) {
                         $avatar['url'] = $plugin->_plugin->get_avatar_url($this);
                         if (!empty($avatar['url'])) {
                             $avatar['url_mini']   = $plugin->_plugin->get_avatar_url($this, 32);
                             $avatar['url_medium'] = $plugin->_plugin->get_avatar_url($this, 64);
-                            $avatar['title'] .= ' (' . $plugin->_plugin->name . ')';
+                            $avatar['title'] .= ' (' . $plugin_name . ')';
                             break;
                         }
                     }
@@ -1393,7 +1397,7 @@ class User extends database_object
 
         foreach (Plugin::get_plugins(PluginTypeEnum::STREAM_CONTROLLER) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null && $plugin->load($user) && !$plugin->_plugin->stream_control($media_ids)) {
+            if ($plugin->_plugin instanceof PluginStreamControlInterface && $plugin->load($user) && !$plugin->_plugin->stream_control($media_ids)) {
                 return false;
             }
         }

@@ -109,24 +109,24 @@ final class AdvancedSearch5Method
                 Json5_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'album':
-                        echo Json5_Data::albums($results, [], $user);
+                        echo Json5_Data::albums($results, [], $user, $input['auth']);
                         break;
                     case 'song_artist':
                     case 'album_artist':
                     case 'artist':
-                        echo Json5_Data::artists($results, [], $user);
+                        echo Json5_Data::artists($results, [], $user, $input['auth']);
                         break;
                     case 'label':
                         echo Json5_Data::labels($results);
                         break;
                     case 'playlist':
-                        echo Json5_Data::playlists($results, $user);
+                        echo Json5_Data::playlists($results, $user, $input['auth']);
                         break;
                     case 'podcast':
-                        echo Json5_Data::podcasts($results, $user);
+                        echo Json5_Data::podcasts($results, $user, $input['auth']);
                         break;
                     case 'podcast_episode':
-                        echo Json5_Data::podcast_episodes($results, $user);
+                        echo Json5_Data::podcast_episodes($results, $user, $input['auth']);
                         break;
                     case 'genre':
                     case 'tag':
@@ -136,10 +136,10 @@ final class AdvancedSearch5Method
                         echo Json5_Data::users($results);
                         break;
                     case 'video':
-                        echo Json5_Data::videos($results, $user);
+                        echo Json5_Data::videos($results, $user, $input['auth']);
                         break;
                     default:
-                        echo Json5_Data::songs($results, $user);
+                        echo Json5_Data::songs($results, $user, $input['auth']);
                         break;
                 }
                 break;
@@ -148,22 +148,22 @@ final class AdvancedSearch5Method
                 Xml5_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'album':
-                        echo Xml5_Data::albums($results, [], $user);
+                        echo Xml5_Data::albums($results, [], $user, $input['auth']);
                         break;
                     case 'artist':
-                        echo Xml5_Data::artists($results, [], $user);
+                        echo Xml5_Data::artists($results, [], $user, $input['auth']);
                         break;
                     case 'label':
                         echo Xml5_Data::labels($results, $user);
                         break;
                     case 'playlist':
-                        echo Xml5_Data::playlists($results, $user);
+                        echo Xml5_Data::playlists($results, $user, $input['auth']);
                         break;
                     case 'podcast':
-                        echo Xml5_Data::podcasts($results, $user);
+                        echo Xml5_Data::podcasts($results, $user, $input['auth']);
                         break;
                     case 'podcast_episode':
-                        echo Xml5_Data::podcast_episodes($results, $user);
+                        echo Xml5_Data::podcast_episodes($results, $user, $input['auth']);
                         break;
                     case 'genre':
                     case 'tag':
@@ -173,10 +173,10 @@ final class AdvancedSearch5Method
                         echo Xml5_Data::users($results);
                         break;
                     case 'video':
-                        echo Xml5_Data::videos($results, $user);
+                        echo Xml5_Data::videos($results, $user, $input['auth']);
                         break;
                     default:
-                        echo Xml5_Data::songs($results, $user);
+                        echo Xml5_Data::songs($results, $user, $input['auth']);
                         break;
                 }
         }

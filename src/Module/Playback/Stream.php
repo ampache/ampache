@@ -402,7 +402,10 @@ class Stream
             // when running cache_catalog_proc redirect to the file path instead of piping
             $command = (string)str_replace("pipe:1", $out_file, (string)$command);
             debug_event(self::class, 'Final command is ' . $command, 4);
-            shell_exec($command);
+            $process = proc_open($command, [], $pipes);
+            if (is_resource($process)) {
+                proc_close($process);
+            }
 
             return [];
         }

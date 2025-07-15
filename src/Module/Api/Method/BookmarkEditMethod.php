@@ -134,10 +134,10 @@ final class BookmarkEditMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::bookmarks($results, $include, false);
+                echo Json_Data::bookmarks($results, $input['auth'], $include, false);
                 break;
             default:
-                echo Xml_Data::bookmarks($results, $include);
+                echo Xml_Data::bookmarks($results, $input['auth'], $include);
         }
 
         return true;

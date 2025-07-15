@@ -105,6 +105,7 @@ final class Stats4Method
             $limit = (int) AmpConfig::get('popular_threshold', 10);
         }
 
+        $results = [];
         switch ($input['filter'] ?? 'random') {
             case 'newest':
                 $results = Stats::get_newest($type, $limit, $offset);
@@ -149,7 +150,7 @@ final class Stats4Method
         }
 
         ob_end_clean();
-        if (!isset($results)) {
+        if (empty($results)) {
             Api4::message('error', 'No Results', '404', $input['api_format']);
 
             return false;
@@ -158,28 +159,28 @@ final class Stats4Method
         if ($type === 'song') {
             switch ($input['api_format']) {
                 case 'json':
-                    echo Json4_Data::songs($results, $user);
+                    echo Json4_Data::songs($results, $user, $input['auth']);
                     break;
                 default:
-                    echo Xml4_Data::songs($results, $user);
+                    echo Xml4_Data::songs($results, $user, $input['auth']);
             }
         }
         if ($type === 'artist') {
             switch ($input['api_format']) {
                 case 'json':
-                    echo Json4_Data::artists($results, [], $user);
+                    echo Json4_Data::artists($results, [], $user, $input['auth']);
                     break;
                 default:
-                    echo Xml4_Data::artists($results, [], $user);
+                    echo Xml4_Data::artists($results, [], $user, $input['auth']);
             }
         }
         if ($type === 'album') {
             switch ($input['api_format']) {
                 case 'json':
-                    echo Json4_Data::albums($results, [], $user);
+                    echo Json4_Data::albums($results, [], $user, $input['auth']);
                     break;
                 default:
-                    echo Xml4_Data::albums($results, [], $user);
+                    echo Xml4_Data::albums($results, [], $user, $input['auth']);
             }
         }
 

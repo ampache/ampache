@@ -439,7 +439,7 @@ class Dba
 
         try {
             $dbh->exec('USE `' . $database . '`');
-        } catch (PDOException $error) {
+        } catch (PDOException) {
             self::$_error = (string)json_encode($dbh->errorInfo());
             debug_event(self::class, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
         }
@@ -490,6 +490,18 @@ class Dba
 
         // Make sure the table is there
         if (self::num_rows($db_results) < 1) {
+            return false;
+        }
+
+        $sql        = "SELECT `id` FROM `preference`";
+        $db_results = self::read($sql);
+
+        if (!$db_results) {
+            return false;
+        }
+
+        // Make sure the table is there and preferences are inserted
+        if (self::num_rows($db_results) < 100) {
             return false;
         }
 

@@ -127,7 +127,8 @@ class AlbumsMethodTest extends MockeryTestCase
             ->with(
                 [],
                 $include,
-                $user
+                $user,
+                'stringauth'
             )
             ->once()
             ->andReturn($result);
@@ -225,7 +226,8 @@ class AlbumsMethodTest extends MockeryTestCase
             ->with(
                 [$album],
                 $include,
-                $user
+                $user,
+                'stringauth',
             )
             ->once()
             ->andReturn($result);

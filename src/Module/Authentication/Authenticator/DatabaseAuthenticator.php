@@ -30,6 +30,14 @@ use Ampache\Module\System\Dba;
 
 final class DatabaseAuthenticator implements AuthenticatorInterface
 {
+    /**
+     * @return array{
+     *     success: bool,
+     *     type?: string,
+     *     username?: string,
+     *     error?: string
+     * }
+     */
     public function auth(string $username, string $password): array
     {
         if (strlen($password) && strlen($username)) {

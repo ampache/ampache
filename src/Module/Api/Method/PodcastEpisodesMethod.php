@@ -144,7 +144,7 @@ final class PodcastEpisodesMethod implements MethodInterface
         $output->setCount($browse->get_total());
 
         $response->getBody()->write(
-            $output->podcastEpisodes($results, $user)
+            $output->podcastEpisodes($results, $user, $input['auth'])
         );
 
         return $response;
