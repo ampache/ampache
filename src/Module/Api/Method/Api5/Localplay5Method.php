@@ -86,9 +86,10 @@ final class Localplay5Method
             return false;
         }
 
-        $result = false;
-        $status = false;
-        switch (strtolower($input['command'])) {
+        $result  = false;
+        $status  = null;
+        $command = strtolower($input['command']);
+        switch ($command) {
             case 'add':
                 // for add commands get the object details
                 $object_id = (int)($input['oid'] ?? 0);
@@ -159,6 +160,13 @@ final class Localplay5Method
 
                 return false;
         } // end switch on command
+
+        if ($command === 'status' && empty($status)) {
+            Api5::error(T_('Unable to connect to localplay controller'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
+
+            return false;
+        }
+
         $results = (!empty($status))
             ? ['localplay' => ['command' => [$input['command'] => $status]]]
             : ['localplay' => ['command' => [$input['command'] => $result]]];

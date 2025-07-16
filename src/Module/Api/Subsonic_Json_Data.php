@@ -155,13 +155,20 @@ class Subsonic_Json_Data
      *     'currentIndex': int,
      *     'playing': bool,
      *     'gain': float,
-     *     'position': int
+     *     'position'?: int
      * }
      */
     private static function _getJukeboxStatus(LocalPlay $localplay): array
     {
         $json   = [];
         $status = $localplay->status();
+        if (empty($status)) {
+            return [
+                'currentIndex' => 0,
+                'playing' => false,
+                'gain' => 0
+            ];
+        }
         $index  = (((int)$status['track']) === 0)
             ? 0
             : $status['track'] - 1;
