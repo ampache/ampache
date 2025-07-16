@@ -338,6 +338,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         if (!in_array('music', $gather_types)) {
             return [];
         }
+
         try {
             $brainz = MusicBrainz::newMusicBrainz(
                 'request',
@@ -381,6 +382,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         } catch (Exception) {
             // no tags found;
         }
+
         try {
             foreach ($brainz->getObjects($brainzData, 'genre') as $genre) {
                 /** @var Genre $genre */
@@ -422,7 +424,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
             $results = $results->getProps(true);
         }
 
-        if (!empty($genres)) {
+        if ($genres !== []) {
             $results['genre'] = array_unique($genres);
         }
 
@@ -451,6 +453,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
 
             return false;
         }
+
         if ($object_type === 'album' || $object instanceof Album) {
             debug_event('MusicBrainz.plugin', 'get_external_metadata only supports Labels and Artists (' . $object_type . ')', 5);
 
@@ -523,6 +526,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                             'active' => $active
                         ];
                     }
+
                     break;
                 case 'artist':
                     if ($object instanceof Artist) {
@@ -532,7 +536,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                             'mbid' => $results->getId(),
                             'summary' => $object->summary,
                             'placeformed' => $beginName ?? $areaName ?? null,
-                            'yearformed' => explode('-', ($begin))[0] ?? $object->yearformed
+                            'yearformed' => explode('-', ((string) $begin))[0] ?? $object->yearformed
                         ];
                     }
 

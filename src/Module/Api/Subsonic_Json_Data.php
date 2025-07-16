@@ -502,7 +502,7 @@ class Subsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      * }>,
      *     'displayArtist'?: string,
      *     'albumArtists'?: array<int, array{
@@ -514,7 +514,7 @@ class Subsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      *     }>,
      *     'displayAlbumArtist'?: string,
      *     'contributors'?: array{
@@ -530,7 +530,7 @@ class Subsonic_Json_Data
      *                 'starred'?: string,
      *                 'musicBrainzId'?: string,
      *                 'sortName'?: string,
-     *                 'roles'?: array<string>
+     *                 'roles'?: string[]
      *             }>
      *         }
      *     },
@@ -1021,7 +1021,7 @@ class Subsonic_Json_Data
      *             'starred'?: string,
      *             'musicBrainzId'?: string,
      *             'sortName'?: string,
-     *             'roles'?: array<string>
+     *             'roles'?: string[]
      *         }>,
      *         'displayArtist'?: string,
      *         'albumArtists'?: array<int, array{
@@ -1033,7 +1033,7 @@ class Subsonic_Json_Data
      *             'starred'?: string,
      *             'musicBrainzId'?: string,
      *             'sortName'?: string,
-     *             'roles'?: array<string>
+     *             'roles'?: string[]
      *         }>,
      *         'displayAlbumArtist'?: string,
      *         'contributors'?: array{
@@ -1049,7 +1049,7 @@ class Subsonic_Json_Data
      *                     'starred'?: string,
      *                     'musicBrainzId'?: string,
      *                     'sortName'?: string,
-     *                     'roles'?: array<string>
+     *                     'roles'?: string[]
      *                 }>
      *             }
      *         },
@@ -1216,7 +1216,7 @@ class Subsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      *     }>,
      *     'displayArtist'?: string,
      *     'albumArtists'?: array<int, array{
@@ -1228,7 +1228,7 @@ class Subsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      *     }>,
      *     'displayAlbumArtist'?: string,
      *     'contributors'?: array{
@@ -1244,7 +1244,7 @@ class Subsonic_Json_Data
      *                 'starred'?: string,
      *                 'musicBrainzId'?: string,
      *                 'sortName'?: string,
-     *                 'roles'?: array<string>
+     *                 'roles'?: string[]
      *             }>
      *         }
      *     },
@@ -1400,7 +1400,7 @@ class Subsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      *     }>,
      *     'displayArtist'?: string,
      *     'albumArtists'?: array<int, array{
@@ -1412,7 +1412,7 @@ class Subsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      *     }>,
      *     'displayAlbumArtist'?: string,
      *     'contributors'?: array{
@@ -1428,7 +1428,7 @@ class Subsonic_Json_Data
      *                 'starred'?: string,
      *                 'musicBrainzId'?: string,
      *                 'sortName'?: string,
-     *                 'roles'?: array<string>
+     *                 'roles'?: string[]
      *             }>
      *         }
      *     },
@@ -1556,7 +1556,7 @@ class Subsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      *     }>,
      *     'displayArtist'?: string,
      *     'albumArtists'?: array<int, array{
@@ -1568,7 +1568,7 @@ class Subsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      *     }>,
      *     'displayAlbumArtist'?: string,
      *     'contributors'?: array{
@@ -1584,7 +1584,7 @@ class Subsonic_Json_Data
      *                 'starred'?: string,
      *                 'musicBrainzId'?: string,
      *                 'sortName'?: string,
-     *                 'roles'?: array<string>
+     *                 'roles'?: string[]
      *             }>
      *         }
      *     },

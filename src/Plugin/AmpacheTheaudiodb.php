@@ -271,7 +271,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                         strtolower($data['name'] ?? '') !== strtolower((string)$object->get_fullname())
                     ) {
                         $name_check = Artist::update_name_from_mbid($data['name'], $object->mbid);
-                        if (isset($object->prefix)) {
+                        if ($object->prefix !== null) {
                             $object->prefix = $name_check['prefix'];
                         }
 

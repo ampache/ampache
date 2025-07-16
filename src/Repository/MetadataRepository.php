@@ -179,7 +179,7 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
         if (
             $metadata->getObjectId() === 0 ||
             $metadata->getFieldId() === 0 ||
-            empty($metadata->getData())
+            in_array($metadata->getData(), ['', '0'], true)
         ) {
             return null;
         }

@@ -186,7 +186,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     public function save_rating(Rating $rating, int $new_rating): void
     {
         if ($this->min_stars > 0 && $new_rating >= $this->min_stars) {
-            if ($rating->type == 'song') {
+            if ($rating->type === 'song') {
                 $song = new Song($rating->id);
                 // rate all the song artists (If there are more than one)
                 foreach (Song::get_parent_array($song->id) as $artist_id) {
@@ -204,7 +204,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                 }
             }
 
-            if ($rating->type == 'album_disk') {
+            if ($rating->type === 'album_disk') {
                 $album_disk = new AlbumDisk($rating->id);
                 // rate the album when the disk count is 1
                 if ($album_disk->disk_count == 1) {
@@ -227,7 +227,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                 }
             }
 
-            if ($rating->type == 'album') {
+            if ($rating->type === 'album') {
                 $album        = new Album($rating->id);
                 $rAlbum       = new Rating($rating->id, 'album');
                 $rating_album = $rAlbum->get_user_rating($this->user->id);
@@ -270,7 +270,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
             $fAlbum = new Userflag($song->album, 'album');
             $fAlbum->set_flag(true, $this->user->id);
             // and individual disks (if set)
-            $fAlbumDisk = new Userflag((int)$song->album_disk, 'album_disk');
+            $fAlbumDisk = new Userflag($song->album_disk, 'album_disk');
             $fAlbumDisk->set_flag(true, $this->user->id);
             // rate all the album artists (If there are more than one)
             if (((int)$album->findAlbumArtist()) > 0) {
@@ -317,27 +317,27 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
             return false;
         }
 
-        if (!empty($this->star1_rule) && $this->rule_process($this->star1_rule, $play_count, $skip_count)) {
+        if ($this->star1_rule !== [] && $this->rule_process($this->star1_rule, $play_count, $skip_count)) {
             $rating->set_rating(1, $this->user->id);
         }
 
-        if (!empty($this->star2_rule) && $this->rule_process($this->star2_rule, $play_count, $skip_count)) {
+        if ($this->star2_rule !== [] && $this->rule_process($this->star2_rule, $play_count, $skip_count)) {
             $rating->set_rating(2, $this->user->id);
         }
 
-        if (!empty($this->star3_rule) && $this->rule_process($this->star3_rule, $play_count, $skip_count)) {
+        if ($this->star3_rule !== [] && $this->rule_process($this->star3_rule, $play_count, $skip_count)) {
             $rating->set_rating(3, $this->user->id);
         }
 
-        if (!empty($this->star4_rule) && $this->rule_process($this->star4_rule, $play_count, $skip_count)) {
+        if ($this->star4_rule !== [] && $this->rule_process($this->star4_rule, $play_count, $skip_count)) {
             $rating->set_rating(4, $this->user->id);
         }
 
-        if (!empty($this->star5_rule) && $this->rule_process($this->star5_rule, $play_count, $skip_count)) {
+        if ($this->star5_rule !== [] && $this->rule_process($this->star5_rule, $play_count, $skip_count)) {
             $rating->set_rating(5, $this->user->id);
         }
 
-        if (!empty($this->flag_rule) && $this->rule_process($this->flag_rule, $play_count, $skip_count)) {
+        if ($this->flag_rule !== [] && $this->rule_process($this->flag_rule, $play_count, $skip_count)) {
             $flag = new Userflag($song->id, 'song');
             if (!$flag->get_flag($this->user->id)) {
                 $flag->set_flag(true, $this->user->id);
