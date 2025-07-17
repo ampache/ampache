@@ -48,9 +48,11 @@ if (!is_array($theme_css_base)) {
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/filepond/filepond.min.css" type="text/css" media="screen">
 
 <?php
-foreach ($theme_css_base as $css_base) { ?>
+foreach ($theme_css_base as $css_base) {
+    if (is_array($css_base)) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . (str_ends_with($css_base[0], '.css') ? $css_base[0] . '?v=' . $ampache_version : $css_base[0]); ?>" type="text/css" media="<?php echo $css_base[1]; ?>">
-<?php } ?>
+<?php }
+    } ?>
 
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/base.css?v=' . $ampache_version; ?>" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $theme_color . '.css?v=' . $ampache_version; ?>" type="text/css" media="screen">
