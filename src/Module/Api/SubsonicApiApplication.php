@@ -114,11 +114,11 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $subsonic_legacy = AmpConfig::get('subsonic_legacy', true); // force this for the moment to always use subsonic
 
         // Authenticate the user with preemptive HTTP Basic authentication first
-        $userName = $post['PHP_AUTH_USER'] ?? $query['PHP_AUTH_USER'] ?? '';
+        $userName = $query['PHP_AUTH_USER'] ?? '';
         if (empty($userName)) {
             $userName = $query['u'] ?? '';
         }
-        $password = $post['PHP_AUTH_PW'] ?? $query['PHP_AUTH_PW'] ?? '';
+        $password = $query['PHP_AUTH_PW'] ?? '';
         if (empty($password)) {
             $password = $query['p'] ?? '';
         }
@@ -325,21 +325,25 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         //$this->logger->debug(print_r(apache_request_headers(), true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
         // Call your function if it's valid
+        $callback = [OpenSubsonic_Api::class, $action];
         if (
             $os_methods !== [] &&
             in_array(strtolower($action), $os_methods) &&
-            method_exists(OpenSubsonic_Api::class, $action)
+            method_exists(OpenSubsonic_Api::class, $action) &&
+            assert(is_callable($callback))
         ) {
-            call_user_func([OpenSubsonic_Api::class, $action], $input, $user);
+            call_user_func($callback, $input, $user);
 
             return;
         }
+        $callback = [Subsonic_Api::class, $action];
         if (
             $methods !== [] &&
             in_array(strtolower($action), $methods) &&
-            method_exists(Subsonic_Api::class, $action)
+            method_exists(Subsonic_Api::class, $action) &&
+            assert(is_callable($callback))
         ) {
-            call_user_func([Subsonic_Api::class, $action], $input, $user);
+            call_user_func($callback, $input, $user);
 
             // We only allow a single function to be called, and we assume it's cleaned up!
             return;
