@@ -4,7 +4,7 @@
 
 ### Added
 
-* Rector and style fixes and phpstan updates
+* Rector, style fixes and phpstan updates
 
 ### Fixed
 
