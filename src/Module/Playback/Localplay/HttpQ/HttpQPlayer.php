@@ -290,9 +290,8 @@ class HttpQPlayer
     /**
      * delete_pos
      * This deletes a specific track
-     * @param $track
      */
-    public function delete_pos($track): bool
+    public function delete_pos(int $track): bool
     {
         $args    = ['index' => $track];
         $results = $this->sendCommand('deletepos', $args);
@@ -394,9 +393,8 @@ class HttpQPlayer
      * set_volume
      * This sets the volume as best it can, we go from a resolution
      * of 100 --> 255 so it's a little fuzzy
-     * @param $value
      */
-    public function set_volume($value): bool
+    public function set_volume(int $value): bool
     {
         // Convert it to base 255
         $volume  = $value * 2.55;
@@ -497,10 +495,10 @@ class HttpQPlayer
      * This is the core of this library it takes care of sending the HTTP
      * request to the HttpQ server and getting the response
      * @param string $cmd
-     * @param array $args
+     * @param array<string, scalar> $args
      * @return string|bool
      */
-    private function sendCommand($cmd, $args)
+    private function sendCommand(string $cmd, array $args)
     {
         $fsock = fsockopen(($this->host ?? 'localhost'), ($this->port ?? 4800), $errno, $errstr);
 

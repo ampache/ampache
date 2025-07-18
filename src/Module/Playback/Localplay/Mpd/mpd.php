@@ -313,11 +313,11 @@ class mpd
      * Sends a generic command to the MPD server. Several command constants
      * are pre-defined for use (see self::COMMAND_* constant definitions above).
      * @param string $command
-     * @param array|string|float|int $arguments
+     * @param array<string|int, scalar>|string|float|int|null $arguments
      * @param bool $refresh_info
      * @return string|bool
      */
-    public function SendCommand($command, $arguments = null, $refresh_info = true)
+    public function SendCommand(string $command, $arguments = null, $refresh_info = true)
     {
         $this->_debug('SendCommand', "cmd: $command, args: " . json_encode($arguments), 5);
         if (
@@ -1092,12 +1092,9 @@ class mpd
     /**
      * _checkCompatibility
      *
-     * Check MPD command compatibility against our internal table of
-     * incompatibilities.
-     * @param $cmd
-     * @param $mpd_version
+     * Check MPD command compatibility against our internal table of  incompatibilities.
      */
-    private function _checkCompatibility($cmd, $mpd_version): bool
+    private function _checkCompatibility(string $cmd, string $mpd_version): bool
     {
         $mpd = self::_computeVersionValue($mpd_version);
 

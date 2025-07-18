@@ -1636,29 +1636,9 @@ parameters:
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:volume\\(\\) has parameter \\$volume with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:\\$_httpq has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:delete_pos\\(\\) has parameter \\$track with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:sendCommand\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:set_volume\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -1771,11 +1751,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:SendCommand\\(\\) has parameter \\$arguments with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:SetRandom\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
@@ -1787,16 +1762,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:SkipTo\\(\\) has parameter \\$idx with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:_checkCompatibility\\(\\) has parameter \\$cmd with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:_checkCompatibility\\(\\) has parameter \\$mpd_version with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
@@ -2006,19 +1971,9 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:volume\\(\\) has parameter \\$volume with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:\\$_vlc has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:delete_pos\\(\\) has parameter \\$track with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:fullstate\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -2031,22 +1986,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:sendCommand\\(\\) has parameter \\$args with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:sendCommand\\(\\) has parameter \\$cmd with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:sendCommand\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:set_volume\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
