@@ -98,12 +98,11 @@ final class Gatekeeper implements GatekeeperInterface
                 );
             } else {
                 /**
-                 * Fallback to legacy get/post parameter
+                 * Fallback to legacy get/post parameter. (prefer POST array over GET))
                  * Remove some day when backwards compatability isn't a problem
                  */
-                $query = $this->request->getQueryParams();
-                $post  = (array)$this->request->getParsedBody();
-                $token = $post[$requestKey] ?? $query[$requestKey] ?? '';
+                $query = array_merge($this->request->getQueryParams(), (array)$this->request->getParsedBody());
+                $token = $query[$requestKey] ?? '';
                 if ($token !== '') {
                     $this->logger->notice(
                         sprintf('API session [%s] (%s)', $token, $requestKey),
