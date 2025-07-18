@@ -195,7 +195,7 @@ class OpenSubsonic_Json_Data
      *     'changed': string,
      *     'coverArt'?: string,
      *     'entry'?: array<int, array<string, mixed>>
-     * }// todo add allowedUser	Array of string
+     * }// todo add allowedUser Array of string
      */
     private static function _getPlaylist_Playlist(Playlist $playlist, bool $songs = false): array
     {
@@ -246,7 +246,7 @@ class OpenSubsonic_Json_Data
      *     'changed': string,
      *     'coverArt'?: string,
      *     'entry'?: array<int, array<string, mixed>>
-     * }// todo add allowedUser	Array of string
+     * }// todo add allowedUser Array of string
      */
     private static function _getPlaylist_Search(Search $search, bool $songs = false): array
     {
