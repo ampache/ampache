@@ -267,9 +267,8 @@ class mpd
      *
      * NOTE: This is called automatically upon object instantiation; you
      * should not need to call this directly.
-     * @return string|false
      */
-    public function connect()
+    public function connect(): ?string
     {
         $this->_debug(self::class, "host: " . $this->host . ", port: " . $this->port, 5);
         $this->_mpd_sock = fsockopen($this->host, (int) $this->port, $err, $err_str, 6);
@@ -277,7 +276,7 @@ class mpd
         if (!$this->_mpd_sock) {
             $this->_error('Connect', "Socket Error: $err_str ($err)");
 
-            return false;
+            return null;
         }
         // Set the timeout on the connection */
         stream_set_timeout($this->_mpd_sock, 6);
@@ -293,18 +292,18 @@ class mpd
             if (strncmp(self::RESPONSE_OK, (string)$response, strlen(self::RESPONSE_OK)) == 0) {
                 $this->connected = true;
 
-                return $response;
+                return $response ?: null;
             }
             if (strncmp(self::RESPONSE_ERR, (string)$response, strlen(self::RESPONSE_ERR)) == 0) {
                 $this->_error('Connect', "Server responded with: " . (string)$response);
 
-                return false;
+                return null;
             }
         } // end while
         // Generic response
         $this->_error('Connect', "Connection not available");
 
-        return false;
+        return null;
     }
 
     /**
@@ -605,9 +604,8 @@ class mpd
      * the playlist. This is used to reorder the songs in the playlist.
      * @param $current_position
      * @param $new_position
-     * @return bool|string
      */
-    public function PLMoveTrack($current_position, $new_position)
+    public function PLMoveTrack($current_position, $new_position): bool|string
     {
         $this->_debug('PLMoveTrack', 'start', 5);
         if (!is_numeric($current_position)) {
@@ -1135,7 +1133,7 @@ class mpd
      * _parseFileListResponse
      *
      * Builds a multidimensional array with MPD response lists.
-     * @param $response
+     * @param bool|string $response
      * @return array|bool
      */
     private static function _parseFileListResponse($response)

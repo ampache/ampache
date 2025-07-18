@@ -31,16 +31,6 @@ parameters:
 			path: src/Gui/Playlist/NewPlaylistDialogAdapterInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Gui\\\\TalView\\:\\:setContext\\(\\) has parameter \\$context with no type specified\\.$#"
-			count: 1
-			path: src/Gui/TalView.php
-
-		-
-			message: "#^Method Ampache\\\\Gui\\\\TalViewInterface\\:\\:setContext\\(\\) has parameter \\$context with no type specified\\.$#"
-			count: 1
-			path: src/Gui/TalViewInterface.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\ApiHandler\\:\\:_executeDebugHandler\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/ApiHandler.php
@@ -1771,11 +1761,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:_parseFileListResponse\\(\\) has parameter \\$response with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:_parseFileListResponse\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
@@ -3167,21 +3152,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:get_user_time_pts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_catalog_files\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_catalog_size\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_graph\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
 

@@ -433,9 +433,8 @@ class HttpQPlayer
     /**
      * get_repeat
      * This returns the current state of the repeat
-     * @return string|bool
      */
-    public function get_repeat()
+    public function get_repeat(): bool|string
     {
         $args = [];
 
@@ -445,9 +444,8 @@ class HttpQPlayer
     /**
      * get_random
      * This returns the current state of shuffle
-     * @return string|bool
      */
-    public function get_random()
+    public function get_random(): bool|string
     {
         $args = [];
 
@@ -458,9 +456,8 @@ class HttpQPlayer
      * get_now_playing
      * This returns the file information for the currently
      * playing song
-     * @return string|bool
      */
-    public function get_now_playing()
+    public function get_now_playing(): bool|string
     {
         // First get the current POS
         $pos = $this->sendCommand('getlistpos', []);
@@ -494,11 +491,9 @@ class HttpQPlayer
      * sendCommand
      * This is the core of this library it takes care of sending the HTTP
      * request to the HttpQ server and getting the response
-     * @param string $cmd
      * @param array<string, scalar> $args
-     * @return string|bool
      */
-    private function sendCommand(string $cmd, array $args)
+    private function sendCommand(string $cmd, array $args): bool|string
     {
         $fsock = fsockopen(($this->host ?? 'localhost'), ($this->port ?? 4800), $errno, $errstr);
 

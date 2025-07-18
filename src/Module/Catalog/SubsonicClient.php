@@ -204,7 +204,7 @@ class SubsonicClient
      * @param array<string, int|string>|null $data
      * @return object
      */
-    protected function error(string $error, ?array $data = null)
+    protected function error(string $error, ?array $data = null): object
     {
         error_log($error . "\n" . print_r($data, true));
 
