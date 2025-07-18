@@ -1417,6 +1417,13 @@ class OpenSubsonic_Xml_Data
     {
         $xjbox  = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
         $status = $localplay->status();
+        if (empty($status)) {
+            $xjbox->addAttribute('currentIndex', '0');
+            $xjbox->addAttribute('playing', 'false');
+            $xjbox->addAttribute('gain', '0');
+
+            return $xml;
+        }
         $index  = (((int)$status['track']) === 0)
             ? 0
             : $status['track'] - 1;

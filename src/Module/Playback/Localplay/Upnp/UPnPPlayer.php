@@ -63,9 +63,8 @@ class UPnPPlayer
 
     /**
      * Lazy initialization for UPNP device property
-     * @return UPnPDevice
      */
-    private function Device()
+    private function Device(): UPnPDevice
     {
         if ($this->_device === null) {
             $this->_device = new UPnPDevice($this->_description_url);
@@ -76,9 +75,8 @@ class UPnPPlayer
 
     /**
      * Lazy initialization for UPNP playlist property
-     * @return UPnPPlaylist
      */
-    private function Playlist()
+    private function Playlist(): UPnPPlaylist
     {
         if ($this->_playlist === null) {
             $this->_playlist = new UPnPPlaylist($this->_description_url);

@@ -45,16 +45,16 @@ final class ShowAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private PrivateMessageRepositoryInterface $privateMessageRepository;
+    private PrivateMessageRepositoryInterface $pmRepository;
 
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        PrivateMessageRepositoryInterface $privateMessageRepository
+        PrivateMessageRepositoryInterface $pmRepository
     ) {
-        $this->ui                       = $ui;
-        $this->configContainer          = $configContainer;
-        $this->privateMessageRepository = $privateMessageRepository;
+        $this->ui              = $ui;
+        $this->configContainer = $configContainer;
+        $this->pmRepository    = $pmRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -70,7 +70,7 @@ final class ShowAction implements ApplicationActionInterface
 
         $msgId = (int)($request->getQueryParams()['pvmsg_id'] ?? 0);
 
-        $pvmsg = $this->privateMessageRepository->findById($msgId);
+        $pvmsg = $this->pmRepository->findById($msgId);
 
         if (
             $pvmsg === null ||
@@ -81,7 +81,7 @@ final class ShowAction implements ApplicationActionInterface
             );
         }
         if ($pvmsg->isRead() === false) {
-            $this->privateMessageRepository->setIsRead($pvmsg, 1);
+            $this->pmRepository->setIsRead($pvmsg, 1);
         }
 
         $this->ui->show(

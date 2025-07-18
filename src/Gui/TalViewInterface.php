@@ -29,5 +29,10 @@ interface TalViewInterface
 
     public function setTemplate(string $templateFilePath): TalViewInterface;
 
+    /**
+     * @param string $key
+     * @param mixed $context
+     * @return TalViewInterface
+     */
     public function setContext(string $key, $context): TalViewInterface;
 }

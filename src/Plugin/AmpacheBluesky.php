@@ -84,9 +84,8 @@ class AmpacheBluesky extends AmpachePlugin implements PluginExternalShareInterfa
     public function external_share(string $url, string $text): string
     {
         $share = "https://bsky.app/intent/compose";
-        $share .= "?text=" . rawurlencode($url);
 
-        return $share;
+        return $share . ("?text=" . rawurlencode($url));
     }
 
     /**

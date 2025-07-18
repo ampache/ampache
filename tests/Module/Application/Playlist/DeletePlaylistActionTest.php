@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Playlist;
 
+use Teapot\StatusCode\RFC\RFC7231;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -35,7 +36,6 @@ use Mockery\MockInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
 
 class DeletePlaylistActionTest extends MockeryTestCase
 {
@@ -135,7 +135,7 @@ class DeletePlaylistActionTest extends MockeryTestCase
             ->once();
 
         $this->responseFactory->shouldReceive('createResponse')
-            ->with(StatusCode\RFC\RFC7231::FOUND)
+            ->with(RFC7231::FOUND)
             ->once()
             ->andReturn($respone);
 

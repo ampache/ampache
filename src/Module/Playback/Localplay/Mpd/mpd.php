@@ -267,9 +267,8 @@ class mpd
      *
      * NOTE: This is called automatically upon object instantiation; you
      * should not need to call this directly.
-     * @return string|false
      */
-    public function connect()
+    public function connect(): ?string
     {
         $this->_debug(self::class, "host: " . $this->host . ", port: " . $this->port, 5);
         $this->_mpd_sock = fsockopen($this->host, (int) $this->port, $err, $err_str, 6);
@@ -277,7 +276,7 @@ class mpd
         if (!$this->_mpd_sock) {
             $this->_error('Connect', "Socket Error: $err_str ($err)");
 
-            return false;
+            return null;
         }
         // Set the timeout on the connection */
         stream_set_timeout($this->_mpd_sock, 6);
@@ -293,18 +292,18 @@ class mpd
             if (strncmp(self::RESPONSE_OK, (string)$response, strlen(self::RESPONSE_OK)) == 0) {
                 $this->connected = true;
 
-                return $response;
+                return $response ?: null;
             }
             if (strncmp(self::RESPONSE_ERR, (string)$response, strlen(self::RESPONSE_ERR)) == 0) {
                 $this->_error('Connect', "Server responded with: " . (string)$response);
 
-                return false;
+                return null;
             }
         } // end while
         // Generic response
         $this->_error('Connect', "Connection not available");
 
-        return false;
+        return null;
     }
 
     /**
@@ -313,11 +312,11 @@ class mpd
      * Sends a generic command to the MPD server. Several command constants
      * are pre-defined for use (see self::COMMAND_* constant definitions above).
      * @param string $command
-     * @param array|string|float|int $arguments
+     * @param array<string|int, scalar>|string|float|int|null $arguments
      * @param bool $refresh_info
      * @return string|bool
      */
-    public function SendCommand($command, $arguments = null, $refresh_info = true)
+    public function SendCommand(string $command, $arguments = null, $refresh_info = true)
     {
         $this->_debug('SendCommand', "cmd: $command, args: " . json_encode($arguments), 5);
         if (
@@ -605,9 +604,8 @@ class mpd
      * the playlist. This is used to reorder the songs in the playlist.
      * @param $current_position
      * @param $new_position
-     * @return bool|string
      */
-    public function PLMoveTrack($current_position, $new_position)
+    public function PLMoveTrack($current_position, $new_position): bool|string
     {
         $this->_debug('PLMoveTrack', 'start', 5);
         if (!is_numeric($current_position)) {
@@ -1092,12 +1090,9 @@ class mpd
     /**
      * _checkCompatibility
      *
-     * Check MPD command compatibility against our internal table of
-     * incompatibilities.
-     * @param $cmd
-     * @param $mpd_version
+     * Check MPD command compatibility against our internal table of  incompatibilities.
      */
-    private function _checkCompatibility($cmd, $mpd_version): bool
+    private function _checkCompatibility(string $cmd, string $mpd_version): bool
     {
         $mpd = self::_computeVersionValue($mpd_version);
 
@@ -1138,7 +1133,7 @@ class mpd
      * _parseFileListResponse
      *
      * Builds a multidimensional array with MPD response lists.
-     * @param $response
+     * @param bool|string $response
      * @return array|bool
      */
     private static function _parseFileListResponse($response)

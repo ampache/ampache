@@ -30,13 +30,14 @@ $web_path = AmpConfig::get_web_path();
 
 $theme_path      = AmpConfig::get('theme_path', '/themes/reborn') . '/templates';
 $theme_color     = AmpConfig::get('theme_color', 'dark');
-$theme_css_base  = AmpConfig::get('theme_css_base');
+$theme_css_base  = AmpConfig::get('theme_css_base', ['default.css', 'screen']);
 $ampache_version = AmpConfig::get('version');
-if (!is_array($theme_css_base)) {
-    $theme_css_base = [$theme_css_base];
+if ($theme_css_base === null) {
+    $theme_css_base = ['default.css', 'screen'];
 }
-?>
-
+if (is_string($theme_css_base)) {
+    $theme_css_base = [$theme_css_base];
+} ?>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/prettyphoto/css/prettyPhoto.min.css" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-ui.custom.css" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-editdialog.css" type="text/css" media="screen">
@@ -46,12 +47,9 @@ if (!is_array($theme_css_base)) {
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.min.css" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jquery-contextmenu/jquery.contextMenu.min.css" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/filepond/filepond.min.css" type="text/css" media="screen">
-
-<?php
-foreach ($theme_css_base as $css_base) { ?>
-    <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . (str_ends_with($css_base[0], '.css') ? $css_base[0] . '?v=' . $ampache_version : $css_base[0]); ?>" type="text/css" media="<?php echo $css_base[1]; ?>">
+<?php foreach ($theme_css_base as $css_base) { ?>
+    <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . (str_ends_with(($css_base[0]), '.css') ? $css_base[0] . '?v=' . $ampache_version : $css_base[0]); ?>" type="text/css" media="<?php echo $css_base[1]; ?>">
 <?php } ?>
-
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/base.css?v=' . $ampache_version; ?>" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $theme_color . '.css?v=' . $ampache_version; ?>" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/print.css'; ?>" type="text/css" media="print">

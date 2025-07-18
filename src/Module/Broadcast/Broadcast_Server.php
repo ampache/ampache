@@ -390,7 +390,7 @@ class Broadcast_Server implements MessageComponentInterface
      * @param Broadcast $broadcast
      * @return ConnectionInterface[]
      */
-    protected function getListeners(Broadcast $broadcast)
+    protected function getListeners(Broadcast $broadcast): array
     {
         return $this->listeners[$broadcast->id];
     }

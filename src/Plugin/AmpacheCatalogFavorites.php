@@ -140,6 +140,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
         if ($this->maxitems < 0) {
             return;
         }
+
         $userflags = Userflag::get_latest('song', null, $this->maxitems);
         if (
             AmpConfig::get('ratings') &&
@@ -165,7 +166,8 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                     <th class="cel_year"><?php echo T_('Year'); ?></th>
                     <?php if ($show_ratings) { ?>
                         <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
-                    <?php } ?>
+                    <?php }
+                    ?>
                     <th class="cel_action essential"><?php echo T_('Action'); ?></th>
                 </tr>
                 </thead>
@@ -182,11 +184,14 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                                         <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $item->id, 'play_circle', T_('Play'), 'play_song_' . $count . '_' . $item->id); ?>
                                         <?php if (Stream_Playlist::check_autoplay_next()) { ?>
                                             <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $item->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_song_' . $count . '_' . $item->id); ?>
-                                        <?php } ?>
+                                        <?php }
+                                        ?>
                                         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
                                             <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $item->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_song_' . $count . '_' . $item->id); ?>
-                                        <?php } ?>
-                                    <?php } ?>
+                                        <?php }
+                                        ?>
+<?php }
+                                    ?>
                                 </div>
                             </td>
                             <td class="cel_cover">
@@ -217,7 +222,8 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                 </span>
                                     </div>
                             </td>
-                        <?php } ?>
+                        <?php }
+                        ?>
                         <td class="cel_action">
                         <?php if (AmpConfig::get('download')) { ?>
                             <a class="nohtml" href="<?php echo AmpConfig::get_web_path(); ?>/stream.php?action=download&song_id=<?php echo $item->getId(); ?>">
@@ -225,6 +231,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                             </a>
                             <?php
                         }
+
                         if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('share')) {
                             echo Share::display_ui('song', $item->getId(), false);
                         } else {
@@ -235,13 +242,15 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                             echo $link; ?>
                                 </a>
                             </li>
-                        <?php } ?>
+                        <?php }
+                        ?>
                             </td>
                         </tr>
                         <?php
                         ++$count;
                     }
-                } ?>
+                }
+                ?>
                 </tbody>
                 <tfoot>
                 <tr class="th-bottom">
@@ -254,75 +263,77 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                     <th class="cel_year"></th>
                     <?php if ($show_ratings) { ?>
                         <th class="cel_ratings optional"></th>
-                    <?php } ?>
+                    <?php }
+                    ?>
                     <th class="cel_action"></th>
                 </tr>
                 </tfoot>
                 </table>
-            <?php } else {
-                echo '<table class="tabledata striped-rows';
-                if ($this->gridview) {
-                    echo " gridview";
-                }
+<?php } else {
+    echo '<table class="tabledata striped-rows';
+    if ($this->gridview) {
+        echo " gridview";
+    }
 
-                echo '">';
-                foreach ($userflags as $userflag) {
-                    $item = new Song($userflag);
-                    if ($item->isNew() === false) {
-                        echo '<tr id="song_' . $userflag . '" class="libitem_menu">';
-                        if (!$this->gridview) {
-                            echo '<td class="grid_song"><span style="font-weight: bold;">' . $item->get_f_link() . '</span><br> ';
-                            echo '<span style="margin-right: 10px;">';
-                            if (AmpConfig::get('directplay')) {
-                                echo Ajax::button(
-                                    '?page=stream&action=directplay&object_type=song&object_id=' . $userflag,
-                                    'play_circle',
-                                    T_('Play'),
-                                    'play_song_' . $userflag
-                                );
-                                if (Stream_Playlist::check_autoplay_next()) {
-                                    echo Ajax::button(
-                                        '?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&playnext=true',
-                                        'menu_open',
-                                        T_('Play next'),
-                                        'nextplay_song_' . $userflag
-                                    );
-                                }
+    echo '">';
+    foreach ($userflags as $userflag) {
+        $item = new Song($userflag);
+        if ($item->isNew() === false) {
+            echo '<tr id="song_' . $userflag . '" class="libitem_menu">';
+            if (!$this->gridview) {
+                echo '<td class="grid_song"><span style="font-weight: bold;">' . $item->get_f_link() . '</span><br> ';
+                echo '<span style="margin-right: 10px;">';
+                if (AmpConfig::get('directplay')) {
+                    echo Ajax::button(
+                        '?page=stream&action=directplay&object_type=song&object_id=' . $userflag,
+                        'play_circle',
+                        T_('Play'),
+                        'play_song_' . $userflag
+                    );
+                    if (Stream_Playlist::check_autoplay_next()) {
+                        echo Ajax::button(
+                            '?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&playnext=true',
+                            'menu_open',
+                            T_('Play next'),
+                            'nextplay_song_' . $userflag
+                        );
+                    }
 
-                                if (Stream_Playlist::check_autoplay_append()) {
-                                    echo Ajax::button(
-                                        '?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&append=true',
-                                        'low_priority',
-                                        T_('Play last'),
-                                        'addplay_song_' . $userflag
-                                    );
-                                }
-                            }
-
-                            echo Ajax::button('?action=basket&type=song&id=' . $userflag, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $userflag);
-                            echo '</span></td>';
-                        }
-
-                        echo '<td class=grid_cover>';
-                        $thumb = ($this->gridview)
-                            ? ['width' => 150, 'height' => 150]
-                            : ['width' => 100, 'height' => 100]; // default to 100x100
-                        $item->display_art($thumb, true);
-                        echo '</td>';
-
-                        if ($this->gridview) {
-                            echo '<td>' . $item->get_f_link() . '</td>';
-                        }
-
-                        echo '<td class="optional">';
-                        echo '<div style="white-space: normal;">' . $item->get_description() . '</div>';
-                        echo '</div>';
-                        echo '</td></tr>';
+                    if (Stream_Playlist::check_autoplay_append()) {
+                        echo Ajax::button(
+                            '?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&append=true',
+                            'low_priority',
+                            T_('Play last'),
+                            'addplay_song_' . $userflag
+                        );
                     }
                 }
 
-                echo '</table>';
+                echo Ajax::button('?action=basket&type=song&id=' . $userflag, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $userflag);
+                echo '</span></td>';
             }
+
+            echo '<td class=grid_cover>';
+            $thumb = ($this->gridview)
+                ? ['width' => 150, 'height' => 150]
+                : ['width' => 100, 'height' => 100]; // default to 100x100
+            $item->display_art($thumb, true);
+            echo '</td>';
+
+            if ($this->gridview) {
+                echo '<td>' . $item->get_f_link() . '</td>';
+            }
+
+            echo '<td class="optional">';
+            echo '<div style="white-space: normal;">' . $item->get_description() . '</div>';
+            echo '</div>';
+            echo '</td></tr>';
+        }
+    }
+
+    echo '</table>';
+}
+
             Ui::show_box_bottom();
             echo '</div>';
         }

@@ -433,7 +433,7 @@ class AmpacheVlc extends localplay_controller
      * This tells VLC to set the volume to the specified amount this
      * is 0-400 percent
      */
-    public function volume($volume): bool
+    public function volume(int $volume): bool
     {
         return $this->_vlc->set_volume($volume);
     }

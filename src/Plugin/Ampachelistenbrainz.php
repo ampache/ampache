@@ -119,7 +119,7 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
         }
 
         // Make sure there's actually a token before we keep going
-        if (!$this->token) {
+        if ($this->token === '' || $this->token === '0') {
             debug_event('listenbrainz.plugin', 'Token missing', 5);
 
             return false;

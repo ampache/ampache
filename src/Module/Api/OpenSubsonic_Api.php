@@ -2153,15 +2153,15 @@ class OpenSubsonic_Api
     public static function getchatmessages(array $input, User $user): void
     {
         unset($user);
-        $since                    = (int)($input['since'] ?? 0);
-        $privateMessageRepository = self::getPrivateMessageRepository();
+        $since        = (int)($input['since'] ?? 0);
+        $pmRepository = self::getPrivateMessageRepository();
 
-        $privateMessageRepository->cleanChatMessages();
+        $pmRepository->cleanChatMessages();
 
         if (!AmpConfig::get('sociable')) {
             $messages = [];
         } else {
-            $messages = $privateMessageRepository->getChatMessages($since);
+            $messages = $pmRepository->getChatMessages($since);
         }
 
         $format = (string)($input['f'] ?? 'xml');

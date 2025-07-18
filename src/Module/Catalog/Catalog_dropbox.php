@@ -64,7 +64,7 @@ class Catalog_dropbox extends Catalog
 
     public int $getchunk;
 
-    /** @var array<int> */
+    /** @var int[] */
     private array $videos_to_gather;
 
     /**
