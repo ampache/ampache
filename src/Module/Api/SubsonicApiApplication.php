@@ -82,19 +82,18 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $this->logger
         );
 
-        $query = $request->getQueryParams();
-        $post  = (array)$request->getParsedBody();
+        $query = array_merge($request->getQueryParams(), (array)$request->getParsedBody());
 
         //$this->logger->debug(print_r($query, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
         //$this->logger->debug(print_r(apache_request_headers(), true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
-        $action = strtolower($post['ssaction'] ?? $query['ssaction'] ?? '');
+        $action = strtolower($query['ssaction'] ?? '');
         // Compatibility reason
         if (empty($action)) {
-            $action = strtolower($post['action'] ?? $query['action'] ?? '');
+            $action = strtolower($query['action'] ?? '');
         }
 
-        $format = (string)($post['f'] ?? $query['f'] ?? 'xml');
+        $format = (string)($query['f'] ?? 'xml');
 
         // Set the correct default headers
         self::_setHeaders($action, $format, (string)AmpConfig::get('site_charset', 'UTF-8'));
@@ -117,18 +116,18 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         // Authenticate the user with preemptive HTTP Basic authentication first
         $userName = $post['PHP_AUTH_USER'] ?? $query['PHP_AUTH_USER'] ?? '';
         if (empty($userName)) {
-            $userName = $post['u'] ?? $query['u'] ?? '';
+            $userName = $query['u'] ?? '';
         }
         $password = $post['PHP_AUTH_PW'] ?? $query['PHP_AUTH_PW'] ?? '';
         if (empty($password)) {
-            $password = $post['p'] ?? $query['p'] ?? '';
+            $password = $query['p'] ?? '';
         }
 
 
-        $token     = $post['t'] ?? $query['t'] ?? '';
-        $salt      = $post['s'] ?? $query['s'] ?? '';
-        $version   = $post['v'] ?? $query['v'] ?? '';
-        $clientapp = $post['c'] ?? $query['c'] ?? '';
+        $token     = $query['t'] ?? '';
+        $salt      = $query['s'] ?? '';
+        $version   = $query['v'] ?? '';
+        $clientapp = $query['c'] ?? '';
 
         if (!isset($_SERVER['HTTP_USER_AGENT'])) {
             $_SERVER['HTTP_USER_AGENT'] = $clientapp;
