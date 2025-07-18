@@ -56,12 +56,12 @@ class Horde_Browser
     /**
      * Major version number.
      */
-    private int $_majorVersion = 0;
+    private int|string $_majorVersion = 0;
 
     /**
      * Minor version number.
      */
-    private int $_minorVersion = 0;
+    private int|string $_minorVersion = 0;
 
     /**
      * Browser name.
