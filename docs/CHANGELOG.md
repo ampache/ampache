@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## Ampache 7.7.1
+
+### Added
+
+* Rector, style fixes and phpstan updates
+
+### Fixed
+
+* Errors looking up missing Localplay controllers
+* Theme css defaults for base path could be missing so set fallbacks
+* Subsonic
+  * POST values were not checked for authentication properly
+
 ## Ampache 7.7.0
 
 ### Added

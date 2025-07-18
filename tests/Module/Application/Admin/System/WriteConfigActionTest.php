@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\System;
 
+use Teapot\StatusCode\RFC\RFC7231;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -38,7 +39,6 @@ use Mockery\MockInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
 
 class WriteConfigActionTest extends MockeryTestCase
 {
@@ -127,7 +127,7 @@ class WriteConfigActionTest extends MockeryTestCase
             ->andReturnTrue();
 
         $this->responseFactory->shouldReceive('createResponse')
-            ->with(StatusCode\RFC\RFC7231::FOUND)
+            ->with(RFC7231::FOUND)
             ->once()
             ->andReturn($response);
 
@@ -182,7 +182,7 @@ class WriteConfigActionTest extends MockeryTestCase
             );
 
         $this->responseFactory->shouldReceive('createResponse')
-            ->with(StatusCode\RFC\RFC7231::FOUND)
+            ->with(RFC7231::FOUND)
             ->once()
             ->andReturn($response);
 

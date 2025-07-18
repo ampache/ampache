@@ -118,7 +118,7 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
                 : '<div id="shout_objects">';
             echo $divString;
             $shouts = iterator_to_array(
-                self::getShoutRepository()->getTop((int) $this->maxitems)
+                self::getShoutRepository()->getTop($this->maxitems)
             );
             $shoutRenderer = $this->getShoutRenderer();
 

@@ -48,18 +48,18 @@ final class ShowAddMessageAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
-    private PrivateMessageRepositoryInterface $privateMessageRepository;
+    private PrivateMessageRepositoryInterface $pmRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        PrivateMessageRepositoryInterface $privateMessageRepository
+        PrivateMessageRepositoryInterface $pmRepository
     ) {
-        $this->configContainer          = $configContainer;
-        $this->ui                       = $ui;
-        $this->modelFactory             = $modelFactory;
-        $this->privateMessageRepository = $privateMessageRepository;
+        $this->configContainer = $configContainer;
+        $this->ui              = $ui;
+        $this->modelFactory    = $modelFactory;
+        $this->pmRepository    = $pmRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -74,7 +74,7 @@ final class ShowAddMessageAction implements ApplicationActionInterface
         $replyToMessageId = (int) ($request->getQueryParams()['reply_to'] ?? 0);
 
         if ($replyToMessageId > 0) {
-            $message = $this->privateMessageRepository->findById($replyToMessageId);
+            $message = $this->pmRepository->findById($replyToMessageId);
 
             if ($message !== null) {
                 $userId       = $gatekeeper->getUserId();

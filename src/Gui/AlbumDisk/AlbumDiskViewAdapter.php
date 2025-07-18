@@ -92,7 +92,7 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
     public function getArt(): string
     {
         $albumId = $this->albumDisk->getAlbumId();
-        $name    = ($this->albumDisk->get_artist_fullname() != "")
+        $name    = ($this->albumDisk->get_artist_fullname() !== "")
             ? '[' . $this->albumDisk->get_artist_fullname() . '] ' . scrub_out($this->albumDisk->get_fullname())
             : scrub_out($this->albumDisk->get_fullname());
 

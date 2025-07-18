@@ -44,20 +44,20 @@ class SetIsReadActionTest extends MockeryTestCase
 
     private UiInterface&MockInterface $ui;
 
-    private PrivateMessageRepositoryInterface&MockInterface $privateMessageRepository;
+    private PrivateMessageRepositoryInterface&MockInterface $pmRepository;
 
     private SetIsReadAction $subject;
 
     protected function setUp(): void
     {
-        $this->configContainer          = $this->mock(ConfigContainerInterface::class);
-        $this->ui                       = $this->mock(UiInterface::class);
-        $this->privateMessageRepository = $this->mock(PrivateMessageRepositoryInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->pmRepository    = $this->mock(PrivateMessageRepositoryInterface::class);
 
         $this->subject = new SetIsReadAction(
             $this->configContainer,
             $this->ui,
-            $this->privateMessageRepository
+            $this->pmRepository
         );
     }
 
@@ -154,7 +154,7 @@ class SetIsReadActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['read' => 1, 'msgs' => implode(',', [$messageId, 42])]);
 
-        $this->privateMessageRepository->shouldReceive('findById')
+        $this->pmRepository->shouldReceive('findById')
             ->with($messageId)
             ->once()
             ->andReturn($message);
@@ -204,11 +204,11 @@ class SetIsReadActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['read' => 1, 'msgs' => (string) $messageId]);
 
-        $this->privateMessageRepository->shouldReceive('findById')
+        $this->pmRepository->shouldReceive('findById')
             ->with($messageId)
             ->once()
             ->andReturn($message);
-        $this->privateMessageRepository->shouldReceive('setIsRead')
+        $this->pmRepository->shouldReceive('setIsRead')
             ->with($message, 1)
             ->once();
 

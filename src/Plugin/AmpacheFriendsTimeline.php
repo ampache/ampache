@@ -124,7 +124,7 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
                 echo $divString;
                 $activities = $this->getUseractivityRepository()->getFriendsActivities(
                     $user_id,
-                    (int) $this->maxitems
+                    $this->maxitems
                 );
                 if ($activities !== []) {
                     Ui::show_box_top(T_('Friends Timeline'));

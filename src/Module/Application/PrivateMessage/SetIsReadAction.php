@@ -45,16 +45,16 @@ final class SetIsReadAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private PrivateMessageRepositoryInterface $privateMessageRepository;
+    private PrivateMessageRepositoryInterface $pmRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        PrivateMessageRepositoryInterface $privateMessageRepository
+        PrivateMessageRepositoryInterface $pmRepository
     ) {
-        $this->configContainer          = $configContainer;
-        $this->ui                       = $ui;
-        $this->privateMessageRepository = $privateMessageRepository;
+        $this->configContainer = $configContainer;
+        $this->ui              = $ui;
+        $this->pmRepository    = $pmRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -79,7 +79,7 @@ final class SetIsReadAction implements ApplicationActionInterface
         );
 
         foreach ($messageIds as $messageId) {
-            $message = $this->privateMessageRepository->findById($messageId);
+            $message = $this->pmRepository->findById($messageId);
             if (
                 $message === null ||
                 $message->getRecipientUserId() !== $gatekeeper->getUserId()
@@ -89,7 +89,7 @@ final class SetIsReadAction implements ApplicationActionInterface
                 );
             }
 
-            $this->privateMessageRepository->setIsRead($message, $readMode);
+            $this->pmRepository->setIsRead($message, $readMode);
         }
 
         $this->ui->showHeader();

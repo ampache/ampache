@@ -45,16 +45,16 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private PrivateMessageRepositoryInterface $privateMessageRepository;
+    private PrivateMessageRepositoryInterface $pmRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        PrivateMessageRepositoryInterface $privateMessageRepository
+        PrivateMessageRepositoryInterface $pmRepository
     ) {
-        $this->configContainer          = $configContainer;
-        $this->ui                       = $ui;
-        $this->privateMessageRepository = $privateMessageRepository;
+        $this->configContainer = $configContainer;
+        $this->ui              = $ui;
+        $this->pmRepository    = $pmRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -74,7 +74,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             explode(',', $request->getQueryParams()['msgs'] ?? [])
         );
         foreach ($messageIds as $messageId) {
-            $message = $this->privateMessageRepository->findById($messageId);
+            $message = $this->pmRepository->findById($messageId);
 
             if (
                 $message === null ||
@@ -85,7 +85,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
                 );
             }
 
-            $this->privateMessageRepository->delete($message);
+            $this->pmRepository->delete($message);
         }
 
         $this->ui->showHeader();

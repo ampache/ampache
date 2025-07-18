@@ -229,9 +229,8 @@ class VlcPlayer
     /**
      * delete_pos
      * This deletes a specific track
-     * @param $track
      */
-    public function delete_pos($track): bool
+    public function delete_pos(int $track): bool
     {
         $args    = ['command' => 'pl_delete', '&id' => $track];
         $results = $this->sendCommand('status.xml?', $args);
@@ -315,9 +314,8 @@ class VlcPlayer
     /**
      * set_volume
      * This sets the volume as best it can, i think it's from 0 to 400, need more testing'
-     * @param $value
      */
-    public function set_volume($value): bool
+    public function set_volume(int $value): bool
     {
         // Convert it to base 400
         $value   = $value * 4;
@@ -367,10 +365,9 @@ class VlcPlayer
      * sendCommand
      * This is the core of this library it takes care of sending the HTTP
      * request to the VLC server and getting the response
-     * @param $cmd
-     * @param $args
+     * @param array<string, string|int> $args
      */
-    private function sendCommand($cmd, $args): ?array
+    private function sendCommand(string $cmd, array $args): ?array
     {
         $fsock = fsockopen($this->host, (int)$this->port, $errno, $errstr);
 

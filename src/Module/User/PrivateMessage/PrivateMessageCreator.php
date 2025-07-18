@@ -33,20 +33,20 @@ use Ampache\Repository\PrivateMessageRepositoryInterface;
 
 final class PrivateMessageCreator implements PrivateMessageCreatorInterface
 {
-    private PrivateMessageRepositoryInterface $privateMessageRepository;
+    private PrivateMessageRepositoryInterface $pmRepository;
 
     private UtilityFactoryInterface $utilityFactory;
 
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
-        PrivateMessageRepositoryInterface $privateMessageRepository,
+        PrivateMessageRepositoryInterface $pmRepository,
         UtilityFactoryInterface $utilityFactory,
         ConfigContainerInterface $configContainer
     ) {
-        $this->privateMessageRepository = $privateMessageRepository;
-        $this->utilityFactory           = $utilityFactory;
-        $this->configContainer          = $configContainer;
+        $this->pmRepository    = $pmRepository;
+        $this->utilityFactory  = $utilityFactory;
+        $this->configContainer = $configContainer;
     }
 
     /**
@@ -61,7 +61,7 @@ final class PrivateMessageCreator implements PrivateMessageCreatorInterface
         string $subject,
         string $message
     ): void {
-        $messageId = $this->privateMessageRepository->create(
+        $messageId = $this->pmRepository->create(
             $recipient,
             $sender,
             $subject,

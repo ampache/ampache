@@ -134,12 +134,14 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
             if ($api) {
                 $result['has_access'] = (((int)$row['level']) <= $accessLevel);
             }
+
             if ($row['type'] == 'special') {
                 $values = Preference::get_special_values($row['name'], $user);
                 if ($values) {
                     $result['values'] = $values;
                 }
             }
+
             $results[] = $result;
         }
 

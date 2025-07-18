@@ -60,6 +60,7 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
                         ? Tag::get_display(Tag::get_tags())
                         : '';
                 }
+
                 $results['tags'] = $tags;
                 break;
             case 'get_labels':

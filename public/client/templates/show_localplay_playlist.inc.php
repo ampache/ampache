@@ -47,11 +47,12 @@ $status = $localplay->status(); ?>
     </thead>
     <tbody>
         <?php
-        foreach ($object_ids as $object) {
-            $class = ' class="cel_name"';
-            if ($status['track'] == $object['track']) {
-                $class=' class="cel_name lp_current"';
-            } ?>
+        if (!empty($status)) {
+            foreach ($object_ids as $object) {
+                $class = ' class="cel_name"';
+                if ($status['track'] == $object['track']) {
+                    $class=' class="cel_name lp_current"';
+                } ?>
         <tr id="localplay_playlist_<?php echo $object['id']; ?>">
             <td class="cel_track">
                 <?php echo scrub_out($object['track']); ?>
@@ -64,10 +65,11 @@ $status = $localplay->status(); ?>
             </td>
         </tr>
         <?php
-        } if (!count($object_ids)) { ?>
+            } if (!count($object_ids)) { ?>
         <tr>
             <td colspan="3"><span class="error"><?php echo T_('No records found'); ?></span></td>
         </tr>
+        <?php } ?>
         <?php } ?>
     </tbody>
     <tfoot>

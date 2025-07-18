@@ -281,7 +281,7 @@ class LocalPlay
      * This returns current information about the state of the player
      * There is an expected array format
      */
-    public function status(): array
+    public function status(): ?array
     {
         $data = ($this->_player instanceof localplay_controller)
             ? $this->_player->status()
@@ -290,7 +290,7 @@ class LocalPlay
         if (empty($data) || !is_array($data)) {
             debug_event(self::class, 'Error Unable to get status, check ' . $this->type . ' controller', 1);
 
-            return [];
+            return null;
         }
 
         return $data;
@@ -686,6 +686,9 @@ class LocalPlay
     public function get_user_playing(): string
     {
         $status = $this->status();
+        if (empty($status) || !is_array($status)) {
+            return '';
+        }
 
         /* Format the track name */
         $track_name = $status['track_artist'] . ' - ' . $status['track_album'] . ' - ' . $status['track_title'];

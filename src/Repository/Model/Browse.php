@@ -101,7 +101,7 @@ class Browse extends Query
      * set_sort_order
      *
      * Try to clean up sorts into something valid before sending to the Query
-     * @param array<string> $default
+     * @param string[] $default
      */
     public function set_sort_order(string $sort, array $default): void
     {

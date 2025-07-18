@@ -128,14 +128,14 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
         // display if you've enabled it
         if ($this->display) {
             $list_array = [];
-            foreach (explode(',', (string) $this->playlist) as $list_id) {
+            foreach (explode(',', $this->playlist) as $list_id) {
                 $playlist = new Playlist((int)$list_id);
                 if ($playlist->isNew() === false) {
                     $list_array[] = [$playlist, 'playlist'];
                 }
             }
 
-            foreach (explode(',', (string) $this->smartlist) as $list_id) {
+            foreach (explode(',', $this->smartlist) as $list_id) {
                 $smartlist = new Search((int)$list_id);
                 if ($smartlist->isNew() === false) {
                     $list_array[] = [$smartlist, 'search'];
