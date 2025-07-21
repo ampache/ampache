@@ -12,6 +12,7 @@
 * Theme css defaults for base path could be missing so set fallbacks
 * Subsonic
   * POST values were not checked for authentication properly
+  * Ensure Localplay status is returned when the controller is missing
 
 ## Ampache 7.7.0
 
