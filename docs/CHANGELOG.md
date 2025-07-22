@@ -10,6 +10,7 @@
 
 * Errors looking up missing Localplay controllers
 * Theme css defaults for base path could be missing so set fallbacks
+* Null disk number causing Runtime Error on tag read
 * Subsonic
   * POST values were not checked for authentication properly
   * Ensure Localplay status is returned when the controller is missing
