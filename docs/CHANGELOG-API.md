@@ -9,6 +9,11 @@ This version is being released for Ampache7 **only**
 * ALL
   * Support POST requests for all methods
 
+### Fixed
+
+* ALL
+  * Localplay methods might not complete when pulling status from missing controllers
+
 ## API 6.8.1
 
 This version is being released for Ampache7 **only**

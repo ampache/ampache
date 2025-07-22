@@ -84,9 +84,8 @@ class AmpacheFacebook extends AmpachePlugin implements PluginExternalShareInterf
     public function external_share(string $url, string $text): string
     {
         unset($text);
-        $share = "https://www.facebook.com/sharer/sharer.php";
 
-        return $share . ("?u=" . rawurlencode($url));
+        return "https://www.facebook.com/sharer/sharer.php?u=" . rawurlencode($url);
     }
 
     /**

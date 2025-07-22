@@ -1264,8 +1264,12 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * sanitize_disk
      * Change letter disk numbers (like vinyl/cassette) to an integer
      */
-    public static function sanitize_disk(int|string $disk): int
+    public static function sanitize_disk(int|string|null $disk): int
     {
+        if ($disk === null || $disk === '') {
+            return 0;
+        }
+
         if ((int)$disk == 0) {
             // A is 0 but we want to start at disk 1
             $alphabet = range('A', 'Z');
