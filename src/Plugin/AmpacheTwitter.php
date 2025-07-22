@@ -83,8 +83,7 @@ class AmpacheTwitter extends AmpachePlugin implements PluginExternalShareInterfa
      */
     public function external_share(string $url, string $text): string
     {
-        $share = "https://twitter.com/share";
-        $share .= "?url=" . rawurlencode($url);
+        $share = "https://twitter.com/share?url=" . rawurlencode($url);
         if ($text !== '' && $text !== '0') {
             $share .= "&text=" . rawurlencode($text);
         }
