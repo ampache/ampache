@@ -67,7 +67,7 @@ final class ClearAction implements ApplicationActionInterface
             ->createResponse(StatusCode\RFC\RFC7231::FOUND)
             ->withHeader(
                 'Location',
-                $this->configContainer->getWebPath()
+                $this->configContainer->getWebPath('/client')
             );
     }
 }
