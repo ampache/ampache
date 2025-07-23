@@ -75,7 +75,8 @@ final class DisableAction extends AbstractUserAction
             /* HINT: User Fullname */
             sprintf(T_('This will disable the user "%s"'), scrub_out($user->getFullDisplayName())),
             sprintf(
-                'admin/users.php?action=confirm_disable&user_id=%s',
+                '%s/users.php?action=confirm_disable&user_id=%s',
+                $this->configContainer->getWebPath('/admin'),
                 $userId
             ),
             1,

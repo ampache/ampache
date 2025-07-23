@@ -228,7 +228,7 @@ class ConfirmDisableActionTest extends TestCase
             ->with(
                 'There Was a Problem',
                 'You need at least one active Administrator account',
-                'admin/users.php'
+                '/users.php'
             );
         $this->ui->expects(static::once())
             ->method('showQueryStats');

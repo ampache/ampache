@@ -197,13 +197,19 @@ final class UpdateUserAction extends AbstractUserAction
                     $mindimension,
                     $maxdimension
                 ),
-                sprintf('%s/users.php', $this->configContainer->getWebPath('/admin'))
+                sprintf(
+                    '%s/users.php',
+                    $this->configContainer->getWebPath('/admin')
+                )
             );
         } else {
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 sprintf(T_('%s (%s) updated'), scrub_out($client->username), scrub_out($client->fullname)),
-                sprintf('%s/users.php', $this->configContainer->getWebPath('/admin'))
+                sprintf(
+                    '%s/users.php',
+                    $this->configContainer->getWebPath('/admin')
+                )
             );
         }
 

@@ -95,7 +95,10 @@ final class ConfirmDisableAction extends AbstractUserAction
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 T_('You need at least one active Administrator account'),
-                'admin/users.php'
+                sprintf(
+                    '%s/users.php',
+                    $this->configContainer->getWebPath('/admin')
+                )
             );
         }
         $this->ui->showQueryStats();

@@ -152,7 +152,10 @@ final class AddCatalogAction extends AbstractCatalogAction
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Catalog creation process has started'),
-                sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin')),
+                sprintf(
+                    '%s/catalog.php',
+                    $this->configContainer->getWebPath('/admin')
+                ),
                 0,
                 'confirmation',
                 false

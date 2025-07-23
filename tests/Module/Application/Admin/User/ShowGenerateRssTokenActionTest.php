@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Util\UiInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -35,14 +36,18 @@ class ShowGenerateRssTokenActionTest extends TestCase
 
     private MockObject&UiInterface $ui;
 
+    private MockObject&ConfigContainerInterface $configContainer;
+
     private ShowGenerateRssTokenAction $subject;
 
     protected function setUp(): void
     {
-        $this->ui = $this->createMock(UiInterface::class);
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new ShowGenerateRssTokenAction(
             $this->ui,
+            $this->configContainer,
         );
     }
 
@@ -56,7 +61,7 @@ class ShowGenerateRssTokenActionTest extends TestCase
                         'Are You Sure?',
                         'This will replace your existing token. Links with the old token might not work properly',
                         sprintf(
-                            'admin/users.php?action=%s&user_id=%d',
+                            '/users.php?action=%s&user_id=%d',
                             GenerateRssTokenAction::REQUEST_KEY,
                             $userId
                         ),
