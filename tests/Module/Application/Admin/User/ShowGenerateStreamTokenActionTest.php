@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Util\UiInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -35,14 +36,18 @@ class ShowGenerateStreamTokenActionTest extends TestCase
 
     private MockObject&UiInterface $ui;
 
+    private MockObject&ConfigContainerInterface $configContainer;
+
     private ShowGenerateStreamTokenAction $subject;
 
     protected function setUp(): void
     {
-        $this->ui = $this->createMock(UiInterface::class);
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new ShowGenerateStreamTokenAction(
             $this->ui,
+            $this->configContainer
         );
     }
 
@@ -56,7 +61,7 @@ class ShowGenerateStreamTokenActionTest extends TestCase
                         'Are You Sure?',
                         'This will replace your existing token. Links with the old token might not work properly',
                         sprintf(
-                            'admin/users.php?action=%s&user_id=%d',
+                            '/users.php?action=%s&user_id=%d',
                             GenerateStreamTokenAction::REQUEST_KEY,
                             $userId
                         ),

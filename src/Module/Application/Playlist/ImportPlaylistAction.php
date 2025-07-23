@@ -95,7 +95,11 @@ final class ImportPlaylistAction implements ApplicationActionInterface
         $this->ui->showConfirmation(
             $title,
             $body,
-            sprintf('%s/playlist.php?action=%s', $this->configContainer->getWebPath('/client'), $url)
+            sprintf(
+                '%s/playlist.php?action=%s',
+                $this->configContainer->getWebPath('/client'),
+                $url
+            )
         );
 
         $this->ui->showQueryStats();

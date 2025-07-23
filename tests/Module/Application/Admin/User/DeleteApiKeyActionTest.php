@@ -158,7 +158,7 @@ class DeleteApiKeyActionTest extends TestCase
             ->with(
                 'No Problem',
                 'API key has been deleted',
-                'admin/users.php',
+                '/users.php',
             );
         $this->ui->expects(static::once())
             ->method('showQueryStats');

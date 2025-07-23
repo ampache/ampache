@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,10 +41,14 @@ final class ShowDeleteRssTokenAction extends AbstractUserAction
 
     private UiInterface $ui;
 
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        ConfigContainerInterface $configContainer
     ) {
-        $this->ui = $ui;
+        $this->ui              = $ui;
+        $this->configContainer = $configContainer;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -55,7 +60,8 @@ final class ShowDeleteRssTokenAction extends AbstractUserAction
                     T_('Are You Sure?'),
                     T_('This Token will be deleted'),
                     sprintf(
-                        'admin/users.php?action=%s&user_id=%d',
+                        '%s/users.php?action=%s&user_id=%d',
+                        $this->configContainer->getWebPath('/admin'),
                         DeleteRssTokenAction::REQUEST_KEY,
                         $userId
                     ),

@@ -63,7 +63,10 @@ final class AddToCatalogAction extends AbstractCatalogAction
         $this->ui->showConfirmation(
             T_('Catalog update process has started'),
             '',
-            sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin')),
+            sprintf(
+                '%s/catalog.php',
+                $this->configContainer->getWebPath('/admin')
+            ),
             0,
             'confirmation',
             false

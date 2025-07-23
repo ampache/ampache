@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Shout;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
@@ -44,16 +45,20 @@ class EditShoutActionTest extends MockeryTestCase
 
     private MockObject&ShoutRepositoryInterface $shoutRepository;
 
+    private MockObject&ConfigContainerInterface $configContainer;
+
     private EditShoutAction $subject;
 
     protected function setUp(): void
     {
         $this->ui              = $this->mock(UiInterface::class);
         $this->shoutRepository = $this->createMock(ShoutRepositoryInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new EditShoutAction(
             $this->ui,
-            $this->shoutRepository
+            $this->shoutRepository,
+            $this->configContainer
         );
     }
 
@@ -147,7 +152,7 @@ class EditShoutActionTest extends MockeryTestCase
             ->with(
                 'No Problem',
                 'Shoutbox post has been updated',
-                'admin/shout.php'
+                '/shout.php'
             )
             ->once();
         $this->ui->shouldReceive('showQueryStats')

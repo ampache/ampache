@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Playlist;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
@@ -46,12 +47,16 @@ final class CreatePlaylistAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
         RequestParserInterface $requestParser,
-        UiInterface $ui
+        UiInterface $ui,
+        ConfigContainerInterface $configContainer
     ) {
-        $this->requestParser = $requestParser;
-        $this->ui            = $ui;
+        $this->requestParser   = $requestParser;
+        $this->ui              = $ui;
+        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -79,7 +84,10 @@ final class CreatePlaylistAction implements ApplicationActionInterface
             T_('Playlist created'),
             /* HINT: %1 playlist name, %2 playlist type */
             sprintf(T_('%1$s (%2$s) has been created'), $playlist_name, $playlist_type),
-            'playlist.php'
+            sprintf(
+                '%s/playlist.php',
+                $this->configContainer->getWebPath()
+            )
         );
 
         $this->ui->showQueryStats();

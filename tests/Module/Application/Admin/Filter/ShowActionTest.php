@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Filter;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -38,14 +39,18 @@ class ShowActionTest extends TestCase
 {
     private UiInterface&MockObject $ui;
 
+    private MockObject&ConfigContainerInterface $configContainer;
+
     protected ShowAction $subject;
 
     protected function setUp(): void
     {
-        $this->ui = $this->createMock(UiInterface::class);
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new ShowAction(
-            $this->ui
+            $this->ui,
+            $this->configContainer
         );
     }
 
