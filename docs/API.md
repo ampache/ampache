@@ -17,11 +17,9 @@ All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.or
 
 ## News
 
-Ampache7 is [here!](https://github.com/ampache/ampache/releases/)
+As of 7.7.1 (API 6.9.0) Ampache fully supports POST data requests for all API methods.
 
-The good news is that API6 will remain as the primary API for the next major version. This means **NO** breaking changes for the API!
-
-API6 will continue to be extended and developed as normal.
+POST requests offer more privacy than a regular GET request because data is sent in the body, not the URL, avoiding exposure in browser history and logs.
 
 ## Archived Version Documentation
 
@@ -316,6 +314,7 @@ All Data methods return HTTP 200 responses
 * scrobble
 * search_group **Ampache 6.3.0+**
 * search  **Ampache 6.3.0+** (alias for [advanced_search](https://ampache.org/api/api-advanced-search))
+* search_rules
 * search_songs
 * shares
 * share
@@ -325,6 +324,7 @@ All Data methods return HTTP 200 responses
 * songs
 * song
 * song_delete
+* song_tags
 * stats
 * system_preference
 * system_preferences
