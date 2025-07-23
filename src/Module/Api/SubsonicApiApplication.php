@@ -82,7 +82,11 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $this->logger
         );
 
-        $query = array_merge($request->getQueryParams(), (array)$request->getParsedBody());
+        $post = ($request->getMethod() === 'POST')
+            ? (array)$request->getParsedBody()
+            : [];
+
+        $query = array_merge($request->getQueryParams(), $post);
 
         //$this->logger->debug(print_r($query, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
         //$this->logger->debug(print_r(apache_request_headers(), true), [LegacyLogger::CONTEXT_TYPE => self::class]);

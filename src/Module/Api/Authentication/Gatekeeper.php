@@ -101,7 +101,10 @@ final class Gatekeeper implements GatekeeperInterface
                  * Fallback to legacy get/post parameter. (prefer POST array over GET))
                  * Remove some day when backwards compatability isn't a problem
                  */
-                $query = array_merge($this->request->getQueryParams(), (array)$this->request->getParsedBody());
+                $post = ($this->request->getMethod() === 'POST')
+                    ? (array)$this->request->getParsedBody()
+                    : [];
+                $query = array_merge($this->request->getQueryParams(), $post);
                 $token = $query[$requestKey] ?? '';
                 if ($token !== '') {
                     $this->logger->notice(
@@ -110,7 +113,6 @@ final class Gatekeeper implements GatekeeperInterface
                     );
                 }
             }
-
 
             $this->auth = $token;
         }
