@@ -92,7 +92,10 @@ final class ClearCacheAction implements ApplicationActionInterface
         $this->ui->showConfirmation(
             T_('No Problem'),
             $text,
-            sprintf('%s/system.php?action=show_debug', $this->configContainer->getWebPath('/admin'))
+            sprintf(
+                '%s/system.php?action=show_debug',
+                $this->configContainer->getWebPath('/admin')
+            )
         );
 
         $this->ui->showQueryStats();

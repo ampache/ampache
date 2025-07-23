@@ -79,7 +79,11 @@ final class ShowDeleteRecordAction implements ApplicationActionInterface
             T_('Are You Sure?'),
             /* HINT: ACL Name */
             sprintf(T_('This will permanently delete the %s ACL "%s"'), scrub_out($access->type), scrub_out($access->name)),
-            sprintf('admin/access.php?action=delete_record&access_id=%d', $access->id),
+            sprintf(
+                '%s/access.php?action=delete_record&access_id=%d',
+                $this->configContainer->getWebPath('/admin'),
+                $access->id
+            ),
             1,
             'delete_access'
         );

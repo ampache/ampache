@@ -125,11 +125,17 @@ class ResetDbCharsetActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
+
+        $this->configContainer->shouldReceive('getWebPath')
+            ->with('/admin')
+            ->once()
+            ->andReturn('/admin');
+
         $this->ui->shouldReceive('showConfirmation')
             ->with(
                 'No Problem',
                 'Your database and associated tables have been updated to match your currently configured charset',
-                'admin/system.php?action=show_debug'
+                '/admin/system.php?action=show_debug'
             )
             ->once();
 

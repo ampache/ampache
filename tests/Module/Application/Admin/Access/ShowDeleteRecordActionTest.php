@@ -138,6 +138,12 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
+
+        $this->configContainer->shouldReceive('getWebPath')
+            ->with('/admin')
+            ->once()
+            ->andReturn('/admin');
+
         $this->ui->shouldReceive('showConfirmation')
             ->with(
                 'Are You Sure?',
@@ -147,7 +153,7 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
                     $accessType,
                     $accessName
                 ),
-                sprintf('admin/access.php?action=delete_record&access_id=%d', $accessId),
+                sprintf('/admin/access.php?action=delete_record&access_id=%d', $accessId),
                 1,
                 'delete_access'
             )

@@ -188,12 +188,18 @@ class DisableActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
+
+        $this->configContainer->shouldReceive('getWebPath')
+            ->with('/admin')
+            ->once()
+            ->andReturn('/admin');
+
         $this->ui->shouldReceive('showConfirmation')
             ->with(
                 'Are You Sure?',
                 sprintf('This will disable the user "%s"', $username),
                 sprintf(
-                    'admin/users.php?action=confirm_disable&user_id=%s',
+                    '/admin/users.php?action=confirm_disable&user_id=%s',
                     $userId
                 ),
                 1,

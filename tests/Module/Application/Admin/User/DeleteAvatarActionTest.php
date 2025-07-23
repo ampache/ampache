@@ -156,7 +156,7 @@ class DeleteAvatarActionTest extends TestCase
             ->with(
                 'No Problem',
                 'Avatar has been deleted',
-                'admin/users.php',
+                '/users.php',
             );
         $this->ui->expects(static::once())
             ->method('showQueryStats');

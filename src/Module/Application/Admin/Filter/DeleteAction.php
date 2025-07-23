@@ -63,7 +63,8 @@ final class DeleteAction extends AbstractFilterAction
             T_('Are You Sure?'),
             $warning_msg,
             sprintf(
-                'admin/filter.php?action=confirm_delete&filter_id=%s&filter_name=%s',
+                '%s/filter.php?action=confirm_delete&filter_id=%s&filter_name=%s',
+                $this->configContainer->getWebPath('/admin'),
                 $filter_id,
                 $filter_name
             ),

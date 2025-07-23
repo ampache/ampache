@@ -143,7 +143,7 @@ class DeleteActionTest extends TestCase
                 'Are You Sure?',
                 'The Podcast will be removed from the database',
                 sprintf(
-                    'podcast.php?action=confirm_delete&podcast_id=%d',
+                    '/podcast.php?action=confirm_delete&podcast_id=%d',
                     $podcastId
                 ),
                 1,

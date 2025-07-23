@@ -90,7 +90,10 @@ final class GenerateApiKeyAction extends AbstractUserAction
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('A new user API Key has been generated'),
-            'admin/users.php'
+            sprintf(
+                '%s/users.php',
+                $this->configContainer->getWebPath('/admin')
+            )
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
