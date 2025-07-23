@@ -3161,16 +3161,6 @@ parameters:
 			path: src/Module/Util/Horde_Browser.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:\\$_majorVersion \\(int\\) does not accept string\\.$#"
-			count: 7
-			path: src/Module/Util/Horde_Browser.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:\\$_minorVersion \\(int\\) does not accept string\\.$#"
-			count: 7
-			path: src/Module/Util/Horde_Browser.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:\\$_mobile is never read, only written\\.$#"
 			count: 1
 			path: src/Module/Util/Horde_Browser.php
