@@ -86,7 +86,7 @@ final class CreatePlaylistAction implements ApplicationActionInterface
             sprintf(T_('%1$s (%2$s) has been created'), $playlist_name, $playlist_type),
             sprintf(
                 '%s/playlist.php',
-                $this->configContainer->getWebPath()
+                $this->configContainer->getWebPath('/client')
             )
         );
 
