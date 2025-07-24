@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Share;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -107,7 +106,10 @@ final readonly class CreateAction implements ApplicationActionInterface
             $this->ui->showConfirmation(
                 $title,
                 $body,
-                AmpConfig::get_web_path('/client') . '/stats.php?action=share'
+                sprintf(
+                    '%s/stats.php?action=share',
+                    $this->configContainer->getWebPath('/client')
+                )
             );
         } else {
             $this->logger->error(
@@ -124,7 +126,10 @@ final readonly class CreateAction implements ApplicationActionInterface
                 $this->ui->showContinue(
                     T_('There Was a Problem'),
                     T_('Failed to create share'),
-                    AmpConfig::get_web_path('/client') . '/stats.php?action=share'
+                    sprintf(
+                        '%s/stats.php?action=share',
+                        $this->configContainer->getWebPath('/client')
+                    )
                 );
             } else {
                 $message   = T_('Failed to create share');
