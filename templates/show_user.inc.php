@@ -57,6 +57,7 @@ $web_path = AmpConfig::get_web_path();
 
 /** @var User $current_user */
 $current_user = Core::get_global('user');
+$is_user      = ($current_user instanceof User && $client->id == $current_user->id);
 $last_seen    = ($client->last_seen) ? get_datetime((int) $client->last_seen) : T_('Never');
 $create_date  = ($client->create_date) ? get_datetime((int) $client->create_date) : T_('Unknown');
 $admin_path   = AmpConfig::get_web_path('/admin');
@@ -100,7 +101,7 @@ Ui::show_box_top(scrub_out($client->get_fullname())); ?>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
             <a href="<?php echo $admin_path; ?>/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('edit', T_('Edit')); ?></a>
             <a href="<?php echo $admin_path; ?>/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('page_info', T_('Preferences')); ?></a>
-        <?php } elseif ($client->id == $current_user->id) { ?>
+        <?php } elseif ($is_user) { ?>
             <a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo Ui::get_material_symbol('edit', T_('Edit')); ?></a>
         <?php } ?>
 <?php if (AmpConfig::get('use_now_playing_embedded')) { ?>
@@ -206,8 +207,8 @@ require Ui::find_template('show_recently_skipped.inc.php'); ?>
         </div>
 <?php } ?>
         <div id="playlists" class="tab_content">
-        <?php
-$show_all     = (($current_user->id ?? 0) == $client->id || ($current_user->access ?? 0) == 100);
+<?php
+$show_all     = ($is_user || ($current_user instanceof User && $current_user->access == 100));
 $playlist_ids = $client->get_playlists($show_all);
 $browse       = new Browse();
 $browse->set_type('playlist');
