@@ -77,9 +77,10 @@ final class Localplay4Method
             return false;
         }
 
-        $result = false;
-        $status = false;
-        switch (strtolower($input['command'])) {
+        $result  = false;
+        $status  = null;
+        $command = strtolower($input['command']);
+        switch ($command) {
             case 'add':
                 // for add commands get the object details
                 $object_id = (int)($input['oid'] ?? 0);
@@ -147,6 +148,14 @@ final class Localplay4Method
 
                 return false;
         } // end switch on command
+
+        // bad status calls can happen
+        if ($command === 'status' && empty($status)) {
+            Api4::message('error', T_('Error Unable to connect to localplay controller'), '405', $input['api_format']);
+
+            return false;
+        }
+
         $results = (!empty($status))
             ? ['localplay' => ['command' => [$input['command'] => $status]]]
             : ['localplay' => ['command' => [$input['command'] => $result]]];

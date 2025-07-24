@@ -227,6 +227,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
             echo '</div>';
             Ui::show_box_bottom();
         }
+
         if ($this->user->getId() < 1) {
             // public user doesn't need to query this twice. hold it for the second page
             $hold_ids = ($this->trending)
@@ -239,6 +240,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
                 ? Stats::get_top($object_type, $limit, $threshold)
                 : [];
         }
+
         if ($object_ids !== []) {
             Ui::show_box_top(T_('Trending') . "&nbsp" . Ajax::button('?page=index&action=dashboard_trending&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'trending', 'dashboard_trending'), 'trending');
             echo '<div id="dashboard_trending">';
@@ -259,6 +261,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
                 ? $hold_ids
                 : Stats::get_top($object_type, 100, $threshold, 0, ($this->user->getId() > 0) ? $this->user : null);
         }
+
         if ($object_ids !== []) {
             shuffle($object_ids);
             $object_ids = array_slice($object_ids, 0, $limit);

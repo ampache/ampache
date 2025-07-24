@@ -426,7 +426,7 @@ class AmpacheHttpq extends localplay_controller
      * This tells httpQ to set the volume to the specified amount this
      * is 0-100
      */
-    public function volume($volume): bool
+    public function volume(int $volume): bool
     {
         return $this->_httpq->set_volume($volume);
     }

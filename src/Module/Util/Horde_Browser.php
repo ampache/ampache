@@ -55,72 +55,50 @@ class Horde_Browser
 {
     /**
      * Major version number.
-     *
-     * @var int
      */
-    private $_majorVersion = 0;
+    private int|string $_majorVersion = 0;
 
     /**
      * Minor version number.
-     *
-     * @var int
      */
-    private $_minorVersion = 0;
+    private int|string $_minorVersion = 0;
 
     /**
      * Browser name.
-     *
-     * @var string
      */
-    private $_browser = '';
+    private string $_browser = '';
 
     /**
      * Full user agent string.
-     *
-     * @var string
      */
-    private $_agent = '';
+    private string $_agent = '';
 
     /**
      * Lower-case user agent string.
-     *
-     * @var string
      */
-    private $_lowerAgent = '';
+    private string $_lowerAgent = '';
 
     /**
      * HTTP_ACCEPT string
-     *
-     * @var string
      */
-    private $_accept = '';
+    private string $_accept = '';
 
     /**
      * Platform the browser is running on.
-     *
-     * @var string
      */
-    private $_platform = '';
+    private string $_platform = '';
 
     /**
      * Is this a mobile browser?
-     *
-     * @var bool
      */
-    private $_mobile = false;
+    private bool $_mobile = false;
 
     /**
      * Is this a tablet browser?
-     *
-     * @var bool
      */
-    private $_tablet = false;
+    private bool $_tablet = false;
 
-    /**
-     * Features.
-     *
-     * @var array<string, bool|float|int|string>
-     */
+    /** @var array<string, bool|float|int|string> */
     private array $_features = [
         'frames' => true,
         'html' => true,
@@ -130,11 +108,7 @@ class Horde_Browser
         'tables' => true
     ];
 
-    /**
-     * Quirks.
-     *
-     * @var array<string, bool>
-     */
+    /** @var array<string, bool> */
     private array $_quirks = [];
 
     /**

@@ -82,7 +82,11 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $this->logger
         );
 
-        $query = $request->getQueryParams();
+        $post = ($request->getMethod() === 'POST')
+            ? (array)$request->getParsedBody()
+            : [];
+
+        $query = array_merge($request->getQueryParams(), $post);
 
         //$this->logger->debug(print_r($query, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
         //$this->logger->debug(print_r(apache_request_headers(), true), [LegacyLogger::CONTEXT_TYPE => self::class]);
@@ -325,21 +329,25 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         //$this->logger->debug(print_r(apache_request_headers(), true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
         // Call your function if it's valid
+        $callback = [OpenSubsonic_Api::class, $action];
         if (
             $os_methods !== [] &&
             in_array(strtolower($action), $os_methods) &&
-            method_exists(OpenSubsonic_Api::class, $action)
+            method_exists(OpenSubsonic_Api::class, $action) &&
+            assert(is_callable($callback))
         ) {
-            call_user_func([OpenSubsonic_Api::class, $action], $input, $user);
+            call_user_func($callback, $input, $user);
 
             return;
         }
+        $callback = [Subsonic_Api::class, $action];
         if (
             $methods !== [] &&
             in_array(strtolower($action), $methods) &&
-            method_exists(Subsonic_Api::class, $action)
+            method_exists(Subsonic_Api::class, $action) &&
+            assert(is_callable($callback))
         ) {
-            call_user_func([Subsonic_Api::class, $action], $input, $user);
+            call_user_func($callback, $input, $user);
 
             // We only allow a single function to be called, and we assume it's cleaned up!
             return;

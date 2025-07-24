@@ -44,20 +44,20 @@ class ConfirmDeleteActionTest extends MockeryTestCase
 
     private UiInterface&MockInterface $ui;
 
-    private PrivateMessageRepositoryInterface&MockInterface $privateMessageRepository;
+    private PrivateMessageRepositoryInterface&MockInterface $pmRepository;
 
     private ConfirmDeleteAction $subject;
 
     protected function setUp(): void
     {
-        $this->configContainer          = $this->mock(ConfigContainerInterface::class);
-        $this->ui                       = $this->mock(UiInterface::class);
-        $this->privateMessageRepository = $this->mock(PrivateMessageRepositoryInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->pmRepository    = $this->mock(PrivateMessageRepositoryInterface::class);
 
         $this->subject = new ConfirmDeleteAction(
             $this->configContainer,
             $this->ui,
-            $this->privateMessageRepository
+            $this->pmRepository
         );
     }
 
@@ -154,7 +154,7 @@ class ConfirmDeleteActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['msgs' => implode(',', [$messageId, 42])]);
 
-        $this->privateMessageRepository->shouldReceive('findById')
+        $this->pmRepository->shouldReceive('findById')
             ->with($messageId)
             ->once()
             ->andReturn($message);
@@ -204,11 +204,11 @@ class ConfirmDeleteActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['msgs' => (string) $messageId]);
 
-        $this->privateMessageRepository->shouldReceive('findById')
+        $this->pmRepository->shouldReceive('findById')
             ->with($messageId)
             ->once()
             ->andReturn($message);
-        $this->privateMessageRepository->shouldReceive('delete')
+        $this->pmRepository->shouldReceive('delete')
             ->with($message)
             ->once();
 

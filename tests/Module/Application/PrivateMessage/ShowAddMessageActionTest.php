@@ -48,22 +48,22 @@ class ShowAddMessageActionTest extends MockeryTestCase
 
     private ModelFactoryInterface&MockInterface $modelFactory;
 
-    private PrivateMessageRepositoryInterface&MockInterface $privateMessageRepository;
+    private PrivateMessageRepositoryInterface&MockInterface $pmRepository;
 
     private ShowAddMessageAction $subject;
 
     protected function setUp(): void
     {
-        $this->configContainer          = $this->mock(ConfigContainerInterface::class);
-        $this->ui                       = $this->mock(UiInterface::class);
-        $this->modelFactory             = $this->mock(ModelFactoryInterface::class);
-        $this->privateMessageRepository = $this->mock(PrivateMessageRepositoryInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->pmRepository    = $this->mock(PrivateMessageRepositoryInterface::class);
 
         $this->subject = new ShowAddMessageAction(
             $this->configContainer,
             $this->ui,
             $this->modelFactory,
-            $this->privateMessageRepository
+            $this->pmRepository
         );
     }
 
@@ -177,7 +177,7 @@ class ShowAddMessageActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['reply_to' => (string) $replyToMessageId]);
 
-        $this->privateMessageRepository->shouldReceive('findById')
+        $this->pmRepository->shouldReceive('findById')
             ->with($replyToMessageId)
             ->once()
             ->andReturnNull();
@@ -233,7 +233,7 @@ class ShowAddMessageActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['reply_to' => (string) $replyToMessageId]);
 
-        $this->privateMessageRepository->shouldReceive('findById')
+        $this->pmRepository->shouldReceive('findById')
             ->with($replyToMessageId)
             ->once()
             ->andReturn($message);

@@ -1,5 +1,20 @@
 # API CHANGELOG
 
+## API 6.9.0
+
+This version is being released for Ampache7 **only**
+
+### Added
+
+* ALL
+  * Support POST requests for all methods
+
+### Fixed
+
+* ALL
+  * Localplay methods might not complete when pulling status from missing controllers
+  * preference_edit would error on system preferences when you had access to change them
+
 ## API 6.8.1
 
 This version is being released for Ampache7 **only**

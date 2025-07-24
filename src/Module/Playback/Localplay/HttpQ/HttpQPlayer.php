@@ -290,9 +290,8 @@ class HttpQPlayer
     /**
      * delete_pos
      * This deletes a specific track
-     * @param $track
      */
-    public function delete_pos($track): bool
+    public function delete_pos(int $track): bool
     {
         $args    = ['index' => $track];
         $results = $this->sendCommand('deletepos', $args);
@@ -394,9 +393,8 @@ class HttpQPlayer
      * set_volume
      * This sets the volume as best it can, we go from a resolution
      * of 100 --> 255 so it's a little fuzzy
-     * @param $value
      */
-    public function set_volume($value): bool
+    public function set_volume(int $value): bool
     {
         // Convert it to base 255
         $volume  = $value * 2.55;
@@ -435,9 +433,8 @@ class HttpQPlayer
     /**
      * get_repeat
      * This returns the current state of the repeat
-     * @return string|bool
      */
-    public function get_repeat()
+    public function get_repeat(): bool|string
     {
         $args = [];
 
@@ -447,9 +444,8 @@ class HttpQPlayer
     /**
      * get_random
      * This returns the current state of shuffle
-     * @return string|bool
      */
-    public function get_random()
+    public function get_random(): bool|string
     {
         $args = [];
 
@@ -460,9 +456,8 @@ class HttpQPlayer
      * get_now_playing
      * This returns the file information for the currently
      * playing song
-     * @return string|bool
      */
-    public function get_now_playing()
+    public function get_now_playing(): bool|string
     {
         // First get the current POS
         $pos = $this->sendCommand('getlistpos', []);
@@ -496,11 +491,9 @@ class HttpQPlayer
      * sendCommand
      * This is the core of this library it takes care of sending the HTTP
      * request to the HttpQ server and getting the response
-     * @param string $cmd
-     * @param array $args
-     * @return string|bool
+     * @param array<string, scalar> $args
      */
-    private function sendCommand($cmd, $args)
+    private function sendCommand(string $cmd, array $args): bool|string
     {
         $fsock = fsockopen(($this->host ?? 'localhost'), ($this->port ?? 4800), $errno, $errstr);
 

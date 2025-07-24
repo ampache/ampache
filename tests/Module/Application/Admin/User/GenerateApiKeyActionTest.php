@@ -164,7 +164,7 @@ class GenerateApiKeyActionTest extends TestCase
             ->with(
                 'No Problem',
                 'A new user API Key has been generated',
-                'admin/users.php'
+                '/users.php'
             );
         $this->ui->expects(static::once())
             ->method('showQueryStats');

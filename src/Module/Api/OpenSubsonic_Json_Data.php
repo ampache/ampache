@@ -156,13 +156,20 @@ class OpenSubsonic_Json_Data
      *     'currentIndex': int,
      *     'playing': bool,
      *     'gain': float,
-     *     'position': int
+     *     'position'?: int
      * }
      */
     private static function _getJukeboxStatus(LocalPlay $localplay): array
     {
         $json   = [];
         $status = $localplay->status();
+        if (empty($status)) {
+            return [
+                'currentIndex' => 0,
+                'playing' => false,
+                'gain' => 0
+            ];
+        }
         $index  = (((int)$status['track']) === 0)
             ? 0
             : $status['track'] - 1;
@@ -188,7 +195,7 @@ class OpenSubsonic_Json_Data
      *     'changed': string,
      *     'coverArt'?: string,
      *     'entry'?: array<int, array<string, mixed>>
-     * }// todo add allowedUser	Array of string
+     * }// todo add allowedUser Array of string
      */
     private static function _getPlaylist_Playlist(Playlist $playlist, bool $songs = false): array
     {
@@ -239,7 +246,7 @@ class OpenSubsonic_Json_Data
      *     'changed': string,
      *     'coverArt'?: string,
      *     'entry'?: array<int, array<string, mixed>>
-     * }// todo add allowedUser	Array of string
+     * }// todo add allowedUser Array of string
      */
     private static function _getPlaylist_Search(Search $search, bool $songs = false): array
     {
@@ -506,7 +513,7 @@ class OpenSubsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      * }>,
      *     'displayArtist'?: string,
      *     'albumArtists'?: array<int, array{
@@ -518,7 +525,7 @@ class OpenSubsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      *     }>,
      *     'displayAlbumArtist'?: string,
      *     'contributors'?: array{
@@ -534,7 +541,7 @@ class OpenSubsonic_Json_Data
      *                 'starred'?: string,
      *                 'musicBrainzId'?: string,
      *                 'sortName'?: string,
-     *                 'roles'?: array<string>
+     *                 'roles'?: string[]
      *             }>
      *         }
      *     },
@@ -1050,7 +1057,7 @@ class OpenSubsonic_Json_Data
      *             'starred'?: string,
      *             'musicBrainzId'?: string,
      *             'sortName'?: string,
-     *             'roles'?: array<string>
+     *             'roles'?: string[]
      *         }>,
      *         'displayArtist'?: string,
      *         'albumArtists'?: array<int, array{
@@ -1062,7 +1069,7 @@ class OpenSubsonic_Json_Data
      *             'starred'?: string,
      *             'musicBrainzId'?: string,
      *             'sortName'?: string,
-     *             'roles'?: array<string>
+     *             'roles'?: string[]
      *         }>,
      *         'displayAlbumArtist'?: string,
      *         'contributors'?: array{
@@ -1078,7 +1085,7 @@ class OpenSubsonic_Json_Data
      *                     'starred'?: string,
      *                     'musicBrainzId'?: string,
      *                     'sortName'?: string,
-     *                     'roles'?: array<string>
+     *                     'roles'?: string[]
      *                 }>
      *             }
      *         },
@@ -1246,7 +1253,7 @@ class OpenSubsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      *     }>,
      *     'displayArtist'?: string,
      *     'albumArtists'?: array<int, array{
@@ -1258,7 +1265,7 @@ class OpenSubsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      *     }>,
      *     'displayAlbumArtist'?: string,
      *     'contributors'?: array{
@@ -1274,7 +1281,7 @@ class OpenSubsonic_Json_Data
      *                 'starred'?: string,
      *                 'musicBrainzId'?: string,
      *                 'sortName'?: string,
-     *                 'roles'?: array<string>
+     *                 'roles'?: string[]
      *             }>
      *         }
      *     },
@@ -1459,7 +1466,7 @@ class OpenSubsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      *     }>,
      *     'displayArtist'?: string,
      *     'albumArtists'?: array<int, array{
@@ -1471,7 +1478,7 @@ class OpenSubsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      *     }>,
      *     'displayAlbumArtist'?: string,
      *     'contributors'?: array{
@@ -1487,7 +1494,7 @@ class OpenSubsonic_Json_Data
      *                 'starred'?: string,
      *                 'musicBrainzId'?: string,
      *                 'sortName'?: string,
-     *                 'roles'?: array<string>
+     *                 'roles'?: string[]
      *             }>
      *         }
      *     },
@@ -1622,7 +1629,7 @@ class OpenSubsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      *     }>,
      *     'displayArtist'?: string,
      *     'albumArtists'?: array<int, array{
@@ -1634,7 +1641,7 @@ class OpenSubsonic_Json_Data
      *         'starred'?: string,
      *         'musicBrainzId'?: string,
      *         'sortName'?: string,
-     *         'roles'?: array<string>
+     *         'roles'?: string[]
      *     }>,
      *     'displayAlbumArtist'?: string,
      *     'contributors'?: array{
@@ -1650,7 +1657,7 @@ class OpenSubsonic_Json_Data
      *                 'starred'?: string,
      *                 'musicBrainzId'?: string,
      *                 'sortName'?: string,
-     *                 'roles'?: array<string>
+     *                 'roles'?: string[]
      *             }>
      *         }
      *     },

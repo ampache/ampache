@@ -71,11 +71,18 @@ final class PreferenceEditMethod
         if ($all && !Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
+
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
+        // allow getting system prefs is you have access
+        $user_id = ($all)
+            ? User::INTERNAL_SYSTEM_USER_ID
+            : $user->id;
+
         $pref_name  = $input['filter'];
-        $preference = Preference::get($pref_name, $user->id);
+        $preference = Preference::get($pref_name, $user_id);
+
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Not Found: %s', $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
@@ -88,7 +95,7 @@ final class PreferenceEditMethod
 
             return false;
         }
-        $results = Preference::get($pref_name, $user->id);
+        $results = Preference::get($pref_name, $user_id);
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results[0], JSON_PRETTY_PRINT);

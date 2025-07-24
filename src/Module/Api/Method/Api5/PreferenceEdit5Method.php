@@ -73,8 +73,13 @@ final class PreferenceEdit5Method
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
+        // allow getting system prefs is you have access
+        $user_id = ($all)
+            ? User::INTERNAL_SYSTEM_USER_ID
+            : $user->id;
+
         $pref_name  = (string)$input['filter'];
-        $preference = Preference::get($pref_name, $user->id);
+        $preference = Preference::get($pref_name, $user_id);
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
@@ -87,7 +92,7 @@ final class PreferenceEdit5Method
 
             return false;
         }
-        $preference = Preference::get($pref_name, $user->id);
+        $preference = Preference::get($pref_name, $user_id);
         $results    = ['preference' => $preference];
         switch ($input['api_format']) {
             case 'json':

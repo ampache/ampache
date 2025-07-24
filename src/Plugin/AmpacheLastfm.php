@@ -199,7 +199,7 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
 
         // Create our scrobbler and then queue it
         $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
-        if (!empty($song->get_artist_fullname()) && !$scrobbler->love($flagged, $song->get_artist_fullname(), (string)$song->title)) {
+        if (!in_array($song->get_artist_fullname(), ['', '0'], true) && !$scrobbler->love($flagged, $song->get_artist_fullname(), (string)$song->title)) {
             debug_event('lastfm.plugin', 'Error Love Failed: ' . $scrobbler->error_msg, 3);
 
             return;
@@ -222,7 +222,7 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
 
         $scrobbler   = new Scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
         $session_key = $scrobbler->get_session_key($token);
-        if (!$session_key) {
+        if ($session_key === null) {
             debug_event('lastfm.plugin', 'getSession Failed: ' . $scrobbler->error_msg, 3);
 
             return false;

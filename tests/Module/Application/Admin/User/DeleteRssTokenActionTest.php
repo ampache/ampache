@@ -156,7 +156,7 @@ class DeleteRssTokenActionTest extends TestCase
             ->with(
                 'No Problem',
                 'Token has been deleted',
-                'admin/users.php',
+                '/users.php',
             );
         $this->ui->expects(static::once())
             ->method('showQueryStats');

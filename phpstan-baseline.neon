@@ -1,31 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method Ampache\\\\Config\\\\AmpConfig\\:\\:set_by_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/AmpConfig.php
-
-		-
-			message: "#^Method Ampache\\\\Config\\\\ConfigContainer\\:\\:__construct\\(\\) has parameter \\$configuration with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/ConfigContainer.php
-
-		-
-			message: "#^Method Ampache\\\\Config\\\\ConfigContainer\\:\\:get\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Config/ConfigContainer.php
-
-		-
-			message: "#^Method Ampache\\\\Config\\\\ConfigContainer\\:\\:updateConfig\\(\\) has parameter \\$configuration with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/ConfigContainer.php
-
-		-
-			message: "#^Property Ampache\\\\Config\\\\ConfigContainer\\:\\:\\$configuration type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Config/ConfigContainer.php
-
-		-
 			message: "#^Method Ampache\\\\Config\\\\ConfigContainerInterface\\:\\:get\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Config/ConfigContainerInterface.php
@@ -54,16 +29,6 @@ parameters:
 			message: "#^Method Ampache\\\\Gui\\\\Playlist\\\\NewPlaylistDialogAdapterInterface\\:\\:getPlaylists\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Gui/Playlist/NewPlaylistDialogAdapterInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Gui\\\\TalView\\:\\:setContext\\(\\) has parameter \\$context with no type specified\\.$#"
-			count: 1
-			path: src/Gui/TalView.php
-
-		-
-			message: "#^Method Ampache\\\\Gui\\\\TalViewInterface\\:\\:setContext\\(\\) has parameter \\$context with no type specified\\.$#"
-			count: 1
-			path: src/Gui/TalViewInterface.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\ApiHandler\\:\\:_executeDebugHandler\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -819,16 +784,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\JsonOutput\\:\\:podcastEpisodes\\(\\) should return string but returns array\\|string\\.$#"
 			count: 1
 			path: src/Module/Api/Output/JsonOutput.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\OpenSubsonic_Api', non\\-falsy\\-string\\} given\\.$#"
-			count: 1
-			path: src/Module/Api/SubsonicApiApplication.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Subsonic_Api', non\\-falsy\\-string\\} given\\.$#"
-			count: 1
-			path: src/Module/Api/SubsonicApiApplication.php
 
 		-
 			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
@@ -1661,29 +1616,9 @@ parameters:
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:volume\\(\\) has parameter \\$volume with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:\\$_httpq has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:delete_pos\\(\\) has parameter \\$track with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:sendCommand\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:set_volume\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -1796,11 +1731,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:SendCommand\\(\\) has parameter \\$arguments with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:SetRandom\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
@@ -1816,22 +1746,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:_checkCompatibility\\(\\) has parameter \\$cmd with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:_checkCompatibility\\(\\) has parameter \\$mpd_version with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:_computeVersionValue\\(\\) never returns float so it can be removed from the return type\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:_parseFileListResponse\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
@@ -2031,19 +1946,9 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:volume\\(\\) has parameter \\$volume with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:\\$_vlc has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:delete_pos\\(\\) has parameter \\$track with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:fullstate\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -2056,22 +1961,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:sendCommand\\(\\) has parameter \\$args with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:sendCommand\\(\\) has parameter \\$cmd with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:sendCommand\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:set_volume\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
@@ -3256,21 +3146,6 @@ parameters:
 			path: src/Module/Util/Graph.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_catalog_files\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_catalog_size\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_graph\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
 			message: "#^Parameter \\#2 \\$Format of method CpChart\\\\Data\\:\\:setXAxisDisplay\\(\\) expects array\\|null, string given\\.$#"
 			count: 4
 			path: src/Module/Util/Graph.php
@@ -3283,16 +3158,6 @@ parameters:
 		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:\\$_accept is never read, only written\\.$#"
 			count: 1
-			path: src/Module/Util/Horde_Browser.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:\\$_majorVersion \\(int\\) does not accept string\\.$#"
-			count: 7
-			path: src/Module/Util/Horde_Browser.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:\\$_minorVersion \\(int\\) does not accept string\\.$#"
-			count: 7
 			path: src/Module/Util/Horde_Browser.php
 
 		-

@@ -160,6 +160,7 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                             if (isset($artist['images']) && count($artist['images']) > 0) {
                                 $results['art'] = $artist['images'][0]['uri'];
                             }
+
                             if (!empty($artist['cover_image'])) {
                                 $results['art'] = $artist['cover_image'];
                             }
@@ -171,6 +172,7 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                     }
                 }
             }
+
             if (!empty($media_info['albumartist']) && !empty($media_info['album'])) {
                 /**
                  * https://api.discogs.com/database/search?type=master&release_title=Ghosts&artist=Ladytron&per_page=10&key=key@secret=secret
@@ -212,6 +214,7 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                             break;
                         }
                     }
+
                     // look up the master release if we have one or the first release
                     if (!isset($album['id'])) {
                         /**
@@ -240,13 +243,16 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                             ? $this->discogs->get_album((int)$albums['results'][0]['master_id'])
                             : $this->discogs->get_album((int)$albums['results'][0]['id'], 'releases');
                     }
+
                     // fallback to the initial search if we don't have a master
                     if (!isset($album['id'])) {
                         $album = $albums['results'][0];
                     }
+
                     if (isset($album['images']) && count($album['images']) > 0) {
                         $results['art'] = $album['images'][0]['uri'];
                     }
+
                     if (!empty($album['cover_image'])) {
                         $results['art'] = $album['cover_image'];
                     }
@@ -257,11 +263,12 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                             $genres = array_merge($genres, $release['genre']);
                         }
                     }
+
                     if (!empty($release['style'])) {
                         $genres = array_merge($genres, $release['style']);
                     }
 
-                    if (!empty($genres)) {
+                    if ($genres !== []) {
                         $results['genre'] = array_unique($genres);
                     }
 

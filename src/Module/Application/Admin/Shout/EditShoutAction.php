@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Shout;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
@@ -45,7 +46,8 @@ final readonly class EditShoutAction implements ApplicationActionInterface
 
     public function __construct(
         private UiInterface $ui,
-        private ShoutRepositoryInterface $shoutRepository
+        private ShoutRepositoryInterface $shoutRepository,
+        private ConfigContainerInterface $configContainer
     ) {
     }
 
@@ -71,7 +73,10 @@ final readonly class EditShoutAction implements ApplicationActionInterface
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Shoutbox post has been updated'),
-            'admin/shout.php'
+            sprintf(
+                '%s/shout.php',
+                $this->configContainer->getWebPath('/admin')
+            )
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();

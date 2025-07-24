@@ -90,7 +90,10 @@ final class ConfirmEnableAction extends AbstractUserAction
         $this->ui->showConfirmation(
             T_('No Problem'),
             sprintf(T_('%s has been enabled'), scrub_out($user->getFullDisplayName())),
-            'admin/users.php'
+            sprintf(
+                '%s/users.php',
+                $this->configContainer->getWebPath('/admin')
+            )
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();

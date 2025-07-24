@@ -164,7 +164,7 @@ class GenerateStreamTokenActionTest extends TestCase
             ->with(
                 'No Problem',
                 'A new user token has been generated',
-                'admin/users.php'
+                '/users.php'
             );
         $this->ui->expects(static::once())
             ->method('showQueryStats');

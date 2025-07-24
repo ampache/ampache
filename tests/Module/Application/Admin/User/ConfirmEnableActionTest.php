@@ -154,7 +154,7 @@ class ConfirmEnableActionTest extends TestCase
             ->with(
                 'No Problem',
                 sprintf('%s has been enabled', $userName),
-                'admin/users.php'
+                '/users.php'
             );
         $this->ui->expects(static::once())
             ->method('showQueryStats');

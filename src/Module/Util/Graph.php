@@ -522,7 +522,7 @@ class Graph
      * @param int $width
      * @param int $height
      */
-    protected function render_graph($title, Data $MyData, $zoom, $width = 0, $height = 0)
+    protected function render_graph($title, Data $MyData, $zoom, $width = 0, $height = 0): void
     {
         // Check graph size sanity
         $width = (int)$width;
@@ -755,7 +755,7 @@ class Graph
         $zoom = 'day',
         $width = 0,
         $height = 0
-    ) {
+    ): void {
         $MyData = new Data();
         $this->get_catalog_all_pts(
             'get_catalog_files_pts',
@@ -793,7 +793,7 @@ class Graph
         $zoom = 'day',
         $width = 0,
         $height = 0
-    ) {
+    ): void {
         $MyData = new Data();
         $this->get_catalog_all_pts(
             'get_catalog_size_pts',

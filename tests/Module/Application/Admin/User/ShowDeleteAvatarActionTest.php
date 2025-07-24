@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Util\UiInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -35,14 +36,18 @@ class ShowDeleteAvatarActionTest extends TestCase
 
     private MockObject&UiInterface $ui;
 
+    private MockObject&ConfigContainerInterface $configContainer;
+
     private ShowDeleteAvatarAction $subject;
 
     protected function setUp(): void
     {
-        $this->ui = $this->createMock(UiInterface::class);
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new ShowDeleteAvatarAction(
             $this->ui,
+            $this->configContainer
         );
     }
 
@@ -56,7 +61,7 @@ class ShowDeleteAvatarActionTest extends TestCase
                         'Are You Sure?',
                         'This Avatar will be deleted',
                         sprintf(
-                            'admin/users.php?action=%s&user_id=%d',
+                            '/users.php?action=%s&user_id=%d',
                             DeleteAvatarAction::REQUEST_KEY,
                             $userId
                         ),

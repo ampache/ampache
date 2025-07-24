@@ -134,13 +134,13 @@ require __DIR__ . '/install_header.inc.php'; ?>
             <input type="password" class="form-control" id="db_password" name="db_password" placeholder="<?php echo T_("Password") . ' (' . T_("required") . ')'; ?>">
         </div>
     </div>
-	<div class="row mb-3">
-		<div class="col-sm-4">
-			<button type="submit" class="btn btn-warning" name="skip_admin"><?php echo T_('Skip'); ?></button>
-		</div>
-		<div class="col-sm-8">
-			<button type="submit" class="btn btn-warning"><?php echo T_('Insert Database'); ?></button>
-		</div>
-	</div>
+    <div class="row mb-3">
+        <div class="col-sm-4">
+            <button type="submit" class="btn btn-warning" name="skip_admin"><?php echo T_('Skip'); ?></button>
+        </div>
+        <div class="col-sm-8">
+            <button type="submit" class="btn btn-warning"><?php echo T_('Insert Database'); ?></button>
+        </div>
+    </div>
 </form>
 <?php require __DIR__ . '/install_footer.inc.php'; ?>

@@ -188,12 +188,18 @@ class ShowDeleteActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
+
+        $this->configContainer->shouldReceive('getWebPath')
+            ->with('/admin')
+            ->once()
+            ->andReturn('/admin');
+
         $this->ui->shouldReceive('showConfirmation')
             ->with(
                 'Are You Sure?',
                 sprintf('This will permanently delete the user "%s"', $username),
                 sprintf(
-                    'admin/users.php?action=confirm_delete&user_id=%s',
+                    '/admin/users.php?action=confirm_delete&user_id=%s',
                     $userId
                 ),
                 1,
