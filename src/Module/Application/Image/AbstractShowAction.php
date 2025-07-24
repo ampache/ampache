@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Image;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -78,7 +77,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 $this->requestParser->getFromRequest('s')
             );
 
-            $cookie = $_COOKIE[AmpConfig::get('session_name', 'ampache')] ?? null;
+            $cookie = $_COOKIE[$this->configContainer->get('session_name') ?? 'ampache'] ?? null;
 
             // Check to see if they've got an interface session or a valid API session
             if (
