@@ -23,7 +23,6 @@
 
 namespace Ampache\Module\Application\Login;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -109,7 +108,7 @@ final class DefaultAction implements ApplicationActionInterface
                     );
             } elseif (array_key_exists($name, $_COOKIE)) {
                 // now auth so unset this cookie
-                setcookie($name, '', -1, (string)AmpConfig::get('cookie_path'));
+                setcookie($name, '', -1, (string)$this->configContainer->get('cookie_path'));
                 setcookie($name, '', -1);
             }
         }
@@ -216,7 +215,7 @@ final class DefaultAction implements ApplicationActionInterface
                     sprintf('%s is disabled and attempted to login', scrub_out($username)),
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
-            } elseif (AmpConfig::get('prevent_multiple_logins')) {
+            } elseif ($this->configContainer->get('prevent_multiple_logins')) {
                 // if logged in multiple times
                 $session_ip = ($user instanceof User) ? $user->is_logged_in() : false;
                 $current_ip = Core::get_user_ip();

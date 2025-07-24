@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Preferences;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -91,7 +90,7 @@ final class UpdateUserAction implements ApplicationActionInterface
         unset($_POST['access']);
         $_POST['username'] = $user->username;
 
-        $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
+        $mandatory_fields = (array) $this->configContainer->get(ConfigurationKeyEnum::REGISTRATION_MANDATORY_FIELDS);
         if (in_array('fullname', $mandatory_fields) && !$_POST['fullname']) {
             AmpError::add('fullname', T_("Please fill in your full name (first name, last name)"));
         }

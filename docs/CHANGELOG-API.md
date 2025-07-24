@@ -13,6 +13,7 @@ This version is being released for Ampache7 **only**
 
 * ALL
   * Localplay methods might not complete when pulling status from missing controllers
+  * preference_edit would error on system preferences when you had access to change them
 
 ## API 6.8.1
 

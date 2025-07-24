@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Share;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessFunctionEnum;
@@ -110,7 +109,7 @@ final class ExternalShareAction implements ApplicationActionInterface
             (int)$share_id,
             true,
             $allow_download,
-            AmpConfig::get('share_expire', 7),
+            $this->configContainer->get(ConfigurationKeyEnum::SHARE_EXPIRE) ?? 7,
             $secret
         );
 
