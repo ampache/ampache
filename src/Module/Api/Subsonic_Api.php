@@ -4091,7 +4091,7 @@ class Subsonic_Api
             $params .= '&transcode_to=' . $format;
         }
         if ($maxBitRate > 0) {
-            $params .= '&bitrate=' . $maxBitRate;
+            $params .= '&bitrate=' . ($maxBitRate * 1000); // Subsonic uses kbps, convert to bps
         }
         if ($timeOffset) {
             $params .= '&frame=' . $timeOffset;
