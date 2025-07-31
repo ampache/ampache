@@ -2831,10 +2831,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addPodcasts($response, $podcasts, $includeEpisodes);
+            $response = Subsonic_Xml_Data::addPodcasts($response, $podcasts, $includeEpisodes, $sub_id);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addPodcasts($response, $podcasts, $includeEpisodes);
+            $response = Subsonic_Json_Data::addPodcasts($response, $podcasts, $includeEpisodes, $sub_id);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
