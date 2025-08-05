@@ -368,10 +368,12 @@ class OpenSubsonic_Json_Data
      *     'episode'?: array<array<string, mixed>>
      * }
      */
-    private static function _getPodcast(Podcast $podcast, bool $includeEpisodes): array
+    private static function _getPodcast(Podcast $podcast, bool $includeEpisodes, ?string $sub_id = null): array
     {
 
-        $sub_id = OpenSubsonic_Api::getPodcastSubId($podcast->getId());
+        $sub_id = (!empty($sub_id))
+            ? $sub_id
+            : Subsonic_Api::getPodcastSubId($podcast->getId());
 
         $json = [
             'id' => $sub_id,
@@ -2957,11 +2959,11 @@ class OpenSubsonic_Json_Data
      * @param Podcast[] $podcasts
      * @return array{'subsonic-response': array<string, mixed>}
      */
-    public static function addPodcasts(array $response, array $podcasts, bool $includeEpisodes = true): array
+    public static function addPodcasts(array $response, array $podcasts, bool $includeEpisodes = true, ?string $sub_id = null): array
     {
         $json = ['channel' => []];
         foreach ($podcasts as $podcast) {
-            $json['channel'][] = self::_getPodcast($podcast, $includeEpisodes);
+            $json['channel'][] = self::_getPodcast($podcast, $includeEpisodes, $sub_id);
         }
 
         $response['subsonic-response']['podcasts'] = (empty($json['channel'])) ? (object)[] : $json;

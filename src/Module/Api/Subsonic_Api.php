@@ -2806,7 +2806,7 @@ class Subsonic_Api
     public static function getpodcasts(array $input, User $user): void
     {
         $sub_id          = $input['id'] ?? null;
-        $includeEpisodes = make_bool($input['includeEpisodes'] ?? false);
+        $includeEpisodes = make_bool($input['includeEpisodes'] ?? true);
 
         if (!AmpConfig::get(ConfigurationKeyEnum::PODCAST)) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
@@ -2831,10 +2831,10 @@ class Subsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addPodcasts($response, $podcasts, $includeEpisodes);
+            $response = Subsonic_Xml_Data::addPodcasts($response, $podcasts, $includeEpisodes, $sub_id);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addPodcasts($response, $podcasts, $includeEpisodes);
+            $response = Subsonic_Json_Data::addPodcasts($response, $podcasts, $includeEpisodes, $sub_id);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -4091,7 +4091,7 @@ class Subsonic_Api
             $params .= '&transcode_to=' . $format;
         }
         if ($maxBitRate > 0) {
-            $params .= '&bitrate=' . $maxBitRate;
+            $params .= '&bitrate=' . ($maxBitRate * 1000); // Subsonic uses kbps, convert to bps
         }
         if ($timeOffset) {
             $params .= '&frame=' . $timeOffset;

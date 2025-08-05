@@ -1650,11 +1650,13 @@ class OpenSubsonic_Xml_Data
      * addPodcasts
      * @param Podcast[] $podcasts
      */
-    public static function addPodcasts(SimpleXMLElement $xml, array $podcasts, bool $includeEpisodes = true): SimpleXMLElement
+    public static function addPodcasts(SimpleXMLElement $xml, array $podcasts, bool $includeEpisodes = true, ?string $sub_id = null): SimpleXMLElement
     {
         $xpodcasts = self::_addChildToResultXml($xml, 'podcasts');
         foreach ($podcasts as $podcast) {
-            $sub_id   = OpenSubsonic_Api::getPodcastSubId($podcast->getId());
+            $sub_id = (!empty($sub_id))
+                ? $sub_id
+                : Subsonic_Api::getPodcastSubId($podcast->getId());
             $xchannel = self::_addChildToResultXml($xpodcasts, 'channel');
             $xchannel->addAttribute('id', $sub_id);
             $xchannel->addAttribute('url', $podcast->getFeedUrl());
