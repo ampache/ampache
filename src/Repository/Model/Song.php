@@ -811,7 +811,7 @@ class Song extends database_object implements
      * gets the catalog_number of $this->album, allows passing of id
      * @param int|null $album_id
      */
-    public function get_album_catalog_number(int $album_id = null): ?string
+    public function get_album_catalog_number(?int $album_id = null): ?string
     {
         if ($album_id === null) {
             $album_id = $this->album;
@@ -827,7 +827,7 @@ class Song extends database_object implements
      * gets the original_year of $this->album, allows passing of id
      * @param int|null $album_id
      */
-    public function get_album_original_year(int $album_id = null): ?int
+    public function get_album_original_year(?int $album_id = null): ?int
     {
         if ($album_id === null) {
             $album_id = $this->album;
@@ -843,7 +843,7 @@ class Song extends database_object implements
      * gets the barcode of $this->album, allows passing of id
      * @param int|null $album_id
      */
-    public function get_album_barcode(int $album_id = null): ?string
+    public function get_album_barcode(?int $album_id = null): ?string
     {
         if (!$album_id) {
             $album_id = $this->album;

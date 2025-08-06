@@ -1048,7 +1048,7 @@ abstract class Catalog extends database_object
     /**
      * Run the cache_catalog_proc() on music catalogs.
      */
-    public static function cache_catalogs(Interactor $interactor = null): void
+    public static function cache_catalogs(?Interactor $interactor = null): void
     {
         $path   = (string)AmpConfig::get('cache_path', '');
         $target = (string)AmpConfig::get('cache_target', '');
@@ -3525,7 +3525,7 @@ abstract class Catalog extends database_object
      * @param string[] $gather_types
      * @return array<string, mixed>
      */
-    public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern, string $file_override = null): array
+    public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern, ?string $file_override = null): array
     {
         // Check for patterns
         if (!$sort_pattern || !$rename_pattern) {
