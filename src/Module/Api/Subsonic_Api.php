@@ -1323,8 +1323,15 @@ class Subsonic_Api
             return;
         }
 
-        $object = self::getAmpacheObject((string)$sub_id);
-        if (!$object instanceof library_item) {
+        if (is_array($sub_id)) {
+            $object      = self::getAmpacheObject($sub_id[0]);
+            $object_type = self::getAmpacheType($sub_id[0]);
+        } else {
+            $object      = self::getAmpacheObject($sub_id);
+            $object_type = self::getAmpacheType($sub_id);
+        }
+
+        if (!$object instanceof library_item || !$object_type) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -1336,7 +1343,6 @@ class Subsonic_Api
             $expire_days  = (isset($input['expires']))
                 ? Share::get_expiry(((int)filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
                 : $share_expire;
-            $object_type = self::getAmpacheType($sub_id);
             if (is_array($sub_id) && $object_type === 'song') {
                 debug_event(self::class, 'createShare: sharing song list (album)', 5);
                 $song_id     = self::getAmpacheId($sub_id[0]);
