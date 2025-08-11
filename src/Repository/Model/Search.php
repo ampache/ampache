@@ -1942,7 +1942,7 @@ class Search extends playlist_object
         if (is_array($this->rules)) {
             foreach ($this->rules as $rule) {
                 // @see search.js SearchRow.add(ruleType, operator, input, subtype)
-                $javascript .= '<script>SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out($rule[1]) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3]) . '"); </script>';
+                $javascript .= '<script>SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out($rule[1]) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3] ?? '') . '"); </script>';
             }
         }
 

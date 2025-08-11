@@ -51,9 +51,9 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public int $song_count;
 
-    public int $total_count;
+    public int $total_count = 0;
 
-    public int $total_skip;
+    public int $total_skip = 0;
 
     public ?string $disksubtitle = null;
 

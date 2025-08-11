@@ -71,9 +71,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     public int $album_disk_count;
 
-    public int $total_count;
+    public int $total_count = 0;
 
-    public int $total_skip;
+    public int $total_skip = 0;
 
     public ?string $link = null;
 
