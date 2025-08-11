@@ -1354,8 +1354,8 @@ class OpenSubsonic_Api
                 $song_id     = self::getAmpacheId($sub_id[0]);
                 $tmp_song    = new Song($song_id);
                 $sub_id      = self::getAlbumSubId($tmp_song->album);
-                $object_type = 'album';
                 $object      = new Album($tmp_song->album);
+                $object_type = 'album';
             }
             debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $sub_id, 4);
             if (
