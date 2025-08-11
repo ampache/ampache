@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## Ampache 7.7.2
+
+### Added
+
+* Update pt_BR translations
+* Add `X-Robots-Tag` to RSS responses
+
+### Changed
+
+* Composer, NPM update
+
+### Fixed
+
+* Errors from unset values
+* PHP 8.4 deprecation errors
+* Subsonic
+  * Sharing Albums (A list of songs instead of just an Album object)
+  * Subsonic `GetPodcasts` not following default `includeEpisodes` value
+  * When refreshing between Subsonic and OpenSubsonic ensure original ID is used for output
+  * maxBitRate conversion for stream calls
+
 ## Ampache 7.7.1
 
 ### Added
