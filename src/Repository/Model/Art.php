@@ -657,24 +657,24 @@ class Art extends database_object
 
         if ($size !== 'original') {
             $path .= $slash_type . 'thumbnail';
-            if ($autocreate && !Core::is_readable($path)) {
+            if ($autocreate && !is_dir($path)) {
                 mkdir($path);
             }
         }
 
         $path .= $slash_type . $type;
-        if ($autocreate && !Core::is_readable($path)) {
+        if ($autocreate && !is_dir($path)) {
             mkdir($path);
         }
 
         $path .= $slash_type . $uid;
-        if ($autocreate && !Core::is_readable($path)) {
+        if ($autocreate && !is_dir($path)) {
             mkdir($path);
         }
 
         if (!empty($kind)) {
             $path .= $slash_type . $kind;
-            if ($autocreate && !Core::is_readable($path)) {
+            if ($autocreate && !is_dir($path)) {
                 mkdir($path);
             }
         }
@@ -793,7 +793,7 @@ class Art extends database_object
             // move old art thumbnails to the new location
             $base_path = self::get_dir_on_disk($type, $uid, 'original', $kind);
             if ($base_path && Core::is_readable($base_path)) {
-                if (!Core::is_readable(dirname($path))) {
+                if (!is_dir(dirname($path))) {
                     mkdir(dirname($path), 0775, true);
                 }
                 $base_path .= "art-" . $sizetext . "." . self::extension($mime);
