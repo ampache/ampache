@@ -119,7 +119,7 @@ class easy_captcha
     {
         // init
         srand();
-        if ($this->id) {
+        if (isset($this->id)) {
             $this->prev[] = $this->id;
         }
         $this->id = $this->new_id();

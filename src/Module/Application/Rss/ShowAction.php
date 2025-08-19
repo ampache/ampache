@@ -106,6 +106,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $handler->configureTemplate($tal);
 
         $response = $this->responseFactory->createResponse()
+            ->withHeader('X-Robots-Tag', 'noindex')
             ->withHeader(
                 'Content-Type',
                 sprintf(

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-07-12 08:50+1000\n"
+"POT-Creation-Date: 2025-07-14 08:58+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Paulo Schopf, 2017-2025\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/ampache/ampache/language/pt_BR/)\n"
@@ -59,10 +59,10 @@ msgid ""
 "that you visit. They are widely used in order to make websites work, or work"
 " more efficiently, as well as to provide information to the owners of the "
 "site"
-msgstr "Cookies são pequenos arquivos de texto que são colocados no seu computador por sites que você visita. Eles são utilizados a fim de que funcionem ou trabalhem de forma mais eficiente, bem como para fornecer informações para os proprietários do site"
+msgstr "Cookies são pequenos arquivos de texto que são colocados no seu computador por sites que você visita. Eles são utilizados a fim de que funcionem ou trabalhem de forma mais eficiente, bem como para fornecer informações para os proprietários do site."
 
 msgid "The table below explains the cookies we use and why"
-msgstr "A tabela abaixo explica os cookies que usamos e porquê"
+msgstr "A tabela abaixo lista os cookies que usamos e o porquê:"
 
 msgid "Cookie"
 msgstr "Cookie"
@@ -121,7 +121,7 @@ msgid "Error Messages"
 msgstr "Mensagens de Erro"
 
 msgid "Donate"
-msgstr "Doar"
+msgstr "Doação"
 
 msgid "Copyright"
 msgstr "Direitos autorais"
@@ -1159,7 +1159,7 @@ msgid "Activate"
 msgstr "Ativar"
 
 msgid "No records found"
-msgstr "Nenhuma Gravação encontrada"
+msgstr "Nenhuma gravação encontrada"
 
 msgid "Clean Catalog"
 msgstr "Limpar catálogo"
@@ -1495,7 +1495,7 @@ msgid "Community"
 msgstr "Comunidade"
 
 msgid "Prevent Preset Override"
-msgstr "Impedir Substituição de Predefinições"
+msgstr "Impedir substituição de predefinições"
 
 msgid "Update User"
 msgstr "Atualização do usuário"
@@ -2112,7 +2112,7 @@ msgid "Gather All Art"
 msgstr "Reunir todas as artes"
 
 msgid "Update All File Tags"
-msgstr "Atualizar Todas as Tags de Arquivos"
+msgstr "Atualizar todas as tags de arquivos"
 
 msgid "Show Disabled Songs"
 msgstr "Mostrar músicas desativadas"
@@ -2231,7 +2231,7 @@ msgid "No playlist found"
 msgstr "Nenhuma playlist encontrada"
 
 msgid "Web Player"
-msgstr "Player web"
+msgstr "Player Web"
 
 msgid "Installed Version"
 msgstr "Versão instalada"
@@ -2739,9 +2739,6 @@ msgstr "Isso garante que sua variável web_path esteja definida corretamente e q
 msgid "Update from tags complete"
 msgstr "Atualização dos rótulos completa"
 
-msgid "Amapche"
-msgstr "Ampache"
-
 msgid "Registration Validation"
 msgstr "Validação do registro"
 
@@ -3107,7 +3104,7 @@ msgid "Invalid Request"
 msgstr "Requisição inválida"
 
 msgid "Deprecated"
-msgstr "Depreciado"
+msgstr "Descontinuado"
 
 msgid "Wrong object type "
 msgstr "Tipo errado de objeto"
@@ -4550,7 +4547,7 @@ msgid "Ampache Database Password"
 msgstr "Senha do Banco de Dados do Ampache"
 
 msgid "Overwrite if Config Already Exists"
-msgstr "Sobreescrever Caso o Arquivo de Configuração Já Exista"
+msgstr "Sobreescrever caso o arquivo de configuração já exista"
 
 msgid "Displays database update information"
 msgstr "Mostra informação da atualização do banco de dados"
@@ -5099,16 +5096,16 @@ msgid "XSPF"
 msgstr "XSPF"
 
 msgid "Allow API3 Only"
-msgstr "Permitir Somente API3"
+msgstr "Permitir somente API3"
 
 msgid "Allow API4 Only"
-msgstr "Permitir Somente API4"
+msgstr "Permitir somente API4"
 
 msgid "Allow API5 Only"
-msgstr "Permitir Somente API5"
+msgstr "Permitir somente API5"
 
 msgid "Allow API6 Only"
-msgstr "Permitir Apenas API6"
+msgstr "Permitir somente API6"
 
 msgid "1 Star"
 msgstr "1 Estrela"
@@ -5217,7 +5214,7 @@ msgid "Catalog favorites grid view display"
 msgstr "Visualização em grade dos favoritos do catálogo"
 
 msgid "Plugin CSS order"
-msgstr "Plugin de Ordem CSS"
+msgstr "Plugin de ordem CSS"
 
 msgid "Catalog favorites media row display"
 msgstr "Exibir linha com mídias favoritas do catálogo"
@@ -5298,7 +5295,7 @@ msgid "Last.FM Submit Challenge"
 msgstr "Desafio de Last.FM"
 
 msgid "Last.FM Grant URL"
-msgstr "URL de Concessão Last.FM"
+msgstr "URL de concessão Last.FM"
 
 msgid "Users avatar's with Libravatar"
 msgstr "Avatares do usuário do Libravatar"
@@ -5310,7 +5307,7 @@ msgid "Libre.FM Submit Challenge"
 msgstr "Submeter Desafio à Libre.FM"
 
 msgid "Libre.FM Grant URL"
-msgstr "URL de Concessão Libre.FM"
+msgstr "URL de concessão Libre.FM"
 
 msgid "Scrobble songs you play to your ListenBrainz Account"
 msgstr "Grave as preferências musicais do que você toca na sua conta ListenBrainz"
@@ -5741,7 +5738,7 @@ msgstr "# Tocado ou Pulado"
 
 #. HINT: Percentage of (Times Played / Times skipped) * 100
 msgid "Played/Skipped ratio"
-msgstr "Taxa reproduzida/pulada"
+msgstr "Taxa tocada/pulada"
 
 msgid "My Last Play"
 msgstr "Minha Última Música"
@@ -6448,15 +6445,15 @@ msgstr "Adicionar à lista de procurados"
 # 
 #: Database preference table id 1
 msgid "Allow Downloads"
-msgstr "Permitir Downloads"
+msgstr "Permitir downloads"
 
 #: Database preference table id 4
 msgid "Popular Threshold"
-msgstr "Limite de Popularidade"
+msgstr "Limite da popularidade"
 
 #: Database preference table id 19
 msgid "Transcode Bitrate"
-msgstr "Taxa de Bits de Transcodificação"
+msgstr "Taxa de bits de transcodificação"
 
 #: Database preference table id 22
 msgid "Website Title"
@@ -6468,15 +6465,15 @@ msgstr "Bloquear Músicas"
 
 #: Database preference table id 24
 msgid "Force HTTP playback regardless of port"
-msgstr "Forçar Playback HTTP, independentemente da porta"
+msgstr "Forçar playback HTTP, independentemente da porta"
 
 #: Database preference table id 29
 msgid "Playback Type"
-msgstr "Tipo de Playback"
+msgstr "Tipo de playback"
 
 #: Database preference table id 32
 msgid "Playlist Type"
-msgstr "Tipo de Playlist"
+msgstr "Tipo de playlist"
 
 #: Database preference table id 33
 msgid "Theme"
@@ -6488,27 +6485,27 @@ msgstr "Acesso Localplay"
 
 #: Database preference table id 41
 msgid "Localplay Type"
-msgstr "Tipo de Localplay"
+msgstr "Tipo de localplay"
 
 #: Database preference table id 44
 msgid "Allow Streaming"
-msgstr "Permitir Streaming"
+msgstr "Permitir dtreaming"
 
 #: Database preference table id 45
 msgid "Allow Democratic Play"
-msgstr "Permitir Play Democrático"
+msgstr "Permitir play democrático"
 
 #: Database preference table id 46
 msgid "Allow Localplay Play"
-msgstr "Permitir Play Local"
+msgstr "Permitir play local"
 
 #: Database preference table id 47
 msgid "Statistics Day Threshold"
-msgstr "Limite do Dia de Estatísticas"
+msgstr "Limite do dia da estatísticas"
 
 #: Database preference table id 51
 msgid "Offset Limit"
-msgstr "Limite de Compensação"
+msgstr "Limite da compensação"
 
 #: Database preference table id 52
 msgid "Rate Limit"
@@ -6516,7 +6513,7 @@ msgstr "Limite da Taxa"
 
 #: Database preference table id 53
 msgid "Playlist Method"
-msgstr "Método de Playlist"
+msgstr "Método de playlist"
 
 #: Database preference table id 69
 msgid "Show lyrics"
@@ -6556,20 +6553,20 @@ msgstr "Autorizar o Player Web HTML5"
 
 #: Database preference table id 90
 msgid "Share Now Playing information"
-msgstr "Compartilhar informação Tocando Agora"
+msgstr "Compartilhar informação do Tocando Agora"
 
 #: Database preference table id 91
 msgid "Share Recently Played information"
-msgstr "Compartilhar informação Tocada Recentemente"
+msgstr "Compartilhar informação do Tocada Recentemente"
 
 #: Database preference table id 92
 msgid ""
 "Share Recently Played information - Allow access to streaming date/time"
-msgstr "Compartilhar informações de Tocadas Recentemente - Permitir acesso à data/hora de streaming"
+msgstr "Compartilhar informações do Tocadas Recentemente - Permitir acesso à data/hora de streaming"
 
 #: Database preference table id 93
 msgid "Share Recently Played information - Allow access to streaming agent"
-msgstr "Compartilhar Informações de Tocadas Recentemente - Permitir acesso ao agente de streaming"
+msgstr "Compartilhar Informações do Tocadas Recentemente - Permitir acesso ao agente de streaming"
 
 #: Database preference table id 94
 msgid "Fix header position on compatible themes"
@@ -6577,7 +6574,7 @@ msgstr "Corrigir a posição do cabeçalho em temas compatíveis"
 
 #: Database preference table id 95
 msgid "Check for Ampache updates automatically"
-msgstr "Verifique atualizações do Ampache automaticamente"
+msgstr "Verificar atualizações do Ampache automaticamente"
 
 #: Database preference table id 96
 msgid "AutoUpdate last check time"
@@ -6601,15 +6598,15 @@ msgstr "Pausa automática entre abas"
 
 #: Database preference table id 101
 msgid "Enable URL Rewriting"
-msgstr "Habilitar Reescrita de URL"
+msgstr "Habilitar reescrita de URL"
 
 #: Database preference table id 102
 msgid "Allow Share"
-msgstr "Permitir Compartilhamento"
+msgstr "Permitir compartilhamento"
 
 #: Database preference table id 103
 msgid "Share links default expiration days (0=never)"
-msgstr "Compartilhar dias de expiração padrão de links (0=nunca)"
+msgstr "Compartilhar dias de expiração padrão de links (0 = nunca)"
 
 #: Database preference table id 104
 msgid "Artist slideshow inactivity time"
@@ -6617,7 +6614,7 @@ msgstr "Tempo de inatividade da apresentação de slides do artista"
 
 #: Database preference table id 105
 msgid "Broadcast web player by default"
-msgstr "Transmita o player web por padrão"
+msgstr "Transmita o Player Web por padrão"
 
 #: Database preference table id 108
 msgid "Album - Group multiple disks"
@@ -6629,7 +6626,7 @@ msgstr "Menu superior"
 
 #: Database preference table id 110
 msgid "Democratic - Clear votes for expired user sessions"
-msgstr "Democrático - Limpar votos de sessões de usuário expiradas"
+msgstr "Democrático - Limpar votos de sessões expiradas de usuário"
 
 #: Database preference table id 111
 msgid "Show donate button in footer"
@@ -6669,7 +6666,7 @@ msgstr "Usar backend UPnP"
 
 #: Database preference table id 121
 msgid "Allow Video Features"
-msgstr "Permitir Recursos de Vídeo"
+msgstr "Permitir recursos de vídeo"
 
 #: Database preference table id 122
 msgid "Album - Group per release type"
@@ -6697,7 +6694,7 @@ msgstr "Mostrar Tocadas Recentemente"
 
 #: Database preference table id 128
 msgid "Show Now Playing"
-msgstr "Mostrar Exibir Agora"
+msgstr "Mostrar Tocando Agora"
 
 #: Database preference table id 129
 msgid "Custom URL - Logo"
@@ -6705,7 +6702,7 @@ msgstr "Personalizar URL - Logo"
 
 #: Database preference table id 130
 msgid "Album - Group per release type sort"
-msgstr "Álbum - Classificar por tipo de lançamento"
+msgstr "Álbum - Agrupar por tipo de lançamento"
 
 #: Database preference table id 131
 msgid "Web Player browser notifications"
@@ -6717,7 +6714,7 @@ msgstr "Timeout das notificações do navegador Player Web (segundos)"
 
 #: Database preference table id 133
 msgid "Allow Geolocation"
-msgstr "Permitir Geolocalização"
+msgstr "Permitir geolocalização"
 
 #: Database preference table id 134
 msgid "Authorize JavaScript decoder (Aurora.js) in Web Player"
@@ -6753,7 +6750,7 @@ msgstr "Cor do tema"
 
 #: Database preference table id 142
 msgid "Custom metadata - Disable these fields"
-msgstr "Personalizar metadados - Desative esses campos"
+msgstr "Personalizar metadados - Desabilitar esses campos"
 
 #: Database preference table id 143
 msgid "Custom metadata - Define field list"
@@ -6777,7 +6774,7 @@ msgstr "Renomear arquivo carregado de acordo com o padrão do catálogo"
 
 #: Database preference table id 148
 msgid "Check library item at import time and disable duplicates"
-msgstr "Verifique o item da biblioteca no tempo de importação e desative duplicatas"
+msgstr "Verificar o item da biblioteca no momento da importação e desabilitar duplicatas"
 
 #: Database preference table id 149
 msgid "Show filter box on browse"
@@ -6810,7 +6807,7 @@ msgstr "Cache calculou os dados SQL (ex. estatísticas de cliques em mídia) usa
 
 #: Database preference table id 157
 msgid "Only add unique items to playlists"
-msgstr "Adicione apenas itens exclusivos às listas de reprodução"
+msgstr "Adicionar apenas itens exclusivos às listas de reprodução"
 
 #: Database preference table id 158
 msgid "Set the amount of items Album/Video of the Moment will display"
@@ -6822,15 +6819,15 @@ msgstr "Personalizar URL - Fundo da página de login"
 
 #: Database preference table id 160
 msgid "Show License"
-msgstr "Mostrar Licença"
+msgstr "Mostrar licença"
 
 #: Database preference table id 161
 msgid "Browse by Original Year for albums (falls back to Year)"
-msgstr "Navegar por Ano Original para álbuns (retorna ao ano)"
+msgstr "Navegar por Ano Original para álbuns (retorna ao Ano)"
 
 #: Database preference table id 162
 msgid "Hide the Song Artist column for Albums with one Artist"
-msgstr "Ocultar a coluna Artista da Música para Álbuns com um artista"
+msgstr "Ocultar a coluna Artista da Música para Álbuns com um Artista"
 
 #: Database preference table id 163
 msgid "Hide the Genre column in browse table rows"
@@ -6844,15 +6841,15 @@ msgstr "Forçar o download de transmissões do Subsonic. (Ative o scrobble no se
 
 #: Database preference table id 165
 msgid "Allow Ampache API3 responses"
-msgstr "Permitir respostas Ampache API3"
+msgstr "Permitir respostas API3 do Ampache"
 
 #: Database preference table id 166
 msgid "Allow Ampache API4 responses"
-msgstr "Permitir respostas Ampache API4"
+msgstr "Permitir respostas API4 do Ampache"
 
 #: Database preference table id 167
 msgid "Allow Ampache API5 responses"
-msgstr "Permitir respostas Ampache API5"
+msgstr "Permitir respostas API5 do Ampache"
 
 #: Database preference table id 168
 msgid "Force a specific API response no matter what version you send"
@@ -6885,11 +6882,11 @@ msgstr "Democrático - Usar listas inteligentes para a playlist base"
 #: Database preference table id 175
 msgid ""
 "Remove tracks before the current playlist item in the webplayer when played"
-msgstr "Remover faixas antes do item da playlist atual no player web quando reproduzido"
+msgstr "Remover faixas antes do item da playlist atual no Player Web quando tocado"
 
 #: Database preference table id 176
 msgid "Allow Ampache API6 responses"
-msgstr "Permitir respostas Ampache API6"
+msgstr "Permitir respostas API6 do Ampache"
 
 #: Database preference table id 177
 msgid "Upload Access Level"
@@ -6911,11 +6908,11 @@ msgstr "Mostrar os links de login/registro no cabeçalho do site"
 msgid ""
 "Use an alternative playback action for streaming if you have issues with "
 "playing music"
-msgstr "Use uma ação de reprodução alternativa para streaming se tiver problemas para reproduzir música"
+msgstr "Usar uma ação de reprodução alternativa para streaming se tiver problemas para tocar música"
 
 #: Database preference table id 182
 msgid "Custom timezone (Override PHP date.timezone)"
-msgstr "Personalizar fuso horário (Substituir PHP date.timezone)"
+msgstr "Personalizar fuso horário (sobrepor PHP date.timezone)"
 
 #: Database preference table id 183
 msgid "Only keep the latest media bookmark"
@@ -6923,7 +6920,7 @@ msgstr "Manter apenas o marcador de mídia mais recente"
 
 #: Database preference table id 184
 msgid "Default webplayer volume"
-msgstr "Volume padrão do player web"
+msgstr "Volume padrão do Player Web"
 
 #: Database preference table id 185
 msgid "API sessions do not expire"
@@ -6931,11 +6928,11 @@ msgstr "As sessões API não expiram"
 
 #: Database preference table id 186
 msgid "Show all media types in Recently Played"
-msgstr "Mostrar todos os tipos de mídia em Reproduzidos Recentemente"
+msgstr "Mostrar todos os tipos de mídia no Tocados Recentemente"
 
 #: Database preference table id 187
 msgid "Enable access to your personal \"Spotify Wrapped\" from your user page"
-msgstr "Habilitar o acesso ao seu \"Spotify Wrapped\" pessoal a partir da sua página de usuário"
+msgstr "Habilitar o acesso ao seu \"Spotify Wrapped\" pessoal de sua página de usuário"
 
 #: Database preference table id 188
 msgid "Hide sidebar switcher arrows"
@@ -6979,27 +6976,27 @@ msgstr "Use links do Painel para o cabeçalho da página de índice"
 
 #: Database preference table id 198
 msgid "Custom CSS Order - Browse"
-msgstr "Ordem CSS personalizada - Navegação"
+msgstr "Pedido CSS personalizado - Navegação"
 
 #: Database preference table id 199
 msgid "Custom CSS Order - Dashboard"
-msgstr "Ordem CSS personalizada - Painel"
+msgstr "Pedido CSS personalizado - Painel"
 
 #: Database preference table id 200
 msgid "Custom CSS Order - Video"
-msgstr "Ordem CSS personalizada - Vídeo"
+msgstr "Pedido CSS personalizado - Vídeo"
 
 #: Database preference table id 201
 msgid "Custom CSS Order - Playlist"
-msgstr "Ordem CSS personalizada - Playlist"
+msgstr "Pedido CSS personalizado - Playlist"
 
 #: Database preference table id 202
 msgid "Custom CSS Order - Search"
-msgstr "Ordem CSS personalizada - Pesquisa"
+msgstr "Pedido CSS personalizado - Pesquisa"
 
 #: Database preference table id 203
 msgid "Custom CSS Order - Information"
-msgstr "Ordem CSS personalizada - Informação"
+msgstr "Pedido CSS personalizado - Informação"
 
 #: Database preference table id 204
 msgid ""
@@ -7041,39 +7038,39 @@ msgstr "Mostrar o ícone de pesquisa Discogs nos itens da biblioteca"
 
 #: Database preference table id 213
 msgid "Force Grid View on Song browse"
-msgstr "Forçar Visão de Grade ao navegar pela Música"
+msgstr "Forçar Visão de Grade ao navegar por Música"
 
 #: Database preference table id 214
 msgid "Force Grid View on Album browse"
-msgstr "Forçar Visão de Grade ao navegar pelo Álbum"
+msgstr "Forçar Visão de Grade ao navegar por Álbum"
 
 #: Database preference table id 215
 msgid "Force Grid View on Album Disk browse"
-msgstr "Forçar Visão de Grade ao navegar pelo Disco do Álbum"
+msgstr "Forçar Visão de Grade ao navegar por Disco do Álbum"
 
 #: Database preference table id 216
 msgid "Force Grid View on Artist browse"
-msgstr "Forçar Visão de Grade ao navegar pelo Artista"
+msgstr "Forçar Visão de Grade ao navegar por Artista"
 
 #: Database preference table id 217
 msgid "Force Grid View on Radio Station browse"
-msgstr "Forçar Visão de Grade ao navegar pela Estação de Rádio"
+msgstr "Forçar Visão de Grade ao navegar por Estação de Rádio"
 
 #: Database preference table id 218
 msgid "Force Grid View on Playlist browse"
-msgstr "Forçar Visão de Grade ao navegar pela Playlist"
+msgstr "Forçar Visão de Grade ao navegar por Playlist"
 
 #: Database preference table id 219
 msgid "Force Grid View on Video browse"
-msgstr "Forçar Visão de Grade ao navegar pelo Vídeo"
+msgstr "Forçar Visão de Grade ao navegar por Vídeo"
 
 #: Database preference table id 220
 msgid "Force Grid View on Podcast browse"
-msgstr "Forçar Visão de Grade ao navegar pelo Podcast"
+msgstr "Forçar Visão de Grade ao navegar por Podcast"
 
 #: Database preference table id 221
 msgid "Force Grid View on Podcast Episode browse"
-msgstr "Forçar Visão de Grade ao navegar pelo Episódio de Podcast"
+msgstr "Forçar Visão de Grade ao navegar por Episódio de Podcast"
 
 #: Database preference table id 222
 msgid "Show Artist column on playlist media rows"
