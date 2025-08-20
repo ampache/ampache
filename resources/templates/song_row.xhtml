@@ -72,7 +72,7 @@
         >POST SHOUT</a>
         <tal:block tal:condition="SONG/canShare" tal:content="structure SONG/getShareUi">SHARE</tal:block>
         <a
-                class="nohtml"
+                class="nohtml" rel="nofollow"
                 tal:condition="SONG/canDownload"
                 tal:attributes="href SONG/getDownloadUrl"
                 tal:content="structure SONG/getDownloadIcon"

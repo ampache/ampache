@@ -40,7 +40,7 @@
         <tal:block tal:condition="PLAYLIST/canShare" tal:replace="structure PLAYLIST/getShareUi">SHARE</tal:block>
 
         <a
-                class="nohtml"
+                class="nohtml" rel="nofollow"
                 tal:condition="PLAYLIST/canBatchDownload"
                 tal:attributes="href PLAYLIST/getBatchDownloadUrl"
                 tal:content="structure PLAYLIST/getBatchDownloadIcon"

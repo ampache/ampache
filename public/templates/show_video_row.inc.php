@@ -130,7 +130,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig
     </li>
 <?php }
 if (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD)) { ?>
-    <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
+    <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $libitem->id; ?>" rel="nofollow"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
 <?php }
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
     <a id="<?php echo 'edit_video_' . $libitem->id; ?>" onclick="showEditDialog('video_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_video_' . $libitem->id; ?>', '<?php echo addslashes(T_('Video Edit')); ?>', 'video_', '<?php echo '&browse_id=' . $browse->getId(); ?>')">
