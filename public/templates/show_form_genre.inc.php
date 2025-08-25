@@ -12,7 +12,7 @@ global $dic;
 $web_path = AmpConfig::get_web_path();
 
 /** @var string $countOrder */
-$countString = ($countOrder === 'name')
+$countString = ($countOrder === 'count')
     ? '&sort=count'
     : '';
 
