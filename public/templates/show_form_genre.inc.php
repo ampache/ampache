@@ -11,6 +11,11 @@ global $dic;
 
 $web_path = AmpConfig::get_web_path();
 
+/** @var string $countOrder */
+$countString = ($countOrder === 'name')
+    ? '&sort=count'
+    : '';
+
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
 $filter_str      = $type ?? (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
 $albumString     = (AmpConfig::get('album_group'))
@@ -18,22 +23,22 @@ $albumString     = (AmpConfig::get('album_group'))
     : 'album_disk'; ?>
 
 <div class="category_options">
-    <a class="category <?php echo ($filter_str == 'song') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=song">
+    <a class="category <?php echo ($filter_str == 'song') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=song<?php echo $countString; ?>">
         <?php echo T_('Songs'); ?>
     </a>
-    <a class="category <?php echo ($filter_str == 'album' || $filter_str == 'album_disk') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=<?php echo $albumString; ?>">
+    <a class="category <?php echo ($filter_str == 'album' || $filter_str == 'album_disk') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=<?php echo $albumString . $countString; ?>">
         <?php echo T_('Albums'); ?>
     </a>
-    <a class="category <?php echo ($filter_str == 'artist' || $filter_str == 'album_artist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist">
+    <a class="category <?php echo ($filter_str == 'artist' || $filter_str == 'album_artist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist<?php echo $countString; ?>">
         <?php echo T_('Artists'); ?>
     </a>
     <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount()) { ?>
-        <a class="category <?php echo ($filter_str == 'video') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=video">
+        <a class="category <?php echo ($filter_str == 'video') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=video<?php echo $countString; ?>">
             <?php echo T_('Videos'); ?>
         </a>
     <?php } ?>
     <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) && Tag::get_merged_count() > 0) { ?>
-    <a class="category <?php echo ($filter_str == 'tag_hidden') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=tag_hidden">
+    <a class="category <?php echo ($filter_str == 'tag_hidden') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=tag_hidden<?php echo $countString; ?>">
         <?php echo T_('Hidden'); ?>
     </a>
     <?php } ?>
