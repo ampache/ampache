@@ -26,7 +26,6 @@ namespace Ampache\Module\System\Update\Migration\V7;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Preference;
 
 /**
  * Add `song_map` table for mapping song id's to external data sources
