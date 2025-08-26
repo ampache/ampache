@@ -110,6 +110,8 @@ final class VaInfo implements VaInfoInterface
 
     private const MBID_REGEX = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
 
+    private const ISRC_REGEX = '/[A-Z]{2}-?[A-Z0-9]{3}-?\d{2}-?\d{5}/';
+
     public string $encoding = '';
 
     public string $encodingId3v1 = '';
@@ -684,8 +686,11 @@ final class VaInfo implements VaInfoInterface
                 ? $tags['genre']
                 : $info['genre'];
 
+            $info['isrc'] = (!$info['isrc'] && array_key_exists('isrc', $tags) && !empty($tags['isrc']))
+                ? $tags['isrc']
+                : $info['isrc'];
+
             $info['mb_trackid']       = (!$info['mb_trackid'] && array_key_exists('mb_trackid', $tags)) ? trim((string)$tags['mb_trackid']) : $info['mb_trackid'];
-            $info['isrc']             = (!$info['isrc'] && array_key_exists('isrc', $tags)) ? trim((string)$tags['isrc']) : $info['isrc'];
             $info['mb_albumid']       = (!$info['mb_albumid'] && array_key_exists('mb_albumid', $tags)) ? trim((string)$tags['mb_albumid']) : $info['mb_albumid'];
             $info['mb_albumid_group'] = (!$info['mb_albumid_group'] && array_key_exists('mb_albumid_group', $tags)) ? trim((string)$tags['mb_albumid_group']) : $info['mb_albumid_group'];
             $info['mb_artistid']      = (!$info['mb_artistid'] && array_key_exists('mb_artistid', $tags)) ? trim((string)$tags['mb_artistid']) : $info['mb_artistid'];
@@ -797,6 +802,27 @@ final class VaInfo implements VaInfoInterface
             $mbid = implode(";", $mbid);
         }
         if (preg_match_all(self::MBID_REGEX, $mbid, $matches)) {
+            return $matches[0];
+        }
+
+        return [];
+    }
+
+    /**
+     * parse_isrc_array
+     * Return only valid isrc data
+     * @param string[]|string|null $isrc
+     * @return string[]
+     */
+    public static function parse_isrc_array(array|string|null $isrc): array
+    {
+        if (empty($isrc)) {
+            return [];
+        }
+        if (is_array($isrc)) {
+            $isrc = implode(";", $isrc);
+        }
+        if (preg_match_all(self::ISRC_REGEX, $isrc, $matches)) {
             return $matches[0];
         }
 
@@ -1232,7 +1258,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['albumartist'] = $data[0];
                     break;
                 case 'isrc':
-                    $parsed['isrc'] = $data[0];
+                    $parsed['isrc'] = (count($data) > 1) ? self::parse_isrc_array($data) : self::parse_isrc_array($data[0]);
                     break;
                 case 'date':
                     $parsed['year'] = $data[0];
@@ -1409,7 +1435,7 @@ final class VaInfo implements VaInfoInterface
                         : reset($data);
                     break;
                 case 'isrc':
-                    $parsed['isrc'] = $data[0];
+                    $parsed['isrc'] = (count($data) > 1) ? self::parse_isrc_array($data) : self::parse_isrc_array($data[0]);;
                     break;
                 case 'comments':
                     $parsed['comment'] = $data[0];
@@ -1673,7 +1699,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['disksubtitle'] = $data[0];
                     break;
                 case 'isrc':
-                    $parsed['isrc'] = $data[0];
+                    $parsed['isrc'] = (count($data) > 1) ? self::parse_isrc_array($data) : self::parse_isrc_array($data[0]);;
                     break;
                 case '©art':
                     $parsed['artist'] = $data[0];
