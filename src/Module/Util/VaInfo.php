@@ -1311,6 +1311,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['barcode'] = $data[0];
                     break;
                 case 'catalognumber':
+                case 'catalog_number':
                     $parsed['catalog_number'] = $data[0];
                     break;
                 case 'label':
@@ -1458,6 +1459,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['barcode'] = $data[0];
                     break;
                 case 'catalognumber':
+                case 'catalog_number':
                     $parsed['catalog_number'] = $data[0];
                     break;
                 case 'label':
@@ -1562,6 +1564,7 @@ final class VaInfo implements VaInfoInterface
                         $parsed['barcode'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     case 'catalognumber':
+                    case 'catalog_number':
                         $parsed['catalog_number'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     case 'label':
@@ -1721,6 +1724,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['barcode'] = $data[0];
                     break;
                 case 'catalognumber':
+                case 'catalog_number':
                     $parsed['catalog_number'] = $data[0];
                     break;
                 case 'label':
