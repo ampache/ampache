@@ -645,8 +645,8 @@ class Stats
             }
             if ($input_type == 'album_disk') {
                 $sql = ($addAdditionalColumns)
-                    ? "SELECT `album_disk`.`id` AS `id`, COUNT(*) AS `count`, 'album_disk' AS `object_type`, `count_type`, " . $threshold . " AS `threshold` FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` AND `object_type` = 'song' LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `song`.`disk` = `album_disk`.`disk`"
-                    : "SELECT `album_disk`.`id` AS `id`, COUNT(*) AS `count` FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` AND `object_type` = 'song' LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `song`.`disk` = `album_disk`.`disk`";
+                    ? "SELECT `album_disk`.`id` AS `id`, COUNT(*) AS `count`, 'album_disk' AS `object_type`, `count_type`, " . $threshold . " AS `threshold` FROM `album_disk` LEFT JOIN `song`  ON `song`.`album` = `album_disk`.`album_id` AND `song`.`disk` = `album_disk`.`disk` LEFT JOIN `object_count`  ON `object_count`.`object_id` = `song`.id AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'download'"
+                    : "SELECT `album_disk`.`id` AS `id`, COUNT(*) AS `count` FROM `album_disk` LEFT JOIN `song` ON `song`.`album` = `album_disk`.`album_id` AND `song`.`disk` = `album_disk`.`disk` LEFT JOIN `object_count` ON `object_count`.`object_id` = `song`.`id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'download'";
                 $group = '`album_disk`.`id`';
                 $type  = 'song';
             }
