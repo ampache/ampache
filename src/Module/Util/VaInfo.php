@@ -1436,7 +1436,7 @@ final class VaInfo implements VaInfoInterface
                         : reset($data);
                     break;
                 case 'isrc':
-                    $parsed['isrc'] = (count($data) > 1) ? self::parse_isrc_array($data) : self::parse_isrc_array($data[0]);;
+                    $parsed['isrc'] = (count($data) > 1) ? self::parse_isrc_array($data) : self::parse_isrc_array($data[0]);
                     break;
                 case 'comments':
                     $parsed['comment'] = $data[0];
@@ -1573,6 +1573,9 @@ final class VaInfo implements VaInfoInterface
                     case 'version':
                         $parsed['version'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
+                    case 'musicbrainz release track id':
+                        // Skip this tag
+                        break;
                     default:
                         $frame = strtolower($this->trimAscii($txxx['description']));
                         if ($enable_custom_metadata && !isset(self::DEFAULT_INFO[$frame]) && !in_array($frame, $parsed)) {
@@ -1702,7 +1705,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['disksubtitle'] = $data[0];
                     break;
                 case 'isrc':
-                    $parsed['isrc'] = (count($data) > 1) ? self::parse_isrc_array($data) : self::parse_isrc_array($data[0]);;
+                    $parsed['isrc'] = (count($data) > 1) ? self::parse_isrc_array($data) : self::parse_isrc_array($data[0]);
                     break;
                 case '©art':
                     $parsed['artist'] = $data[0];
@@ -1732,6 +1735,9 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'version':
                     $parsed['version'] = $data[0];
+                    break;
+                case 'musicbrainz release track id':
+                    // Skip this tag
                     break;
                 default:
                     $parsed[strtolower($tag)] = $data[0];
