@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Metadata\MetadataEnabledInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Playback\Stream;
@@ -809,7 +810,6 @@ class Song extends database_object implements
     /**
      * get_album_catalog_number
      * gets the catalog_number of $this->album, allows passing of id
-     * @param int|null $album_id
      */
     public function get_album_catalog_number(?int $album_id = null): ?string
     {
@@ -825,7 +825,6 @@ class Song extends database_object implements
     /**
      * get_album_original_year
      * gets the original_year of $this->album, allows passing of id
-     * @param int|null $album_id
      */
     public function get_album_original_year(?int $album_id = null): ?int
     {
@@ -841,7 +840,6 @@ class Song extends database_object implements
     /**
      * get_album_barcode
      * gets the barcode of $this->album, allows passing of id
-     * @param int|null $album_id
      */
     public function get_album_barcode(?int $album_id = null): ?string
     {
@@ -2201,7 +2199,11 @@ class Song extends database_object implements
                 $metadata = $metadataRepository->findById((int) $metadataId);
                 if ($metadata && $value !== $metadata->getData()) {
                     $metadata->setData((string) $value);
-                    $metadata->save();
+                    try {
+                        $metadata->save();
+                    } catch (DatabaseException $error) {
+                        debug_event(self::class, 'Failed to save metadata: ' . $error->getMessage(), 2);
+                    }
                 }
             }
         }
