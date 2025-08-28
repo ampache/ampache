@@ -48,6 +48,8 @@ $remember_disabled = (AmpConfig::get('session_length', 3600) >= AmpConfig::get('
 $user_agent     = Core::get_server('HTTP_USER_AGENT');
 $mobile_session = strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPhone') || strpos($user_agent, 'iPad'));
 
+$logo_url = AmpConfig::get('custom_login_logo', Ui::get_logo_url());
+
 define('TABLE_RENDERED', 1);
 if (!AmpConfig::get('disable_xframe_sameorigin', false)) {
     header("X-Frame-Options: SAMEORIGIN");
@@ -68,7 +70,7 @@ $_SESSION['login'] = true; ?>
     <div id="maincontainer">
         <?php if (!$mobile_session) {
             echo "<div id=\"header\"><!-- This is the header -->";
-            echo "<a href=\"" . $web_path . "\" id=\"logo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></a>";
+            echo "<a href=\"" . $web_path . "\" id=\"logo\"><img src=\"" . $logo_url . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></a>";
             echo "</div>";
         } ?>
         <div id="loginbox">
@@ -106,7 +108,7 @@ $_SESSION['login'] = true; ?>
             </form>
             <?php if ($mobile_session) {
                 echo '<div id="mobileheader"><!-- This is the header -->';
-                echo "<h1 id=\"logo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></h1>";
+                echo "<h1 id=\"logo\"><img src=\"" . $logo_url . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></h1>";
                 echo '</div>';
             }
 if (AmpConfig::get('cookie_disclaimer')) {
