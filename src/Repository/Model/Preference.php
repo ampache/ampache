@@ -1104,13 +1104,13 @@ class Preference extends database_object
                     Dba::write($pref_sql, [135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload']);
                     break;
                 case 'custom_login_logo':
-                    Dba::write($pref_sql, [136, 'custom_login_logo', '', 'Custom URL - Login page logo', AccessLevelEnum::MANAGER->value, 'string', 'system', 'interface']);
+                    Dba::write($pref_sql, [136, 'custom_login_logo', '', 'Custom URL - Login page logo', AccessLevelEnum::ADMIN->value, 'string', 'system', 'interface']);
                     break;
                 case 'custom_favicon':
-                    Dba::write($pref_sql, [137, 'custom_favicon', '', 'Custom URL - Favicon', AccessLevelEnum::MANAGER->value, 'string', 'system', 'interface']);
+                    Dba::write($pref_sql, [137, 'custom_favicon', '', 'Custom URL - Favicon', AccessLevelEnum::ADMIN->value, 'string', 'system', 'interface']);
                     break;
                 case 'custom_text_footer':
-                    Dba::write($pref_sql, [138, 'custom_text_footer', '', 'Custom text footer', AccessLevelEnum::MANAGER->value, 'string', 'system', 'interface']);
+                    Dba::write($pref_sql, [138, 'custom_text_footer', '', 'Custom text footer', AccessLevelEnum::ADMIN->value, 'string', 'system', 'interface']);
                     break;
                 case 'webdav_backend':
                     Dba::write($pref_sql, [139, 'webdav_backend', '0', 'Use WebDAV backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend']);
@@ -1170,7 +1170,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [158, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', AccessLevelEnum::USER->value, 'integer', 'interface', 'home']);
                     break;
                 case 'custom_login_background':
-                    Dba::write($pref_sql, [159, 'custom_login_background', '', 'Custom URL - Login page background', AccessLevelEnum::MANAGER->value, 'string', 'system', 'interface']);
+                    Dba::write($pref_sql, [159, 'custom_login_background', '', 'Custom URL - Login page background', AccessLevelEnum::ADMIN->value, 'string', 'system', 'interface']);
                     break;
                 case 'show_license':
                     Dba::write($pref_sql, [160, 'show_license', '1', 'Show License', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
