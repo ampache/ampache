@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\System;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -89,6 +90,10 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                 case 'custom_login_background':
                 case 'custom_login_logo':
                 case 'custom_logo':
+                    $value = urldecode($value);
+                    if (!empty($value) && !str_starts_with($value, 'http')) {
+                        $value = AmpConfig::get_web_path() . '/' . ltrim($value, '/');
+                    }
                     $value = filter_var(urldecode($value), FILTER_VALIDATE_URL) ?: null;
                     break;
                 case 'transcode_bitrate':
