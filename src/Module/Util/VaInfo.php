@@ -602,7 +602,7 @@ final class VaInfo implements VaInfoInterface
      *     'file': ?string,
      *     'frame_rate': ?float,
      *     'genre': ?string,
-     *     'isrc': ?string,
+     *     'isrc': ?string[],
      *     'language': ?string,
      *     'lyrics': ?string,
      *     'mb_albumartistid': ?string,

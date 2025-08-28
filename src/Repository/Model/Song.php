@@ -147,6 +147,8 @@ class Song extends database_object implements
      * Generated data from other areas
      */
 
+    public array $isrc = [];
+
     public ?string $link = null;
 
     public string $type;
@@ -947,7 +949,6 @@ class Song extends database_object implements
 
         return $this->albumartist;
     }
-
 
     /**
      * get_album_artists
