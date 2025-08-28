@@ -127,7 +127,6 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $password = $query['p'] ?? '';
         }
 
-
         $token     = $query['t'] ?? '';
         $salt      = $query['s'] ?? '';
         $version   = $query['v'] ?? '';
@@ -154,7 +153,6 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 $subsonic_legacy = Preference::get_by_user($user->getId(), 'subsonic_legacy');
             }
         }
-
 
         // make sure we have correct authentication parameters
         if (

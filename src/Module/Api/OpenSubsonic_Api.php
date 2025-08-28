@@ -3339,7 +3339,6 @@ class OpenSubsonic_Api
         }
     }
 
-
     /**
      * getUsers
      *
@@ -3856,7 +3855,6 @@ class OpenSubsonic_Api
                 if (!$media instanceof Media || !isset($media->time) || !isset($media->id)) {
                     continue;
                 }
-
 
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();

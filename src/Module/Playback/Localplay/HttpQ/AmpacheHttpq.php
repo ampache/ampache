@@ -233,7 +233,6 @@ class AmpacheHttpq extends localplay_controller
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_httpq` WHERE `id` = ?" : "SELECT * FROM `localplay_httpq`";
         $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
-
         if ($row = Dba::fetch_assoc($db_results)) {
             return [
                 'id' => (int)$row['id'],

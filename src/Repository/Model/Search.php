@@ -1826,7 +1826,6 @@ class Search extends playlist_object
         return $this->types;
     }
 
-
     /**
      * set_rules
      *
