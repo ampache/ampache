@@ -278,7 +278,7 @@ class AmpacheXbmc extends localplay_controller
      */
     public function get_active_instance(): ?int
     {
-        if (AmpConfig::get(self::ACTIVE_PREF)) {;
+        if (AmpConfig::get(self::ACTIVE_PREF)) {
             return (int)AmpConfig::get(self::ACTIVE_PREF);
         }
 
