@@ -121,8 +121,8 @@ class AmpacheXbmc extends localplay_controller
      */
     public function uninstall(): bool
     {
-        $sql = "DROP TABLE `?`";
-        Dba::query($sql, [self::DB_TABLENAME]);
+        $sql = "DROP TABLE `localplay_xbmc`";
+        Dba::query($sql);
 
         // Remove the pref we added for this
         Preference::delete(self::ACTIVE_PREF);
