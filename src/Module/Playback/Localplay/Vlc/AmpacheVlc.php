@@ -42,11 +42,12 @@ use Ampache\Module\System\Dba;
  */
 class AmpacheVlc extends localplay_controller
 {
-    /* Variables */
-    private string $version     = 'Beta 0.2';
+    protected const ACTIVE_PREF = 'vlc_active';
+
+    private string $version = 'Beta 0.2';
+
     private string $description = 'Controls a VLC instance';
 
-    /* Constructed variables */
     private $_vlc;
 
     /**
@@ -103,7 +104,7 @@ class AmpacheVlc extends localplay_controller
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('vlc_active', T_('VLC Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'vlc');
+        Preference::insert(self::ACTIVE_PREF, T_('VLC Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'vlc');
 
         return true;
     }
@@ -118,7 +119,7 @@ class AmpacheVlc extends localplay_controller
         Dba::query($sql);
 
         // Remove the pref we added for this
-        Preference::delete('vlc_active');
+        Preference::delete(self::ACTIVE_PREF);
 
         return true;
     }
@@ -225,7 +226,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function get_instance(?string $instance = ''): array
     {
-        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('vlc_active', 0);
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get(self::ACTIVE_PREF, 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_vlc` WHERE `id` = ?" : "SELECT * FROM `localplay_vlc`";
         $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
@@ -254,9 +255,9 @@ class AmpacheVlc extends localplay_controller
         if (!$user instanceof User) {
             return false;
         }
-        Preference::update('vlc_active', $user->id, $uid);
-        AmpConfig::set('vlc_active', $uid, true);
-        debug_event('vlc.controller', 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
+        Preference::update(self::ACTIVE_PREF, $user->id, $uid);
+        AmpConfig::set(self::ACTIVE_PREF, $uid, true);
+        debug_event(self::class, 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
 
         return true;
     }
