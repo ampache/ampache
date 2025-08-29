@@ -273,10 +273,15 @@ class AmpacheXbmc extends localplay_controller
     /**
      * get_active_instance
      * This returns the UID of the current active instance
-     * false if none are active
+     * null if none are active
      */
-    public function get_active_instance()
+    public function get_active_instance(): ?int
     {
+        if (AmpConfig::get(self::ACTIVE_PREF)) {;
+            return (int)AmpConfig::get(self::ACTIVE_PREF);
+        }
+
+        return null;
     }
 
     /**

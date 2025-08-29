@@ -147,6 +147,7 @@ class Song extends database_object implements
      * Generated data from other areas
      */
 
+    /** @var string[] $isrc */
     public array $isrc = [];
 
     public ?string $link = null;
