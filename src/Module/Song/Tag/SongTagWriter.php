@@ -160,6 +160,9 @@ final class SongTagWriter implements SongTagWriterInterface
             if (!empty($id3v2Data)) {
                 unset($id3v2Data['text']);
                 foreach ($id3v2Data as $key => $value) {
+                    if (!isset($ndata[$key]) || !is_array($ndata[$key])) {
+                        $ndata[$key] = [];
+                    }
                     if (isset($songMeta[$key]) && $value[0] !== $songMeta[$key]) {
                         $ndata[$key][] = $songMeta[$key];
                     } else {
@@ -169,6 +172,9 @@ final class SongTagWriter implements SongTagWriterInterface
             } else {
                 unset($songMeta['text']);
                 foreach ($songMeta as $key => $value) {
+                    if (!isset($ndata[$key]) || !is_array($ndata[$key])) {
+                        $ndata[$key] = [];
+                    }
                     $ndata[$key][] = $songMeta;
                 }
             }
@@ -189,6 +195,9 @@ final class SongTagWriter implements SongTagWriterInterface
                         if ($key == 'releasetype' || $key == 'releasestatus') {
                             $ndata[$key] = $songMeta[$key];
                         } else {
+                            if (!isset($ndata[$key]) || !is_array($ndata[$key])) {
+                                $ndata[$key] = [];
+                            }
                             $ndata[$key][] = $songMeta[$key];
                         }
                     } else {
@@ -202,6 +211,9 @@ final class SongTagWriter implements SongTagWriterInterface
                     if ($key == 'releasetype' || $key == 'releasestatus') {
                         $ndata[$key] = $value;
                     } else {
+                        if (!isset($ndata[$key]) || !is_array($ndata[$key])) {
+                            $ndata[$key] = [];
+                        }
                         $ndata[$key][] = $value;
                     }
                 }
@@ -315,6 +327,9 @@ final class SongTagWriter implements SongTagWriterInterface
                 if (!empty($id3v2Data)) {
                     unset($id3v2Data['text']);
                     foreach ($id3v2Data as $key => $value) {
+                        if (!isset($ndata[$key]) || !is_array($ndata[$key])) {
+                            $ndata[$key] = [];
+                        }
                         $ndata[$key][] = $value[0];
                     }
                 }
