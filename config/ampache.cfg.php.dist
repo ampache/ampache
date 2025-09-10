@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 83
+config_version = 84
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -556,6 +556,13 @@ ratings = "true"
 ; assigned to a specific user set their user ID here.
 ; DEFAULT: -1
 ;rating_file_tag_user = 1
+
+; Rating Tag Compatability mode
+; Lots of different players have lots of different scales for ratings
+; Ampache has always kept a simple divide by 5 scale but lots of places don'table
+; Enable this option if your file tags are using this other scale
+; DEFAULT: "false"
+;rating_file_tag_compatibility = "true"
 
 ; Direct play
 ; This allows user to play directly a song or album

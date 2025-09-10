@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginGetMetadataInterface;
 use Ampache\Repository\Model\Plugin;
@@ -1597,7 +1598,7 @@ final class VaInfo implements VaInfoInterface
                     $user = $this->userRepository->findByEmail($popm['email']);
                     if ($user instanceof User) {
                         // Ratings are out of 255; scale it
-                        $parsed['rating'][$user->id] = ((int)$popm['rating']) / 255 * 5;
+                        $parsed['rating'][$user->id] = self::_parse_rating((int)$popm['rating']);
                     }
                     continue;
                 }
@@ -1607,7 +1608,7 @@ final class VaInfo implements VaInfoInterface
                     $rating_user = (int) $this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                 }
 
-                $parsed['rating'][$rating_user] = ((int)$popm['rating']) / 255 * 5;
+                $parsed['rating'][$rating_user] = self::_parse_rating((int)$popm['rating']);
             }
         }
 
@@ -1882,6 +1883,35 @@ final class VaInfo implements VaInfoInterface
         }
 
         return $parsed;
+    }
+
+    /**
+     * _parse_rating
+     * Convert ratings to 5 stars based on semi standard 255 unit scale
+     */
+    private static function _parse_rating(int $value): int
+    {
+        if (!$value) {
+            return 0;
+        }
+
+        if (AmpConfig::get('rating_file_tag_compatibility', false)) {
+            if ($value === 1) {
+                return 1;
+            } elseif ($value <= 64) {
+                return 2;
+            } elseif ($value <= 128) {
+                return 3;
+            } elseif ($value <= 204) {
+                return 4;
+            } elseif ($value <= 255) {
+                return 5;
+            }
+        } else {
+            return $value / 255 * 5;
+        }
+
+        return 0;
     }
 
     /**
