@@ -3033,6 +3033,9 @@ abstract class Catalog extends database_object
             //debug_event(self::class, "get_clean_metadata " . print_r($ctags, true), 4);
             foreach ($ctags as $tag => $value) {
                 try {
+                    if (is_array($value)) {
+                        $value = implode('; ', $value);
+                    }
                     $metadataManager->updateOrAddMetadata($song, $tag, (string)$value);
                 } catch (DatabaseException) {
                     debug_event(self::class, "Error: DatabaseException: " . $tag . ' ' . $value, 4);
