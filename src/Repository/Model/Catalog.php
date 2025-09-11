@@ -3135,10 +3135,10 @@ abstract class Catalog extends database_object
 
         // If song rating tag exists and is well formed (array user=>rating), update it
         if ($song->id && is_array($results) && array_key_exists('rating', $results) && is_array($results['rating']) && !empty($results['rating'])) {
+            $o_rating = new Rating($song->id, 'song');
             // For each user's ratings, call the function
             foreach ($results['rating'] as $user => $rating) {
                 debug_event(self::class, "Updating rating for Song " . $song->id . sprintf(' to %s for user %s', $rating, $user), 5);
-                $o_rating = new Rating($song->id, 'song');
                 if (
                     (int)$user > 0 &&
                     $o_rating->get_user_rating((int)$user) != (int)$rating
