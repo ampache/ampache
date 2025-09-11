@@ -1902,7 +1902,7 @@ final class VaInfo implements VaInfoInterface
                 return 2;
             } elseif ($value <= 128) {
                 return 3;
-            } elseif ($value <= 204) {
+            } elseif ($value <= 196) {
                 return 4;
             } elseif ($value <= 255) {
                 return 5;
