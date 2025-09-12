@@ -34,6 +34,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Module\Util\VaInfo;
 use Psr\Log\LoggerInterface;
 
 final class SongTagWriter implements SongTagWriterInterface
@@ -564,7 +565,7 @@ final class SongTagWriter implements SongTagWriterInterface
             if (!empty($user->email)) {
                 $meta['Popularimeter'] = [
                     "email" => $user->email,
-                    "rating" => ($my_rating > 0) ? $my_rating * (255 / 5) : 0,
+                    "rating" => ($my_rating > 0) ? VaInfo::parse_rating($my_rating) : 0,
                     "data" => $song->get_totalcount()
                 ];
             } else {

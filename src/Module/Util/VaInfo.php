@@ -1598,7 +1598,7 @@ final class VaInfo implements VaInfoInterface
                     $user = $this->userRepository->findByEmail($popm['email']);
                     if ($user instanceof User) {
                         // Ratings are out of 255; scale it
-                        $parsed['rating'][$user->id] = self::_parse_rating((int)$popm['rating']);
+                        $parsed['rating'][$user->id] = self::parse_rating((int)$popm['rating']);
                     }
                     continue;
                 }
@@ -1608,7 +1608,7 @@ final class VaInfo implements VaInfoInterface
                     $rating_user = (int) $this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                 }
 
-                $parsed['rating'][$rating_user] = self::_parse_rating((int)$popm['rating']);
+                $parsed['rating'][$rating_user] = self::parse_rating((int)$popm['rating']);
             }
         }
 
@@ -1886,10 +1886,10 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     * _parse_rating
+     * parse_rating
      * Convert ratings to 5 stars based on semi standard 255 unit scale
      */
-    private static function _parse_rating(int $value): int
+    public static function parse_rating(int $value): int
     {
         if (!$value) {
             return 0;
