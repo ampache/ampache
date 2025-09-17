@@ -3319,8 +3319,6 @@ abstract class Catalog extends database_object
             'summary' => null,
             'time' => null,
             'title' => null,
-            'totaldisks' => null,
-            'totaltracks' => null,
             'track' => null,
             'version' => null,
             'video_bitrate' => null,
