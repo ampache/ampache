@@ -49,13 +49,13 @@
         </tal:block>
         <tal:block tal:condition="SONG/canDownload">
             <a
-                class="nohtml"
+                class="nohtml" rel="nofollow"
                 tal:attributes="href SONG/getExternalPlayUrl"
                 target="_blank"
                 tal:content="structure SONG/getExternalPlayIcon"
             >EXTERNAL PLAY</a>
             <a
-                class="nohtml"
+                class="nohtml" rel="nofollow"
                 tal:attributes="href SONG/getDownloadUrl"
                 tal:content="structure SONG/getDownloadIcon"
             >DOWNLOAD</a>

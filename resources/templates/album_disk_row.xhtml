@@ -50,7 +50,7 @@
         <tal:block tal:condition="ALBUMDISK/canShare" tal:replace="structure ALBUMDISK/getShareUi">SHARE</tal:block>
 
         <a
-                class="nohtml"
+                class="nohtml" rel="nofollow"
                 tal:condition="ALBUMDISK/canBatchDownload"
                 tal:attributes="href ALBUMDISK/getBatchDownloadUrl"
                 tal:content="structure ALBUMDISK/getBatchDownloadIcon"

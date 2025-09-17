@@ -259,7 +259,7 @@ if ($isAlbumEditable) {
 if ($zip_album) {
     $download = "&nbsp;" . T_('Download'); ?>
             <li>
-                <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $album->id; ?>">
+                <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $album->id; ?>" rel="nofollow">
                     <?php echo Ui::get_material_symbol('folder_zip', $download);
     echo $download; ?>
                 </a>
@@ -330,7 +330,7 @@ foreach ($album->getDisks() as $album_disk) {
                 </a>
     <?php }
     if ($zip_albumD) { ?>
-            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album_disk&id=<?php echo $album_disk->id; ?>"><?php echo Ui::get_material_symbol('folder_zip', T_('Download')); ?></a>
+            <a class="nohtml" rel="nofollow" href="<?php echo $web_path; ?>/batch.php?action=album_disk&id=<?php echo $album_disk->id; ?>"><?php echo Ui::get_material_symbol('folder_zip', T_('Download')); ?></a>
         <?php } ?>
     </div>
     <div id='reordered_list_<?php echo $album_disk->id; ?>'>
