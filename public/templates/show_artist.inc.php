@@ -245,7 +245,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('artist')) {
     $download = "&nbsp;" . T_('Download'); ?>
         <li>
-            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>">
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>" rel="nofollow">
                 <?php echo Ui::get_material_symbol('folder_zip', $download); ?>
                 <?php echo $download; ?>
             </a>

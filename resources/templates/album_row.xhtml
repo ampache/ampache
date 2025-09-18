@@ -50,7 +50,7 @@
         <tal:block tal:condition="ALBUM/canShare" tal:replace="structure ALBUM/getShareUi">SHARE</tal:block>
 
         <a
-                class="nohtml"
+                class="nohtml" rel="nofollow"
                 tal:condition="ALBUM/canBatchDownload"
                 tal:attributes="href ALBUM/getBatchDownloadUrl"
                 tal:content="structure ALBUM/getBatchDownloadIcon"
