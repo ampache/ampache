@@ -742,7 +742,7 @@ class Stats
     {
         $type           = self::validate_type($input_type);
         $ordersql       = ($newest === true) ? 'DESC' : 'ASC';
-        $user_sql       = ($user !== null) ? " AND `user` = '" . $user->getId() . "'" : '';
+        $user_sql       = ($user !== null) ? " AND `object_count`.`user` = '" . $user->getId() . "'" : '';
         $catalog_filter = (AmpConfig::get('catalog_filter'));
         $filter_user    = ($user ?? Core::get_global('user'));
 
