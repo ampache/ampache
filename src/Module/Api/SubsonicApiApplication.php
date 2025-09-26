@@ -369,6 +369,9 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $encpwd = strpos($password, "enc:");
         if ($encpwd !== false) {
             $hex    = substr($password, 4);
+            if (!ctype_xdigit($hex)) { // If the string have non-hex char
+                return false;
+            }
             $decpwd = '';
             for ($count = 0; $count < strlen((string)$hex); $count += 2) {
                 $decpwd .= chr((int)hexdec(substr($hex, $count, 2)));
