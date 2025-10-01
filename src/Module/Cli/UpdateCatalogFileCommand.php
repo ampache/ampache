@@ -53,10 +53,14 @@ final class UpdateCatalogFileCommand extends Command
             ->option('-e|--verify', T_('Reads your files and updates the database to match changes'), 'boolval', false)
             ->option('-a|--add', T_('Adds new media files to the database'), 'boolval', false)
             ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
+            ->option('-r|--rename', T_('Renames a file in the database. It takes as an argument the new path to the file'), 'strval', null)
             ->argument('<catalogName>', T_('Catalog Name'))
             ->argument('<filePath>', T_('File Path'))
             /* HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album) */
-            ->usage('<bold>  run:updateCatalogFile some-catalog /tmp/some-file.mp3</end> <comment> ## ' . sprintf(T_('Update %s in the catalog `some-catalog`'), '/tmp/some-file.mp3') . '<eol/>');
+            ->usage(
+                '<bold>  run:updateCatalogFile -e some-catalog /tmp/some-file.mp3</end> <comment> ## ' . sprintf(T_('Update %s in the catalog `some-catalog`'), '/tmp/some-file.mp3') . '</end><eol/>' .
+                '<bold>  run:updateCatalogFile -r /tmp/new-file.flac some-catalog /tmp/old-file.flac</end> <comment> ## ' . sprintf(T_('Rename %s to %s in the catalog `some-catalog`'), '/tmp/some-file.mp3', '/tmp/some-new-file.mp3') . '</end><eol/>'
+            );
     }
 
     public function execute(
@@ -65,6 +69,23 @@ final class UpdateCatalogFileCommand extends Command
     ): void {
         $values = $this->values();
 
+        $interactor = $this->io();
+
+        if (
+            $values['rename'] != null &&
+            ($values['verify'] == 1 ||
+             $values['add'] == 1 ||
+             $values['cleanup'] == 1 ||
+             $values['art'] == 1)
+        ) {
+            $interactor->error(
+                "\n" . T_('Rename (-r|--rename) cannot be used with other options enabled'),
+                true
+            );
+
+            return;
+        }
+
         $this->updateSingleCatalogFile->update(
             $this->io(),
             $catalogName,
@@ -72,7 +93,8 @@ final class UpdateCatalogFileCommand extends Command
             $values['verify'],
             $values['add'],
             $values['cleanup'],
-            $values['art']
+            $values['art'],
+            $values['rename']
         );
     }
 }

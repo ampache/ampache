@@ -47,7 +47,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         bool $verificationMode,
         bool $addMode,
         bool $cleanupMode,
-        bool $searchArtMode
+        bool $searchArtMode,
+        ?string $newFilePath
     ): void {
         $sql        = "SELECT `id` FROM `catalog` WHERE `name` = ? AND `catalog_type`='local'";
         $db_results = Dba::read($sql, [$catname]);
@@ -55,16 +56,17 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         ob_end_clean();
         ob_start();
 
+        if (! Dba::num_rows($db_results)) {
+            $interactor->error(
+                sprintf(T_('Catalog `%s` not found'), $catname),
+                true
+            );
+
+            return;
+        }
+
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
-            if ($catalog === null) {
-                $interactor->error(
-                    sprintf(T_('Catalog `%s` not found'), $catname),
-                    true
-                );
-
-                return;
-            }
             if (isset($catalog->path) && !Core::is_readable($catalog->path)) {
                 $interactor->error(
                     T_('Catalog root unreadable, stopping check'),
@@ -93,6 +95,35 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     $file_id = Catalog::get_id_from_file($filePath, $type);
                     $media   = new Song($file_id);
                     break;
+            }
+            // handle file renaming
+            if ($newFilePath != null) {
+                // file is valid media in the database
+                if ($media->isNew() === false) {
+                    $newfile_test = is_file($newFilePath);
+                    if (!$newfile_test) {
+                        $interactor->error(
+                            sprintf(T_('Cannot find new filename `%s` in the filesystem'), $newFilePath),
+                            true
+                        );
+
+                        return;
+                    }
+                    $catalog->rename_file($filePath, $newFilePath, $type);
+                    $interactor->info(
+                        sprintf(T_('Renaming file: `%s` -> `%s`'), $filePath, $newFilePath),
+                        true
+                    );
+                } else {
+                    $interactor->error(
+                        sprintf(T_('Cannot find file `%s` in the catalog `%s`'), $filePath, $catname),
+                        true
+                    );
+
+                    return;
+                }
+
+                return;
             }
             $file_test = is_file($filePath);
             // deleted file but it was valid media in the database
