@@ -710,8 +710,8 @@ class Search extends playlist_object
             '1280' => '1280',
         ];
         $this->_add_type_select('bitrate', T_('Bitrate'), 'numeric', $bitrate_array, $t_file_data);
-        $this->_add_type_date('added', T_('Added'), $t_file_data);
-        $this->_add_type_date('updated', T_('Updated'), $t_file_data);
+        $this->_add_type_date('added', T_('Date Added'), $t_file_data);
+        $this->_add_type_date('updated', T_('Date Updated'), $t_file_data);
         if (AmpConfig::get('licensing')) {
             $licenses = iterator_to_array(
                 $this->getLicenseRepository()->getList(false)
@@ -943,12 +943,12 @@ class Search extends playlist_object
 
         $t_file_data = T_('File Data');
         $this->_add_type_text('file', T_('Filename'), $t_file_data);
-        $this->_add_type_date('added', T_('Added'), $t_file_data);
-        $this->_add_type_date('updated', T_('Updated'), $t_file_data);
+        $this->_add_type_date('added', T_('Date Added'), $t_file_data);
+        $this->_add_type_date('updated', T_('Date Updated'), $t_file_data);
         $this->_add_type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
         $this->_add_type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $this->_add_type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
-        $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
+        $this->_add_type_numeric('recent_added', T_('Recently Added'), 'recent_added', $t_file_data);
         $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
         $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $this->_add_type_boolean('duplicate_tracks', T_('Duplicate Album Tracks'), 'is_true', $t_file_data);
@@ -1047,8 +1047,8 @@ class Search extends playlist_object
         $t_file_data = T_('File Data');
         $this->_add_type_text('file', T_('Filename'), $t_file_data);
         $this->_add_type_date('pubdate', T_('Publication Date'), $t_file_data);
-        $this->_add_type_date('added', T_('Added'), $t_file_data);
-        $this->_add_type_date('updated', T_('Updated'), $t_file_data);
+        $this->_add_type_date('added', T_('Date Added'), $t_file_data);
+        $this->_add_type_date('updated', T_('Date Updated'), $t_file_data);
         $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
         $this->_add_type_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
     }
@@ -1095,8 +1095,8 @@ class Search extends playlist_object
         $t_file_data = T_('File Data');
         $this->_add_type_text('file', T_('Filename'), $t_file_data);
         $this->_add_type_date('pubdate', T_('Publication Date'), $t_file_data);
-        $this->_add_type_date('added', T_('Added'), $t_file_data);
-        $this->_add_type_date('updated', T_('Updated'), $t_file_data);
+        $this->_add_type_date('added', T_('Date Added'), $t_file_data);
+        $this->_add_type_date('updated', T_('Date Updated'), $t_file_data);
         $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
         $this->_add_type_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
     }
