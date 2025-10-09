@@ -1046,6 +1046,7 @@ class Search extends playlist_object
         $this->_add_type_text('file', T_('Filename'), $t_file_data);
         $this->_add_type_date('pubdate', T_('Publication Date'), $t_file_data);
         $this->_add_type_date('added', T_('Added'), $t_file_data);
+        $this->_add_type_date('updated', T_('Updated'), $t_file_data);
     }
 
     /**
@@ -1091,6 +1092,7 @@ class Search extends playlist_object
         $this->_add_type_text('file', T_('Filename'), $t_file_data);
         $this->_add_type_date('pubdate', T_('Publication Date'), $t_file_data);
         $this->_add_type_date('added', T_('Added'), $t_file_data);
+        $this->_add_type_date('updated', T_('Updated'), $t_file_data);
     }
 
     /**

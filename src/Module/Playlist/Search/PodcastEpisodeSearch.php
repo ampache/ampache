@@ -215,6 +215,11 @@ final class PodcastEpisodeSearch implements SearchInterface
                     $where[]      = "`podcast_episode`.`addition_time` $operator_sql ?";
                     $parameters[] = $input;
                     break;
+                case 'updated':
+                    $input        = strtotime((string) $input);
+                    $where[]      = "`podcast_episode`.`update_time` $operator_sql ?";
+                    $parameters[] = $input;
+                    break;
                 case 'id':
                     $where[]      = "`podcast_episode`.`id` $operator_sql ?";
                     $parameters[] = $input;

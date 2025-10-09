@@ -232,6 +232,12 @@ final class PodcastSearch implements SearchInterface
                     $parameters[]            = $input;
                     $join['podcast_episode'] = true;
                     break;
+                case 'updated':
+                    $input                   = strtotime((string) $input);
+                    $where[]                 = "`podcast_episode`.`update_time` $operator_sql ?";
+                    $parameters[]            = $input;
+                    $join['podcast_episode'] = true;
+                    break;
                 case 'file':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
                         $where[] = "NOT (`podcast_episode`.`file` SOUNDS LIKE ?)";
