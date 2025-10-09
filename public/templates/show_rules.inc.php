@@ -41,7 +41,7 @@ if (empty($currentType)) {
 if (isset($playlist)) {
     $logic_operator = $playlist->logic_operator;
 } else {
-    $logic_operator = Core::get_request('operator');
+    $logic_operator = Core::get_request('operator') ?? 'and';
 }
 $logic_operator = strtolower((string)$logic_operator);?>
 <script src="<?php echo $web_path; ?>/lib/javascript/search.js"></script>
