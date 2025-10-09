@@ -45,6 +45,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
     var jsAmpConfigPlayType = "<?php echo AmpConfig::get('play_type'); ?>";
     var jsAmpConfigSlideshowTime = "<?php echo (int)(AmpConfig::get('slideshow_time', 0)); ?>";
     var jsAmpConfigSidebarHideSwitcher = "<?php echo make_bool(AmpConfig::get('sidebar_hide_switcher', false)); ?>";
+    var jsAmpConfigSongPageTitle = "<?php echo addslashes(AmpConfig::get('song_page_title', '')); ?>";
 
     // Preferences
     var jsPrefExistsFlickrApiKey = "<?php echo Preference::exists('flickr_api_key'); ?>";
