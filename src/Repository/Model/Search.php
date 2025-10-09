@@ -722,6 +722,8 @@ class Search extends playlist_object
 
         $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
         $this->_add_type_numeric('recent_updated', T_('Recently updated'), 'recent_updated', $t_file_data);
+        $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
+        $this->_add_type_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
         $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $this->_add_type_boolean('duplicate_tracks', T_('Duplicate Album Tracks'), 'is_true', $t_file_data);
         $this->_add_type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);

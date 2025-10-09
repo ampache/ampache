@@ -303,6 +303,12 @@ final class SongSearch implements SearchInterface
                         : "";
                     $where[] = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - (" . (int)$input . " * 86400))";
                     break;
+                case 'days_added':
+                    $where[] = "`song`.`addition_time` $operator_sql (UNIX_TIMESTAMP() - (" . (int)$input . " * 86400))";
+                    break;
+                case 'days_updated':
+                    $where[] = "`song`.`update_time` $operator_sql (UNIX_TIMESTAMP() - (" . (int)$input . " * 86400))";
+                    break;
                 case 'played_times':
                     $where[]      = "(`song`.`total_count` $operator_sql ?)";
                     $parameters[] = $input;
