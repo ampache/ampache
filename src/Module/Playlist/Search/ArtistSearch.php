@@ -317,6 +317,9 @@ final class ArtistSearch implements SearchInterface
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
+                case 'days_added':
+                    $where[] = "`artist`.`addition_time` $operator_sql (UNIX_TIMESTAMP() - (" . (int)$input . " * 86400))";
+                    break;
                 case 'played_times':
                     $where[]      = "`artist`.`total_count` $operator_sql ?";
                     $parameters[] = $input;

@@ -841,6 +841,7 @@ class Search extends playlist_object
         $this->_add_type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
         $this->_add_type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $this->_add_type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
+        $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
         $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $this->_add_type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
         $catalogs = [];
@@ -947,10 +948,11 @@ class Search extends playlist_object
         $this->_add_type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
         $this->_add_type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $this->_add_type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
+        $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
+        $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
         $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $this->_add_type_boolean('duplicate_tracks', T_('Duplicate Album Tracks'), 'is_true', $t_file_data);
         $this->_add_type_boolean('duplicate_mbid_group', T_('Duplicate MusicBrainz Release Group'), 'is_true', $t_file_data);
-        $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
         $catalogs = [];
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
