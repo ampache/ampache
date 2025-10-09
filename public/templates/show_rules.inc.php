@@ -54,7 +54,7 @@ $logic_operator = strtolower((string)$logic_operator);?>
         <td><?php echo T_('Match'); ?></td>
         <td>
             <select name="operator">
-                <option value="and" <?php if ($logic_operator == 'and') {
+                <option value="and" <?php if (empty($logic_operator) || $logic_operator == 'and') {
                     echo 'selected="selected"';
                 } ?>><?php echo T_('all rules'); ?></option>
                 <option value="or" <?php if ($logic_operator == 'or') {

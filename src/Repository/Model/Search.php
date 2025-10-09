@@ -75,7 +75,7 @@ class Search extends playlist_object
 
     public $rules; // rules used to run a search (User chooses rules from available types for that object). JSON string to decoded to array
 
-    public ?string $logic_operator = 'AND';
+    public ?string $logic_operator = 'and';
 
     public ?int $random = 0;
 
@@ -1849,7 +1849,7 @@ class Search extends playlist_object
         $data                 = $this->_filter_request($data);
         $this->rules          = [];
         $user_rules           = [];
-        $this->logic_operator = $data['operator'] ?? 'AND';
+        $this->logic_operator = $data['operator'] ?? 'and';
         // match the numeric rules you send (e.g. rule_1, rule_6000)
         foreach (array_keys($data) as $rule) {
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
@@ -1915,10 +1915,14 @@ class Search extends playlist_object
             $this->name .= uniqid('', true);
         }
 
+        if (empty($this->logic_operator)) {
+            $this->logic_operator = 'and';
+        }
+
         $time = time();
 
         $sql = "INSERT INTO `search` (`name`, `type`, `user`, `username`, `rules`, `logic_operator`, `random`, `limit`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, [$this->name, $this->type, $user->id, $user->username, json_encode($this->rules), $this->logic_operator, ($this->random > 0) ? 1 : 0, $this->limit, $time, $time]);
+        Dba::write($sql, [$this->name, $this->type, $user->id, $user->username, json_encode($this->rules), strtolower($this->logic_operator), ($this->random > 0) ? 1 : 0, $this->limit, $time, $time]);
         $insert_id = Dba::insert_id();
         if (!$insert_id) {
             return null;
