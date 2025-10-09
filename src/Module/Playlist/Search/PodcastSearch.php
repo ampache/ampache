@@ -159,6 +159,14 @@ final class PodcastSearch implements SearchInterface
                     $where[]                 = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - (" . (int)$input . " * 86400))";
                     $join['podcast_episode'] = true;
                     break;
+                case 'days_added':
+                    $where[]                 = "`podcast_episode`.`addition_time` $operator_sql (UNIX_TIMESTAMP() - (" . (int)$input . " * 86400))";
+                    $join['podcast_episode'] = true;
+                    break;
+                case 'days_updated':
+                    $where[]                 = "`podcast_episode`.`update_time` $operator_sql (UNIX_TIMESTAMP() - (" . (int)$input . " * 86400))";
+                    $join['podcast_episode'] = true;
+                    break;
                 case 'played_times':
                     $where[]      = "(`podcast`.`total_count` $operator_sql ?)";
                     $parameters[] = $input;

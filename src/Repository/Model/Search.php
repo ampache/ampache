@@ -1047,6 +1047,8 @@ class Search extends playlist_object
         $this->_add_type_date('pubdate', T_('Publication Date'), $t_file_data);
         $this->_add_type_date('added', T_('Added'), $t_file_data);
         $this->_add_type_date('updated', T_('Updated'), $t_file_data);
+        $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
+        $this->_add_type_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
     }
 
     /**
@@ -1093,6 +1095,8 @@ class Search extends playlist_object
         $this->_add_type_date('pubdate', T_('Publication Date'), $t_file_data);
         $this->_add_type_date('added', T_('Added'), $t_file_data);
         $this->_add_type_date('updated', T_('Updated'), $t_file_data);
+        $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
+        $this->_add_type_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
     }
 
     /**
