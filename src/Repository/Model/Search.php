@@ -665,7 +665,7 @@ class Search extends playlist_object
         $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
+        $this->_add_type_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
         $this->_add_type_text('genre', $t_genre, $t_genre);
@@ -720,8 +720,8 @@ class Search extends playlist_object
             $this->_add_type_boolean('no_license', T_('No Music License'), 'is_true', $t_file_data);
         }
 
-        $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
-        $this->_add_type_numeric('recent_updated', T_('Recently updated'), 'recent_updated', $t_file_data);
+        $this->_add_type_numeric('recent_added', T_('Recently Added'), 'recent_added', $t_file_data);
+        $this->_add_type_numeric('recent_updated', T_('Recently Updated'), 'recent_updated', $t_file_data);
         $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
         $this->_add_type_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
         $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
@@ -818,7 +818,7 @@ class Search extends playlist_object
         $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
+        $this->_add_type_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
         $this->_add_type_text('genre', $t_genre, $t_genre);
@@ -918,7 +918,7 @@ class Search extends playlist_object
         $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
+        $this->_add_type_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
         $this->_add_type_text('genre', $t_genre, $t_genre);
@@ -1042,7 +1042,7 @@ class Search extends playlist_object
         $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
+        $this->_add_type_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
 
         $t_file_data = T_('File Data');
         $this->_add_type_text('file', T_('Filename'), $t_file_data);
@@ -1090,7 +1090,7 @@ class Search extends playlist_object
         $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
+        $this->_add_type_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
 
         $t_file_data = T_('File Data');
         $this->_add_type_text('file', T_('Filename'), $t_file_data);
