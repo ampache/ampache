@@ -201,6 +201,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                     $songTagWriter = $dic->get(SongTagWriterInterface::class);
                     $songTagWriter->writeRating($song, $this->user, $rating);
                 }
+
                 // rate all the song artists (If there are more than one)
                 foreach (Song::get_parent_array($song->id) as $artist_id) {
                     $rArtist       = new Rating($artist_id, 'artist');
