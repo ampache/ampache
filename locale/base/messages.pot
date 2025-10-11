@@ -6896,7 +6896,7 @@ msgid "Show all media types in Recently Played"
 msgstr ""
 
 #: Database preference table id 187
-msgid "Enable access to your personal "Spotify Wrapped" from your user page"
+msgid "Enable access to your personal \"Spotify Wrapped\" from your user page"
 msgstr ""
 
 #: Database preference table id 188
