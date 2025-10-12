@@ -1,5 +1,44 @@
 # CHANGELOG
 
+## Ampache 7.7.3
+
+### Added
+
+* Translations 2025-10-10
+* Config version 84
+  * Add `rating_file_tag_compatibility` to allow using an alternative 5 star rating scale
+* Database 773001
+  * Add `song_map` table for ISRC storage
+  * Convert `custom_favicon`, `custom_login_background`, `custom_login_logo` into system preferences
+* Search
+  * Song, Artist, Album, AlbumDisk: `days_added` songs that were added before/after x days
+  * Song: `days_update` songs that were updated before/after x days
+  * Podcast, Podcast Episode: `days_added` songs that were added before/after x days
+  * Podcast, Podcast Episode: `days_update` songs that were updated before/after x days
+  * Podcast, Podcast Episode: `updated` date that episode files where last updated
+* Start parsing ISRC song tags
+* Add nofollow parameters to links
+
+### Changed
+
+* Add the full url path for relative data in `custom_blankalbum`, `custom_favicon`, `custom_login_background`, `custom_login_logo` and `custom_logo`
+* Update docker files for Debian stable changes
+* Don't change the page title when `song_page_title` is enabled
+* Update translation guidelines for new CLI Transifex version
+
+### Fixed
+
+* Skip some unused tags that filter into additional metadata
+* SQL join for AlbumDisk `get_top_sql` calls
+* SQL for `get_recent_sql` joins with user
+* Don't error on song import / update when additional metadata calls fail
+* `custom_login_logo` overwritten by header logo
+* Tag writer sending non array values
+* Stop writing dong tags for ratings when reading the tags
+* Don't error when sending invalid Subsonic auth
+* Missing Art object type
+* Search not always setting `and`/`or`
+
 ## Ampache 7.7.2
 
 ### Added
