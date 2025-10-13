@@ -186,12 +186,6 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     public function save_rating(Rating $rating, int $new_rating): void
     {
         if ($this->min_stars > 0 && $new_rating >= $this->min_stars) {
-            // if the rating isn't changed, we don't need to do anything
-            $user_rating = (int)$rating->get_user_rating($this->user->getId());
-            if ($user_rating === $new_rating) {
-                return;
-            }
-
             if ($rating->type === 'song') {
                 $song = new Song($rating->id);
 
