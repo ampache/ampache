@@ -538,6 +538,10 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                             'placeformed' => $beginName ?? $areaName ?? null,
                             'yearformed' => explode('-', ((string) $begin))[0] ?? $object->yearformed
                         ];
+
+                        if ($data['yearformed'] === '' || $data['yearformed'] === 0 || $data['yearformed'] === false) {
+                            $data['yearformed'] = null;
+                        }
                     }
 
                     break;
