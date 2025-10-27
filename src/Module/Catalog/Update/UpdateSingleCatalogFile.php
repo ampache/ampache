@@ -96,31 +96,39 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     $media   = new Song($file_id);
                     break;
             }
+
             // handle file renaming
             if ($newFilePath != null) {
-                // file is valid media in the database
-                if ($media->isNew() === false) {
-                    $newfile_test = is_file($newFilePath);
-                    if (!$newfile_test) {
-                        $interactor->error(
-                            sprintf(T_('Cannot find new filename `%s` in the filesystem'), $newFilePath),
-                            true
-                        );
-
-                        return;
-                    }
-                    $catalog->rename_file($filePath, $newFilePath, $type);
-                    $interactor->info(
-                        sprintf(T_('Renaming file: `%s` -> `%s`'), $filePath, $newFilePath),
-                        true
-                    );
-                } else {
+                // file not an existing catalog file
+                if ($media->isNew()) {
                     $interactor->error(
-                        sprintf(T_('Cannot find file `%s` in the catalog `%s`'), $filePath, $catname),
+                        T_('Error') . ': ' . $catname . ' ' . T_('File not found') . ' ' . $filePath,
                         true
                     );
 
                     return;
+                }
+
+                // rename path doesn't exist
+                if (!is_file($newFilePath)) {
+                    $interactor->error(
+                        T_('Error') . ': ' . T_('File not found') . ' ' . $newFilePath,
+                        true
+                    );
+
+                    return;
+                }
+
+                if ($catalog->set_file($media->getId(), $newFilePath, $type)) {
+                    $interactor->info(
+                        sprintf(T_('Updated: %s'), sprintf('`%s` -> `%s`', $filePath, $newFilePath)),
+                        true
+                    );
+                } else {
+                    $interactor->error(
+                        T_('Error') . ': ' . $newFilePath,
+                        true
+                    );
                 }
 
                 return;

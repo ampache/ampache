@@ -1040,36 +1040,22 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * rename_file
+     * set_file
      *
-     * Rename a single file
+     * Update file path
      * Return true on rename. false on failures
-     *
-     * @param string $file
-     * @param string $new_file
-     * @param string $media_type
      */
-    public function rename_file($file, $new_file, $media_type = 'song'): bool
+    public function set_file(int $object_id, string $new_file, ?string $media_type = null): bool
     {
-        $file_info = Core::get_filesize(Core::conv_lc_file($file));
-        $object_id = Catalog::get_id_from_file($file, $media_type);
-        $params    = [$new_file, $object_id];
         switch ($media_type) {
             case 'song':
-                $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?;";
-                Dba::write($sql, $params);
-                break;
             case 'video':
-                $sql = "UPDATE `video` SET `file` = ? WHERE `id` = ?;";
-                Dba::write($sql, $params);
-                break;
             case 'podcast_episode':
-                $sql = "UPDATE `podcast_episode` SET `file` = ? WHERE `id` = ?;";
-                Dba::write($sql, $params);
-                break;
+                $sql = "UPDATE `$media_type` SET `file` = ? WHERE `id` = ?;";
+                return Dba::write($sql, [$new_file, $object_id]) !== false;
+            default:
+                return false;
         }
-
-        return true;
     }
 
     /**
