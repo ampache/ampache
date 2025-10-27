@@ -67,7 +67,7 @@ class Art extends database_object
 
     public ?int $id = 0;
 
-    public string $object_type;
+    public string $object_type = 'album';
 
     public int $object_id;
 

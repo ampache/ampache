@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-07-14 08:58+1000\n"
+"POT-Creation-Date: 2025-10-10 21:23+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -777,8 +777,8 @@ msgid "WARNING"
 msgstr ""
 
 msgid ""
-"The music license you choose gives away rights in an irrevocable manner to "
-"the audience."
+"The music license you choose may give away some rights in an irrevocable "
+"manner."
 msgstr ""
 
 msgid ""
@@ -5741,9 +5741,6 @@ msgstr ""
 msgid "# Played or Skipped by Me"
 msgstr ""
 
-msgid "Recently played"
-msgstr ""
-
 msgid "Album Genre"
 msgstr ""
 
@@ -5762,13 +5759,16 @@ msgstr ""
 msgid "File Data"
 msgstr ""
 
+msgid "Date Updated"
+msgstr ""
+
 msgid "No Music License"
 msgstr ""
 
-msgid "Recently added"
+msgid "Recently Added"
 msgstr ""
 
-msgid "Recently updated"
+msgid "Recently Updated"
 msgstr ""
 
 msgid "Duplicate Album Tracks"

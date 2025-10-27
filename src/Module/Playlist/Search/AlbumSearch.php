@@ -49,7 +49,7 @@ final class AlbumSearch implements SearchInterface
         Search $search
     ): array {
         $search_user_id     = $search->search_user->getId();
-        $sql_logic_operator = $search->logic_operator;
+        $sql_logic_operator = strtoupper($search->logic_operator);
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
         $subsearch_count    = 0;
@@ -261,6 +261,9 @@ final class AlbumSearch implements SearchInterface
                     $where[]      = "`song`.`update_time` $operator_sql ?";
                     $parameters[] = $input;
                     $join['song'] = true;
+                    break;
+                case 'days_added':
+                    $where[] = "`album`.`addition_time` $operator_sql (UNIX_TIMESTAMP() - (" . (int)$input . " * 86400))";
                     break;
                 case 'played_times':
                     $where[]      = "`album`.`total_count` $operator_sql ?";

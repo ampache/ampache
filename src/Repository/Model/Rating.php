@@ -318,7 +318,7 @@ class Rating extends database_object
      * This function sets the rating for the current object.
      * If no user_id is passed in, we use the currently logged in user.
      */
-    public function set_rating(int $rating, ?int $user_id = null): bool
+    public function set_rating(int $rating, ?int $user_id = null, $write_back = true): bool
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -353,7 +353,10 @@ class Rating extends database_object
 
         parent::add_to_cache('rating_' . $this->type . '_user' . $user_id, $this->id, [$rating]);
 
-        self::save_rating($this->id, $this->type, (int)$rating, (int)$user_id);
+        // sometimes we're reading the rating so don't always write back
+        if ($write_back) {
+            self::save_rating($this->id, $this->type, (int)$rating, (int)$user_id);
+        }
 
         return true;
     }

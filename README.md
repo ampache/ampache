@@ -8,13 +8,9 @@
 
 ## News
 
-Ampache7 is [here!](https://github.com/ampache/ampache/releases/)
+**REDUCED CONTRIBUTIONS** Hi everyone, I need to note that as the primary dev I am not able to work as many hours on Ampache right now.
 
-Information and changes for this major release are being recorded in the wiki [here](https://github.com/ampache/ampache/wiki/ampache7-for-admins).
-
-Visual and informational changes for users are documented [here](https://github.com/ampache/ampache/wiki/ampache7-for-users).
-
-Ampache7 will continue to use **API6** and will not make any breaking changes to that [API](https://ampache.org/api/).
+Significant health issues for a family member are taking precedence for a while and may take about 6 months before I can fully recommit.
 
 ## Basics
 
@@ -31,6 +27,7 @@ choosing a suitable method for doing so.
 
 * Check out [Ampache 7 for Admins](https://github.com/ampache/ampache/wiki/ampache7-for-admins)
 * As well as [Ampache 7 for Users](https://github.com/ampache/ampache/wiki/ampache7-for-users)
+* The Ampache API is documented with examples [here](https://ampache.org/api/)
 
 ## Recommended Version
 

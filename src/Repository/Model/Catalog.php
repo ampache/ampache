@@ -3143,7 +3143,7 @@ abstract class Catalog extends database_object
                     (int)$user > 0 &&
                     $o_rating->get_user_rating((int)$user) != (int)$rating
                 ) {
-                    $o_rating->set_rating((int)$rating, (int)$user);
+                    $o_rating->set_rating((int)$rating, (int)$user, false);
                 }
             }
         }

@@ -49,7 +49,7 @@ final class LabelSearch implements SearchInterface
         Search $search
     ): array {
         $search_user_id     = $search->search_user->getId();
-        $sql_logic_operator = $search->logic_operator;
+        $sql_logic_operator = strtoupper($search->logic_operator);
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 

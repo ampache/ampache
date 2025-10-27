@@ -49,7 +49,7 @@ final class SongSearch implements SearchInterface
         Search $search
     ): array {
         $search_user_id     = $search->search_user->getId();
-        $sql_logic_operator = $search->logic_operator;
+        $sql_logic_operator = strtoupper($search->logic_operator);
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
         $subsearch_count    = 0;
@@ -302,6 +302,12 @@ final class SongSearch implements SearchInterface
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '$my_type'"
                         : "";
                     $where[] = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - (" . (int)$input . " * 86400))";
+                    break;
+                case 'days_added':
+                    $where[] = "`song`.`addition_time` $operator_sql (UNIX_TIMESTAMP() - (" . (int)$input . " * 86400))";
+                    break;
+                case 'days_updated':
+                    $where[] = "`song`.`update_time` $operator_sql (UNIX_TIMESTAMP() - (" . (int)$input . " * 86400))";
                     break;
                 case 'played_times':
                     $where[]      = "(`song`.`total_count` $operator_sql ?)";
