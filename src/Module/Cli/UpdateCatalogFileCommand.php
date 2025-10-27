@@ -78,7 +78,7 @@ final class UpdateCatalogFileCommand extends Command
                 $values['add'] ||
                 $values['cleanup'] ||
                 $values['art']
-             )
+            )
         ) {
             $interactor->error(
                 "\n" . T_('Rename (-r|--rename) cannot be used with other options enabled'),

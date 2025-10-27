@@ -1052,6 +1052,7 @@ class Catalog_local extends Catalog
             case 'video':
             case 'podcast_episode':
                 $sql = "UPDATE `$media_type` SET `file` = ? WHERE `id` = ?;";
+
                 return Dba::write($sql, [$new_file, $object_id]) !== false;
             default:
                 return false;
