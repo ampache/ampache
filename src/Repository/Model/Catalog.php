@@ -1092,9 +1092,17 @@ abstract class Catalog extends database_object
                     true
                 );
                 foreach ($cache_files as $file) {
-                    $path    = pathinfo((string)$file);
-                    $song_id = $path['filename'];
-                    if (!Song::has_id($song_id)) {
+                    $path      = pathinfo((string)$file);
+                    $song_id   = $path['filename'];
+                    $song      = new Song($song_id);
+                    $song_path = ($song->isNew() === false)
+                        ? pathinfo($song->file)
+                        : [];
+                    if (
+                        $song->isNew() ||
+                        (bool)AmpConfig::get('cache_' . $path['extension'], false) == false ||
+                        (bool)AmpConfig::get('cache_' . $song_path['extension'], false) == false
+                    ) {
                         unlink($file);
                         debug_event(self::class, 'cache_catalogs: removed {' . $file . '}', 4);
                         $interactor?->info(
