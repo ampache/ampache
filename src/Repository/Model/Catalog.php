@@ -1134,9 +1134,9 @@ abstract class Catalog extends database_object
                         (bool)AmpConfig::get('cache_' . $song_path['extension'], false) == false
                     ) {
                         unlink($file);
-                        debug_event(self::class, 'cache_catalogs: removed (cache_' . $song_path['extension'] . ') {' . $file . '}', 4);
+                        debug_event(self::class, 'cache_catalogs: removed (cache_' . $song_path['extension'] . ' ' . $song->file . ') {' . $file . '}', 4);
                         $interactor?->info(
-                            sprintf('cache_catalogs: removed (cache_%s) {%s}', $song_path['extension'], $file),
+                            sprintf('cache_catalogs: removed (cache_%s %s) {%s}', $song_path['extension'], $song->file, $file),
                             true
                         );
                     }
