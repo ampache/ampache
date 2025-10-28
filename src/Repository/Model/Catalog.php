@@ -1091,16 +1091,21 @@ abstract class Catalog extends database_object
                     'cache_catalogs: cleaning old files',
                     true
                 );
+
+                $remote_catalog = ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic);
+                $remote_cache   = (bool)AmpConfig::get('cache_remote', false);
+
                 foreach ($cache_files as $file) {
                     $path      = pathinfo((string)$file);
                     $song_id   = $path['filename'];
                     $song      = new Song($song_id);
                     $song_path = ($song->isNew() === false)
                         ? pathinfo($song->file)
-                        : [];
+                        : ['extension' => ''];
                     if (
                         $song->isNew() ||
                         (bool)AmpConfig::get('cache_' . $path['extension'], false) == false ||
+                        ($remote_catalog && $remote_cache === false) ||
                         (bool)AmpConfig::get('cache_' . $song_path['extension'], false) == false
                     ) {
                         unlink($file);
