@@ -1113,11 +1113,11 @@ abstract class Catalog extends database_object
                             true
                         );
                     }
-                    if ((bool)AmpConfig::get('cache_' . $path['extension'], false) == false) {
+                    if ($path['extension'] !== $target) {
                         unlink($file);
-                        debug_event(self::class, 'cache_catalogs: removed (cache_' . $path['extension'] . ') {' . $file . '}', 4);
+                        debug_event(self::class, 'cache_catalogs: removed (cache_target !== ' . $path['extension'] . ') {' . $file . '}', 4);
                         $interactor?->info(
-                            sprintf('cache_catalogs: removed (cache_%s) {%s}', $path['extension'], $file),
+                            sprintf('cache_catalogs: removed (cache_target !== %s) {%s}', $path['extension'], $file),
                             true
                         );
                     }
