@@ -28,6 +28,7 @@ namespace Ampache\Module\Song;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -248,7 +249,20 @@ final class SongSorter implements SongSorterInterface
                 true
             );
         } else {
-            $file_ids = [Catalog::get_id_from_file($path, 'music')];
+            switch ($this->catalog->gather_types) {
+                case 'podcast':
+                    $file_ids = [Catalog::get_id_from_file($path, 'podcast_episode')];
+                    break;
+                case 'video':
+                    $file_ids = [Catalog::get_id_from_file($path, 'video')];
+                    break;
+                case 'music':
+                    $file_ids = [Catalog::get_id_from_file($path, 'song')];
+                    break;
+                default:
+                    $file_ids = [];
+                    break;
+            }
             $interactor->info(
                 T_(sprintf('Sorting single file: %s', $path)),
                 true
