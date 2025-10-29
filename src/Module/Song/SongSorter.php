@@ -343,7 +343,7 @@ final class SongSorter implements SongSorterInterface
 
         // Now that we've got the correct directory structure let's try to copy it
         if ($test_mode) {
-            $sql = "UPDATE `song` SET `file` = " . Dba::escape($fullname) . " WHERE `id` = " . Dba::escape($media->id) . ";";
+            $sql = "UPDATE `song` SET `file` = '" . Dba::escape($fullname) . "' WHERE `id` = " . Dba::escape($media->id) . ";";
             $interactor->info(
                 sprintf('SQL: %s', $sql),
                 true
