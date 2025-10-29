@@ -2127,7 +2127,7 @@ abstract class Catalog extends database_object
 
         $inserted = false;
         $options  = [];
-        if (method_exists($libitem, 'fill_ext_info')) {
+        if ($libitem instanceof Song) {
             $libitem->fill_ext_info();
         }
 

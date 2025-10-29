@@ -32,6 +32,7 @@ use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\playable_item;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -101,7 +102,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         );
 
         if ($libItem instanceof playable_item) {
-            if (method_exists($libItem, 'fill_ext_info')) {
+            if ($libItem instanceof Song) {
                 $libItem->fill_ext_info();
             }
             $name      = (string)$libItem->get_fullname();

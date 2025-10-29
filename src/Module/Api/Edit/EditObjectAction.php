@@ -34,6 +34,7 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -160,7 +161,7 @@ final class EditObjectAction extends AbstractEditAction
             }
         } else {
             // @todo: is it really necessary to call format before updating the object?
-            if (method_exists($libitem, 'fill_ext_info')) {
+            if ($libitem instanceof Song) {
                 $libitem->fill_ext_info();
             }
             $libitem->update($_POST);
