@@ -241,32 +241,31 @@ final class SongSorter implements SongSorterInterface
         string $path,
         Interactor $interactor
     ): void {
-        if (is_dir($path)) {
-            $file_ids = Catalog::get_ids_from_folder($path, $this->catalog->gather_types);
-            $interactor->info(
-                T_(sprintf('Sorting media in folder: %s', $path)),
-                true
-            );
-        } else {
-            switch ($this->catalog->gather_types) {
-                case 'podcast':
-                    $file_ids = [Catalog::get_id_from_file($path, 'podcast_episode')];
-                    break;
-                case 'video':
-                    $file_ids = [Catalog::get_id_from_file($path, 'video')];
-                    break;
-                case 'music':
-                    $file_ids = [Catalog::get_id_from_file($path, 'song')];
-                    break;
-                default:
-                    $file_ids = [];
-                    break;
-            }
-            $interactor->info(
-                T_(sprintf('Sorting single file: %s', $path)),
-                true
-            );
+        switch ($this->catalog->gather_types) {
+            case 'podcast':
+                $file_ids = (is_dir($path))
+                    ? Catalog::get_ids_from_folder($path, 'podcast_episode')
+                    : [Catalog::get_id_from_file($path, 'podcast_episode')];
+                break;
+            case 'video':
+                $file_ids = (is_dir($path))
+                    ? Catalog::get_ids_from_folder($path, 'video')
+                    : [Catalog::get_id_from_file($path, 'video')];
+                break;
+            case 'music':
+                $file_ids = (is_dir($path))
+                    ? Catalog::get_ids_from_folder($path, 'song')
+                    : [Catalog::get_id_from_file($path, 'song')];
+                break;
+            default:
+                $file_ids = [];
+                break;
         }
+
+        $interactor->info(
+            T_(sprintf('Sort: %s', $path)),
+            true
+        );
 
         foreach ($file_ids as $file_id) {
             switch ($this->catalog->gather_types) {
