@@ -1910,7 +1910,7 @@ class Song extends database_object implements
             return $results;
         }
 
-        $sql = "SELECT DISTINCT `object_id` FROM `song_map` WHERE `object_type` = ? AND `object_id` = ?;";
+        $sql = "SELECT DISTINCT `object_id` FROM `song_map` WHERE `object_type` = ? AND `song_id` = ?;";
 
         $db_results = Dba::read($sql, [$type, $song_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
