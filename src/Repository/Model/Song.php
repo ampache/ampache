@@ -1484,18 +1484,18 @@ class Song extends database_object implements
     public static function update_song_map(array $new_data, string $type, int $song_id): void
     {
         if (empty($new_data)) {
-            $sql = "DELETE FROM `song_map` WHERE `song_id` = ? AND `type` = ?;";
+            $sql = "DELETE FROM `song_map` WHERE `song_id` = ? AND `object_type` = ?;";
             Dba::write($sql, [$song_id, $type]) !== false;
 
             return;
         }
 
         // we only want your latest values in the map so we delete anything not in the new list
-        $sql = "DELETE FROM `song_map` WHERE `song_id` = ? AND `type` = ? AND `object_id` NOT IN (";
+        $sql = "DELETE FROM `song_map` WHERE `song_id` = ? AND `object_type` = ? AND `object_id` NOT IN (";
 
         foreach ($new_data as $object_id) {
             // insert new values
-            Dba::write("REPLACE INTO `song_map` (`song_id`, `type`, `data`) VALUES (?, ?, ?);", [$song_id, $type, $object_id]);
+            Dba::write("REPLACE INTO `song_map` (`song_id`, `object_type`, `object_id`) VALUES (?, ?, ?);", [$song_id, $type, $object_id]);
             // append to the sql for deletions
             $sql .= Dba::escape($object_id) . ',';
         }
