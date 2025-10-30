@@ -208,7 +208,7 @@ if (!AmpConfig::get('use_auth') || $access25) {
     <?php
     }
 }
-if ($access25 && AmpConfig::get('share')) { ?>
+if ($access25 && $can_share) { ?>
             <li>
                 <?php echo Share::display_ui('album', $album->id); ?>
             </li>

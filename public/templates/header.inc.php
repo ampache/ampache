@@ -269,7 +269,7 @@ echo ($isCollapsed) ? ' content-left-wild' : ''; ?>">
                 <?php }
                     echo '</div>';
                 }
-if (AmpConfig::get("ajax_load")) {
+if ($site_ajax) {
     require Ui::find_template('show_web_player_embedded.inc.php');
 } ?>
                 <div id="guts">

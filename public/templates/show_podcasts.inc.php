@@ -39,10 +39,11 @@ use Ampache\Repository\PodcastRepositoryInterface;
 /** @var list<int> $object_ids */
 /** @var PodcastRepositoryInterface $podcastRepository */
 
-$webPath      = AmpConfig::get_web_path();
-$thcount      = 7;
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
-$is_table     = !$browse->is_grid_view();
+$webPath            = AmpConfig::get_web_path();
+$thcount            = 7;
+$show_ratings       = User::is_registered() && (AmpConfig::get('ratings'));
+$show_played_times  = AmpConfig::get('show_played_times');
+$is_table           = !$browse->is_grid_view();
 // translate once
 $count_text  = T_('Played');
 $rating_text = T_('Rating');
@@ -86,7 +87,7 @@ $css_class   = ($is_table) ? '' : ' gridview'; ?>
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title'); ?></th>
             <th class="cel_siteurl"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=website', T_('Website'), 'podcast_sort_website'); ?></th>
             <th class="cel_episodes optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=episodes', T_('Episodes'), 'podcast_sort_episodes'); ?></th>
-            <?php if (AmpConfig::get('show_played_times')) {
+            <?php if ($show_played) {
                 ++$thcount; ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', $count_text, 'podcast_sort_total_count' . $browse->id); ?></th>
                 <?php
@@ -129,7 +130,7 @@ foreach ($object_ids as $podcastId) {
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title_bottom'); ?></th>
             <th class="cel_siteurl"><?php echo T_('Website'); ?></th>
             <th class="cel_episodes"><?php echo T_('Episodes'); ?></th>
-            <?php if (AmpConfig::get('show_played_times')) { ?>
+            <?php if ($show_played) { ?>
                 <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
             <?php } ?>
             <?php if ($show_ratings) { ?>

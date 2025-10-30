@@ -744,7 +744,7 @@ class Stream_Playlist
      */
     public function create_web_player(): void
     {
-        if (AmpConfig::get("ajax_load")) {
+        if (AmpConfig::get('ajax_load')) {
             require Ui::find_template('create_web_player_embedded.inc.php');
         } else {
             require Ui::find_template('create_web_player.inc.php');
