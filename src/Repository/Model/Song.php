@@ -261,6 +261,7 @@ class Song extends database_object implements
         $albumartist_mbid = $results['mb_albumartistid'] ?? null;
         $disk             = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
         $disksubtitle     = $results['disksubtitle'] ?? null;
+        $isrc             = $results['isrc'] ?? [];
         $year             = Catalog::normalize_year($results['year'] ?? 0);
         $comment          = $results['comment'] ?? null;
         $tags             = $results['genre'] ?? []; // multiple genre support makes this an array
@@ -411,6 +412,9 @@ class Song extends database_object implements
                 }
             }
         }
+
+        // Add you ISRC's to the song_map
+        self::update_song_map($isrc, 'isrc', $song_id);
 
         // update the all the counts for the album right away
         Album::update_album_count($album_id);
@@ -1473,6 +1477,34 @@ class Song extends database_object implements
     }
 
     /**
+     * update_song_map
+     * update and remove mapping data for a song
+     * @param string[] $new_data
+     */
+    public static function update_song_map(array $new_data, string $type, int $song_id): void
+    {
+        if (empty($new_data)) {
+            $sql = "DELETE FROM `song_map` WHERE `song_id` = ? AND `type` = ?;";
+            Dba::write($sql, [$song_id, $type]) !== false;
+
+            return;
+        }
+
+        // we only want your latest values in the map so we delete anything not in the new list
+        $sql = "DELETE FROM `song_map` WHERE `song_id` = ? AND `type` = ? AND `object_id` NOT IN (";
+
+        foreach ($new_data as $object_id) {
+            // insert new values
+            Dba::write("REPLACE INTO `song_map` (`song_id`, `type`, `data`) VALUES (?, ?, ?);", [$song_id, $type, $object_id]);
+            // append to the sql for deletions
+            $sql .= Dba::escape($object_id) . ',';
+        }
+        $sql = rtrim($sql, ',') . ');';
+
+        Dba::write($sql, [$song_id, $type]) !== false;
+    }
+
+    /**
      * update_artist
      * updates the artist field
      */
@@ -1766,6 +1798,19 @@ class Song extends database_object implements
     }
 
     /**
+     * Get item album_artists array
+     * @return string[]
+     */
+    public function get_isrcs(): array
+    {
+        if ($this->isrc === null) {
+            $this->isrc = self::get_song_map($this->id);
+        }
+
+        return $this->isrc ?? [];
+    }
+
+    /**
      * Get item f_albumartist_link.
      */
     public function get_f_albumartist_link(): string
@@ -1849,6 +1894,27 @@ class Song extends database_object implements
         $db_results = Dba::read($sql, [$object_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['object_id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * Get song data from the song_map table (ISRC's only right now).
+     * @return string[]
+     */
+    public static function get_song_map(int $song_id, ?string $type = 'isrc'): array
+    {
+        $results = [];
+        if (!$song_id) {
+            return $results;
+        }
+
+        $sql = "SELECT DISTINCT `object_id` FROM `song_map` WHERE `object_type` = ? AND `object_id` = ?;";
+
+        $db_results = Dba::read($sql, [$type, $song_id]);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (string)$row['object_id'];
         }
 
         return $results;

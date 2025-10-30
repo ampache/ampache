@@ -2706,6 +2706,7 @@ abstract class Catalog extends database_object
             : (int)($results['year']);
         $new_song->disk         = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
         $new_song->disksubtitle = $results['disksubtitle'] ?: null;
+        $new_song->isrc         = (!empty($results['isrc'])) ? $results['isrc'] : [];
         $new_song->title        = self::check_length(self::check_title($results['title'], $new_song->file));
         $new_song->bitrate      = $results['bitrate'];
         $new_song->rate         = $results['rate'];
@@ -3063,6 +3064,7 @@ abstract class Catalog extends database_object
 
         /* Since we're doing a full compare make sure we fill the extended information */
         $song->fill_ext_info();
+        $song->get_isrcs();
 
         $metadataManager = self::getMetadataManager();
 
@@ -3165,6 +3167,10 @@ abstract class Catalog extends database_object
 
             if ($song->license !== $new_song->license) {
                 Song::update_license($new_song->license, $song->id);
+            }
+
+            if ($song->isrc !== $new_song->isrc) {
+                Song::update_song_map($new_song->isrc, 'isrc', $song->id);
             }
         } else {
             // always update the time when you update
