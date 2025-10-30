@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 7.7.3
+## Ampache 7.8.0
 
 Bitrate options in the database for transcoding are defined in units of 1000 (e.g. 128 == 128000)
 
