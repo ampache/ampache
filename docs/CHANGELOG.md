@@ -2,6 +2,12 @@
 
 ## Ampache 7.7.3
 
+Bitrate options in the database for transcoding are defined in units of 1000 (e.g. 128 == 128000)
+
+You should update your config file to make sure all `%BITRATE%` values have a k in them to denote 1000's (`%BITRATE%k`)
+
+These settings can not be updated automatically in the config file so make sure you check all `encode_args_` parameters (e.g. `encode_args_mp3`)
+
 ### Added
 
 * Translations 2025-10-10
@@ -10,6 +16,11 @@
 * Database 773001
   * Add `song_map` table for ISRC storage
   * Convert `custom_favicon`, `custom_login_background`, `custom_login_logo` into system preferences
+* CLI
+  * run:updateCatalogFile: Add rename (-r|--rename) parameter to rename single files
+  * run:cacheProcess: Clean up files that do not match cache config settings
+  * run:cacheProcess: Add option (-c|--cleanup) to skip cache process and just run a cleanup
+  * cleanup:sortSongs: Add option (-p|--path) to sort a single file or folder path
 * Search
   * Song, Artist, Album, AlbumDisk: `days_added` songs that were added before/after x days
   * Song: `days_update` songs that were updated before/after x days
@@ -17,7 +28,7 @@
   * Podcast, Podcast Episode: `days_update` songs that were updated before/after x days
   * Podcast, Podcast Episode: `updated` date that episode files where last updated
 * Start parsing ISRC song tags
-* Add nofollow parameters to links
+* Add `nofollow` parameters to links
 
 ### Changed
 
@@ -38,6 +49,10 @@
 * Don't error when sending invalid Subsonic auth
 * Missing Art object type
 * Search not always setting `and`/`or`
+* Missing `attachment` Content-Disposition for playlist and CSV downloads
+* Don't reapply the rating to albums for Rating Match plugin
+* MusicBrainz plugin not setting valid `yearformed` for Artist objects
+* Play actions were caching files that didn't need to be
 
 ## Ampache 7.7.2
 
