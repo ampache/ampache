@@ -109,6 +109,6 @@ final class CsvExporter implements CatalogExporterInterface
         header('Content-Transfer-Encoding: binary');
         header('Cache-control: public');
         header('Content-Type: application/vnd.ms-excel');
-        header(sprintf('Content-Disposition: filename="ampache-export-%s.csv"', $date));
+        header(sprintf('Content-Disposition: attachment; filename="ampache-export-%s.csv"', $date));
     }
 }
