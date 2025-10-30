@@ -13,7 +13,7 @@ These settings can not be updated automatically in the config file so make sure 
 * Translations 2025-10-10
 * Config version 84
   * Add `rating_file_tag_compatibility` to allow using an alternative 5 star rating scale
-* Database 773001
+* Database 780001
   * Add `song_map` table for ISRC storage
   * Convert `custom_favicon`, `custom_login_background`, `custom_login_logo` into system preferences
 * CLI
