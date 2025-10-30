@@ -1497,7 +1497,7 @@ class Song extends database_object implements
             // insert new values
             Dba::write("REPLACE INTO `song_map` (`song_id`, `object_type`, `object_id`) VALUES (?, ?, ?);", [$song_id, $type, $object_id]);
             // append to the sql for deletions
-            $sql .= Dba::escape($object_id) . ',';
+            $sql .= "'" . Dba::escape($object_id) . "',";
         }
         $sql = rtrim($sql, ',') . ');';
 
