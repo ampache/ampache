@@ -469,6 +469,7 @@ class Song extends database_object implements
         Dba::write("DELETE FROM `song` WHERE `song`.`catalog` NOT IN (SELECT `id` FROM `catalog`);");
         // delete the rest
         Dba::write("DELETE FROM `song_data` WHERE `song_data`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`);");
+        Dba::write("DELETE FROM `song_map` WHERE `song_map`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`);");
         // also clean up some bad data that might creep in
         Dba::write("UPDATE `song` SET `composer` = NULL WHERE `composer` = '';");
         Dba::write("UPDATE `song` SET `mbid` = NULL WHERE `mbid` = '';");
