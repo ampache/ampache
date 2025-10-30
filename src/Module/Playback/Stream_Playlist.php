@@ -514,7 +514,7 @@ class Stream_Playlist
         $filename = (!empty($name)) ? rawurlencode($name) : 'ampache_playlist';
         if (isset($ext)) {
             header('Cache-control: public');
-            header('Content-Disposition: filename=' . $filename . '.' . $ext);
+            header('Content-Disposition: attachment; filename=' . $filename . '.' . $ext);
             header('Content-Type: ' . $ctype . ';');
         }
 
