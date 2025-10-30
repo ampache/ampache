@@ -27,7 +27,7 @@ These settings can not be updated automatically in the config file so make sure 
   * Podcast, Podcast Episode: `days_added` songs that were added before/after x days
   * Podcast, Podcast Episode: `days_update` songs that were updated before/after x days
   * Podcast, Podcast Episode: `updated` date that episode files where last updated
-* Start parsing ISRC song tags
+* Start parsing ISRC song tags and display them on Song pages
 * Add `nofollow` parameters to links
 
 ### Changed
