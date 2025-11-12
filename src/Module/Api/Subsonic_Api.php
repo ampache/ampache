@@ -2039,14 +2039,14 @@ class Subsonic_Api
      */
     public static function getartists(array $input, User $user): void
     {
-        unset($user);
         $musicFolderId = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($input['musicFolderId']) : 0;
         $catalogs      = [];
         if (!empty($musicFolderId) && $musicFolderId != 0) {
             $catalogs[] = $musicFolderId;
         }
 
-        $artists = Artist::get_id_arrays($catalogs);
+        $user_id = $user->id ?? 0;
+        $artists = Artist::get_id_arrays($catalogs, ((bool)Preference::get_by_user($user_id, 'subsonic_force_album_artist') === true));
         $format  = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
