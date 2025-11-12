@@ -2600,6 +2600,10 @@ abstract class Catalog extends database_object
             $artists[] = $libitem->id;
             $tags      = self::getSongTags('artist', $libitem->id);
             Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
+            // update incorrect counts for album_disk
+            if ($libitem->album_count > 0 && $libitem->album_disk_count == 0) {
+                $maps = true;
+            }
         }
 
         if ($type !== 'song') {
