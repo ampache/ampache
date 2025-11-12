@@ -29,7 +29,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 /**
  * Add `total_skip` to podcast table
  */
-final class Migration780002 extends AbstractMigration
+final class Migration780003 extends AbstractMigration
 {
     protected array $changelog = ['Add preference to only select Album Artists when making Subsonic Artist calls'];
 
