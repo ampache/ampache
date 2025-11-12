@@ -37,6 +37,6 @@ final class Migration780002 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('subsonic_force_album_artist', 'Only select Album Artists when making Subsonic Artist calls', '1', 25, 'boolean', 'options', 'api');
+        $this->updatePreferences('subsonic_force_album_artist', 'Only select Album Artists when making Subsonic Artist calls', '0', 25, 'boolean', 'options', 'api');
     }
 }
