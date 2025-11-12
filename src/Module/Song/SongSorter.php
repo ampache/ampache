@@ -46,7 +46,7 @@ final class SongSorter implements SongSorterInterface
 
     private ModelFactoryInterface $modelFactory;
 
-    private ?Catalog_local $catalog= null;
+    private ?Catalog $catalog = null;
 
     private int $move_count = 0;
 
@@ -105,8 +105,8 @@ final class SongSorter implements SongSorterInterface
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $this->catalog = Catalog::create_from_id($row['id']);
-            if ($this->catalog === null) {
-                break;
+            if (!$this->catalog instanceof Catalog_local) {
+                continue;
             }
 
             if ($customPath !== null) {

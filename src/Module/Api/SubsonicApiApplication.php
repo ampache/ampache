@@ -371,7 +371,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $hex = substr($password, 4);
             // If the string has non-hex char
             if (!ctype_xdigit($hex)) {
-                return false;
+                return $password;
             }
             $decpwd = '';
             for ($count = 0; $count < strlen((string)$hex); $count += 2) {

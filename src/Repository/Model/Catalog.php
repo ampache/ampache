@@ -1053,7 +1053,7 @@ abstract class Catalog extends database_object
         $path   = (string)AmpConfig::get('cache_path', '');
         $target = (string)AmpConfig::get('cache_target', '');
         // need a destination and target filetype
-        if (is_dir($path) && Core::is_readable($path)) {
+        if (is_string($path) && is_dir($path) && Core::is_readable($path)) {
             $catalogs = self::get_all_catalogs('music');
             $scandir  = scandir($path) ?: [];
             foreach ($scandir as $file) {
@@ -1069,13 +1069,14 @@ abstract class Catalog extends database_object
                 }
             }
             if ($target) {
-                // don't cache everything when cleaning
-                if ($cleanup === false) {
-                    foreach ($catalogs as $catalogid) {
-                        $catalog = self::create_from_id($catalogid);
-                        if ($catalog === null) {
-                            break;
-                        }
+                foreach ($catalogs as $catalogid) {
+                    $catalog = self::create_from_id($catalogid);
+                    if ($catalog === null) {
+                        break;
+                    }
+
+                    // don't cache everything when cleaning
+                    if ($cleanup === false) {
                         debug_event(self::class, 'cache_catalogs: ' . $catalogid, 5);
                         $interactor?->info(
                             sprintf('cache_catalogs: %s', $catalogid),
@@ -1084,65 +1085,64 @@ abstract class Catalog extends database_object
 
                         $catalog->cache_catalog_proc();
                     }
-                }
 
-                $catalog_dirs = new RecursiveDirectoryIterator($path);
-                $dir_files    = new RecursiveIteratorIterator($catalog_dirs);
-                $cache_files  = new RegexIterator($dir_files, sprintf('/\.%s/i', $target));
-                debug_event(self::class, 'cache_catalogs: cleaning old files', 5);
-                $interactor?->info(
-                    'cache_catalogs: cleaning old files',
-                    true
-                );
+                    $catalog_dirs = new RecursiveDirectoryIterator($path);
+                    $dir_files    = new RecursiveIteratorIterator($catalog_dirs);
+                    $cache_files  = new RegexIterator($dir_files, sprintf('/\.%s/i', $target));
+                    debug_event(self::class, 'cache_catalogs: cleaning old files', 5);
+                    $interactor?->info(
+                        'cache_catalogs: cleaning old files',
+                        true
+                    );
 
-                $remote_catalog = ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic);
-                $remote_cache   = (bool)AmpConfig::get('cache_remote', false);
+                    $remote_catalog = ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic);
+                    $remote_cache   = (bool)AmpConfig::get('cache_remote', false);
 
-                foreach ($cache_files as $file) {
-                    $path      = pathinfo((string)$file);
-                    $song_id   = $path['filename'];
-                    $song      = new Song($song_id);
-                    $song_path = ($song->isNew() === false)
-                        ? pathinfo($song->file)
-                        : ['extension' => ''];
-                    if ($song->isNew()) {
-                        unlink($file);
-                        debug_event(self::class, 'cache_catalogs: removed (not in database) {' . $file . '}', 4);
-                        $interactor?->info(
-                            sprintf('cache_catalogs: removed (not in database) {%s}', $file),
-                            true
-                        );
-                    }
-                    if ($path['extension'] !== $target) {
-                        unlink($file);
-                        debug_event(self::class, 'cache_catalogs: removed (cache_target !== ' . $path['extension'] . ') {' . $file . '}', 4);
-                        $interactor?->info(
-                            sprintf('cache_catalogs: removed (cache_target !== %s) {%s}', $path['extension'], $file),
-                            true
-                        );
-                    }
-                    if ($remote_catalog && $remote_cache === false) {
-                        unlink($file);
-                        debug_event(self::class, 'cache_catalogs: removed (cache_remote) {' . $file . '}', 4);
-                        $interactor?->info(
-                            sprintf('cache_catalogs: removed (cache_remote) {%s}', $file),
-                            true
-                        );
-                    }
-                    if (
-                        $song_path['extension'] &&
-                        (bool)AmpConfig::get('cache_' . $song_path['extension'], false) == false
-                    ) {
-                        unlink($file);
-                        debug_event(self::class, 'cache_catalogs: removed (cache_' . $song_path['extension'] . ' ' . $song->file . ') {' . $file . '}', 4);
-                        $interactor?->info(
-                            sprintf('cache_catalogs: removed (cache_%s %s) {%s}', $song_path['extension'], $song->file, $file),
-                            true
-                        );
+                    foreach ($cache_files as $file) {
+                        $path      = pathinfo((string)$file);
+                        $song_id   = (int)$path['filename'];
+                        $song      = new Song($song_id);
+                        $song_path = ($song->isNew() === false)
+                            ? pathinfo($song->file)
+                            : ['extension' => ''];
+                        if ($song->isNew()) {
+                            unlink($file);
+                            debug_event(self::class, 'cache_catalogs: removed (not in database) {' . $file . '}', 4);
+                            $interactor?->info(
+                                sprintf('cache_catalogs: removed (not in database) {%s}', $file),
+                                true
+                            );
+                        }
+                        if ($path['extension'] !== $target) {
+                            unlink($file);
+                            debug_event(self::class, 'cache_catalogs: removed (cache_target !== ' . $path['extension'] . ') {' . $file . '}', 4);
+                            $interactor?->info(
+                                sprintf('cache_catalogs: removed (cache_target !== %s) {%s}', $path['extension'], $file),
+                                true
+                            );
+                        }
+                        if ($remote_catalog && $remote_cache === false) {
+                            unlink($file);
+                            debug_event(self::class, 'cache_catalogs: removed (cache_remote) {' . $file . '}', 4);
+                            $interactor?->info(
+                                sprintf('cache_catalogs: removed (cache_remote) {%s}', $file),
+                                true
+                            );
+                        }
+                        if (
+                            $song_path['extension'] &&
+                            (bool)AmpConfig::get('cache_' . $song_path['extension'], false) == false
+                        ) {
+                            unlink($file);
+                            debug_event(self::class, 'cache_catalogs: removed (cache_' . $song_path['extension'] . ' ' . $song->file . ') {' . $file . '}', 4);
+                            $interactor?->info(
+                                sprintf('cache_catalogs: removed (cache_%s %s) {%s}', $song_path['extension'], $song->file, $file),
+                                true
+                            );
+                        }
                     }
                 }
             }
-
         }
     }
 

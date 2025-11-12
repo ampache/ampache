@@ -57,7 +57,7 @@ if ($browse->is_show_header()) {
             <th class="cel_codec optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'), 'video_sort_codec'); ?></th>
             <th class="cel_resolution optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'), 'video_sort_resolution'); ?></th>
             <th class="cel_length optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=length', T_('Time'), 'video_sort_length'); ?></th>
-            <?php if ($show_played) { ?>
+            <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', T_('Played'), 'video_sort_total_count' . $browse->id); ?></th>
             <?php } ?>
             <?php if (!$hide_genres) { ?>
@@ -96,7 +96,7 @@ if ($browse->is_show_header()) {
             <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'), 'video_sort_codec'); ?></th>
             <th class="cel_resolution"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'), 'video_sort_resolution'); ?></th>
             <th class="cel_length"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=length', T_('Time'), 'video_sort_length'); ?></th>
-            <?php if ($show_played) { ?>
+            <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('Played'); ?></th>
             <?php } ?>
             <?php if (!$hide_genres) { ?>

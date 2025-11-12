@@ -60,7 +60,7 @@ final class ArtistSearch implements SearchInterface
         Search $search
     ): array {
         $search_user_id     = $search->search_user->getId();
-        $sql_logic_operator = strtoupper($search->logic_operator);
+        $sql_logic_operator = strtoupper($search->logic_operator ?? 'and');
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
         $album_artist       = ($this->subType == 'album_artist');

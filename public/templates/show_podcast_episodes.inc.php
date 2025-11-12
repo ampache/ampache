@@ -63,7 +63,7 @@ if ($browse->is_show_header()) {
                 <?php
             } ?>
             <th class="<?php echo $cel_time; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time', T_('Time'), 'podcast_episode_sort_time'); ?></th>
-            <?php if ($show_played) { ?>
+            <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', $count_text, 'podcast_episode_sort_total_count' . $browse->id); ?></th>
             <?php } ?>
             <th class="cel_pubdate optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=pubdate', T_('Publication Date'), 'podcast_episode_sort_pubdate'); ?></th>
@@ -106,7 +106,7 @@ foreach ($object_ids as $episode_id) {
             <th class="cel_podcast"><?php echo T_('Podcast'); ?></th>
             <?php } ?>
             <th class="<?php echo $cel_time; ?>"><?php echo T_('Time'); ?></th>
-            <?php if ($show_played) { ?>
+            <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
             <?php } ?>
             <th class="cel_pubdate"><?php echo T_('Publication Date'); ?></th>

@@ -47,7 +47,7 @@ final class TagSearch implements SearchInterface
     public function getSql(
         Search $search
     ): array {
-        $sql_logic_operator = strtoupper($search->logic_operator);
+        $sql_logic_operator = strtoupper($search->logic_operator ?? 'and');
 
         $where      = [];
         $table      = [];

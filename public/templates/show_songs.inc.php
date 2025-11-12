@@ -107,7 +107,7 @@ if ($browse->is_show_header()) {
             <th class="<?php echo $cel_license; ?> optional"><?php echo T_('License'); ?></th>
             <?php
             } ?>
-            <?php if ($show_played) {
+            <?php if ($show_played_times) {
                 ++$thcount; ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count' . $argument_param, T_('Played'), 'song_sort_total_count' . $browse->id); ?></th>
             <?php
@@ -196,7 +196,7 @@ foreach ($object_ids as $song_id) {
             <?php if ($show_license) { ?>
             <th class="<?php echo $cel_license; ?>"><?php echo T_('License'); ?></th>
             <?php } ?>
-            <?php if ($show_played) { ?>
+            <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('Played'); ?></th>
             <?php } ?>
             <?php if (AmpConfig::get('show_skipped_times')) { ?>

@@ -1908,7 +1908,7 @@ final class VaInfo implements VaInfoInterface
                 return 5;
             }
         } else {
-            return $value / 255 * 5;
+            return (int)($value / 255 * 5);
         }
 
         return 0;

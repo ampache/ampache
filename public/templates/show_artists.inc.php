@@ -76,7 +76,7 @@ if ($browse->is_show_header()) {
             <th class="cel_songs optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=song_count', T_('Songs'), 'artist_sort_song_count'); ?></th>
             <th class="cel_albums optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album_count', T_('Albums'), 'artist_sort_album_count'); ?></th>
             <th class="<?php echo $cel_time; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time', T_('Time'), 'artist_sort_time'); ?></th>
-            <?php if ($show_played) { ?>
+            <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', T_('Played'), 'artist_sort_total_count'); ?></th>
             <?php } ?>
             <?php if (!$hide_genres) {
@@ -138,7 +138,7 @@ if (!count($object_ids)) { ?>
             <th class="cel_songs optional"><?php echo T_('Songs'); ?></th>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
             <th class="<?php echo $cel_time; ?> essential"><?php echo T_('Time'); ?></th>
-            <?php if ($show_played) { ?>
+            <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('Played'); ?></th>
             <?php } ?>
             <?php if (!$hide_genres) { ?>

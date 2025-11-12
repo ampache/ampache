@@ -87,7 +87,7 @@ $css_class   = ($is_table) ? '' : ' gridview'; ?>
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title'); ?></th>
             <th class="cel_siteurl"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=website', T_('Website'), 'podcast_sort_website'); ?></th>
             <th class="cel_episodes optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=episodes', T_('Episodes'), 'podcast_sort_episodes'); ?></th>
-            <?php if ($show_played) {
+            <?php if ($show_played_times) {
                 ++$thcount; ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', $count_text, 'podcast_sort_total_count' . $browse->id); ?></th>
                 <?php
@@ -130,7 +130,7 @@ foreach ($object_ids as $podcastId) {
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title_bottom'); ?></th>
             <th class="cel_siteurl"><?php echo T_('Website'); ?></th>
             <th class="cel_episodes"><?php echo T_('Episodes'); ?></th>
-            <?php if ($show_played) { ?>
+            <?php if ($show_played_times) { ?>
                 <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
             <?php } ?>
             <?php if ($show_ratings) { ?>
