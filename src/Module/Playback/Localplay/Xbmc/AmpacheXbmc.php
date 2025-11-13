@@ -587,7 +587,7 @@ class AmpacheXbmc extends localplay_controller
      * volume
      * This tells XBMC to set the volume to the specified amount
      */
-    public function volume($volume): bool
+    public function volume(int $volume): bool
     {
         if (!$this->_xbmc) {
             return false;

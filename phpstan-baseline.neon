@@ -1636,11 +1636,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:volume\\(\\) has parameter \\$volume with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:\\$_mpd has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
@@ -1841,11 +1836,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:volume\\(\\) has parameter \\$volume with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
 			message: "#^Cannot access offset 'host' on array\\{scheme\\?\\: string, host\\?\\: string, port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\|false\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
@@ -1882,11 +1872,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:GetPlaylistItems\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:SetVolume\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
@@ -1952,11 +1937,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:status\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:volume\\(\\) has parameter \\$volume with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
 
@@ -3879,11 +3859,6 @@ parameters:
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:\\$site_id has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheMatomo.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:get_artist\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:\\$piwik_url has no type specified\\.$#"

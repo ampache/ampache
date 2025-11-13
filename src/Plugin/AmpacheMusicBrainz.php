@@ -539,7 +539,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                             'yearformed' => explode('-', ((string) $begin))[0] ?? $object->yearformed
                         ];
 
-                        if ($data['yearformed'] === '' || $data['yearformed'] === 0 || $data['yearformed'] === false) {
+                        if (empty($data['yearformed'])) {
                             $data['yearformed'] = null;
                         }
                     }
@@ -562,6 +562,10 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
     /**
      * get_artist
      * Get an artist from musicbrainz
+     * @return array{
+     *     name?: string,
+     *     mbid?: string
+     * }
      */
     public function get_artist(string $mbid): array
     {

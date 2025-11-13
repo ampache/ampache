@@ -28,7 +28,6 @@ namespace Ampache\Module\Song;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
@@ -105,7 +104,7 @@ final class SongSorter implements SongSorterInterface
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $this->catalog = Catalog::create_from_id($row['id']);
-            if (!$this->catalog instanceof Catalog_local) {
+            if ($this->catalog === null) {
                 continue;
             }
 
@@ -130,7 +129,7 @@ final class SongSorter implements SongSorterInterface
                     sprintf(T_('Catalog Block: %s'), $chunk . '/' . $chunks),
                     true
                 );
-                $songs = $this->catalog->get_songs($chunk, 1000);
+                $songs = $this->catalog?->get_songs($chunk, 1000) ?? [];
                 // Foreach through each file and find it a home!
                 foreach ($songs as $song) {
                     $this->processMedia($song, $interactor);
@@ -149,6 +148,10 @@ final class SongSorter implements SongSorterInterface
         Song $media,
         Interactor $interactor
     ): void {
+        if ($this->catalog === null) {
+            return;
+        }
+
         if ($this->limit > 0 && $this->move_count == $this->limit) {
             /* HINT: filename (File path) */
             $interactor->info(
@@ -240,6 +243,10 @@ final class SongSorter implements SongSorterInterface
         string $path,
         Interactor $interactor
     ): void {
+        if ($this->catalog === null) {
+            return;
+        }
+
         switch ($this->catalog->gather_types) {
             case 'podcast':
                 $file_ids = (is_dir($path))
@@ -267,7 +274,7 @@ final class SongSorter implements SongSorterInterface
         );
 
         foreach ($file_ids as $file_id) {
-            switch ($this->catalog->gather_types) {
+            switch ($this->catalog?->gather_types) {
                 case 'music':
                     $media = $this->modelFactory->createSong($file_id);
                     break;
@@ -310,7 +317,7 @@ final class SongSorter implements SongSorterInterface
         unset($data[0]);
 
         foreach ($data as $dir) {
-            $dir = Catalog::sort_clean_name($dir, '', $windowsCompat);
+            $dir = Catalog::sort_clean_name($dir, '', $windowsCompat ?? false);
             $path .= '/' . $dir;
 
             // We need to check for the existence of this directory
@@ -384,7 +391,7 @@ final class SongSorter implements SongSorterInterface
             // Look for the folder art and copy that as well
             if ($old_dir != $directory) {
                 // don't move things into the same dir
-                $preferred  = Catalog::sort_clean_name($this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME) ?? 'folder.jpg', '', $windowsCompat);
+                $preferred  = Catalog::sort_clean_name($this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME) ?? 'folder.jpg', '', $windowsCompat ?? false);
                 $folder_art = $directory . DIRECTORY_SEPARATOR . $preferred;
                 $old_art    = $old_dir . DIRECTORY_SEPARATOR . $preferred;
                 // copy art that exists

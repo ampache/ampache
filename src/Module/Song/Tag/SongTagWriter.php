@@ -329,10 +329,11 @@ final class SongTagWriter implements SongTagWriterInterface
                     unset($id3v2Data['text']);
                     foreach ($id3v2Data as $key => $value) {
                         if (is_array($value) && isset($value[0])) {
-                            if (!isset($ndata[$key]) || !is_array($ndata[$key])) {
+                            if (isset($ndata[$key])) {
+                                $ndata[$key][] = $value[0];
+                            } else {
                                 $ndata[$key] = [];
                             }
-                            $ndata[$key][] = $value[0];
                         }
                     }
                 }
