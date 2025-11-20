@@ -173,7 +173,7 @@ final class LegacyLogger implements LoggerInterface
 
         /* Set it up here to make sure it's _always_ the same */
         $time       = time();
-        $log_time   = date("c", $time);
+        $log_time   = date(DATE_ISO8601, $time);
         $event_name = $context[self::CONTEXT_TYPE] ?? '';
 
         $log_filename = $this->configContainer->get('log_filename');
