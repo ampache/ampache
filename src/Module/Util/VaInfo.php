@@ -125,7 +125,7 @@ final class VaInfo implements VaInfoInterface
 
     public array $tags = [];
 
-    /* @var string[] */
+    /** @var string[] */
     public array $gatherTypes = [];
 
     public bool $islocal;

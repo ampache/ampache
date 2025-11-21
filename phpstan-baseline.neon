@@ -3731,11 +3731,6 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$gatherTypes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
