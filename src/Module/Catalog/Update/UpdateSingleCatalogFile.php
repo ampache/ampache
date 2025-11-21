@@ -56,7 +56,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         ob_end_clean();
         ob_start();
 
-        if (! Dba::num_rows($db_results)) {
+        if (!Dba::num_rows($db_results)) {
             $interactor->error(
                 sprintf(T_('Catalog `%s` not found'), $catname),
                 true
@@ -97,18 +97,18 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     break;
             }
 
+            // file not an existing catalog file
+            if ($media->isNew()) {
+                $interactor->error(
+                    T_('Error') . ': ' . $catname . ' ' . T_('File not found') . ' ' . $filePath,
+                    true
+                );
+
+                return;
+            }
+
             // handle file renaming
             if ($newFilePath != null) {
-                // file not an existing catalog file
-                if ($media->isNew()) {
-                    $interactor->error(
-                        T_('Error') . ': ' . $catname . ' ' . T_('File not found') . ' ' . $filePath,
-                        true
-                    );
-
-                    return;
-                }
-
                 // rename path doesn't exist
                 if (!is_file($newFilePath)) {
                     $interactor->error(
