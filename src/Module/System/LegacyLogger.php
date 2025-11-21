@@ -161,34 +161,25 @@ final class LegacyLogger implements LoggerInterface
             return;
         }
 
-        $username = $context['username'] ?? null;
-
-        if ($username === null || $username === '') {
-            $user = Core::get_global('user');
-            if ($user) {
-                $username = $user->username;
-            } else {
-                $username = self::FALLBACK_USERNAME;
-            }
-        }
-
         $time_format = $this->configContainer->get('log_time_format');
-        match ($time_format) {
-            'DATE_ATOM' => $time_format             = DATE_ATOM,
-            'DATE_COOKIE' => $time_format           = DATE_COOKIE,
-            'DATE_ISO8601' => $time_format          = DATE_ISO8601,
-            'DATE_ISO8601_EXPANDED' => $time_format = DATE_ISO8601_EXPANDED,
-            'DATE_RFC822' => $time_format           = DATE_RFC822,
-            'DATE_RFC850' => $time_format           = DATE_RFC850,
-            'DATE_RFC1036' => $time_format          = DATE_RFC1036,
-            'DATE_RFC1123' => $time_format          = DATE_RFC1123,
-            'DATE_RFC7231' => $time_format          = DATE_RFC7231,
-            'DATE_RFC2822' => $time_format          = DATE_RFC2822,
-            'DATE_RFC3339' => $time_format          = DATE_RFC3339,
-            'DATE_RFC3339_EXTENDED' => $time_format = DATE_RFC3339_EXTENDED,
-            'DATE_RSS' => $time_format              = DATE_RSS,
-            'DATE_W3C' => $time_format              = DATE_W3C,
-            default => $time_format                 = (empty($time_format) || !is_string($time_format)) ? self::FALLBACK_DATETIME : $time_format,
+        $log_time    = match ($time_format) {
+            'DATE_ATOM' => date(DATE_ATOM, time()),
+            'DATE_COOKIE' => date(DATE_COOKIE, time()),
+            'DATE_ISO8601' => date("Y-m-d\TH:i:sO", time()),
+            'DATE_ISO8601_EXPANDED' => date(DATE_ISO8601_EXPANDED, time()),
+            'DATE_RFC822' => date(DATE_RFC822, time()),
+            'DATE_RFC850' => date(DATE_RFC850, time()),
+            'DATE_RFC1036' => date(DATE_RFC1036, time()),
+            'DATE_RFC1123' => date(DATE_RFC1123, time()),
+            'DATE_RFC7231' => date(DATE_RFC7231, time()),
+            'DATE_RFC2822' => date(DATE_RFC2822, time()),
+            'DATE_RFC3339' => date(DATE_RFC3339, time()),
+            'DATE_RFC3339_EXTENDED' => date(DATE_RFC3339_EXTENDED, time()),
+            'DATE_RSS' => date(DATE_RSS, time()),
+            'DATE_W3C' => date(DATE_W3C, time()),
+            default => (empty($time_format) || !is_string($time_format))
+                ? date(self::FALLBACK_DATETIME, time())
+                : date($time_format, time()),
         };
 
         $log_filename = $this->configContainer->get('log_filename');
@@ -196,21 +187,26 @@ final class LegacyLogger implements LoggerInterface
             $log_filename = "%name.%Y%m%d.log";
         }
 
-        $log_filename = str_replace("%name", self::LOG_NAME, $log_filename);
-        $log_filename = str_replace("%Y", date('Y'), $log_filename);
-        $log_filename = str_replace("%m", date('m'), $log_filename);
-        $log_filename = str_replace("%d", date('d'), $log_filename);
+        if (str_contains($log_filename, '%')) {
+            $log_filename = str_replace("%name", self::LOG_NAME, $log_filename);
+            $log_filename = str_replace("%Y", date('Y'), $log_filename);
+            $log_filename = str_replace("%m", date('m'), $log_filename);
+            $log_filename = str_replace("%d", date('d'), $log_filename);
+        }
         $log_filename = rtrim($this->configContainer->get('log_path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $log_filename;
 
-        $time       = time();
-        $log_time   = date($time_format, $time);
         $event_name = $context[self::CONTEXT_TYPE] ?? '';
-        $log_line   = "$log_time [$username] ($event_name) -> $message\n";
+        $username   = $context['username'] ?? null;
+        if (empty($username)) {
+            $user     = Core::get_global('user');
+            $username = $user?->username ?? self::FALLBACK_USERNAME;
+        }
 
-        // Do the deed
-        $log_write = error_log($log_line, 3, $log_filename);
-
-        if (!$log_write && !defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+        if (
+            !error_log("$log_time [$username] ($event_name) -> $message\n", 3, $log_filename) &&
+            !defined('SSE_OUTPUT') &&
+            !defined('CLI') && !defined('API')
+        ) {
             echo "Warning: Unable to write to log ($log_filename) Please check your log_path variable in ampache.cfg.php";
         }
     }
