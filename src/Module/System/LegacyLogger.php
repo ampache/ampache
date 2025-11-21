@@ -174,21 +174,21 @@ final class LegacyLogger implements LoggerInterface
 
         $time_format = $this->configContainer->get('log_time_format');
         match ($time_format) {
-            'DATE_ATOM' => $time_format = DATE_ATOM,
-            'DATE_COOKIE' => $time_format = DATE_COOKIE,
-            'DATE_ISO8601' => $time_format = DATE_ISO8601,
+            'DATE_ATOM' => $time_format             = DATE_ATOM,
+            'DATE_COOKIE' => $time_format           = DATE_COOKIE,
+            'DATE_ISO8601' => $time_format          = DATE_ISO8601,
             'DATE_ISO8601_EXPANDED' => $time_format = DATE_ISO8601_EXPANDED,
-            'DATE_RFC822' => $time_format = DATE_RFC822,
-            'DATE_RFC850' => $time_format = DATE_RFC850,
-            'DATE_RFC1036' => $time_format = DATE_RFC1036,
-            'DATE_RFC1123' => $time_format = DATE_RFC1123,
-            'DATE_RFC7231' => $time_format = DATE_RFC7231,
-            'DATE_RFC2822' => $time_format = DATE_RFC2822,
-            'DATE_RFC3339' => $time_format = DATE_RFC3339,
+            'DATE_RFC822' => $time_format           = DATE_RFC822,
+            'DATE_RFC850' => $time_format           = DATE_RFC850,
+            'DATE_RFC1036' => $time_format          = DATE_RFC1036,
+            'DATE_RFC1123' => $time_format          = DATE_RFC1123,
+            'DATE_RFC7231' => $time_format          = DATE_RFC7231,
+            'DATE_RFC2822' => $time_format          = DATE_RFC2822,
+            'DATE_RFC3339' => $time_format          = DATE_RFC3339,
             'DATE_RFC3339_EXTENDED' => $time_format = DATE_RFC3339_EXTENDED,
-            'DATE_RSS' => $time_format = DATE_RSS,
-            'DATE_W3C' => $time_format = DATE_W3C,
-            default => $time_format = (empty($time_format) || !is_string($time_format)) ? self::FALLBACK_DATETIME : $time_format,
+            'DATE_RSS' => $time_format              = DATE_RSS,
+            'DATE_W3C' => $time_format              = DATE_W3C,
+            default => $time_format                 = (empty($time_format) || !is_string($time_format)) ? self::FALLBACK_DATETIME : $time_format,
         };
 
         $log_filename = $this->configContainer->get('log_filename');
