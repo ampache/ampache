@@ -2121,11 +2121,6 @@ parameters:
 			path: src/Module/System/InstallationHelperInterface.php
 
 		-
-			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and array\\<int, string\\>\\|string results in an error\\.$#"
-			count: 1
-			path: src/Module/System/LegacyLogger.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\LegacyLogger\\:\\:alert\\(\\) has parameter \\$message with no type specified\\.$#"
 			count: 1
 			path: src/Module/System/LegacyLogger.php
