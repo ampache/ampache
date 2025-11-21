@@ -44,6 +44,7 @@ final class LegacyLogger implements LoggerInterface
 
     public const CONTEXT_TYPE = 'event_type';
 
+    private const FALLBACK_DATETIME = 'c';
     private const FALLBACK_USERNAME = 'ampache';
     private const LOG_NAME          = 'ampache';
 
@@ -171,13 +172,13 @@ final class LegacyLogger implements LoggerInterface
             }
         }
 
-        /* Set it up here to make sure it's _always_ the same */
-        $time       = time();
-        $log_time   = date("c", $time);
-        $event_name = $context[self::CONTEXT_TYPE] ?? '';
+        $time_format = $this->configContainer->get('log_time_format');
+        if (empty($time_format) || !is_string($time_format)) {
+            $time_format = self::FALLBACK_DATETIME;
+        }
 
         $log_filename = $this->configContainer->get('log_filename');
-        if (empty($log_filename)) {
+        if (empty($log_filename) || !is_string($log_filename)) {
             $log_filename = "%name.%Y%m%d.log";
         }
 
@@ -186,7 +187,11 @@ final class LegacyLogger implements LoggerInterface
         $log_filename = str_replace("%m", date('m'), $log_filename);
         $log_filename = str_replace("%d", date('d'), $log_filename);
         $log_filename = rtrim($this->configContainer->get('log_path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $log_filename;
-        $log_line     = "$log_time [$username] ($event_name) -> $message\n";
+
+        $time       = time();
+        $log_time   = date($time_format, $time);
+        $event_name = $context[self::CONTEXT_TYPE] ?? '';
+        $log_line   = "$log_time [$username] ($event_name) -> $message\n";
 
         // Do the deed
         $log_write = error_log($log_line, 3, $log_filename);
