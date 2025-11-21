@@ -58,8 +58,8 @@ final class UpdateCatalogFileCommand extends Command
             ->argument('<filePath>', T_('File Path'))
             /* HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album) */
             ->usage(
-                '<bold>  run:updateCatalogFile -e some-catalog /tmp/some-file.mp3</end> <comment> ## ' . sprintf(T_('Update %s in the catalog `some-catalog`'), '/tmp/some-file.mp3') . '</end><eol/>' .
-                '<bold>  run:updateCatalogFile -r /tmp/some-file.flac /tmp/new-file.flac some-catalog</end> <comment> ## ' . sprintf(T_('Rename %s to %s in the catalog `some-catalog`'), '/tmp/some-file.flac', '/tmp/new-file.flac') . '</end><eol/>'
+                '<bold>  run:updateCatalogFile some-catalog /tmp/some-file.mp3 -e</end> <comment> ## ' . sprintf(T_('Update %s in the catalog `some-catalog`'), '/tmp/some-file.mp3') . '</end><eol/>' .
+                '<bold>  run:updateCatalogFile some-catalog /tmp/some-file.flac -r /tmp/new-file.flac</end> <comment> ## ' . sprintf(T_('Rename %s to %s in the catalog `some-catalog`'), '/tmp/some-file.flac', '/tmp/new-file.flac') . '</end><eol/>'
             );
     }
 
