@@ -10,12 +10,14 @@ These settings can not be updated automatically in the config file so make sure 
 
 ### Added
 
-* Translations 2025-10-10
-* Config version 84
+* Translations 2025-10-31
+* Config version 85
   * Add `rating_file_tag_compatibility` to allow using an alternative 5 star rating scale
-* Database 780001
+  * Add `log_time_format` to set your own log date format [PHP Date](https://www.php.net/manual/en/function.date.php)
+* Database 780003
   * Add `song_map` table for ISRC storage
   * Convert `custom_favicon`, `custom_login_background`, `custom_login_logo` into system preferences
+  * Add preference `subsonic_force_album_artist` to only select Album Artists when making Subsonic Artist calls
 * CLI
   * run:updateCatalogFile: Add rename (-r|--rename) parameter to rename single files
   * run:cacheProcess: Clean up files that do not match cache config settings
@@ -39,6 +41,8 @@ These settings can not be updated automatically in the config file so make sure 
 
 ### Fixed
 
+* CLI
+  * Some help commands didn't show arguments in the right order
 * Skip some unused tags that filter into additional metadata
 * SQL join for AlbumDisk `get_top_sql` calls
 * SQL for `get_recent_sql` joins with user
@@ -53,6 +57,8 @@ These settings can not be updated automatically in the config file so make sure 
 * Don't reapply the rating to albums for Rating Match plugin
 * MusicBrainz plugin not setting valid `yearformed` for Artist objects
 * Play actions were caching files that didn't need to be
+* AlbumDisk counts not updating correctly
+* Ampache Wrapped showing favorites for all users instead of just you
 
 ## Ampache 7.7.2
 
