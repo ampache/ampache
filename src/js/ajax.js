@@ -94,7 +94,9 @@ $(document).ajaxSuccess(function() {
     title = title.replace(/\?.*/gi, '');
     title = title.replace(/\b(?:action|type|tab|.php|\[\]|[a-z]* id|[0-9]*)\b/gi, '');
     title = title.trim();
-    if (title === 'index') {
+    if (jsAmpConfigSongPageTitle) {
+        // don't do anything
+    } else if (title === 'index') {
         document.title = jsSiteTitle + ' | ' + jsHomeTitle;
     } else if (title === 'browse') {
         document.title = jsSiteTitle + ' | ' + jsBrowseMusicTitle;

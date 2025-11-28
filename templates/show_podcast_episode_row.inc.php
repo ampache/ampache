@@ -110,7 +110,7 @@ if ($show_ratings) { ?>
     <?php } ?>
 <td class="cel_action">
     <?php if (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD) && !empty($libitem->file)) { ?>
-            <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&podcast_episode_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
+            <a class="nohtml" rel="nofollow" href="<?php echo $web_path; ?>/stream.php?action=download&podcast_episode_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
         <?php } ?>
 <?php
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>

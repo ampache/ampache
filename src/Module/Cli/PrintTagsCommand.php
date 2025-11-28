@@ -54,7 +54,7 @@ final class PrintTagsCommand extends Command
 
         $this
             ->argument('<filename>', T_('File Path'))
-            ->usage('<bold>  print:tags</end> <comment><filename></end> ## ' . T_('Print tags') . '<eol/>');
+            ->usage('<bold>  print:tags /tmp/some-file.flac</end> <comment><filename></end> ## ' . T_('Print tags') . '<eol/>');
     }
 
     public function execute(

@@ -168,7 +168,6 @@ class Wanted extends database_object
             return [];
         }
 
-
         $wantedRepository = self::getWantedRepository();
 
         $results = [];

@@ -263,7 +263,7 @@ if ($isAlbumEditable) {
 if ($zip_album) {
     $download = "&nbsp;" . T_('Download'); ?>
         <li>
-            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $album->id; ?>">
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $album->id; ?>" rel="nofollow">
                 <?php echo Ui::get_material_symbol('folder_zip', $download);
     echo $download; ?>
             </a>

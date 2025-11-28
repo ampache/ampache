@@ -42,6 +42,9 @@ if (isset($playlist)) {
     $logic_operator = $playlist->logic_operator;
 } else {
     $logic_operator = Core::get_request('operator');
+    if (empty($logic_operator)) {
+        $logic_operator = 'and';
+    }
 }
 $logic_operator = strtolower((string)$logic_operator);?>
 <script src="<?php echo $web_path; ?>/lib/javascript/search.js"></script>
@@ -54,7 +57,7 @@ $logic_operator = strtolower((string)$logic_operator);?>
         <td><?php echo T_('Match'); ?></td>
         <td>
             <select name="operator">
-                <option value="and" <?php if ($logic_operator == 'and') {
+                <option value="and" <?php if (empty($logic_operator) || $logic_operator == 'and') {
                     echo 'selected="selected"';
                 } ?>><?php echo T_('all rules'); ?></option>
                 <option value="or" <?php if ($logic_operator == 'or') {

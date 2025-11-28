@@ -2099,7 +2099,6 @@ class Subsonic_Json_Data
         return $response;
     }
 
-
     /**
      * addArtistWithAlbumsID3
      *
@@ -2107,7 +2106,6 @@ class Subsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/artistwithalbumsid3/
      * @see self::addArtistID3()
      */
-
 
     /**
      * addBookmarks
@@ -2151,7 +2149,6 @@ class Subsonic_Json_Data
 
         $response['subsonic-response']['chatMessages'] = (empty($json['chatMessage'])) ? (object)[] : $json;
 
-
         return $response;
     }
 
@@ -2189,7 +2186,6 @@ class Subsonic_Json_Data
      *
      * A disc title for an albumSubsonic
      */
-
 
     /**
      * addError
@@ -2324,7 +2320,6 @@ class Subsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/indexid3/
      */
 
-
     /**
      * _getInternetRadioStation
      *
@@ -2345,7 +2340,6 @@ class Subsonic_Json_Data
             'homepageUrl' => (string)$radio->site_url,
         ];
     }
-
 
     /**
      * addInternetRadioStations
@@ -2374,7 +2368,6 @@ class Subsonic_Json_Data
      * A date for a media item that may be just a year, or year-month, or full date.Subsonic
      */
 
-
     /**
      * addItemGenre
      *
@@ -2384,8 +2377,6 @@ class Subsonic_Json_Data
      * @see self::addAlbumID3()
      *
      */
-
-
 
     /**
      * addJukeboxPlaylistSubsonic
@@ -2428,7 +2419,6 @@ class Subsonic_Json_Data
         return $response;
     }
 
-
     /**
      * addLicense
      *
@@ -2446,14 +2436,12 @@ class Subsonic_Json_Data
         return $response;
     }
 
-
     /**
      * addLine
      *
      * One line of a song lyricSubsonic
      * @see self::addLyricsList())
      */
-
 
     /**
      * addLyrics
@@ -2492,7 +2480,6 @@ class Subsonic_Json_Data
         return $response;
     }
 
-
     /**
      * addLyricsList
      *
@@ -2510,7 +2497,6 @@ class Subsonic_Json_Data
 
         $response['subsonic-response']['lyricsList'] = (empty($json)) ? (object)[] : ['structuredLyrics' => $json];
 
-
         return $response;
     }
 
@@ -2520,7 +2506,6 @@ class Subsonic_Json_Data
      * MusicFolder.Subsonic
      * @see self::addMusicFolders()
      */
-
 
     /**
      * addMusicFolders
@@ -2756,7 +2741,6 @@ class Subsonic_Json_Data
             $response['subsonic-response']['playQueue'] = $json;
         }
 
-
         return $response;
     }
 
@@ -2816,10 +2800,8 @@ class Subsonic_Json_Data
             $response['subsonic-response']['playQueueByIndex'] = $json;
         }
 
-
         return $response;
     }
-
 
     /**
      * addPodcastChannel
@@ -2827,7 +2809,6 @@ class Subsonic_Json_Data
      * A Podcast channelSubsonic
      * @see self::addPodcasts()
      */
-
 
     /**
      * addPodcastEpside
@@ -2840,7 +2821,6 @@ class Subsonic_Json_Data
     public static function addPodcastEpisode(array $response, Podcast_Episode $episode): array
     {
         $response['subsonic-response']['podcastEpisode'] = self::_getPodcastEpisode($episode);
-
 
         return $response;
     }
@@ -2879,7 +2859,6 @@ class Subsonic_Json_Data
      * skipped
      */
 
-
     /**
      * addRandomSongsSubsonic
      * @param array{'subsonic-response': array<string, mixed>} $response
@@ -2906,14 +2885,12 @@ class Subsonic_Json_Data
      * @see self::addAlbumID3()
      */
 
-
     /**
      * addReplayGain
      *
      * The replay gain data of a song.Subsonic
      * @see self::_getChildSong()
      */
-
 
     /**
      * addScanStatus
@@ -3253,7 +3230,6 @@ class Subsonic_Json_Data
         return $response;
     }
 
-
     /**
      * addSimilarSongs
      *
@@ -3338,7 +3314,6 @@ class Subsonic_Json_Data
      * Songs list.Subsonic
      * @see self::_getChildSong()
      */
-
 
     /**
      * addSongsByGenreSubsonic
@@ -3511,7 +3486,6 @@ class Subsonic_Json_Data
         return $response;
     }
 
-
     /**
      * addUsers
      *
@@ -3550,7 +3524,6 @@ class Subsonic_Json_Data
 
         return $response;
     }
-
 
     /**
      * addVideos

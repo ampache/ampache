@@ -498,7 +498,7 @@ class Catalog_Seafile extends Catalog
      * @return array<string, mixed>
      * @throws Exception
      */
-    public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern, string $file_override = null): array
+    public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern, ?string $file_override = null): array
     {
         // if you have the file it's all good
         $media_file = $file_override ?? $media->file;

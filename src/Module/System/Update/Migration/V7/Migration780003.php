@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -18,23 +20,23 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Catalog\Update;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-use Ahc\Cli\IO\Interactor;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-interface UpdateSingleCatalogFileInterface
+/**
+ * Add `total_skip` to podcast table
+ */
+final class Migration780003 extends AbstractMigration
 {
-    public function update(
-        Interactor $interactor,
-        string $catname,
-        string $filePath,
-        bool $verificationMode,
-        bool $addMode,
-        bool $cleanupMode,
-        bool $searchArtMode,
-        ?string $newFilePath
-    ): void;
+    protected array $changelog = ['Add preference to only select Album Artists when making Subsonic Artist calls'];
+
+    protected bool $warning = true;
+
+    public function migrate(): void
+    {
+        $this->updatePreferences('subsonic_force_album_artist', 'Only select Album Artists when making Subsonic Artist calls', '0', 25, 'boolean', 'options', 'api');
+    }
 }

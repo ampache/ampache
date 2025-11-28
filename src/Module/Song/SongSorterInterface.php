@@ -34,6 +34,7 @@ interface SongSorterInterface
         int $limit = 0,
         bool $windowsCompat = false,
         ?string $various_artist_override = null,
+        ?string $customPath = null,
         ?string $catalogName = null
     ): void;
 }

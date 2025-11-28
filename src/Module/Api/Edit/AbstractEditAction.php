@@ -38,6 +38,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -105,7 +106,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         );
         /** @var library_item $libitem */
         $libitem = new $className($object_id);
-        if (method_exists($libitem, 'fill_ext_info')) {
+        if ($libitem instanceof Song) {
             $libitem->fill_ext_info();
         }
 

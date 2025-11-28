@@ -1040,6 +1040,26 @@ class Catalog_local extends Catalog
     }
 
     /**
+     * set_file
+     *
+     * Update file path
+     * Return true on rename. false on failures
+     */
+    public function set_file(int $object_id, string $new_file, ?string $media_type = null): bool
+    {
+        switch ($media_type) {
+            case 'song':
+            case 'video':
+            case 'podcast_episode':
+                $sql = "UPDATE `$media_type` SET `file` = ? WHERE `id` = ?;";
+
+                return Dba::write($sql, [$new_file, $object_id]) !== false;
+            default:
+                return false;
+        }
+    }
+
+    /**
      * clean_file
      *
      * Clean up a single file checking that it's missing or just unreadable.
@@ -1205,7 +1225,7 @@ class Catalog_local extends Catalog
                 foreach ($results['rating'] as $user => $rating) {
                     debug_event('local.catalog', "Setting rating for Song $song_id to $rating for user $user", 5);
                     $o_rating = new Rating($song_id, 'song');
-                    $o_rating->set_rating((int)$rating, $user);
+                    $o_rating->set_rating((int)$rating, $user, false);
                 }
             }
             // Extended metadata loading is not deferred, retrieve it now

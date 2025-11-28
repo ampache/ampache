@@ -253,7 +253,7 @@ if (AmpConfig::get('sociable') && !empty($owner_id)) {
             if ($zip_albumD) {
                 $download = "&nbsp;" . T_('Download'); ?>
         <li>
-            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album_disk&id=<?php echo $albumDisk->id; ?>">
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album_disk&id=<?php echo $albumDisk->id; ?>" rel="nofollow">
                 <?php echo Ui::get_material_symbol('folder_zip', $download); ?>
                 <?php echo $download; ?>
             </a>

@@ -54,6 +54,7 @@ final class SortFilesCommand extends Command
             ->option('-l|--limit', T_('Limit how many moves to allow before stopping'), 'intval', 0)
             ->option('-w|--windows', T_('Replace all Windows-incompatible characters with an underscore'), 'boolval', false)
             ->option('-n|--name', T_('Sets the default name for `Various Artists`'), 'strval')
+            ->option('-p|--path', T_('Sort a single file or folder path'), 'strval', null)
             ->argument('[catalogName]', T_('Name of Catalog (optional)'))
             ->usage('<bold>  cleanup:sortSongs</end> <comment> ## ' . T_('Sort song files') . '<eol/>');
     }
@@ -88,6 +89,7 @@ final class SortFilesCommand extends Command
             $values['limit'],
             $values['windows'],
             $values['name'],
+            $values['path'],
             $catalogName
         );
     }
