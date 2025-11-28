@@ -34,7 +34,7 @@ These settings can not be updated automatically in the config file so make sure 
 
 ### Changed
 
-* Add the full url path for relative data in `custom_blankalbum`, `custom_favicon`, `custom_login_background`, `custom_login_logo` and `custom_logo`
+* Add the full URL path for relative data in `custom_blankalbum`, `custom_favicon`, `custom_login_background`, `custom_login_logo` and `custom_logo`
 * Update docker files for Debian stable changes
 * Don't change the page title when `song_page_title` is enabled
 * Update translation guidelines for new CLI Transifex version
@@ -59,6 +59,7 @@ These settings can not be updated automatically in the config file so make sure 
 * Play actions were caching files that didn't need to be
 * AlbumDisk counts not updating correctly
 * Ampache Wrapped showing favorites for all users instead of just you
+* Artist counts for Album, AlbumDisk and Song would not update 0 values
 
 ## Ampache 7.7.2
 
