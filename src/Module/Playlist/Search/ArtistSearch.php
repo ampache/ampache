@@ -60,7 +60,7 @@ final class ArtistSearch implements SearchInterface
         Search $search
     ): array {
         $search_user_id     = $search->search_user->getId();
-        $sql_logic_operator = $search->logic_operator;
+        $sql_logic_operator = strtoupper($search->logic_operator ?? 'and');
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
         $album_artist       = ($this->subType == 'album_artist');
@@ -316,6 +316,9 @@ final class ArtistSearch implements SearchInterface
                     $where[]      = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - (? * 86400))";
                     $parameters[] = $input;
                     $join['song'] = true;
+                    break;
+                case 'days_added':
+                    $where[] = "`artist`.`addition_time` $operator_sql (UNIX_TIMESTAMP() - (" . (int)$input . " * 86400))";
                     break;
                 case 'played_times':
                     $where[]      = "`artist`.`total_count` $operator_sql ?";

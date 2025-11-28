@@ -119,7 +119,7 @@ abstract class localplay_controller
 
     abstract public function set_active_instance(int $uid): bool;
 
-    abstract public function get_active_instance();
+    abstract public function get_active_instance(): ?int;
 
     /**
      * get_url

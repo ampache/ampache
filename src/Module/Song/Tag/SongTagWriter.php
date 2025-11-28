@@ -34,6 +34,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Module\Util\VaInfo;
 use Psr\Log\LoggerInterface;
 
 final class SongTagWriter implements SongTagWriterInterface
@@ -160,6 +161,9 @@ final class SongTagWriter implements SongTagWriterInterface
             if (!empty($id3v2Data)) {
                 unset($id3v2Data['text']);
                 foreach ($id3v2Data as $key => $value) {
+                    if (!isset($ndata[$key]) || !is_array($ndata[$key])) {
+                        $ndata[$key] = [];
+                    }
                     if (isset($songMeta[$key]) && $value[0] !== $songMeta[$key]) {
                         $ndata[$key][] = $songMeta[$key];
                     } else {
@@ -169,6 +173,9 @@ final class SongTagWriter implements SongTagWriterInterface
             } else {
                 unset($songMeta['text']);
                 foreach ($songMeta as $key => $value) {
+                    if (!isset($ndata[$key]) || !is_array($ndata[$key])) {
+                        $ndata[$key] = [];
+                    }
                     $ndata[$key][] = $songMeta;
                 }
             }
@@ -189,6 +196,9 @@ final class SongTagWriter implements SongTagWriterInterface
                         if ($key == 'releasetype' || $key == 'releasestatus') {
                             $ndata[$key] = $songMeta[$key];
                         } else {
+                            if (!isset($ndata[$key]) || !is_array($ndata[$key])) {
+                                $ndata[$key] = [];
+                            }
                             $ndata[$key][] = $songMeta[$key];
                         }
                     } else {
@@ -202,6 +212,9 @@ final class SongTagWriter implements SongTagWriterInterface
                     if ($key == 'releasetype' || $key == 'releasestatus') {
                         $ndata[$key] = $value;
                     } else {
+                        if (!isset($ndata[$key]) || !is_array($ndata[$key])) {
+                            $ndata[$key] = [];
+                        }
                         $ndata[$key][] = $value;
                     }
                 }
@@ -315,7 +328,13 @@ final class SongTagWriter implements SongTagWriterInterface
                 if (!empty($id3v2Data)) {
                     unset($id3v2Data['text']);
                     foreach ($id3v2Data as $key => $value) {
-                        $ndata[$key][] = $value[0];
+                        if (is_array($value) && isset($value[0])) {
+                            if (isset($ndata[$key])) {
+                                $ndata[$key][] = $value[0];
+                            } else {
+                                $ndata[$key] = [];
+                            }
+                        }
                     }
                 }
                 if (!empty($user->email)) {
@@ -549,7 +568,7 @@ final class SongTagWriter implements SongTagWriterInterface
             if (!empty($user->email)) {
                 $meta['Popularimeter'] = [
                     "email" => $user->email,
-                    "rating" => ($my_rating > 0) ? $my_rating * (255 / 5) : 0,
+                    "rating" => ($my_rating > 0) ? VaInfo::parse_rating($my_rating) : 0,
                     "data" => $song->get_totalcount()
                 ];
             } else {

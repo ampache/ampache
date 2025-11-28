@@ -437,6 +437,10 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
             $songprops[T_('R128 Album Gain')] = $this->song->r128_album_gain;
         }
 
+        if ($this->song->get_isrcs() !== []) {
+            $songprops[T_('ISRC')] = implode(', ', array_map('scrub_out', $this->song->get_isrcs()));
+        }
+
         if ($this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) && $this->song->file !== null) {
             $data                      = pathinfo($this->song->file);
             $songprops[T_('Path')]     = scrub_out((string)($data['dirname'] ?? ''));

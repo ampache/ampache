@@ -36,6 +36,7 @@ $embed        = $embed ?? false;
 $loop         = ($isRandom || $isDemocratic);
 $jp_volume    = (float)AmpConfig::get('jp_volume', 0.80);
 $removeCount  = (int)AmpConfig::get('webplayer_removeplayed', 0);
+$waveform     = AmpConfig::get('waveform');
 $canSlideshow = Preference::exists('flickr_api_key');
 $removePlayed = ($removeCount > 0);
 if ($removePlayed && $removeCount === 999) {
@@ -268,7 +269,7 @@ echo implode(',', $solutions); ?>",
                                 echo "actionsobj += (typeof actiontype !== 'undefined') ? ' <a href=\"javascript:NavigateTo(\'" . $web_path . "/shout.php?action=show_add_shout&type=' + currenttype + '&id=' + currentjpitem.attr('data-media_id') + '\');\">" . Ui::get_material_symbol('comment', addslashes(T_('Post Shout'))) . "</a> |' : '';";
                             }
                             echo "actionsobj += '<div id=\'action_buttons\'></div>';";
-                            if (AmpConfig::get('waveform')) {
+                            if ($waveform) {
                                 $shoutLink = AmpConfig::get('sociable') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
                                 echo "var waveformobj = '';";
                                 if ($shoutLink) {
@@ -296,7 +297,7 @@ echo implode(',', $solutions); ?>",
                     <?php if (AmpConfig::get('show_lyrics')) { ?>
                     $('.playing_lyrics').html(lyricsobj);
                     <?php }
-                    if (AmpConfig::get('waveform') && $isShare === false) { ?>
+                    if ($waveform && $isShare === false) { ?>
                     $('.waveform').html(waveformobj);
                     <?php }
                     }
@@ -308,7 +309,7 @@ if (AmpConfig::get('song_page_title') && $isShare === false) {
 } ?>
                 }
             });
-            <?php if (AmpConfig::get('waveform') && $isShare === false) { ?>
+            <?php if ($waveform && $isShare === false) { ?>
             HideWaveform();
             <?php } ?>
 
@@ -321,7 +322,7 @@ if (AmpConfig::get('song_page_title') && $isShare === false) {
             if (brkey != '') {
                 sendBroadcastMessage('SONG_POSITION', event.jPlayer.status.currentTime);
             }
-            <?php if (AmpConfig::get('waveform') && $isShare === false) { ?>
+            <?php if ($waveform && $isShare === false) { ?>
             var int_position = Math.floor(event.jPlayer.status.currentTime);
             if (int_position != last_int_position && event.jPlayer.status.currentTime > 0) {
                 last_int_position = int_position;
@@ -409,7 +410,7 @@ if ($isShare && $isVideo) { ?>
 </head>
 <body>
 <?php $areaClass = "";
-if ((!AmpConfig::get('waveform') || $isShare) && !$embed) {
+if ((!$waveform || $isShare) && !$embed) {
     $areaClass .= " jp-area-center";
 }
 if ($embed) {
@@ -510,7 +511,7 @@ if ($isVideo === false) {
                             <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="<?php echo $repeaton; ?>"><?php echo $repeaton; ?></a></li>
                             <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="<?php echo $repeatoff; ?>"><?php echo $repeatoff; ?></a></li>
                         </ul>
-                        <?php if (AmpConfig::get('waveform') && $isShare === false) { ?>
+                        <?php if ($waveform && $isShare === false) { ?>
                             <div class="waveform"></div>
                         <?php } ?>
                     <?php } ?>

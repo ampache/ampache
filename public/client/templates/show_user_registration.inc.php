@@ -39,7 +39,9 @@ $web_path  = AmpConfig::get_web_path('/client');
 $display_fields   = (array) AmpConfig::get('registration_display_fields');
 $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
 
-$_SESSION['login'] = true; ?>
+$_SESSION['login'] = true;
+
+$logo_url = AmpConfig::get('custom_login_logo', Ui::get_logo_url()); ?>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
@@ -58,7 +60,7 @@ $_SESSION['login'] = true; ?>
     <div id="maincontainer">
         <div id="header">
             <a href="<?php echo $web_path; ?>">
-                <h1 id="logo"><img src="<?php echo Ui::get_logo_url(); ?>" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>"></h1>
+                <h1 id="logo"><img src="<?php echo $logo_url; ?>" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>"></h1>
             </a>
         </div>
 <?php $action    = scrub_in(Core::get_request('action'));

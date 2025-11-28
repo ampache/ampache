@@ -72,14 +72,14 @@ interface InstallationHelperInterface
      */
     public function install_get_transcode_modes(): array;
 
-    public function install_config_transcode_mode(string $mode);
+    public function install_config_transcode_mode(string $mode): void;
 
-    public function install_config_use_case(string $case);
+    public function install_config_use_case(string $case): void;
 
     /**
      * @param string[] $backends
      */
-    public function install_config_backends(array $backends);
+    public function install_config_backends(array $backends): void;
 
     /**
      * Write new configuration into the current configuration file by keeping old values.

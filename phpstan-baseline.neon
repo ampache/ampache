@@ -1121,11 +1121,6 @@ parameters:
 			path: src/Module/Application/Admin/Catalog/AbstractCatalogAction.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Module/Application/Installation/DefaultAction.php
-
-		-
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<1, max\\>, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/Play2Action.php
@@ -1606,11 +1601,6 @@ parameters:
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:get_active_instance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:status\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
@@ -1631,11 +1621,6 @@ parameters:
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:get_active_instance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:move\\(\\) has parameter \\$destination with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
@@ -1647,11 +1632,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:status\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:volume\\(\\) has parameter \\$volume with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
@@ -1851,17 +1831,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:get_active_instance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:status\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\AmpacheUPnP\\:\\:volume\\(\\) has parameter \\$volume with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
 
@@ -1906,11 +1876,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:SetVolume\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:prepareURIRequest\\(\\) has parameter \\$prefix with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
@@ -1932,11 +1897,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\AmpacheVlc\\:\\:get_active_instance\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/AmpacheVlc.php
 
@@ -1976,17 +1936,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:get_active_instance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:status\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:volume\\(\\) has parameter \\$volume with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
 
@@ -2007,11 +1957,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\localplay_controller\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/localplay_controller.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\localplay_controller\\:\\:get_active_instance\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/localplay_controller.php
 
@@ -2174,26 +2119,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:generate_config\\(\\) has parameter \\$current with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/System/InstallationHelperInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:install_config_backends\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelperInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:install_config_transcode_mode\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelperInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:install_config_use_case\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelperInterface.php
-
-		-
-			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and array\\<int, string\\>\\|string results in an error\\.$#"
-			count: 1
-			path: src/Module/System/LegacyLogger.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\LegacyLogger\\:\\:alert\\(\\) has parameter \\$message with no type specified\\.$#"
@@ -3806,11 +3731,6 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$gatherTypes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -3929,11 +3849,6 @@ parameters:
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMatomo\\:\\:\\$site_id has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheMatomo.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:get_artist\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpachePiwik\\:\\:\\$piwik_url has no type specified\\.$#"

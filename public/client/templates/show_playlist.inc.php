@@ -97,7 +97,7 @@ global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('playlist')) { ?>
         <li>
-            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=playlist&id=<?php echo $playlist->id; ?>">
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=playlist&id=<?php echo $playlist->id; ?>" rel="nofollow">
                 <?php echo Ui::get_material_symbol('folder_zip', T_('Batch download')); ?>
                 <?php echo T_('Batch download'); ?>
             </a>

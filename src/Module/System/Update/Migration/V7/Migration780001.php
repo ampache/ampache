@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -18,23 +20,21 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Catalog\Update;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-use Ahc\Cli\IO\Interactor;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-interface UpdateSingleCatalogFileInterface
+/**
+ * Alter `song_map` table object_id to a string type
+ */
+final class Migration780001 extends AbstractMigration
 {
-    public function update(
-        Interactor $interactor,
-        string $catname,
-        string $filePath,
-        bool $verificationMode,
-        bool $addMode,
-        bool $cleanupMode,
-        bool $searchArtMode,
-        ?string $newFilePath
-    ): void;
+    protected array $changelog = ['Alter `song_map` table object_id to a string type'];
+
+    public function migrate(): void
+    {
+        $this->updateDatabase("ALTER TABLE `song_map` MODIFY COLUMN `object_id` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL; ");
+    }
 }

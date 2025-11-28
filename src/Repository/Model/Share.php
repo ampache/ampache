@@ -136,7 +136,7 @@ class Share extends database_object
             )
         ) {
             if ($this->allow_download) {
-                echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_material_symbol('download', T_('Download')) . "</a>";
+                echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\" rel=\"nofollow\">" . Ui::get_material_symbol('download', T_('Download')) . "</a>";
             }
 
             echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . Ui::get_material_symbol('edit', T_('Edit')) . "</a>";

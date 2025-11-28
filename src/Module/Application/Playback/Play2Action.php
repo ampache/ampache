@@ -671,13 +671,21 @@ final class Play2Action implements ApplicationActionInterface
 
             $has_cache = ($file_target !== null && is_file($file_target));
             if ($catalog && !$has_cache) {
-                if (($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic) && AmpConfig::get('cache_remote', '')) {
+                if (
+                    ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic) &&
+                    (bool)AmpConfig::get('cache_remote', false)
+                ) {
                     $media_file = $catalog->getRemoteStreamingUrl($media);
                     if ($file_target && $media_file) {
                         $catalog->cache_catalog_file($file_target, $media_file);
                     }
                 }
-                if ($catalog instanceof Catalog_local && $file_target && $cache_target) {
+                if (
+                    $catalog instanceof Catalog_local &&
+                    $file_target &&
+                    $cache_target &&
+                    (bool)AmpConfig::get('cache_' . $cache_target, false)
+                ) {
                     $catalog->cache_catalog_file($file_target, $media, $cache_target);
                 }
             }

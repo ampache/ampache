@@ -45,6 +45,8 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 class AmpacheMpd extends localplay_controller
 {
+    protected const ACTIVE_PREF = 'mpd_active';
+
     public bool $block_clear = false;
 
     private string $version = '000003';
@@ -53,7 +55,6 @@ class AmpacheMpd extends localplay_controller
 
     private int $_add_count = 0;
 
-    /* Constructed variables */
     private $_mpd;
 
     /**
@@ -110,7 +111,7 @@ class AmpacheMpd extends localplay_controller
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('mpd_active', T_('MPD Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'mpd');
+        Preference::insert(self::ACTIVE_PREF, T_('MPD Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'mpd');
 
         return true;
     }
@@ -124,7 +125,7 @@ class AmpacheMpd extends localplay_controller
         $sql = "DROP TABLE `localplay_mpd`";
         Dba::write($sql);
 
-        Preference::delete('mpd_active');
+        Preference::delete(self::ACTIVE_PREF);
 
         return true;
     }
@@ -195,7 +196,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function get_instance(?string $instance = ''): array
     {
-        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('mpd_active', 0);
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get(self::ACTIVE_PREF, 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_mpd` WHERE `id` = ?" : "SELECT * FROM `localplay_mpd`";
         $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
@@ -261,9 +262,9 @@ class AmpacheMpd extends localplay_controller
         if (!$user instanceof User) {
             return false;
         }
-        Preference::update('mpd_active', $user->id, $uid);
-        AmpConfig::set('mpd_active', $uid, true);
-        debug_event('mdp.controller', 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
+        Preference::update(self::ACTIVE_PREF, $user->id, $uid);
+        AmpConfig::set(self::ACTIVE_PREF, $uid, true);
+        debug_event(self::class, 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
 
         return true;
     }
@@ -271,10 +272,15 @@ class AmpacheMpd extends localplay_controller
     /**
      * get_active_instance
      * This returns the UID of the current active instance
-     * false if none are active
+     * null if none are active
      */
-    public function get_active_instance()
+    public function get_active_instance(): ?int
     {
+        if (AmpConfig::get(self::ACTIVE_PREF)) {
+            return (int)AmpConfig::get(self::ACTIVE_PREF);
+        }
+
+        return null;
     }
 
     /**
@@ -293,7 +299,7 @@ class AmpacheMpd extends localplay_controller
         }
 
         if (!$this->_mpd->PlAdd($url->url)) {
-            debug_event('mdp.controller', 'add_url failed to add: ' . json_encode($url), 1);
+            debug_event(self::class, 'add_url failed to add: ' . json_encode($url), 1);
 
             return false;
         }
@@ -408,7 +414,7 @@ class AmpacheMpd extends localplay_controller
      * volume
      * This tells MPD to set the volume to the parameter
      */
-    public function volume($volume): bool
+    public function volume(int $volume): bool
     {
         return $this->_mpd->SetVolume($volume) !== false;
     }
@@ -576,7 +582,7 @@ class AmpacheMpd extends localplay_controller
             $url_data      = $this->parse_url($playlist_item['file']);
         }
 
-        debug_event('mdp.controller', 'Status result. Current song (' . $track . ') info: ' . json_encode($playlist_item), 5);
+        debug_event(self::class, 'Status result. Current song (' . $track . ') info: ' . json_encode($playlist_item), 5);
 
         if (count($url_data) > 0 && array_key_exists('oid', $url_data) && !empty($url_data['oid'])) {
             $song = new Song($url_data['oid']);

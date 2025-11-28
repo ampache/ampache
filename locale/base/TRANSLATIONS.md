@@ -95,7 +95,7 @@ Finally, to build all the mo files which Ampache uses you need to install gettex
 Now you can forcibly rebuild all the mo files with this command
 
 ```shell
-cd base/locale
+cd locale/base
 bash gather-messages.sh -fa
 ```
 
@@ -106,14 +106,14 @@ Generate a new messages.pot using the generate command.
 This file is used by Transifex to generate the messages for each language file.
 
 ```shell
-cd base/locale
+cd locale/base
 bash gather-messages.sh -g
 ```
 
 You can regenerate database strings by adding `u`
 
 ```shell
-cd base/locale
+cd locale/base
 bash gather-messages.sh -gu
 ```
 
