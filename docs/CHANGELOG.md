@@ -49,7 +49,7 @@ These settings can not be updated automatically in the config file so make sure 
 * Don't error on song import / update when additional metadata calls fail
 * `custom_login_logo` overwritten by header logo
 * Tag writer sending non array values
-* Stop writing dong tags for ratings when reading the tags
+* Stop writing Song tags for ratings when reading the tags
 * Don't error when sending invalid Subsonic auth
 * Missing Art object type
 * Search not always setting `and`/`or`
