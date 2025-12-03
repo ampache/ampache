@@ -14,10 +14,11 @@ These settings can not be updated automatically in the config file so make sure 
 * Config version 85
   * Add `rating_file_tag_compatibility` to allow using an alternative 5 star rating scale
   * Add `log_time_format` to set your own log date format [PHP Date](https://www.php.net/manual/en/function.date.php)
-* Database 780003
+* Database 780004
   * Add `song_map` table for ISRC storage
   * Convert `custom_favicon`, `custom_login_background`, `custom_login_logo` into system preferences
   * Add preference `subsonic_force_album_artist` to only select Album Artists when making Subsonic Artist calls
+  * Add preference `subsonic_single_user_data` to only show data (e.g. ratings, stars) for your user in Subsonic list calls
 * CLI
   * run:updateCatalogFile: Add rename (-r|--rename) parameter to rename single files
   * run:cacheProcess: Clean up files that do not match cache config settings
@@ -38,6 +39,8 @@ These settings can not be updated automatically in the config file so make sure 
 * Update docker files for Debian stable changes
 * Don't change the page title when `song_page_title` is enabled
 * Update translation guidelines for new CLI Transifex version
+* Subsonic
+  * Filter list calls by your user instead of public/shared information by default (disable `subsonic_single_user_data` to restore old behavior)
 
 ### Fixed
 
@@ -60,6 +63,9 @@ These settings can not be updated automatically in the config file so make sure 
 * AlbumDisk counts not updating correctly
 * Ampache Wrapped showing favorites for all users instead of just you
 * Artist counts for Album, AlbumDisk and Song would not update 0 values
+* Check zip file exists before deleting
+* Subsonic
+  * Different calls would filter output by user differently for no reason
 
 ## Ampache 7.7.2
 
