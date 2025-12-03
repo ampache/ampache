@@ -550,7 +550,7 @@ class OpenSubsonic_Api
                 $albums = Stats::get_top('album', $size, 0, $offset, $output_user);
                 break;
             case 'recent':
-                $albums = Stats::get_recent('album', $size, $offset, $output_user?->id);
+                $albums = Stats::get_recent('album', $size, $offset, $output_user);
                 break;
             case 'starred':
                 $albums = Userflag::get_latest('album', $output_user, $size, $offset);
