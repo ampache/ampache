@@ -545,10 +545,10 @@ class OpenSubsonic_Api
                 $albums = Stats::get_newest('album', $size, $offset, $musicFolderId, $user);
                 break;
             case 'highest':
-                $albums = Rating::get_highest('album', $size, $offset, $output_user?->id);
+                $albums = Rating::get_highest('album', $size, $offset, $output_user?->id, $by_user);
                 break;
             case 'frequent':
-                $albums = Stats::get_top('album', $size, 0, $offset, $output_user);
+                $albums = Stats::get_top('album', $size, 0, $offset, $output_user, false, 0, 0, $by_user);
                 break;
             case 'recent':
                 $albums = Stats::get_recent('album', $size, $offset, $output_user);
