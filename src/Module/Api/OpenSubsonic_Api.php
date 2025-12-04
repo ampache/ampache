@@ -3181,17 +3181,17 @@ class OpenSubsonic_Api
                 case 'starred':
                     $response = OpenSubsonic_Xml_Data::addStarred(
                         $response,
-                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, $by_user),
-                        Userflag::get_latest('album', $output_user, 10000, 0, 0, $by_user),
-                        Userflag::get_latest('song', $output_user, 10000, 0, 0, $by_user)
+                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
                     );
                     break;
                 case 'starred2':
                     $response = OpenSubsonic_Xml_Data::addStarred2(
                         $response,
-                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, $by_user),
-                        Userflag::get_latest('album', $output_user, 10000, 0, 0, $by_user),
-                        Userflag::get_latest('song', $output_user, 10000, 0, 0, $by_user)
+                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
                     );
                     break;
             }
@@ -3201,17 +3201,17 @@ class OpenSubsonic_Api
                 case 'starred':
                     $response = OpenSubsonic_Json_Data::addStarred(
                         $response,
-                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, $by_user),
-                        Userflag::get_latest('album', $output_user, 10000, 0, 0, $by_user),
-                        Userflag::get_latest('song', $output_user, 10000, 0, 0, $by_user)
+                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
                     );
                     break;
                 case 'starred2':
                     $response = OpenSubsonic_Json_Data::addStarred2(
                         $response,
-                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, $by_user),
-                        Userflag::get_latest('album', $output_user, 10000, 0, 0, $by_user),
-                        Userflag::get_latest('song', $output_user, 10000, 0, 0, $by_user)
+                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
                     );
                     break;
             }
