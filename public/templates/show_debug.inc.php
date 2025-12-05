@@ -85,6 +85,7 @@ $latest_version  = AutoUpdate::get_latest_version(); ?>
     <?php if ((string) AutoUpdate::is_force_git_branch() !== '') { ?>
         <?php echo "<div>" . T_('GitHub Branch') . ': ' . (string)AutoUpdate::is_force_git_branch() . '</div>';
     } ?>
+    <?php echo "<div>" . T_('Last Update') . ': ' . (string)((AmpConfig::get('autoupdate_lastcheck', 0)) ? get_datetime(AmpConfig::get('autoupdate_lastcheck', 0)) : T_('Unknown')) . '</div>'; ?>
     <div><a class="nohtml" href="<?php echo $admin_path; ?>/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
     <?php if ($current_version !== $latest_version || AutoUpdate::is_update_available()) {
         AutoUpdate::show_new_version();
