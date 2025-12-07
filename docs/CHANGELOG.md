@@ -32,6 +32,7 @@ These settings can not be updated automatically in the config file so make sure 
   * Podcast, Podcast Episode: `updated` date that episode files where last updated
 * Start parsing ISRC song tags and display them on Song pages
 * Add `nofollow` parameters to links
+* Show Last Update check time in the debug page
 
 ### Changed
 
