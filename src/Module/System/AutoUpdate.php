@@ -130,7 +130,7 @@ class AutoUpdate
     /**
      * Check if last GitHub check expired.
      */
-    protected static function lastcheck_expired(): bool
+    public static function lastcheck_expired(): bool
     {
         // if you're not auto updating the check should never expire
         if (!AmpConfig::get('autoupdate', false)) {
