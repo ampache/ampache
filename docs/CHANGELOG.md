@@ -65,6 +65,8 @@ These settings can not be updated automatically in the config file so make sure 
 * Ampache Wrapped showing favorites for all users instead of just you
 * Artist counts for Album, AlbumDisk and Song would not update 0 values
 * Check zip file exists before deleting
+* Remove `mail_auth_pass` in Ampache debug page when set
+* Reduce spam to GitHub API when checking version with auto update
 * Subsonic
   * Different calls would filter output by user differently for no reason
 
