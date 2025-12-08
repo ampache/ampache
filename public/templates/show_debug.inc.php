@@ -43,6 +43,7 @@ $admin_path = AmpConfig::get_web_path('/admin');
 unset(
     $configuration['database_password'],
     $configuration['load_time_begin'],
+    $configuration['mail_auth_pass'],
     $configuration['phpversion'],
 );
 // check your versions
