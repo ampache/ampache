@@ -33,6 +33,7 @@ global $dic;
 $environment = $dic->get(EnvironmentInterface::class);
 
 /** @var array $configuration */
+/** @var string $latest_version */
 /** @var int $lastCronDate */
 
 $web_path = AmpConfig::get_web_path();
@@ -48,15 +49,7 @@ unset(
 );
 // check your versions
 $current_version = AutoUpdate::get_current_version();
-$latest_version  = AutoUpdate::get_latest_version();
-// force an update check if versions don't match and the last check is not expired
-if (
-    $current_version !== $latest_version &&
-    (string)AutoUpdate::is_force_git_branch() !== '' &&
-    !AutoUpdate::lastcheck_expired()
-) {
-    $latest_version = AutoUpdate::get_latest_version(true);
-} ?>
+$latest_version  = $latest_version ?? AutoUpdate::get_latest_version(); ?>
 <?php Ui::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
         <ul>

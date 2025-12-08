@@ -333,7 +333,7 @@ class AutoUpdate
 
     protected static function _set_lastcheck(int $time): void
     {
-        debug_event(self::class, 'Set autoupdate_lastcheck to ' . $time, 5);
+        //debug_event(self::class, 'Set autoupdate_lastcheck to ' . $time, 5);
         Preference::update_all('autoupdate_lastcheck', $time);
         AmpConfig::set('autoupdate_lastcheck', $time, true);
     }
