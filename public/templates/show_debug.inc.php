@@ -47,9 +47,9 @@ unset(
     $configuration['mail_auth_pass'],
     $configuration['phpversion'],
 );
+
 // check your versions
-$current_version = AutoUpdate::get_current_version();
-$latest_version  = $latest_version ?? AutoUpdate::get_latest_version(); ?>
+$current_version = AutoUpdate::get_current_version(); ?>
 <?php Ui::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
         <ul>
