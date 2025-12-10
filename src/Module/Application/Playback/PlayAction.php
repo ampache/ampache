@@ -907,7 +907,7 @@ final class PlayAction implements ApplicationActionInterface
         if ($transcode) {
             $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
             if ($bitrate) {
-                $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $media_bitrate)
+                $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $bitrate)
                     ? $maxbitrate
                     : $bitrate;
             }
