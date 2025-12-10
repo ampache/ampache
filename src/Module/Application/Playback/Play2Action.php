@@ -702,7 +702,7 @@ final class Play2Action implements ApplicationActionInterface
             if (
                 $transcode_cfg != 'never' &&
                 $transcode_to &&
-                ($bitrate === 0 || $bitrate = (int)AmpConfig::get('transcode_bitrate', 128) * 1000) &&
+                ($bitrate === 0 || $bitrate === (int)AmpConfig::get('transcode_bitrate', 128) * 1000) &&
                 $has_cache
             ) {
                 $this->logger->debug(
