@@ -448,7 +448,7 @@ class Recommendation
         );
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
         $results['placeformed'] = (string)$xml->artist->bio->placeformed;
-        $results['yearformed']  = (string)$xml->artist->bio->yearformed;
+        $results['yearformed']  = (int)$xml->artist->bio->yearformed;
 
         return $results;
     }
@@ -481,7 +481,7 @@ class Recommendation
             $results['id']          = $artist_id;
             $results['summary']     = $artist->summary;
             $results['placeformed'] = $artist->placeformed;
-            $results['yearformed']  = $artist->yearformed;
+            $results['yearformed']  = (int)$artist->yearformed;
             $results['largephoto']  = Art::url($artist->id, 'artist', null, 174);
             $results['smallphoto']  = Art::url($artist->id, 'artist', null, 34);
             $results['mediumphoto'] = Art::url($artist->id, 'artist', null, 64);

@@ -904,7 +904,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         $mbid        = $data['mbid'] ?? null;
         $summary     = $data['summary'] ?? null;
         $placeformed = $data['placeformed'] ?? null;
-        $yearformed  = is_int($data['yearformed'] ?? null) ? $data['yearformed'] : null;
+        $yearformed  = is_numeric($data['yearformed'] ?? null) ? (int)$data['yearformed'] : null;
         $current_id  = $this->id;
 
         // Check if name is different than the current name
