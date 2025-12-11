@@ -162,7 +162,7 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
      * @return null|array{'text': string, 'url': string}
      */
     public function get_lyrics(Song $song): ?array
-    {        
+    {
         debug_event(self::class, 'get_lyrics', 3);
         $response = $this->_query_server(
             '/api/search',
