@@ -69,8 +69,8 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
      *     artistName: string,
      *     albumName: string,
      *     duration: float,
-     *     plainLyrics: string,
-     *     syncedLyrics: string,
+     *     plainLyrics: string|null,
+     *     syncedLyrics: string|null,
      * }>
      */
     private function _query_server(string $path_str, string $query_str = ''): ?array
@@ -175,7 +175,8 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
                     (int)$item['duration'] === $song->time &&
                     $item['trackName'] === $song->title &&
                     $item['artistName'] === $song->get_artist_fullname() &&
-                    $item['albumName'] === $song->get_album_fullname()
+                    $item['albumName'] === $song->get_album_fullname() &&
+                    !empty($item['plainLyrics'])
                 ) {
                     return [
                         'text' => nl2br((string)$item['plainLyrics']),
