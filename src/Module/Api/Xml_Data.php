@@ -279,6 +279,9 @@ class Xml_Data
         // Foreach it
         foreach ($array as $key => $value) {
             $attribute = '';
+            if (is_object($value)) {
+                $value = (array)$value;
+            }
             // See if the key has attributes
             if (is_array($value) && isset($value['attributes'])) {
                 $attribute = ' ' . $value['attributes'];
