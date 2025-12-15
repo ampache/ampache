@@ -559,7 +559,7 @@ ratings = "true"
 
 ; Rating Tag Compatability mode
 ; Lots of different players have lots of different scales for ratings
-; Ampache has always kept a simple divide by 5 scale but lots of places don'table
+; Ampache has always kept a simple divide by 5 scale but lots of places don't
 ; Enable this option if your file tags are using this other scale
 ; DEFAULT: "false"
 ;rating_file_tag_compatibility = "true"
