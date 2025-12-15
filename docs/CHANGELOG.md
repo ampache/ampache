@@ -24,6 +24,8 @@ These settings can not be updated automatically in the config file so make sure 
   * run:cacheProcess: Clean up files that do not match cache config settings
   * run:cacheProcess: Add option (-c|--cleanup) to skip cache process and just run a cleanup
   * cleanup:sortSongs: Add option (-p|--path) to sort a single file or folder path
+* Plugin
+  * LrcLib.net plugin with custom server support
 * Search
   * Song, Artist, Album, AlbumDisk: `days_added` songs that were added before/after x days
   * Song: `days_update` songs that were updated before/after x days
@@ -40,6 +42,8 @@ These settings can not be updated automatically in the config file so make sure 
 * Update docker files for Debian stable changes
 * Don't change the page title when `song_page_title` is enabled
 * Update translation guidelines for new CLI Transifex version
+* Update composer and npm packages
+* Update alternative streaming action (Play2Action) to try and stop closing transcode streams early 
 * Subsonic
   * Filter list calls by your user instead of public/shared information by default (disable `subsonic_single_user_data` to restore old behavior)
 
@@ -67,6 +71,9 @@ These settings can not be updated automatically in the config file so make sure 
 * Check zip file exists before deleting
 * Remove `mail_auth_pass` in Ampache debug page when set
 * Reduce spam to GitHub API when checking version with auto update
+* Play actions ignoring custom bitrate parameters
+* Error with a string Year Formed value from plugins
+* ViteManifest now expects an absolute URI for baseUri
 * Subsonic
   * Different calls would filter output by user differently for no reason
 
