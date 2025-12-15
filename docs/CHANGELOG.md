@@ -64,6 +64,7 @@ These settings can not be updated automatically in the config file so make sure 
 * Missing `attachment` Content-Disposition for playlist and CSV downloads
 * Don't reapply the rating to albums for Rating Match plugin
 * MusicBrainz plugin not setting valid `yearformed` for Artist objects
+* Error with a string `yearformed` value from plugins
 * Play actions were caching files that didn't need to be
 * AlbumDisk counts not updating correctly
 * Ampache Wrapped showing favorites for all users instead of just you
@@ -72,7 +73,6 @@ These settings can not be updated automatically in the config file so make sure 
 * Remove `mail_auth_pass` in Ampache debug page when set
 * Reduce spam to GitHub API when checking version with auto update
 * Play actions ignoring custom bitrate parameters
-* Error with a string Year Formed value from plugins
 * ViteManifest now expects an absolute URI for baseUri
 * Subsonic
   * Different calls would filter output by user differently for no reason
