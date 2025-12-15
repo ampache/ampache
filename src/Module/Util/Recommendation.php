@@ -420,7 +420,7 @@ class Recommendation
      * @return array{
      *     summary: ?string,
      *     placeformed: ?string,
-     *     yearformed: ?string
+     *     yearformed: ?int
      * }
      */
     public static function get_artist_info_by_name(string $fullname): array
@@ -448,7 +448,9 @@ class Recommendation
         );
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
         $results['placeformed'] = (string)$xml->artist->bio->placeformed;
-        $results['yearformed']  = (int)$xml->artist->bio->yearformed;
+        $results['yearformed']  = (isset($xml->artist->bio->yearformed))
+            ? (int)$xml->artist->bio->yearformed
+            : null;
 
         return $results;
     }

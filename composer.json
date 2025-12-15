@@ -89,7 +89,7 @@
         "phpunit/phpunit": "^11",
         "rector/rector": "^1",
         "seec/phpunit-consecutive-params": "^1.1",
-        "szymach/c-pchart": "^3.0"
+        "szymach/c-pchart": "3.0.17"
     },
     "repositories":
     [
