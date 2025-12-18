@@ -48,10 +48,12 @@ final class GetLyricsMethod
      *
      * Return Database lyrics or search with plugins
      *
-     * filter = (string) song id
+     * filter  = (string) song id
+     * plugins = (int) 0,1, if false disable plugin lookup (Default: 1)
      *
      * @param array{
      *     filter: string,
+     *     plugins: int,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -85,18 +87,21 @@ final class GetLyricsMethod
             $results['plugin']['database'] = $database_lyrics;
         }
 
-        foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
-            $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin instanceof PluginGetLyricsInterface && $plugin->load($user)) {
-                $lyrics = $plugin->_plugin->get_lyrics($libitem);
-                if (!empty($lyrics)) {
-                    // save the lyrics if not set before
-                    if (array_key_exists('text', $lyrics) && !empty($lyrics['text'])) {
-                        $results['plugin'][$plugin_name] = $lyrics;
+        if ((int)($input['plugins'] ?? 1) === 1) {
+            foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->_plugin instanceof PluginGetLyricsInterface && $plugin->load($user)) {
+                    $lyrics = $plugin->_plugin->get_lyrics($libitem);
+                    if (!empty($lyrics)) {
+                        // save the lyrics if not set before
+                        if (array_key_exists('text', $lyrics) && !empty($lyrics['text'])) {
+                            $results['plugin'][$plugin_name] = $lyrics;
+                        }
                     }
                 }
             }
         }
+
         if ($results['plugin'] === []) {
             Api::empty($type, $input['api_format']);
 
