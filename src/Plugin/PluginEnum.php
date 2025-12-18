@@ -50,6 +50,7 @@ final class PluginEnum
         'libravatar' => AmpacheLibravatar::class,
         'librefm' => Ampachelibrefm::class,
         'listenbrainz' => Ampachelistenbrainz::class,
+        'lrclib' => AmpacheLrcLib::class,
         'lyrist' => AmpacheLyristLyrics::class,
         'mastodon' => AmpacheMastodon::class,
         'matomo' => AmpacheMatomo::class,

@@ -904,7 +904,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         $mbid        = $data['mbid'] ?? null;
         $summary     = $data['summary'] ?? null;
         $placeformed = $data['placeformed'] ?? null;
-        $yearformed  = is_int($data['yearformed'] ?? null) ? $data['yearformed'] : null;
+        $yearformed  = is_numeric($data['yearformed'] ?? null) ? (int)$data['yearformed'] : null;
         $current_id  = $this->id;
 
         // Check if name is different than the current name
@@ -1062,7 +1062,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `artist_map`.`artist_id` = ? AND `catalog`.`enabled` = '1' GROUP BY `artist_map`.`artist_id`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist_id`;";
         Dba::write($sql, $params);
         // empty artist.song_count
-        $sql = "UPDATE `artist` SET `song_count` = 0 WHERE `artist_map`.`artist_id` = ? AND `song_count` > 0 AND `id` NOT IN (SELECT `artist_id` FROM `artist_map` WHERE `object_type` = 'song');";
+        $sql = "UPDATE `artist` SET `song_count` = 0 WHERE `id` = ? AND `song_count` > 0 AND `id` NOT IN (SELECT `artist_id` FROM `artist_map` WHERE `object_type` = 'song');";
         Dba::write($sql, $params);
     }
 
