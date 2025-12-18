@@ -46,7 +46,7 @@ final class GetLyricsMethod
      * get_lyrics
      * MINIMUM_API_VERSION=6.9.0
      *
-     * Return Database lyrics or search with plugins
+     * Return Database lyrics or search with plugins by Song id
      *
      * filter  = (string) song id
      * plugins = (int) 0,1, if false disable plugin lookup (Default: 1)
