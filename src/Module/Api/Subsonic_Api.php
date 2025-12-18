@@ -518,6 +518,12 @@ class Subsonic_Api
         $musicFolderId = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($input['musicFolderId']) : 0;
         $catalogFilter = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'));
 
+        // hide ratings and flags for other users if single user data is enabled
+        $by_user     = (bool)Preference::get_by_user($user->id, 'subsonic_single_user_data') === true;
+        $output_user = ($by_user)
+            ? $user
+            : null;
+
         // Get albums from all catalogs by default Catalog filter is not supported for all request types for now.
         $catalogs = ($catalogFilter)
             ? $user->get_catalogs('music')
@@ -538,16 +544,16 @@ class Subsonic_Api
                 $albums = Stats::get_newest('album', $size, $offset, $musicFolderId, $user);
                 break;
             case 'highest':
-                $albums = Rating::get_highest('album', $size, $offset, $user->id);
+                $albums = Rating::get_highest('album', $size, $offset, $output_user?->id, $by_user);
                 break;
             case 'frequent':
-                $albums = Stats::get_top('album', $size, 0, $offset);
+                $albums = Stats::get_top('album', $size, 0, $offset, $output_user, false, 0, 0, $by_user);
                 break;
             case 'recent':
-                $albums = Stats::get_recent('album', $size, $offset);
+                $albums = Stats::get_recent('album', $size, $offset, $output_user);
                 break;
             case 'starred':
-                $albums = Userflag::get_latest('album', null, $size, $offset);
+                $albums = Userflag::get_latest('album', $output_user, $size, $offset, 0, 0, $by_user);
                 break;
             case 'alphabeticalByName':
                 $albums = ($catalogFilter && empty($catalogs) && $musicFolderId == 0)
@@ -3155,6 +3161,12 @@ class Subsonic_Api
      */
     public static function getstarred(array $input, User $user, string $elementName = 'starred'): void
     {
+        // hide ratings and flags for other users if single user data is enabled
+        $by_user     = (bool)Preference::get_by_user($user->id, 'subsonic_single_user_data') === true;
+        $output_user = ($by_user)
+            ? $user
+            : null;
+
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
@@ -3162,17 +3174,17 @@ class Subsonic_Api
                 case 'starred':
                     $response = Subsonic_Xml_Data::addStarred(
                         $response,
-                        Userflag::get_latest('artist', $user, 10000),
-                        Userflag::get_latest('album', $user, 10000),
-                        Userflag::get_latest('song', $user, 10000)
+                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
                     );
                     break;
                 case 'starred2':
                     $response = Subsonic_Xml_Data::addStarred2(
                         $response,
-                        Userflag::get_latest('artist', $user, 10000),
-                        Userflag::get_latest('album', $user, 10000),
-                        Userflag::get_latest('song', $user, 10000)
+                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
                     );
                     break;
             }
@@ -3182,17 +3194,17 @@ class Subsonic_Api
                 case 'starred':
                     $response = Subsonic_Json_Data::addStarred(
                         $response,
-                        Userflag::get_latest('artist', $user, 10000),
-                        Userflag::get_latest('album', $user, 10000),
-                        Userflag::get_latest('song', $user, 10000)
+                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
                     );
                     break;
                 case 'starred2':
                     $response = Subsonic_Json_Data::addStarred2(
                         $response,
-                        Userflag::get_latest('artist', $user, 10000),
-                        Userflag::get_latest('album', $user, 10000),
-                        Userflag::get_latest('song', $user, 10000)
+                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
                     );
                     break;
             }

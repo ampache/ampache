@@ -1113,15 +1113,20 @@ abstract class Catalog extends database_object
                                 sprintf('cache_catalogs: removed (not in database) {%s}', $file),
                                 true
                             );
+                            continue;
                         }
-                        if ($extension !== $cache_target) {
+
+                        $cache_ext = $pathinfo['extension'] ?? '';
+                        if ($cache_ext !== $cache_target) {
                             unlink($file);
-                            debug_event(self::class, 'cache_catalogs: removed (cache_target !== ' . $extension . ') {' . $file . '}', 4);
+                            debug_event(self::class, 'cache_catalogs: removed (cache_target !== ' . $cache_ext . ') {' . $file . '}', 4);
                             $interactor?->info(
-                                sprintf('cache_catalogs: removed (cache_target !== %s) {%s}', $extension, $file),
+                                sprintf('cache_catalogs: removed (cache_target !== %s) {%s}', $cache_ext, $file),
                                 true
                             );
+                            continue;
                         }
+
                         if ($remote_catalog && $remote_cache === false) {
                             unlink($file);
                             debug_event(self::class, 'cache_catalogs: removed (cache_remote) {' . $file . '}', 4);
@@ -1129,7 +1134,9 @@ abstract class Catalog extends database_object
                                 sprintf('cache_catalogs: removed (cache_remote) {%s}', $file),
                                 true
                             );
+                            continue;
                         }
+
                         if (
                             $extension &&
                             (bool)AmpConfig::get('cache_' . $extension, false) == false

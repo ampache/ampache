@@ -192,7 +192,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                     $results['art']        = $release->strArtistThumb ?? null;
                     $results['title']      = $release->strArtist ?? null;
                     $results['summary']    = $release->strBiographyEN ?? null;
-                    $results['yearformed'] = $release->intFormedYear ?? null;
+                    $results['yearformed'] = (is_numeric($release->intFormedYear ?? null)) ? (int)$release->intFormedYear : null;
                 }
             } elseif ($media_info['mb_trackid']) {
                 $track = $this->get_track($media_info['mb_trackid']);
@@ -261,7 +261,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                         default => $release->strBiographyEN ?? null,
                     };
                     $data['placeformed'] = $release->strCountry ?? null;
-                    $data['yearformed']  = $release->intFormedYear ?? null;
+                    $data['yearformed']  = (is_numeric($release->intFormedYear ?? null)) ? (int)$release->intFormedYear : null;
 
                     // when you come in with an mbid you might want to keep the name updated (ignore case)
                     if (

@@ -14,15 +14,18 @@ These settings can not be updated automatically in the config file so make sure 
 * Config version 85
   * Add `rating_file_tag_compatibility` to allow using an alternative 5 star rating scale
   * Add `log_time_format` to set your own log date format [PHP Date](https://www.php.net/manual/en/function.date.php)
-* Database 780003
+* Database 780004
   * Add `song_map` table for ISRC storage
   * Convert `custom_favicon`, `custom_login_background`, `custom_login_logo` into system preferences
   * Add preference `subsonic_force_album_artist` to only select Album Artists when making Subsonic Artist calls
+  * Add preference `subsonic_single_user_data` to only show data (e.g. ratings, stars) for your user in Subsonic list calls
 * CLI
   * run:updateCatalogFile: Add rename (-r|--rename) parameter to rename single files
   * run:cacheProcess: Clean up files that do not match cache config settings
   * run:cacheProcess: Add option (-c|--cleanup) to skip cache process and just run a cleanup
   * cleanup:sortSongs: Add option (-p|--path) to sort a single file or folder path
+* Plugin
+  * LrcLib.net plugin with custom server support
 * Search
   * Song, Artist, Album, AlbumDisk: `days_added` songs that were added before/after x days
   * Song: `days_update` songs that were updated before/after x days
@@ -31,6 +34,7 @@ These settings can not be updated automatically in the config file so make sure 
   * Podcast, Podcast Episode: `updated` date that episode files where last updated
 * Start parsing ISRC song tags and display them on Song pages
 * Add `nofollow` parameters to links
+* Show Last Update check time in the debug page
 
 ### Changed
 
@@ -38,6 +42,10 @@ These settings can not be updated automatically in the config file so make sure 
 * Update docker files for Debian stable changes
 * Don't change the page title when `song_page_title` is enabled
 * Update translation guidelines for new CLI Transifex version
+* Update composer and npm packages
+* Update alternative streaming action (Play2Action) to try and stop closing transcode streams early 
+* Subsonic
+  * Filter list calls by your user instead of public/shared information by default (disable `subsonic_single_user_data` to restore old behavior)
 
 ### Fixed
 
@@ -49,17 +57,25 @@ These settings can not be updated automatically in the config file so make sure 
 * Don't error on song import / update when additional metadata calls fail
 * `custom_login_logo` overwritten by header logo
 * Tag writer sending non array values
-* Stop writing dong tags for ratings when reading the tags
+* Stop writing Song tags for ratings when reading the tags
 * Don't error when sending invalid Subsonic auth
 * Missing Art object type
 * Search not always setting `and`/`or`
 * Missing `attachment` Content-Disposition for playlist and CSV downloads
 * Don't reapply the rating to albums for Rating Match plugin
 * MusicBrainz plugin not setting valid `yearformed` for Artist objects
+* Error with a string `yearformed` value from plugins
 * Play actions were caching files that didn't need to be
 * AlbumDisk counts not updating correctly
 * Ampache Wrapped showing favorites for all users instead of just you
 * Artist counts for Album, AlbumDisk and Song would not update 0 values
+* Check zip file exists before deleting
+* Remove `mail_auth_pass` in Ampache debug page when set
+* Reduce spam to GitHub API when checking version with auto update
+* Play actions ignoring custom bitrate parameters
+* ViteManifest now expects an absolute URI for baseUri
+* Subsonic
+  * Different calls would filter output by user differently for no reason
 
 ## Ampache 7.7.2
 

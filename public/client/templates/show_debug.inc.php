@@ -33,6 +33,7 @@ global $dic;
 $environment = $dic->get(EnvironmentInterface::class);
 
 /** @var array $configuration */
+/** @var string $latest_version */
 /** @var int $lastCronDate */
 
 $web_path = AmpConfig::get_web_path('/client');
@@ -43,11 +44,12 @@ $admin_path = AmpConfig::get_web_path('/admin');
 unset(
     $configuration['database_password'],
     $configuration['load_time_begin'],
+    $configuration['mail_auth_pass'],
     $configuration['phpversion'],
 );
+
 // check your versions
-$current_version = AutoUpdate::get_current_version();
-$latest_version  = AutoUpdate::get_latest_version(); ?>
+$current_version = AutoUpdate::get_current_version(); ?>
 <?php Ui::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
         <ul>
@@ -85,6 +87,7 @@ $latest_version  = AutoUpdate::get_latest_version(); ?>
     <?php if ((string) AutoUpdate::is_force_git_branch() !== '') { ?>
         <?php echo "<div>" . T_('GitHub Branch') . ': ' . (string)AutoUpdate::is_force_git_branch() . '</div>';
     } ?>
+    <?php echo "<div>" . T_('Last Update') . ': ' . (string)((AmpConfig::get('autoupdate_lastcheck', 0)) ? get_datetime(AmpConfig::get('autoupdate_lastcheck', 0)) : T_('Unknown')) . '</div>'; ?>
     <div><a class="nohtml" href="<?php echo $admin_path; ?>/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
     <?php if ($current_version !== $latest_version || AutoUpdate::is_update_available()) {
         AutoUpdate::show_new_version();

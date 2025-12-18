@@ -920,6 +920,7 @@ class Ui implements UiInterface
             case 'subsonic_backend':
             case 'subsonic_force_album_artist':
             case 'subsonic_legacy':
+            case 'subsonic_single_user_data':
             case 'tadb_overwrite_name':
             case 'topmenu':
             case 'ui_fixed':

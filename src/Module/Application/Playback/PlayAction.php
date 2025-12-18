@@ -680,7 +680,7 @@ final class PlayAction implements ApplicationActionInterface
             if (
                 $transcode_cfg != 'never' &&
                 $transcode_to &&
-                ($bitrate === 0 || $bitrate = (int)AmpConfig::get('transcode_bitrate', 128) * 1000) &&
+                ($bitrate === 0 || $bitrate === (int)AmpConfig::get('transcode_bitrate', 128) * 1000) &&
                 $has_cache
             ) {
                 $this->logger->debug(
@@ -907,7 +907,7 @@ final class PlayAction implements ApplicationActionInterface
         if ($transcode) {
             $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
             if ($bitrate) {
-                $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $media_bitrate)
+                $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $bitrate)
                     ? $maxbitrate
                     : $bitrate;
             }
