@@ -74,6 +74,11 @@ final class GetLyricsMethod
             return false;
         }
 
+        $results = [
+            'object_id' => $object_id,
+            'object_type' => 'song',
+            'plugin' => [],
+        ];
 
         $database_lyrics = $libitem->get_lyrics(true);
         if (!empty($database_lyrics)) {
