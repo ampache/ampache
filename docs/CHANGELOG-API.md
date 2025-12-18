@@ -10,7 +10,7 @@ we will keep on 6.9.0 and resume build number versioning until Ampache 8
 ### Added
 
 * API6
-  * get_lyrics: Return Database lyrics or search with plugins by Song id
+  * New Method: get_lyrics (Return Database lyrics or search with plugins by Song id)
 
 ## API 6.9.0
 
@@ -184,7 +184,7 @@ This version is being released for Ampache7 **only**
 ### Added
 
 * API6
-  * get_external_metadata: Get metadata from external plugins. (Useful for scripting)
+  * New Method: get_external_metadata (Get metadata from external plugins. (Useful for scripting))
   * Add `is_hidden` status and `merge` genres into genre data objects
 
 ### Changed
