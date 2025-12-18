@@ -90,6 +90,7 @@ class Api
         Method\GetBookmarkMethod::ACTION => Method\GetBookmarkMethod::class,
         Method\GetIndexesMethod::ACTION => Method\GetIndexesMethod::class,
         Method\GetExternalMetadataMethod::ACTION => Method\GetExternalMetadataMethod::class,
+        Method\GetLyricsMethod::ACTION => Method\GetLyricsMethod::class,
         Method\GetSimilarMethod::ACTION => Method\GetSimilarMethod::class,
         Method\GoodbyeMethod::ACTION => Method\GoodbyeMethod::class,
         Method\HandshakeMethod::ACTION => Method\HandshakeMethod::class,

@@ -2157,7 +2157,7 @@ class Song extends database_object implements
      * Get lyrics.
      * @return array{'text'?: string}
      */
-    public function get_lyrics(): array
+    public function get_lyrics(bool $db_only = false): array
     {
         if ($this->lyrics === null) {
             $this->fill_ext_info('lyrics');
@@ -2165,6 +2165,10 @@ class Song extends database_object implements
 
         if ($this->lyrics) {
             return ['text' => $this->lyrics];
+        }
+
+        if ($db_only) {
+            return [];
         }
 
         $user = Core::get_global('user');
