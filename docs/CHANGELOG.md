@@ -78,6 +78,8 @@ If you are also having issues try downgrading to composer [2.8.12](https://getco
 * Reduce spam to GitHub API when checking version with auto update
 * Play actions ignoring custom bitrate parameters
 * ViteManifest now expects an absolute URI for baseUri
+* Transcode cache checking source file instead of cache file
+* Saving smart playlist option and settings being overwritten by defaults
 * Subsonic
   * Different calls would filter output by user differently for no reason
 
