@@ -101,7 +101,7 @@ final class PlaylistEdit4Method
         if ($name !== $playlist->name || $type !== $playlist->type) {
             $array = [
                 "name" => $name,
-                "pl_type" => $type,
+                "playlist_type" => $type,
             ];
             $playlist->update($array);
         }

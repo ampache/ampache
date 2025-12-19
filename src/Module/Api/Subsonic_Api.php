@@ -907,11 +907,11 @@ class Subsonic_Api
         bool $public = true,
         bool $clearFirst = false
     ): void {
-        $playlist           = new Playlist((int)$playlist_id);
-        $songsIdToAdd_count = count($songsIdToAdd);
-        $newdata            = [];
-        $newdata['name']    = (!empty($name)) ? $name : $playlist->name;
-        $newdata['pl_type'] = ($public) ? "public" : "private";
+        $playlist                 = new Playlist((int)$playlist_id);
+        $songsIdToAdd_count       = count($songsIdToAdd);
+        $newdata                  = [];
+        $newdata['name']          = (!empty($name)) ? $name : $playlist->name;
+        $newdata['playlist_type'] = ($public) ? "public" : "private";
         $playlist->update($newdata);
         if ($clearFirst) {
             $playlist->delete_all();

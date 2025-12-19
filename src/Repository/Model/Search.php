@@ -1162,8 +1162,8 @@ class Search extends playlist_object
         // Figure out if they want an AND based search or an OR based search
         $operator            = $data['operator'] ?? '';
         $request['operator'] = match (strtolower((string) $operator)) {
-            'or' => 'OR',
-            default => 'AND',
+            'or' => 'or',
+            default => 'and',
         };
         if (array_key_exists('limit', $data)) {
             $request['limit'] = $data['limit'];
@@ -1859,7 +1859,7 @@ class Search extends playlist_object
         $data                 = $this->_filter_request($data);
         $this->rules          = [];
         $user_rules           = [];
-        $this->logic_operator = $data['operator'] ?? 'and';
+        $this->logic_operator = strtolower($data['operator'] ?? 'and');
         // match the numeric rules you send (e.g. rule_1, rule_6000)
         foreach (array_keys($data) as $rule) {
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {

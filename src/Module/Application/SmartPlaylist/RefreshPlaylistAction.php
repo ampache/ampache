@@ -54,6 +54,13 @@ final class RefreshPlaylistAction implements ApplicationActionInterface
             (int) ($request->getQueryParams()['playlist_id'] ?? 0)
         );
 
+        $data = $request->getParsedBody();
+        if (
+            is_array($data)
+        ) {
+            $playlist->set_rules($data);
+        }
+
         $this->ui->showHeader();
         $this->ui->show(
             'show_search.inc.php',

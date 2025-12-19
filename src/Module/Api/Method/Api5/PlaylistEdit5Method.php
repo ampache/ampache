@@ -109,8 +109,8 @@ final class PlaylistEdit5Method
         if ($name !== $playlist->name || $type !== $playlist->type || $owner !== $playlist->user) {
             $array = [
                 "name" => $name,
-                "pl_type" => $type,
-                "pl_user" => (int)$owner,
+                "playlist_type" => $type,
+                "playlist_user" => (int)$owner,
             ];
             $playlist->update($array);
         }
