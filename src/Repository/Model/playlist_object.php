@@ -147,10 +147,9 @@ abstract class playlist_object extends database_object implements library_item
                 $this->update_item('limit', $limit);
             }
 
-            $operator = $data['operator'] ?? 'and';
+            $operator = $data['operator'] ?? $this->logic_operator;
             if ($operator != $this->logic_operator) {
                 $this->update_item('logic_operator', $operator);
-                $this->logic_operator = $operator;
             }
 
             $this->update_item('rules', json_encode($this->rules) ?: null);
