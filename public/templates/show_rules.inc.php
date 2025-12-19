@@ -37,16 +37,17 @@ $currentType = (isset($currentType))
 if (empty($currentType)) {
     $currentType = 'song';
 }
-/** @var null|Search $playlist */
-if (isset($playlist)) {
-    $logic_operator = $playlist->logic_operator;
-} else {
-    $logic_operator = Core::get_request('operator');
-    if (empty($logic_operator)) {
-        $logic_operator = 'and';
-    }
+
+$logic_operator = Core::get_request('operator');
+if (empty($logic_operator)) {
+    /** @var null|Search $playlist */
+    $logic_operator = ((isset($playlist)))
+        ? $playlist->logic_operator
+        : 'and';
+    // rules are based on request so make sure it's set
+    $_REQUEST['operator'] = $logic_operator;
 }
-$logic_operator = strtolower((string)$logic_operator);?>
+$logic_operator = strtolower((string)$logic_operator); ?>
 <script src="<?php echo $web_path; ?>/lib/javascript/search.js"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/search-data.php?type=<?php echo $currentType; ?>"></script>
 
@@ -57,10 +58,10 @@ $logic_operator = strtolower((string)$logic_operator);?>
         <td><?php echo T_('Match'); ?></td>
         <td>
             <select name="operator">
-                <option value="and" <?php if (empty($logic_operator) || $logic_operator == 'and') {
+                <option value="and" <?php if ($logic_operator !== 'or') {
                     echo 'selected="selected"';
                 } ?>><?php echo T_('all rules'); ?></option>
-                <option value="or" <?php if ($logic_operator == 'or') {
+                <option value="or" <?php if ($logic_operator === 'or') {
                     echo 'selected="selected"';
                 } ?>><?php echo T_('any rule'); ?></option>
             </select>
