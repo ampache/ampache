@@ -53,7 +53,7 @@ final class GetLyricsMethod
      *
      * @param array{
      *     filter: string,
-     *     plugins: int,
+     *     plugins?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -66,12 +66,11 @@ final class GetLyricsMethod
             return false;
         }
 
-        $type      = (string) $input['type'];
         $object_id = (int) $input['filter'];
         $libitem   = new Song($object_id);
 
         if ($libitem->isNew()) {
-            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf('Bad Request: %s', $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
@@ -100,12 +99,6 @@ final class GetLyricsMethod
                     }
                 }
             }
-        }
-
-        if ($results['plugin'] === []) {
-            Api::empty($type, $input['api_format']);
-
-            return false;
         }
 
         ob_end_clean();

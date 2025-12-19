@@ -48,7 +48,10 @@ $remember_disabled = (AmpConfig::get('session_length', 3600) >= AmpConfig::get('
 $user_agent     = Core::get_server('HTTP_USER_AGENT');
 $mobile_session = strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPhone') || strpos($user_agent, 'iPad'));
 
-$logo_url = AmpConfig::get('custom_login_logo', Ui::get_logo_url());
+$logo_url = AmpConfig::get('custom_login_logo');
+if (!$logo_url) {
+    $logo_url = Ui::get_logo_url();
+}
 
 define('TABLE_RENDERED', 1);
 if (!AmpConfig::get('disable_xframe_sameorigin', false)) {
