@@ -150,6 +150,7 @@ abstract class playlist_object extends database_object implements library_item
             $operator = $data['operator'] ?? 'and';
             if ($operator != $this->logic_operator) {
                 $this->update_item('logic_operator', $operator);
+                $this->logic_operator = $operator;
             }
 
             $this->update_item('rules', json_encode($this->rules) ?: null);
