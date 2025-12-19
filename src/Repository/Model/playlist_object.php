@@ -112,6 +112,7 @@ abstract class playlist_object extends database_object implements library_item
      *     last_duration?: ?int,
      *     random?: ?int,
      *     limit?: int,
+     *     operator?: int,
      * } $data
      */
     public function update(?array $data = null): int
@@ -144,6 +145,11 @@ abstract class playlist_object extends database_object implements library_item
             $limit = $data['limit'] ?? 0;
             if ($limit != $this->limit) {
                 $this->update_item('limit', $limit);
+            }
+
+            $operator = $data['operator'] ?? 'and';
+            if ($operator != $this->logic_operator) {
+                $this->update_item('logic_operator', $operator);
             }
 
             $this->update_item('rules', json_encode($this->rules) ?: null);
