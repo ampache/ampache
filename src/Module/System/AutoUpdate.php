@@ -116,8 +116,11 @@ class AutoUpdate
                 return null;
             }
             debug_event(self::class, 'GitHub API request ' . $url, 5);
+            $result = json_decode((string)$request->body);
 
-            return json_decode((string)$request->body);
+            return (is_object($result))
+                ? $result
+                : null;
         } catch (Exception $error) {
             debug_event(self::class, 'Request error: ' . $error->getMessage(), 1);
 
