@@ -8,6 +8,10 @@ You should update your config file to make sure all `%BITRATE%` values have a k 
 
 These settings can not be updated automatically in the config file so make sure you check all `encode_args_` parameters (e.g. `encode_args_mp3`)
 
+I have been getting a few issues with composer 2.9.x versions [issue](https://github.com/composer/composer/issues/12681)
+
+If you are also having issues try downgrading to composer [2.8.12](https://getcomposer.org/download/2.8.12/composer.phar) first.
+
 ### Added
 
 * Translations 2025-10-31
@@ -74,6 +78,8 @@ These settings can not be updated automatically in the config file so make sure 
 * Reduce spam to GitHub API when checking version with auto update
 * Play actions ignoring custom bitrate parameters
 * ViteManifest now expects an absolute URI for baseUri
+* Transcode cache checking source file instead of cache file
+* Saving smart playlist option and settings being overwritten by defaults
 * Subsonic
   * Different calls would filter output by user differently for no reason
 

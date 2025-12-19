@@ -140,8 +140,8 @@ final class PlaylistEditMethod
         ) {
             $array = [
                 "name" => $name,
-                "pl_type" => $type,
-                "pl_user" => (int)$owner,
+                "playlist_type" => $type,
+                "playlist_user" => (int)$owner,
             ];
             $playlist->update($array);
             $change_made = true;
