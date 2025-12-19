@@ -105,8 +105,8 @@ abstract class playlist_object extends database_object implements library_item
      * This function takes a key'd array of data and runs updates
      * @param null|array{
      *     name?: ?string,
-     *     pl_type?: ?string,
-     *     pl_user?: ?int,
+     *     playlist_type?: ?string,
+     *     playlist_user?: ?int,
      *     collaborate?: null|list<string>,
      *     last_count?: ?int,
      *     last_duration?: ?int,
@@ -124,14 +124,14 @@ abstract class playlist_object extends database_object implements library_item
             $this->update_item('name', $data['name']);
         }
 
-        if (isset($data['pl_type']) && $data['pl_type'] != $this->type) {
-            $this->update_item('type', $data['pl_type']);
+        if (isset($data['playlist_type']) && $data['playlist_type'] != $this->type) {
+            $this->update_item('type', $data['playlist_type']);
         }
 
-        if (isset($data['pl_user']) && $data['pl_user'] != $this->user) {
-            $this->user     = (int)$data['pl_user'];
+        if (isset($data['playlist_user']) && $data['playlist_user'] != $this->user) {
+            $this->user     = (int)$data['playlist_user'];
             $this->username = User::get_username($this->user);
-            $this->update_item('user', $data['pl_user']);
+            $this->update_item('user', $data['playlist_user']);
             $this->update_item('username', $this->username);
         }
 
