@@ -48,7 +48,10 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
     $mobile_session = true;
 }
 
-$logo_url = AmpConfig::get('custom_login_logo', Ui::get_logo_url()); ?>
+$logo_url = AmpConfig::get('custom_login_logo');
+if (!$logo_url) {
+    $logo_url = Ui::get_logo_url();
+} ?>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir; ?>">
