@@ -1310,6 +1310,23 @@ CREATE TABLE IF NOT EXISTS `song_data` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `song_map`
+--
+
+DROP TABLE IF EXISTS `song_map`;
+CREATE TABLE IF NOT EXISTS `song_map` (
+  `song_id` int(11) UNSIGNED NOT NULL,
+  `object_id` varchar(36) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `object_type` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  UNIQUE KEY `unique_song_map` (`object_id`,`object_type`,`song_id`),
+  KEY `object_id_index` (`object_id`),
+  KEY `song_id_type_index` (`song_id`,`object_type`),
+  KEY `object_id_type_index` (`object_id`,`object_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `song_preview`
 --
 
