@@ -32,9 +32,9 @@ If you are also having issues try downgrading to composer [2.8.12](https://getco
   * LrcLib.net plugin with custom server support
 * Search
   * Song, Artist, Album, AlbumDisk: `days_added` songs that were added before/after x days
-  * Song: `days_update` songs that were updated before/after x days
+  * Song: `days_updated` songs that were updated before/after x days
   * Podcast, Podcast Episode: `days_added` songs that were added before/after x days
-  * Podcast, Podcast Episode: `days_update` songs that were updated before/after x days
+  * Podcast, Podcast Episode: `days_updated` songs that were updated before/after x days
   * Podcast, Podcast Episode: `updated` date that episode files where last updated
 * Start parsing ISRC song tags and display them on Song pages
 * Add `nofollow` parameters to links
