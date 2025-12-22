@@ -1298,6 +1298,31 @@ By default; get only the most recent bookmark. Use `all` to retrieve all media b
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_bookmark.json)
 [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_bookmark%20\(with%20include\).json)
 
+### get_external_metadata
+
+Return External plugin metadata searching by object id and type
+
+| Input     | Type    | Description                                      | Optional |
+|-----------|---------|--------------------------------------------------|---------:|
+| 'filter'  | string  | $object_id to find                               |       NO |
+| 'type'    | string  | `song`, `album`, `artist`, `label` (object_type) |       NO |
+
+* return array
+
+```JSON
+"object_id": "",
+"object_type": "",
+"plugin": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_external_metadata.json)
+
 ### get_indexes
 
 This takes a collection of inputs and returns ID + name for the object type
@@ -1340,6 +1365,31 @@ ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/
 ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_indexes%20\(album\).json)
 
 PLAYLIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_indexes%20\(playlist\).json)
+
+### get_lyrics
+
+Return Database lyrics or search with plugins by Song id
+
+| Input      | Type    | Description                                           | Optional |
+|------------|---------|-------------------------------------------------------|---------:|
+| 'filter'   | string  | $song_id to find                                      |       NO |
+| 'plugins'  | string  | `0`, `1`, if false disable plugin lookup (default: 1) |       NO |
+
+* return array
+
+```JSON
+"object_id": "",
+"object_type": "",
+"plugin": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/get_lyrics.json)
 
 ### get_similar
 
@@ -2648,11 +2698,11 @@ Print a list of valid search rules for your search type
 "error": ""
 ```
 
-Artist [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules (artist).json)
+Artist [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules%20\(artist\).json)
 
-Album [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules (album).json)
+Album [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules%20\(album\).json)
 
-Song [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules (song).json)
+Song [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules%20\(song\).json)
 
 ### search_songs
 
