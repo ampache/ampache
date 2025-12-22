@@ -30,25 +30,25 @@ RUN     sh -c 'echo "Types: deb\n# http://snapshot.debian.org/archive/debian/202
           logrotate \
           make \
           p7zip-full \
-          php8.3 \
-          php8.3-curl \
-          php8.3-dev \
-          php8.3-gd \
-          php8.3-intl \
-          php8.3-ldap \
-          php8.3-mysql \
-          php8.3-xml \
-          php8.3-zip \
+          php8.2 \
+          php8.2-curl \
+          php8.2-dev \
+          php8.2-gd \
+          php8.2-intl \
+          php8.2-ldap \
+          php8.2-mysql \
+          php8.2-xml \
+          php8.2-zip \
           php-pear \
           pwgen \
           supervisor \
           vorbis-tools \
           zip \
           unzip \
-    &&  update-alternatives --set php /usr/bin/php8.3 \
-    &&  update-alternatives --set phpize /usr/bin/phpize8.3 \
-    &&  update-alternatives --set php-config /usr/bin/php-config8.3 \
-    &&  phpenmod -v 8.3 xml \
+    &&  update-alternatives --set php /usr/bin/php8.2 \
+    &&  update-alternatives --set phpize /usr/bin/phpize8.2 \
+    &&  update-alternatives --set php-config /usr/bin/php-config8.2 \
+    &&  phpenmod -v 8.2 xml \
     &&  rm -rf /var/www/html/* /etc/apache2/sites-enabled/* /var/lib/apt/lists/* \
     &&  mkdir -p /var/log/ampache \
     &&  chown -R www-data:www-data /var/log/ampache \
@@ -62,9 +62,9 @@ RUN     sh -c 'echo "Types: deb\n# http://snapshot.debian.org/archive/debian/202
     &&  sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen \
     &&  locale-gen \
     &&  pecl install xdebug \
-    &&  echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" > /etc/php/8.3/apache2/conf.d/xdebug.ini \
-    &&  echo "xdebug.remote_enable=on" >> /etc/php/8.3/apache2/conf.d/xdebug.ini \
-    &&  echo "xdebug.remote_autostart=off" >> /etc/php/8.3/apache2/conf.d/xdebug.ini \
+    &&  echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" > /etc/php/8.2/apache2/conf.d/xdebug.ini \
+    &&  echo "xdebug.remote_enable=on" >> /etc/php/8.2/apache2/conf.d/xdebug.ini \
+    &&  echo "xdebug.remote_autostart=off" >> /etc/php/8.2/apache2/conf.d/xdebug.ini \
     &&  wget -q -O /usr/local/bin/composer https://getcomposer.org/download/latest-stable/composer.phar \
     &&  chmod +x /usr/local/bin/composer \
     &&  apt-get -qq purge \
