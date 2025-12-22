@@ -56,7 +56,7 @@ final class LabelArtistsMethod
      *
      * @param array{
      *     filter: string,
-     *     include?: array|string,
+     *     include?: string|string[],
      *     offset?: int,
      *     limit?: int,
      *     cond?: string,

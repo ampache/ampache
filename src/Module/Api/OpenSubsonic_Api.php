@@ -518,6 +518,12 @@ class OpenSubsonic_Api
         $musicFolderId = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($input['musicFolderId']) : 0;
         $catalogFilter = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'));
 
+        // hide ratings and flags for other users if single user data is enabled
+        $by_user     = (bool)Preference::get_by_user($user->id, 'subsonic_single_user_data') === true;
+        $output_user = ($by_user)
+            ? $user
+            : null;
+
         // Get albums from all catalogs by default Catalog filter is not supported for all request types for now.
         $catalogs = ($catalogFilter)
             ? $user->get_catalogs('music')
@@ -526,6 +532,7 @@ class OpenSubsonic_Api
             $catalogs   = [];
             $catalogs[] = $musicFolderId;
         }
+
         $albums = null;
         switch ($type) {
             case 'random':
@@ -538,16 +545,16 @@ class OpenSubsonic_Api
                 $albums = Stats::get_newest('album', $size, $offset, $musicFolderId, $user);
                 break;
             case 'highest':
-                $albums = Rating::get_highest('album', $size, $offset, $user->id);
+                $albums = Rating::get_highest('album', $size, $offset, $output_user?->id, $by_user);
                 break;
             case 'frequent':
-                $albums = Stats::get_top('album', $size, 0, $offset);
+                $albums = Stats::get_top('album', $size, 0, $offset, $output_user, false, 0, 0, $by_user);
                 break;
             case 'recent':
-                $albums = Stats::get_recent('album', $size, $offset);
+                $albums = Stats::get_recent('album', $size, $offset, $output_user);
                 break;
             case 'starred':
-                $albums = Userflag::get_latest('album', null, $size, $offset);
+                $albums = Userflag::get_latest('album', $output_user, $size, $offset, 0, 0, $by_user);
                 break;
             case 'alphabeticalByName':
                 $albums = ($catalogFilter && empty($catalogs) && $musicFolderId == 0)
@@ -901,11 +908,11 @@ class OpenSubsonic_Api
         bool $public = true,
         bool $clearFirst = false
     ): void {
-        $playlist           = new Playlist((int)$playlist_id);
-        $songsIdToAdd_count = count($songsIdToAdd);
-        $newdata            = [];
-        $newdata['name']    = (!empty($name)) ? $name : $playlist->name;
-        $newdata['pl_type'] = ($public) ? "public" : "private";
+        $playlist                 = new Playlist((int)$playlist_id);
+        $songsIdToAdd_count       = count($songsIdToAdd);
+        $newdata                  = [];
+        $newdata['name']          = (!empty($name)) ? $name : $playlist->name;
+        $newdata['playlist_type'] = ($public) ? "public" : "private";
         $playlist->update($newdata);
         if ($clearFirst) {
             $playlist->delete_all();
@@ -2045,14 +2052,14 @@ class OpenSubsonic_Api
      */
     public static function getartists(array $input, User $user): void
     {
-        unset($user);
         $musicFolderId = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($input['musicFolderId']) : 0;
         $catalogs      = [];
         if (!empty($musicFolderId) && $musicFolderId != 0) {
             $catalogs[] = $musicFolderId;
         }
 
-        $artists = Artist::get_id_arrays($catalogs);
+        $user_id = $user->id ?? 0;
+        $artists = Artist::get_id_arrays($catalogs, ((bool)Preference::get_by_user($user_id, 'subsonic_force_album_artist') === true));
         $format  = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
@@ -3161,6 +3168,12 @@ class OpenSubsonic_Api
      */
     public static function getstarred(array $input, User $user, string $elementName = 'starred'): void
     {
+        // hide ratings and flags for other users if single user data is enabled
+        $by_user     = (bool)Preference::get_by_user($user->id, 'subsonic_single_user_data') === true;
+        $output_user = ($by_user)
+            ? $user
+            : null;
+
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
@@ -3168,17 +3181,17 @@ class OpenSubsonic_Api
                 case 'starred':
                     $response = OpenSubsonic_Xml_Data::addStarred(
                         $response,
-                        Userflag::get_latest('artist', $user, 10000),
-                        Userflag::get_latest('album', $user, 10000),
-                        Userflag::get_latest('song', $user, 10000)
+                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
                     );
                     break;
                 case 'starred2':
                     $response = OpenSubsonic_Xml_Data::addStarred2(
                         $response,
-                        Userflag::get_latest('artist', $user, 10000),
-                        Userflag::get_latest('album', $user, 10000),
-                        Userflag::get_latest('song', $user, 10000)
+                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
                     );
                     break;
             }
@@ -3188,17 +3201,17 @@ class OpenSubsonic_Api
                 case 'starred':
                     $response = OpenSubsonic_Json_Data::addStarred(
                         $response,
-                        Userflag::get_latest('artist', $user, 10000),
-                        Userflag::get_latest('album', $user, 10000),
-                        Userflag::get_latest('song', $user, 10000)
+                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
                     );
                     break;
                 case 'starred2':
                     $response = OpenSubsonic_Json_Data::addStarred2(
                         $response,
-                        Userflag::get_latest('artist', $user, 10000),
-                        Userflag::get_latest('album', $user, 10000),
-                        Userflag::get_latest('song', $user, 10000)
+                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
+                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
                     );
                     break;
             }
@@ -3338,7 +3351,6 @@ class OpenSubsonic_Api
             self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
-
 
     /**
      * getUsers
@@ -3856,7 +3868,6 @@ class OpenSubsonic_Api
                 if (!$media instanceof Media || !isset($media->time) || !isset($media->id)) {
                     continue;
                 }
-
 
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();

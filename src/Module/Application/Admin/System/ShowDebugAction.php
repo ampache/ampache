@@ -76,14 +76,14 @@ final class ShowDebugAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $configuration = AmpConfig::get_all();
-        if ($this->requestParser->getFromRequest('autoupdate') === 'force') {
-            AutoUpdate::get_latest_version(true);
-        }
+        $configuration  = AmpConfig::get_all();
+        $latest_version = AutoUpdate::get_latest_version(($this->requestParser->getFromRequest('autoupdate') === 'force'));
+
         $this->ui->show(
             'show_debug.inc.php',
             [
                 'configuration' => $configuration,
+                'latestVersion' => $latest_version,
                 'lastCronDate' => (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::CRON_DATE)
             ]
         );

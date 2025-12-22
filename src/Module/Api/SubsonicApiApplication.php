@@ -127,7 +127,6 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $password = $query['p'] ?? '';
         }
 
-
         $token     = $query['t'] ?? '';
         $salt      = $query['s'] ?? '';
         $version   = $query['v'] ?? '';
@@ -154,7 +153,6 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 $subsonic_legacy = Preference::get_by_user($user->getId(), 'subsonic_legacy');
             }
         }
-
 
         // make sure we have correct authentication parameters
         if (
@@ -370,7 +368,11 @@ final class SubsonicApiApplication implements ApiApplicationInterface
     {
         $encpwd = strpos($password, "enc:");
         if ($encpwd !== false) {
-            $hex    = substr($password, 4);
+            $hex = substr($password, 4);
+            // If the string has non-hex char
+            if (!ctype_xdigit($hex)) {
+                return $password;
+            }
             $decpwd = '';
             for ($count = 0; $count < strlen((string)$hex); $count += 2) {
                 $decpwd .= chr((int)hexdec(substr($hex, $count, 2)));

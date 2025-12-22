@@ -115,7 +115,6 @@ class UpdateFromTagsActionTest extends MockeryTestCase
         $catalogId = 42;
         $webPath   = 'some-web-path';
 
-
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
             ->once()

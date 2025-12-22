@@ -144,12 +144,17 @@ class UPnPPlayer
      */
     public function GetState()
     {
+        $state       = '';
         $response    = $this->Device()->instanceOnly('GetTransportInfo');
         $responseXML = simplexml_load_string($response);
-        if (empty($responseXML)) {
-            return '';
+
+        if ($responseXML instanceof SimpleXMLElement) {
+            $xpath = $responseXML->xpath('//CurrentTransportState');
+            if (is_array($xpath)) {
+                list($state) = $xpath;
+            }
         }
-        list($state) = $responseXML->xpath('//CurrentTransportState');
+
         debug_event(self::class, 'GetState = ' . $state, 5);
 
         return $state;
@@ -382,17 +387,13 @@ class UPnPPlayer
         return $this->SetVolume($volume);
     }
 
-    /**
-     * SetVolume
-     * @param $value
-     */
-    public function SetVolume($value): bool
+    public function SetVolume(int $value): bool
     {
         $desiredVolume = max(0, min(100, $value));
         $instanceId    = 0;
         $channel       = 'Master';
 
-        $response = $this->Device()->sendRequestToDevice('SetVolume', [
+        $this->Device()->sendRequestToDevice('SetVolume', [
             'InstanceID' => $instanceId,
             'Channel' => $channel,
             'DesiredVolume' => $desiredVolume,
@@ -410,17 +411,22 @@ class UPnPPlayer
     {
         $instanceId = 0;
         $channel    = 'Master';
-
-        $response = $this->Device()->sendRequestToDevice('GetVolume', [
+        $arguments  = [
             'InstanceID' => $instanceId,
             'Channel' => $channel,
-        ]);
+        ];
 
+        $volume      = '';
+        $response    = $this->Device()->sendRequestToDevice('GetVolume', $arguments);
         $responseXML = simplexml_load_string($response);
-        if (empty($responseXML)) {
-            return '';
+
+        if ($responseXML instanceof SimpleXMLElement) {
+            $xpath = $responseXML->xpath('//CurrentVolume');
+            if (is_array($xpath)) {
+                list($volume) = $xpath;
+            }
         }
-        list($volume) = ($responseXML->xpath('//CurrentVolume'));
+
         debug_event(self::class, 'GetVolume:' . $volume, 5);
 
         return $volume;

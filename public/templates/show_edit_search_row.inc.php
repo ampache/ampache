@@ -40,7 +40,7 @@ use Ampache\Repository\Model\User;
                 <td>
                     <?php $name    = 'select_' . $libitem->type; ?>
                     <?php ${$name} = ' selected="selected"'; ?>
-                    <select name="pl_type">
+                    <select name="playlist_type">
                         <option value="public"<?php echo $select_public ?? ''; ?>><?php echo T_('Public'); ?></option>
                         <option value="private"<?php echo $select_private ?? ''; ?>><?php echo T_('Private'); ?></option>
                     </select>
@@ -68,7 +68,7 @@ if (!empty($users)) {
         $selected  = ($user_id == $libitem->user) ? ' selected="selected"' : '';
         $options[] = '<option value="' . $user_id . '"' . $selected . '>' . scrub_out($username) . '</option>';
     }
-    echo '<select name="pl_user">' . implode("\n", $options) . '</select>';
+    echo '<select name="playlist_user">' . implode("\n", $options) . '</select>';
 } ?>
                 </td>
             </tr>

@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Metadata\MetadataEnabledInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Playback\Stream;
@@ -146,6 +147,9 @@ class Song extends database_object implements
      * Generated data from other areas
      */
 
+    /** @var null|string[] $isrc */
+    public ?array $isrc = null;
+
     public ?string $link = null;
 
     public string $type;
@@ -257,6 +261,7 @@ class Song extends database_object implements
         $albumartist_mbid = $results['mb_albumartistid'] ?? null;
         $disk             = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
         $disksubtitle     = $results['disksubtitle'] ?? null;
+        $isrc             = $results['isrc'] ?? [];
         $year             = Catalog::normalize_year($results['year'] ?? 0);
         $comment          = $results['comment'] ?? null;
         $tags             = $results['genre'] ?? []; // multiple genre support makes this an array
@@ -408,6 +413,9 @@ class Song extends database_object implements
             }
         }
 
+        // Add you ISRC's to the song_map
+        self::update_song_map($isrc, 'isrc', $song_id);
+
         // update the all the counts for the album right away
         Album::update_album_count($album_id);
 
@@ -461,6 +469,7 @@ class Song extends database_object implements
         Dba::write("DELETE FROM `song` WHERE `song`.`catalog` NOT IN (SELECT `id` FROM `catalog`);");
         // delete the rest
         Dba::write("DELETE FROM `song_data` WHERE `song_data`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`);");
+        Dba::write("DELETE FROM `song_map` WHERE `song_map`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`);");
         // also clean up some bad data that might creep in
         Dba::write("UPDATE `song` SET `composer` = NULL WHERE `composer` = '';");
         Dba::write("UPDATE `song` SET `mbid` = NULL WHERE `mbid` = '';");
@@ -809,7 +818,6 @@ class Song extends database_object implements
     /**
      * get_album_catalog_number
      * gets the catalog_number of $this->album, allows passing of id
-     * @param int|null $album_id
      */
     public function get_album_catalog_number(?int $album_id = null): ?string
     {
@@ -825,7 +833,6 @@ class Song extends database_object implements
     /**
      * get_album_original_year
      * gets the original_year of $this->album, allows passing of id
-     * @param int|null $album_id
      */
     public function get_album_original_year(?int $album_id = null): ?int
     {
@@ -841,7 +848,6 @@ class Song extends database_object implements
     /**
      * get_album_barcode
      * gets the barcode of $this->album, allows passing of id
-     * @param int|null $album_id
      */
     public function get_album_barcode(?int $album_id = null): ?string
     {
@@ -949,7 +955,6 @@ class Song extends database_object implements
 
         return $this->albumartist;
     }
-
 
     /**
      * get_album_artists
@@ -1473,6 +1478,34 @@ class Song extends database_object implements
     }
 
     /**
+     * update_song_map
+     * update and remove mapping data for a song
+     * @param string[] $new_data
+     */
+    public static function update_song_map(array $new_data, string $type, int $song_id): void
+    {
+        if (empty($new_data)) {
+            $sql = "DELETE FROM `song_map` WHERE `song_id` = ? AND `object_type` = ?;";
+            Dba::write($sql, [$song_id, $type]) !== false;
+
+            return;
+        }
+
+        // we only want your latest values in the map so we delete anything not in the new list
+        $sql = "DELETE FROM `song_map` WHERE `song_id` = ? AND `object_type` = ? AND `object_id` NOT IN (";
+
+        foreach ($new_data as $object_id) {
+            // insert new values
+            Dba::write("REPLACE INTO `song_map` (`song_id`, `object_type`, `object_id`) VALUES (?, ?, ?);", [$song_id, $type, $object_id]);
+            // append to the sql for deletions
+            $sql .= "'" . Dba::escape($object_id) . "',";
+        }
+        $sql = rtrim($sql, ',') . ');';
+
+        Dba::write($sql, [$song_id, $type]) !== false;
+    }
+
+    /**
      * update_artist
      * updates the artist field
      */
@@ -1766,6 +1799,19 @@ class Song extends database_object implements
     }
 
     /**
+     * Get item album_artists array
+     * @return string[]
+     */
+    public function get_isrcs(): array
+    {
+        if ($this->isrc === null) {
+            $this->isrc = self::get_song_map($this->id);
+        }
+
+        return $this->isrc ?? [];
+    }
+
+    /**
      * Get item f_albumartist_link.
      */
     public function get_f_albumartist_link(): string
@@ -1849,6 +1895,27 @@ class Song extends database_object implements
         $db_results = Dba::read($sql, [$object_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['object_id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * Get song data from the song_map table (ISRC's only right now).
+     * @return string[]
+     */
+    public static function get_song_map(int $song_id, ?string $type = 'isrc'): array
+    {
+        $results = [];
+        if (!$song_id) {
+            return $results;
+        }
+
+        $sql = "SELECT DISTINCT `object_id` FROM `song_map` WHERE `object_type` = ? AND `song_id` = ?;";
+
+        $db_results = Dba::read($sql, [$type, $song_id]);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (string)$row['object_id'];
         }
 
         return $results;
@@ -2090,7 +2157,7 @@ class Song extends database_object implements
      * Get lyrics.
      * @return array{'text'?: string}
      */
-    public function get_lyrics(): array
+    public function get_lyrics(bool $db_only = false): array
     {
         if ($this->lyrics === null) {
             $this->fill_ext_info('lyrics');
@@ -2098,6 +2165,10 @@ class Song extends database_object implements
 
         if ($this->lyrics) {
             return ['text' => $this->lyrics];
+        }
+
+        if ($db_only) {
+            return [];
         }
 
         $user = Core::get_global('user');
@@ -2201,7 +2272,11 @@ class Song extends database_object implements
                 $metadata = $metadataRepository->findById((int) $metadataId);
                 if ($metadata && $value !== $metadata->getData()) {
                     $metadata->setData((string) $value);
-                    $metadata->save();
+                    try {
+                        $metadata->save();
+                    } catch (DatabaseException $error) {
+                        debug_event(self::class, 'Failed to save metadata: ' . $error->getMessage(), 2);
+                    }
                 }
             }
         }

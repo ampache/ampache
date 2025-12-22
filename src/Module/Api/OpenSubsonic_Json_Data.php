@@ -2175,7 +2175,6 @@ class OpenSubsonic_Json_Data
         return $response;
     }
 
-
     /**
      * addArtistWithAlbumsID3
      *
@@ -2183,7 +2182,6 @@ class OpenSubsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/artistwithalbumsid3/
      * @see self::addArtistID3()
      */
-
 
     /**
      * addBookmarks
@@ -2269,7 +2267,6 @@ class OpenSubsonic_Json_Data
      * A disc title for an album
      * https://opensubsonic.netlify.app/docs/responses/disctitle/
      */
-
 
     /**
      * addError
@@ -2406,7 +2403,6 @@ class OpenSubsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/indexid3/
      */
 
-
     /**
      * _getInternetRadioStation
      *
@@ -2428,7 +2424,6 @@ class OpenSubsonic_Json_Data
             'homepageUrl' => (string)$radio->site_url,
         ];
     }
-
 
     /**
      * addInternetRadioStations
@@ -2459,7 +2454,6 @@ class OpenSubsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/itemdate/
      */
 
-
     /**
      * addItemGenre
      *
@@ -2470,8 +2464,6 @@ class OpenSubsonic_Json_Data
      * @see self::addAlbumID3()
      *
      */
-
-
 
     /**
      * addJukeboxPlaylist
@@ -2516,7 +2508,6 @@ class OpenSubsonic_Json_Data
         return $response;
     }
 
-
     /**
      * addLicense
      *
@@ -2535,7 +2526,6 @@ class OpenSubsonic_Json_Data
         return $response;
     }
 
-
     /**
      * addLine
      *
@@ -2543,7 +2533,6 @@ class OpenSubsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/line/
      * @see self::addLyricsList())
      */
-
 
     /**
      * addLyrics
@@ -2583,7 +2572,6 @@ class OpenSubsonic_Json_Data
         return $response;
     }
 
-
     /**
      * addLyricsList
      *
@@ -2612,7 +2600,6 @@ class OpenSubsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/musicfolder/
      * @see self::addMusicFolders()
      */
-
 
     /**
      * addMusicFolders
@@ -2858,7 +2845,6 @@ class OpenSubsonic_Json_Data
             $response['subsonic-response']['playQueue'] = $json;
         }
 
-
         return $response;
     }
 
@@ -2919,10 +2905,8 @@ class OpenSubsonic_Json_Data
             $response['subsonic-response']['playQueueByIndex'] = $json;
         }
 
-
         return $response;
     }
-
 
     /**
      * addPodcastChannel
@@ -2931,7 +2915,6 @@ class OpenSubsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/podcastchannel/
      * @see self::addPodcasts()
      */
-
 
     /**
      * addPodcastEpside
@@ -2945,7 +2928,6 @@ class OpenSubsonic_Json_Data
     public static function addPodcastEpisode(array $response, Podcast_Episode $episode): array
     {
         $response['subsonic-response']['podcastEpisode'] = self::_getPodcastEpisode($episode);
-
 
         return $response;
     }
@@ -2985,7 +2967,6 @@ class OpenSubsonic_Json_Data
      * skipped
      */
 
-
     /**
      * addRandomSongs
      * https://opensubsonic.netlify.app/docs/responses/randomsongs/
@@ -3014,7 +2995,6 @@ class OpenSubsonic_Json_Data
      * @see self::addAlbumID3()
      */
 
-
     /**
      * addReplayGain
      *
@@ -3022,7 +3002,6 @@ class OpenSubsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/replaygain/
      * @see self::_getChildSong()
      */
-
 
     /**
      * addScanStatus
@@ -3365,7 +3344,6 @@ class OpenSubsonic_Json_Data
         return $response;
     }
 
-
     /**
      * addSimilarSongs
      *
@@ -3453,7 +3431,6 @@ class OpenSubsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/songs/
      * @see self::_getChildSong()
      */
-
 
     /**
      * addSongsByGenre
@@ -3631,7 +3608,6 @@ class OpenSubsonic_Json_Data
         return $response;
     }
 
-
     /**
      * addUsers
      *
@@ -3672,7 +3648,6 @@ class OpenSubsonic_Json_Data
 
         return $response;
     }
-
 
     /**
      * addVideos

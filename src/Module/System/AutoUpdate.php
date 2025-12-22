@@ -41,7 +41,7 @@ class AutoUpdate
     /**
      * Check if current version is a development version.
      */
-    protected static function is_develop(): bool
+    protected static function _is_develop(): bool
     {
         $version    = (string)AmpConfig::get('version');
         $vspart     = explode('-', $version);
@@ -61,7 +61,7 @@ class AutoUpdate
     /**
      * Check if current version is a git repository.
      */
-    protected static function is_git_repository(): bool
+    protected static function _is_git_repository(): bool
     {
         return is_dir(__DIR__ . '/../../../.git');
     }
@@ -94,7 +94,7 @@ class AutoUpdate
     /**
      * Check if branch develop exists in git repository.
      */
-    protected static function is_branch_develop_exists(): bool
+    protected static function _is_branch_develop_exists(): bool
     {
         return is_readable(__DIR__ . '/../../../.git/refs/heads/develop');
     }
@@ -108,18 +108,19 @@ class AutoUpdate
             // https is mandatory
             $url     = "https://api.github.com/repos/ampache/ampache" . $action;
             $request = Requests::get($url, [], Core::requests_options());
-            $time    = time();
             if ($request->status_code != 200) {
                 debug_event(self::class, 'GitHub API request ' . $url . ' failed with http code ' . $request->status_code, 1);
                 // Not connected / API rate limit exceeded: just ignore, it will pass next time
-                Preference::update_all('autoupdate_lastcheck', $time);
-                AmpConfig::set('autoupdate_lastcheck', $time, true);
+                self::_set_lastcheck(time());
 
                 return null;
             }
             debug_event(self::class, 'GitHub API request ' . $url, 5);
+            $result = json_decode((string)$request->body);
 
-            return json_decode((string)$request->body);
+            return (is_object($result))
+                ? $result
+                : null;
         } catch (Exception $error) {
             debug_event(self::class, 'Request error: ' . $error->getMessage(), 1);
 
@@ -130,7 +131,7 @@ class AutoUpdate
     /**
      * Check if last GitHub check expired.
      */
-    protected static function lastcheck_expired(): bool
+    public static function lastcheck_expired(): bool
     {
         // if you're not auto updating the check should never expire
         if (!AmpConfig::get('autoupdate', false)) {
@@ -155,25 +156,23 @@ class AutoUpdate
 
         // Don't spam the GitHub API
         if (
-            $force === false ||
+            $force === false &&
             self::lastcheck_expired() === false
         ) {
             return $lastversion;
         }
 
         // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
-        $time       = time();
-        $git_branch = self::is_force_git_branch();
-        Preference::update_all('autoupdate_lastcheck', $time);
-        AmpConfig::set('autoupdate_lastcheck', $time, true);
+        self::_set_lastcheck(time());
 
+        $git_branch = self::is_force_git_branch();
         // Development version, get latest commit on develop branch
         if (
-            self::is_develop() ||
+            self::_is_develop() ||
             $git_branch !== ''
         ) {
             if (
-                self::is_develop() ||
+                self::_is_develop() ||
                 $git_branch == 'develop'
             ) {
                 $commits = self::github_request('/commits/develop');
@@ -187,9 +186,6 @@ class AutoUpdate
                 $lastversion = $commits->sha;
                 Preference::update_all('autoupdate_lastversion', $lastversion);
                 AmpConfig::set('autoupdate_lastversion', $lastversion, true);
-                $available = self::is_update_available(true);
-                Preference::update_all('autoupdate_lastversion_new', (int)$available);
-                AmpConfig::set('autoupdate_lastversion_new', $available, true);
 
                 return $lastversion;
             }
@@ -205,9 +201,6 @@ class AutoUpdate
                 $lastversion = $release->name;
                 Preference::update_all('autoupdate_lastversion', $lastversion);
                 AmpConfig::set('autoupdate_lastversion', $lastversion, true);
-                $available = self::is_update_available(true);
-                Preference::update_all('autoupdate_lastversion_new', (int)$available);
-                AmpConfig::set('autoupdate_lastversion_new', $available, true);
 
                 return $lastversion;
             }
@@ -257,7 +250,7 @@ class AutoUpdate
         ) {
             return trim((string)file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
         }
-        if (self::is_branch_develop_exists()) {
+        if (self::_is_branch_develop_exists()) {
             return trim((string)file_get_contents(__DIR__ . '/../../../.git/refs/heads/develop'));
         }
 
@@ -270,15 +263,15 @@ class AutoUpdate
     public static function is_update_available(?bool $force = false): bool
     {
         if (
-            $force === false ||
+            $force === false &&
             self::lastcheck_expired() === false
         ) {
             return (bool)AmpConfig::get('autoupdate_lastversion_new', false);
         }
 
-        $time = time();
-        Preference::update_all('autoupdate_lastcheck', $time);
-        AmpConfig::set('autoupdate_lastcheck', $time, true);
+        if ($force) {
+            self::_set_lastcheck(time());
+        }
 
         $available  = false;
         $git_branch = self::is_force_git_branch();
@@ -303,7 +296,7 @@ class AutoUpdate
                 // returns -1 if the first version is lower than the second, (e.g. version_compare(6.3.3, 7.0.0) = -1)
                 $available = (version_compare($current, $latest) === -1);
             } elseif (
-                self::is_develop() ||
+                self::_is_develop() ||
                 $git_branch !== ''
             ) {
                 $ccommit = AmpConfig::get($current) ?? self::github_request('/commits/' . $current);
@@ -339,6 +332,13 @@ class AutoUpdate
         //    echo '<a href="https://github.com/ampache/ampache/wiki/Ampache-Next-Changes' . '" target="_blank">' . T_('View changes') . '</a><br /> ';
         //    echo '</div>';
         //}
+    }
+
+    protected static function _set_lastcheck(int $time): void
+    {
+        //debug_event(self::class, 'Set autoupdate_lastcheck to ' . $time, 5);
+        Preference::update_all('autoupdate_lastcheck', $time);
+        AmpConfig::set('autoupdate_lastcheck', $time, true);
     }
 
     /**
@@ -380,7 +380,7 @@ class AutoUpdate
             return;
         }
         $git_branch    = self::is_force_git_branch();
-        $develop_check = self::is_develop() || $git_branch != '';
+        $develop_check = self::_is_develop() || $git_branch != '';
         $changelog     = ($git_branch == '') ? 'master' : $git_branch;
         $zip_name      = ($git_branch == '') ? 'develop' : $git_branch;
 
@@ -393,7 +393,7 @@ class AutoUpdate
         } else {
             echo ' | <a href="' . self::get_zip_url() . '" target="_blank">' . T_('Download') . '</a>';
         }
-        if (self::is_git_repository()) {
+        if (self::_is_git_repository()) {
             echo ' | <a class="nohtml" href="' . AmpConfig::get_web_path() . '/update.php?type=sources&action=update"> <b>' . T_('Update') . '</b></a>';
             echo ' | <a class="nohtml" href="' . AmpConfig::get_web_path() . '/update.php?type=sources&action=clear">' . T_('Ignore') . '</a>';
         }
@@ -409,7 +409,7 @@ class AutoUpdate
         $git_branch = self::is_force_git_branch();
         if ($git_branch !== '') {
             $cmd = 'git pull https://github.com/ampache/ampache.git ' . $git_branch;
-        } elseif (self::is_develop()) {
+        } elseif (self::_is_develop()) {
             $cmd = 'git pull https://github.com/ampache/ampache.git develop';
         }
         if (!$api) {

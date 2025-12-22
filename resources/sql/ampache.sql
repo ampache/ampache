@@ -18,9 +18,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.9
--- Generation Time: Jun 10, 2025 at 10:08 AM
--- Server version: 11.8.1-MariaDB-5 from Debian
--- PHP Version: 8.4.7
+-- Generation Time: Dec 19, 2025 at 10:36 AM
+-- Server version: 11.8.3-MariaDB-0+deb13u1 from Debian
+-- PHP Version: 8.4.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -878,7 +878,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
   UNIQUE KEY `preference_UN` (`name`),
   KEY `category` (`category`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=232 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `preference`
@@ -961,8 +961,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (133, 'geolocation', '0', 'Allow Geolocation', 25, 'boolean', 'options', 'feature'),
 (134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', 25, 'boolean', 'streaming', 'player'),
 (135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 100, 'boolean', 'system', 'upload'),
-(136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom'),
-(137, 'custom_favicon', '', 'Custom URL - Favicon', 75, 'string', 'interface', 'custom'),
+(136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'system', 'interface'),
+(137, 'custom_favicon', '', 'Custom URL - Favicon', 75, 'string', 'system', 'interface'),
 (138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'system', 'interface'),
 (139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system', 'backend'),
 (140, 'notify_email', '0', 'Allow E-mail notifications', 25, 'boolean', 'options', NULL),
@@ -983,7 +983,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 100, 'boolean', 'system', 'catalog'),
 (157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL),
 (158, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home'),
-(159, 'custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom'),
+(159, 'custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'system', 'interface'),
 (160, 'show_license', '1', 'Show License', 25, 'boolean', 'interface', 'browse'),
 (161, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse'),
 (162, 'hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse'),
@@ -1053,7 +1053,9 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (228, 'browse_podcast_grid_view', '0', 'Force Grid View on Podcast browse', 25, 'boolean', 'interface', 'cookies'),
 (229, 'browse_podcast_episode_grid_view', '0', 'Force Grid View on Podcast Episode browse', 25, 'boolean', 'interface', 'cookies'),
 (230, 'show_playlist_media_parent', '0', 'Show Artist column on playlist media rows', 25, 'boolean', 'playlist', NULL),
-(231, 'subsonic_legacy', '1', 'Enable legacy Subsonic API responses for compatibility issues', 25, 'boolean', 'options', 'api');
+(231, 'subsonic_legacy', '1', 'Enable legacy Subsonic API responses for compatibility issues', 25, 'boolean', 'options', 'api'),
+(232, 'subsonic_force_album_artist', '0', 'Only select Album Artists when making Subsonic Artist calls', 25, 'boolean', 'options', 'api'),
+(233, 'subsonic_single_user_data', '1', 'Only show my data when making Subsonic list calls', 25, 'boolean', 'options', 'api');
 
 -- --------------------------------------------------------
 
@@ -1308,6 +1310,23 @@ CREATE TABLE IF NOT EXISTS `song_data` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `song_map`
+--
+
+DROP TABLE IF EXISTS `song_map`;
+CREATE TABLE IF NOT EXISTS `song_map` (
+  `song_id` int(11) UNSIGNED NOT NULL,
+  `object_id` varchar(36) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `object_type` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  UNIQUE KEY `unique_song_map` (`object_id`,`object_type`,`song_id`),
+  KEY `object_id_index` (`object_id`),
+  KEY `song_id_type_index` (`song_id`,`object_type`),
+  KEY `object_id_type_index` (`object_id`,`object_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `song_preview`
 --
 
@@ -1468,7 +1487,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '760001'),
+('db_version', '780004'),
 ('Plugin_Last.FM', '000005'),
 ('Plugin_Home Dashboard', '2');
 
@@ -1799,7 +1818,10 @@ INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
 (-1, 227, 'browse_video_grid_view', '0'),
 (-1, 228, 'browse_podcast_grid_view', '0'),
 (-1, 229, 'browse_podcast_episode_grid_view', '0'),
-(-1, 230, 'show_playlist_media_parent', '0');
+(-1, 230, 'show_playlist_media_parent', '0'),
+(-1, 231, 'subsonic_legacy', '1'),
+(-1, 232, 'subsonic_force_album_artist', '0'),
+(-1, 233, 'subsonic_single_user_data', '1');
 
 -- --------------------------------------------------------
 

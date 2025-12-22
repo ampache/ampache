@@ -66,7 +66,7 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('search')) { ?>
         <li>
-            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=search&id=<?php echo $playlist->id; ?>">
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=search&id=<?php echo $playlist->id; ?>" rel="nofollow">
                 <?php echo Ui::get_material_symbol('folder_zip', T_('Batch download')); ?>
                 <?php echo T_('Batch download'); ?>
             </a>
@@ -105,6 +105,9 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
         <input type="hidden" name="playlist_id" value="<?php echo $playlist->id; ?>" />
         <input type="hidden" name="playlist_type" value="<?php echo $playlist->type; ?>" />
         <input type="hidden" name="playlist_name" value="<?php echo $playlist->name; ?>" />
+        <input type="hidden" name="playlist_user" value="<?php echo $playlist->user; ?>" />
+        <input type="hidden" name="limit" value="<?php echo $playlist->limit; ?>" />
+        <input type="hidden" name="random" value="<?php echo $playlist->random; ?>" />
     </div>
 </form>
 

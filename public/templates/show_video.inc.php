@@ -110,7 +110,7 @@ $gart = Art::display('video', $video->id, $fullname, ['width' => 200, 'height' =
     <?php } ?>
         <?php if (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD)) { ?>
             <a class="nohtml" href="<?php echo $video->play_url(); ?>"><?php echo Ui::get_material_symbol('link', T_('Link')); ?></a>
-            <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>" rel="nofollow"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
         <?php } ?>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>

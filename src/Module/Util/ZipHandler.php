@@ -151,7 +151,7 @@ final class ZipHandler implements ZipHandlerInterface
     public function __destruct()
     {
         // cleanup the generated file
-        if ($this->zipFile) {
+        if ($this->zipFile && is_file($this->zipFile)) {
             @unlink($this->zipFile);
         }
         $this->zipFile = null;

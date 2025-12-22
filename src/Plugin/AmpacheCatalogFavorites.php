@@ -226,7 +226,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                         ?>
                         <td class="cel_action">
                         <?php if (AmpConfig::get('download')) { ?>
-                            <a class="nohtml" href="<?php echo AmpConfig::get_web_path(); ?>/stream.php?action=download&song_id=<?php echo $item->getId(); ?>">
+                            <a class="nohtml" href="<?php echo AmpConfig::get_web_path(); ?>/stream.php?action=download&song_id=<?php echo $item->getId(); ?>" rel="nofollow">
                                 <?php echo Ui::get_material_symbol('download', T_('Download')); ?>
                             </a>
                             <?php

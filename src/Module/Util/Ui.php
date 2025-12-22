@@ -918,7 +918,9 @@ class Ui implements UiInterface
             case 'stream_beautiful_url':
             case 'subsonic_always_download':
             case 'subsonic_backend':
+            case 'subsonic_force_album_artist':
             case 'subsonic_legacy':
+            case 'subsonic_single_user_data':
             case 'tadb_overwrite_name':
             case 'topmenu':
             case 'ui_fixed':

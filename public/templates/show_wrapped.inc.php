@@ -83,7 +83,7 @@ if (!empty($object_ids)) {
     Ui::show_box_bottom();
 }
 
-$object_ids = Userflag::get_latest('song', $user, -1, 0, $startTime, $endTime);
+$object_ids = Userflag::get_latest('song', $user, -1, 0, $startTime, $endTime, true);
 if (!empty($object_ids)) {
     Ui::show_box_top(T_('Favorites'));
     $browse = new Browse();

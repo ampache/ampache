@@ -504,7 +504,6 @@ class Podcast_Episode extends database_object implements
         return Stats::has_played_history('podcast_episode', $this, $user, $agent, $date);
     }
 
-
     /**
      * update_utime
      * sets a new update time

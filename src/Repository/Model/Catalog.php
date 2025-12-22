@@ -1048,63 +1048,109 @@ abstract class Catalog extends database_object
     /**
      * Run the cache_catalog_proc() on music catalogs.
      */
-    public static function cache_catalogs(?Interactor $interactor = null): void
+    public static function cache_catalogs(?Interactor $interactor = null, bool $cleanup = false): void
     {
-        $path   = (string)AmpConfig::get('cache_path', '');
-        $target = (string)AmpConfig::get('cache_target', '');
+        $cache_path   = (string)AmpConfig::get('cache_path', '');
+        $cache_target = (string)AmpConfig::get('cache_target', '');
         // need a destination and target filetype
-        if (is_dir($path) && Core::is_readable($path)) {
+        if (is_string($cache_path) && is_dir($cache_path) && Core::is_readable($cache_path)) {
             $catalogs = self::get_all_catalogs('music');
-            $scandir  = scandir($path) ?: [];
+            $scandir  = scandir($cache_path) ?: [];
             foreach ($scandir as $file) {
                 // check for lost catalogs
                 if ('.' === $file || '..' === $file) {
                     continue;
-                } elseif (is_dir($path . '/' . $file) && !in_array($file, $catalogs)) {
-                    debug_event(self::class, 'WARNING: Orphaned catalog cache ' . $path . '/' . $file, 5);
+                } elseif (is_dir($cache_path . '/' . $file) && !in_array($file, $catalogs)) {
+                    debug_event(self::class, 'WARNING: Orphaned catalog cache ' . $cache_path . '/' . $file, 5);
                     $interactor?->warn(
-                        sprintf('WARNING: Orphaned catalog cache %s/%s', $path, $file),
+                        sprintf('WARNING: Orphaned catalog cache %s/%s', $cache_path, $file),
                         true
                     );
                 }
             }
-            if ($target) {
+            if ($cache_target) {
                 foreach ($catalogs as $catalogid) {
                     $catalog = self::create_from_id($catalogid);
                     if ($catalog === null) {
                         break;
                     }
-                    debug_event(self::class, 'cache_catalogs: ' . $catalogid, 5);
+
+                    // don't cache everything when cleaning
+                    if ($cleanup === false) {
+                        debug_event(self::class, 'cache_catalogs: ' . $catalogid, 5);
+                        $interactor?->info(
+                            sprintf('cache_catalogs: %s', $catalogid),
+                            true
+                        );
+
+                        $catalog->cache_catalog_proc();
+                    }
+
+                    $catalog_dirs = new RecursiveDirectoryIterator($cache_path);
+                    $dir_files    = new RecursiveIteratorIterator($catalog_dirs);
+                    $cache_files  = new RegexIterator($dir_files, sprintf('/\.%s/i', $cache_target));
+                    debug_event(self::class, 'cache_catalogs: cleaning old files', 5);
                     $interactor?->info(
-                        sprintf('cache_catalogs: %s', $catalogid),
+                        'cache_catalogs: cleaning old files',
                         true
                     );
 
-                    $catalog->cache_catalog_proc();
-                }
+                    $remote_catalog = ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic);
+                    $remote_cache   = (bool)AmpConfig::get('cache_remote', false);
 
-                $catalog_dirs = new RecursiveDirectoryIterator($path);
-                $dir_files    = new RecursiveIteratorIterator($catalog_dirs);
-                $cache_files  = new RegexIterator($dir_files, sprintf('/\.%s/i', $target));
-                debug_event(self::class, 'cache_catalogs: cleaning old files', 5);
-                $interactor?->info(
-                    'cache_catalogs: cleaning old files',
-                    true
-                );
-                foreach ($cache_files as $file) {
-                    $path    = pathinfo((string)$file);
-                    $song_id = $path['filename'];
-                    if (!Song::has_id($song_id)) {
-                        unlink($file);
-                        debug_event(self::class, 'cache_catalogs: removed {' . $file . '}', 4);
-                        $interactor?->info(
-                            sprintf('cache_catalogs: removed {%s}', $file),
-                            true
-                        );
+                    foreach ($cache_files as $file) {
+                        $pathinfo  = pathinfo((string)$file);
+                        $song_id   = (int)$pathinfo['filename'];
+                        $song      = new Song($song_id);
+                        $song_path = ($song->isNew() === false && $song->file)
+                            ? pathinfo($song->file)
+                            : ['extension' => ''];
+                        $extension = $song_path['extension'] ?? '';
+                        if ($song->isNew() || $extension === '') {
+                            unlink($file);
+                            debug_event(self::class, 'cache_catalogs: removed (not in database) {' . $file . '}', 4);
+                            $interactor?->info(
+                                sprintf('cache_catalogs: removed (not in database) {%s}', $file),
+                                true
+                            );
+                            continue;
+                        }
+
+                        $cache_ext = $pathinfo['extension'] ?? '';
+                        if ($cache_ext !== $cache_target) {
+                            unlink($file);
+                            debug_event(self::class, 'cache_catalogs: removed (cache_target !== ' . $cache_ext . ') {' . $file . '}', 4);
+                            $interactor?->info(
+                                sprintf('cache_catalogs: removed (cache_target !== %s) {%s}', $cache_ext, $file),
+                                true
+                            );
+                            continue;
+                        }
+
+                        if ($remote_catalog && $remote_cache === false) {
+                            unlink($file);
+                            debug_event(self::class, 'cache_catalogs: removed (cache_remote) {' . $file . '}', 4);
+                            $interactor?->info(
+                                sprintf('cache_catalogs: removed (cache_remote) {%s}', $file),
+                                true
+                            );
+                            continue;
+                        }
+
+                        if (
+                            $extension &&
+                            (bool)AmpConfig::get('cache_' . $extension, false) == false
+                        ) {
+                            unlink($file);
+                            debug_event(self::class, 'cache_catalogs: removed (cache_' . $extension . ' ' . $song->file . ') {' . $file . '}', 4);
+                            $interactor?->info(
+                                sprintf('cache_catalogs: removed (cache_%s %s) {%s}', $extension, $song->file, $file),
+                                true
+                            );
+                        }
                     }
                 }
             }
-
         }
     }
 
@@ -2089,7 +2135,7 @@ abstract class Catalog extends database_object
 
         $inserted = false;
         $options  = [];
-        if (method_exists($libitem, 'fill_ext_info')) {
+        if ($libitem instanceof Song) {
             $libitem->fill_ext_info();
         }
 
@@ -2562,6 +2608,10 @@ abstract class Catalog extends database_object
             $artists[] = $libitem->id;
             $tags      = self::getSongTags('artist', $libitem->id);
             Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
+            // update incorrect counts for album_disk
+            if ($libitem->album_count > 0 && $libitem->album_disk_count == 0) {
+                $maps = true;
+            }
         }
 
         if ($type !== 'song') {
@@ -2668,6 +2718,7 @@ abstract class Catalog extends database_object
             : (int)($results['year']);
         $new_song->disk         = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
         $new_song->disksubtitle = $results['disksubtitle'] ?: null;
+        $new_song->isrc         = (!empty($results['isrc'])) ? $results['isrc'] : [];
         $new_song->title        = self::check_length(self::check_title($results['title'], $new_song->file));
         $new_song->bitrate      = $results['bitrate'];
         $new_song->rate         = $results['rate'];
@@ -3025,6 +3076,7 @@ abstract class Catalog extends database_object
 
         /* Since we're doing a full compare make sure we fill the extended information */
         $song->fill_ext_info();
+        $song->get_isrcs();
 
         $metadataManager = self::getMetadataManager();
 
@@ -3033,6 +3085,9 @@ abstract class Catalog extends database_object
             //debug_event(self::class, "get_clean_metadata " . print_r($ctags, true), 4);
             foreach ($ctags as $tag => $value) {
                 try {
+                    if (is_array($value)) {
+                        $value = implode('; ', $value);
+                    }
                     $metadataManager->updateOrAddMetadata($song, $tag, (string)$value);
                 } catch (DatabaseException) {
                     debug_event(self::class, "Error: DatabaseException: " . $tag . ' ' . $value, 4);
@@ -3125,18 +3180,27 @@ abstract class Catalog extends database_object
             if ($song->license !== $new_song->license) {
                 Song::update_license($new_song->license, $song->id);
             }
+
+            if ($new_song->isrc && $song->isrc !== $new_song->isrc) {
+                Song::update_song_map($new_song->isrc, 'isrc', $song->id);
+            }
         } else {
             // always update the time when you update
             Song::update_utime($song->id);
         }
 
         // If song rating tag exists and is well formed (array user=>rating), update it
-        if ($song->id && is_array($results) && array_key_exists('rating', $results) && is_array($results['rating'])) {
+        if ($song->id && is_array($results) && array_key_exists('rating', $results) && is_array($results['rating']) && !empty($results['rating'])) {
+            $o_rating = new Rating($song->id, 'song');
             // For each user's ratings, call the function
             foreach ($results['rating'] as $user => $rating) {
                 debug_event(self::class, "Updating rating for Song " . $song->id . sprintf(' to %s for user %s', $rating, $user), 5);
-                $o_rating = new Rating($song->id, 'song');
-                $o_rating->set_rating((int)$rating, $user);
+                if (
+                    (int)$user > 0 &&
+                    $o_rating->get_user_rating((int)$user) != (int)$rating
+                ) {
+                    $o_rating->set_rating((int)$rating, (int)$user, false);
+                }
             }
         }
 
@@ -3245,8 +3309,8 @@ abstract class Catalog extends database_object
 
     /**
      * Get rid of all tags found in the libraryItem
-     * @param array<string, scalar> $metadata
-     * @return array<string, scalar>
+     * @param array<string, scalar|scalar[]> $metadata
+     * @return array<string, scalar|scalar[]>
      */
     private static function filterMetadata(MetadataEnabledInterface $libraryItem, array $metadata): array
     {
@@ -3254,18 +3318,70 @@ abstract class Catalog extends database_object
 
         // these fields seem to be ignored but should be removed
         $databaseFields = [
+            'album' => null,
+            'albumartist' => null,
+            'art' => null,
+            'artist' => null,
             'artists' => null,
-            'mb_albumartistid_array' => null,
-            'mb_artistid_array' => null,
-            'original_year' => null,
-            'release_status' => null,
-            'release_type' => null,
-            'originalyear' => null,
+            'audio_codec' => null,
+            'barcode' => null,
+            'bitrate' => null,
+            'catalog_number' => null,
+            'channels' => null,
+            'comment' => null,
+            'composer' => null,
+            'description' => null,
+            'disk' => null,
+            'disksubtitle' => null,
+            'display_x' => null,
+            'display_y' => null,
             'dynamic range (r128)' => null,
-            'volume level (r128)' => null,
-            'volume level (replaygain)' => null,
+            'encoding' => null,
+            'file' => null,
+            'frame_rate' => null,
+            'genre' => null,
+            'isrc' => null,
+            'language' => null,
+            'lyrics' => null,
+            'mb_albumartistid_array' => null,
+            'mb_albumartistid' => null,
+            'mb_albumid_group' => null,
+            'mb_albumid' => null,
+            'mb_artistid_array' => null,
+            'mb_artistid' => null,
+            'mb_trackid' => null,
+            'mime' => null,
+            'mode' => null,
+            'original_name' => null,
+            'original_year' => null,
+            'originalyear' => null,
             'peak level (r128)' => null,
             'peak level (sample)' => null,
+            'publisher' => null,
+            'r128_album_gain' => null,
+            'r128_track_gain' => null,
+            'rate' => null,
+            'rating' => null,
+            'release_date' => null,
+            'release_status' => null,
+            'release_type' => null,
+            'replaygain_album_gain' => null,
+            'replaygain_album_peak' => null,
+            'replaygain_track_gain' => null,
+            'replaygain_track_peak' => null,
+            'resolution_x' => null,
+            'resolution_y' => null,
+            'size' => null,
+            'summary' => null,
+            'time' => null,
+            'title' => null,
+            'track' => null,
+            'version' => null,
+            'video_bitrate' => null,
+            'video_codec' => null,
+            'volume level (r128)' => null,
+            'volume level (replaygain)' => null,
+            'year' => null,
         ];
 
         // Drops ignored keys from the metadata
@@ -3498,7 +3614,10 @@ abstract class Catalog extends database_object
         $tags = self::filterMetadata($libraryItem, $metadata);
 
         foreach ($tags as $tag => $value) {
-            $metadataManager->addMetadata($libraryItem, $tag, (string) $value);
+            $value = (is_array($value))
+                ? implode(', ', $value)
+                : (string)$value;
+            $metadataManager->addMetadata($libraryItem, $tag, $value);
         }
     }
 
@@ -3512,8 +3631,11 @@ abstract class Catalog extends database_object
         $tags = self::filterMetadata($item, $tags);
 
         foreach ($tags as $tag => $value) {
+            $value = (is_array($value))
+                ? implode(', ', $value)
+                : (string)$value;
             try {
-                $metadataManager->updateOrAddMetadata($item, $tag, (string) $value);
+                $metadataManager->updateOrAddMetadata($item, $tag, $value);
             } catch (DatabaseException) {
                 debug_event(self::class, "Error: DatabaseException: " . $tag . ' ' . $value, 4);
             }

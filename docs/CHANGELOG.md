@@ -1,5 +1,88 @@
 # CHANGELOG
 
+## Ampache 7.8.0
+
+Bitrate options in the database for transcoding are defined in units of 1000 (e.g. 128 == 128000)
+
+You should update your config file to make sure all `%BITRATE%` values have a k in them to denote 1000's (`%BITRATE%k`)
+
+These settings can not be updated automatically in the config file so make sure you check all `encode_args_` parameters (e.g. `encode_args_mp3`)
+
+I have been getting a few issues with composer 2.9.x versions [issue](https://github.com/composer/composer/issues/12681)
+
+If you are also having issues try downgrading to composer [2.8.12](https://getcomposer.org/download/2.8.12/composer.phar) first.
+
+### Added
+
+* Translations 2025-10-31
+* Config version 85
+  * Add `rating_file_tag_compatibility` to allow using an alternative 5 star rating scale
+  * Add `log_time_format` to set your own log date format [PHP Date](https://www.php.net/manual/en/function.date.php)
+* Database 780004
+  * Add `song_map` table for ISRC storage
+  * Convert `custom_favicon`, `custom_login_background`, `custom_login_logo` into system preferences
+  * Add preference `subsonic_force_album_artist` to only select Album Artists when making Subsonic Artist calls
+  * Add preference `subsonic_single_user_data` to only show data (e.g. ratings, stars) for your user in Subsonic list calls
+* CLI
+  * run:updateCatalogFile: Add rename (-r|--rename) parameter to rename single files
+  * run:cacheProcess: Clean up files that do not match cache config settings
+  * run:cacheProcess: Add option (-c|--cleanup) to skip cache process and just run a cleanup
+  * cleanup:sortSongs: Add option (-p|--path) to sort a single file or folder path
+* Plugin
+  * LrcLib.net plugin with custom server support
+* Search
+  * Song, Artist, Album, AlbumDisk: `days_added` songs that were added before/after x days
+  * Song: `days_updated` songs that were updated before/after x days
+  * Podcast, Podcast Episode: `days_added` songs that were added before/after x days
+  * Podcast, Podcast Episode: `days_updated` songs that were updated before/after x days
+  * Podcast, Podcast Episode: `updated` date that episode files where last updated
+* Start parsing ISRC song tags and display them on Song pages
+* Add `nofollow` parameters to links
+* Show Last Update check time in the debug page
+
+### Changed
+
+* Add the full URL path for relative data in `custom_blankalbum`, `custom_favicon`, `custom_login_background`, `custom_login_logo` and `custom_logo`
+* Update docker files for Debian stable changes
+* Don't change the page title when `song_page_title` is enabled
+* Update translation guidelines for new CLI Transifex version
+* Update composer and npm packages
+* Update alternative streaming action (Play2Action) to try and stop closing transcode streams early 
+* Subsonic
+  * Filter list calls by your user instead of public/shared information by default (disable `subsonic_single_user_data` to restore old behavior)
+
+### Fixed
+
+* CLI
+  * Some help commands didn't show arguments in the right order
+* Skip some unused tags that filter into additional metadata
+* SQL join for AlbumDisk `get_top_sql` calls
+* SQL for `get_recent_sql` joins with user
+* Don't error on song import / update when additional metadata calls fail
+* `custom_login_logo` overwritten by header logo
+* Tag writer sending non array values
+* Stop writing Song tags for ratings when reading the tags
+* Don't error when sending invalid Subsonic auth
+* Missing Art object type
+* Search not always setting `and`/`or`
+* Missing `attachment` Content-Disposition for playlist and CSV downloads
+* Don't reapply the rating to albums for Rating Match plugin
+* MusicBrainz plugin not setting valid `yearformed` for Artist objects
+* Error with a string `yearformed` value from plugins
+* Play actions were caching files that didn't need to be
+* AlbumDisk counts not updating correctly
+* Ampache Wrapped showing favorites for all users instead of just you
+* Artist counts for Album, AlbumDisk and Song would not update 0 values
+* Check zip file exists before deleting
+* Remove `mail_auth_pass` in Ampache debug page when set
+* Reduce spam to GitHub API when checking version with auto update
+* Play actions ignoring custom bitrate parameters
+* ViteManifest now expects an absolute URI for baseUri
+* Transcode cache checking source file instead of cache file
+* Saving smart playlist option and settings being overwritten by defaults
+* Subsonic
+  * Different calls would filter output by user differently for no reason
+
 ## Ampache 7.7.2
 
 ### Added

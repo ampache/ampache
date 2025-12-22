@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-07-14 08:58+1000\n"
+"POT-Creation-Date: 2025-10-31 12:10+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -777,8 +777,8 @@ msgid "WARNING"
 msgstr ""
 
 msgid ""
-"The music license you choose gives away rights in an irrevocable manner to "
-"the audience."
+"The music license you choose may give away some rights in an irrevocable "
+"manner."
 msgstr ""
 
 msgid ""
@@ -3022,6 +3022,9 @@ msgstr ""
 msgid "R128 Album Gain"
 msgstr ""
 
+msgid "ISRC"
+msgstr ""
+
 msgid "Lyrics"
 msgstr ""
 
@@ -4233,6 +4236,11 @@ msgstr ""
 msgid "Catalog `%s` not found"
 msgstr ""
 
+#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
+#, php-format
+msgid "Updated: %s"
+msgstr ""
+
 #, php-format
 msgid "Removing File: \"%s\""
 msgstr ""
@@ -4613,6 +4621,9 @@ msgstr ""
 msgid "Sets the default name for `Various Artists`"
 msgstr ""
 
+msgid "Sort a single file or folder path"
+msgstr ""
+
 msgid "Name of Catalog (optional)"
 msgstr ""
 
@@ -4654,9 +4665,19 @@ msgstr ""
 msgid "Perform catalog actions for a single file"
 msgstr ""
 
+msgid "Update file path in the database to a new location"
+msgstr ""
+
 #. HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album)
 #, php-format
 msgid "Update %s in the catalog `some-catalog`"
+msgstr ""
+
+#, php-format
+msgid "Rename %s to %s in the catalog `some-catalog`"
+msgstr ""
+
+msgid "Rename (-r|--rename) cannot be used with other options enabled"
 msgstr ""
 
 msgid "Perform catalog actions for a single folder"
@@ -4899,11 +4920,6 @@ msgstr ""
 #. HINT: Database error message
 #, php-format
 msgid "Administrative user creation failed: %s"
-msgstr ""
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
-#, php-format
-msgid "Updated: %s"
 msgstr ""
 
 msgid "commented on"
@@ -5741,9 +5757,6 @@ msgstr ""
 msgid "# Played or Skipped by Me"
 msgstr ""
 
-msgid "Recently played"
-msgstr ""
-
 msgid "Album Genre"
 msgstr ""
 
@@ -5762,13 +5775,16 @@ msgstr ""
 msgid "File Data"
 msgstr ""
 
+msgid "Date Updated"
+msgstr ""
+
 msgid "No Music License"
 msgstr ""
 
-msgid "Recently added"
+msgid "Recently Added"
 msgstr ""
 
-msgid "Recently updated"
+msgid "Recently Updated"
 msgstr ""
 
 msgid "Duplicate Album Tracks"

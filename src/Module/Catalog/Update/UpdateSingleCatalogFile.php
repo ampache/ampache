@@ -47,7 +47,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         bool $verificationMode,
         bool $addMode,
         bool $cleanupMode,
-        bool $searchArtMode
+        bool $searchArtMode,
+        ?string $newFilePath
     ): void {
         $sql        = "SELECT `id` FROM `catalog` WHERE `name` = ? AND `catalog_type`='local'";
         $db_results = Dba::read($sql, [$catname]);
@@ -55,16 +56,17 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         ob_end_clean();
         ob_start();
 
+        if (!Dba::num_rows($db_results)) {
+            $interactor->error(
+                sprintf(T_('Catalog `%s` not found'), $catname),
+                true
+            );
+
+            return;
+        }
+
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
-            if ($catalog === null) {
-                $interactor->error(
-                    sprintf(T_('Catalog `%s` not found'), $catname),
-                    true
-                );
-
-                return;
-            }
             if (isset($catalog->path) && !Core::is_readable($catalog->path)) {
                 $interactor->error(
                     T_('Catalog root unreadable, stopping check'),
@@ -93,6 +95,43 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     $file_id = Catalog::get_id_from_file($filePath, $type);
                     $media   = new Song($file_id);
                     break;
+            }
+
+            // file not an existing catalog file
+            if ($media->isNew()) {
+                $interactor->error(
+                    T_('Error') . ': ' . $catname . ' ' . T_('File not found') . ' ' . $filePath,
+                    true
+                );
+
+                return;
+            }
+
+            // handle file renaming
+            if ($newFilePath != null) {
+                // rename path doesn't exist
+                if (!is_file($newFilePath)) {
+                    $interactor->error(
+                        T_('Error') . ': ' . T_('File not found') . ' ' . $newFilePath,
+                        true
+                    );
+
+                    return;
+                }
+
+                if ($catalog->set_file($media->getId(), $newFilePath, $type)) {
+                    $interactor->info(
+                        sprintf(T_('Updated: %s'), sprintf('`%s` -> `%s`', $filePath, $newFilePath)),
+                        true
+                    );
+                } else {
+                    $interactor->error(
+                        T_('Error') . ': ' . $newFilePath,
+                        true
+                    );
+                }
+
+                return;
             }
             $file_test = is_file($filePath);
             // deleted file but it was valid media in the database

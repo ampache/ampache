@@ -41,7 +41,7 @@ final class SearchRulesMethod
 
     /**
      * search_rules
-     * MINIMUM_API_VERSION=6.3.0
+     * MINIMUM_API_VERSION=6.8.0
      *
      * Print a list of valid search rules for your search type
      *

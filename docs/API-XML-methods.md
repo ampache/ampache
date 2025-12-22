@@ -1313,6 +1313,30 @@ By default; get only the most recent bookmark. Use `all` to retrieve all media b
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_bookmark.xml)
 [Example (with include)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_bookmark%20\(with%20include\).xml)
 
+### get_external_metadata
+
+Return External plugin metadata searching by object id and type
+
+| Input     | Type    | Description                                        | Optional |
+|-----------|---------|----------------------------------------------------|---------:|
+| 'filter'  | string  | $object_id to find                                 |       NO |
+| 'type'    | string  | `song`, `album`, `artist`, `label` (object_type)   |       NO |
+
+* return
+
+```XML
+<root>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_external_metadata.xml)
+
 ### get_indexes
 
 This takes a collection of inputs and returns ID + name for the object type
@@ -1358,6 +1382,30 @@ ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/d
 PLAYLIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_indexes%20\(playlist\).xml)
 
 PODCAST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_indexes%20\(podcast\).xml)
+
+### get_lyrics
+
+Return Database lyrics or search with plugins by Song id
+
+| Input      | Type    | Description                                           | Optional |
+|------------|---------|-------------------------------------------------------|---------:|
+| 'filter'   | string  | $song_id to find                                      |       NO |
+| 'plugins'  | string  | `0`, `1`, if false disable plugin lookup (default: 1) |       NO |
+
+* return
+
+```XML
+<root>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/get_lyrics.xml)
 
 ### get_similar
 
@@ -2708,11 +2756,11 @@ Print a list of valid search rules for your search type
 <root><error></root>
 ```
 
-Artist [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules (artist).xml)
+Artist [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules%20\(artist\).xml)
 
-Album [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules (album).xml)
+Album [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules%20\(album\).xml)
 
-Song [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules (song).xml)
+Song [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/search_rules%20\(song\).xml)
 
 ### search_songs
 

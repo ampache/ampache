@@ -38,7 +38,6 @@ final class Migration710006 extends AbstractMigration
 
     public function migrate(): void
     {
-
         $this->updatePreferences('browse_song_grid_view', 'Force Grid View on Song browse', '0', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies');
         $this->updatePreferences('browse_album_grid_view', 'Force Grid View on Album browse', '0', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies');
         $this->updatePreferences('browse_album_disk_grid_view', 'Force Grid View on AlbumDisk browse', '0', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies');

@@ -90,6 +90,7 @@ class Api
         Method\GetBookmarkMethod::ACTION => Method\GetBookmarkMethod::class,
         Method\GetIndexesMethod::ACTION => Method\GetIndexesMethod::class,
         Method\GetExternalMetadataMethod::ACTION => Method\GetExternalMetadataMethod::class,
+        Method\GetLyricsMethod::ACTION => Method\GetLyricsMethod::class,
         Method\GetSimilarMethod::ACTION => Method\GetSimilarMethod::class,
         Method\GoodbyeMethod::ACTION => Method\GoodbyeMethod::class,
         Method\HandshakeMethod::ACTION => Method\HandshakeMethod::class,
@@ -190,7 +191,7 @@ class Api
 
     public static string $version = '6.9.0'; // AMPACHE_VERSION
 
-    public static string $version_numeric = '690000'; // AMPACHE_VERSION
+    public static string $version_numeric = '690010'; // AMPACHE_VERSION
 
     public static ?Browse $browse = null;
 

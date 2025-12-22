@@ -44,16 +44,17 @@ use XBMC_RPC_HTTPClient;
  */
 class AmpacheXbmc extends localplay_controller
 {
-    /* Variables */
-    private string $version     = '000001';
+    protected const ACTIVE_PREF = 'xbmc_active';
+
+    private string $version = '000001';
+
     private string $description = 'Controls a XBMC instance';
 
-    /* Constructed variables */
     private $_xbmc;
-    // Always use player 0 for now
-    private $_playerId = 0;
-    // Always use playlist 0 for now
-    private $_playlistId = 0;
+
+    private $_playerId = 0; // Always use player 0 for now
+
+    private $_playlistId = 0; // Always use playlist 0 for now
 
     /**
      * get_description
@@ -109,7 +110,7 @@ class AmpacheXbmc extends localplay_controller
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('xbmc_active', T_('XBMC Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'xbmc');
+        Preference::insert(self::ACTIVE_PREF, T_('XBMC Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'xbmc');
 
         return true;
     }
@@ -124,7 +125,7 @@ class AmpacheXbmc extends localplay_controller
         Dba::query($sql);
 
         // Remove the pref we added for this
-        Preference::delete('xbmc_active');
+        Preference::delete(self::ACTIVE_PREF);
 
         return true;
     }
@@ -234,7 +235,7 @@ class AmpacheXbmc extends localplay_controller
      */
     public function get_instance(?string $instance = ''): array
     {
-        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('xbmc_active', 0);
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get(self::ACTIVE_PREF, 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_xbmc` WHERE `id` = ?" : "SELECT * FROM `localplay_xbmc`";
         $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
@@ -263,9 +264,9 @@ class AmpacheXbmc extends localplay_controller
         if (!$user instanceof User) {
             return false;
         }
-        Preference::update('xbmc_active', $user->id, $uid);
-        AmpConfig::set('xbmc_active', $uid, true);
-        debug_event('xbmc.controller', 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
+        Preference::update(self::ACTIVE_PREF, $user->id, $uid);
+        AmpConfig::set(self::ACTIVE_PREF, $uid, true);
+        debug_event(self::class, 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
 
         return true;
     }
@@ -273,10 +274,15 @@ class AmpacheXbmc extends localplay_controller
     /**
      * get_active_instance
      * This returns the UID of the current active instance
-     * false if none are active
+     * null if none are active
      */
-    public function get_active_instance()
+    public function get_active_instance(): ?int
     {
+        if (AmpConfig::get(self::ACTIVE_PREF)) {
+            return (int)AmpConfig::get(self::ACTIVE_PREF);
+        }
+
+        return null;
     }
 
     /**
@@ -581,7 +587,7 @@ class AmpacheXbmc extends localplay_controller
      * volume
      * This tells XBMC to set the volume to the specified amount
      */
-    public function volume($volume): bool
+    public function volume(int $volume): bool
     {
         if (!$this->_xbmc) {
             return false;

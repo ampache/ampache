@@ -105,13 +105,14 @@ abstract class playlist_object extends database_object implements library_item
      * This function takes a key'd array of data and runs updates
      * @param null|array{
      *     name?: ?string,
-     *     pl_type?: ?string,
-     *     pl_user?: ?int,
+     *     playlist_type?: ?string,
+     *     playlist_user?: ?int,
      *     collaborate?: null|list<string>,
      *     last_count?: ?int,
      *     last_duration?: ?int,
      *     random?: ?int,
      *     limit?: int,
+     *     operator?: int,
      * } $data
      */
     public function update(?array $data = null): int
@@ -124,26 +125,30 @@ abstract class playlist_object extends database_object implements library_item
             $this->update_item('name', $data['name']);
         }
 
-        if (isset($data['pl_type']) && $data['pl_type'] != $this->type) {
-            $this->update_item('type', $data['pl_type']);
+        if (isset($data['playlist_type']) && $data['playlist_type'] != $this->type) {
+            $this->update_item('type', $data['playlist_type']);
         }
 
-        if (isset($data['pl_user']) && $data['pl_user'] != $this->user) {
-            $this->user     = (int)$data['pl_user'];
+        if (isset($data['playlist_user']) && $data['playlist_user'] != $this->user) {
+            $this->user     = (int)$data['playlist_user'];
             $this->username = User::get_username($this->user);
-            $this->update_item('user', $data['pl_user']);
+            $this->update_item('user', $data['playlist_user']);
             $this->update_item('username', $this->username);
         }
 
         if ($this instanceof Search) {
-            $random = $data['random'] ?? 0;
+            $random = $data['random'] ?? $this->random;
             if ($random != $this->random) {
                 $this->update_item('random', $random);
             }
 
-            $limit = $data['limit'] ?? 0;
+            $limit = $data['limit'] ?? $this->limit;
             if ($limit != $this->limit) {
                 $this->update_item('limit', $limit);
+            }
+
+            if (!empty($data['operator'])) {
+                $this->update_item('logic_operator', $data['operator']);
             }
 
             $this->update_item('rules', json_encode($this->rules) ?: null);

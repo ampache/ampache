@@ -75,7 +75,7 @@ class Search extends playlist_object
 
     public $rules; // rules used to run a search (User chooses rules from available types for that object). JSON string to decoded to array
 
-    public ?string $logic_operator = 'AND';
+    public ?string $logic_operator = 'and';
 
     public ?int $random = 0;
 
@@ -665,7 +665,7 @@ class Search extends playlist_object
         $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
+        $this->_add_type_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
         $this->_add_type_text('genre', $t_genre, $t_genre);
@@ -710,8 +710,8 @@ class Search extends playlist_object
             '1280' => '1280',
         ];
         $this->_add_type_select('bitrate', T_('Bitrate'), 'numeric', $bitrate_array, $t_file_data);
-        $this->_add_type_date('added', T_('Added'), $t_file_data);
-        $this->_add_type_date('updated', T_('Updated'), $t_file_data);
+        $this->_add_type_date('added', T_('Date Added'), $t_file_data);
+        $this->_add_type_date('updated', T_('Date Updated'), $t_file_data);
         if (AmpConfig::get('licensing')) {
             $licenses = iterator_to_array(
                 $this->getLicenseRepository()->getList(false)
@@ -720,8 +720,10 @@ class Search extends playlist_object
             $this->_add_type_boolean('no_license', T_('No Music License'), 'is_true', $t_file_data);
         }
 
-        $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
-        $this->_add_type_numeric('recent_updated', T_('Recently updated'), 'recent_updated', $t_file_data);
+        $this->_add_type_numeric('recent_added', T_('Recently Added'), 'recent_added', $t_file_data);
+        $this->_add_type_numeric('recent_updated', T_('Recently Updated'), 'recent_updated', $t_file_data);
+        $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
+        $this->_add_type_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
         $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $this->_add_type_boolean('duplicate_tracks', T_('Duplicate Album Tracks'), 'is_true', $t_file_data);
         $this->_add_type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
@@ -816,7 +818,7 @@ class Search extends playlist_object
         $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
+        $this->_add_type_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
         $this->_add_type_text('genre', $t_genre, $t_genre);
@@ -839,6 +841,7 @@ class Search extends playlist_object
         $this->_add_type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
         $this->_add_type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $this->_add_type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
+        $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
         $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $this->_add_type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
         $catalogs = [];
@@ -915,7 +918,7 @@ class Search extends playlist_object
         $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
+        $this->_add_type_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
         $this->_add_type_text('genre', $t_genre, $t_genre);
@@ -940,15 +943,16 @@ class Search extends playlist_object
 
         $t_file_data = T_('File Data');
         $this->_add_type_text('file', T_('Filename'), $t_file_data);
-        $this->_add_type_date('added', T_('Added'), $t_file_data);
-        $this->_add_type_date('updated', T_('Updated'), $t_file_data);
+        $this->_add_type_date('added', T_('Date Added'), $t_file_data);
+        $this->_add_type_date('updated', T_('Date Updated'), $t_file_data);
         $this->_add_type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
         $this->_add_type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $this->_add_type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
+        $this->_add_type_numeric('recent_added', T_('Recently Added'), 'recent_added', $t_file_data);
+        $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
         $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $this->_add_type_boolean('duplicate_tracks', T_('Duplicate Album Tracks'), 'is_true', $t_file_data);
         $this->_add_type_boolean('duplicate_mbid_group', T_('Duplicate MusicBrainz Release Group'), 'is_true', $t_file_data);
-        $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
         $catalogs = [];
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
@@ -1038,12 +1042,15 @@ class Search extends playlist_object
         $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
+        $this->_add_type_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
 
         $t_file_data = T_('File Data');
         $this->_add_type_text('file', T_('Filename'), $t_file_data);
         $this->_add_type_date('pubdate', T_('Publication Date'), $t_file_data);
-        $this->_add_type_date('added', T_('Added'), $t_file_data);
+        $this->_add_type_date('added', T_('Date Added'), $t_file_data);
+        $this->_add_type_date('updated', T_('Date Updated'), $t_file_data);
+        $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
+        $this->_add_type_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
     }
 
     /**
@@ -1083,12 +1090,15 @@ class Search extends playlist_object
         $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
+        $this->_add_type_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
 
         $t_file_data = T_('File Data');
         $this->_add_type_text('file', T_('Filename'), $t_file_data);
         $this->_add_type_date('pubdate', T_('Publication Date'), $t_file_data);
-        $this->_add_type_date('added', T_('Added'), $t_file_data);
+        $this->_add_type_date('added', T_('Date Added'), $t_file_data);
+        $this->_add_type_date('updated', T_('Date Updated'), $t_file_data);
+        $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
+        $this->_add_type_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
     }
 
     /**
@@ -1152,8 +1162,8 @@ class Search extends playlist_object
         // Figure out if they want an AND based search or an OR based search
         $operator            = $data['operator'] ?? '';
         $request['operator'] = match (strtolower((string) $operator)) {
-            'or' => 'OR',
-            default => 'AND',
+            'or' => 'or',
+            default => 'and',
         };
         if (array_key_exists('limit', $data)) {
             $request['limit'] = $data['limit'];
@@ -1826,7 +1836,6 @@ class Search extends playlist_object
         return $this->types;
     }
 
-
     /**
      * set_rules
      *
@@ -1850,7 +1859,7 @@ class Search extends playlist_object
         $data                 = $this->_filter_request($data);
         $this->rules          = [];
         $user_rules           = [];
-        $this->logic_operator = $data['operator'] ?? 'AND';
+        $this->logic_operator = strtolower($data['operator'] ?? 'and');
         // match the numeric rules you send (e.g. rule_1, rule_6000)
         foreach (array_keys($data) as $rule) {
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
@@ -1916,10 +1925,14 @@ class Search extends playlist_object
             $this->name .= uniqid('', true);
         }
 
+        if (empty($this->logic_operator)) {
+            $this->logic_operator = 'and';
+        }
+
         $time = time();
 
         $sql = "INSERT INTO `search` (`name`, `type`, `user`, `username`, `rules`, `logic_operator`, `random`, `limit`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, [$this->name, $this->type, $user->id, $user->username, json_encode($this->rules), $this->logic_operator, ($this->random > 0) ? 1 : 0, $this->limit, $time, $time]);
+        Dba::write($sql, [$this->name, $this->type, $user->id, $user->username, json_encode($this->rules), strtolower($this->logic_operator), ($this->random > 0) ? 1 : 0, $this->limit, $time, $time]);
         $insert_id = Dba::insert_id();
         if (!$insert_id) {
             return null;
