@@ -61,19 +61,19 @@ RUN     sh -c 'echo "Types: deb\n# http://snapshot.debian.org/archive/debian/202
     &&  a2enmod rewrite \
     &&  sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen \
     &&  locale-gen \
+    &&  pecl install xdebug \
+    &&  echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" > /etc/php/8.3/apache2/conf.d/xdebug.ini \
+    &&  echo "xdebug.remote_enable=on" >> /etc/php/8.3/apache2/conf.d/xdebug.ini \
+    &&  echo "xdebug.remote_autostart=off" >> /etc/php/8.3/apache2/conf.d/xdebug.ini \
+    &&  wget -q -O /usr/local/bin/composer https://getcomposer.org/download/latest-stable/composer.phar \
+    &&  chmod +x /usr/local/bin/composer \
     &&  apt-get -qq purge \
           extrepo \
           libdvd-pkg \
           lsb-release \
           unzip \
           wget \
-    &&  apt-get -qq autoremove \
-    &&  pecl install xdebug \
-    &&  echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" > /etc/php/8.3/apache2/conf.d/xdebug.ini \
-    &&  echo "xdebug.remote_enable=on" >> /etc/php/8.3/apache2/conf.d/xdebug.ini \
-    &&  echo "xdebug.remote_autostart=off" >> /etc/php/8.3/apache2/conf.d/xdebug.ini \
-    &&  wget -q -O /usr/local/bin/composer https://getcomposer.org/download/latest-stable/composer.phar \
-    &&  chmod +x /usr/local/bin/composer
+    &&  apt-get -qq autoremove
 
 VOLUME ["/var/log/ampache", "/var/www/html"]
 EXPOSE 80
