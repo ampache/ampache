@@ -269,7 +269,9 @@ All Data methods return HTTP 200 responses
 * genre_artists
 * genre_songs
 * get_bookmark
+* get_external_metadata
 * get_indexes
+* get_lyrics
 * get_similar
 * index **Ampache 6.3.0+**
 * labels
