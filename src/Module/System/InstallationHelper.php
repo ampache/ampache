@@ -265,7 +265,7 @@ final class InstallationHelper implements InstallationHelperInterface
         if (strlen((string) $db_user) && strlen((string) $db_pass)) {
             $db_host = AmpConfig::get('database_hostname');
             // create the user account
-            $sql_user = "CREATE USER '" . Dba::escape($db_user) . "'";
+            $sql_user = "CREATE USER IF NOT EXISTS '" . Dba::escape($db_user) . "'";
             if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
                 $sql_user .= "@'localhost'";
             }
