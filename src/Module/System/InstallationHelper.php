@@ -243,7 +243,11 @@ final class InstallationHelper implements InstallationHelperInterface
         if (is_object($db_exists) && $create_db) {
             if ($overwrite) {
                 Dba::write('DROP DATABASE `' . $database . '`');
+            } elseif (Dba::check_database_inserted()) {
+                // The database exists and is a valid Ampache DB
+                $create_db = false;
             } else {
+                // when you have a database but it is empty
                 AmpError::add('general', T_('Database already exists and "overwrite" was not checked'));
 
                 return false;
