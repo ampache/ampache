@@ -1648,15 +1648,15 @@ class Preference extends database_object
     {
         switch ($level) {
             case 'guest':
-                return Dba::write('UPDATE `preference` SET `level` = ?;', [AccessLevelEnum::GUEST->value]) !== false;
+                return (Dba::write('UPDATE `preference` SET `level` = ?;', [AccessLevelEnum::GUEST->value]) !== false);
             case 'user':
-                return Dba::write('UPDATE `preference` SET `level` = ?;', [AccessLevelEnum::USER->value]) !== false;
+                return (Dba::write('UPDATE `preference` SET `level` = ?;', [AccessLevelEnum::USER->value]) !== false);
             case 'content_manager':
-                return Dba::write('UPDATE `preference` SET `level` = ?;', [AccessLevelEnum::CONTENT_MANAGER->value]) !== false;
+                return (Dba::write('UPDATE `preference` SET `level` = ?;', [AccessLevelEnum::CONTENT_MANAGER->value]) !== false);
             case 'manager':
-                return Dba::write('UPDATE `preference` SET `level` = ?;', [AccessLevelEnum::MANAGER->value]) !== false;
+                return (Dba::write('UPDATE `preference` SET `level` = ?;', [AccessLevelEnum::MANAGER->value]) !== false);
             case 'admin':
-                return Dba::write('UPDATE `preference` SET `level` = ?;', [AccessLevelEnum::ADMIN->value]) !== false;
+                return (Dba::write('UPDATE `preference` SET `level` = ?;', [AccessLevelEnum::ADMIN->value]) !== false);
             case 'default':
                 return (
                     Dba::write(

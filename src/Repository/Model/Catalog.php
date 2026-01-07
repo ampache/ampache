@@ -519,7 +519,7 @@ abstract class Catalog extends database_object
 
         $db_results = Dba::read($sql, $params);
 
-        return Dba::num_rows($db_results) > 0;
+        return (Dba::num_rows($db_results) > 0);
     }
 
     /**
@@ -531,7 +531,7 @@ abstract class Catalog extends database_object
         $sql        = "SELECT `enabled` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `catalog_id` = ? AND `enabled` = 1;";
         $db_results = Dba::read($sql, [$filter_id, $catalog_id]);
 
-        return Dba::num_rows($db_results) > 0;
+        return (Dba::num_rows($db_results) > 0);
     }
 
     /**
