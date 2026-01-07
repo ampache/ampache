@@ -1805,7 +1805,7 @@ class Song extends database_object implements
     public function get_isrcs(): array
     {
         if ($this->isrc === null) {
-            $this->isrc = self::get_song_map($this->id);
+            $this->isrc = self::get_song_map_array($this->id);
         }
 
         return $this->isrc ?? [];
@@ -1904,7 +1904,7 @@ class Song extends database_object implements
      * Get song data from the song_map table (ISRC's only right now).
      * @return string[]
      */
-    public static function get_song_map(int $song_id, ?string $type = 'isrc'): array
+    public static function get_song_map_array(int $song_id, ?string $type = 'isrc'): array
     {
         $results = [];
         if (!$song_id) {
@@ -1919,6 +1919,25 @@ class Song extends database_object implements
         }
 
         return $results;
+    }
+
+    /**
+     * Get an ID or unique value from the song_map table.
+     */
+    public static function get_song_map_object_id(int $song_id, string $type): ?string
+    {
+        if (!$song_id) {
+            return null;
+        }
+
+        $sql = "SELECT DISTINCT `object_id` FROM `song_map` WHERE `object_type` = ? AND `song_id` = ?;";
+
+        $db_results = Dba::read($sql, [$type, $song_id]);
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return (string)$row['object_id'];
+        }
+
+        return null;
     }
 
     /**
