@@ -402,6 +402,10 @@ class Catalog_remote extends Catalog
                             $existing_song
                         ) {
                             debug_event('remote.catalog', 'Skip existing song: ' . $song_id_check, 5);
+                            if (Song::get_song_map_object_id($song_id_check, 'remote_' . $this->catalog_id) !== $remote_id) {
+                                Song::update_song_map([$remote_id], 'remote_' . $this->catalog_id, $song_id_check);
+                            }
+
                             continue;
                         }
                         if (
