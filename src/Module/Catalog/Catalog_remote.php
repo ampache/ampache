@@ -378,7 +378,8 @@ class Catalog_remote extends Catalog
                             continue;
                         }
 
-                        $song_id = 0;
+                        $song_id   = 0;
+                        $remote_id = (string)$song->attributes()->id;
 
                         // Update URLS to the current format for remote catalogs
                         $old_url  = (string)preg_replace('/ssid=[0-9a-z]*&/', '', $song->url);
@@ -390,7 +391,7 @@ class Catalog_remote extends Catalog
                         }
 
                         $existing_song = false;
-                        $song_id_check = $this->check_remote_song([$old_url, $db_url], $db_file);
+                        $song_id_check = $this->check_remote_song([$old_url, $db_url], $db_file, $remote_id);
                         if ($song_id_check) {
                             $existing_song = true;
                         }
@@ -409,9 +410,6 @@ class Catalog_remote extends Catalog
                         ) {
                             continue;
                         }
-
-                        // get tag data from the remote object
-                        $remote_id = (string)$song->attributes()->id;
 
                         $file_target  = ($song_id_check && !empty($cache_target) && $cache_target === (string)$song->stream_format)
                             ? Catalog::get_cache_path($song_id_check, $this->catalog_id, $cache_path, $cache_target)
@@ -926,16 +924,27 @@ class Catalog_remote extends Catalog
      * if it find a song it returns the UID
      * @param string[] $song_urls
      */
-    public function check_remote_song(array $song_urls, string $db_file): ?int
+    public function check_remote_song(array $song_urls, string $db_file, string $remote_id): ?int
     {
         if (empty($song_urls) || $db_file == '') {
             return null;
         }
 
+        // Check by remote id urls first
+        if (!empty($remote_id)) {
+            $sql        = 'SELECT `id` FROM `song` WHERE `file` LIKE ?;';
+            $db_results = Dba::read($sql, [$this->uri . '/play/index.php?%&type=song%&oid=' . $remote_id . '&%']);
+            if ($results = Dba::fetch_assoc($db_results)) {
+                Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_file, $results['id']]);
+
+                return (int)$results['id'];
+            }
+        }
+
         // Update old urls to the new format if needed
         foreach ($song_urls as $old_url) {
             // Check for old formats and update the URL to the current version
-            $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
+            $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?;';
             $db_results = Dba::read($sql, [$old_url]);
             if ($results = Dba::fetch_assoc($db_results)) {
                 Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_file, $results['id']]);
