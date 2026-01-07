@@ -936,6 +936,7 @@ class Catalog_remote extends Catalog
             $db_results = Dba::read($sql, [$this->uri . '/play/index.php?%&type=song%&oid=' . $remote_id . '&%']);
             if ($results = Dba::fetch_assoc($db_results)) {
                 Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_file, $results['id']]);
+                Song::update_song_map([$remote_id], 'remote_' . $this->catalog_id, (int)$results['id']);
 
                 return (int)$results['id'];
             }
