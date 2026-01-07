@@ -332,7 +332,10 @@ class Song extends database_object implements
             $albumartist_id = (int)($results['albumartist_id']);
         }
 
-        if (!isset($results['artist_id'])) {
+        // song artist text is the same as album artist so don't worry about looking up id's if they match
+        if (isset($albumartist_id) && $albumartist === $artist) {
+            $artist_id            = $albumartist_id;
+        } elseif (!isset($results['artist_id'])) {
             $artist_id = null;
             if ($artist !== null && $artist !== '' && $artist !== '0') {
                 $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
