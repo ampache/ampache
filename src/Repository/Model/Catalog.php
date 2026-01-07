@@ -2486,6 +2486,13 @@ abstract class Catalog extends database_object
         Dba::write($sql, $params);
     }
 
+    public static function is_local(int $catalog_id): bool
+    {
+        $db_results = Dba::read('SELECT `id` FROM `catalog` WHERE `id` = ? AND `type` = \'local\';', [$catalog_id]);
+
+        return (Dba::num_rows($db_results) > 0);
+    }
+
     /**
      * update_single_item
      * updates a single album,artist,song from the tag data and return the id. (if the artist/album changes it's updated)
@@ -2547,20 +2554,28 @@ abstract class Catalog extends database_object
         $tags   = false;
         $maps   = false;
         foreach ($songs as $song_id) {
-            $song   = new Song($song_id);
-            $info   = self::update_media_from_tags($song);
-            $file   = scrub_out($song->file);
-            $diff   = array_key_exists('element', $info) && is_array($info['element']) && $info['element'] !== [];
-            $album  = ($album) || ($diff && array_key_exists('album', $info['element']));
-            $artist = ($artist) || ($diff && array_key_exists('artist', $info['element']));
-            $tags   = ($tags) || ($diff && array_key_exists('tags', $info['element']));
-            $maps   = ($maps) || ($diff && array_key_exists('maps', $info));
+            $diff = false;
+            $song = new Song($song_id);
+            if ($song->isNew()) {
+                $info = ['error' => true];
+            } elseif (self::is_local($song->catalog) === false) {
+                $info = ['remote' => true];
+            } else {
+                $info = self::update_media_from_tags($song);
+
+                $diff   = array_key_exists('element', $info) && is_array($info['element']) && $info['element'] !== [];
+                $album  = ($album) || ($diff && array_key_exists('album', $info['element']));
+                $artist = ($artist) || ($diff && array_key_exists('artist', $info['element']));
+                $tags   = ($tags) || ($diff && array_key_exists('tags', $info['element']));
+                $maps   = ($maps) || ($diff && array_key_exists('maps', $info));
+            }
 
             // don't echo useless info when using api
             if ($api) {
                 continue;
             }
 
+            $file = scrub_out($song->file);
             if (array_key_exists('change', $info) && $info['change']) {
                 if ($diff && array_key_exists($type, $info['element'])) {
                     $element   = explode(' --> ', (string)$info['element'][$type]);
@@ -2570,6 +2585,8 @@ abstract class Catalog extends database_object
                 echo "<tr><td>" . $file . "</td><td>" . T_('Updated') . "</td></tr>\n";
             } elseif (array_key_exists('error', $info) && $info['error']) {
                 echo '<tr><td>' . $file . "</td><td>" . T_('Error') . "</td></tr>\n";
+            } elseif (array_key_exists('remote', $info) && $info['remote']) {
+                echo '<tr><td>' . $file . "</td><td>" . T_('Skipped') . "</td></tr>\n";
             } else {
                 echo '<tr><td>' . $file . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
             }
