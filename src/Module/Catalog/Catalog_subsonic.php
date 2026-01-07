@@ -275,10 +275,12 @@ class Catalog_subsonic extends Catalog
                     if (is_array($album) && $album['success']) {
                         foreach ($album['data']['directory']['child'] as $song) {
                             if (Catalog::is_audio_file($song['path'])) {
-                                $db_url = $this->uri . '/rest/stream.view?id=' . $song['id'] . '&filename=' . urlencode($song['path']);
+                                $song_id   = 0;
+                                $remote_id = $song['id'];
+                                $db_file   = $song['path'];
 
                                 $existing_song = false;
-                                $song_id_check = $this->check_remote_song($db_url);
+                                $song_id_check = $this->check_remote_song($db_file, $remote_id);
                                 if ($song_id_check) {
                                     $existing_song = true;
                                 }
@@ -287,6 +289,10 @@ class Catalog_subsonic extends Catalog
                                     $existing_song
                                 ) {
                                     debug_event('subsonic.catalog', 'Skipping existing song ' . $song_id_check, 5);
+                                    if (Song::get_song_map_object_id($song_id_check, 'subsonic_' . $this->catalog_id) !== $remote_id) {
+                                        Song::update_song_map([$remote_id], 'subsonic_' . $this->catalog_id, $song_id_check);
+                                    }
+
                                     continue;
                                 }
 
@@ -325,7 +331,7 @@ class Catalog_subsonic extends Catalog
                                 $data['genre']    = (!empty($song['genre']))
                                     ? explode(',', html_entity_decode($song['genre']))
                                     : [];
-                                $data['file']    = $db_url;
+                                $data['file']    = $db_file;
                                 $data['catalog'] = $this->catalog_id;
 
                                 if ($action === 'add' && !$existing_song) {
@@ -344,7 +350,7 @@ class Catalog_subsonic extends Catalog
                                     $songsadded++;
                                 } elseif ($action === 'verify' && $existing_song) {
                                     // If we already have the song, update it
-                                    $song_id = Catalog::get_id_from_file($song['path'], 'song');
+                                    $song_id = $song_id_check;
                                     if ($song_id) {
                                         $current_song = new Song($song_id);
                                         $current_song->fill_ext_info();
@@ -354,6 +360,13 @@ class Catalog_subsonic extends Catalog
                                             debug_event('subsonic.catalog', 'Updated existing song ' . $song_id, 5);
                                             $songsadded++;
                                         }
+                                    }
+                                }
+
+                                if ($song_id) {
+                                    // Update the remote id for streaming / lookup
+                                    if (Song::get_song_map_object_id($song_id, 'subsonic_' . $this->catalog_id) !== $remote_id) {
+                                        Song::update_song_map([$remote_id], 'subsonic_' . $this->catalog_id, $song_id);
                                     }
                                 }
                             }
@@ -556,10 +569,22 @@ class Catalog_subsonic extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      */
-    public function check_remote_song(string $url): ?int
+    public function check_remote_song(string $db_file, string $remote_id): ?int
     {
+        // Check by urls first
+        if (!empty($remote_id)) {
+            $sql        = 'SELECT `id` FROM `song` WHERE `file` LIKE ?;';
+            $db_results = Dba::read($sql, [$this->uri . '/rest/stream.view?id=' . $remote_id . '&filename=' . urlencode($db_file)]);
+            if ($results = Dba::fetch_assoc($db_results)) {
+                Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_file, $results['id']]);
+                Song::update_song_map([$remote_id], 'subsonic_' . $this->catalog_id, (int)$results['id']);
+
+                return (int)$results['id'];
+            }
+        }
+
         $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
-        $db_results = Dba::read($sql, [$url]);
+        $db_results = Dba::read($sql, [$db_file]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];
@@ -618,6 +643,17 @@ class Catalog_subsonic extends Catalog
     {
         $this->_createClient();
 
-        return $this->subsonic?->parameterize($media->file . '&');
+        if (filter_var($media->file, FILTER_VALIDATE_URL)) {
+            return $this->subsonic?->parameterize($media->file . '&');
+        }
+
+        $remote_id = Song::get_song_map_object_id($media->id, 'subsonic_' . $this->catalog_id);
+        if (!empty($remote_id)) {
+            return $this->subsonic?->parameterize($this->uri . '/rest/stream.view?id=' . $remote_id . '&filename=' . urlencode($media->file) . '&');
+        }
+
+        debug_event('subsonic.catalog', 'Unable to find external url for ' . $media->id, 1);
+
+        return null;
     }
 }
