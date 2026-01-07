@@ -1039,6 +1039,8 @@ class Catalog_remote extends Catalog
             }
         }
 
+        debug_event('remote.catalog', 'Unable to find song ' . $remote_id, 1);
+
         return null;
     }
 }
