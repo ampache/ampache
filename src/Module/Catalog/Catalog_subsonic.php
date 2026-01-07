@@ -331,8 +331,10 @@ class Catalog_subsonic extends Catalog
                                 $data['genre']    = (!empty($song['genre']))
                                     ? explode(',', html_entity_decode($song['genre']))
                                     : [];
-                                $data['file']    = $db_file;
-                                $data['catalog'] = $this->catalog_id;
+                                $data['file']         = $db_file;
+                                $data['catalog']      = $this->catalog_id;
+                                $data['disksubtitle'] = null;
+                                $data['rate']         = null;
 
                                 if ($action === 'add' && !$existing_song) {
                                     debug_event('subsonic.catalog', 'Adding song ' . $song['path'], 5);
