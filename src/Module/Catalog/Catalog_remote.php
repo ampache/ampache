@@ -1018,6 +1018,8 @@ class Catalog_remote extends Catalog
         if (filter_var($media->file, FILTER_VALIDATE_URL)) {
             $handshake = $this->remote_handle->info();
             if (!$handshake instanceof SimpleXMLElement) {
+                debug_event('remote.catalog', 'Handshake with remote server failed', 1);
+
                 return null;
             }
 
@@ -1026,6 +1028,8 @@ class Catalog_remote extends Catalog
 
         $remote_id = Song::get_song_map_object_id($media->id, 'remote_' . $this->catalog_id);
         if (!$remote_id) {
+            debug_event('remote.catalog', 'Unable to identify remote id ' . $media->id . '. Update the catalog.', 1);
+
             return null;
         }
 
