@@ -892,7 +892,7 @@ class Catalog_remote extends Catalog
                     rename($old_target_file, $file_target);
                     debug_event('remote.catalog', 'Moved: ' . $row['id'] . ' from: {' . $old_target_file . '}' . ' to: {' . $file_target . '}', 5);
                 } else {
-                    $song = new Song($row['id']);
+                    $song       = new Song($row['id']);
                     $remote_url = $this->getRemoteStreamingUrl($song);
                     if (
                         !empty($remote_url) &&
