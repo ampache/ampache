@@ -352,8 +352,8 @@ class Catalog_subsonic extends Catalog
                                     $songsadded++;
                                 } elseif ($action === 'verify' && $existing_song) {
                                     // If we already have the song, update it
-                                    $song_id = $song_id_check;
-                                    if ($song_id) {
+                                    $song_id = (int)$song_id_check;
+                                    if ($song_id > 0) {
                                         $current_song = new Song($song_id);
                                         $current_song->fill_ext_info();
 
@@ -650,7 +650,7 @@ class Catalog_subsonic extends Catalog
         }
 
         $remote_id = Song::get_song_map_object_id($media->id, 'subsonic_' . $this->catalog_id);
-        if (!empty($remote_id)) {
+        if (!empty($remote_id) && $media->file !== null) {
             return $this->subsonic?->parameterize($this->uri . '/rest/stream.view?id=' . $remote_id . '&filename=' . urlencode($media->file) . '&');
         }
 
