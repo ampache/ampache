@@ -261,7 +261,7 @@ class Song extends database_object implements
         $albumartist_mbid = $results['mb_albumartistid'] ?? null;
         $disk             = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
         $disksubtitle     = $results['disksubtitle'] ?? null;
-        $isrc             = (isset($results['isrc']) && is_string($results['isrc']))? [$results['isrc']] : $results['isrc'] ?? [];
+        $isrc             = (isset($results['isrc']) && is_string($results['isrc'])) ? [$results['isrc']] : $results['isrc'] ?? [];
         $year             = Catalog::normalize_year($results['year'] ?? 0);
         $comment          = $results['comment'] ?? null;
         $tags             = $results['genre'] ?? []; // multiple genre support makes this an array
