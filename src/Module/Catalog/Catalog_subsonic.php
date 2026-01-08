@@ -259,7 +259,7 @@ class Catalog_subsonic extends Catalog
         );
 
         if (is_array($song) && $song['success']) {
-            return $this->_gather_tags($song);
+            return $this->_gather_tags($song['data']['song']);
         }
 
         return null;
