@@ -371,14 +371,13 @@ class Catalog_remote extends Catalog
             foreach ($song_tags->children() as $name => $value) {
                 $key = (string)$name;
                 if (count($song_tags->$name) > 1) {
-                    // arrays of objects
+                    // Key in XML multiple times so it's an array
                     if (!isset($data[$key]) || !$data[$key] || !is_array($data[$key])) {
                         $data[$key] = [];
                     }
-                    foreach ($value as $child) {
-                        if (!empty((string)$child) && is_array($data[$key])) {
-                            $data[$key][] = (string)$child;
-                        }
+
+                    if (!empty((string)$value)) {
+                        $data[$key][] = (string)$value;
                     }
                 } else {
                     // single value
