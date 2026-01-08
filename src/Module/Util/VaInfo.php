@@ -265,6 +265,11 @@ final class VaInfo implements VaInfoInterface
         $this->logger          = $logger;
     }
 
+    public static function get_default_info(): array
+    {
+        return self::DEFAULT_INFO;
+    }
+
     /**
      * forceSize
      */

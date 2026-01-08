@@ -34,6 +34,7 @@ use Ampache\Repository\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\VaInfo;
 use Exception;
 
 /**
@@ -245,7 +246,9 @@ class Catalog_subsonic extends Catalog
     {
         $this->_createClient();
 
-        $remote_id = Song::get_song_map_object_id($media->getId(), 'remote_' . $this->catalog_id);
+        $remote_id = (filter_var($media->file, FILTER_VALIDATE_URL))
+            ? preg_replace('/^.*[?&]id=([^&]+).*$/', '$1', html_entity_decode($media->file))
+            : Song::get_song_map_object_id($media->getId(), 'remote_' . $this->catalog_id);
         if (!$remote_id) {
             return null;
         }
@@ -271,14 +274,13 @@ class Catalog_subsonic extends Catalog
      */
     private function _gather_tags(array $song): array
     {
-
         $artistInfo  = $this->subsonic?->querySubsonic('getArtistInfo', ['id' => $song['artistId']]);
         $album       = $this->subsonic?->querySubsonic('getMusicDirectory', ['id' => $song['parent']]);
         $albumartist = (is_array($album) && isset($album['data']['directory']['parent']))
             ? $this->subsonic?->querySubsonic('getArtist', ['id' => $album['data']['directory']['parent']])
             : null;
 
-        $data = [];
+        $data = VaInfo::get_default_info();
         // album_artist isn't included in the song response
         if (is_array($albumartist) && $albumartist['success']) {
             $data['albumartist'] = html_entity_decode($albumartist['data']['artist']['name']);
@@ -305,8 +307,6 @@ class Catalog_subsonic extends Catalog
             : [];
         $data['file']         = $song['path'];
         $data['catalog']      = $this->catalog_id;
-        $data['disksubtitle'] = null;
-        $data['rate']         = null;
 
         return $data;
     }

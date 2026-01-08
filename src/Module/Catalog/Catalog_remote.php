@@ -36,6 +36,7 @@ use Ampache\Repository\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\VaInfo;
 use AmpacheApi\AmpacheApi;
 use Exception;
 use SimpleXMLElement;
@@ -324,10 +325,14 @@ class Catalog_remote extends Catalog
         }
 
         $results   = [];
-        $remote_id = Song::get_song_map_object_id($media->getId(), 'remote_' . $this->catalog_id);
-        $song      = ($remote_id)
-            ? $this->remote_handle->send_command(self::CMD_SONG, ['filter' => $remote_id])
-            : null;
+        $remote_id = (filter_var($media->file, FILTER_VALIDATE_URL))
+            ? preg_replace('/^.*[?&]oid=([^&]+).*$/', '$1', html_entity_decode($media->file))
+            : Song::get_song_map_object_id($media->getId(), 'remote_' . $this->catalog_id);
+        if (!$remote_id) {
+            return null;
+        }
+
+        $song = $this->remote_handle->send_command(self::CMD_SONG, ['filter' => $remote_id]);
 
         if (
             $song instanceof SimpleXMLElement &&

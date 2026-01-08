@@ -2661,7 +2661,7 @@ abstract class Catalog extends database_object
         }
 
         if ($catalog instanceof Catalog_Remote || $catalog instanceof Catalog_subsonic) {
-            // remote files are read using hte API and not the file
+            // remote files are read using the API and not the file
             $results = $catalog->get_media_tags($media, $gather_types, '', '');
         } else {
             // retrieve the file if needed
