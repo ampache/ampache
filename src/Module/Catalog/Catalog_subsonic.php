@@ -348,15 +348,16 @@ class Catalog_subsonic extends Catalog
                     if (is_array($album) && $album['success']) {
                         foreach ($album['data']['directory']['child'] as $child) {
                             // Use getSong to get more details
-                            $song = $this->subsonic?->querySubsonic(
+                            $getSong = $this->subsonic?->querySubsonic(
                                 'getSong',
                                 ['id' => $child['id']]
                             );
 
-                            if (!is_array($song) || !$song['success']) {
+                            if (!is_array($getSong) || !$getSong['success']) {
                                 continue;
                             }
 
+                            $song = $getSong['data']['song'];
                             if (Catalog::is_audio_file($song['path'])) {
                                 $song_id   = 0;
                                 $remote_id = $song['id'];
