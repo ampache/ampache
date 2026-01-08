@@ -2733,7 +2733,7 @@ abstract class Catalog extends database_object
         $new_song->isrc         = (!empty($results['isrc'])) ? $results['isrc'] : [];
         $new_song->title        = self::check_length(self::check_title($results['title'], $new_song->file));
         $new_song->bitrate      = $results['bitrate'];
-        $new_song->rate         = $results['rate'];
+        $new_song->rate         = $results['rate'] ?? 0;
         $new_song->mode         = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
         $new_song->channels     = $results['channels'];
         $new_song->size         = $results['size'];
