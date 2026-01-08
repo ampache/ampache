@@ -2488,7 +2488,7 @@ abstract class Catalog extends database_object
 
     public static function is_local(int $catalog_id): bool
     {
-        $db_results = Dba::read('SELECT `id` FROM `catalog` WHERE `id` = ? AND `type` = \'local\';', [$catalog_id]);
+        $db_results = Dba::read('SELECT `id` FROM `catalog` WHERE `id` = ? AND `catalog_type` = \'local\';', [$catalog_id]);
 
         return (Dba::num_rows($db_results) > 0);
     }
