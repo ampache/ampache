@@ -2583,8 +2583,8 @@ abstract class Catalog extends database_object
                 echo "<tr><td>" . $file . "</td><td>" . T_('Updated') . "</td></tr>\n";
             } elseif (array_key_exists('error', $info) && $info['error']) {
                 $message = (self::is_local($song->catalog) === false)
-                    ? T_('Error')
-                    : T_('Skipped');
+                    ? T_('Skipped')
+                    : T_('Error');
                 echo '<tr><td>' . $file . "</td><td>" . $message . "</td></tr>\n";
             } else {
                 echo '<tr><td>' . $file . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
