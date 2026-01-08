@@ -2486,13 +2486,6 @@ abstract class Catalog extends database_object
         Dba::write($sql, $params);
     }
 
-    public static function is_local(int $catalog_id): bool
-    {
-        $db_results = Dba::read('SELECT `id` FROM `catalog` WHERE `id` = ? AND `catalog_type` = \'local\';', [$catalog_id]);
-
-        return (Dba::num_rows($db_results) > 0);
-    }
-
     /**
      * update_single_item
      * updates a single album,artist,song from the tag data and return the id. (if the artist/album changes it's updated)
@@ -2582,10 +2575,7 @@ abstract class Catalog extends database_object
 
                 echo "<tr><td>" . $file . "</td><td>" . T_('Updated') . "</td></tr>\n";
             } elseif (array_key_exists('error', $info) && $info['error']) {
-                $message = (self::is_local($song->catalog) === false)
-                    ? T_('Skipped')
-                    : T_('Error');
-                echo '<tr><td>' . $file . "</td><td>" . $message . "</td></tr>\n";
+                echo '<tr><td>' . $file . "</td><td>" . T_('Error') . "</td></tr>\n";
             } else {
                 echo '<tr><td>' . $file . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
             }
@@ -2678,6 +2668,7 @@ abstract class Catalog extends database_object
             $streamConfiguration = $catalog->prepare_media($media);
 
             if ($streamConfiguration === null) {
+                debug_event(self::class, 'update_media_from_tags: Error prepare_media ' . $catalog->catalog_type, 2);
                 $array['error'] = true;
 
                 return $array;
