@@ -2558,8 +2558,6 @@ abstract class Catalog extends database_object
             $song = new Song($song_id);
             if ($song->isNew()) {
                 $info = ['error' => true];
-            } elseif (self::is_local($song->catalog) === false) {
-                $info = ['remote' => true];
             } else {
                 $info = self::update_media_from_tags($song);
 
