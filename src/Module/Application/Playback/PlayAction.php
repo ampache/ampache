@@ -653,7 +653,7 @@ final class PlayAction implements ApplicationActionInterface
                     ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic) &&
                     (bool)AmpConfig::get('cache_remote', false)
                 ) {
-                    $media_file = $catalog->getRemoteStreamingUrl($media);
+                    $media_file = $catalog->getRemoteStreamingUrl($media, 'download');
                     if ($file_target && $media_file) {
                         $catalog->cache_catalog_file($file_target, $media_file);
                     }
