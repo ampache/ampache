@@ -3678,25 +3678,33 @@ abstract class Catalog extends database_object
             return [];
         }
 
-        $vainfo = $this->getUtilityFactory()->createVaInfo(
-            $media_file,
-            $gather_types,
-            '',
-            '',
-            (string) $sort_pattern,
-            (string) $rename_pattern
-        );
-        try {
-            $vainfo->gather_tags();
-        } catch (Exception $exception) {
-            debug_event(self::class, 'Error ' . $exception->getMessage(), 1);
+        if ($this->catalog_type == 'local') {
+            $vainfo = $this->getUtilityFactory()->createVaInfo(
+                $media_file,
+                $gather_types,
+                '',
+                '',
+                (string) $sort_pattern,
+                (string) $rename_pattern
+            );
+            try {
+                $vainfo->gather_tags();
+            } catch (Exception $exception) {
+                debug_event(self::class, 'Error ' . $exception->getMessage(), 1);
 
-            return [];
+                return [];
+            }
+
+            $key = VaInfo::get_tag_type($vainfo->tags);
+
+            return VaInfo::clean_tag_info($vainfo->tags, $key, $media_file);
         }
 
-        $key = VaInfo::get_tag_type($vainfo->tags);
+        if ($this instanceof Catalog_remote) {
+            return ($this->get_remote_tags($media) ?? []);
+        }
 
-        return VaInfo::clean_tag_info($vainfo->tags, $key, $media_file);
+        return [];
     }
 
     /**
