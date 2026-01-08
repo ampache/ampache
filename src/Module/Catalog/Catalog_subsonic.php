@@ -274,9 +274,9 @@ class Catalog_subsonic extends Catalog
      */
     private function _gather_tags(array $song): array
     {
-        $album       = $this->subsonic?->querySubsonic('getMusicDirectory', ['id' => $song['parent']]);
-        $albumartist = (is_array($album) && isset($album['data']['directory']['parent']))
-            ? $this->subsonic?->querySubsonic('getArtist', ['id' => $album['data']['directory']['parent']])
+        $album       = $this->subsonic?->querySubsonic('getAlbum', ['id' => $song['parent']]);
+        $albumartist = (is_array($album) && isset($album['data']['album']['parent']))
+            ? $this->subsonic?->querySubsonic('getArtist', ['id' => $album['data']['album']['parent']])
             : null;
 
         $data = VaInfo::get_default_info();
@@ -296,8 +296,8 @@ class Catalog_subsonic extends Catalog
         $data['disk']     = $song['discNumber'];
         $data['coverArt'] = $song['coverArt'];
         $data['mode']     = 'vbr';
-        $data['genre']    = (!empty($song['genre']))
-            ? explode(',', html_entity_decode($song['genre']))
+        $data['genre']    = (!empty($album['data']['album']['genre']))
+            ? explode(',', html_entity_decode($album['data']['album']['genre']))
             : [];
         $data['file']         = $song['path'];
         $data['catalog']      = $this->catalog_id;
