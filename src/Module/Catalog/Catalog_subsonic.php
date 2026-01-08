@@ -274,7 +274,6 @@ class Catalog_subsonic extends Catalog
      */
     private function _gather_tags(array $song): array
     {
-        $artistInfo  = $this->subsonic?->querySubsonic('getArtistInfo', ['id' => $song['artistId']]);
         $album       = $this->subsonic?->querySubsonic('getMusicDirectory', ['id' => $song['parent']]);
         $albumartist = (is_array($album) && isset($album['data']['directory']['parent']))
             ? $this->subsonic?->querySubsonic('getArtist', ['id' => $album['data']['directory']['parent']])
@@ -288,12 +287,7 @@ class Catalog_subsonic extends Catalog
         $data['artist'] = html_entity_decode($song['artist']);
         $data['album']  = html_entity_decode($song['album']);
         $data['title']  = html_entity_decode($song['title']);
-        if (
-            is_array($artistInfo) &&
-            isset($artistInfo['data']['artistInfo']['biography'])
-        ) {
-            $data['comment'] = html_entity_decode($artistInfo['data']['artistInfo']['biography']);
-        }
+
         $data['year']     = $song['year'];
         $data['bitrate']  = $song['bitRate'] * 1000;
         $data['size']     = $song['size'];
