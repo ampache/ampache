@@ -246,7 +246,7 @@ class Catalog_subsonic extends Catalog
     {
         $this->_createClient();
 
-        $remote_id = (filter_var($media->file, FILTER_VALIDATE_URL))
+        $remote_id = ($media->file && filter_var($media->file, FILTER_VALIDATE_URL))
             ? preg_replace('/^.*[?&]id=([^&]+).*$/', '$1', html_entity_decode($media->file))
             : Song::get_song_map_object_id($media->getId(), 'remote_' . $this->catalog_id);
         if (!$remote_id) {
@@ -698,7 +698,7 @@ class Catalog_subsonic extends Catalog
     /**
      * Returns the remote streaming-url if supported
      */
-    public function getRemoteStreamingUrl(Podcast_Episode|Video|Song $media): ?string
+    public function getRemoteStreamingUrl(Podcast_Episode|Video|Song $media, ?string $action = null): ?string
     {
         $this->_createClient();
 
