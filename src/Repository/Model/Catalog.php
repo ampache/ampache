@@ -2582,9 +2582,10 @@ abstract class Catalog extends database_object
 
                 echo "<tr><td>" . $file . "</td><td>" . T_('Updated') . "</td></tr>\n";
             } elseif (array_key_exists('error', $info) && $info['error']) {
-                echo '<tr><td>' . $file . "</td><td>" . T_('Error') . "</td></tr>\n";
-            } elseif (array_key_exists('remote', $info) && $info['remote']) {
-                echo '<tr><td>' . $file . "</td><td>" . T_('Skipped') . "</td></tr>\n";
+                $message = (self::is_local($song->catalog) === false)
+                    ? T_('Error')
+                    : T_('Skipped');
+                echo '<tr><td>' . $file . "</td><td>" . $message . "</td></tr>\n";
             } else {
                 echo '<tr><td>' . $file . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
             }
@@ -2669,31 +2670,36 @@ abstract class Catalog extends database_object
             return $array;
         }
 
-        // retrieve the file if needed
-        $streamConfiguration = $catalog->prepare_media($media);
+        if ($catalog instanceof Catalog_Remote) {
+            // remote files are read using hte API and not the file
+            $results = $catalog->get_media_tags($media, $gather_types, '', '');
+        } else {
+            // retrieve the file if needed
+            $streamConfiguration = $catalog->prepare_media($media);
 
-        if ($streamConfiguration === null) {
-            $array['error'] = true;
+            if ($streamConfiguration === null) {
+                $array['error'] = true;
 
-            return $array;
-        }
+                return $array;
+            }
 
-        if (empty($streamConfiguration['file_path']) || Core::get_filesize(Core::conv_lc_file($streamConfiguration['file_path'])) == 0) {
-            debug_event(self::class, 'update_media_from_tags: Error loading file ' . $streamConfiguration['file_path'], 2);
-            $array['error'] = true;
+            if (empty($streamConfiguration['file_path']) || Core::get_filesize(Core::conv_lc_file($streamConfiguration['file_path'])) == 0) {
+                debug_event(self::class, 'update_media_from_tags: Error loading file ' . $streamConfiguration['file_path'], 2);
+                $array['error'] = true;
 
-            return $array;
-        }
+                return $array;
+            }
 
-        // try and get the tags from your file
-        debug_event(self::class, 'Reading tags from ' . $streamConfiguration['file_path'], 4);
-        $extension = strtolower(pathinfo($streamConfiguration['file_path'], PATHINFO_EXTENSION));
-        $results   = $catalog->get_media_tags($media, $gather_types, '', '');
-        // for files without tags try to update from their file name instead
-        if ($media->id && in_array($extension, ['wav', 'shn'])) {
-            // match against your catalog 'Filename Pattern' and 'Folder Pattern'
-            $patres  = VaInfo::parse_pattern($streamConfiguration['file_path'], $catalog->sort_pattern ?? '', $catalog->rename_pattern ?? '');
-            $results = array_merge($results, $patres);
+            // try and get the tags from your file
+            debug_event(self::class, 'Reading tags from ' . $streamConfiguration['file_path'], 4);
+            $extension = strtolower(pathinfo($streamConfiguration['file_path'], PATHINFO_EXTENSION));
+            $results   = $catalog->get_media_tags($media, $gather_types, '', '');
+            // for files without tags try to update from their file name instead
+            if ($media->id && in_array($extension, ['wav', 'shn'])) {
+                // match against your catalog 'Filename Pattern' and 'Folder Pattern'
+                $patres  = VaInfo::parse_pattern($streamConfiguration['file_path'], $catalog->sort_pattern ?? '', $catalog->rename_pattern ?? '');
+                $results = array_merge($results, $patres);
+            }
         }
 
         if ($media instanceof Song) {
@@ -3676,6 +3682,10 @@ abstract class Catalog extends database_object
             return [];
         }
 
+        if ($this instanceof Catalog_remote) {
+            return ($this->get_remote_tags($media) ?? []);
+        }
+
         if ($this->catalog_type == 'local') {
             $vainfo = $this->getUtilityFactory()->createVaInfo(
                 $media_file,
@@ -3696,10 +3706,6 @@ abstract class Catalog extends database_object
             $key = VaInfo::get_tag_type($vainfo->tags);
 
             return VaInfo::clean_tag_info($vainfo->tags, $key, $media_file);
-        }
-
-        if ($this instanceof Catalog_remote) {
-            return ($this->get_remote_tags($media) ?? []);
         }
 
         return [];
