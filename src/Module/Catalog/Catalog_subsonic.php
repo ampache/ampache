@@ -296,9 +296,14 @@ class Catalog_subsonic extends Catalog
         $data['disk']     = $song['discNumber'];
         $data['coverArt'] = $song['coverArt'];
         $data['mode']     = 'vbr';
-        $data['genre']    = (!empty($album['data']['album']['genre']))
-            ? explode(',', html_entity_decode($album['data']['album']['genre']))
-            : [];
+        if (isset($album['data']['album']['genres'])) {
+            $data['genre'] = [];
+            foreach ($album['data']['album']['genres'] as $genre) {
+                $data['genre'][] = html_entity_decode($genre);
+            }
+        } elseif (isset($album['data']['album']['genre'])) {
+            $data['genre'] = explode(',', html_entity_decode($album['data']['album']['genre']));
+        }
         $data['file']         = $song['path'];
         $data['catalog']      = $this->catalog_id;
 
