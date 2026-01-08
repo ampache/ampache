@@ -265,6 +265,11 @@ final class VaInfo implements VaInfoInterface
         $this->logger          = $logger;
     }
 
+    /**
+     * get_default_info
+     *
+     * @return array<string, null>
+     */
     public static function get_default_info(): array
     {
         return self::DEFAULT_INFO;

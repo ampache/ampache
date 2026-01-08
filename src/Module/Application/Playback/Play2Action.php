@@ -723,7 +723,7 @@ final class Play2Action implements ApplicationActionInterface
                 return null;
             } else {
                 // Some catalogs redirect you to the remote url so stop here
-                $remoteStreamingUrl = $catalog->getRemoteStreamingUrl($media);
+                $remoteStreamingUrl = $catalog->getRemoteStreamingUrl($media, $action);
                 if ($remoteStreamingUrl !== null) {
                     $this->logger->debug(
                         'Started remote stream - ' . $remoteStreamingUrl,

@@ -290,7 +290,7 @@ abstract class Catalog extends database_object
         return (int)($this->id ?? 0);
     }
 
-    public function getRemoteStreamingUrl(Podcast_Episode|Video|Song $media): ?string
+    public function getRemoteStreamingUrl(Podcast_Episode|Video|Song $media, ?string $action = null): ?string
     {
         return null;
     }

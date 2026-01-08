@@ -52,6 +52,8 @@ class Catalog_remote extends Catalog
 
     private const CMD_ARTISTS = 'artists';
 
+    private const CMD_DOWNLOAD = 'download';
+
     private const CMD_PING = 'ping';
 
     private const CMD_SONGS = 'songs';
@@ -59,6 +61,8 @@ class Catalog_remote extends Catalog
     private const CMD_SONG = 'song';
 
     private const CMD_SONG_TAGS = 'song_tags';
+
+    private const CMD_STREAM = 'stream';
 
     private const CMD_URL_TO_SONG = 'url_to_song';
 
@@ -325,7 +329,7 @@ class Catalog_remote extends Catalog
         }
 
         $results   = [];
-        $remote_id = (filter_var($media->file, FILTER_VALIDATE_URL))
+        $remote_id = ($media->file && filter_var($media->file, FILTER_VALIDATE_URL))
             ? preg_replace('/^.*[?&]oid=([^&]+).*$/', '$1', html_entity_decode($media->file))
             : Song::get_song_map_object_id($media->getId(), 'remote_' . $this->catalog_id);
         if (!$remote_id) {
@@ -975,7 +979,7 @@ class Catalog_remote extends Catalog
                     debug_event('remote.catalog', 'Moved: ' . $row['id'] . ' from: {' . $old_target_file . '}' . ' to: {' . $file_target . '}', 5);
                 } else {
                     $song       = new Song($row['id']);
-                    $remote_url = $this->getRemoteStreamingUrl($song);
+                    $remote_url = $this->getRemoteStreamingUrl($song, self::CMD_DOWNLOAD);
                     if (
                         !empty($remote_url) &&
                         Catalog::cache_remote_file($file_target, $remote_url)
@@ -1083,7 +1087,7 @@ class Catalog_remote extends Catalog
     /**
      * Returns the remote streaming-url if supported
      */
-    public function getRemoteStreamingUrl(Podcast_Episode|Video|Song $media): ?string
+    public function getRemoteStreamingUrl(Podcast_Episode|Video|Song $media, ?string $action = null): ?string
     {
         $this->_connect();
 
@@ -1112,23 +1116,8 @@ class Catalog_remote extends Catalog
             return null;
         }
 
-        $songs = $this->remote_handle->send_command(self::CMD_SONG, ['filter' => $remote_id]);
-        if (
-            $songs instanceof SimpleXMLElement &&
-            $songs->song->count() > 0
-        ) {
-            foreach ($songs->song as $song) {
-                if (
-                    $song instanceof SimpleXMLElement &&
-                    $song->url
-                ) {
-                    return (string)$song->url;
-                }
-            }
-        }
-
-        debug_event('remote.catalog', 'Unable to find song ' . $remote_id, 1);
-
-        return null;
+        return ($action === 'download')
+            ? $this->remote_handle->get_command_url(self::CMD_DOWNLOAD, ['filter' => $remote_id])
+            : $this->remote_handle->get_command_url(self::CMD_STREAM, ['filter' => $remote_id]);
     }
 }

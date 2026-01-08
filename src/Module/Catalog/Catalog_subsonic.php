@@ -708,7 +708,11 @@ class Catalog_subsonic extends Catalog
 
         $remote_id = Song::get_song_map_object_id($media->id, 'subsonic_' . $this->catalog_id);
         if (!empty($remote_id) && $media->file !== null) {
-            return $this->subsonic?->parameterize($this->uri . '/rest/stream.view?id=' . $remote_id . '&filename=' . urlencode($media->file) . '&');
+            $action = ($action === 'download')
+                ? 'download'
+                : 'stream';
+
+            return $this->subsonic?->parameterize($this->uri . '/rest/' . $action . '.view?id=' . $remote_id . '&filename=' . urlencode($media->file) . '&');
         }
 
         debug_event('subsonic.catalog', 'Unable to find external url for ' . $media->id, 1);
