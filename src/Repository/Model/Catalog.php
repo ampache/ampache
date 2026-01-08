@@ -2660,7 +2660,7 @@ abstract class Catalog extends database_object
             return $array;
         }
 
-        if ($catalog instanceof Catalog_Remote) {
+        if ($catalog instanceof Catalog_Remote || $catalog instanceof Catalog_subsonic) {
             // remote files are read using hte API and not the file
             $results = $catalog->get_media_tags($media, $gather_types, '', '');
         } else {
@@ -2691,6 +2691,11 @@ abstract class Catalog extends database_object
                 $patres  = VaInfo::parse_pattern($streamConfiguration['file_path'], $catalog->sort_pattern ?? '', $catalog->rename_pattern ?? '');
                 $results = array_merge($results, $patres);
             }
+
+            // remote catalogs should unlink the temp files if needed // TODO add other types of remote catalog
+            if ($catalog instanceof Catalog_Seafile) {
+                $catalog->clean_tmp_file($streamConfiguration['file_path']);
+            }
         }
 
         if ($media instanceof Song) {
@@ -2701,11 +2706,6 @@ abstract class Catalog extends database_object
             $update = self::update_podcast_episode_from_tags($results, $media);
         } else {
             $update = [];
-        }
-
-        // remote catalogs should unlink the temp files if needed // TODO add other types of remote catalog
-        if ($catalog instanceof Catalog_Seafile) {
-            $catalog->clean_tmp_file($streamConfiguration['file_path']);
         }
 
         return $update;
@@ -3673,7 +3673,7 @@ abstract class Catalog extends database_object
             return [];
         }
 
-        if ($this instanceof Catalog_remote) {
+        if ($this instanceof Catalog_remote || $this instanceof Catalog_subsonic) {
             return ($this->get_remote_tags($media) ?? []);
         }
 
