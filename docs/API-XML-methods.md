@@ -3682,11 +3682,14 @@ Streams a given media file. Takes the file id in parameter with optional max bit
 
 This is for controlling localplay
 
+**NOTE** `filter` is available in Ampache 7.9.0 and higher. `oid` will be deprecated and removed in a future release.
+
 | Input     | Type    | Description                                                                             | Optional |
 |-----------|---------|-----------------------------------------------------------------------------------------|---------:|
 | 'command' | string  | `next`, `prev`, `stop`, `play`, `pause`, `add`, `volume_up`                             |       NO |
 |           |         | `volume_down`, `volume_mute`, `delete_all`, `skip`, `status`                            |          |
 | 'oid'     | string  | $object_id                                                                              |      YES |
+| 'filter'  | string  | Alias of `catalog` (Ampache 7.9.0+)                                                     |      YES |
 | 'type'    | string  | `song`, `video`, `podcast_episode`, `channel`, `broadcast`, `democratic`, `live_stream` |      YES |
 | 'clear'   | boolean | `0`, `1` (Clear the current playlist before adding)                                     |      YES |
 

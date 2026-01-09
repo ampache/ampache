@@ -10,7 +10,9 @@ URL paths are stil supported but they will be converted on the next catalog upda
 
 ### Added
 
-* Extend `Dba::check_database_inserted(`) tables a bit more
+* Extend `Dba::check_database_inserted()` tables a bit more
+* Support Update from tags actions for Remote Ampache and Subsonic catalogs
+* Support download actions on remote song objects
 
 ### Changed
 
@@ -26,6 +28,10 @@ URL paths are stil supported but they will be converted on the next catalog upda
 
 * ISRC could be sent as a string from some places
 * Subsonic remote catalog missing data keys for Song updates
+* Genre for remote Ampache and Subsonic catalogs not being read correctly
+* Error missing tag values when updating remote files
+* Subsonic remote catalog missing `getAlbum` as a command
+* Call download actions on remote caching action
 
 ## Ampache 7.8.0
 
