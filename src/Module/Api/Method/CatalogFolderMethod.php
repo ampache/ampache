@@ -75,9 +75,8 @@ final class CatalogFolderMethod
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (isset($input['filter'])) {
-            $input['catalog'] = $input['filter'];
-        }
+
+        $input['catalog'] = $input['filter'] ?? $input['catalog'] ?? null;
         if (!Api::check_parameter($input, ['catalog', 'folder', 'task'], self::ACTION)) {
             return false;
         }

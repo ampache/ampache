@@ -60,14 +60,12 @@ final class UrlToSongMethod
      */
     public static function url_to_song(array $input, User $user): bool
     {
-        if (isset($input['filter'])) {
-            $input['url'] = $input['filter'];
-        }
+        $input['url'] = $input['filter'] ?? $input['url'] ?? null;
         if (!Api::check_parameter($input, ['url'], self::ACTION)) {
             return false;
         }
         $charset  = AmpConfig::get('site_charset', 'UTF-8');
-        $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
+        $song_url = html_entity_decode((string)$input['url'], ENT_QUOTES, $charset);
         $url_data = Stream_Url::parse($song_url);
         if (!array_key_exists('id', $url_data)) {
             Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'url', $input['api_format']);

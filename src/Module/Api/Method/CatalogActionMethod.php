@@ -67,9 +67,8 @@ final class CatalogActionMethod
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (isset($input['filter'])) {
-            $input['catalog'] = $input['filter'];
-        }
+
+        $input['catalog'] = $input['filter'] ?? $input['catalog'] ?? null;
         if (!Api::check_parameter($input, ['catalog', 'task'], self::ACTION)) {
             return false;
         }
