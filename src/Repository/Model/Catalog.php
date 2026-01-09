@@ -290,6 +290,15 @@ abstract class Catalog extends database_object
         return (int)($this->id ?? 0);
     }
 
+    /**
+     * get_remote_tags
+     * @return null|array<string, mixed>
+     */
+    public function get_remote_tags(Podcast_Episode|Video|Song $media): ?array
+    {
+        return null;
+    }
+
     public function getRemoteStreamingUrl(Podcast_Episode|Video|Song $media, ?string $action = null): ?string
     {
         return null;
@@ -1191,7 +1200,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * cache_remote_file
+     * cache_local_file
      */
     public static function cache_local_file(Podcast_Episode|Song|Video $media, string $target_file, string $cache_target): void
     {
@@ -1204,7 +1213,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * Get last catalogs update.
+     * Get last update for catalogs.
      * @param int[]|null $catalogs
      */
     public static function getLastUpdate(?array $catalogs = null): int
