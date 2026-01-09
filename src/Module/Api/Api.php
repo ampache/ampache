@@ -399,7 +399,12 @@ class Api
         $playlists = (AmpConfig::get('hide_search', false))
             ? $counts['playlist']
             : $counts['playlist'] + $counts['search'];
-        $autharray = (!empty($token)) ? ['auth' => $token] : [];
+        $autharray = (!empty($token))
+            ? [
+                'auth' => $token,
+                'streamtoken' => $client->streamtoken
+            ]
+            : [];
         // perpetual sessions do not expire
         $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
         $session_expire = ($perpetual)
