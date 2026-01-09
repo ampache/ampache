@@ -50,7 +50,8 @@ final class UrlToSongMethod
      * url = (string) $url
      *
      * @param array{
-     *     url: string,
+     *     filter?: string,
+     *     url?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -59,6 +60,9 @@ final class UrlToSongMethod
      */
     public static function url_to_song(array $input, User $user): bool
     {
+        if (isset($input['filter'])) {
+            $input['url'] = $input['filter'];
+        }
         if (!Api::check_parameter($input, ['url'], self::ACTION)) {
             return false;
         }

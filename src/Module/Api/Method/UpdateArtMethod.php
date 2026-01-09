@@ -67,13 +67,13 @@ final class UpdateArtMethod
      */
     public static function update_art(array $input, User $user): bool
     {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
+            return false;
+        }
         if (!Api::check_parameter($input, ['type', 'id'], self::ACTION)) {
             return false;
         }
 
-        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
         $type      = (string)$input['type'];
         $object_id = (int)$input['id'];
         $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;

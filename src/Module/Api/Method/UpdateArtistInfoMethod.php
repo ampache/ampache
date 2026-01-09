@@ -60,13 +60,13 @@ final class UpdateArtistInfoMethod
      */
     public static function update_artist_info(array $input, User $user): bool
     {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
+            return false;
+        }
         if (!Api::check_parameter($input, ['id'], self::ACTION)) {
             return false;
         }
 
-        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
         $object_id = (int) $input['id'];
         $item      = new Artist($object_id);
         if ($item->isNew()) {

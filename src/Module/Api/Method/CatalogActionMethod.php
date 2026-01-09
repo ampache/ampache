@@ -54,7 +54,8 @@ final class CatalogActionMethod
      *
      * @param array{
      *     task: string,
-     *     catalog: int,
+     *     filter?: int,
+     *     catalog?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -63,12 +64,16 @@ final class CatalogActionMethod
      */
     public static function catalog_action(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, ['catalog', 'task'], self::ACTION)) {
-            return false;
-        }
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
+        if (isset($input['filter'])) {
+            $input['catalog'] = $input['filter'];
+        }
+        if (!Api::check_parameter($input, ['catalog', 'task'], self::ACTION)) {
+            return false;
+        }
+
         $task = (string) $input['task'];
         // confirm the correct data
         if (!in_array($task, ['add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'garbage_collect'])) {
