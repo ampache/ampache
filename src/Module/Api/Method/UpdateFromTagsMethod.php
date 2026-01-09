@@ -52,7 +52,8 @@ final class UpdateFromTagsMethod
      * id   = (string) $artist_id, $album_id, $song_id
      *
      * @param array{
-     *     id: string,
+     *     filter?: string,
+     *     id?: string,
      *     type: string,
      *     api_format: string,
      *     auth: string,
@@ -62,6 +63,7 @@ final class UpdateFromTagsMethod
      */
     public static function update_from_tags(array $input, User $user): bool
     {
+        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
         if (!Api::check_parameter($input, ['type', 'id'], self::ACTION)) {
             return false;
         }

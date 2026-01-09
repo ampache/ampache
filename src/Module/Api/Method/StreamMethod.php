@@ -59,7 +59,8 @@ final class StreamMethod
      * stats   = (integer) 0,1, if false disable stat recording when playing the object (default: 1) //optional
      *
      * @param array{
-     *     id: string,
+     *     filter?: string,
+     *     id?: string,
      *     type: string,
      *     bitrate?: int,
      *     format?: int,
@@ -74,6 +75,7 @@ final class StreamMethod
      */
     public static function stream(array $input, User $user): bool
     {
+        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
         if (!Api::check_parameter($input, ['id', 'type'], self::ACTION)) {
             http_response_code(400);
 
@@ -91,7 +93,7 @@ final class StreamMethod
             )
         ) {
             // The API can use searches as playlists so check for those too
-            $object_id = (int)str_replace('smart_', '', $input['id']);
+            $object_id = (int)str_replace('smart_', '', ($input['id'] ?? '0'));
             $type      = 'search';
         }
 

@@ -51,7 +51,8 @@ final class UpdateArtistInfoMethod
      * id = (string) $artist_id
      *
      * @param array{
-     *     id: string,
+     *     filter?: string,
+     *     id?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -63,6 +64,7 @@ final class UpdateArtistInfoMethod
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
+        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
         if (!Api::check_parameter($input, ['id'], self::ACTION)) {
             return false;
         }

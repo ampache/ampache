@@ -56,7 +56,8 @@ final class UpdateArtMethod
      * overwrite = (integer) 0,1 //optional
      *
      * @param array{
-     *     id: string,
+     *     filter?: string,
+     *     id?: string,
      *     type: string,
      *     overwrite: int,
      *     api_format: string,
@@ -70,6 +71,7 @@ final class UpdateArtMethod
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
+        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
         if (!Api::check_parameter($input, ['type', 'id'], self::ACTION)) {
             return false;
         }
