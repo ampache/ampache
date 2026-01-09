@@ -3689,7 +3689,7 @@ This is for controlling localplay
 | 'command' | string  | `next`, `prev`, `stop`, `play`, `pause`, `add`, `volume_up`                             |       NO |
 |           |         | `volume_down`, `volume_mute`, `delete_all`, `skip`, `status`                            |          |
 | 'oid'     | string  | $object_id                                                                              |      YES |
-| 'filter'  | string  | Alias of `catalog` (Ampache 7.9.0+)                                                     |      YES |
+| 'filter'  | string  | Alias of `oid` (Ampache 7.9.0+)                                                         |      YES |
 | 'type'    | string  | `song`, `video`, `podcast_episode`, `channel`, `broadcast`, `democratic`, `live_stream` |      YES |
 | 'clear'   | boolean | `0`, `1` (Clear the current playlist before adding)                                     |      YES |
 

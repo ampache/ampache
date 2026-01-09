@@ -10,6 +10,7 @@ URL paths are stil supported but they will be converted on the next catalog upda
 
 ### Added
 
+* Add the remote id of songs to the `song_map` table
 * Extend `Dba::check_database_inserted()` tables a bit more
 * Support Update from tags actions for Remote Ampache and Subsonic catalogs
 * Support download actions on remote song objects
