@@ -38,7 +38,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
 
     private const VERSION = '7.9.0'; // AMPACHE_VERSION
 
-    private const CONFIG_VERSION = '85';
+    private const CONFIG_VERSION = '86';
 
     private const STRUCTURE = 'public'; // Project release is using either the public html folder or squashed structure
 
