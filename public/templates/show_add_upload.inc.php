@@ -300,14 +300,12 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
 </script>
 
 <table class="tabledata">
-    <tr class="upload_select_row">
-        <small>
-            <?php echo Ui::get_material_symbol('info'); ?>
-            <?php echo T_('Leave the artist and album fields blank to read file tags'); ?>
-        </small>
-    </tr>
-</table>
-<table class="tabledata">
+<tr class="upload_select_row">
+    <small>
+        <?php echo Ui::get_material_symbol('info'); ?>
+        <?php echo T_('Leave the artist and album fields blank to read file tags'); ?>
+    </small>
+</tr>
 <tr class="upload_select_row">
     <td class="edit_dialog_content_header"><?php echo T_('Artist'); ?></td>
     <td id="artist_select" class="upload_select">
