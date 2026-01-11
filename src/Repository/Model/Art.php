@@ -75,7 +75,7 @@ class Art extends database_object
 
     public int $height = 0;
 
-    public string $raw = '';
+    public ?string $raw = null;
 
     public string $raw_mime = '';
 
@@ -251,7 +251,7 @@ class Art extends database_object
         }
 
         if ($size === 'original' || !$this->thumb) {
-            return $this->raw;
+            return $this->raw ?? '';
         } else {
             return $this->thumb;
         }
@@ -270,6 +270,9 @@ class Art extends database_object
             if (AmpConfig::get('album_art_store_disk')) {
                 $this->raw = (string)self::read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
             } else {
+                if (empty($results['image'])) {
+                    return false;
+                }
                 $this->raw = $results['image'];
             }
 
@@ -350,7 +353,9 @@ class Art extends database_object
 
         // If there is no thumb in the database and we want one we have to generate it
         if ($this->get_image($fallback, $size)) {
-            $data = $this->generate_thumb($this->raw, $thumb_size, $this->raw_mime);
+            $data = ($this->raw)
+                ? $this->generate_thumb($this->raw, $thumb_size, $this->raw_mime)
+                : [];
 
             // thumb wasn't generated
             if ($data === []) {

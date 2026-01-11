@@ -49,7 +49,8 @@ final class UpdatePodcast4Method
      * filter = (string) UID of podcast
      *
      * @param array{
-     *     filter: string,
+     *     filter?: string,
+     *     id?: string,
      *     type: string,
      *     overwrite: int,
      *     api_format: string,
@@ -60,6 +61,7 @@ final class UpdatePodcast4Method
      */
     public static function update_podcast(array $input, User $user): bool
     {
+        $input['filter'] = $input['filter'] ?? $input['id'] ?? null;
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }

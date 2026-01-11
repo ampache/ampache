@@ -62,7 +62,8 @@ final class CatalogFolderMethod
      * @param array{
      *     folder: string,
      *     task: string,
-     *     catalog: int,
+     *     filter?: int,
+     *     catalog?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -74,6 +75,8 @@ final class CatalogFolderMethod
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
+
+        $input['catalog'] = $input['filter'] ?? $input['catalog'] ?? null;
         if (!Api::check_parameter($input, ['catalog', 'folder', 'task'], self::ACTION)) {
             return false;
         }

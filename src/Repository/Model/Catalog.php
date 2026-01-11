@@ -290,7 +290,16 @@ abstract class Catalog extends database_object
         return (int)($this->id ?? 0);
     }
 
-    public function getRemoteStreamingUrl(Podcast_Episode|Video|Song $media): ?string
+    /**
+     * get_remote_tags
+     * @return null|array<string, mixed>
+     */
+    public function get_remote_tags(Podcast_Episode|Video|Song $media): ?array
+    {
+        return null;
+    }
+
+    public function getRemoteStreamingUrl(Podcast_Episode|Video|Song $media, ?string $action = null): ?string
     {
         return null;
     }
@@ -519,7 +528,7 @@ abstract class Catalog extends database_object
 
         $db_results = Dba::read($sql, $params);
 
-        return Dba::num_rows($db_results) > 0;
+        return (Dba::num_rows($db_results) > 0);
     }
 
     /**
@@ -531,7 +540,7 @@ abstract class Catalog extends database_object
         $sql        = "SELECT `enabled` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `catalog_id` = ? AND `enabled` = 1;";
         $db_results = Dba::read($sql, [$filter_id, $catalog_id]);
 
-        return Dba::num_rows($db_results) > 0;
+        return (Dba::num_rows($db_results) > 0);
     }
 
     /**
@@ -1191,7 +1200,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * cache_remote_file
+     * cache_local_file
      */
     public static function cache_local_file(Podcast_Episode|Song|Video $media, string $target_file, string $cache_target): void
     {
@@ -1204,7 +1213,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * Get last catalogs update.
+     * Get last update for catalogs.
      * @param int[]|null $catalogs
      */
     public static function getLastUpdate(?array $catalogs = null): int
@@ -2547,20 +2556,26 @@ abstract class Catalog extends database_object
         $tags   = false;
         $maps   = false;
         foreach ($songs as $song_id) {
-            $song   = new Song($song_id);
-            $info   = self::update_media_from_tags($song);
-            $file   = scrub_out($song->file);
-            $diff   = array_key_exists('element', $info) && is_array($info['element']) && $info['element'] !== [];
-            $album  = ($album) || ($diff && array_key_exists('album', $info['element']));
-            $artist = ($artist) || ($diff && array_key_exists('artist', $info['element']));
-            $tags   = ($tags) || ($diff && array_key_exists('tags', $info['element']));
-            $maps   = ($maps) || ($diff && array_key_exists('maps', $info));
+            $diff = false;
+            $song = new Song($song_id);
+            if ($song->isNew()) {
+                $info = ['error' => true];
+            } else {
+                $info = self::update_media_from_tags($song);
+
+                $diff   = array_key_exists('element', $info) && is_array($info['element']) && $info['element'] !== [];
+                $album  = ($album) || ($diff && array_key_exists('album', $info['element']));
+                $artist = ($artist) || ($diff && array_key_exists('artist', $info['element']));
+                $tags   = ($tags) || ($diff && array_key_exists('tags', $info['element']));
+                $maps   = ($maps) || ($diff && array_key_exists('maps', $info));
+            }
 
             // don't echo useless info when using api
             if ($api) {
                 continue;
             }
 
+            $file = scrub_out($song->file);
             if (array_key_exists('change', $info) && $info['change']) {
                 if ($diff && array_key_exists($type, $info['element'])) {
                     $element   = explode(' --> ', (string)$info['element'][$type]);
@@ -2654,31 +2669,42 @@ abstract class Catalog extends database_object
             return $array;
         }
 
-        // retrieve the file if needed
-        $streamConfiguration = $catalog->prepare_media($media);
+        if ($catalog instanceof Catalog_Remote || $catalog instanceof Catalog_subsonic) {
+            // remote files are read using the API and not the file
+            $results = $catalog->get_media_tags($media, $gather_types, '', '');
+        } else {
+            // retrieve the file if needed
+            $streamConfiguration = $catalog->prepare_media($media);
 
-        if ($streamConfiguration === null) {
-            $array['error'] = true;
+            if ($streamConfiguration === null) {
+                debug_event(self::class, 'update_media_from_tags: Error prepare_media ' . $catalog->catalog_type, 2);
+                $array['error'] = true;
 
-            return $array;
-        }
+                return $array;
+            }
 
-        if (empty($streamConfiguration['file_path']) || Core::get_filesize(Core::conv_lc_file($streamConfiguration['file_path'])) == 0) {
-            debug_event(self::class, 'update_media_from_tags: Error loading file ' . $streamConfiguration['file_path'], 2);
-            $array['error'] = true;
+            if (empty($streamConfiguration['file_path']) || Core::get_filesize(Core::conv_lc_file($streamConfiguration['file_path'])) == 0) {
+                debug_event(self::class, 'update_media_from_tags: Error loading file ' . $streamConfiguration['file_path'], 2);
+                $array['error'] = true;
 
-            return $array;
-        }
+                return $array;
+            }
 
-        // try and get the tags from your file
-        debug_event(self::class, 'Reading tags from ' . $streamConfiguration['file_path'], 4);
-        $extension = strtolower(pathinfo($streamConfiguration['file_path'], PATHINFO_EXTENSION));
-        $results   = $catalog->get_media_tags($media, $gather_types, '', '');
-        // for files without tags try to update from their file name instead
-        if ($media->id && in_array($extension, ['wav', 'shn'])) {
-            // match against your catalog 'Filename Pattern' and 'Folder Pattern'
-            $patres  = VaInfo::parse_pattern($streamConfiguration['file_path'], $catalog->sort_pattern ?? '', $catalog->rename_pattern ?? '');
-            $results = array_merge($results, $patres);
+            // try and get the tags from your file
+            debug_event(self::class, 'Reading tags from ' . $streamConfiguration['file_path'], 4);
+            $extension = strtolower(pathinfo($streamConfiguration['file_path'], PATHINFO_EXTENSION));
+            $results   = $catalog->get_media_tags($media, $gather_types, '', '');
+            // for files without tags try to update from their file name instead
+            if ($media->id && in_array($extension, ['wav', 'shn'])) {
+                // match against your catalog 'Filename Pattern' and 'Folder Pattern'
+                $patres  = VaInfo::parse_pattern($streamConfiguration['file_path'], $catalog->sort_pattern ?? '', $catalog->rename_pattern ?? '');
+                $results = array_merge($results, $patres);
+            }
+
+            // remote catalogs should unlink the temp files if needed // TODO add other types of remote catalog
+            if ($catalog instanceof Catalog_Seafile) {
+                $catalog->clean_tmp_file($streamConfiguration['file_path']);
+            }
         }
 
         if ($media instanceof Song) {
@@ -2689,11 +2715,6 @@ abstract class Catalog extends database_object
             $update = self::update_podcast_episode_from_tags($results, $media);
         } else {
             $update = [];
-        }
-
-        // remote catalogs should unlink the temp files if needed // TODO add other types of remote catalog
-        if ($catalog instanceof Catalog_Seafile) {
-            $catalog->clean_tmp_file($streamConfiguration['file_path']);
         }
 
         return $update;
@@ -2721,7 +2742,7 @@ abstract class Catalog extends database_object
         $new_song->isrc         = (!empty($results['isrc'])) ? $results['isrc'] : [];
         $new_song->title        = self::check_length(self::check_title($results['title'], $new_song->file));
         $new_song->bitrate      = $results['bitrate'];
-        $new_song->rate         = $results['rate'];
+        $new_song->rate         = $results['rate'] ?? 0;
         $new_song->mode         = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
         $new_song->channels     = $results['channels'];
         $new_song->size         = $results['size'];
@@ -3661,25 +3682,33 @@ abstract class Catalog extends database_object
             return [];
         }
 
-        $vainfo = $this->getUtilityFactory()->createVaInfo(
-            $media_file,
-            $gather_types,
-            '',
-            '',
-            (string) $sort_pattern,
-            (string) $rename_pattern
-        );
-        try {
-            $vainfo->gather_tags();
-        } catch (Exception $exception) {
-            debug_event(self::class, 'Error ' . $exception->getMessage(), 1);
-
-            return [];
+        if ($this instanceof Catalog_remote || $this instanceof Catalog_subsonic) {
+            return ($this->get_remote_tags($media) ?? []);
         }
 
-        $key = VaInfo::get_tag_type($vainfo->tags);
+        if ($this->catalog_type == 'local') {
+            $vainfo = $this->getUtilityFactory()->createVaInfo(
+                $media_file,
+                $gather_types,
+                '',
+                '',
+                (string) $sort_pattern,
+                (string) $rename_pattern
+            );
+            try {
+                $vainfo->gather_tags();
+            } catch (Exception $exception) {
+                debug_event(self::class, 'Error ' . $exception->getMessage(), 1);
 
-        return VaInfo::clean_tag_info($vainfo->tags, $key, $media_file);
+                return [];
+            }
+
+            $key = VaInfo::get_tag_type($vainfo->tags);
+
+            return VaInfo::clean_tag_info($vainfo->tags, $key, $media_file);
+        }
+
+        return [];
     }
 
     /**

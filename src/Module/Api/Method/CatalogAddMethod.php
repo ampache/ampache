@@ -76,12 +76,13 @@ final class CatalogAddMethod
      */
     public static function catalog_add(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, ['name', 'path'], self::ACTION)) {
-            return false;
-        }
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
+        if (!Api::check_parameter($input, ['name', 'path'], self::ACTION)) {
+            return false;
+        }
+
         $path           = (string)$input['path'];
         $name           = (string)$input['name'];
         $type           = (string)($input['type'] ?? 'local');

@@ -269,9 +269,9 @@ All Data methods return HTTP 200 responses
 * genre_artists
 * genre_songs
 * get_bookmark
-* get_external_metadata
+* get_external_metadata **Ampache 7.4.0+**
 * get_indexes
-* get_lyrics
+* get_lyrics **Ampache 7.8.0+**
 * get_similar
 * index **Ampache 6.3.0+**
 * labels
@@ -316,7 +316,7 @@ All Data methods return HTTP 200 responses
 * scrobble
 * search_group **Ampache 6.3.0+**
 * search  **Ampache 6.3.0+** (alias for [advanced_search](https://ampache.org/api/api-advanced-search))
-* search_rules
+* search_rules **Ampache 7.6.0+**
 * search_songs
 * shares
 * share
@@ -326,7 +326,7 @@ All Data methods return HTTP 200 responses
 * songs
 * song
 * song_delete
-* song_tags
+* song_tags **Ampache 7.5.0+**
 * stats
 * system_preference
 * system_preferences

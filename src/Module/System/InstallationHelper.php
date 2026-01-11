@@ -243,7 +243,11 @@ final class InstallationHelper implements InstallationHelperInterface
         if (is_object($db_exists) && $create_db) {
             if ($overwrite) {
                 Dba::write('DROP DATABASE `' . $database . '`');
+            } elseif (Dba::check_database_inserted()) {
+                // The database exists and is a valid Ampache DB
+                $create_db = false;
             } else {
+                // when you have a database but it is empty
                 AmpError::add('general', T_('Database already exists and "overwrite" was not checked'));
 
                 return false;
@@ -265,7 +269,7 @@ final class InstallationHelper implements InstallationHelperInterface
         if (strlen((string) $db_user) && strlen((string) $db_pass)) {
             $db_host = AmpConfig::get('database_hostname');
             // create the user account
-            $sql_user = "CREATE USER '" . Dba::escape($db_user) . "'";
+            $sql_user = "CREATE USER IF NOT EXISTS '" . Dba::escape($db_user) . "'";
             if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
                 $sql_user .= "@'localhost'";
             }

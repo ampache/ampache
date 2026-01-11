@@ -55,7 +55,8 @@ final class FlagMethod
      * date = (integer) UNIXTIME() //optional
      *
      * @param array{
-     *     id: string,
+     *     filter?: string,
+     *     id?: string,
      *     type: string,
      *     flag: int,
      *     date?: int,
@@ -72,9 +73,12 @@ final class FlagMethod
 
             return false;
         }
+
+        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
         if (!Api::check_parameter($input, ['type', 'id', 'flag'], self::ACTION)) {
             return false;
         }
+
         ob_end_clean();
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];

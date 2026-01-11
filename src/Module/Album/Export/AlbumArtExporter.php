@@ -94,7 +94,7 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
 
             $file_handle = @fopen($file, 'w');
 
-            if ($file_handle === false) {
+            if ($file_handle === false || !$art->raw) {
                 throw new Export\Exception\AlbumArtExportException(
                     sprintf(T_('Unable to open `%s` for writing'), $file)
                 );
