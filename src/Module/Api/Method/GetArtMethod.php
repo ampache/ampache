@@ -56,7 +56,8 @@ final class GetArtMethod
      * size     = (string) width x height ('640x480', 'original') //optional
      *
      * @param array{
-     *     id: string,
+     *     filter?: string,
+     *     id?: string,
      *     type: string,
      *     fallback?: int,
      *     size?: string,
@@ -68,6 +69,7 @@ final class GetArtMethod
      */
     public static function get_art(array $input, User $user): bool
     {
+        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
         if (!Api::check_parameter($input, ['id', 'type'], self::ACTION)) {
             http_response_code(400);
 

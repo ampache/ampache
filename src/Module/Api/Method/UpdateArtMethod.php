@@ -56,7 +56,8 @@ final class UpdateArtMethod
      * overwrite = (integer) 0,1 //optional
      *
      * @param array{
-     *     id: string,
+     *     filter?: string,
+     *     id?: string,
      *     type: string,
      *     overwrite: int,
      *     api_format: string,
@@ -67,13 +68,14 @@ final class UpdateArtMethod
      */
     public static function update_art(array $input, User $user): bool
     {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
+            return false;
+        }
+        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
         if (!Api::check_parameter($input, ['type', 'id'], self::ACTION)) {
             return false;
         }
 
-        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
         $type      = (string)$input['type'];
         $object_id = (int)$input['id'];
         $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;

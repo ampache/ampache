@@ -70,6 +70,7 @@ class SubsonicClient
             'deleteShare',
             'deleteUser',
             'download',
+            'getAlbum',
             'getAlbumList',
             'getArtist',
             'getArtistInfo',

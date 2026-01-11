@@ -1,5 +1,39 @@
 # CHANGELOG
 
+## Ampache develop
+
+Ampache and Subsonic catalogs will store the filename instead of the remote URL.
+
+URL paths are stil supported but they will be converted on the next catalog update.
+
+**Note** that this may cause duplicate file paths which can not be updated for existing files.
+
+### Added
+
+* Add the remote id of songs to the `song_map` table
+* Extend `Dba::check_database_inserted()` tables a bit more
+* Support Update from tags actions for Remote Ampache and Subsonic catalogs
+* Support download actions on remote song objects
+
+### Changed
+
+* CLI
+  * install: Ignore user exist failure
+  * install: Check database is a valid database before failing without overwrite
+* Artist lookup for Song Artist will match with Album Artist ID if the text matches
+* `Artist::check()` will only pull one result when searching by name or name and mbid
+* Convert remote Ampache catalog filenames from URL to the local filename
+* Convert remote Subsonic catalog filenames from URL to the local filename
+
+### Fixed
+
+* ISRC could be sent as a string from some places
+* Subsonic remote catalog missing data keys for Song updates
+* Genre for remote Ampache and Subsonic catalogs not being read correctly
+* Error missing tag values when updating remote files
+* Subsonic remote catalog missing `getAlbum` as a command
+* Call download actions on remote caching action
+
 ## Ampache 7.8.0
 
 Bitrate options in the database for transcoding are defined in units of 1000 (e.g. 128 == 128000)

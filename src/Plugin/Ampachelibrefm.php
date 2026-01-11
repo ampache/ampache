@@ -25,8 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use SimpleXMLElement;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream;
+use SimpleXMLElement;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
@@ -231,7 +232,7 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
      */
     public function load(User $user): bool
     {
-        $this->api_key = AmpConfig::get('lastfm_api_key');
+        $this->api_key = hash('sha256', 'AmpacheLibreFMPlugin' . AmpConfig::get('version') . Stream::get_base_url());
         $this->secret  = '';
         $user->set_preferences();
         $data          = $user->prefs;

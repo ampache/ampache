@@ -700,23 +700,20 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
             }
         } else {
             // look for artists with no mbid (if they exist) and then match on mbid artists last
-            $id_array   = [];
-            $sql        = "SELECT `id` FROM `artist` WHERE `mbid` IS NULL AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ORDER BY `id`;";
+            $sql        = "SELECT `id` FROM `artist` WHERE `mbid` IS NULL AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ORDER BY `id` LIMIT 1;";
             $db_results = Dba::read($sql, [$name, $full_name]);
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $id_array[] = (int)$row['id'];
-            }
-
-            $sql        = "SELECT `id`, `mbid` FROM `artist` WHERE `mbid` IS NOT NULL AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ORDER BY `id`;";
-            $db_results = Dba::read($sql, [$name, $full_name]);
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $id_array[] = (int)$row['id'];
-            }
-
-            if ($id_array !== []) {
-                // Pick the first one (nombid and nombid used before matching on mbid)
-                $artist_id = $id_array[0];
+            if ($row = Dba::fetch_assoc($db_results)) {
+                $artist_id = (int)$row['id'];
                 $exists    = true;
+            }
+
+            if (!$exists) {
+                $sql        = "SELECT `id`, `mbid` FROM `artist` WHERE `mbid` IS NOT NULL AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ORDER BY `id` LIMIT 1;";
+                $db_results = Dba::read($sql, [$name, $full_name]);
+                if ($row = Dba::fetch_assoc($db_results)) {
+                    $artist_id = (int)$row['id'];
+                    $exists    = true;
+                }
             }
         }
 

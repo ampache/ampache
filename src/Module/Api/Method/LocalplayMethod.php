@@ -59,6 +59,7 @@ final class LocalplayMethod
      *
      * @param array{
      *     command: string,
+     *     filter?: string,
      *     oid?: string,
      *     type?: string,
      *     clear?: int,
@@ -93,7 +94,7 @@ final class LocalplayMethod
         switch ($command) {
             case 'add':
                 // for add commands get the object details
-                $object_id = (int)($input['oid'] ?? 0);
+                $object_id = (int)($input['filter'] ?? $input['oid'] ?? 0);
                 $type      = LibraryItemEnum::tryFrom((string) strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
 
                 if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {

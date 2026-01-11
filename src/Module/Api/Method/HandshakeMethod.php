@@ -165,11 +165,12 @@ final class HandshakeMethod
                     $token = $input['auth'];
                 } else {
                     // Create the session
-                    $data             = [];
-                    $data['username'] = (string)$client->username;
-                    $data['type']     = 'api';
-                    $data['apikey']   = (string)$client->apikey;
-                    $data['value']    = $data_version;
+                    $data                = [];
+                    $data['username']    = (string)$client->username;
+                    $data['type']        = 'api';
+                    $data['apikey']      = (string)$client->apikey;
+                    $data['streamtoken'] = (string)$client->streamtoken;
+                    $data['value']       = $data_version;
                     if (isset($input['client'])) {
                         $data['agent'] = scrub_in((string)$input['client']);
                     }

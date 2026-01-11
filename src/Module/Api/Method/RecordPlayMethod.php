@@ -55,7 +55,8 @@ final class RecordPlayMethod
      * date   = (integer) UNIXTIME() //optional
      *
      * @param array{
-     *     id: string,
+     *     filter?: string,
+     *     id?: string,
      *     user?: int|string,
      *     client?: string,
      *     date?: int,
@@ -67,6 +68,7 @@ final class RecordPlayMethod
      */
     public static function record_play(array $input, User $user): bool
     {
+        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
         if (!Api::check_parameter($input, ['id'], self::ACTION)) {
             return false;
         }

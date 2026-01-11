@@ -481,28 +481,42 @@ class Dba
      */
     public static function check_database_inserted(): bool
     {
-        $sql        = "DESCRIBE `session`";
-        $db_results = self::read($sql);
+        $check = [
+            ['table' => 'album', 'action' => 'describe', 'count' => 1],
+            ['table' => 'artist', 'action' => 'describe', 'count' => 1],
+            ['table' => 'session', 'action' => 'describe', 'count' => 1],
+            ['table' => 'song', 'action' => 'describe', 'count' => 1],
+            ['table' => 'preference', 'action' => 'count', 'count' => 100],
+            ['table' => 'user_preference', 'action' => 'count', 'count' => 100],
+            ['table' => 'update_info', 'action' => 'count', 'count' => 1],
+        ];
 
-        if (!$db_results) {
-            return false;
-        }
+        foreach ($check as $item) {
+            if ($item['action'] === 'describe') {
+                $sql        = "DESCRIBE `" . $item['table'] . "`";
+                $db_results = self::read($sql);
 
-        // Make sure the table is there
-        if (self::num_rows($db_results) < 1) {
-            return false;
-        }
+                if (!$db_results) {
+                    return false;
+                }
 
-        $sql        = "SELECT `id` FROM `preference`";
-        $db_results = self::read($sql);
+                // Make sure the table is there
+                if (self::num_rows($db_results) < $item['count']) {
+                    return false;
+                }
+            } elseif ($item['action'] === 'count') {
+                $sql        = "SELECT COUNT(*) FROM `" . $item['table'] . "`";
+                $db_results = self::read($sql);
 
-        if (!$db_results) {
-            return false;
-        }
+                if (!$db_results) {
+                    return false;
+                }
 
-        // Make sure the table is there and preferences are inserted
-        if (self::num_rows($db_results) < 100) {
-            return false;
+                $row = self::fetch_row($db_results);
+                if ((int)$row[0] < $item['count']) {
+                    return false;
+                }
+            }
         }
 
         return true;

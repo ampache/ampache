@@ -261,7 +261,7 @@ class Song extends database_object implements
         $albumartist_mbid = $results['mb_albumartistid'] ?? null;
         $disk             = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
         $disksubtitle     = $results['disksubtitle'] ?? null;
-        $isrc             = $results['isrc'] ?? [];
+        $isrc             = (isset($results['isrc']) && is_string($results['isrc'])) ? [$results['isrc']] : $results['isrc'] ?? [];
         $year             = Catalog::normalize_year($results['year'] ?? 0);
         $comment          = $results['comment'] ?? null;
         $tags             = $results['genre'] ?? []; // multiple genre support makes this an array
@@ -332,7 +332,10 @@ class Song extends database_object implements
             $albumartist_id = (int)($results['albumartist_id']);
         }
 
-        if (!isset($results['artist_id'])) {
+        // song artist text is the same as album artist so don't worry about looking up id's if they match
+        if (isset($albumartist_id) && $albumartist === $artist) {
+            $artist_id            = $albumartist_id;
+        } elseif (!isset($results['artist_id'])) {
             $artist_id = null;
             if ($artist !== null && $artist !== '' && $artist !== '0') {
                 $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
@@ -1805,7 +1808,7 @@ class Song extends database_object implements
     public function get_isrcs(): array
     {
         if ($this->isrc === null) {
-            $this->isrc = self::get_song_map($this->id);
+            $this->isrc = self::get_song_map_array($this->id);
         }
 
         return $this->isrc ?? [];
@@ -1904,7 +1907,7 @@ class Song extends database_object implements
      * Get song data from the song_map table (ISRC's only right now).
      * @return string[]
      */
-    public static function get_song_map(int $song_id, ?string $type = 'isrc'): array
+    public static function get_song_map_array(int $song_id, ?string $type = 'isrc'): array
     {
         $results = [];
         if (!$song_id) {
@@ -1919,6 +1922,25 @@ class Song extends database_object implements
         }
 
         return $results;
+    }
+
+    /**
+     * Get an ID or unique value from the song_map table.
+     */
+    public static function get_song_map_object_id(int $song_id, string $type): ?string
+    {
+        if (!$song_id) {
+            return null;
+        }
+
+        $sql = "SELECT DISTINCT `object_id` FROM `song_map` WHERE `object_type` = ? AND `song_id` = ?;";
+
+        $db_results = Dba::read($sql, [$type, $song_id]);
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return (string)$row['object_id'];
+        }
+
+        return null;
     }
 
     /**
