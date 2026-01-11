@@ -46,7 +46,7 @@ $app = new Ahc\Cli\Application(
     $dic->get(ConfigContainerInterface::class)->get('version')
 );
 
-if (AmpConfig::get('term_black_on_white')) {
+if (AmpConfig::get('term_white_on_black')) {
     Ahc\Cli\Output\Color::style('info', [
         'fg' => Ahc\Cli\Output\Color::CYAN,
         'bold' => 1,

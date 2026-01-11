@@ -15,11 +15,11 @@ config_version = 86
 ; DEFAULT: "UTC"
 ;date_timezone = "UTC"
 
-; Change some color of the cli output to have better reading on black-on-white terminal
+; Change some color of the cli output to have better reading on white-on-black terminal
 ; I you want to disable all color output, set NO_COLOR env var to 1
 ; Example : NO_COLOR=1 bin/cli show:version
 ; DEFAULT: false
-term_black_on_white = "false"
+term_white_on_black = "false"
 
 ;#########################################################
 ; Auto Update                                            #
