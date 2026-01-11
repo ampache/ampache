@@ -301,7 +301,7 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
 
 <table class="tabledata">
 <tr class="upload_select_row">
-    <small>
+    <small class="upload_select_row">
         <?php echo Ui::get_material_symbol('info'); ?>
         <?php echo T_('Leave the artist and album fields blank to read file tags'); ?>
     </small>
