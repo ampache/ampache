@@ -31,6 +31,7 @@ client
 dist/
 lib/components
 lib/javascript/custom.js
+templates/custom.css
 newclient
 core
 develop
