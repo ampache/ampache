@@ -10,6 +10,8 @@ URL paths are stil supported but they will be converted on the next catalog upda
 
 ### Added
 
+* Allow hiding upload artist and album selection rows with CSS (`upload_select_row`)
+* Custom CSS in `public/templates/custom.css` when the file exists
 * Add the remote id of songs to the `song_map` table
 * Extend `Dba::check_database_inserted()` tables a bit more
 * Support Update from tags actions for Remote Ampache and Subsonic catalogs
@@ -20,6 +22,8 @@ URL paths are stil supported but they will be converted on the next catalog upda
 * CLI
   * install: Ignore user exist failure
   * install: Check database is a valid database before failing without overwrite
+* Plugin
+  * Use a custom generated keay for Libre.FM instead of the Last.FM key
 * Artist lookup for Song Artist will match with Album Artist ID if the text matches
 * `Artist::check()` will only pull one result when searching by name or name and mbid
 * Convert remote Ampache catalog filenames from URL to the local filename
@@ -27,6 +31,7 @@ URL paths are stil supported but they will be converted on the next catalog upda
 
 ### Fixed
 
+* Art raw column can be null
 * ISRC could be sent as a string from some places
 * Subsonic remote catalog missing data keys for Song updates
 * Genre for remote Ampache and Subsonic catalogs not being read correctly

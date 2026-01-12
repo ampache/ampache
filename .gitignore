@@ -28,6 +28,7 @@ public/client/rest/.htaccess
 public/client/dist/
 public/client/lib/components
 public/client/lib/javascript/custom.js
+public/client/templates/custom.css
 public/newclient
 public/core
 public/develop
