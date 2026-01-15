@@ -1,10 +1,4 @@
----
-title: "Contributing"
-metaTitle: "Contributing"
-description: "Contributing to ampache"
----
-
-## Contributing to ampache
+# Contributing to Ampache
 
 Ampache is an open source project that loves to receive contributions from our community — you!
 There are many ways to contribute, from writing tutorials or blog posts, improving the documentation,

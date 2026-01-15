@@ -1,10 +1,4 @@
----
-title: "Translations"
-metaTitle: "Translations"
-description: "Ampache Translation Guide"
----
-
-## Ampache Translation Guide
+# Ampache Translation Guide
 
 The official way to send in translations is via [Transifex](https://www.transifex.com/ampache/ampache/dashboard/).
 

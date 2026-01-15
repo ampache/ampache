@@ -1,10 +1,4 @@
----
-title: "JSON Methods"
-metaTitle: "JSON Methods"
-description: "API documentation"
----
-
-## API JSON Methods
+# API JSON Methods
 
 Let's go through come calls and examples that you can do for each JSON method.
 

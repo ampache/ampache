@@ -1,10 +1,4 @@
----
-title: "XML Methods"
-metaTitle: "XML Methods"
-description: "API documentation"
----
-
-## API XML Methods
+# API XML Methods
 
 Let's go through come calls and examples that you can do for each XML method.
 

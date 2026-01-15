@@ -1,10 +1,4 @@
----
-title: "Subsonic API"
-metaTitle: "Subsonic API"
-description: "API documentation"
----
-
-## Subsonic API support
+# Subsonic API Support
 
 Ampache implements the [OpenSubsonic](https://opensubsonic.netlify.app/docs/) API as well as a pure [Subsonic](http://www.subsonic.org/pages/api.jsp) API.
 

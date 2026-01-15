@@ -1,10 +1,4 @@
----
-title: "Ampache API"
-metaTitle: "Ampache API"
-description: "API documentation"
----
-
-## Ampache API
+# Ampache API
 
 The Ampache API Provides methods for pulling out it's meta data in the form of
 simple XML (and JSON!) documents. This was originally created for use by [Amarok](http://amarok.kde.org/),
