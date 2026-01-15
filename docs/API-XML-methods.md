@@ -4,6 +4,8 @@ metaTitle: "XML Methods"
 description: "API documentation"
 ---
 
+## API XML Methods
+
 Let's go through come calls and examples that you can do for each XML method.
 
 With the exception of Binary methods, all responses will return a HTTP 200 response.
@@ -3749,3 +3751,4 @@ This is for controlling democratic play (Songs only)
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/democratic%20\(vote\).xml)
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/democratic%20\(playlist\).xml)
+

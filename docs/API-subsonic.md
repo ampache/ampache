@@ -62,7 +62,7 @@ Ampache supports sending your apiKey parameter to the server using a Bearer Toke
 
 The `apiKey` parameter does not need to be sent with your URL. We will check your header for a token first
 
-```Text
+```text
 GET http://localhost/ampache/rest/ping.view?v=1.2.0&c=DSub&f=jsonHTTP/1.1
 Authorization: Bearer 000111112233334444455556667777788888899aaaaabbbbcccccdddeeeeeeff
 ```

@@ -4,6 +4,8 @@ metaTitle: "JSON Methods"
 description: "API documentation"
 ---
 
+## API JSON Methods
+
 Let's go through come calls and examples that you can do for each JSON method.
 
 With the exception of Binary methods, all responses will return a HTTP 200 response.
@@ -3704,3 +3706,4 @@ This is for controlling localplay
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/localplay.json)
 
 [Example (status)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/localplay%20\(status\).json)
+
