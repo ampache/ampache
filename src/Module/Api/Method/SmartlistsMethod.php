@@ -47,8 +47,6 @@ final class SmartlistsMethod
      * This returns smartlists based on the specified filter
      *
      * filter      = (string) Alpha-numeric search term (match all if missing) //optional
-     * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
-     * show_dupes  = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
      * include     = (integer) 0,1, if true include smartlist contents //optional
      * exact       = (integer) 0,1, if true filter is exact rather than fuzzy //optional
      * add         = $browse->set_api_filter(date) //optional
@@ -60,8 +58,6 @@ final class SmartlistsMethod
      *
      * @param array{
      *     filter?: string,
-     *     hide_search?: int,
-     *     show_dupes?: int,
      *     include?: int|string,
      *     exact?: int,
      *     add?: string,
@@ -78,11 +74,7 @@ final class SmartlistsMethod
      */
     public static function smartlists(array $input, User $user): bool
     {
-        $include    = (isset($input['include']) && ((int)$input['include'] === 1 || $input['include'] === 'songs'));
-        $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
-        $show_dupes = (array_key_exists('show_dupes', $input))
-            ? make_bool($input['show_dupes'])
-            : (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === false;
+        $include = (isset($input['include']) && ((int)$input['include'] === 1 || $input['include'] === 'songs'));
 
         $browse = Api::getBrowse($user);
         $browse->set_type('smartplaylist');
@@ -98,13 +90,6 @@ final class SmartlistsMethod
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_filter('playlist_open', $user->getId());
-
-        if (
-            $hide === false &&
-            $show_dupes === false
-        ) {
-            $browse->set_filter('hide_dupe_playlist', 1);
-        }
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
