@@ -103,7 +103,7 @@ final class SmartlistsMethod
             $hide === false &&
             $show_dupes === false
         ) {
-            $browse->set_filter('hide_dupe_smartlist', 1);
+            $browse->set_filter('hide_dupe_playlist', 1);
         }
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
