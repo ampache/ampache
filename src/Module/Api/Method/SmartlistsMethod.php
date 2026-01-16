@@ -100,7 +100,7 @@ final class SmartlistsMethod
         }        
 
         $results = [];
-        foreach ($lists as $id) {
+        foreach ($objects as $id) {
             $results[] = 'smart_' . $id;
         }
 
