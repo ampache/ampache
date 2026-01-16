@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -93,11 +92,16 @@ final class SmartlistsMethod
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
-        $results = $browse->get_objects();
-        if (empty($results)) {
+        $objects = $browse->get_objects();
+        if (empty($objects)) {
             Api::empty('playlist', $input['api_format']);
 
             return false;
+        }        
+
+        $results = [];
+        foreach ($lists as $id) {
+            $results[] = 'smart_' . $id;
         }
 
         ob_end_clean();
