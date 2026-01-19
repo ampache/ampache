@@ -708,6 +708,21 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
+			path: src/Module/Api/Method/SmartlistMethod.php
+
+		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/Module/Api/Method/SmartlistSongsMethod.php
+
+		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/Module/Api/Method/SmartlistsMethod.php
+
+		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
+			count: 1
 			path: src/Module/Api/Method/SongMethod.php
 
 		-
