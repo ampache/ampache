@@ -97,7 +97,7 @@ final class SmartlistsMethod
             Api::empty('playlist', $input['api_format']);
 
             return false;
-        }        
+        }
 
         $results = [];
         foreach ($objects as $id) {
