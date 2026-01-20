@@ -80,6 +80,9 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                     if (!empty($users)) {
                         /** @var string[] $users */
                         foreach ($users as $user_id => $username) {
+                            if ($user_id < 1) {
+                                continue;
+                            }
                             $selected  = ($user_id == $libitem->user) ? ' selected="selected"' : '';
                             $options[] = '<option value="' . $user_id . '"' . $selected . '>' . scrub_out($username) . '</option>';
                         }
