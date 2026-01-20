@@ -1468,7 +1468,8 @@ class Song extends database_object implements
      */
     public static function update_user_upload(?int $new_user_upload, int $song_id): void
     {
-        self::_update_item('user_upload', $new_user_upload, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
+        $value = ((int)$new_user_upload === 0) ? null : (int)$new_user_upload;
+        self::_update_item('user_upload', $value, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
