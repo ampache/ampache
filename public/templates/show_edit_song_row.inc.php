@@ -130,7 +130,7 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                             $selected  = ($user_id == $libitem->user_upload) ? ' selected="selected"' : '';
                             $options[] = '<option value="' . $user_id . '"' . $selected . '>' . scrub_out($username) . '</option>';
                         }
-                        echo '<select name="user">' . implode("\n", $options) . '</select>';
+                        echo '<select name="user_upload">' . implode("\n", $options) . '</select>';
                     } ?>
                 <?php } else {
                     echo '<input type="hidden" name="user_upload" value="' . $libitem->user_upload . '"/>' . $libitem->user_upload;

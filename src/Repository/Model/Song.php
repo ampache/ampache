@@ -1253,6 +1253,7 @@ class Song extends database_object implements
                          * @see self::update_year()
                          * @see self::update_title()
                          * @see self::update_track()
+                         * @see self::update_user_upload()
                          * @see self::update_mbid()
                          * @see self::update_license()
                          * @see self::update_composer()
@@ -1465,7 +1466,7 @@ class Song extends database_object implements
      * @param int $new_user_upload
      * @param int $song_id
      */
-    public static function update_user_upload(int $new_user_upload, int $song_id): void
+    public static function update_user_upload(?int $new_user_upload, int $song_id): void
     {
         self::_update_item('user_upload', $new_user_upload, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
