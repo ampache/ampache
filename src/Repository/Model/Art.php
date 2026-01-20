@@ -1650,8 +1650,8 @@ class Art extends database_object
                 (
                     $user->has_access(AccessLevelEnum::CONTENT_MANAGER) ||
                     (
-                        $user->has_access(AccessLevelEnum::USER)
-                        && $user->id == $libitem->get_user_owner()
+                        $user->has_access(AccessLevelEnum::USER) &&
+                        $user->id == $libitem->get_user_owner()
                     )
                 )
             ) {
