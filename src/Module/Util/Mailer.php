@@ -200,6 +200,7 @@ final class Mailer implements MailerInterface
             if (function_exists('mb_encode_mimeheader')) {
                 $recipient_name = mb_encode_mimeheader($recipient_name);
             }
+
             $mail->addAddress((string) $this->recipient, $recipient_name);
         } else {
             $mail = $phpmailer;
@@ -268,10 +269,12 @@ final class Mailer implements MailerInterface
         $mail = new PHPMailer();
 
         foreach (self::get_users($group_name) as $member) {
+            $recipient_name = (string)($member['fullname'] ?? $member['username']);
             if (function_exists('mb_encode_mimeheader')) {
-                $member['fullname'] = mb_encode_mimeheader($member['fullname']);
+                $recipient_name = mb_encode_mimeheader($recipient_name);
             }
-            $mail->addBCC($member['email'], $member['fullname']);
+
+            $mail->addBCC($member['email'], $recipient_name);
         }
 
         return $this->send($mail);
