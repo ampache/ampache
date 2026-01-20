@@ -1647,7 +1647,13 @@ class Art extends database_object
             echo "<div class=\"item_art_actions\">";
             if (
                 $user instanceof User &&
-                ($user->has_access(AccessLevelEnum::CONTENT_MANAGER) || $user->has_access(AccessLevelEnum::USER) && $user->id == $libitem->get_user_owner())
+                (
+                    $user->has_access(AccessLevelEnum::CONTENT_MANAGER) ||
+                    (
+                        $user->has_access(AccessLevelEnum::USER)
+                        && $user->id == $libitem->get_user_owner()
+                    )
+                )
             ) {
                 $ajax_str = ((AmpConfig::get('ajax_load')) ? '#' : '');
                 echo "<a href=\"javascript:NavigateTo('" . $web_path . "/" . $ajax_str . "arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
