@@ -33,6 +33,11 @@ interface ZipHandlerInterface
     public function isZipable(string $object_type): bool;
 
     /**
+     * Clean up the generated zip file
+     */
+    public static function destroyZip(?string $zipFile): void;
+
+    /**
      * takes array of full paths to medias
      * zips them and sends them
      *
