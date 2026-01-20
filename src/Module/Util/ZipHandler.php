@@ -147,11 +147,11 @@ final class ZipHandler implements ZipHandlerInterface
 
         // Various different browsers dislike various characters here. Strip them all for safety.
         $normalizedArchiveName = trim(str_replace(['"', "'", '\\', ';', "\n", "\r"], '', $archiveName . '.zip'));
-        
+
         $body    = $this->streamFactory->createStreamFromFile($this->zipFile);
         $zipPath = $this->zipFile;
 
-        register_shutdown_function(static function() use ($body, $zipPath): void {
+        register_shutdown_function(static function () use ($body, $zipPath): void {
             try {
                 // close stream resource first (helps on Windows)
                 if (method_exists($body, 'close')) {

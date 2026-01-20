@@ -1245,6 +1245,7 @@ class Song extends database_object implements
                 case 'size':
                 case 'title':
                 case 'track':
+                case 'user_upload':
                 case 'year':
                     // Check to see if it needs to be updated
                     if ($value != $this->$key) {
@@ -1456,6 +1457,17 @@ class Song extends database_object implements
     public static function update_track(int $new_track, int $song_id): void
     {
         self::_update_item('track', $new_track, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
+    }
+
+    /**
+     * update_user_upload
+     * this updates the user_upload field
+     * @param int $new_user_upload
+     * @param int $song_id
+     */
+    public static function update_user_upload(int $new_user_upload, int $song_id): void
+    {
+        self::_update_item('user_upload', $new_user_upload, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**

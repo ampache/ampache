@@ -885,6 +885,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      *     summary?: ?string,
      *     placeformed?: ?string,
      *     yearformed?: ?int,
+     *     user?: ?int,
      *     overwrite_childs?: string,
      *     add_to_childs?: string,
      *     edit_tags?: string,
@@ -902,6 +903,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         $summary     = $data['summary'] ?? null;
         $placeformed = $data['placeformed'] ?? null;
         $yearformed  = is_numeric($data['yearformed'] ?? null) ? (int)$data['yearformed'] : null;
+        $user        = is_numeric($data['user'] ?? null) ? (int)$data['user'] : null;
         $current_id  = $this->id;
 
         // Check if name is different than the current name
@@ -952,6 +954,14 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         $this->prefix = $prefix;
         $this->name   = $name;
         $this->mbid   = $mbid;
+
+        if (isset($data['user'])) {
+            $user = ((int)$data['user'] == 0) ? null : (int)$data['user'];
+            if ($this->user != (int)$data['user']) {
+                $sql = 'UPDATE `artist` SET `user` = ? WHERE `id` = ?';
+                Dba::write($sql, [$user, $current_id]);
+            }
+        }
 
         $override_childs = false;
         if (array_key_exists('overwrite_childs', $data) && $data['overwrite_childs'] == 'checked') {

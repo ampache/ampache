@@ -115,6 +115,29 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                 <td><input type="text" name="year" value="<?php echo scrub_out((string)$libitem->year); ?>" /></td>
             </tr>
             <tr>
+                <td>
+                    <?php echo T_('Owner'); ?><br />
+                </td>
+                <td>
+                <?php if ($has_access) {
+                    $selected = (!$libitem->user_upload) ? ' selected="selected"' : '';
+                    $options  = [
+                        '<option value="0"' . $selected . '></option>'
+                    ];
+                    if (!empty($users)) {
+                        /** @var string[] $users */
+                        foreach ($users as $user_id => $username) {
+                            $selected  = ($user_id == $libitem->user_upload) ? ' selected="selected"' : '';
+                            $options[] = '<option value="' . $user_id . '"' . $selected . '>' . scrub_out($username) . '</option>';
+                        }
+                        echo '<select name="user">' . implode("\n", $options) . '</select>';
+                    } ?>
+                <?php } else {
+                    echo '<input type="hidden" name="user_upload" value="' . $libitem->user_upload . '"/>' . $libitem->user_upload;
+                } ?>
+                </td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres'); ?></td>
                 <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display(Tag::get_top_tags('song', $libitem->id, 0)); ?>" /></td>
             </tr>
@@ -136,7 +159,7 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                     <div class="metadataAccordion">
                     <table class="tabledata">
                         <?php
-                        $dismetas = $metadataManager->getDisabledMetadataFields();
+                    $dismetas = $metadataManager->getDisabledMetadataFields();
             foreach ($metadataManager->getMetadata($libitem) as $metadata) {
                 /** @var Metadata $metadata */
                 $field = $metadata->getField();
