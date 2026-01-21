@@ -36,12 +36,12 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
-use Exception;
 use Kunnu\Dropbox\DropboxApp;
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxFile;
 use Kunnu\Dropbox\Exceptions\DropboxClientException;
 use Kunnu\Dropbox\Models\ModelInterface;
+use Exception;
 use ReflectionException;
 
 /**
@@ -57,7 +57,7 @@ class Catalog_dropbox extends Catalog
     private int $catalog_id;
     private string $apikey = '';
     private string $secret;
-    private string $authcode;
+    //private string $authcode;
     private string $authtoken;
 
     public string $path;
@@ -271,9 +271,9 @@ class Catalog_dropbox extends Catalog
         // Prevent the script from timing out
         set_time_limit(0);
 
-        if ($options != null) {
-            $this->authcode = (string)$options['authcode'];
-        }
+        //if ($options != null) {
+        //    $this->authcode = (string)$options['authcode'];
+        //}
 
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Dropbox Remote Update') . '. . .');
