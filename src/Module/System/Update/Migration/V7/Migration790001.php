@@ -39,8 +39,8 @@ final class Migration790001 extends AbstractMigration
 
     public function migrate(): void
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $collation  = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset    = (AmpConfig::get('database_charset', 'utf8mb4'));
         $sql        = "SHOW TABLES LIKE 'catalog_dropbox'";
         $db_results = Dba::query($sql);
 

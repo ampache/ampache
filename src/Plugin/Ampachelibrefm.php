@@ -27,13 +27,13 @@ namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
-use SimpleXMLElement;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Scrobble\Scrobbler;
+use SimpleXMLElement;
 
 class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
