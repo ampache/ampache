@@ -647,7 +647,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      */
     public static function check(string $name, ?string $mbid = '', bool $readonly = false): ?int
     {
-        debug_event(self::class, "Artist::check(): name" . $name . ", mbid: " . $mbid . ", readonly: " . ($readonly ? 'true' : 'false'), 6); // TODO: remove THIS IS MASSIVE
+        debug_event(self::class, "Artist::check(): name " . $name . ", mbid: " . $mbid . ", readonly: " . ($readonly ? 'true' : 'false'), 6); // TODO: remove THIS IS MASSIVE
         $split_artist = AmpConfig::get('split_artist_regex', false);
         $full_name    = ($split_artist && preg_match('/[^ ]' . $split_artist . '[^ ]/', $name))
             ? explode($split_artist, $name)[0]
