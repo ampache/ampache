@@ -374,8 +374,6 @@ final class VaInfo implements VaInfoInterface
         }
 
         $this->_get_plugin_tags();
-        
-        debug_event(self::class, "this->tags: " . print_r($this->tags, true), 6); // TODO: remove THIS IS MASSIVE
     }
 
     /**

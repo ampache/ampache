@@ -240,7 +240,7 @@ class Song extends database_object implements
         if ($check_file > 0) {
             return $check_file;
         }
-        debug_event(self::class, "insert results: " . print_r($results, true), 5);
+        //debug_event(self::class, "insert results: " . print_r($results, true), 4);
 
         $catalog          = $results['catalog'];
         $file             = $results['file'];
