@@ -2729,7 +2729,7 @@ abstract class Catalog extends database_object
      */
     public static function update_song_from_tags(array $results, Song $song): array
     {
-        //debug_event(self::class, "update_song_from_tags results: " . print_r($results, true), 4);
+        debug_event(self::class, "update_song_from_tags results: " . print_r($results, true), 5);
         // info for the song table. This is all the primary file data that is song related
         $new_song          = new Song();
         $new_song->file    = $results['file'];
