@@ -661,6 +661,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
         $name = $trimmed[0];
 
+        // If Ampache support multiple artists per song one day, we should also handle other artists here
         $mbid = VaInfo::parse_mbid($mbid);
 
         if (!$name) {
@@ -673,8 +674,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         }
 
         if (isset(self::$_mapcache[$name][$prefix][$mbid])) {
-            debug_event(self::class, "Artist::check() - isset(self::_mapcache[name][prefix][mbid] " . print_r(self::$_mapcache[$name][$prefix][$mbid], true), 6); // TODO: remove THIS IS MASSIVE
-
             return self::$_mapcache[$name][$prefix][$mbid];
         }
 
@@ -721,14 +720,11 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         // cache and return the result
         if ($exists && $artist_id > 0) {
             self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
-            debug_event(self::class, "Artist::check() - exists && artist_id > 0: " . $artist_id, 6); // TODO: remove THIS IS MASSIVE
 
             return $artist_id;
         }
 
         if ($readonly) {
-            debug_event(self::class, "Artist::check() - readonly: " . $artist_id, 6); // TODO: remove THIS IS MASSIVE
-
             return null;
         }
 
@@ -752,8 +748,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
         $db_results = Dba::write($sql, [$name, $prefix, $mbid]);
         if (!$db_results) {
-            debug_event(self::class, "Artist::check() - insert failed: " . $artist_id, 6); // TODO: remove THIS IS MASSIVE
-
             return null;
         }
 
@@ -763,7 +757,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         Catalog::update_map(0, 'artist', $artist_id);
 
         self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
-        debug_event(self::class, "Artist::check() - new artist: " . $artist_id, 6); // TODO: remove THIS IS MASSIVE
 
         return $artist_id;
     }
