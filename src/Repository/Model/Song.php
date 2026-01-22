@@ -322,35 +322,39 @@ class Song extends database_object implements
             $mode = null;
         }
 
-        if (!isset($results['albumartist_id'])) {
-            $albumartist_id = null;
-            if ($albumartist !== null && $albumartist !== '' && $albumartist !== '0') {
-                $albumartist_mbid = Catalog::trim_slashed_list($albumartist_mbid);
-                $albumartist_id   = Artist::check($albumartist, $albumartist_mbid);
-            }
-        } else {
+        $albumartist_id = null;
+        if (isset($results['albumartist_id'])) {
             $albumartist_id = (int)($results['albumartist_id']);
+        } elseif (
+            $albumartist !== null &&
+            $albumartist !== '' &&
+            $albumartist !== '0'
+        ) {
+            $albumartist_mbid = Catalog::trim_slashed_list($albumartist_mbid);
+            $albumartist_id   = Artist::check($albumartist, $albumartist_mbid);
         }
 
         // song artist text is the same as album artist so don't worry about looking up id's if they match
-        if (isset($albumartist_id) && $albumartist === $artist) {
-            $artist_id            = $albumartist_id;
-        } elseif (!isset($results['artist_id'])) {
-            $artist_id = null;
-            if ($artist !== null && $artist !== '' && $artist !== '0') {
-                $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
-                $artist_id   = (int)Artist::check($artist, $artist_mbid);
-            }
-        } else {
+        $artist_id = null;
+        if (
+            $albumartist_id &&
+            $albumartist &&
+            $albumartist === $artist
+        ) {
+            $artist_id = $albumartist_id;
+        } elseif (isset($results['artist_id'])) {
             $artist_id = (int)($results['artist_id']);
+        } elseif ($artist !== null && $artist !== '' && $artist !== '0') {
+            $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
+            $artist_id   = (int)Artist::check($artist, $artist_mbid);
         }
 
-        if (!isset($results['album_id'])) {
+        if (isset($results['album_id'])) {
+            $album_id = (int)($results['album_id']);
+        } else {
             $album_id = (empty($album))
                 ? 0
                 : Album::check($catalog, $album, $year, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
-        } else {
-            $album_id = (int)($results['album_id']);
         }
 
         // create the album_disk (if missing)
