@@ -523,9 +523,13 @@ class Catalog_dropbox extends Catalog
             : null;
 
         // Download File
-        $response = $dropbox->postToContent('/files/download', ['path' => $path], null, $dropboxFile);
-        if ($response->getHttpStatusCode() == 200) {
-            return true;
+        try {
+            $response = $dropbox->postToContent('/files/download', ['path' => $path], null, $dropboxFile);
+            if ($response->getHttpStatusCode() == 200) {
+                return true;
+            }
+        } catch (Exception $error) {
+            debug_event('dropbox.catalog', 'download error: ' . $error->getMessage(), 3);
         }
 
         return false;
