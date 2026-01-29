@@ -47,14 +47,16 @@ final class PreferenceEditMethod
      *
      * Edit a preference value and apply to all users if allowed
      *
-     * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
-     * value  = (string|integer) Preference value
-     * all    = (integer) 0,1 if true apply to all users //optional
+     * filter  = (string) Preference name e.g ('notify_email', 'ajax_load')
+     * value   = (string|integer) Preference value
+     * all     = (integer) 0,1 if true apply to all users //optional
+     * default = (integer) 0,1 if true set as system default (New and public users) //optional
      *
      * @param array{
      *     filter: string,
      *     value: string|int,
      *     all?: int,
+     *     default?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -66,9 +68,14 @@ final class PreferenceEditMethod
         if (!Api::check_parameter($input, ['filter', 'value'], self::ACTION)) {
             return false;
         }
-        $all = (array_key_exists('all', $input) && (int)$input['all'] == 1);
-        // don't apply to all when you aren't an admin
-        if ($all && !Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
+
+        $all     = (array_key_exists('all', $input) && (int)$input['all'] == 1);
+        $default = (array_key_exists('default', $input) && (int)$input['default'] == 1);
+        // don't apply to all or set default when you aren't an admin
+        if (
+            ($all || $default) &&
+            !Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])
+        ) {
             return false;
         }
 
@@ -76,7 +83,7 @@ final class PreferenceEditMethod
         User::fix_preferences($user->id);
 
         // allow getting system prefs is you have access
-        $user_id = ($all)
+        $user_id = ($all || $default)
             ? User::INTERNAL_SYSTEM_USER_ID
             : $user->id;
 
