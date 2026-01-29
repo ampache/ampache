@@ -609,6 +609,8 @@ class OpenSubsonic_Json_Data
             $json['averageRating'] = $avg_rating;
         }
 
+        $json['playCount'] = $album->total_count;
+
         $starred = new Userflag($album->id, 'album');
         $result  = $starred->get_flag(null, true);
         if (is_array($result)) {
@@ -1352,6 +1354,8 @@ class OpenSubsonic_Json_Data
             $json['averageRating'] = $avg_rating;
         }
 
+        $json['playCount'] = $song->total_count;
+
         $starred = new Userflag($song->id, 'song');
         $result  = $starred->get_flag(null, true);
         if (is_array($result)) {
@@ -1560,6 +1564,8 @@ class OpenSubsonic_Json_Data
             $json['averageRating'] = $avg_rating;
         }
 
+        $json['playCount'] = $episode->total_count;
+
         $starred = new Userflag($episode->id, 'podcast_episode');
         $result  = $starred->get_flag(null, true);
         if (is_array($result)) {
@@ -1722,6 +1728,8 @@ class OpenSubsonic_Json_Data
         if ($avg_rating > 0) {
             $json['averageRating'] = $avg_rating;
         }
+
+        $json['playCount'] = $video->total_count;
 
         $starred = new Userflag($video->id, 'video');
         $result  = $starred->get_flag(null, true);
@@ -1932,6 +1940,7 @@ class OpenSubsonic_Json_Data
      *
      * An album from ID3 tags.
      * https://opensubsonic.netlify.app/docs/responses/albumid3/
+     * https://opensubsonic.netlify.app/docs/responses/albumid3withsongs/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */

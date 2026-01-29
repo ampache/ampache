@@ -438,6 +438,9 @@ class OpenSubsonic_Xml_Data
         if ($avg_rating > 0) {
             $xsong->addAttribute('averageRating', (string)$avg_rating);
         }
+
+        $xsong->addAttribute('playCount', (string)$song->total_count);
+
         self::_setIfStarred($xsong, 'song', $song->id);
         if ($song->track > 0) {
             $xsong->addAttribute('track', (string)$song->track);
@@ -595,6 +598,9 @@ class OpenSubsonic_Xml_Data
         if ($avg_rating > 0) {
             $xalbum->addAttribute('averageRating', (string)$avg_rating);
         }
+
+        $xalbum->addAttribute('playCount', (string)$album->total_count);
+
         self::_setIfStarred($xalbum, 'album', $album->id);
 
         if ($songs) {
@@ -668,6 +674,9 @@ class OpenSubsonic_Xml_Data
         if ($avg_rating > 0) {
             $xalbum->addAttribute('averageRating', (string)$avg_rating);
         }
+
+        $xalbum->addAttribute('playCount', (string)$album->total_count);
+
         self::_setIfStarred($xalbum, 'album', $album->id);
 
         if ($songs) {
