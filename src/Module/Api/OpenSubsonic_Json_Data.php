@@ -96,6 +96,8 @@ class OpenSubsonic_Json_Data
 
     /**
      * _createSuccessResponse
+     *
+     * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
      * @return array{
      *     'subsonic-response': array{
      *         'status': string,
@@ -115,6 +117,8 @@ class OpenSubsonic_Json_Data
 
     /**
      * _createFailedResponse
+     *
+     * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
      * @return array{
      *     'subsonic-response': array{
      *         'status': string,
@@ -152,6 +156,8 @@ class OpenSubsonic_Json_Data
 
     /**
      * _getJukeboxStatus
+     *
+     * https://opensubsonic.netlify.app/docs/responses/jukeboxstatus/
      * @return array{
      *     'currentIndex': int,
      *     'playing': bool,
@@ -184,6 +190,9 @@ class OpenSubsonic_Json_Data
 
     /**
      * _getPlaylist_Playlist
+     *
+     * https://opensubsonic.netlify.app/docs/responses/playlist/
+     * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
      * @return array{
      *     'id': string,
      *     'name': string,
@@ -235,6 +244,9 @@ class OpenSubsonic_Json_Data
 
     /**
      * _getPlaylist_Search
+     *
+     * https://opensubsonic.netlify.app/docs/responses/playlist/
+     * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
      * @return array{
      *     'id': string,
      *     'name': string,
@@ -405,6 +417,7 @@ class OpenSubsonic_Json_Data
      * _getChatMessage
      *
      * A chatMessage.
+     * https://opensubsonic.netlify.app/docs/responses/chatmessage/
      * @return array{
      *     'username': string,
      *     'time': int,
@@ -926,7 +939,8 @@ class OpenSubsonic_Json_Data
 
     /**
      * _getArtistInfo
-     *
+     * https://opensubsonic.netlify.app/docs/responses/artistinfo/
+     * https://opensubsonic.netlify.app/docs/responses/artistinfo2/
      * Artist info.
      * @param Artist $artist
      * @param array{
@@ -974,6 +988,7 @@ class OpenSubsonic_Json_Data
         $json['largeImageUrl']  = htmlentities((string)$info['largephoto']);
         $json['similarArtist']  = [];
 
+        $unknownCount = 0;
         foreach ($similars as $similar) {
             if (($similar['id'] !== null)) {
                 $sim_artist = new Artist($similar['id']);
@@ -986,9 +1001,8 @@ class OpenSubsonic_Json_Data
                         break;
                 }
             } else {
-                // TODO there might be a difference between artistInfo and artistInfo2 for empty data
                 $json['similarArtist'][] = [
-                    'id' => '-1',
+                    'id' => (string)('-' . $unknownCount++),
                     'name' => (string)$similar['name'],
                 ];
             }
@@ -1000,6 +1014,7 @@ class OpenSubsonic_Json_Data
     /**
      * _getBookmark
      *
+     * https://opensubsonic.netlify.app/docs/responses/bookmark/
      * A bookmark.
      * @return array{
      *     'position': int,
@@ -1139,6 +1154,7 @@ class OpenSubsonic_Json_Data
      * _getIndex
      *
      * An indexed artist list.
+     * https://opensubsonic.netlify.app/docs/responses/index_/
      * @param array<int, array{
      *     id: int,
      *     f_name: string,
@@ -1867,6 +1883,7 @@ class OpenSubsonic_Json_Data
      * _getGenre
      *
      * A genre.
+     * https://opensubsonic.netlify.app/docs/responses/genre/
      * @param array{id: int, name: string, is_hidden: int, count: int} $genre
      * @return array{
      *     'songCount': int,
@@ -2345,7 +2362,7 @@ class OpenSubsonic_Json_Data
      * addGenres
      *
      * Genres list.
-     * https://opensubsonic.netlify.app/docs/responsesq
+     * https://opensubsonic.netlify.app/docs/responses/genres/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2467,6 +2484,7 @@ class OpenSubsonic_Json_Data
 
     /**
      * addJukeboxPlaylist
+     *
      * https://opensubsonic.netlify.app/docs/responses/jukeboxplaylist/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2495,6 +2513,7 @@ class OpenSubsonic_Json_Data
 
     /**
      * addJukeboxStatus
+     *
      * https://opensubsonic.netlify.app/docs/responses/jukeboxstatus/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2917,7 +2936,7 @@ class OpenSubsonic_Json_Data
      */
 
     /**
-     * addPodcastEpside
+     * addPodcastEpisode
      *
      * Podcasts.
      * https://opensubsonic.netlify.app/docs/responses/podcastepisode/
@@ -2936,7 +2955,7 @@ class OpenSubsonic_Json_Data
      * addPodcasts
      *
      * Podcasts.
-     *  https://opensubsonic.netlify.app/docs/responses/podcasts/
+     * https://opensubsonic.netlify.app/docs/responses/podcasts/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param Podcast[] $podcasts
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2969,6 +2988,7 @@ class OpenSubsonic_Json_Data
 
     /**
      * addRandomSongs
+     *
      * https://opensubsonic.netlify.app/docs/responses/randomsongs/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $songs
@@ -3164,6 +3184,7 @@ class OpenSubsonic_Json_Data
      * _getShare
      *
      * Share.
+     * https://opensubsonic.netlify.app/docs/responses/share/
      * @return array{
      *     'id': string,
      *     'url': string,
@@ -3274,6 +3295,7 @@ class OpenSubsonic_Json_Data
      * _getUser
      *
      * user.
+     * https://opensubsonic.netlify.app/docs/responses/user/
      * @return array{
      *     'username': string,
      *     'email': string,
@@ -3434,6 +3456,7 @@ class OpenSubsonic_Json_Data
 
     /**
      * addSongsByGenre
+     *
      * https://opensubsonic.netlify.app/docs/responses/songsbygenre/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $songs
@@ -3557,7 +3580,7 @@ class OpenSubsonic_Json_Data
     /**
      * addTokenInfo
      *
-     *  Information about an API key
+     * Information about an API key
      * https://opensubsonic.netlify.app/docs/responses/tokeninfo/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
