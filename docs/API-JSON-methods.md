@@ -215,6 +215,11 @@ Get your server preferences
 
 **ACCESS REQUIRED:** 100 (Admin)
 
+* You can modify and update your preferences using the following methods
+  * [preference_create](#preference_create)
+  * [preference_delete](#preference_delete)
+  * [preference_edit](#preference_edit)
+
 * return array
 
 ```JSON
@@ -250,6 +255,11 @@ Get ids and usernames for your site
 ### user_preferences
 
 Get your user preferences
+
+* You can modify and update your preferences using the following methods
+  * [preference_create](#preference_create)
+  * [preference_delete](#preference_delete)
+  * [preference_edit](#preference_edit)
 
 * return array
 
@@ -2478,13 +2488,12 @@ Delete a non-system preference by name
 
 Edit a preference value and apply to all users if allowed
 
-**ACCESS REQUIRED:** 100 (Admin)
-
-| Input    | Type    | Description                                       | Optional |
-|----------|---------|---------------------------------------------------|---------:|
-| 'filter' | string  | Preference name e.g ('notify_email', 'ajax_load') |       NO |
-| 'value'  | mixed   | (string/integer) Preference value                 |       NO |
-| 'all'    | boolean | `0`, `1` apply to all users                       |      YES |
+| Input     | Type    | Description                                                                                   | Optional |
+|-----------|---------|-----------------------------------------------------------------------------------------------|---------:|
+| 'filter'  | string  | Preference name e.g ('notify_email', 'ajax_load')                                             |       NO |
+| 'value'   | mixed   | (string/integer) Preference value                                                             |       NO |
+| 'all'     | boolean | `0`, `1` apply to all users **ACCESS REQUIRED:** 100 (Admin)                                  |      YES |
+| 'default' | boolean | `0`, `1` apply set as system default (New and public users)  **ACCESS REQUIRED:** 100 (Admin) |      YES |
 
 * return object
 
