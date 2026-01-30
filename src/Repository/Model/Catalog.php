@@ -1533,7 +1533,7 @@ abstract class Catalog extends database_object
             ? 'user_upload'
             : 'user';
         $table = ($type == 'album')
-            ? 'artist'
+            ? 'song'
             : $type;
         $where_sql = ($user_id > 0)
             ? sprintf('WHERE `%s`.`%s` = \'', $table, $column) . $user_id . "'"
@@ -1542,7 +1542,7 @@ abstract class Catalog extends database_object
 
         return match ($type) {
             'song' => 'SELECT `song`.`id` AS `id` FROM `song` ' . $where_sql,
-            'album' => 'SELECT DISTINCT `album`.`id` AS `id` FROM `album` LEFT JOIN `artist` on `album`.`album_artist` = `artist`.`id` ' . $where_sql,
+            'album' => 'SELECT DISTINCT `album`.`id` AS `id` FROM `album` LEFT JOIN `song` on `album`.`id` = `song`.`album` ' . $where_sql,
             'artist' => 'SELECT DISTINCT `id` FROM `artist` ' . $where_sql,
             default => $sql,
         };
