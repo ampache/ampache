@@ -117,8 +117,9 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 $hide_genres    = AmpConfig::get('hide_genres');
                 $is_group       = AmpConfig::get('album_group');
                 $show_license   = AmpConfig::get('licensing') && AmpConfig::get('show_license');
-                $argument_param = '&hide=' . Core::get_request('hide');
-                $argument       = explode(',', Core::get_request('hide'));
+                $hide           = Core::get_request('hide');
+                $argument_param = '&hide=' . $hide;
+                $argument       = explode(',', $hide);
                 $hide_artist    = in_array('cel_artist', $argument);
                 $hide_album     = in_array('cel_album', $argument);
                 $hide_year      = in_array('cel_year', $argument);
@@ -135,7 +136,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         ->setContext('ARGUMENT_PARAM', $argument_param)
                         ->setContext('IS_TABLE_VIEW', true)
                         ->setContext('IS_ALBUM_GROUP', $is_group)
-                        ->setContext('IS_SHOW_TRACK', (!empty(Core::get_request('hide'))))
+                        ->setContext('IS_SHOW_TRACK', (!empty($hide)))
                         ->setContext('IS_SHOW_LICENSE', $show_license)
                         ->setContext('IS_HIDE_GENRE', $hide_genres)
                         ->setContext('IS_HIDE_ARTIST', $hide_artist)
