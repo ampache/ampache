@@ -2910,9 +2910,6 @@ abstract class Catalog extends database_object
         }
 
         // check whether this artist exists (and the album_artist)
-        $new_song->artist = ($is_upload_artist)
-            ? $song->artist
-            : Artist::check($artist, $artist_mbid);
         if ($albumartist || !empty($song->albumartist)) {
             $new_song->albumartist = ($is_upload_albumartist || !$albumartist)
                 ? $song->albumartist
@@ -2920,6 +2917,18 @@ abstract class Catalog extends database_object
             if (!$new_song->albumartist) {
                 $new_song->albumartist = $song->albumartist;
             }
+        }
+
+        if (
+            $new_song->albumartist &&
+            $albumartist &&
+            $albumartist === $artist
+        ) {
+            $new_song->artist = $new_song->albumartist;
+        } else {
+            $new_song->artist = ($is_upload_artist)
+                ? $song->artist
+                : Artist::check($artist, $artist_mbid);
         }
 
         if (!$new_song->artist) {
