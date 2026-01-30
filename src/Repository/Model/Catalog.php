@@ -2731,12 +2731,10 @@ abstract class Catalog extends database_object
     {
         //debug_event(self::class, "update_song_from_tags results: " . print_r($results, true), 4);
         // info for the song table. This is all the primary file data that is song related
-        $new_song          = new Song();
-        $new_song->file    = $results['file'];
-        $new_song->catalog = $song->getCatalogId();
-        $new_song->year    = (strlen((string)$results['year']) > 4)
-            ? (int)substr((string) $results['year'], -4, 4)
-            : (int)($results['year']);
+        $new_song               = new Song();
+        $new_song->file         = $results['file'];
+        $new_song->catalog      = $song->getCatalogId();
+        $new_song->year         = self::normalize_year($results['year'] ?? 0);
         $new_song->disk         = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
         $new_song->disksubtitle = $results['disksubtitle'] ?: null;
         $new_song->isrc         = (!empty($results['isrc'])) ? $results['isrc'] : [];
