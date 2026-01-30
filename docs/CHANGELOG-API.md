@@ -14,6 +14,7 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
   * New Method: smartlists (Return smartlists based on filters)
   * New Method: smartlist_songs (Return the songs for a smartlist)
   * New Method: smartlist_delete (Delete a smartlist)
+  * preference_edit: Add `default` parameter (Set as system default for new and public users)
   * handshake: Add `streamtoken` to responses
   * ping: Add `streamtoken` to responses
   * url_to_song: Add `filter` as an alias of `url`

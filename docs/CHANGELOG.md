@@ -11,6 +11,8 @@ URL paths are stil supported but they will be converted on the next catalog upda
 ### Added
 
 * Translations 2026-01-20
+* Database 790001
+  * Update Dropbox catalog `authtoken` (if installed)
 * Add a warning to playlist sort commands because it saves a new order
 * Allow hiding upload artist and album selection rows with CSS (`upload_select_row`)
 * Custom CSS in `public/templates/custom.css` when the file exists
@@ -18,6 +20,9 @@ URL paths are stil supported but they will be converted on the next catalog upda
 * Extend `Dba::check_database_inserted()` tables a bit more
 * Support Update from tags actions for Remote Ampache and Subsonic catalogs
 * Support download actions on remote song objects
+* Added another cleanup check on zip downloads
+* Allow owner selection on Song and Artist objects
+* Add license tags to VaInfo output
 
 ### Changed
 
@@ -26,10 +31,16 @@ URL paths are stil supported but they will be converted on the next catalog upda
   * install: Check database is a valid database before failing without overwrite
 * Plugin
   * Use a custom generated keay for Libre.FM instead of the Last.FM key
+* Update copyright to 2026
 * Artist lookup for Song Artist will match with Album Artist ID if the text matches
 * `Artist::check()` will only pull one result when searching by name or name and mbid
 * Convert remote Ampache catalog filenames from URL to the local filename
 * Convert remote Subsonic catalog filenames from URL to the local filename
+* Update and Insert Song tags now use the same function and process to filter data
+* When inserting and updating tags, check Song artist after Album Artist to allow text fallback
+* Show album uploads on Song owner OR Artist owner
+* Don't delete empy artists when they are owned by a user
+* Don't overwrite upload objects with tag values when set
 
 ### Fixed
 
@@ -40,6 +51,20 @@ URL paths are stil supported but they will be converted on the next catalog upda
 * Error missing tag values when updating remote files
 * Subsonic remote catalog missing `getAlbum` as a command
 * Call download actions on remote caching action
+* Emails without `fullname`
+* Updating Art was hidden when you were the owner of the object
+* Song tag insert and update issues
+* SQL error in `Artist::update_artist_count()`
+* Scrub output on Broadcast and Song_Preview pages
+* Language tags would not be set in some cases
+* Hinting for genre tags corrected
+* Missing album_group check when updating songs
+* Subsonic
+  * Objects missing `playCount`
+* Dropbox remote catalog
+  * References to dead code
+  * Catch and log download exceptions
+
 
 ## Ampache 7.8.0
 
