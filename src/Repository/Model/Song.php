@@ -1524,7 +1524,8 @@ class Song extends database_object implements
         if ($old_artist != $new_artist && self::_update_item('artist', $new_artist, $song_id, AccessLevelEnum::CONTENT_MANAGER) !== false) {
             if ($update_counts && $old_artist) {
                 self::migrate_artist($new_artist, $old_artist);
-                Artist::update_table_counts();
+                Artist::update_artist_count($new_album);
+                Artist::update_artist_count($old_album);
             }
 
             return true;
@@ -1542,7 +1543,8 @@ class Song extends database_object implements
         if ($old_album != $new_album && self::_update_item('album', $new_album, $song_id, AccessLevelEnum::CONTENT_MANAGER, true) !== false) {
             self::migrate_album($new_album, $song_id, $old_album);
             if ($update_counts) {
-                Album::update_table_counts();
+                Album::update_album_count($new_album);
+                Album::update_album_count($old_album);
             }
 
             return true;
