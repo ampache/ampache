@@ -1529,7 +1529,7 @@ abstract class Catalog extends database_object
     public static function get_uploads_sql(string $type, int $user_id = 0): string
     {
         $sql    = '';
-        $column = ($type == 'song')
+        $column = ($type == 'song' || $type == 'album')
             ? 'user_upload'
             : 'user';
         $table = ($type == 'album')
