@@ -2975,6 +2975,7 @@ abstract class Catalog extends database_object
         $is_upload_albumartist = ($song->albumartist) ? Artist::is_upload($song->albumartist) : false;
         if ($is_upload_albumartist) {
             debug_event(self::class, $song->albumartist . ' : is an uploaded album artist', 4);
+            $artists_array          = [];
             $albumartist_mbid_array = [];
             $new_song->albumartist  = $song->albumartist;
         } elseif ($albumartist || !empty($song->albumartist)) {
