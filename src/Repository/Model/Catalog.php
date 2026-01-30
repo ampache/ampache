@@ -3938,7 +3938,10 @@ abstract class Catalog extends database_object
             return 0;
         }
 
-        $year = (int)($year);
+        $year = (strlen((string)$year) > 4)
+            ? (int)substr((string)$year, -4, 4)
+            : (int)($year);
+
         if ($year < 0 || $year > 9999) {
             return 0;
         }
