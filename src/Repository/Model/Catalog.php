@@ -2789,7 +2789,7 @@ abstract class Catalog extends database_object
             }
         }
 
-        $new_song->language              = (!empty($results['mb_trackid'])) ? self::check_length($results['language'], 128) : null;
+        $new_song->language              = (!empty($results['language'])) ? self::check_length($results['language'], 128) : null;
         $new_song->replaygain_track_gain = (is_null($results['replaygain_track_gain'])) ? null : (float) $results['replaygain_track_gain'];
         $new_song->replaygain_track_peak = (is_null($results['replaygain_track_peak'])) ? null : (float) $results['replaygain_track_peak'];
         $new_song->replaygain_album_gain = (is_null($results['replaygain_album_gain'])) ? null : (float) $results['replaygain_album_gain'];
