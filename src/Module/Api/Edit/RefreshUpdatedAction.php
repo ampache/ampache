@@ -115,6 +115,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
             case 'song_row':
                 /** @var Song $libitem */
                 $hide_genres    = AmpConfig::get('hide_genres');
+                $is_group       = AmpConfig::get('album_group');
                 $show_license   = AmpConfig::get('licensing') && AmpConfig::get('show_license');
                 $argument_param = '&hide=' . Core::get_request('hide');
                 $argument       = explode(',', Core::get_request('hide'));
@@ -133,6 +134,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
                         ->setContext('ARGUMENT_PARAM', $argument_param)
                         ->setContext('IS_TABLE_VIEW', true)
+                        ->setContext('IS_ALBUM_GROUP', $is_group)
                         ->setContext('IS_SHOW_TRACK', (!empty($argument)))
                         ->setContext('IS_SHOW_LICENSE', $show_license)
                         ->setContext('IS_HIDE_GENRE', $hide_genres)

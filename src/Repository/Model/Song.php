@@ -1524,8 +1524,8 @@ class Song extends database_object implements
         if ($old_artist != $new_artist && self::_update_item('artist', $new_artist, $song_id, AccessLevelEnum::CONTENT_MANAGER) !== false) {
             if ($update_counts && $old_artist) {
                 self::migrate_artist($new_artist, $old_artist);
-                Artist::update_artist_count($new_album);
-                Artist::update_artist_count($old_album);
+                Artist::update_artist_count($new_artist);
+                Artist::update_artist_count($old_artist);
             }
 
             return true;
