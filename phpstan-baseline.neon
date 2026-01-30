@@ -3996,32 +3996,7 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:trim_featuring\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_media_from_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_podcast_episode_from_tags\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_podcast_episode_from_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_settings\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_single_item\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 

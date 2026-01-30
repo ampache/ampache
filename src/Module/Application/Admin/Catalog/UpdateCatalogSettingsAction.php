@@ -60,8 +60,20 @@ final class UpdateCatalogSettingsAction extends AbstractCatalogAction
             return null;
         }
 
-        /* Update the catalog */
-        Catalog::update_settings($_POST);
+        $data = (array)$request->getParsedBody();
+        if (
+            empty($data) ||
+            (!isset($data['catalog_id']) || !isset($data['name']) || !isset($data['rename_pattern']) || !isset($data['sort_pattern']))
+        ) {
+            return null;
+        }
+
+        Catalog::update_settings([
+            'name' => $data['name'],
+            'rename_pattern' => $data['rename_pattern'],
+            'sort_pattern' => $data['sort_pattern'],
+            'catalog_id' => (int)$data['catalog_id'],
+        ]);
 
         $url   = sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin'));
         $title = T_('No Problem');

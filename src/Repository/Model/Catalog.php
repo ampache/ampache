@@ -2486,7 +2486,12 @@ abstract class Catalog extends database_object
     /**
      * update_settings
      * This function updates the basic setting of the catalog
-     * @param array $data
+     * @param array{
+     *     name: string,
+     *     rename_pattern: string,
+     *     sort_pattern: string,
+     *     catalog_id: int,
+     * } $data
      */
     public static function update_settings(array $data): void
     {
@@ -2499,6 +2504,10 @@ abstract class Catalog extends database_object
      * update_single_item
      * updates a single album,artist,song from the tag data and return the id. (if the artist/album changes it's updated)
      * this can be done by 75+
+     * @return array{
+     *     object_id: int,
+     *     change: bool,
+     * }
      */
     public static function update_single_item(string $type, int $object_id, bool $api = false, bool $multi_object = false): array
     {
@@ -3385,6 +3394,13 @@ abstract class Catalog extends database_object
         return $info;
     }
 
+    /**
+     * @param array<string, mixed> $results
+     * @return array{
+     *     change: bool,
+     *     element: bool,
+     * }
+     */
     public static function update_podcast_episode_from_tags(array $results, Podcast_Episode $podcast_episode): array
     {
         $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `update_time` = ?, `state` = 'completed' WHERE `id` = ?";
@@ -4039,6 +4055,7 @@ abstract class Catalog extends database_object
     /**
      * trim_featuring
      * Splits artists featuring from the string
+     * @return string[]
      */
     public static function trim_featuring(string $string): array
     {

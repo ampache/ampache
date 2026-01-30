@@ -1458,8 +1458,6 @@ class Song extends database_object implements
     /**
      * update_user_upload
      * this updates the user_upload field
-     * @param int $new_user_upload
-     * @param int $song_id
      */
     public static function update_user_upload(?int $new_user_upload, int $song_id): void
     {
