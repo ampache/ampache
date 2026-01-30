@@ -1529,20 +1529,23 @@ abstract class Catalog extends database_object
     public static function get_uploads_sql(string $type, int $user_id = 0): string
     {
         $sql    = '';
-        $column = ($type == 'song' || $type == 'album')
-            ? 'user_upload'
-            : 'user';
-        $table = ($type == 'album')
-            ? 'song'
-            : $type;
-        $where_sql = ($user_id > 0)
-            ? sprintf('WHERE `%s`.`%s` = \'', $table, $column) . $user_id . "'"
-            : sprintf('WHERE `%s`.`%s` IS NOT NULL', $table, $column);
+        if ($type == 'album') {
+            $where_sql = ($user_id > 0)
+                ? "WHERE `artist`.`user` = '" . $user_id . "' OR `song`.`user_upload` = '" . $user_id . "'"
+                : 'WHERE `artist`.`user` IS NOT NULL OR `song`.`user_upload` IS NOT NULL';
+        } else {
+            $column = ($type == 'song')
+                ? 'user_upload'
+                : 'user';
+            $where_sql = ($user_id > 0)
+                ? sprintf('WHERE `%s`.`%s` = \'', $type, $column) . $user_id . "'"
+                : sprintf('WHERE `%s`.`%s` IS NOT NULL', $type, $column);
+        }
         //debug_event(self::class, 'get_uploads_sql ' . $sql, 5);
 
         return match ($type) {
             'song' => 'SELECT `song`.`id` AS `id` FROM `song` ' . $where_sql,
-            'album' => 'SELECT DISTINCT `album`.`id` AS `id` FROM `album` LEFT JOIN `song` on `album`.`id` = `song`.`album` ' . $where_sql,
+            'album' => 'SELECT DISTINCT `album`.`id` AS `id` FROM `album` LEFT JOIN `artist` on `album`.`album_artist` = `artist`.`id` LEFT JOIN `song` on `album`.`id` = `song`.`album` ' . $where_sql,
             'artist' => 'SELECT DISTINCT `id` FROM `artist` ' . $where_sql,
             default => $sql,
         };
