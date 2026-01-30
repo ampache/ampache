@@ -2967,44 +2967,36 @@ abstract class Catalog extends database_object
             $artist = $artists_array[0];
         }
 
-        $is_upload_artist = false;
-        if ($song->artist) {
-            $is_upload_artist = Artist::is_upload($song->artist);
-            if ($is_upload_artist) {
-                debug_event(self::class, $song->artist . ' : is an uploaded song artist', 4);
-                $artist_mbid_array = [];
-            }
-        }
-
-        $is_upload_albumartist = false;
-        if ($song->album && $song->albumartist) {
-            $is_upload_albumartist = Artist::is_upload($song->albumartist);
-            if ($is_upload_albumartist) {
-                debug_event(self::class, $song->albumartist . ' : is an uploaded album artist', 4);
-                $albumartist_mbid_array = [];
-            }
-        }
 
         // check whether this artist exists (and the album_artist)
-        if ($albumartist || !empty($song->albumartist)) {
-            $new_song->albumartist = ($is_upload_albumartist || !$albumartist)
+        $is_upload_albumartist = ($song->albumartist) ? Artist::is_upload($song->albumartist) : false;
+        if ($is_upload_albumartist) {
+            debug_event(self::class, $song->albumartist . ' : is an uploaded album artist', 4);
+            $albumartist_mbid_array = [];
+            $new_song->albumartist  = $song->albumartist;
+        } elseif ($albumartist || !empty($song->albumartist)) {
+            $new_song->albumartist = (!$albumartist)
                 ? $song->albumartist
                 : Artist::check($albumartist, $albumartist_mbid);
-            if (!$new_song->albumartist) {
-                $new_song->albumartist = $song->albumartist;
-            }
         }
 
-        if (
+        if (!$new_song->albumartist) {
+            $new_song->albumartist = $song->albumartist;
+        }
+
+        $is_upload_artist = ($song->artist) ? Artist::is_upload($song->artist) : false;
+        if ($is_upload_artist) {
+            debug_event(self::class, $song->artist . ' : is an uploaded song artist', 4);
+            $artist_mbid_array = [];
+            $new_song->artist  = $song->artist;
+        } elseif (
             $new_song->albumartist &&
             $albumartist &&
             $albumartist === $artist
         ) {
             $new_song->artist = $new_song->albumartist;
         } else {
-            $new_song->artist = ($is_upload_artist)
-                ? $song->artist
-                : Artist::check($artist, $artist_mbid);
+            $new_song->artist = Artist::check($artist, $artist_mbid);
         }
 
         if (!$new_song->artist) {
@@ -3012,7 +3004,7 @@ abstract class Catalog extends database_object
         }
 
         // check whether this album exists
-        $new_song->album = ($is_upload_albumartist)
+        $new_song->album = ($is_upload_artist || $is_upload_albumartist)
             ? $song->album
             : Album::check($new_song->catalog, $album, $new_song->year, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
         if ($new_song->album === 0) {
@@ -3020,7 +3012,7 @@ abstract class Catalog extends database_object
         }
 
         // Check album_disk and update if needed
-        $new_song->album_disk = ($is_upload_albumartist)
+        $new_song->album_disk = ($is_upload_artist || $is_upload_albumartist)
             ? $song->album_disk
             : AlbumDisk::check($new_song->album, $new_song->disk, $new_song->catalog, $new_song->disksubtitle, $song->album_disk);
         if ($new_song->album_disk === 0) {
