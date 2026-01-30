@@ -135,7 +135,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         ->setContext('ARGUMENT_PARAM', $argument_param)
                         ->setContext('IS_TABLE_VIEW', true)
                         ->setContext('IS_ALBUM_GROUP', $is_group)
-                        ->setContext('IS_SHOW_TRACK', (!empty($argument)))
+                        ->setContext('IS_SHOW_TRACK', (!empty(Core::get_request('hide'))))
                         ->setContext('IS_SHOW_LICENSE', $show_license)
                         ->setContext('IS_HIDE_GENRE', $hide_genres)
                         ->setContext('IS_HIDE_ARTIST', $hide_artist)
