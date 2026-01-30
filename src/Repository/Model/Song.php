@@ -250,7 +250,7 @@ class Song extends database_object implements
         $albumartist      = (isset($results['albumartist'])) ? Catalog::check_length($results['albumartist']) : null;
         $bitrate          = $results['bitrate'] ?? 0;
         $rate             = $results['rate'] ?? 0;
-        $mode             = $results['mode'] ?? null;
+        $mode             = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
         $size             = $results['size'] ?? 0;
         $time             = $results['time'] ?? 0;
         $track            = Catalog::check_track((string) $results['track']);
@@ -264,11 +264,19 @@ class Song extends database_object implements
         $isrc             = (isset($results['isrc']) && is_string($results['isrc'])) ? [$results['isrc']] : $results['isrc'] ?? [];
         $year             = Catalog::normalize_year($results['year'] ?? 0);
         $comment          = $results['comment'] ?? null;
-        $tags             = $results['genre'] ?? []; // multiple genre support makes this an array
-        $lyrics           = $results['lyrics'] ?? null;
-        $user_upload      = $results['user_upload'] ?? null;
-        $composer         = (isset($results['composer'])) ? Catalog::check_length($results['composer']) : null;
-        $label            = (isset($results['publisher'])) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
+        if (
+            !empty($results['genre']) &&
+            !is_array($results['genre'])
+        ) {
+            $results['genre'] = [$results['genre']];
+        }
+        $tags        = $results['genre'] ?? []; // multiple genre support makes this an array
+        $lyrics      = $results['lyrics'] ?? null;
+        $user_upload = $results['user_upload'] ?? null;
+        $composer    = (isset($results['composer'])) ? Catalog::check_length($results['composer']) : null;
+        $label       = (isset($results['publisher']))
+            ? Catalog::check_length($results['publisher'], 128)
+            : null;
         if ($label && AmpConfig::get('label')) {
             // create the label if missing
             foreach (array_map('trim', explode(';', $label)) as $label_name) {
@@ -298,8 +306,21 @@ class Song extends database_object implements
         }
 
         $license_id = null;
-        if (isset($results['license']) && (int)$results['license'] > 0) {
-            $license_id = (int)$results['license'];
+        if (isset($results['license'])) {
+            $licenseRepository = self::getLicenseRepository();
+            $licenseName       = (string) $results['license'];
+            $licenseId         = $licenseRepository->find($licenseName);
+
+            if ($licenseId === 0 || $licenseId === null) {
+                $license = $licenseRepository->prototype()
+                    ->setName($licenseName);
+
+                $license->save();
+
+                $licenseId = $license->getId();
+            }
+
+            $license_id = $licenseId;
         }
 
         $language              = (isset($results['language'])) ? Catalog::check_length($results['language'], 128) : null;

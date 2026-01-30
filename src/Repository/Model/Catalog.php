@@ -2737,7 +2737,7 @@ abstract class Catalog extends database_object
         $new_song->year         = self::normalize_year($results['year'] ?? 0);
         $new_song->disk         = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
         $new_song->disksubtitle = $results['disksubtitle'] ?: null;
-        $new_song->isrc         = (!empty($results['isrc'])) ? $results['isrc'] : [];
+        $new_song->isrc         = (isset($results['isrc']) && is_string($results['isrc'])) ? [$results['isrc']] : $results['isrc'] ?? [];
         $new_song->title        = self::check_length(self::check_title($results['title'], $new_song->file));
         $new_song->bitrate      = $results['bitrate'];
         $new_song->rate         = $results['rate'] ?? 0;
@@ -2755,7 +2755,7 @@ abstract class Catalog extends database_object
         $new_song->track    = self::check_track((string)$results['track']);
         $new_song->mbid     = (!empty($results['mb_trackid'])) ? $results['mb_trackid'] : null;
         $new_song->composer = (!empty($results['composer'])) ? self::check_length($results['composer']) : null;
-        $new_song->mime     = $results['mime'];
+        $new_song->mime     = $results['mime']; // UPDATE ONLY (Generated from the filename)
 
         // info for the song_data table. used in Song::update_song
         $new_song->comment = $results['comment'];
@@ -2765,7 +2765,7 @@ abstract class Catalog extends database_object
             $licenseName       = (string) $results['license'];
             $licenseId         = $licenseRepository->find($licenseName);
 
-            if ($licenseId === 0) {
+            if ($licenseId === 0 || $licenseId === null) {
                 $license = $licenseRepository->prototype()
                     ->setName($licenseName);
 
@@ -2776,10 +2776,12 @@ abstract class Catalog extends database_object
 
             $new_song->license = $licenseId;
         } else {
-            $new_song->license = null;
+            $new_song->license = $song->license;
         }
 
-        $new_song->label = (isset($results['publisher'])) ? self::check_length($results['publisher'], 128) : null;
+        $new_song->label = (isset($results['publisher']))
+            ? self::check_length($results['publisher'], 128)
+            : null;
         if ($song->label !== null && $song->label !== '' && $song->label !== '0' && AmpConfig::get('label')) {
             // create the label if missing
             foreach (array_map('trim', explode(';', (string) $new_song->label)) as $label_name) {
@@ -4468,18 +4470,18 @@ abstract class Catalog extends database_object
                             switch ($catalog->gather_types) {
                                 case 'podcast':
                                     $type      = 'podcast_episode';
-                                    $file_ids  = Catalog::get_ids_from_folder($clean_path, $type);
+                                    $file_ids  = self::get_ids_from_folder($clean_path, $type);
                                     $className = Podcast_Episode::class;
                                     break;
                                 case 'video':
                                     $type      = 'video';
-                                    $file_ids  = Catalog::get_ids_from_folder($clean_path, $type);
+                                    $file_ids  = self::get_ids_from_folder($clean_path, $type);
                                     $className = Video::class;
                                     break;
                                 case 'music':
                                 default:
                                     $type      = 'song';
-                                    $file_ids  = Catalog::get_ids_from_folder($clean_path, $type);
+                                    $file_ids  = self::get_ids_from_folder($clean_path, $type);
                                     $className = Song::class;
                                     break;
                             }
@@ -4604,13 +4606,13 @@ abstract class Catalog extends database_object
                         self::update_catalog_map($catalog_media_type);
                         switch ($catalog_media_type) {
                             case 'podcast':
-                                Catalog::garbage_collect_mapping(['podcast_episode', 'podcast']);
+                                self::garbage_collect_mapping(['podcast_episode', 'podcast']);
                                 break;
                             case 'video':
-                                Catalog::garbage_collect_mapping(['video']);
+                                self::garbage_collect_mapping(['video']);
                                 break;
                             case 'music':
-                                Catalog::garbage_collect_mapping(['album', 'artist', 'song']);
+                                self::garbage_collect_mapping(['album', 'artist', 'song']);
                                 break;
                         }
                     }
