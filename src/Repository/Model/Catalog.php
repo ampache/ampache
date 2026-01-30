@@ -2756,7 +2756,7 @@ abstract class Catalog extends database_object
         $results['mime']     = $results['mime']; // UPDATE ONLY (Generated from the filename)
 
         // info for the song_data table. used in Song::update_song
-        if (isset($results['license'])) {
+        if (!empty($results['license'])) {
             $licenseRepository = self::getLicenseRepository();
             $licenseName       = (string) $results['license'];
             $licenseId         = $licenseRepository->find($licenseName);
