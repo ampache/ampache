@@ -241,42 +241,34 @@ class Song extends database_object implements
             return $check_file;
         }
         //debug_event(self::class, "insert results: " . print_r($results, true), 4);
-
-        $catalog          = $results['catalog'];
-        $file             = $results['file'];
-        $title            = (isset($results['title'])) ? Catalog::check_length(Catalog::check_title($results['title'], $file)) : null;
-        $artist           = (isset($results['artist'])) ? Catalog::check_length($results['artist']) : null;
-        $album            = (isset($results['album'])) ? Catalog::check_length($results['album']) : null;
-        $albumartist      = (isset($results['albumartist'])) ? Catalog::check_length($results['albumartist']) : null;
-        $bitrate          = $results['bitrate'] ?? 0;
-        $rate             = $results['rate'] ?? 0;
-        $mode             = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
-        $size             = $results['size'] ?? 0;
-        $time             = $results['time'] ?? 0;
-        $track            = Catalog::check_track((string) $results['track']);
-        $track_mbid       = $results['mb_trackid'] ?? $results['mbid'] ?? null;
-        $album_mbid       = $results['mb_albumid'] ?? null;
-        $album_mbid_group = $results['mb_albumid_group'] ?? null;
-        $artist_mbid      = $results['mb_artistid'] ?? null;
-        $albumartist_mbid = $results['mb_albumartistid'] ?? null;
-        $disk             = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
-        $disksubtitle     = $results['disksubtitle'] ?? null;
-        $isrc             = (isset($results['isrc']) && is_string($results['isrc'])) ? [$results['isrc']] : $results['isrc'] ?? [];
-        $year             = Catalog::normalize_year($results['year'] ?? 0);
-        $comment          = $results['comment'] ?? null;
-        if (
-            !empty($results['genre']) &&
-            !is_array($results['genre'])
-        ) {
-            $results['genre'] = [$results['genre']];
-        }
-        $tags        = $results['genre'] ?? []; // multiple genre support makes this an array
-        $lyrics      = $results['lyrics'] ?? null;
-        $user_upload = $results['user_upload'] ?? null;
-        $composer    = (isset($results['composer'])) ? Catalog::check_length($results['composer']) : null;
-        $label       = (isset($results['publisher']))
-            ? Catalog::check_length($results['publisher'], 128)
-            : null;
+        $filtered_results = Catalog::filter_tag_results($results);
+        $catalog          = $filtered_results['catalog'];
+        $file             = $filtered_results['file'];
+        $title            = $filtered_results['title'];
+        $artist           = $filtered_results['artist'];
+        $album            = $filtered_results['album'];
+        $albumartist      = $filtered_results['albumartist'];
+        $bitrate          = $filtered_results['bitrate'];
+        $rate             = $filtered_results['rate'];
+        $mode             = $filtered_results['mode'];
+        $size             = $filtered_results['size'];
+        $time             = $filtered_results['time'];
+        $track            = $filtered_results['track'];
+        $track_mbid       = $filtered_results['mbid'];
+        $album_mbid       = $filtered_results['mb_albumid'];
+        $album_mbid_group = $filtered_results['mb_albumid_group'];
+        $artist_mbid      = $filtered_results['mb_artistid'];
+        $albumartist_mbid = $filtered_results['mb_albumartistid'];
+        $disk             = $filtered_results['disk'];
+        $disksubtitle     = $filtered_results['disksubtitle'];
+        $isrc             = $filtered_results['isrc'];
+        $year             = $filtered_results['year'];
+        $comment          = $filtered_results['comment'];
+        $tags             = $filtered_results['genre']; // multiple genre support makes this an array
+        $lyrics           = $filtered_results['lyrics'];
+        $user_upload      = $filtered_results['user_upload'];
+        $composer         = $filtered_results['composer'];
+        $label            = $filtered_results['label'];
         if ($label && AmpConfig::get('label')) {
             // create the label if missing
             foreach (array_map('trim', explode(';', $label)) as $label_name) {
@@ -285,9 +277,9 @@ class Song extends database_object implements
         }
 
         // info for the artist_map table.
-        $artists_array          = $results['artists'] ?? [];
-        $artist_mbid_array      = $results['mb_artistid_array'] ?? [];
-        $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? [];
+        $artists_array          = $filtered_results['artists'];
+        $artist_mbid_array      = $filtered_results['mb_artistid_array'];
+        $albumartist_mbid_array = $filtered_results['mb_albumartistid_array'];
         // if you have an artist array this will be named better than what your tags will give you
         if (!empty($artists_array)) {
             if (
@@ -305,43 +297,21 @@ class Song extends database_object implements
             $artist = (string)$artists_array[0];
         }
 
-        $license_id = null;
-        if (isset($results['license'])) {
-            $licenseRepository = self::getLicenseRepository();
-            $licenseName       = (string) $results['license'];
-            $licenseId         = $licenseRepository->find($licenseName);
-
-            if ($licenseId === 0 || $licenseId === null) {
-                $license = $licenseRepository->prototype()
-                    ->setName($licenseName);
-
-                $license->save();
-
-                $licenseId = $license->getId();
-            }
-
-            $license_id = $licenseId;
-        }
-
-        $language              = (isset($results['language'])) ? Catalog::check_length($results['language'], 128) : null;
-        $channels              = $results['channels'] ?? null;
-        $release_type          = (isset($results['release_type'])) ? Catalog::check_length($results['release_type'], 32) : null;
-        $release_status        = $results['release_status'] ?? null;
-        $replaygain_track_gain = $results['replaygain_track_gain'] ?? null;
-        $replaygain_track_peak = $results['replaygain_track_peak'] ?? null;
-        $replaygain_album_gain = $results['replaygain_album_gain'] ?? null;
-        $replaygain_album_peak = $results['replaygain_album_peak'] ?? null;
-        $r128_track_gain       = $results['r128_track_gain'] ?? null;
-        $r128_album_gain       = $results['r128_album_gain'] ?? null;
-        $original_year         = Catalog::normalize_year($results['original_year'] ?? 0);
-        $barcode               = (isset($results['barcode'])) ? Catalog::check_length($results['barcode'], 64) : null;
-        $catalog_number        = (isset($results['catalog_number'])) ? Catalog::check_length($results['catalog_number'], 64) : null;
-        $version               = (isset($results['version'])) ? Catalog::check_length($results['version'], 64) : null;
-
-        if (!in_array($mode, ['vbr', 'cbr', 'abr'])) {
-            debug_event(self::class, 'Error analyzing: ' . $file . ' unknown file bitrate mode: ' . $mode, 2);
-            $mode = null;
-        }
+        $license_id            = $filtered_results['license_id'];
+        $language              = $filtered_results['language'];
+        $channels              = $filtered_results['channels'];
+        $release_type          = $filtered_results['release_type'];
+        $release_status        = $filtered_results['release_status'];
+        $replaygain_track_gain = $filtered_results['replaygain_track_gain'];
+        $replaygain_track_peak = $filtered_results['replaygain_track_peak'];
+        $replaygain_album_gain = $filtered_results['replaygain_album_gain'];
+        $replaygain_album_peak = $filtered_results['replaygain_album_peak'];
+        $r128_track_gain       = $filtered_results['r128_track_gain'];
+        $r128_album_gain       = $filtered_results['r128_album_gain'];
+        $original_year         = $filtered_results['original_year'];
+        $barcode               = $filtered_results['barcode'];
+        $catalog_number        = $filtered_results['catalog_number'];
+        $version               = $filtered_results['version'];
 
         $albumartist_id = null;
         if (isset($results['albumartist_id'])) {

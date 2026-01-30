@@ -2721,45 +2721,41 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * update_song_from_tags
-     * Updates the song info based on tags; this is called from a bunch of
-     * different places and passes in a full fledged song object, so it's a
-     * static function.
-     * FIXME: This is an ugly mess, this really needs to be consolidated and cleaned up.
+     * filter_tag_results
+     * This filters and normalizes the tag results from get_media_tags
+     * @param array<string, mixed> $results
+     * @return array<string, mixed>
      */
-    public static function update_song_from_tags(array $results, Song $song): array
+    public static function filter_tag_results(array $results, ?Song $song = null): array
     {
-        //debug_event(self::class, "update_song_from_tags results: " . print_r($results, true), 4);
-        // info for the song table. This is all the primary file data that is song related
-        $new_song               = new Song();
-        $new_song->file         = $results['file'];
-        $new_song->catalog      = $song->getCatalogId();
-        $new_song->year         = self::normalize_year($results['year'] ?? 0);
-        $new_song->disk         = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
-        $new_song->disksubtitle = $results['disksubtitle'] ?: null;
-        $new_song->isrc         = (isset($results['isrc']) && is_string($results['isrc'])) ? [$results['isrc']] : $results['isrc'] ?? [];
-        $new_song->title        = self::check_length(self::check_title($results['title'], $new_song->file));
-        $new_song->bitrate      = $results['bitrate'];
-        $new_song->rate         = $results['rate'] ?? 0;
-        $new_song->mode         = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
-        $new_song->channels     = $results['channels'];
-        $new_song->size         = $results['size'];
-        $new_song->time         = (strlen((string)$results['time']) > 5)
+        $results['catalog']      = $song?->getCatalogId() ?? $results['catalog'];
+        $results['year']         = self::normalize_year($results['year'] ?? 0);
+        $results['disk']         = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
+        $results['disksubtitle'] = $results['disksubtitle'] ?: null;
+        $results['isrc']         = (isset($results['isrc']) && is_string($results['isrc'])) ? [$results['isrc']] : $results['isrc'] ?? [];
+        $results['title']        = self::check_length(self::check_title($results['title'], $results['file']));
+        $results['bitrate']      = $results['bitrate'];
+        $results['rate']         = $results['rate'] ?? 0;
+        if (!in_array($results['mode'], ['vbr', 'cbr', 'abr'])) {
+            debug_event(self::class, 'Error analyzing: ' . $results['file'] . ' unknown file bitrate mode: ' . $results['mode'], 2);
+        }
+        $results['mode']     = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
+        $results['channels'] = $results['channels'];
+        $results['size']     = $results['size'];
+        $results['time']     = (strlen((string)$results['time']) > 5)
             ? (int)substr((string) $results['time'], -5, 5)
             : (int)($results['time']);
-        if ($new_song->time < 0) {
+        if ($results['time'] < 0) {
             // fall back to last time if you fail to scan correctly
-            $new_song->time = $song->time;
+            $results['time'] = $song?->time ?? 0;
         }
 
-        $new_song->track    = self::check_track((string)$results['track']);
-        $new_song->mbid     = (!empty($results['mb_trackid'])) ? $results['mb_trackid'] : null;
-        $new_song->composer = (!empty($results['composer'])) ? self::check_length($results['composer']) : null;
-        $new_song->mime     = $results['mime']; // UPDATE ONLY (Generated from the filename)
+        $results['track']    = self::check_track((string)$results['track']);
+        $results['mbid']     = (!empty($results['mb_trackid'])) ? $results['mb_trackid'] : null;
+        $results['composer'] = (!empty($results['composer'])) ? self::check_length($results['composer']) : null;
+        $results['mime']     = $results['mime']; // UPDATE ONLY (Generated from the filename)
 
         // info for the song_data table. used in Song::update_song
-        $new_song->comment = $results['comment'];
-        $new_song->lyrics  = $results['lyrics'];
         if (isset($results['license'])) {
             $licenseRepository = self::getLicenseRepository();
             $licenseName       = (string) $results['license'];
@@ -2774,14 +2770,90 @@ abstract class Catalog extends database_object
                 $licenseId = $license->getId();
             }
 
-            $new_song->license = $licenseId;
+            $results['license_id'] = $licenseId;
         } else {
-            $new_song->license = $song->license;
+            $results['license_id'] = $song?->license;
         }
 
-        $new_song->label = (isset($results['publisher']))
+        $results['label'] = (isset($results['publisher']))
             ? self::check_length($results['publisher'], 128)
             : null;
+
+        $results['language']              = (!empty($results['language'])) ? self::check_length($results['language'], 128) : null;
+        $results['replaygain_track_gain'] = (is_null($results['replaygain_track_gain'])) ? null : (float) $results['replaygain_track_gain'];
+        $results['replaygain_track_peak'] = (is_null($results['replaygain_track_peak'])) ? null : (float) $results['replaygain_track_peak'];
+        $results['replaygain_album_gain'] = (is_null($results['replaygain_album_gain'])) ? null : (float) $results['replaygain_album_gain'];
+        $results['replaygain_album_peak'] = (is_null($results['replaygain_album_peak'])) ? null : (float) $results['replaygain_album_peak'];
+        $results['r128_track_gain']       = (is_null($results['r128_track_gain'])) ? null : (int) $results['r128_track_gain'];
+        $results['r128_album_gain']       = (is_null($results['r128_album_gain'])) ? null : (int) $results['r128_album_gain'];
+
+        if (empty($results['genre'])) {
+            $results['genre'] = [];
+        } elseif (!is_array($results['genre'])) {
+            $results['genre'] = [$results['genre']];
+        }
+        $results['user_upload']      = $results['user_upload'] ?? null;
+        $results['artist_mbid']      = $results['mb_artistid'] ?? null;
+        $results['artist']           = self::check_length($results['artist']);
+        $results['album_mbid']       = $results['mb_albumid'] ?? null;
+        $results['album_mbid_group'] = $results['mb_albumid_group'] ?? null;
+        $results['album']            = self::check_length($results['album']);
+        $results['release_type']     = self::check_length($results['release_type'], 32);
+        $results['albumartist_mbid'] = $results['mb_albumartistid'] ?? null;
+        $results['albumartist']      = (empty($results['albumartist']))
+            ? $song?->get_album_artist_fullname()
+            : self::check_length($results['albumartist']);
+        $results['albumartist'] ??= null;
+
+        $results['original_year']  = (!empty($results['original_year'])) ? (int)$results['original_year'] : null;
+        $results['barcode']        = self::check_length($results['barcode'], 64);
+        $results['catalog_number'] = self::check_length($results['catalog_number'], 64);
+        $results['version']        = self::check_length($results['version'], 64);
+
+        $results['artists_array']          = $results['artists'] ?? [];
+        $results['mb_artistid_array']      = $results['mb_artistid_array'] ?? [];
+        $results['mb_albumartistid_array'] = $results['mb_albumartistid_array'] ?? [];
+
+        return $results;
+    }
+
+    /**
+     * update_song_from_tags
+     * Updates the song info based on tags; this is called from a bunch of
+     * different places and passes in a full fledged song object, so it's a
+     * static function.
+     * FIXME: This is an ugly mess, this really needs to be consolidated and cleaned up.
+     */
+    public static function update_song_from_tags(array $results, Song $song): array
+    {
+        //debug_event(self::class, "update_song_from_tags results: " . print_r($results, true), 4);
+        $filtered_results = self::filter_tag_results($results, $song);
+
+        // info for the song table. This is all the primary file data that is song related
+        $new_song               = new Song();
+        $new_song->file         = $filtered_results['file'];
+        $new_song->catalog      = $song->getCatalogId();
+        $new_song->year         = $filtered_results['year'];
+        $new_song->disk         = $filtered_results['disk'];
+        $new_song->disksubtitle = $filtered_results['disksubtitle'];
+        $new_song->isrc         = $filtered_results['isrc'];
+        $new_song->title        = $filtered_results['title'];
+        $new_song->bitrate      = $filtered_results['bitrate'];
+        $new_song->rate         = $filtered_results['rate'];
+        $new_song->mode         = $filtered_results['mode'];
+        $new_song->channels     = $filtered_results['channels'];
+        $new_song->size         = $filtered_results['size'];
+        $new_song->time         = $filtered_results['time'];
+        $new_song->track        = $filtered_results['track'];
+        $new_song->mbid         = $filtered_results['mb_trackid'];
+        $new_song->composer     = $filtered_results['composer'];
+        $new_song->mime         = $filtered_results['mime']; // TODO store mime in Song (Generated from the filename on new Song())
+
+        // info for the song_data table. used in Song::update_song
+        $new_song->comment = $filtered_results['comment'];
+        $new_song->lyrics  = $filtered_results['lyrics'];
+        $new_song->license = $filtered_results['license_id'];
+        $new_song->label   = $filtered_results['label'];
         if ($song->label !== null && $song->label !== '' && $song->label !== '0' && AmpConfig::get('label')) {
             // create the label if missing
             foreach (array_map('trim', explode(';', (string) $new_song->label)) as $label_name) {
@@ -2789,23 +2861,19 @@ abstract class Catalog extends database_object
             }
         }
 
-        $new_song->language              = (!empty($results['language'])) ? self::check_length($results['language'], 128) : null;
-        $new_song->replaygain_track_gain = (is_null($results['replaygain_track_gain'])) ? null : (float) $results['replaygain_track_gain'];
-        $new_song->replaygain_track_peak = (is_null($results['replaygain_track_peak'])) ? null : (float) $results['replaygain_track_peak'];
-        $new_song->replaygain_album_gain = (is_null($results['replaygain_album_gain'])) ? null : (float) $results['replaygain_album_gain'];
-        $new_song->replaygain_album_peak = (is_null($results['replaygain_album_peak'])) ? null : (float) $results['replaygain_album_peak'];
-        $new_song->r128_track_gain       = (is_null($results['r128_track_gain'])) ? null : (int) $results['r128_track_gain'];
-        $new_song->r128_album_gain       = (is_null($results['r128_album_gain'])) ? null : (int) $results['r128_album_gain'];
+        $new_song->language              = $filtered_results['language'];
+        $new_song->replaygain_track_gain = $filtered_results['replaygain_track_gain'];
+        $new_song->replaygain_track_peak = $filtered_results['replaygain_track_peak'];
+        $new_song->replaygain_album_gain = $filtered_results['replaygain_album_gain'];
+        $new_song->replaygain_album_peak = $filtered_results['replaygain_album_peak'];
+        $new_song->r128_track_gain       = $filtered_results['r128_track_gain'];
+        $new_song->r128_album_gain       = $filtered_results['r128_album_gain'];
 
         // genre is used in the tag and tag_map tables
         $new_tag_array = [];
-        if (!empty($results['genre'])) {
-            if (!is_array($results['genre'])) {
-                $results['genre'] = [$results['genre']];
-            }
-
+        if (!empty($filtered_results['genre'])) {
             // check if this thing has been renamed into something else
-            foreach ($results['genre'] as $genreName) {
+            foreach ($filtered_results['genre'] as $genreName) {
                 $genre = Tag::construct_from_name($genreName);
                 if ($genre->isNew() === false) {
                     if ($genre->is_hidden) {
@@ -2849,30 +2917,29 @@ abstract class Catalog extends database_object
         }
 
         // info for the artist table.
-        $artist           = self::check_length($results['artist']);
-        $artist_mbid      = $results['mb_artistid'];
-        $albumartist_mbid = $results['mb_albumartistid'];
-        // info for the album table.
-        $album      = self::check_length($results['album']);
-        $album_mbid = $results['mb_albumid'];
-        // year is also included in album
-        $album_mbid_group = $results['mb_albumid_group'];
-        $release_type     = self::check_length($results['release_type'], 32);
-        $release_status   = $results['release_status'];
-        $albumartist      = (empty($results['albumartist']))
+        $artist           = $filtered_results['artist'];
+        $artist_mbid      = $filtered_results['mb_artistid'];
+        $albumartist_mbid = $filtered_results['mb_albumartistid'];
+        // info for the album table. (year is also included in album)
+        $album            = $filtered_results['album'];
+        $album_mbid       = $filtered_results['mb_albumid'];
+        $album_mbid_group = $filtered_results['mb_albumid_group'];
+        $release_type     = $filtered_results['release_type'];
+        $release_status   = $filtered_results['release_status'];
+        $albumartist      = (empty($filtered_results['albumartist']))
             ? $song->get_album_artist_fullname()
-            : self::check_length($results['albumartist']);
+            : self::check_length($filtered_results['albumartist']);
         $albumartist ??= null;
 
-        $original_year  = (!empty($results['original_year'])) ? (int)$results['original_year'] : null;
-        $barcode        = self::check_length($results['barcode'], 64);
-        $catalog_number = self::check_length($results['catalog_number'], 64);
-        $version        = self::check_length($results['version'], 64);
+        $original_year  = $filtered_results['original_year'];
+        $barcode        = $filtered_results['barcode'];
+        $catalog_number = $filtered_results['catalog_number'];
+        $version        = $filtered_results['version'];
 
         // info for the artist_map table.
-        $artists_array          = $results['artists'] ?? [];
-        $artist_mbid_array      = $results['mb_artistid_array'] ?? [];
-        $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? [];
+        $artists_array          = $filtered_results['artists'];
+        $artist_mbid_array      = $filtered_results['mb_artistid_array'];
+        $albumartist_mbid_array = $filtered_results['mb_albumartistid_array'];
         // if you have an artist array this will be named better than what your tags will give you
         if (!empty($artists_array)) {
             if (
@@ -3220,10 +3287,10 @@ abstract class Catalog extends database_object
         }
 
         // If song rating tag exists and is well formed (array user=>rating), update it
-        if ($song->id && is_array($results) && array_key_exists('rating', $results) && is_array($results['rating']) && !empty($results['rating'])) {
+        if ($song->id && is_array($results) && array_key_exists('rating', $filtered_results) && is_array($filtered_results['rating']) && !empty($filtered_results['rating'])) {
             $o_rating = new Rating($song->id, 'song');
             // For each user's ratings, call the function
-            foreach ($results['rating'] as $user => $rating) {
+            foreach ($filtered_results['rating'] as $user => $rating) {
                 debug_event(self::class, "Updating rating for Song " . $song->id . sprintf(' to %s for user %s', $rating, $user), 5);
                 if (
                     (int)$user > 0 &&
