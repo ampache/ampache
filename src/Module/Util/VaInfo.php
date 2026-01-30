@@ -70,6 +70,7 @@ final class VaInfo implements VaInfoInterface
         'genre' => null,
         'isrc' => null,
         'language' => null,
+        'license' => null,
         'lyrics' => null,
         'mb_albumartistid' => null,
         'mb_albumartistid_array' => null,
@@ -615,6 +616,7 @@ final class VaInfo implements VaInfoInterface
      *     'genre': ?string,
      *     'isrc': ?string[],
      *     'language': ?string,
+     *     'license': ?string,
      *     'lyrics': ?string,
      *     'mb_albumartistid': ?string,
      *     'mb_albumartistid_array': ?string[],
@@ -731,6 +733,7 @@ final class VaInfo implements VaInfoInterface
             $info['version']        = (!$info['version'] && array_key_exists('version', $tags)) ? trim((string)$tags['version']) : $info['version'];
 
             $info['language'] = (!$info['language'] && array_key_exists('language', $tags)) ? trim((string)$tags['language']) : $info['language'];
+            $info['license']  = (!$info['license'] && array_key_exists('license', $tags)) ? trim((string)$tags['license']) : $info['license'];
             $info['comment']  = (!$info['comment'] && array_key_exists('comment', $tags)) ? trim((string)$tags['comment']) : $info['comment'];
             $info['lyrics']   = (!$info['lyrics'] && array_key_exists('lyrics', $tags) && is_string($tags['lyrics'])) ? nl2br(strip_tags($tags['lyrics'])) : $info['lyrics'];
 
