@@ -2799,13 +2799,13 @@ class OpenSubsonic_Json_Data
                 if ($playlist->isNew()) {
                     continue;
                 }
-                $json[] = self::_getPlaylist_Search($playlist);
+                $json['playlist'][] = self::_getPlaylist_Search($playlist);
             } else {
                 $playlist = new Playlist((int)$playlist_id);
                 if ($playlist->isNew()) {
                     continue;
                 }
-                $json[] = self::_getPlaylist_Playlist($playlist);
+                $json['playlist'][] = self::_getPlaylist_Playlist($playlist);
             }
         }
 
