@@ -65,7 +65,6 @@ URL paths are stil supported but they will be converted on the next catalog upda
   * References to dead code
   * Catch and log download exceptions
 
-
 ## Ampache 7.8.0
 
 Bitrate options in the database for transcoding are defined in units of 1000 (e.g. 128 == 128000)
@@ -113,7 +112,7 @@ If you are also having issues try downgrading to composer [2.8.12](https://getco
 * Don't change the page title when `song_page_title` is enabled
 * Update translation guidelines for new CLI Transifex version
 * Update composer and npm packages
-* Update alternative streaming action (Play2Action) to try and stop closing transcode streams early 
+* Update alternative streaming action (Play2Action) to try and stop closing transcode streams early
 * Subsonic
   * Filter list calls by your user instead of public/shared information by default (disable `subsonic_single_user_data` to restore old behavior)
 
@@ -230,7 +229,7 @@ If you are also having issues try downgrading to composer [2.8.12](https://getco
 * Art inserted from URL would insert as a PHP mime type
 * Garbage Collection from the Web UI didn't send catalogs correctly
 * Filename checked as a change in tag comparison
-* Bad regex in MusicBrainz art collector 
+* Bad regex in MusicBrainz art collector
 * Null values in `parse_mbid_array`
 * Search
   * Local image `has_image` search didn't count missing joins
@@ -1762,7 +1761,7 @@ Use `php bin/installer htaccess -e` to update your htaccess files
 ### Added
 
 * Plugins
-  * Lyrist Lyrics (https://github.com/asrvd/lyrist)
+  * Lyrist Lyrics (`https://github.com/asrvd/lyrist`)
 
 ### Changed
 
@@ -1928,7 +1927,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Rework user_playlists (used for Now Playing & Play Queue operations)
 * Workaround time for dsub playqueue by converting to UTC
 * An upload_catalog should only be a music catalog
-* Redirect Democratic and Random Play actions with a http 308 response (https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308)
+* Redirect Democratic and Random Play actions with a http 308 response (`https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308`)
 * Add username column to playlist and search rows and allow sorting
 * Show empty properties on song pages
 * Split filename and folder properties on song and video pages
@@ -2052,7 +2051,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 ### Added
 
-* Fork https://github.com/scaron/prettyphoto and add jQuery3 support
+* Fork `https://github.com/scaron/prettyphoto` and add jQuery3 support
 * Added an empty example plugin to the docs folder AmpacheExample.php
 * CLI
   * New cli command `bin/cli show:version` (Print the Ampache version number)
@@ -3554,7 +3553,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Added Spotify art searches for both album and artist images.
 * Updated component installer and php-cs-fixer package.
 * Translation updates (April 2020, May 2020, July 2020)
-* Added declare(strict_types=0); to lib/* and lib/class/* (requires more work before it can be enabled)
+* Added declare(strict_types=0); to `lib/*` and `lib/class/*` (requires more work before it can be enabled)
 * Add 250 for search form limits in the web UI. (Jump from 100 to 500 is pretty big)
 * Add Recently updated/added to search rules
 * Add regex searching to text fields. ([<https://mariadb.com/kb/en/regexp/>])
@@ -4612,7 +4611,7 @@ Notes about this release that can't be summed up in a log line
   %10 reduces cpu load due to javascript excution (Thx Dmole)
 * Add bmp to the list of allowed / supported album art types
 * Strip extranious whitespace from cmdline catalog update (Thx ascheel)
-* Fix catalog size math for catalogs up to 4TB (Thx Joost.t.Hart@planet.nl)
+* Fix catalog size math for catalogs up to 4TB (Thx <Joost.t.Hart@planet.nl>)
 * Fix httpQ not correctly skipping to new song
 * Fix refreshing of Localplay playlist when an item is skipped to
 * Fix missing Content-Disposition filename= on non-transcoded songs
@@ -4658,7 +4657,7 @@ Notes about this release that can't be summed up in a log line
 * Fix random methods not working for Localplay
 * Fixed extra space on prefixed albums (Thx ibizaman)
 * Add missing operator on tag and rating searches so they will
-  work with other methods (Thx kiehnet@netscape.net)
+  work with other methods (Thx <kiehnet@netscape.net>)
 * Add MusicBrainz MBID support to uniqly identify albums and
   also get more album art (Thx flowerysong)
 * Fix the URL to song function
