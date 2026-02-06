@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Artist;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\Core;
+use Ampache\Plugin\AmpacheMusicBrainz;
 use Ampache\Repository\Model\Artist;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -64,7 +65,7 @@ final class UpdateFromMusicBrainzAction implements ApplicationActionInterface
 
         // load up musicbrainz or cause an error
         $plugin = new Plugin('musicbrainz');
-        if ($plugin->_plugin !== null) {
+        if ($plugin->_plugin instanceof AmpacheMusicBrainz) {
             if (!$plugin->load($user)) {
                 throw new AccessDeniedException('Unable to load musicbrainz plugin');
             }

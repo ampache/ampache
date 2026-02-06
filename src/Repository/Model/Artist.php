@@ -31,6 +31,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\VaInfo;
+use Ampache\Plugin\AmpacheMusicBrainz;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
@@ -732,7 +733,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         if ($mbid !== null && $mbid !== '' && $mbid !== '0') {
             $plugin      = new Plugin('musicbrainz');
             $parsed_mbid = VaInfo::parse_mbid($mbid);
-            $data        = $plugin->_plugin->get_artist($parsed_mbid);
+            $data        = ($parsed_mbid && $plugin->_plugin instanceof AmpacheMusicBrainz)
+                ? $plugin->_plugin->get_artist($parsed_mbid)
+                : [];
             if (array_key_exists('name', $data)) {
                 $trimmed = Catalog::trim_prefix(trim((string)$data['name']));
                 $name    = $trimmed['string'];
@@ -786,7 +789,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
             // if that fails, insert a new artist and return the id
             $plugin = new Plugin('musicbrainz');
-            $data   = $plugin->_plugin->get_artist($parsed_mbid);
+            $data   = ($plugin->_plugin instanceof AmpacheMusicBrainz)
+                ? $plugin->_plugin->get_artist($parsed_mbid)
+                : [];
             if (array_key_exists('name', $data)) {
                 $trimmed = Catalog::trim_prefix(trim((string)$data['name']));
                 $name    = $trimmed['string'];

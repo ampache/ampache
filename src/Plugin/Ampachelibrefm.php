@@ -56,7 +56,7 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
 
     private $challenge;
 
-    private string $api_key = '';
+    public string $api_key = '';
 
     private string $secret = '';
 

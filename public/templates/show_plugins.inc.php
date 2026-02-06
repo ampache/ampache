@@ -44,11 +44,13 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
     <tbody>
         <?php
         foreach ($plugins as $plugin_name) {
-            $plugin            = new Plugin($plugin_name);
-            $installed_version = ($plugin->_plugin !== null)
-                ? Plugin::get_plugin_version($plugin->_plugin->name)
-                : 0;
-            if ($installed_version == 0) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->_plugin === null) {
+                continue;
+            }
+
+            $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
+            if ($installed_version === 0) {
                 $action = "<a href=\"" . $admin_path . "/modules.php?action=confirm_install_plugin&plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Activate') . "</a>";
             } else {

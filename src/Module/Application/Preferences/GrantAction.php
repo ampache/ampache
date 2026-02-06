@@ -29,6 +29,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Plugin\AmpacheLastfm;
+use Ampache\Plugin\Ampachelibrefm;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -82,7 +84,13 @@ final class GrantAction implements ApplicationActionInterface
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->_plugin !== null) {
                     $plugin->load($user);
-                    if ($plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))) {
+                    if (
+                        (
+                            $plugin->_plugin instanceof Ampachelibrefm ||
+                            $plugin->_plugin instanceof AmpacheLastfm
+                        ) &&
+                        $plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))
+                    ) {
                         $title = T_('No Problem');
                         $text  = T_('Your account has been updated') . ' : ' . $plugin_name;
                     } else {

@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Plugin\PluginExternalShareInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Share;
@@ -92,7 +93,7 @@ final class ExternalShareAction implements ApplicationActionInterface
         }
 
         $plugin = new Plugin(Core::get_get('plugin'));
-        if ($plugin->_plugin === null) {
+        if (!$plugin->_plugin instanceof PluginExternalShareInterface) {
             throw new AccessDeniedException('Access Denied - Unknown external share plugin');
         }
         $plugin->load($user);
@@ -114,6 +115,9 @@ final class ExternalShareAction implements ApplicationActionInterface
         );
 
         $share = new Share($share_id);
+        if ($share->public_url === null) {
+            throw new AccessDeniedException('Access Denied - Unable to create share');
+        }
 
         return $this->responseFactory
             ->createResponse(StatusCode\RFC\RFC7231::FOUND)

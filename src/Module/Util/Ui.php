@@ -31,6 +31,8 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
+use Ampache\Plugin\AmpacheLastfm;
+use Ampache\Plugin\Ampachelibrefm;
 use Ampache\Plugin\PluginDisplayOnFooterInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
@@ -1327,11 +1329,13 @@ class Ui implements UiInterface
                 // construct links for granting access Ampache application to Last.fm and Libre.fm
                 $plugin_name = ucfirst(str_replace('_grant_link', '', $name));
                 $plugin      = new Plugin($plugin_name);
-                $url         = $plugin->_plugin->url;
-                $api_key     = rawurlencode($plugin->_plugin->api_key);
-                $callback    = rawurlencode(AmpConfig::get_web_path() . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
-                /* HINT: Plugin Name */
-                echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . self::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
+                if ($plugin->_plugin instanceof Ampachelibrefm || $plugin->_plugin instanceof AmpacheLastfm) {
+                    $url      = $plugin->_plugin->url;
+                    $api_key  = rawurlencode((string)$plugin->_plugin->api_key);
+                    $callback = rawurlencode(AmpConfig::get_web_path() . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
+                    /* HINT: Plugin Name */
+                    echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . self::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
+                }
                 break;
             case 'bandwidth':
             case 'features':

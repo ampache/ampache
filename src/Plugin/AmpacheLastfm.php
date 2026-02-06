@@ -54,7 +54,7 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
 
     private $challenge;
 
-    private ?string $api_key = null;
+    public ?string $api_key = null;
 
     private ?string $secret = null;
 

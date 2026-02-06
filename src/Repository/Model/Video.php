@@ -1107,6 +1107,10 @@ class Video extends database_object implements
      * the ones in the database to see if they have changed
      * it returns false if nothing has changes, or the true
      * if they have. Static because it doesn't need this
+     * @return array{
+     *     change: bool,
+     *     element: array<string, string>
+     * }
      */
     public static function compare_video_information(Video $video, Video $new_video): array
     {

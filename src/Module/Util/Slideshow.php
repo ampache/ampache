@@ -28,6 +28,7 @@ namespace Ampache\Module\Util;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Plugin\Ampacheflickr;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -63,7 +64,9 @@ final class Slideshow implements SlideshowInterface
         $images = [];
 
         foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::SLIDESHOW, $user) as $plugin) {
-            $images += $plugin->_plugin->get_photos($song->get_artist_fullname());
+            if ($plugin->_plugin instanceof Ampacheflickr) {
+                $images += $plugin->_plugin->get_photos($song->get_artist_fullname());
+            }
         }
 
         return $images;

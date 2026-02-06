@@ -204,16 +204,10 @@ class Song extends database_object implements
             return;
         }
 
-        $info = $this->has_info($song_id);
-        if ($info === []) {
+        if (!$this->has_info($song_id)) {
             return;
         }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
-
-        $this->id   = (int)$song_id;
         $this->type = strtolower(pathinfo((string)$this->file, PATHINFO_EXTENSION));
         $this->mime = self::type_to_mime($this->type);
     }
@@ -554,10 +548,15 @@ class Song extends database_object implements
         return true;
     }
 
-    private function has_info(int $song_id): array
+    private function has_info(int $song_id): bool
     {
         if (parent::is_cached('song', $song_id)) {
-            return parent::get_from_cache('song', $song_id);
+            $results = parent::get_from_cache('song', $song_id);
+            foreach ($results as $key => $value) {
+                $this->$key = $value;
+            }
+
+            return true;
         }
 
         $sql        = "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `album`.`album_artist` AS `albumartist`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?";
@@ -565,11 +564,14 @@ class Song extends database_object implements
         $results    = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
             parent::add_to_cache('song', $song_id, $results);
+            foreach ($results as $key => $value) {
+                $this->$key = $value;
+            }
 
-            return $results;
+            return true;
         }
 
-        return [];
+        return false;
     }
 
     public static function has_id(int|string $song_id): bool
@@ -1030,6 +1032,10 @@ class Song extends database_object implements
      * the ones in the database to see if they have changed
      * it returns false if nothing has changes, or the true
      * if they have. Static because it doesn't need this
+     * @return array{
+     *     change: bool,
+     *     element: array<string, string>
+     * }
      */
     public static function compare_song_information(Song $song, Song $new_song): array
     {
@@ -1074,6 +1080,10 @@ class Song extends database_object implements
      * compare_media_information
      * @param string[] $string_array
      * @param string[] $skip_array
+     * @return array{
+     *     change: bool,
+     *     element: array<string, string>
+     * }
      */
     public static function compare_media_information(Video|Song $media, Video|Song $new_media, array $string_array, array $skip_array): array
     {
@@ -2206,7 +2216,10 @@ class Song extends database_object implements
         if ($user instanceof User) {
             foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin instanceof PluginGetLyricsInterface && $plugin->load($user)) {
+                if (
+                    $plugin->_plugin instanceof PluginGetLyricsInterface &&
+                    $plugin->load($user)
+                ) {
                     $lyrics = $plugin->_plugin->get_lyrics($this);
                     if (!empty($lyrics)) {
                         // save the lyrics if not set before

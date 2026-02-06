@@ -33,9 +33,9 @@ use Ampache\Plugin\PluginEnum;
 
 class Plugin
 {
-    public ?string $name;
+    public ?string $name = null;
 
-    public $_plugin;
+    public ?AmpachePlugin $_plugin = null;
 
     /**
      * Constructor
@@ -44,34 +44,17 @@ class Plugin
      */
     public function __construct(?string $name = null)
     {
-        if (!$name) {
-            $this->_plugin = null;
-            $this->name    = null;
-
-            return;
-        }
-
-        $this->has_info($name);
-    }
-
-    /**
-     * has_info
-     */
-    private function has_info(string $cname): void
-    {
-        $controller = PluginEnum::LIST[strtolower($cname)] ?? null;
+        $controller = ($name)
+            ? PluginEnum::LIST[strtolower($name)] ?? null
+            : null;
         if ($controller === null) {
-            debug_event(self::class, 'Cannot find plugin `' . $cname . '`.', 1);
-            $this->_plugin = null;
-            $this->name    = null;
+            debug_event(self::class, 'Cannot find plugin `' . $name . '`.', 1);
 
             return;
         }
 
         $this->_plugin = new $controller();
-        $this->name    = $cname;
-
-        $this->is_valid();
+        $this->name    = $name;
     }
 
     /**

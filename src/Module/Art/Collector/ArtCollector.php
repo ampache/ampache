@@ -146,12 +146,13 @@ final class ArtCollector implements ArtCollectorInterface
         foreach ($artOrder as $method) {
             $data = [];
             if (in_array(strtolower($method), $plugin_names)) {
-                $plugin            = new Plugin($method);
-                $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
-                if ($installed_version > 0) {
-                    if ($plugin->_plugin instanceof PluginGatherArtsInterface && $plugin->load($user)) {
-                        $data = $plugin->_plugin->gather_arts($type, $options, $limit);
-                    }
+                $plugin = new Plugin($method);
+                if (
+                    $plugin->_plugin instanceof PluginGatherArtsInterface &&
+                    Plugin::get_plugin_version($plugin->_plugin->name) > 0 &&
+                    $plugin->load($user)
+                ) {
+                    $data = $plugin->_plugin->gather_arts($type, $options, $limit);
                 }
             } else {
                 $handlerClassName = ArtCollectorTypeEnum::TYPE_CLASS_MAP[$method] ?? null;

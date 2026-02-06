@@ -988,19 +988,20 @@ final class VaInfo implements VaInfoInterface
         $tag_order = array_diff($tag_order, ['getid3', 'filename']);
         foreach ($tag_order as $tag_source) {
             if (in_array($tag_source, $plugin_names)) {
-                $plugin            = new Plugin($tag_source);
-                $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
-                if ($installed_version > 0) {
-                    if ($plugin->_plugin instanceof PluginGetMetadataInterface && $plugin->load($user)) {
-                        $this->tags[$tag_source] = $plugin->_plugin->get_metadata(
-                            $this->gatherTypes,
-                            self::clean_tag_info(
-                                $this->tags,
-                                self::get_tag_type($this->tags, $this->get_metadata_order_key()),
-                                $this->filename
-                            )
-                        );
-                    }
+                $plugin = new Plugin($tag_source);
+                if (
+                    $plugin->_plugin instanceof PluginGetMetadataInterface &&
+                    Plugin::get_plugin_version($plugin->_plugin->name) > 0 &&
+                    $plugin->load($user)
+                ) {
+                    $this->tags[$tag_source] = $plugin->_plugin->get_metadata(
+                        $this->gatherTypes,
+                        self::clean_tag_info(
+                            $this->tags,
+                            self::get_tag_type($this->tags, $this->get_metadata_order_key()),
+                            $this->filename
+                        )
+                    );
                 }
             } elseif (!in_array($tag_source, ['filename', 'getid3'])) {
                 $this->logger->debug(
