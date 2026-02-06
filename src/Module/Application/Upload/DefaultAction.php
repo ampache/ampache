@@ -111,7 +111,7 @@ final class DefaultAction implements ApplicationActionInterface
             );
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            echo sprintf(T_('Not Found: %s'), 'upload_catalog') . '<br>' . "<a href=\"https://github.com/ampache/ampache/wiki/upload-catalogs\" target=\"_blank\">" . T_('Help') . " " . Ui::get_material_symbol('open_in_new', T_('Link')) . "</a>";
+            echo sprintf(T_('Not Found: %s'), 'upload_catalog') . '<br>' . "<a href=\"https://ampache.org/docs/help/upload-catalogs\" target=\"_blank\">" . T_('Help') . " " . Ui::get_material_symbol('open_in_new', T_('Link')) . "</a>";
         }
         // Show the Footer
         $this->ui->showQueryStats();

@@ -50,7 +50,7 @@ use Ampache\Module\Util\Ui;
     <div class="jumbotron" style="margin-top: 70px">
       <h1><?php echo T_('Ampache Configuration Parse Error'); ?></h1>
       <p><?php /* HINT: ampache config file path */ echo sprintf(T_('You may have reached this page because your %s configuration file was not parsable'), '<strong>/config/ampache.cfg.php</strong>'); ?></p>
-      <p><a href="https://github.com/ampache/ampache/wiki/FAQ#im-getting-ampache-configuration-parse-error" rel="nofollow"><?php echo T_('Please visit the wiki for help'); ?></a></p>
+      <p><a href="https://ampache.org/docs/help/troubleshooting/faq#im-getting-ampache-configuration-parse-error" rel="nofollow"><?php echo T_('Please visit the wiki for help'); ?></a></p>
     </div>
   </div>
 </body>

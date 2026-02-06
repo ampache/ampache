@@ -1024,7 +1024,7 @@ Fixed some slowdowns due to preference name and location look ups happening for 
 
 ## Ampache 7.0.0
 
-Information and changes for this major release are recorded in the wiki. [Ampache7 for Admins](https://github.com/ampache/ampache/wiki/ampache7-for-admins) and [Ampache7 for Users](https://github.com/ampache/ampache/wiki/ampache7-for-users).
+Information and changes for this major release are recorded in the wiki. [Ampache7 for Admins](https://ampache.org/docs/help/troubleshooting/ampache7-for-admins) and [Ampache7 for Users](https://ampache.org/docs/help/troubleshooting/ampache7-for-users).
 
 Ampache7 still supports upgrading your database from any version higher than 3.6.0 (released in 2013!)
 
@@ -1378,7 +1378,7 @@ This release has made greater use of browses reducing reliance on customizing mi
 
 Work on Ampache7 is ongoing.
 
-Check out the [wiki](https://github.com/ampache/ampache/wiki/ampache7-for-admins) for information as some changes will be backported to Ampache6.
+Check out the [wiki](https://ampache.org/docs/help/troubleshooting/ampache7-for-admins) for information as some changes will be backported to Ampache6.
 
 There has been a change to the way Random Searches work for Artist and Albums
 These searches will now use to rules for that object type and then return the songs contained in those objects
@@ -1793,11 +1793,11 @@ Use `php bin/installer htaccess -e` to update your htaccess files
 
 **NOTE** For database update 600005; please consider using the CLI update command (`php bin/cli admin:updateDatabase -e`)
 
-For information about Admin and backend changes check out [Ampache6 for Admins](https://github.com/ampache/ampache/wiki/ampache6-details)
+For information about Admin and backend changes check out [Ampache6 for Admins](https://ampache.org/docs/old-information/ampache6-details)
 
-For information about what you'll see and changed behavior's check out [Ampache6 for Users](https://github.com/ampache/ampache/wiki/ampache6-for-users)
+For information about what you'll see and changed behavior's check out [Ampache6 for Users](https://ampache.org/docs/old-information/ampache6-for-users)
 
-You can now use a permanent session token for streaming. (check out the [wiki](https://github.com/ampache/ampache/wiki/ampache6-details#allow-permalink-user-streams)!)
+You can now use a permanent session token for streaming. (check out the [wiki](https://ampache.org/docs/old-information/ampache6-details#allow-permalink-user-streams)!)
 
 You can find example Subsonic responses from an official server and Ampache server [here](https://ampache.org/api/subsonic)
 
@@ -1922,7 +1922,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Change all the Information pages into browses (Default to Album/Album Disk)
 * Add extra types to the Information pages
 * Combined all Albums into single Album objects
-* Remove Channels from Ampache (Use [icecast](https://github.com/ampache/ampache/wiki/Ampache-Icecast-and-Liquidsoap) instead)
+* Remove Channels from Ampache (Use [icecast](https://ampache.org/docs/configuration/Ampache-Icecast-and-Liquidsoap/) instead)
 * Download URL parameter order matching "client, action, cache"
 * Add `barcode`, `catalog_number` and `subtitle` to Album::check() for comparison checks
 * Rework user_playlists (used for Now Playing & Play Queue operations)
@@ -1977,7 +1977,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Art from share page
 * Remove the auth parameter from image URLs
 * Option to 'Force Democratic Play' has been removed from the config page
-  * Check the [wiki](https://github.com/ampache/ampache/wiki/ampache6-details#configure-democratic-playlist-options-directly) for details
+  * Check the [wiki](https://ampache.org/docs/old-information/ampache6-details#configure-democratic-playlist-options-directly) for details
 * Remove all reference to deleted database updates (not required)
 * Plugins
   * The Movie Database (TMDB) plugin
@@ -2313,7 +2313,7 @@ You will get this error when using the zip releases so we need to do it. At leas
 
 Private catalogs have been given a lot of love. This feature allows you to assign a catalog to multiple users instead of just one.
 
-Check out the [wiki](https://github.com/ampache/ampache/wiki/catalog-filters) for more information about this feature.
+Check out the [wiki](https://ampache.org/docs/configuration/catalog-filters/) for more information about this feature.
 
 **NOTE** Any user that has a private catalog will have their own filter group created which includes all public catalogs
 
@@ -2363,7 +2363,7 @@ PHP8.1 has now been fixed up completely and is now fully supported.
 
 ### Changed
 
-* Private catalogs have been migrated into [Catalog filters](https://github.com/ampache/ampache/wiki/catalog-filters)
+* Private catalogs have been migrated into [Catalog filters](https://ampache.org/docs/configuration/catalog-filters/)
 * Interface cookies for the sidebar state have new names matching their page and group
 * Made getID function required for library_item's
 * Update codeql-analysis.yml to v2
@@ -2558,7 +2558,7 @@ This cycle we have added support for multiple Album and Song artists.
 
 This allows multiple artists to be part of a single song/album object and is created from file tags.
 
-Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for more information about this feature.
+Check out the [wiki](https://ampache.org/docs/configuration/multi-artist/) for more information about this feature.
 
 The old and long ignored module [jPlayer](https://github.com/jplayer/jPlayer) has been forked into the base Ampache code.
 
@@ -2967,10 +2967,10 @@ API3 is not recommended for use outside of running old applications and it is re
 
 Ampache 5 is here and it's big!
 
-* Check out [Ampache 5 for Admins](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
-* As well as [Ampache 5 for Users](https://github.com/ampache/ampache/wiki/Ampache-5-for-users)
-* The bin folder has had a major [rework](https://github.com/ampache/ampache/wiki/cli-faq)
-* You can pre cache files using [Transcode Caching](https://github.com/ampache/ampache/wiki/Transcode-Caching)
+* Check out [Ampache 5 for Admins](https://ampache.org/docs/old-information/ampache5-changes)
+* As well as [Ampache 5 for Users](https://ampache.org/docs/old-information/ampache5-for-users)
+* The bin folder has had a major [rework](https://ampache.org/docs/help/troubleshooting/cli)
+* You can pre cache files using [Transcode Caching](https://ampache.org/docs/configuration/transcoding/transcode-caching)
 
 **IMPORTANT** instead of using date() we are now using IntlDateFormatter and your locale to identify formats.
 This means that 'custom_datetime' based on the date() format is incorrect and will look weird.
@@ -2993,7 +2993,7 @@ If you want to keep utf8 make sure you set it before running updates.
 ### Added
 
 * Private catalogs! You can now set a public or per user catalog for your music folders
-* Cache transcoded files before a user requests them with [Transcode Caching](https://github.com/ampache/ampache/wiki/Transcode-Caching)
+* Cache transcoded files before a user requests them with [Transcode Caching](https://ampache.org/docs/configuration/transcoding/transcode-caching)
 * Added a CONTRIBUTING.md file
 * php-intl is now required for translation of date formats into your locale
 * Added %R (Release Status) to catalog pattern matching
@@ -3048,7 +3048,7 @@ If you want to keep utf8 make sure you set it before running updates.
   * catalog_ignore_pattern: Allow you to ignore audio, video and playlist files with a regex
 * NEW cli commands
   * `run:moveCatalogPath`: Change a Catalog path
-  * `run:cacheProcess`: Run the [cache process](https://github.com/ampache/ampache/wiki/Transcode-Caching)
+  * `run:cacheProcess`: Run the [cache process](https://ampache.org/docs/configuration/transcoding/transcode-caching)
   * `export:databaseArt`: Export all database art to local_metadata_dir
 
 ### Changed
@@ -3234,7 +3234,7 @@ If you want to keep utf8 make sure you set it before running updates.
 
 ## Ampache 4.4.0-release
 
-Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
+Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://ampache.org/docs/old-information/ampache5-changes)
 
 ### Added
 
@@ -3830,7 +3830,7 @@ Notes about this release that can't be summed up in a log line
 * HTML5 doctype across the board. (DOCTYPE html)
 * Lots of HTML and UI fixes courtesy of @kuzi-moto
 * If you are using charts/graphs there has been a change regarding c-pchart
-  * [chart-faq](https://github.com/ampache/ampache/wiki/chart-faq)
+  * [chart-faq](https://ampache.org/docs/help/troubleshooting/cli)
 * Numerous catalog updates to allow data migration when updating file tags meaning faster tag updates/catalog verify! (Updating an album would update each file multiple times)
   * UserActivity::migrate, Userflag::migrate, Rating::migrate, Catalog::migrate,
   * Shoutbox::migrate, Recommendation::migrate, Tag::migrate, Share::migrate

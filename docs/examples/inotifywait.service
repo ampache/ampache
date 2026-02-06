@@ -1,7 +1,7 @@
 [Unit]
 Description=inotifywait_catalog1
 After=network.target remote-fs.target nss-lookup.target
-Documentation=https://github.com/ampache/ampache/wiki
+Documentation=https://ampache.org/docs/
 
 [Service]
 PrivateTmp=true

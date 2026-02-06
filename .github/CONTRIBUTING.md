@@ -7,7 +7,7 @@ submitting bug reports and feature requests or writing code which can be incorpo
 Anyone can take part in our community and it there are no rules or requirements stopping you from joining.
 Hopefully this document will help you make the jump!
 
-Please read [Development section](https://github.com/ampache/ampache/wiki#development).
+Please read [Development section](https://ampache.org/docs/development/CONTRIBUTING).
 
 ## Bug report
 
@@ -15,7 +15,7 @@ Anyone can take part in our community and it there are no rules or requirements 
 Hopefully this document will help you make the jump!
 
 Be sure the bug is not already fixed in `develop` branch or already reported in current open issues.
-Please add [some logs](https://github.com/ampache/ampache/wiki/Troubleshooting#enable-logging) with your new issue.
+Please add [some logs](ampache.org/docs/help/#enable-logging) with your new issue.
 
 ## Translations
 

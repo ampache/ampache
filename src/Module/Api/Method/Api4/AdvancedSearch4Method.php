@@ -53,7 +53,7 @@ final class AdvancedSearch4Method
      *   * rule input (e.g. rule_1_input, rule_2_input)
      *
      * Refer to the wiki for further information on rule_* types and data
-     * https://github.com/ampache/ampache/wiki/XML-methods
+     * https://ampache.org/api/api-xml-methods
      *
      * operator        = (string) 'and'|'or' (whether to match one rule or all)
      * rule_1          = (string)
