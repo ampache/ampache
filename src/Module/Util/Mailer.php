@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -145,7 +145,7 @@ final class Mailer implements MailerInterface
      * This returns an array of userids for people who have e-mail
      * addresses based on the passed filter
      * @param string $filter
-     * @return array<int, array{id: string, fullname: string, email: string}>
+     * @return array<int, array{id: string, fullname: ?string, username: string, email: string}>
      */
     public static function get_users(string $filter): array
     {
@@ -177,6 +177,7 @@ final class Mailer implements MailerInterface
             $results[] = [
                 'id' => $row['id'],
                 'fullname' => $row['fullname'],
+                'username' => $row['username'],
                 'email' => $row['email']
             ];
         }
@@ -200,6 +201,7 @@ final class Mailer implements MailerInterface
             if (function_exists('mb_encode_mimeheader')) {
                 $recipient_name = mb_encode_mimeheader($recipient_name);
             }
+
             $mail->addAddress((string) $this->recipient, $recipient_name);
         } else {
             $mail = $phpmailer;
@@ -268,10 +270,12 @@ final class Mailer implements MailerInterface
         $mail = new PHPMailer();
 
         foreach (self::get_users($group_name) as $member) {
+            $recipient_name = (string)($member['fullname'] ?? $member['username']);
             if (function_exists('mb_encode_mimeheader')) {
-                $member['fullname'] = mb_encode_mimeheader($member['fullname']);
+                $recipient_name = mb_encode_mimeheader($recipient_name);
             }
-            $mail->addBCC($member['email'], $member['fullname']);
+
+            $mail->addBCC($member['email'], $recipient_name);
         }
 
         return $this->send($mail);

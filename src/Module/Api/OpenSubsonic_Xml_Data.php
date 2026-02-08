@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -69,6 +69,8 @@ class OpenSubsonic_Xml_Data
 {
     /**
      * _createResponse
+     *
+     * Common answer wrapper.
      * https://opensubsonic.netlify.app/docs/responses/subsonicresponse/
      */
     private static function _createResponse(string $status = 'ok'): SimpleXMLElement
@@ -86,6 +88,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * _createSuccessResponse
+     *
+     * https://opensubsonic.netlify.app/docs/responses/subsonicresponse/
      */
     private static function _createSuccessResponse(string $function = ''): SimpleXMLElement
     {
@@ -97,6 +101,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * _createFailedResponse
+     *
+     * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
      */
     private static function _createFailedResponse(string $function = ''): SimpleXMLElement
     {
@@ -120,6 +126,7 @@ class OpenSubsonic_Xml_Data
     /**
      * addError
      * Add a failed subsonic-response with error information.
+     * https://opensubsonic.netlify.app/docs/responses/error/
      */
     public static function addError(int $code, string $function): SimpleXMLElement
     {
@@ -171,6 +178,9 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addLicense
+     *
+     * getLicense result.
+     * https://opensubsonic.netlify.app/docs/responses/license/
      */
     public static function addLicense(SimpleXMLElement $xml): SimpleXMLElement
     {
@@ -183,6 +193,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addMusicFolders
+     *
+     * https://opensubsonic.netlify.app/docs/responses/musicfolders/
      * @param int[] $catalogs
      */
     public static function addMusicFolders(SimpleXMLElement $xml, array $catalogs): SimpleXMLElement
@@ -203,6 +215,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addIndexes
+     *
+     * https://opensubsonic.netlify.app/docs/responses/indexes/
      * @param array<int, array{
      *     id: int,
      *     f_name: string,
@@ -236,6 +250,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addIndex
+     *
+     * https://opensubsonic.netlify.app/docs/responses/index_/
      * @param array<int, array{
      *     id: int,
      *     f_name: string,
@@ -285,6 +301,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addOpenSubsonicExtension
+     *
+     * https://opensubsonic.netlify.app/docs/responses/opensubsonicextensions/
      * @param array<string, int[]> $extensions
      */
     public static function addOpenSubsonicExtensions(SimpleXMLElement $xml, array $extensions): SimpleXMLElement
@@ -302,6 +320,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addArtists
+     *
+     * https://opensubsonic.netlify.app/docs/responses/artistsid3/
      * @param array<int, array{
      *     id: int,
      *     f_name: string,
@@ -322,6 +342,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addArtist
+     *
+     * https://opensubsonic.netlify.app/docs/responses/artist/
      */
     public static function addArtist(SimpleXMLElement $xml, Artist $artist, bool $albums = false): SimpleXMLElement
     {
@@ -381,6 +403,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addChildSong
+     *
+     * https://opensubsonic.netlify.app/docs/responses/child/
      * @param array<string, string> $attributes
      */
     private static function _addChildSong(SimpleXMLElement $xml, Song $song, string $elementName, array $attributes = []): SimpleXMLElement
@@ -414,6 +438,9 @@ class OpenSubsonic_Xml_Data
         if ($avg_rating > 0) {
             $xsong->addAttribute('averageRating', (string)$avg_rating);
         }
+
+        $xsong->addAttribute('playCount', (string)$song->total_count);
+
         self::_setIfStarred($xsong, 'song', $song->id);
         if ($song->track > 0) {
             $xsong->addAttribute('track', (string)$song->track);
@@ -481,6 +508,7 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addAlbumList
+     *
      * https://opensubsonic.netlify.app/docs/responses/albumList/
      * @param int[] $albums
      */
@@ -497,6 +525,7 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addAlbumList2
+     *
      * https://opensubsonic.netlify.app/docs/responses/albumList2/
      * @param int[] $albums
      */
@@ -542,7 +571,6 @@ class OpenSubsonic_Xml_Data
         $xalbum->addAttribute('songCount', (string) $album->song_count);
         $xalbum->addAttribute('created', date('c', (int)$album->addition_time));
         $xalbum->addAttribute('duration', (string) $album->time);
-        $xalbum->addAttribute('playCount', (string)$album->total_count);
         if ($album_artist) {
             $xalbum->addAttribute('artistId', OpenSubsonic_Api::getArtistSubId($album_artist));
         }
@@ -569,6 +597,9 @@ class OpenSubsonic_Xml_Data
         if ($avg_rating > 0) {
             $xalbum->addAttribute('averageRating', (string)$avg_rating);
         }
+
+        $xalbum->addAttribute('playCount', (string)$album->total_count);
+
         self::_setIfStarred($xalbum, 'album', $album->id);
 
         if ($songs) {
@@ -587,6 +618,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addAlbum
+     *
+     * https://opensubsonic.netlify.app/docs/responses/child/
      */
     public static function addAlbum(SimpleXMLElement $xml, Album $album, bool $songs = false, string $elementName = 'album'): void
     {
@@ -613,7 +646,6 @@ class OpenSubsonic_Xml_Data
         $xalbum->addAttribute('songCount', (string) $album->song_count);
         $xalbum->addAttribute('created', date('c', (int)$album->addition_time));
         $xalbum->addAttribute('duration', (string) $album->time);
-        $xalbum->addAttribute('playCount', (string)$album->total_count);
         if ($album_artist) {
             $xalbum->addAttribute('artistId', OpenSubsonic_Api::getArtistSubId($album_artist));
         }
@@ -640,6 +672,9 @@ class OpenSubsonic_Xml_Data
         if ($avg_rating > 0) {
             $xalbum->addAttribute('averageRating', (string)$avg_rating);
         }
+
+        $xalbum->addAttribute('playCount', (string)$album->total_count);
+
         self::_setIfStarred($xalbum, 'album', $album->id);
 
         if ($songs) {
@@ -656,6 +691,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addSong
+     *
+     * https://opensubsonic.netlify.app/docs/responses/song/
      * @param array<string, string> $attributes
      */
     public static function addSong(SimpleXMLElement $xml, Song $song, string $elementName = 'song', array $attributes = []): SimpleXMLElement
@@ -664,7 +701,10 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addDirectory will create the directory element based on the type
+     * addDirectory
+     *
+     * Create the directory element based on the type
+     * https://opensubsonic.netlify.app/docs/responses/directory/
      */
     public static function addDirectory(SimpleXMLElement $xml, Artist|Album|Catalog $object): SimpleXMLElement
     {
@@ -746,6 +786,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addGenres
+     *
+     * https://opensubsonic.netlify.app/docs/responses/genres/
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      */
     public static function addGenres(SimpleXMLElement $xml, array $tags): SimpleXMLElement
@@ -764,6 +806,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addVideos
+     *
+     * https://opensubsonic.netlify.app/docs/responses/videos/
      * @param Video[] $videos
      */
     public static function addVideos(SimpleXMLElement $xml, array $videos): SimpleXMLElement
@@ -778,6 +822,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addVideo
+     *
+     * https://opensubsonic.netlify.app/docs/responses/child/
      */
     private static function _addVideo(SimpleXMLElement $xml, Video $video, string $elementName = 'video'): void
     {
@@ -826,6 +872,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addVideoInfo
+     *
+     * https://opensubsonic.netlify.app/docs/responses/videoinfo/
      */
     public static function addVideoInfo(SimpleXMLElement $xml, int $video_id): SimpleXMLElement
     {
@@ -837,6 +885,7 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addPlaylists
+     *
      * return playlists object with nested playlist items
      * https://opensubsonic.netlify.app/docs/responses/playlists/
      * https://opensubsonic.netlify.app/docs/responses/playlist/
@@ -884,6 +933,9 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addPlaylist_Playlist
+     *
+     * https://opensubsonic.netlify.app/docs/responses/playlist/
+     * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
      */
     private static function _addPlaylist_Playlist(SimpleXMLElement $xml, Playlist $playlist, bool $songs = false): SimpleXMLElement
     {
@@ -919,6 +971,9 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addPlaylist_Search
+     *
+     * https://opensubsonic.netlify.app/docs/responses/playlist/
+     * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
      */
     private static function _addPlaylist_Search(SimpleXMLElement $xml, Search $search, bool $songs = false): SimpleXMLElement
     {
@@ -955,7 +1010,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addPlayQueue
-     * current="133" position="45000" username="admin" changed="2015-02-18T15:22:22.825Z" changedBy="android"
+     *
+     * https://opensubsonic.netlify.app/docs/responses/playqueue/
      */
     public static function addPlayQueue(SimpleXMLElement $xml, User_Playlist $playQueue, string $username): SimpleXMLElement
     {
@@ -989,6 +1045,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addRandomSongs
+     *
+     * https://opensubsonic.netlify.app/docs/responses/randomsongs/
      * @param int[] $songs
      */
     public static function addRandomSongs(SimpleXMLElement $xml, array $songs): SimpleXMLElement
@@ -1007,7 +1065,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addPlayQueueByIndex
-     * currentIndex="133" position="45000" username="admin" changed="2015-02-18T15:22:22.825Z" changedBy="android"
+     *
+     * https://opensubsonic.netlify.app/docs/responses/playqueue/
      */
     public static function addPlayQueueByIndex(SimpleXMLElement $xml, User_Playlist $playQueue, string $username): SimpleXMLElement
     {
@@ -1048,6 +1107,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addSongsByGenre
+     *
+     * https://opensubsonic.netlify.app/docs/responses/songsbygenre/
      * @param int[] $songs
      */
     public static function addSongsByGenre(SimpleXMLElement $xml, array $songs): SimpleXMLElement
@@ -1066,6 +1127,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addTopSongs
+     *
+     * https://opensubsonic.netlify.app/docs/responses/topsongs/
      * @param int[] $songs
      */
     public static function addTopSongs(SimpleXMLElement $xml, array $songs): SimpleXMLElement
@@ -1084,6 +1147,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addNowPlaying
+     *
+     * https://opensubsonic.netlify.app/docs/responses/nowplaying/
      * @param array<int, array{
      *     media: library_item,
      *     client: User,
@@ -1116,6 +1181,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addSearchResult
+     *
+     * https://opensubsonic.netlify.app/docs/responses/searchresult/
      * @param int[] $songs
      */
     public static function addSearchResult(SimpleXMLElement $xml, array $songs, int $offset, int $total): SimpleXMLElement
@@ -1136,6 +1203,7 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addSearchResult2
+     *
      * https://opensubsonic.netlify.app/docs/responses/searchresult2/
      * @param int[] $artists
      * @param int[] $albums
@@ -1165,6 +1233,7 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addSearchResult3
+     *
      * https://opensubsonic.netlify.app/docs/responses/searchresult3/
      * @param int[] $artists
      * @param int[] $albums
@@ -1194,6 +1263,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addStarred
+     *
+     * https://opensubsonic.netlify.app/docs/responses/starred/
      * @param int[] $artists
      * @param int[] $albums
      * @param int[] $songs
@@ -1225,6 +1296,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addStarred2
+     *
+     * https://opensubsonic.netlify.app/docs/responses/starred2/
      * @param int[] $artists
      * @param int[] $albums
      * @param int[] $songs
@@ -1256,6 +1329,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addUser
+     *
+     * https://opensubsonic.netlify.app/docs/responses/user/
      */
     public static function addUser(SimpleXMLElement $xml, User $user): SimpleXMLElement
     {
@@ -1282,6 +1357,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addUsers
+     *
+     * https://opensubsonic.netlify.app/docs/responses/users/
      * @param int[] $users
      */
     public static function addUsers(SimpleXMLElement $xml, array $users): SimpleXMLElement
@@ -1299,6 +1376,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addInternetRadioStations
+     *
+     * https://opensubsonic.netlify.app/docs/responses/internetradiostations/
      * @param int[] $radios
      */
     public static function addInternetRadioStations(SimpleXMLElement $xml, array $radios): SimpleXMLElement
@@ -1314,6 +1393,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addInternetRadioStation
+     *
+     * https://opensubsonic.netlify.app/docs/responses/internetradiostation/
      */
     private static function _addInternetRadioStation(SimpleXMLElement $xml, Live_Stream $radio): void
     {
@@ -1326,6 +1407,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addShares
+     *
+     * https://opensubsonic.netlify.app/docs/responses/shares/
      * @param list<int> $shares
      */
     public static function addShares(SimpleXMLElement $xml, array $shares): SimpleXMLElement
@@ -1344,6 +1427,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addShare
+     *
+     * https://opensubsonic.netlify.app/docs/responses/share/
      */
     private static function _addShare(SimpleXMLElement $xml, Share $share): void
     {
@@ -1391,6 +1476,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addJukeboxPlaylist
+     *
+     * https://opensubsonic.netlify.app/docs/responses/jukeboxplaylist/
      */
     public static function addJukeboxPlaylist(SimpleXMLElement $xml, LocalPlay $localplay): SimpleXMLElement
     {
@@ -1412,6 +1499,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addJukeboxStatus
+     *
+     * https://opensubsonic.netlify.app/docs/responses/jukeboxstatus/
      */
     public static function addJukeboxStatus(SimpleXMLElement $xml, LocalPlay $localplay, string $elementName = 'jukeboxStatus'): SimpleXMLElement
     {
@@ -1437,6 +1526,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addLyrics
+     *
+     * https://opensubsonic.netlify.app/docs/responses/lyrics/
      */
     public static function addLyrics(SimpleXMLElement $xml, string $artist, string $title, Song $song): SimpleXMLElement
     {
@@ -1464,6 +1555,7 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addLyricsList
+     *
      * https://opensubsonic.netlify.app/docs/responses/lyricslist/
      */
     public static function addLyricsList(SimpleXMLElement $xml, Song $song): SimpleXMLElement
@@ -1499,6 +1591,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addAlbumInfo
+     *
+     * https://opensubsonic.netlify.app/docs/responses/albuminfo/
      * @param array{
      *     id: int,
      *     summary: ?string,
@@ -1523,6 +1617,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addArtistInfo
+     *
+     * https://opensubsonic.netlify.app/docs/responses/artistinfo/
      * @param array{
      *     id: ?int,
      *     summary: ?string,
@@ -1553,9 +1649,10 @@ class OpenSubsonic_Xml_Data
         $xartist->addChild('mediumImageUrl', htmlentities((string)$info['mediumphoto']));
         $xartist->addChild('largeImageUrl', htmlentities((string)$info['largephoto']));
 
+        $unknownCount = 0;
         foreach ($similars as $similar) {
             $xsimilar = self::_addChildToResultXml($xartist, 'similarArtist');
-            $xsimilar->addAttribute('id', (($similar['id'] !== null) ? OpenSubsonic_Api::getArtistSubId($similar['id']) : "-1"));
+            $xsimilar->addAttribute('id', (($similar['id'] !== null) ? OpenSubsonic_Api::getArtistSubId($similar['id']) : (string)('-' . $unknownCount++)));
             $xsimilar->addAttribute('name', (string)$similar['name']);
         }
 
@@ -1564,6 +1661,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addArtistInfo2
+     *
+     * https://opensubsonic.netlify.app/docs/responses/artistinfo2/
      * @param array{
           *     id: ?int,
           *     summary: ?string,
@@ -1588,6 +1687,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addSimilarSongs
+     *
+     * https://opensubsonic.netlify.app/docs/responses/similarsongs/
      * @param array<int, array{
      *     id: ?int,
      *     name?: ?string,
@@ -1613,6 +1714,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addSimilarSongs2
+     *
+     * https://opensubsonic.netlify.app/docs/responses/similarsongs2/
      * @param array<int, array{
      *     id: ?int,
      *     name?: ?string,
@@ -1638,6 +1741,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addPodcastEpisode
+     *
+     * https://opensubsonic.netlify.app/docs/responses/podcastepisode/
      */
     public static function addPodcastEpisode(SimpleXMLElement $xml, Podcast_Episode $episode): SimpleXMLElement
     {
@@ -1649,6 +1754,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addPodcasts
+     *
+     * https://opensubsonic.netlify.app/docs/responses/podcasts/
      * @param Podcast[] $podcasts
      */
     public static function addPodcasts(SimpleXMLElement $xml, array $podcasts, bool $includeEpisodes = true, ?string $sub_id = null): SimpleXMLElement
@@ -1682,6 +1789,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addNewestPodcasts
+     *
+     * https://opensubsonic.netlify.app/docs/responses/newestpodcasts/
      * @param Podcast_Episode[] $episodes
      */
     public static function addNewestPodcasts(SimpleXMLElement $xml, array $episodes): SimpleXMLElement
@@ -1696,6 +1805,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addBookmarks
+     *
+     * https://opensubsonic.netlify.app/docs/responses/bookmarks/
      * @param list<Bookmark> $bookmarks
      */
     public static function addBookmarks(SimpleXMLElement $xml, array $bookmarks): SimpleXMLElement
@@ -1710,6 +1821,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addBookmark
+     *
+     * https://opensubsonic.netlify.app/docs/responses/bookmark/
      */
     private static function _addBookmark(SimpleXMLElement $xml, Bookmark $bookmark): void
     {
@@ -1733,6 +1846,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addPodcastEpisode
+     *
+     * https://opensubsonic.netlify.app/docs/responses/podcastepisode/
      */
     private static function _addPodcastEpisode(SimpleXMLElement $xml, Podcast_Episode $episode, string $elementName = 'episode'): void
     {
@@ -1773,6 +1888,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addChatMessages
+     *
+     * https://opensubsonic.netlify.app/docs/responses/chatmessages/
      * @param int[] $messages
      */
     public static function addChatMessages(SimpleXMLElement $xml, array $messages): SimpleXMLElement
@@ -1792,6 +1909,8 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addScanStatus
+     *
+     * https://opensubsonic.netlify.app/docs/responses/scanstatus/
      */
     public static function addScanStatus(SimpleXMLElement $xml, User $user): SimpleXMLElement
     {
@@ -1806,6 +1925,9 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addTokenInfo
+     *
+     * Information about an API key
+     * https://opensubsonic.netlify.app/docs/responses/tokeninfo/
      */
     public static function addTokenInfo(SimpleXMLElement $xml, User $user): SimpleXMLElement
     {
@@ -1817,6 +1939,9 @@ class OpenSubsonic_Xml_Data
 
     /**
      * addMessage
+     *
+     * A chatMessage.
+     * https://opensubsonic.netlify.app/docs/responses/chatmessage/
      */
     private static function _addMessage(SimpleXMLElement $xml, PrivateMsg $message): void
     {

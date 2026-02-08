@@ -25,8 +25,8 @@ presents an already organised collection in a useful way. It assumes
 that you know best how to manage your files and are capable of
 choosing a suitable method for doing so.
 
-* Check out [Ampache 7 for Admins](https://github.com/ampache/ampache/wiki/ampache7-for-admins)
-* As well as [Ampache 7 for Users](https://github.com/ampache/ampache/wiki/ampache7-for-users)
+* Check out [Ampache 7 for Admins](https://ampache.org/docs/help/troubleshooting/ampache7-for-admins)
+* As well as [Ampache 7 for Users](https://ampache.org/docs/help/troubleshooting/ampache7-for-users)
 * The Ampache API is documented with examples [here](https://ampache.org/api/)
 
 ## Recommended Version
@@ -39,11 +39,11 @@ You get the latest version with recent changes and fixes but maybe in an unstabl
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f995711a30364908968bf0efb3e7e257)](https://app.codacy.com/gh/ampache/ampache)
 [![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
 
-If you want to run the last stable version [release5](https://github.com/ampache/ampache/archive/release5.tar.gz) is still available
+If you want to run the last stable version [release6](https://github.com/ampache/ampache/archive/release6.tar.gz) is still available
 
 ## Installation
 
-Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and don't forget to check out the [basic config](https://github.com/ampache/ampache/wiki/Basic) guide after that.
+Please see [the wiki](https://ampache.org/docs/installation/) and don't forget to check out the [basic config](https://ampache.org/docs/configuration/) guide after that.
 
 ## Requirements
 
@@ -61,6 +61,7 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * PHP 8.2 (Ampache 6.0.0 and higher)
   * PHP 8.3 (Ampache 6.2.0 and higher)
   * PHP 8.4 (Ampache 7.1.0 and higher)
+  * PHP 8.5 **TODO**
 
 **NOTE** That php7.4 will not be supported for Ampache6 but can still be built.
 
@@ -73,7 +74,7 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * intl
   * simplexml
   * curl
-  * zip ([Required](https://github.com/ampache/ampache/wiki/ampache7-for-admins#php-zip-extension-is-required) in Ampache 7.0.0 and higher)
+  * zip ([Required](https://ampache.org/docs/help/troubleshooting/ampache7-for-admins#php-zip-extension-is-required) in Ampache 7.0.0 and higher)
 
 * For FreeBSD The following php modules must be loaded:
   * php-xml
@@ -81,7 +82,7 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * php-intl
   * php-zip
 
-* Node.js v15+, npm v7+ ([Required](https://github.com/ampache/ampache/wiki/ampache7-for-admins#npm-is-required-for-js-package-installation) in Ampache 7.0.0 and higher)
+* Node.js v15+, npm v7+ ([Required](https://ampache.org/docs/help/troubleshooting/ampache7-for-admins#npm-is-required-for-js-package-installation) in Ampache 7.0.0 and higher)
 
 * MySQL 5.x / MySQL 8.x / MariaDB 10.x
 
@@ -164,7 +165,7 @@ Hate it? Love it? Let us know! Dozens of people send ideas for amazing new featu
 
 * For Live discussions, visit us on our IRC Channel at chat.freenode.net #ampache or alternative via a [web based chat client](https://webchat.freenode.net)
 * For harder cases or general discussion about Ampache take a look at our [Google Groups Forum](https://groups.google.com/forum/#!forum/ampache)
-* Found a bug or Ampache isn't working as expected? Please refer to the [Issues Template](https://github.com/ampache/ampache/wiki/Issues) and head over to our [Issue Tracker](https://github.com/ampache/ampache/issues)
+* Found a bug or Ampache isn't working as expected? Please refer to the [Issues Template](https://ampache.org/docs/development/issue-template) and head over to our [Issue Tracker](https://github.com/ampache/ampache/issues)
 * [r/Ampache](https://www.reddit.com/r/ampache/)
 * [Our Telegram Group](https://t.me/ampache)
 * [Official Twitter](https://twitter.com/ampache)
@@ -173,7 +174,7 @@ Hate it? Love it? Let us know! Dozens of people send ideas for amazing new featu
 ## Further Information and basic Help
 
 * Everything related to the Ampache Project can be found on our [Public Repository](https://github.com/ampache)
-* Want to know, how to get Apache to work or learn more about the functions? See our [Documentation](https://github.com/ampache/ampache/wiki)
+* Want to know, how to get Apache to work or learn more about the functions? See our [Documentation](https://ampache.org/docs/)
 
 We hope to see you soon and that you have fun with this Project!
 

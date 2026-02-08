@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,6 +28,7 @@ namespace Ampache\Module\Util;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Plugin\Ampacheflickr;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -63,7 +64,9 @@ final class Slideshow implements SlideshowInterface
         $images = [];
 
         foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::SLIDESHOW, $user) as $plugin) {
-            $images += $plugin->_plugin->get_photos($song->get_artist_fullname());
+            if ($plugin->_plugin instanceof Ampacheflickr) {
+                $images += $plugin->_plugin->get_photos($song->get_artist_fullname());
+            }
         }
 
         return $images;

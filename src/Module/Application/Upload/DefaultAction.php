@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -111,7 +111,7 @@ final class DefaultAction implements ApplicationActionInterface
             );
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            echo sprintf(T_('Not Found: %s'), 'upload_catalog') . '<br>' . "<a href=\"https://github.com/ampache/ampache/wiki/upload-catalogs\" target=\"_blank\">" . T_('Help') . " " . Ui::get_material_symbol('open_in_new', T_('Link')) . "</a>";
+            echo sprintf(T_('Not Found: %s'), 'upload_catalog') . '<br>' . "<a href=\"https://ampache.org/docs/help/upload-catalogs\" target=\"_blank\">" . T_('Help') . " " . Ui::get_material_symbol('open_in_new', T_('Link')) . "</a>";
         }
         // Show the Footer
         $this->ui->showQueryStats();

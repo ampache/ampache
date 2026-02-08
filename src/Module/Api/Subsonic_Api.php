@@ -8,7 +8,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -417,6 +417,7 @@ class Subsonic_Api
             case self::SUBID_LIVESTREAM:
             case self::SUBID_PLAYLIST:
             case self::SUBID_PODCAST:
+            case self::SUBID_PODCASTEP:
             case self::SUBID_SHARE:
             case self::SUBID_SMARTPL:
             case self::SUBID_SONG:

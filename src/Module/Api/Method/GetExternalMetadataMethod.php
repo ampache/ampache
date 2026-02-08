@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -128,17 +128,18 @@ final class GetExternalMetadataMethod
         ];
         $plugin_names = Plugin::get_plugins(PluginTypeEnum::METADATA_RETRIEVER);
         foreach ($plugin_names as $tag_source) {
-            $plugin            = new Plugin($tag_source);
-            $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
-            if ($installed_version > 0) {
-                if ($plugin->_plugin instanceof PluginGetMetadataInterface && $plugin->load($user)) {
-                    $results['plugin'][$tag_source] = $plugin->_plugin->get_metadata(
-                        ['music', $type],
-                        $data,
-                    );
-                    if ($results['plugin'][$tag_source] === []) {
-                        unset($results['plugin'][$tag_source]);
-                    }
+            $plugin = new Plugin($tag_source);
+            if (
+                $plugin->_plugin instanceof PluginGetMetadataInterface &&
+                Plugin::get_plugin_version($plugin->_plugin->name) > 0 &&
+                $plugin->load($user)
+            ) {
+                $results['plugin'][$tag_source] = $plugin->_plugin->get_metadata(
+                    ['music', $type],
+                    $data,
+                );
+                if ($results['plugin'][$tag_source] === []) {
+                    unset($results['plugin'][$tag_source]);
                 }
             }
         }
