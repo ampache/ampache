@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -149,7 +149,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
         <div>
             <?php echo T_('Transcoding allows you to convert music from one encoding to another. Ampache supports on the fly transcoding of any file type based on user, player, IP address or available bandwidth. In order to transcode, Ampache takes advantage of existing binary applications such as ffmpeg. In order for transcoding to work you must first install the supporting applications and ensure that they are executable by the web server.'); ?>
             <br />
-            <?php echo T_('This section applies the default transcoding configuration according to the application you want to use. You may need to customize settings once setup has ended.'); ?> <a href="https://github.com/ampache/ampache/wiki/Transcoding" target="_blank"><?php echo T_('See wiki page'); ?></a>
+            <?php echo T_('This section applies the default transcoding configuration according to the application you want to use. You may need to customize settings once setup has ended.'); ?> <a href="https://ampache.org/docs/configuration/transcoding/" target="_blank"><?php echo T_('See wiki page'); ?></a>
         </div>
         <br />
         <div class="row mb-3">
@@ -175,7 +175,7 @@ foreach ($modes as $mode) { ?>
         <p>&nbsp;</p>
         <legend><?php echo T_('Players'); ?></legend>
         <div><?php echo T_('Ampache is more than only a web interface. Several backends are implemented to ensure you can stream your media to any player.'); ?></div>
-        <div><?php echo T_('Select each backend to enable. Depending on the backend, you may need to perform additional configuration.'); ?> <a href="https://github.com/ampache/ampache/wiki/API" target="_blank"><?php echo T_('See wiki page'); ?></a></div>
+        <div><?php echo T_('Select each backend to enable. Depending on the backend, you may need to perform additional configuration.'); ?> <a href="https://ampache.org/api/" target="_blank"><?php echo T_('See wiki page'); ?></a></div>
         <br />
 
         <div class="form-check form-check-inline disabled">

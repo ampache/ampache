@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,7 @@ declare(strict_types=0);
 use Ampache\Repository\Model\Song_Preview;
 
 ?>
-<td class="cel_song"><?php echo $libitem->title; ?></td>
+<td class="cel_song"><?php echo scrub_out($libitem->title); ?></td>
 <td class="cel_artist"><?php echo $libitem->get_f_parent_link(); ?></td>
 <td class="cel_album"><?php echo $libitem->get_f_album_link(); ?></td>
 <td class="cel_track"><?php echo $libitem->track; ?></td>

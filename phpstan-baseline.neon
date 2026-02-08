@@ -156,11 +156,6 @@ parameters:
 			path: src/Module/Api/Daap_Api.php
 
 		-
-			message: "#^Variable \\$argument in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/RefreshUpdatedAction.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
@@ -704,6 +699,21 @@ parameters:
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/SearchSongsMethod.php
+
+		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/Module/Api/Method/SmartlistMethod.php
+
+		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/Module/Api/Method/SmartlistSongsMethod.php
+
+		-
+			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/Module/Api/Method/SmartlistsMethod.php
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
@@ -3981,32 +3991,7 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:trim_featuring\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_media_from_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_podcast_episode_from_tags\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_podcast_episode_from_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_settings\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_single_item\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -4059,11 +4044,6 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:\\$_plugin has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:fix_preferences\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -4156,21 +4136,6 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:compare_media_information\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:compare_song_information\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:has_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:run_custom_play_action\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -4229,11 +4194,6 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Userflag.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:compare_video_information\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
 
 		-
 			message: "#^PHPDoc tag @var for variable \\$group has no value type specified in iterable type array\\.$#"

@@ -1,14 +1,10 @@
----
-title: "Ampache API"
-metaTitle: "Ampache API"
-description: "API documentation"
----
+# Ampache API
 
 The Ampache API Provides methods for pulling out it's meta data in the form of
-simple XML (and JSON!) documents. This was originally created for use by [Amarok](https://ampache.org/api/http://amarok.kde.org/),
+simple XML (and JSON!) documents. This was originally created for use by [Amarok](http://amarok.kde.org/),
 but there is no reason it couldn't be used to create other front-ends to the Ampache data.
 
-Access to the API is controlled by the Internal [Access Control Lists](https://ampache.org/api/api-acls).
+Access to the API is controlled by the Internal [Access Control Lists](https://ampache.org/docs/configuration/acl).
 Currently all requests are limited to a maximum of 5000 results for performance reasons. To get additional results
 pass offset as an additional parameter.
 
@@ -93,7 +89,7 @@ Ampache supports sending your auth parameter to the server using a Bearer Token.
 
 The `auth` parameter does not need to be sent with your URL. We will check your header for a token first
 
-```Text
+```text
 GET https://demo.ampache.dev/server/json.server.php?action=handshake&version=6.0.0 HTTP/1.1
 Authorization: Bearer 000111112233334444455556667777788888899aaaaabbbbcccccdddeeeeeeff
 ```
@@ -104,7 +100,7 @@ Authorization: Bearer 000111112233334444455556667777788888899aaaaabbbbcccccdddee
 
 To standardize how to transfer Ampache connection information, the following Ampache scheme is defined.
 
-```Text
+```text
 ampache://authentication@hostname[:port]/subdirectory[#parameters]
 ```
 

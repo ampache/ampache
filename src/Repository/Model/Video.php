@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -1107,6 +1107,10 @@ class Video extends database_object implements
      * the ones in the database to see if they have changed
      * it returns false if nothing has changes, or the true
      * if they have. Static because it doesn't need this
+     * @return array{
+     *     change: bool,
+     *     element: array<string, string>
+     * }
      */
     public static function compare_video_information(Video $video, Video $new_video): array
     {

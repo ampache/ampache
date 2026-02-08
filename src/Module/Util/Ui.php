@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,6 +31,8 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
+use Ampache\Plugin\AmpacheLastfm;
+use Ampache\Plugin\Ampachelibrefm;
 use Ampache\Plugin\PluginDisplayOnFooterInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
@@ -1327,11 +1329,13 @@ class Ui implements UiInterface
                 // construct links for granting access Ampache application to Last.fm and Libre.fm
                 $plugin_name = ucfirst(str_replace('_grant_link', '', $name));
                 $plugin      = new Plugin($plugin_name);
-                $url         = $plugin->_plugin->url;
-                $api_key     = rawurlencode($plugin->_plugin->api_key);
-                $callback    = rawurlencode(AmpConfig::get_web_path('/client') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
-                /* HINT: Plugin Name */
-                echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . self::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
+                if ($plugin->_plugin instanceof Ampachelibrefm || $plugin->_plugin instanceof AmpacheLastfm) {
+                    $url      = $plugin->_plugin->url;
+                    $api_key  = rawurlencode((string)$plugin->_plugin->api_key);
+                    $callback = rawurlencode(AmpConfig::get_web_path('/client') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
+                    /* HINT: Plugin Name */
+                    echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . self::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
+                }
                 break;
             case 'bandwidth':
             case 'features':

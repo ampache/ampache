@@ -24,7 +24,7 @@
 # Ladee Io, 2016
 # Leandro D'Archivio <leandro.darchi@gmail.com>, 2021
 # Leandro D'Archivio <leandro.darchi@gmail.com>, 2020-2021
-# manuelglez86 <manuel.gonzalez@correo.uady.mx>, 2021-2024
+# manuelglez86 <manuel.gonzalez@correo.uady.mx>, 2021-2024,2026
 # manuelglez86 <manuel.gonzalez@correo.uady.mx>, 2020
 # Manuel <psyvirusx@gmail.com>, 2018
 # Pablo Ganuza Vidal <pablerkas@gmail.com>, 2016
@@ -38,9 +38,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-07-12 08:50+1000\n"
+"POT-Creation-Date: 2025-07-14 08:58+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
-"Last-Translator: manuelglez86 <manuel.gonzalez@correo.uady.mx>, 2021-2024\n"
+"Last-Translator: manuelglez86 <manuel.gonzalez@correo.uady.mx>, 2021-2024,2026\n"
 "Language-Team: Spanish (Spain) (http://app.transifex.com/ampache/ampache/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -190,7 +190,7 @@ msgid "Newest Artists"
 msgstr "Últimos artistas"
 
 msgid "Newest Songs"
-msgstr ""
+msgstr "Últimas canciones"
 
 msgid "Newest Shouts"
 msgstr "Shouts recientes"
@@ -516,7 +516,7 @@ msgstr "Los nuevos catálogos se añaden al grupo DEFAULT cuando se crean"
 msgid ""
 "In the form below enter either a local path (i.e. /data/music) or the URL to"
 " a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr ""
+msgstr "Escriba en la parte de abajo un dirección local (ej. /data/music) o la URL de la instalación remota de (ej. http://theotherampache.com)"
 
 msgid "Catalog Name"
 msgstr "Nombre de catálogo"
@@ -570,7 +570,7 @@ msgid "Barcode"
 msgstr "Código de barras"
 
 msgid "Ignore"
-msgstr ""
+msgstr "Ignorar"
 
 msgid "Catalog Type"
 msgstr "Tipo de catalogo"
@@ -781,22 +781,22 @@ msgid "Target folder"
 msgstr "Carpeta destino"
 
 msgid "New folder"
-msgstr ""
+msgstr "Nueva Carpeta"
 
 msgid "Rename"
-msgstr ""
+msgstr "Renombrar"
 
 msgid "Reload"
-msgstr ""
+msgstr "Recargar"
 
 msgid "Cut"
-msgstr ""
+msgstr "Cortar"
 
 msgid "Copy"
-msgstr ""
+msgstr "Copiar"
 
 msgid "Paste"
-msgstr ""
+msgstr "Pegar"
 
 msgid "Leave the artist and album fields blank to read file tags"
 msgstr "Dejar los campos Artista y Álbum en blanco para leer las etiquetas del archivo"
@@ -810,7 +810,7 @@ msgstr "AVISO"
 msgid ""
 "The music license you choose gives away rights in an irrevocable manner to "
 "the audience."
-msgstr ""
+msgstr "El tipo de licencia que elegiste le da derechos a la audiencia de manera irrevocable"
 
 msgid ""
 "Read the text of the license you choose carefully with the 'View License' "
@@ -832,7 +832,7 @@ msgid ""
 msgstr ""
 
 msgid "Field contains invalid files"
-msgstr ""
+msgstr "El campo contiene archivos inválidos"
 
 msgid "Waiting for size"
 msgstr ""
@@ -841,73 +841,73 @@ msgid "Size not available"
 msgstr ""
 
 msgid "Error during load"
-msgstr ""
+msgstr "Error al cargar"
 
 msgid "Uploading"
-msgstr ""
+msgstr "Subiendo"
 
 msgid "Upload complete"
-msgstr ""
+msgstr "Carga completada"
 
 msgid "Upload cancelled"
-msgstr ""
+msgstr "Carga cancelada"
 
 msgid "Error during upload"
-msgstr ""
+msgstr "Error al cargar"
 
 msgid "Error during revert"
-msgstr ""
+msgstr "Error al revertir"
 
 msgid "Error during remove"
-msgstr ""
+msgstr "Error al eliminar"
 
 msgid "tap to cancel"
-msgstr ""
+msgstr "presiona para cancelar"
 
 msgid "tap to retry"
-msgstr ""
+msgstr "presiona para reintentar"
 
 msgid "tap to undo"
-msgstr ""
+msgstr "presiona para deshacer"
 
 msgid "Remove"
 msgstr "Eliminar"
 
 msgid "Abort"
-msgstr ""
+msgstr "Cancelar"
 
 msgid "Retry"
-msgstr ""
+msgstr "Reintentar"
 
 msgid "Undo"
-msgstr ""
+msgstr "Deshacer"
 
 msgid "File is too large"
-msgstr ""
+msgstr "El archivo es demasiado grande"
 
 msgid "Maximum file size is {filesize}"
-msgstr ""
+msgstr "El tamaño máximo de archivo es {filesize}"
 
 msgid "Maximum total size exceeded"
-msgstr ""
+msgstr "Tamaño máximo total excedido"
 
 msgid "Maximum total file size is {filesize}"
-msgstr ""
+msgstr "El tamaño total máximo es {filesize}"
 
 msgid "File of invalid type"
-msgstr ""
+msgstr "Tipo inválido de archivo"
 
 msgid "Expects {allButLastType} or {lastType}"
 msgstr ""
 
 msgid "Image type not supported"
-msgstr ""
+msgstr "Tipo de imagen no soportado"
 
 msgid "Image is too small"
-msgstr ""
+msgstr "La imagen es demasiado pequeña"
 
 msgid "Image is too big"
-msgstr ""
+msgstr "La imagen es demasiado grande"
 
 msgid "Minimum size is {minWidth} × {minHeight}"
 msgstr ""
@@ -916,10 +916,10 @@ msgid "Maximum size is {maxWidth} × {maxHeight}"
 msgstr ""
 
 msgid "Resolution is too low"
-msgstr ""
+msgstr "La resolución es muy baja"
 
 msgid "Resolution is too high"
-msgstr ""
+msgstr "La resolución es muy alta"
 
 msgid "Minimum resolution is {minResolution}"
 msgstr ""
@@ -952,7 +952,7 @@ msgid "Admin"
 msgstr "Administrador"
 
 msgid "User Catalog Filter"
-msgstr ""
+msgstr "Filtro de catálogo de usuario"
 
 msgid "Search on Google ..."
 msgstr "Buscar en Google ..."
@@ -967,10 +967,10 @@ msgid "Search on Last.fm ..."
 msgstr "Buscar en Last.fm ..."
 
 msgid "Search on Bandcamp ..."
-msgstr ""
+msgstr "Buscar en Bandcamp ..."
 
 msgid "Search on Discogs ..."
-msgstr ""
+msgstr "Buscar en Discogs ..."
 
 msgid "Search on Musicbrainz ..."
 msgstr "Buscar en Musicbrainz ..."
@@ -1427,7 +1427,7 @@ msgid "External Link"
 msgstr "Enlace externo"
 
 msgid "Order"
-msgstr ""
+msgstr "Orden"
 
 msgid "Confirm"
 msgstr "Confirmar"
@@ -1436,7 +1436,7 @@ msgid "Owner"
 msgstr "Dueño"
 
 msgid "Collaborate"
-msgstr ""
+msgstr "Colaborar"
 
 msgid "GUID"
 msgstr "GUID"
@@ -1495,7 +1495,7 @@ msgid "User Properties"
 msgstr "Propiedades de usuario"
 
 msgid "Catalog Filter"
-msgstr ""
+msgstr "Filtro de catálogo"
 
 msgid "Other Options"
 msgstr "Otras opciones"
@@ -1504,7 +1504,7 @@ msgid "Config Preset"
 msgstr "Configuración por defecto"
 
 msgid "This affects all non-admin accounts"
-msgstr ""
+msgstr "Esto afecta a las cuentas no administrativas"
 
 msgid "System"
 msgstr "Sistema"
@@ -1699,7 +1699,7 @@ msgid "Add All to playlist"
 msgstr "Añadir todo a lista de reproducción"
 
 msgid "Loop Playlist"
-msgstr ""
+msgstr "Lista de reproducción en bucle"
 
 msgid "Expand/Collapse playlist"
 msgstr "Expandir/Retraer lista de reproducción"
@@ -2157,7 +2157,7 @@ msgid "Are you sure?"
 msgstr "¿Está seguro?"
 
 msgid "Add new files from:"
-msgstr ""
+msgstr "Añadir nuevos archivos desde:"
 
 msgid "Clean deleted files in:"
 msgstr ""
@@ -2224,7 +2224,7 @@ msgid "Share playlist"
 msgstr "Compartir Lista de reproducción"
 
 msgid "Download Playlist"
-msgstr ""
+msgstr "Descargar lista de reproducción"
 
 msgid "Refresh from Smartlist"
 msgstr "Actualizar desde lista de reproducción inteligente"
@@ -2518,7 +2518,7 @@ msgid "Shared by"
 msgstr "Compartido por"
 
 msgid "Skipped"
-msgstr ""
+msgstr "Omitido"
 
 msgid "No song found"
 msgstr "Ninguna canción encontrada"
@@ -2763,9 +2763,6 @@ msgstr "Esta prueba se asegura que tu variable web_path sea correcta y que podem
 msgid "Update from tags complete"
 msgstr "Actualización desde las etiquetas completada"
 
-msgid "Amapche"
-msgstr ""
-
 msgid "Registration Validation"
 msgstr "Validación del registro"
 
@@ -2886,10 +2883,10 @@ msgid "Ampache Wrapped"
 msgstr ""
 
 msgid "Songs Played"
-msgstr ""
+msgstr "Canciones reproducidas"
 
 msgid "Minutes Played"
-msgstr ""
+msgstr "Minutos reproducidos"
 
 msgid "Ratings"
 msgstr "Valoraciones"
@@ -3146,7 +3143,7 @@ msgid "Login Failed: timestamp out of range"
 msgstr "Inicio de sesión fallido: Marca de Tiempo fuera de rango"
 
 msgid "Error Invalid Handshake - "
-msgstr ""
+msgstr "Handshake inválido"
 
 msgid "Invalid Username/Password"
 msgstr "Usuario/Contraseña inválidos"
@@ -3274,7 +3271,7 @@ msgid "Failed to update_artist_info or recommendations for "
 msgstr ""
 
 msgid "Failed to sync episodes for podcast: "
-msgstr ""
+msgstr "Error al sincronizar episodios del Podcast"
 
 msgid "Enable: video"
 msgstr "Habilitar: video"
@@ -3380,7 +3377,7 @@ msgstr "Ha ocurrido un problema"
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
-msgstr ""
+msgstr "No se pudo eliminar %s"
 
 msgid "Song has been enabled"
 msgid_plural "Songs have been enabled"
@@ -3425,7 +3422,7 @@ msgid "The new filter was not created"
 msgstr ""
 
 msgid "New Filter Added"
-msgstr ""
+msgstr "Nuevo filtro agregado"
 
 #, php-format
 msgid "%1$s has been created"
@@ -3464,10 +3461,10 @@ msgid "A new License has been created"
 msgstr "Se ha creado la Licencia nueva"
 
 msgid "Create license"
-msgstr ""
+msgstr "Crear licencia"
 
 msgid "Edit license"
-msgstr ""
+msgstr "Editar licencia"
 
 msgid "Your e-mail has been sent"
 msgstr "El correo electrónico ha sido enviado"
@@ -3702,7 +3699,7 @@ msgstr "Incapaz de crear cuenta local"
 
 #, php-format
 msgid "%s - Now Playing"
-msgstr ""
+msgstr "%s - Reproduciendo"
 
 msgid "Playlist created"
 msgstr "La Lista de reproducción ha sido creada"
@@ -3761,16 +3758,16 @@ msgid "Podcast-import finished. Imported %d podcasts"
 msgstr ""
 
 msgid "File is invalid"
-msgstr ""
+msgstr "El archivo es inválido"
 
 msgid "File-type not recognized"
-msgstr ""
+msgstr "Tipo de archivo no reconocido"
 
 msgid "Invalid catalog type"
-msgstr ""
+msgstr "Tipo de catálogo inválido"
 
 msgid "Import Podcasts"
-msgstr ""
+msgstr "Importar Podcasts"
 
 msgid "Your account has been updated"
 msgstr "Tu cuenta ha sido actualizada"
@@ -4377,11 +4374,11 @@ msgstr ""
 #. HINT: config version string (e.g. 62)
 #, php-format
 msgid "Config version: %s"
-msgstr ""
+msgstr "Versión del archivo de configuración: %s"
 
 #, php-format
 msgid "Database version: %s"
-msgstr ""
+msgstr "Versión de la base de datos: %s"
 
 msgid "Missing database tables have been created"
 msgstr "Las tablas faltantes de la base de datos han sido creadas"
@@ -4392,7 +4389,7 @@ msgstr ""
 
 #, php-format
 msgid "Update failed! %s"
-msgstr ""
+msgstr "¡Actualización fallida! %s"
 
 msgid ""
 "Your database version is higher than the Ampache version. Use -e|--execute "
@@ -4550,16 +4547,16 @@ msgid "Output type ('m3u', 'xspf', 'pls'), (default: m3u)"
 msgstr ""
 
 msgid "Playlist ID"
-msgstr ""
+msgstr "ID de la lista de reproducción"
 
 msgid "Export playlists as m3u files to /tmp"
 msgstr "Exportar listas de reproducción como m3u a /tmp"
 
 msgid "Create .htaccess files"
-msgstr ""
+msgstr "Crear archivo .htaccess"
 
 msgid "Recreate Ampache .htaccess files"
-msgstr ""
+msgstr "Recrear archivos .htaccess de Ampache"
 
 msgid "Failed to write config file"
 msgstr "No se pudo escribir el archivo de configuración"
@@ -4577,7 +4574,7 @@ msgid "Overwrite if Config Already Exists"
 msgstr "Sobrescribir si la configuración ya existe"
 
 msgid "Displays database update information"
-msgstr ""
+msgstr "Mostrar la información de la actualización de la base de datos"
 
 msgid "Existing Ampache installation found"
 msgstr "Instalación de Ampache existente localizada"
@@ -4819,7 +4816,7 @@ msgid "by"
 msgstr "por"
 
 msgid "Various Artists"
-msgstr ""
+msgstr "Varios Artistas"
 
 #, php-format
 msgid "Starting Catalog: %s"
@@ -4929,7 +4926,7 @@ msgid "Unable to grant permissions to \"%1$s\" for the user \"%2$s\" on \"%3$s\"
 msgstr "Incapaz de otorgar permisos de \"%1$s\" para el usuario \"%2$s\" en \"%3$s\" : %4$s"
 
 msgid "Unable to open ampache.sql"
-msgstr ""
+msgstr "No se puede abrir ampache.sql"
 
 msgid ""
 "Connection to the database failed: Check hostname, username and password"
@@ -5132,7 +5129,7 @@ msgid "Allow API5 Only"
 msgstr "Permitir únicamente API5"
 
 msgid "Allow API6 Only"
-msgstr ""
+msgstr "Solo permitir API6"
 
 msgid "1 Star"
 msgstr "1 Estrella"
@@ -5158,7 +5155,7 @@ msgid "Keep %s previous tracks"
 msgstr ""
 
 msgid "Remove all previous tracks"
-msgstr ""
+msgstr "Eliminar todas las pistas anteriores"
 
 msgid "Send on Add"
 msgstr "Enviar al añadir"
@@ -5223,7 +5220,7 @@ msgid "URL shorteners on shared links with Bit.ly"
 msgstr "URLS cortas en enlaces compartidos con Bit.ly"
 
 msgid "Bit.ly Token"
-msgstr ""
+msgstr "Token de Bit.ly"
 
 msgid "Bit.ly Group GUID"
 msgstr ""
@@ -5241,7 +5238,7 @@ msgid "Catalog favorites grid view display"
 msgstr "Vista en rejilla de favoritos del Catalogo"
 
 msgid "Plugin CSS order"
-msgstr ""
+msgstr "Orden del Plugin CSS"
 
 msgid "Catalog favorites media row display"
 msgstr ""
@@ -5710,7 +5707,7 @@ msgid "Length (in minutes)"
 msgstr "Duración (en minutos)"
 
 msgid "Database ID"
-msgstr ""
+msgstr "ID de la base de datos"
 
 msgid "My Rating"
 msgstr "Mi valoración"
@@ -5725,13 +5722,13 @@ msgid "My Rating (Artist)"
 msgstr "Mi valoración (Artista)"
 
 msgid "My Favorite Songs"
-msgstr ""
+msgstr "Mis canciones favoritas"
 
 msgid "My Favorite Albums"
-msgstr ""
+msgstr "Mis álbumes favoritos"
 
 msgid "My Favorite Artists"
-msgstr ""
+msgstr "Mis artistas favoritos"
 
 msgid "Favorites (Album)"
 msgstr "Favoritos (Álbum)"
@@ -5753,11 +5750,11 @@ msgstr "Historial de reproducción"
 
 #. HINT: Number of times object has been played
 msgid "# Played"
-msgstr ""
+msgstr "# Reproducidos"
 
 #. HINT: Number of times object has been skipped
 msgid "# Skipped"
-msgstr ""
+msgstr "# omitidos"
 
 #. HINT: Number of times object has been played OR skipped
 msgid "# Played or Skipped"
@@ -5787,15 +5784,15 @@ msgstr "Reproducido por mi (Artista)"
 
 #. HINT: Number of times object has been played
 msgid "# Played by Me"
-msgstr ""
+msgstr "# Reproducidos por mí"
 
 #. HINT: Number of times object has been skipped
 msgid "# Skipped by Me"
-msgstr ""
+msgstr "# omitidos por mí"
 
 #. HINT: Number of times object has been played OR skipped
 msgid "# Played or Skipped by Me"
-msgstr ""
+msgstr "# Reproducidos u omitidos por mí"
 
 msgid "Recently played"
 msgstr "Reproducidas recientemente"
