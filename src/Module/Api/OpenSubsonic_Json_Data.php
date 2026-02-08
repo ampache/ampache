@@ -503,7 +503,7 @@ class OpenSubsonic_Json_Data
      *     'averageRating'?: float,
      *     'playCount'?: int,
      *     'discNumber'?: int,
-     *     'created'?: string,
+     *     'created': string,
      *     'starred'?: string,
      *     'albumId'?: string,
      *     'artistId'?: string,
@@ -610,6 +610,7 @@ class OpenSubsonic_Json_Data
         }
 
         $json['playCount'] = $album->total_count;
+        $json['created']   = date("Y-m-d\TH:i:s\Z", (int)$album->addition_time);
 
         $starred = new Userflag($album->id, 'album');
         $result  = $starred->get_flag(null, true);
@@ -1051,7 +1052,7 @@ class OpenSubsonic_Json_Data
      *         'averageRating'?: float,
      *         'playCount'?: int,
      *         'discNumber'?: int,
-     *         'created'?: string,
+     *         'created': string,
      *         'starred'?: string,
      *         'albumId'?: string,
      *         'artistId'?: string,
@@ -1248,7 +1249,7 @@ class OpenSubsonic_Json_Data
      *     'averageRating'?: float,
      *     'playCount'?: int,
      *     'discNumber'?: int,
-     *     'created'?: string,
+     *     'created': string,
      *     'starred'?: string,
      *     'albumId'?: string,
      *     'artistId'?: string,
@@ -1355,6 +1356,7 @@ class OpenSubsonic_Json_Data
         }
 
         $json['playCount'] = $song->total_count;
+        $json['created']   = date("Y-m-d\TH:i:s\Z", (int)$song->addition_time);
 
         $starred = new Userflag($song->id, 'song');
         $result  = $starred->get_flag(null, true);
@@ -1463,7 +1465,7 @@ class OpenSubsonic_Json_Data
      *     'averageRating'?: float,
      *     'playCount'?: int,
      *     'discNumber'?: int,
-     *     'created'?: string,
+     *     'created': string,
      *     'starred'?: string,
      *     'albumId'?: string,
      *     'artistId'?: string,
@@ -1565,6 +1567,7 @@ class OpenSubsonic_Json_Data
         }
 
         $json['playCount'] = $episode->total_count;
+        $json['created']   = date("Y-m-d\TH:i:s\Z", (int)$episode->addition_time);
 
         $starred = new Userflag($episode->id, 'podcast_episode');
         $result  = $starred->get_flag(null, true);
@@ -1628,7 +1631,7 @@ class OpenSubsonic_Json_Data
      *     'averageRating'?: float,
      *     'playCount'?: int,
      *     'discNumber'?: int,
-     *     'created'?: string,
+     *     'created': string,
      *     'starred'?: string,
      *     'albumId'?: string,
      *     'artistId'?: string,
@@ -1730,6 +1733,7 @@ class OpenSubsonic_Json_Data
         }
 
         $json['playCount'] = $video->total_count;
+        $json['created']   = date("Y-m-d\TH:i:s\Z", (int)$video->addition_time);
 
         $starred = new Userflag($video->id, 'video');
         $result  = $starred->get_flag(null, true);
