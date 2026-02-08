@@ -417,6 +417,7 @@ class OpenSubsonic_Api
             case self::SUBID_LIVESTREAM:
             case self::SUBID_PLAYLIST:
             case self::SUBID_PODCAST:
+            case self::SUBID_PODCASTEP:
             case self::SUBID_SHARE:
             case self::SUBID_SMARTPL:
             case self::SUBID_SONG:
