@@ -1268,10 +1268,10 @@ class OpenSubsonic_Api
                 $playlist = new Playlist($playlistId);
                 if ($format === 'xml') {
                     $response = self::_addXmlResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, true);
+                    $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, $user, true);
                 } else {
                     $response = self::_addJsonResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, true);
+                    $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, $user, true);
                 }
                 self::_responseOutput($input, __FUNCTION__, $response);
             } else {
@@ -2657,7 +2657,6 @@ class OpenSubsonic_Api
      */
     public static function getplaylist(array $input, User $user): void
     {
-        unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
         if (!$sub_id) {
             return;
@@ -2676,10 +2675,10 @@ class OpenSubsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, true);
+            $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, $user, true);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, true);
+            $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, $user, true);
         }
 
         self::_responseOutput($input, __FUNCTION__, $response);
