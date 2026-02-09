@@ -4022,12 +4022,12 @@ class OpenSubsonic_Api
     public static function setrating(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
         $rating = self::_check_parameter($input, 'rating', __FUNCTION__);
-        if ($rating === false || !is_numeric($rating)) {
+        if ($rating === false) {
             return;
         }
 
