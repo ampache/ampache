@@ -4021,7 +4021,7 @@ class Subsonic_Api
         }
 
         $rating = self::_check_parameter($input, 'rating', __FUNCTION__);
-        if (!$rating) {
+        if ($rating === false || !is_numeric($rating)) {
             return;
         }
 
