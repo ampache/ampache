@@ -13,6 +13,7 @@ URL paths are stil supported but they will be converted on the next catalog upda
 * Translations 2026-01-20
 * Database 790001
   * Update Dropbox catalog `authtoken` (if installed)
+* Build for PHP 8.5
 * Add a warning to playlist sort commands because it saves a new order
 * Allow hiding upload artist and album selection rows with CSS (`upload_select_row`)
 * Custom CSS in `public/templates/custom.css` when the file exists
@@ -59,8 +60,12 @@ URL paths are stil supported but they will be converted on the next catalog upda
 * Language tags would not be set in some cases
 * Hinting for genre tags corrected
 * Missing album_group check when updating songs
+* Set default count values for Album, Album Disk and Artist
 * Subsonic
   * Objects missing `playCount`
+  * OpenSubsonic playlist data inserted incorrectly
+  * Add `created` where missing to workaround some Navidrome clients
+  * Missing Podcast Episode from id conversion
 * Dropbox remote catalog
   * References to dead code
   * Catch and log download exceptions

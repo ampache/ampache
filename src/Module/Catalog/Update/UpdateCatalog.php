@@ -432,7 +432,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
     private function lookupCatalogs(
         string $catalogType,
         ?string $catalogName
-    ): PDOStatement|false {
+    ): PDOStatement|null {
         $where = sprintf(
             'catalog_type = \'%s\'',
             Dba::escape($catalogType)

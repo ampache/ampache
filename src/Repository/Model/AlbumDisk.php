@@ -49,7 +49,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public int $catalog;
 
-    public int $song_count;
+    public int $song_count = 0;
 
     public int $total_count = 0;
 
@@ -87,9 +87,9 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public ?int $addition_time = null;
 
-    public int $artist_count;
+    public int $artist_count = 0;
 
-    public int $song_artist_count;
+    public int $song_artist_count = 0;
 
     public ?string $link = null;
 

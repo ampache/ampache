@@ -533,7 +533,6 @@ class Podcast_Episode extends database_object implements
      * It takes a field, value podcast_episode_id and level. first and foremost it checks the level
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
-     * @param int|string $value
      */
     private static function _update_item(string $field, int|string $value, int $episode_id): void
     {
