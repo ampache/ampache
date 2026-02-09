@@ -451,6 +451,10 @@ class OpenSubsonic_Xml_Data
         $tags = Tag::get_object_tags('song', $song->id);
         if (!empty($tags)) {
             $xsong->addAttribute('genre', implode(',', array_column($tags, 'name')));
+            foreach ($tags as $tag) {
+                $xlastcat = self::_addChildToResultXml($xml, 'genres');
+                $xlastcat->addAttribute('name', (string)$tag);
+            }
         }
         $xsong->addAttribute('size', (string)$song->size);
         $disk = $song->disk;
@@ -586,6 +590,10 @@ class OpenSubsonic_Xml_Data
         $tags = Tag::get_object_tags('album', $album->id);
         if (!empty($tags)) {
             $xalbum->addAttribute('genre', implode(',', array_column($tags, 'name')));
+            foreach ($tags as $tag) {
+                $xlastcat = self::_addChildToResultXml($xml, 'genres');
+                $xlastcat->addAttribute('name', (string)$tag);
+            }
         }
 
         $rating      = new Rating($album->id, 'album');
@@ -661,6 +669,10 @@ class OpenSubsonic_Xml_Data
         $tags = Tag::get_object_tags('album', $album->id);
         if (!empty($tags)) {
             $xalbum->addAttribute('genre', implode(',', array_column($tags, 'name')));
+            foreach ($tags as $tag) {
+                $xlastcat = self::_addChildToResultXml($xml, 'genres');
+                $xlastcat->addAttribute('name', (string)$tag);
+            }
         }
 
         $rating      = new Rating($album->id, 'album');
@@ -848,6 +860,10 @@ class OpenSubsonic_Xml_Data
         $tags = Tag::get_object_tags('video', (int)$video->id);
         if (!empty($tags)) {
             $xvideo->addAttribute('genre', implode(',', array_column($tags, 'name')));
+            foreach ($tags as $tag) {
+                $xlastcat = self::_addChildToResultXml($xml, 'genres');
+                $xlastcat->addAttribute('name', (string)$tag);
+            }
         }
         $xvideo->addAttribute('size', (string)$video->size);
         $xvideo->addAttribute('suffix', (string)$video->type);
