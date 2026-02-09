@@ -958,8 +958,7 @@ class OpenSubsonic_Xml_Data
         $xplaylist->addAttribute('readonly', (string)$playlist->has_access($user));
 
         try {
-            $play_time = date("Y-m-d H:i:s", time() + 300);
-            $date      = new DateTime($play_time);
+            $date = new DateTime(date("Y-m-d H:i:s", time() + 300));
             $date->setTimezone(new DateTimeZone('UTC'));
             $xplaylist->addAttribute('validUntil', $date->format('c'));
         } catch (Exception $error) {
@@ -1010,8 +1009,7 @@ class OpenSubsonic_Xml_Data
         $xplaylist->addAttribute('readonly', (string)$search->has_access($user));
 
         try {
-            $play_time = date("Y-m-d H:i:s", time() + 300);
-            $date      = new DateTime($play_time);
+            $date = new DateTime(date("Y-m-d H:i:s", time() + 300));
             $date->setTimezone(new DateTimeZone('UTC'));
             $xplaylist->addAttribute('validUntil', $date->format('c'));
         } catch (Exception $error) {

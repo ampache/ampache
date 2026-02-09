@@ -231,9 +231,8 @@ class OpenSubsonic_Json_Data
 
         $json['readonly'] = $playlist->has_access($user);
 
-        $play_time = date("Y-m-d H:i:s", time() + 300);
         try {
-            $date = new DateTime($play_time);
+            $date = new DateTime(date("Y-m-d H:i:s", time() + 300));
             $date->setTimezone(new DateTimeZone('UTC'));
             $validUntil         = (string)$date->format('c');
             $json['validUntil'] = $validUntil;
@@ -297,9 +296,8 @@ class OpenSubsonic_Json_Data
 
         $json['readonly'] = $search->has_access($user);
 
-        $play_time = date("Y-m-d H:i:s", time() + 300);
         try {
-            $date = new DateTime($play_time);
+            $date = new DateTime(date("Y-m-d H:i:s", time() + 300));
             $date->setTimezone(new DateTimeZone('UTC'));
             $validUntil         = (string)$date->format('c');
             $json['validUntil'] = $validUntil;
