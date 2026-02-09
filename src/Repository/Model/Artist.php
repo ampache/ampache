@@ -674,8 +674,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
             $mbid = '89ad4ac3-39f7-470e-963a-56509c546377';
         }
 
-        if (isset(self::$_mapcache[$name][$prefix][$mbid])) {
-            return self::$_mapcache[$name][$prefix][$mbid];
+        if (isset(self::$_mapcache[$name][$prefix ?? ''][$mbid ?? ''])) {
+            return self::$_mapcache[$name][$prefix ?? ''][$mbid ?? ''];
         }
 
         $artist_id = 0;
@@ -759,7 +759,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         // map the new id
         Catalog::update_map(0, 'artist', $artist_id);
 
-        self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
+        self::$_mapcache[$name][$prefix ?? ''][$mbid ?? ''] = $artist_id;
 
         return $artist_id;
     }

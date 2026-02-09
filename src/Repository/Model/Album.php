@@ -250,8 +250,8 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $catalog_id    = 0;
         }
 
-        if (isset(self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$version])) {
-            return self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$version];
+        if (isset(self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''])) {
+            return self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''];
         }
 
         $sql    = "SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = ? ";
@@ -340,7 +340,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $album_id = (int)$row['id'];
             if ($album_id > 0) {
                 // cache the album id against it's details
-                self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$version] = $album_id;
+                self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''] = $album_id;
 
                 return $album_id;
             }
@@ -394,7 +394,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             }
         }
 
-        self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$version] = $album_id;
+        self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''] = $album_id;
 
         return (int)$album_id;
     }
