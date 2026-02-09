@@ -294,7 +294,7 @@ class OpenSubsonic_Json_Data
             $json['coverArt'] = $sub_id;
         }
 
-        $json['readonly'] = $search->has_access($user);
+        $json['readonly'] = false;
 
         try {
             $date = new DateTime(date("Y-m-d H:i:s", time() + 300));

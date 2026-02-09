@@ -1022,7 +1022,7 @@ class OpenSubsonic_Xml_Data
         $xplaylist->addAttribute('created', date('c', (int)$search->date));
         $xplaylist->addAttribute('changed', date('c', time()));
         $xplaylist->addAttribute('coverArt', $sub_id);
-        $xplaylist->addAttribute('readonly', (string)$search->has_access($user));
+        $xplaylist->addAttribute('readonly', (string)false);
 
         try {
             $date = new DateTime(date("Y-m-d H:i:s", time() + 300));
