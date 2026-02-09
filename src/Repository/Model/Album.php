@@ -84,11 +84,11 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     public int $total_skip = 0;
 
-    public int $song_count;
+    public int $song_count = 0;
 
-    public int $artist_count;
+    public int $artist_count = 0;
 
-    public int $song_artist_count;
+    public int $song_artist_count = 0;
 
     public ?string $link = null;
 
