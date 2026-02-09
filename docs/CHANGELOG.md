@@ -42,6 +42,8 @@ URL paths are stil supported but they will be converted on the next catalog upda
 * Show album uploads on Song owner OR Artist owner
 * Don't delete empy artists when they are owned by a user
 * Don't overwrite upload objects with tag values when set
+* Subsonic
+  * Extend playlists for OpenSubsonic [pull #204](https://github.com/opensubsonic/open-subsonic-api/pull/204/)
 
 ### Fixed
 
