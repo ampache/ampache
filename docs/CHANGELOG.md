@@ -68,6 +68,8 @@ URL paths are stil supported but they will be converted on the next catalog upda
   * OpenSubsonic playlist data inserted incorrectly
   * Add `created` where missing to workaround some Navidrome clients
   * Missing Podcast Episode from id conversion
+  * Incorrect assumption of 0 being false after check parameter
+  * Genres missing from xml for objects
 * Dropbox remote catalog
   * References to dead code
   * Catch and log download exceptions
