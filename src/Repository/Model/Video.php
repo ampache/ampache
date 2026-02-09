@@ -1003,7 +1003,7 @@ class Video extends database_object implements
             Dba::write($sql, $params);
 
             $sql     = "DELETE FROM `video` WHERE `id` = ?";
-            $deleted = (Dba::write($sql, $params) !== false);
+            $deleted = (Dba::write($sql, $params) !== null);
             if ($deleted) {
                 $this->getArtCleanup()->collectGarbageForObject('video', $this->id);
                 Userflag::garbage_collection('video', $this->id);
