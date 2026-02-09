@@ -61,7 +61,7 @@ Please see [the wiki](https://ampache.org/docs/installation/) and don't forget t
   * PHP 8.2 (Ampache 6.0.0 and higher)
   * PHP 8.3 (Ampache 6.2.0 and higher)
   * PHP 8.4 (Ampache 7.1.0 and higher)
-  * PHP 8.5 **TODO**
+  * PHP 8.5 (Ampache 7.9.0 and higher)
 
 **NOTE** That php7.4 will not be supported for Ampache6 but can still be built.
 

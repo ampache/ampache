@@ -2384,17 +2384,17 @@ class Song extends database_object implements
             Catalog::migrate_map('artist', $old_artist, $new_artist);
             // update mapping tables
             $sql = "UPDATE IGNORE `album_map` SET `object_id` = ? WHERE `object_id` = ?";
-            if (Dba::write($sql, [$new_artist, $old_artist]) === false) {
+            if (Dba::write($sql, [$new_artist, $old_artist]) === null) {
                 return false;
             }
 
             $sql = "UPDATE IGNORE `artist_map` SET `artist_id` = ? WHERE `artist_id` = ?";
-            if (Dba::write($sql, [$new_artist, $old_artist]) === false) {
+            if (Dba::write($sql, [$new_artist, $old_artist]) === null) {
                 return false;
             }
 
             $sql = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-            if (Dba::write($sql, [$new_artist, 'artist', $old_artist]) === false) {
+            if (Dba::write($sql, [$new_artist, 'artist', $old_artist]) === null) {
                 return false;
             }
 
@@ -2429,29 +2429,29 @@ class Song extends database_object implements
 
         // update mapping tables
         $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `album_id` = ?";
-        if (Dba::write($sql, [$new_album, $old_album]) === false) {
+        if (Dba::write($sql, [$new_album, $old_album]) === null) {
             return false;
         }
 
         if ($song_id > 0) {
             $sql = "UPDATE IGNORE `album_map` SET `album_id` = ? WHERE `album_id` = ? AND `object_id` = ? AND `object_type` = 'song'";
-            if (Dba::write($sql, [$new_album, $old_album, $song_id]) === false) {
+            if (Dba::write($sql, [$new_album, $old_album, $song_id]) === null) {
                 return false;
             }
         } else {
             $sql = "UPDATE IGNORE `album_map` SET `album_id` = ? WHERE `album_id` = ? AND `object_type` = 'song'";
-            if (Dba::write($sql, [$new_album, $old_album]) === false) {
+            if (Dba::write($sql, [$new_album, $old_album]) === null) {
                 return false;
             }
         }
 
         $sql = "UPDATE IGNORE `artist_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-        if (Dba::write($sql, [$new_album, 'album', $old_album]) === false) {
+        if (Dba::write($sql, [$new_album, 'album', $old_album]) === null) {
             return false;
         }
 
         $sql = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-        if (Dba::write($sql, [$new_album, 'album', $old_album]) === false) {
+        if (Dba::write($sql, [$new_album, 'album', $old_album]) === null) {
             return false;
         }
 

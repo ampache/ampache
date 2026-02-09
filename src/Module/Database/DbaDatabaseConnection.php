@@ -56,7 +56,7 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
     ): PDOStatement {
         $result = Dba::query($sql, $params, $silent, $interactor);
 
-        if ($result === false) {
+        if ($result === null) {
             if (!$silent) {
                 $interactor?->error(
                     'ERROR_query ' . $sql . ' ' . print_r($params, true),

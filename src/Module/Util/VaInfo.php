@@ -455,7 +455,7 @@ final class VaInfo implements VaInfoInterface
             } else {
                 $command = 'metaflac --remove --block-type=PICTURE ' . escapeshellarg($this->filename);
             }
-            $commandError = `$command`;
+            $commandError = shell_exec($command);
         }
         if ($tagWriter->WriteTags()) {
             foreach ($tagWriter->warnings as $message) {
