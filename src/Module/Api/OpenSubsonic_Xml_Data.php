@@ -453,7 +453,7 @@ class OpenSubsonic_Xml_Data
             $xsong->addAttribute('genre', implode(',', array_column($tags, 'name')));
             foreach ($tags as $tag) {
                 $xlastcat = self::_addChildToResultXml($xml, 'genres');
-                $xlastcat->addAttribute('name', (string)$tag);
+                $xlastcat->addAttribute('name', (string)$tag['name']);
             }
         }
         $xsong->addAttribute('size', (string)$song->size);
@@ -592,7 +592,7 @@ class OpenSubsonic_Xml_Data
             $xalbum->addAttribute('genre', implode(',', array_column($tags, 'name')));
             foreach ($tags as $tag) {
                 $xlastcat = self::_addChildToResultXml($xml, 'genres');
-                $xlastcat->addAttribute('name', (string)$tag);
+                $xlastcat->addAttribute('name', (string)$tag['name']);
             }
         }
 
@@ -671,7 +671,7 @@ class OpenSubsonic_Xml_Data
             $xalbum->addAttribute('genre', implode(',', array_column($tags, 'name')));
             foreach ($tags as $tag) {
                 $xlastcat = self::_addChildToResultXml($xml, 'genres');
-                $xlastcat->addAttribute('name', (string)$tag);
+                $xlastcat->addAttribute('name', (string)$tag['name']);
             }
         }
 
@@ -862,7 +862,7 @@ class OpenSubsonic_Xml_Data
             $xvideo->addAttribute('genre', implode(',', array_column($tags, 'name')));
             foreach ($tags as $tag) {
                 $xlastcat = self::_addChildToResultXml($xml, 'genres');
-                $xlastcat->addAttribute('name', (string)$tag);
+                $xlastcat->addAttribute('name', (string)$tag['name']);
             }
         }
         $xvideo->addAttribute('size', (string)$video->size);
