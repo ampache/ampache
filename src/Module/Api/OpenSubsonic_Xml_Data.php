@@ -452,7 +452,7 @@ class OpenSubsonic_Xml_Data
         if (!empty($tags)) {
             $xsong->addAttribute('genre', implode(',', array_column($tags, 'name')));
             foreach ($tags as $tag) {
-                $xlastcat = self::_addChildToResultXml($xml, 'genres');
+                $xlastcat = self::_addChildToResultXml($xsong, 'genres');
                 $xlastcat->addAttribute('name', (string)$tag['name']);
             }
         }
