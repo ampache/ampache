@@ -1,13 +1,15 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-s
-    RewriteCond %{REQUEST_URI} !\.view$
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+    RewriteRule ^(3|4|5|6)/json/([^/]+)/([^/]+)/?$ json.server.php?version=$1&action=$2&filter=$3 [L,QSA]
+    RewriteRule ^(3|4|5|6)/json/([^/]+)/?$ json.server.php?version=$1&action=$2 [L,QSA]
+    RewriteRule ^(3|4|5|6)/xml/([^/]+)/([^/]+)/?$ xml.server.php?version=$1&action=$2&filter=$3 [L,QSA]
+    RewriteRule ^(3|4|5|6)/xml/([^/]+)/?$ xml.server.php?version=$1&action=$2 [L,QSA]
     # some subsonic clients don't use *.view
-    RewriteRule ^(.+)$ /rest/index.php?ssaction=$1 "[PT,L,QSA,B= ?,BNP]"
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-s
+    RewriteRule ^([^/]+)/?$ index.php?ssaction=$1 [L,QSA]
     # subsonic clients using *.view
-    RewriteRule ^(.+)\.view$ /rest/index.php?ssaction=$1 "[PT,L,QSA,B= ?,BNP]"
-    RewriteRule ^fake/(.+)$ /play/$1 "[PT,L,QSA,B= ?,BNP]"
+    RewriteRule ^([^/]+)\.view$ index.php?ssaction=$1 [L,QSA]
+    RewriteRule ^fake/(.+)$ /play/$1 [L,QSA]
 </IfModule>
