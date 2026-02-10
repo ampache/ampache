@@ -72,7 +72,7 @@ final class PodcastEpisodesMethod implements MethodInterface
      * @param ResponseInterface $response
      * @param ApiOutputInterface $output
      * @param array{
-     *     filter?: string,
+     *     filter: string,
      *     offset?: string,
      *     limit?: string,
      *     cond?: string,

@@ -53,7 +53,8 @@ final class TimelineMethod
      * since    = (integer) UNIXTIME() //optional
      *
      * @param array{
-     *     username: string,
+     *     filter?: string,
+     *     username?: string,
      *     limit?: int,
      *     since?: int,
      *     api_format: string,
@@ -69,14 +70,16 @@ final class TimelineMethod
 
             return false;
         }
+
+        $input['username'] = $input['filter'] ?? $input['username'] ?? null;
         if (!Api::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
-        $username = $input['username'];
-        $limit    = (int)($input['limit'] ?? 0);
-        $since    = (int)($input['since'] ?? 0);
 
+        $username = $input['username'];
         if (!empty($username)) {
+            $limit = (int)($input['limit'] ?? 0);
+            $since = (int)($input['since'] ?? 0);
             if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
                 $results = self::getUseractivityRepository()->getActivities(
                     $user->getId(),
