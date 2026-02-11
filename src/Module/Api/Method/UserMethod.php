@@ -50,6 +50,7 @@ final class UserMethod
      * username = (string) $username
      *
      * @param array{
+     *     filter?: string,
      *     username?: string,
      *     api_format: string,
      *     auth: string,
@@ -59,7 +60,7 @@ final class UserMethod
      */
     public static function user(array $input, User $user): bool
     {
-        $username = $input['username'] ?? null;
+        $username = $input['filter'] ?? $input['username'] ?? null;
 
         // if the username is omitted, use the current users context to retrieve its own data
         if ($username === null) {
