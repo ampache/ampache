@@ -397,12 +397,14 @@ class Json_Data
                 $results = self::artists($objects, $include_array, $user, $auth);
                 break;
             case 'playlist':
+                /** @var string $results */
                 $results = self::playlists($objects, $user, $auth, $include);
                 break;
             case 'share':
                 $results = self::shares($objects);
                 break;
             case 'podcast':
+                /** @var string $results */
                 $results = self::podcasts($objects, $user, $auth, $include);
                 break;
             case 'podcast_episode':

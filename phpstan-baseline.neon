@@ -221,11 +221,6 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:indexes\\(\\) should return string but returns array\\|string\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:labels\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php

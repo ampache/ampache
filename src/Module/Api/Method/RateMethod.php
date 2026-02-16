@@ -52,8 +52,9 @@ final class RateMethod
      * rating = (integer) 0|1|2|3|4|5 $rating
      *
      * @param array{
+     *     filter?: string,
+     *     id?: string,
      *     type: string,
-     *     id: string,
      *     rating: int,
      *     api_format: string,
      *     auth: string,
@@ -68,6 +69,8 @@ final class RateMethod
 
             return false;
         }
+
+        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
         if (!Api::check_parameter($input, ['type', 'id', 'rating'], self::ACTION)) {
             return false;
         }

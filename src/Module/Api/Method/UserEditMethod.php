@@ -68,7 +68,8 @@ final class UserEditMethod
      * clear_stats       = (integer) 0,1 true reset all stats for this user //optional
      *
      * @param array{
-     *     username: string,
+     *     filter?: string,
+     *     username?: string,
      *     fullname?: string,
      *     password?: string,
      *     email?: string,
@@ -93,6 +94,8 @@ final class UserEditMethod
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
+
+        $input['username'] = $input['filter'] ?? $input['username'] ?? null;
         if (!Api::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
