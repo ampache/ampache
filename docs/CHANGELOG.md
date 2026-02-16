@@ -33,6 +33,7 @@ URL paths are stil supported but they will be converted on the next catalog upda
 * Plugin
   * Use a custom generated keay for Libre.FM instead of the Last.FM key
 * Update copyright to 2026
+* Update `/rest` htaccess rewrite rules for Ampache REST implemtation
 * Artist lookup for Song Artist will match with Album Artist ID if the text matches
 * `Artist::check()` will only pull one result when searching by name or name and mbid
 * Convert remote Ampache catalog filenames from URL to the local filename
@@ -63,6 +64,7 @@ URL paths are stil supported but they will be converted on the next catalog upda
 * Hinting for genre tags corrected
 * Missing album_group check when updating songs
 * Set default count values for Album, Album Disk and Artist
+* Check that a path is writeable before downloading a podcast episode
 * Subsonic
   * Objects missing `playCount`
   * OpenSubsonic playlist data inserted incorrectly

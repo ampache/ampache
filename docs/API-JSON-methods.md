@@ -2919,6 +2919,75 @@ This returns smartlists based on the specified filter
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/smartlists.json)
 
+### smartlist
+
+This returns a single smartlist
+
+| Input    | Type   | Description                              | Optional |
+|----------|--------|------------------------------------------|---------:|
+| 'filter' | string | UID of smartlist, returns smartlist JSON |       NO |
+
+* return array
+
+```JSON
+"playlist": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/smartlist.json)
+
+### smartlist_songs
+
+This returns the songs for a smartlist
+
+| Input    | Type    | Description                                       | Optional |
+|----------|---------|---------------------------------------------------|---------:|
+| 'filter' | string  | UID of smartlist, returns song JSON               |       NO |
+| 'random' | integer | `0`, `1` (if true get random songs using limit)   |      YES |
+| 'offset' | integer | Return results starting from this index position  |      YES |
+| 'limit'  | integer | Maximum number of results to return               |      YES |
+
+* return array
+
+```JSON
+"song": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/smartlist_songs.json)
+
+### smartlist_delete
+
+This deletes a smartlist
+
+| Input    | Type   | Description      | Optional |
+|----------|--------|------------------|---------:|
+| 'filter' | string | UID of smartlist |       NO |
+
+* return object
+
+```JSON
+"success": ""
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/smartlist_delete.json)
+
 ### songs
 
 Returns songs based on the specified filter
