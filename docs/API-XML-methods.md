@@ -2948,6 +2948,117 @@ Takes the share id to update with optional description and expires parameters.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/share_edit.xml)
 
+### smartlists
+
+This returns smartlists based on the specified filter
+
+| Input         | Type       | Description                                                                                        | Optional |
+|---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'      | string     | Filter results to match this string                                                                |      YES |
+| 'exact'       | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                    |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
+| 'cond'        | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
+|               |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
+| 'sort'        | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
+|               |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <playlist>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/smartlists.xml)
+
+### smartlist
+
+This returns a single smartlist
+
+| Input    | Type   | Description                             | Optional |
+|----------|--------|-----------------------------------------|---------:|
+| 'filter' | string | UID of smartlist, returns smartlist XML |       NO |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <playlist>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/smartlist.xml)
+
+### smartlist_songs
+
+This returns the songs for a smartlist
+
+| Input    | Type    | Description                                       | Optional |
+|----------|---------|---------------------------------------------------|---------:|
+| 'filter' | string  | UID of smartlist, returns song XML                |       NO |
+| 'random' | integer | `0`, `1` (if true get random songs using limit)   |      YES |
+| 'offset' | integer | Return results starting from this index position  |      YES |
+| 'limit'  | integer | Maximum number of results to return               |      YES |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <song>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/smartlist_songs.xml)
+
+### smartlist_delete
+
+This deletes a smartlist
+
+| Input    | Type   | Description      | Optional |
+|----------|--------|------------------|---------:|
+| 'filter' | string | UID of smartlist |       NO |
+
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/smartlist_delete.xml)
+
 ### songs
 
 Returns songs based on the specified filter

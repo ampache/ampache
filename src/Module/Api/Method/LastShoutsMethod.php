@@ -51,6 +51,7 @@ final class LastShoutsMethod
      * limit = (integer) $limit Default: 10 (popular_threshold) //optional
      *
      * @param array{
+     *     filter?: string,
      *     username?: string,
      *     limit?: int,
      *     api_format: string,
@@ -66,6 +67,8 @@ final class LastShoutsMethod
 
             return false;
         }
+
+        $input['username'] = $input['filter'] ?? $input['username'] ?? null;
         if (!Api::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }

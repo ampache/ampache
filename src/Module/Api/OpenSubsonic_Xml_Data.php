@@ -451,6 +451,10 @@ class OpenSubsonic_Xml_Data
         $tags = Tag::get_object_tags('song', $song->id);
         if (!empty($tags)) {
             $xsong->addAttribute('genre', implode(',', array_column($tags, 'name')));
+            foreach ($tags as $tag) {
+                $xlastcat = self::_addChildToResultXml($xsong, 'genres');
+                $xlastcat->addAttribute('name', (string)$tag['name']);
+            }
         }
         $xsong->addAttribute('size', (string)$song->size);
         $disk = $song->disk;
@@ -586,6 +590,10 @@ class OpenSubsonic_Xml_Data
         $tags = Tag::get_object_tags('album', $album->id);
         if (!empty($tags)) {
             $xalbum->addAttribute('genre', implode(',', array_column($tags, 'name')));
+            foreach ($tags as $tag) {
+                $xlastcat = self::_addChildToResultXml($xalbum, 'genres');
+                $xlastcat->addAttribute('name', (string)$tag['name']);
+            }
         }
 
         $rating      = new Rating($album->id, 'album');
@@ -661,6 +669,10 @@ class OpenSubsonic_Xml_Data
         $tags = Tag::get_object_tags('album', $album->id);
         if (!empty($tags)) {
             $xalbum->addAttribute('genre', implode(',', array_column($tags, 'name')));
+            foreach ($tags as $tag) {
+                $xlastcat = self::_addChildToResultXml($xalbum, 'genres');
+                $xlastcat->addAttribute('name', (string)$tag['name']);
+            }
         }
 
         $rating      = new Rating($album->id, 'album');
@@ -848,6 +860,10 @@ class OpenSubsonic_Xml_Data
         $tags = Tag::get_object_tags('video', (int)$video->id);
         if (!empty($tags)) {
             $xvideo->addAttribute('genre', implode(',', array_column($tags, 'name')));
+            foreach ($tags as $tag) {
+                $xlastcat = self::_addChildToResultXml($xvideo, 'genres');
+                $xlastcat->addAttribute('name', (string)$tag['name']);
+            }
         }
         $xvideo->addAttribute('size', (string)$video->size);
         $xvideo->addAttribute('suffix', (string)$video->type);
@@ -891,7 +907,7 @@ class OpenSubsonic_Xml_Data
      * https://opensubsonic.netlify.app/docs/responses/playlist/
      * @param int[]|string[] $playlists
      */
-    public static function addPlaylists(SimpleXMLElement $xml, ?User $user, array $playlists): SimpleXMLElement
+    public static function addPlaylists(SimpleXMLElement $xml, User $user, array $playlists): SimpleXMLElement
     {
         $xplaylists = self::_addChildToResultXml($xml, 'playlists');
         foreach ($playlists as $playlist_id) {
@@ -908,7 +924,7 @@ class OpenSubsonic_Xml_Data
                 continue;
             }
 
-            self::addPlaylist($xplaylists, $playlist);
+            self::addPlaylist($xplaylists, $playlist, $user);
         }
 
         return $xml;
@@ -919,13 +935,13 @@ class OpenSubsonic_Xml_Data
      * https://opensubsonic.netlify.app/docs/responses/playlist/
      * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
      */
-    public static function addPlaylist(SimpleXMLElement $xml, Playlist|Search $playlist, bool $songs = false): SimpleXMLElement
+    public static function addPlaylist(SimpleXMLElement $xml, Playlist|Search $playlist, User $user, bool $songs = false): SimpleXMLElement
     {
         if ($playlist instanceof Playlist && $playlist->isNew() === false) {
-            $xml = self::_addPlaylist_Playlist($xml, $playlist, $songs);
+            $xml = self::_addPlaylist_Playlist($xml, $playlist, $user, $songs);
         }
         if ($playlist instanceof Search && $playlist->isNew() === false) {
-            $xml = self::_addPlaylist_Search($xml, $playlist, $songs);
+            $xml = self::_addPlaylist_Search($xml, $playlist, $user, $songs);
         }
 
         return $xml;
@@ -937,7 +953,7 @@ class OpenSubsonic_Xml_Data
      * https://opensubsonic.netlify.app/docs/responses/playlist/
      * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
      */
-    private static function _addPlaylist_Playlist(SimpleXMLElement $xml, Playlist $playlist, bool $songs = false): SimpleXMLElement
+    private static function _addPlaylist_Playlist(SimpleXMLElement $xml, Playlist $playlist, User $user, bool $songs = false): SimpleXMLElement
     {
         $sub_id    = OpenSubsonic_Api::getPlaylistSubId($playlist->id);
         $songcount = $playlist->get_media_count('song');
@@ -955,6 +971,15 @@ class OpenSubsonic_Xml_Data
             $xplaylist->addAttribute('coverArt', $sub_id);
         }
 
+        $xplaylist->addAttribute('readonly', (string)$playlist->has_access($user));
+
+        try {
+            $date = new DateTime(date("Y-m-d H:i:s", time() + 300));
+            $date->setTimezone(new DateTimeZone('UTC'));
+            $xplaylist->addAttribute('validUntil', $date->format('c'));
+        } catch (Exception $error) {
+            debug_event(self::class, 'DateTime error: ' . $error->getMessage(), 5);
+        }
         if ($songs) {
             $allsongs = $playlist->get_songs();
             foreach ($allsongs as $song_id) {
@@ -975,7 +1000,7 @@ class OpenSubsonic_Xml_Data
      * https://opensubsonic.netlify.app/docs/responses/playlist/
      * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
      */
-    private static function _addPlaylist_Search(SimpleXMLElement $xml, Search $search, bool $songs = false): SimpleXMLElement
+    private static function _addPlaylist_Search(SimpleXMLElement $xml, Search $search, User $user, bool $songs = false): SimpleXMLElement
     {
         $sub_id    = OpenSubsonic_Api::getSmartPlaylistSubId($search->id);
         $xplaylist = self::_addChildToResultXml($xml, 'playlist');
@@ -983,26 +1008,36 @@ class OpenSubsonic_Xml_Data
         $xplaylist->addAttribute('name', (string)$search->get_fullname());
         $xplaylist->addAttribute('owner', (string)$search->username);
         $xplaylist->addAttribute('public', ($search->type != 'private') ? 'true' : 'false');
+        if ($songs) {
+            $allitems  = $search->get_items();
+            $songcount = count($allitems);
+            $duration  = ($songcount > 0) ? Search::get_total_duration($allitems) : 0;
+        } else {
+            $allitems  = [];
+            $songcount = $search->last_count;
+            $duration  = $search->last_duration;
+        }
+        $xplaylist->addAttribute('songCount', (string)$songcount);
+        $xplaylist->addAttribute('duration', (string)$duration);
         $xplaylist->addAttribute('created', date('c', (int)$search->date));
         $xplaylist->addAttribute('changed', date('c', time()));
+        $xplaylist->addAttribute('coverArt', $sub_id);
+        $xplaylist->addAttribute('readonly', (string)false);
 
-        if ($songs) {
-            $allitems = $search->get_items();
-            $xplaylist->addAttribute('songCount', (string)count($allitems));
-            $duration = (count($allitems) > 0) ? Search::get_total_duration($allitems) : 0;
-            $xplaylist->addAttribute('duration', (string)$duration);
-            $xplaylist->addAttribute('coverArt', $sub_id);
-            foreach ($allitems as $item) {
-                $song = new Song((int)$item['object_id']);
-                if ($song->isNew() || !$song->enabled) {
-                    continue;
-                }
-                self::addSong($xplaylist, $song, 'entry');
+        try {
+            $date = new DateTime(date("Y-m-d H:i:s", time() + 300));
+            $date->setTimezone(new DateTimeZone('UTC'));
+            $xplaylist->addAttribute('validUntil', $date->format('c'));
+        } catch (Exception $error) {
+            debug_event(self::class, 'DateTime error: ' . $error->getMessage(), 5);
+        }
+
+        foreach ($allitems as $item) {
+            $song = new Song((int)$item['object_id']);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
             }
-        } else {
-            $xplaylist->addAttribute('songCount', (string)$search->last_count);
-            $xplaylist->addAttribute('duration', (string)$search->last_duration);
-            $xplaylist->addAttribute('coverArt', $sub_id);
+            self::addSong($xplaylist, $song, 'entry');
         }
 
         return $xml;

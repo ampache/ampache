@@ -30,7 +30,14 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
   * download: Add `filter` as an alias of `id`
   * get_art: Add `filter` as an alias of `id`
   * stream: Add `filter` as an alias of `id`
+  * rate: Add `filter` as an alias of `id`
   * localplay: Add `filter` as an alias of `oid`
+  * last_shouts: Add `filter` as an alias of `username`
+  * timeline: Add `filter` as an alias of `username`
+  * toggle_follow: Add `filter` as an alias of `username`
+  * user: Add `filter` as an alias of `username`
+  * user_delete: Add `filter` as an alias of `username`
+  * user_edit: Add `filter` as an alias of `username`
 
 ### Fixed (691011)
 

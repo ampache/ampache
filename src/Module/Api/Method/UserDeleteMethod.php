@@ -50,7 +50,8 @@ final class UserDeleteMethod
      * username = (string) $username
      *
      * @param array{
-     *     username: string,
+     *     filter?: string,
+     *     username?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -62,9 +63,12 @@ final class UserDeleteMethod
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
+
+        $input['username'] = $input['filter'] ?? $input['username'] ?? null;
         if (!Api::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
+
         $username = $input['username'];
         $del_user = User::get_from_username($username);
         // don't delete yourself or admins

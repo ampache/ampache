@@ -33,6 +33,7 @@ URL paths are stil supported but they will be converted on the next catalog upda
 * Plugin
   * Use a custom generated keay for Libre.FM instead of the Last.FM key
 * Update copyright to 2026
+* Update `/rest` htaccess rewrite rules for Ampache REST implemtation
 * Artist lookup for Song Artist will match with Album Artist ID if the text matches
 * `Artist::check()` will only pull one result when searching by name or name and mbid
 * Convert remote Ampache catalog filenames from URL to the local filename
@@ -42,6 +43,8 @@ URL paths are stil supported but they will be converted on the next catalog upda
 * Show album uploads on Song owner OR Artist owner
 * Don't delete empy artists when they are owned by a user
 * Don't overwrite upload objects with tag values when set
+* Subsonic
+  * Extend playlists for OpenSubsonic [pull #204](https://github.com/opensubsonic/open-subsonic-api/pull/204/)
 
 ### Fixed
 
@@ -61,11 +64,14 @@ URL paths are stil supported but they will be converted on the next catalog upda
 * Hinting for genre tags corrected
 * Missing album_group check when updating songs
 * Set default count values for Album, Album Disk and Artist
+* Check that a path is writeable before downloading a podcast episode
 * Subsonic
   * Objects missing `playCount`
   * OpenSubsonic playlist data inserted incorrectly
   * Add `created` where missing to workaround some Navidrome clients
   * Missing Podcast Episode from id conversion
+  * Incorrect assumption of 0 being false after check parameter
+  * Genres missing from xml for objects
 * Dropbox remote catalog
   * References to dead code
   * Catch and log download exceptions

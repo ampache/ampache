@@ -2888,6 +2888,106 @@ Takes the share id to update with optional description and expires parameters.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/share_edit.json)
 
+### smartlists
+
+This returns smartlists based on the specified filter
+
+| Input         | Type       | Description                                                                                        | Optional |
+|---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'      | string     | Filter results to match this string                                                                |      YES |
+| 'exact'       | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                    |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
+| 'cond'        | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
+|               |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
+| 'sort'        | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
+|               |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
+
+* return array
+
+```JSON
+"playlist": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/smartlists.json)
+
+### smartlist
+
+This returns a single smartlist
+
+| Input    | Type   | Description                              | Optional |
+|----------|--------|------------------------------------------|---------:|
+| 'filter' | string | UID of smartlist, returns smartlist JSON |       NO |
+
+* return array
+
+```JSON
+"playlist": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/smartlist.json)
+
+### smartlist_songs
+
+This returns the songs for a smartlist
+
+| Input    | Type    | Description                                       | Optional |
+|----------|---------|---------------------------------------------------|---------:|
+| 'filter' | string  | UID of smartlist, returns song JSON               |       NO |
+| 'random' | integer | `0`, `1` (if true get random songs using limit)   |      YES |
+| 'offset' | integer | Return results starting from this index position  |      YES |
+| 'limit'  | integer | Maximum number of results to return               |      YES |
+
+* return array
+
+```JSON
+"song": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/smartlist_songs.json)
+
+### smartlist_delete
+
+This deletes a smartlist
+
+| Input    | Type   | Description      | Optional |
+|----------|--------|------------------|---------:|
+| 'filter' | string | UID of smartlist |       NO |
+
+* return object
+
+```JSON
+"success": ""
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/smartlist_delete.json)
+
 ### songs
 
 Returns songs based on the specified filter
