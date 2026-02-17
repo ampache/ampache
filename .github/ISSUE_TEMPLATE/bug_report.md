@@ -59,6 +59,6 @@ It may also make sense to post PHP settings depending on the situation.  -->
 
 ## Logs
 
-<!-- To enable logging, visit ampache.org/docs/help/#enable-logging
+<!-- To enable logging, visit https://ampache.org/docs/help/#enable-logging
 
 Please post relevant Ampache logs, and web server access/error logs, making sure to surround in triple back-ticks ``` to make into a code block. If you have large logs, it may make sense to trim them to a shorter time-frame if you know exactly when the error occurred. If appropriate, post any client error logs as well -->
