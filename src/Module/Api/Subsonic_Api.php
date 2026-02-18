@@ -880,7 +880,6 @@ class Subsonic_Api
                 if (curl_exec($curl) === false) {
                     debug_event(self::class, 'Stream error: ' . curl_error($curl), 1);
                 }
-                curl_close($curl);
             }
         } else {
             // Stream media using http redirect if no curl support
