@@ -298,7 +298,6 @@ final class Environment implements EnvironmentInterface
         );
         curl_exec($handle);
         $error = curl_errno($handle);
-        curl_close($handle);
 
         return !$error;
     }

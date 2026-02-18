@@ -246,7 +246,6 @@ class UPnPPlayer
             curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
             curl_setopt($curl, CURLOPT_HEADER, false);
             curl_exec($curl);
-            curl_close($curl);
         }
     }
 

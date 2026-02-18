@@ -147,8 +147,8 @@ class SubsonicClient
                         CURLOPT_PORT => (int)($this->_serverPort)
                     ]
                 );
+
                 $answer = curl_exec($curl);
-                curl_close($curl);
                 if ($rawAnswer) {
                     return $answer;
                 } else {

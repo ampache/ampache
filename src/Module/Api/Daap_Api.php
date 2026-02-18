@@ -128,7 +128,6 @@ class Daap_Api
                     ]
                 );
                 curl_exec($curl);
-                curl_close($curl);
             }
         } else {
             // Stream media using http redirect if no curl support
