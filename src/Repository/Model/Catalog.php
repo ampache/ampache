@@ -1188,7 +1188,6 @@ abstract class Catalog extends database_object
                 ]
             );
             curl_exec($curl);
-            curl_close($curl);
             fclose($filehandle);
 
             return true;
