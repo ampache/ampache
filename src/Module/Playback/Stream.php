@@ -302,7 +302,7 @@ class Stream
         string $media_type = 'song'
     ): string {
         if (!empty($GLOBALS['transcode'])) {
-            return $GLOBALS['transcode'][$source][$target][$player][$media_type] ?? '';
+            return $GLOBALS['transcode'][$source][$target ?? ''][$player ?? ''][$media_type] ?? '';
         }
 
         return '';
@@ -321,7 +321,7 @@ class Stream
         if (empty($GLOBALS['transcode']) || !is_array($GLOBALS['transcode'])) {
             $GLOBALS['transcode'] = [];
         }
-        $GLOBALS['transcode'][$source][$target][$player][$media_type] = $output;
+        $GLOBALS['transcode'][$source][$target ?? ''][$player ?? ''][$media_type] = $output;
     }
 
     /**
