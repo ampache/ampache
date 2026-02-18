@@ -102,7 +102,9 @@ final class UserEditMethod
 
         // identify the user to modify
         $username    = $input['username'];
-        $update_user = User::get_from_username($username);
+        $update_user = ($username !== null)
+            ? User::get_from_username($username)
+            : null;
         if ($update_user === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
