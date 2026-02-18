@@ -104,7 +104,7 @@ final class PodcastEpisodesMethod implements MethodInterface
             return $response;
         }
 
-        $podcastId = (int)($input['filter'] ?? 0);
+        $podcastId = (int)$input['filter'];
         if ($podcastId === 0) {
             throw new RequestParamMissingException(
                 sprintf(T_('Bad Request: %s'), 'filter')

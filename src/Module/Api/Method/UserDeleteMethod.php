@@ -70,7 +70,17 @@ final class UserDeleteMethod
         }
 
         $username = $input['username'];
-        $del_user = User::get_from_username($username);
+        $del_user = ($username !== null)
+            ? User::get_from_username($username)
+            : null;
+
+        if ($del_user === null) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf('Bad Request: %s', $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+
         // don't delete yourself or admins
         if ($del_user instanceof User && $del_user->username !== $user->username && $del_user->access < 100 && $del_user->delete()) {
             Api::message('successfully deleted: ' . $username, $input['api_format']);
