@@ -1487,7 +1487,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '780004'),
+('db_version', '790001'),
 ('Plugin_Last.FM', '000005'),
 ('Plugin_Home Dashboard', '2');
 
