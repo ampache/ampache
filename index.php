@@ -24,7 +24,7 @@
             </div>
             <div class="alert alert-danger">
                 <p>You must update your DocumentRoot to the new path</p>
-                <p><a href="https://github.com/ampache/ampache/wiki/Ampache-Next-Changes" target="_blank">Please check the Ampache wiki for more information</a></p>
+                <p><a href="https://ampache.org/docs/old-information/ampache5-changes" target="_blank">Please check the Ampache wiki for more information</a></p>
             </div>
         </div>
     </body>

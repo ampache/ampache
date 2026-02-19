@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Plugin\PluginProcessWantedInterface;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
@@ -108,7 +109,9 @@ final readonly class WantedManager implements WantedManagerInterface
             foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::WANTED_LOOKUP, $user) as $plugin) {
                 debug_event(self::class, 'Using Wanted Process plugin: ' . $plugin::class, 5);
 
-                $plugin->_plugin->process_wanted($this);
+                if ($plugin->_plugin instanceof PluginProcessWantedInterface) {
+                    $plugin->_plugin->process_wanted($wanted);
+                }
             }
         }
     }

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,6 +31,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\VaInfo;
+use Ampache\Plugin\AmpacheMusicBrainz;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
@@ -65,11 +66,11 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     public ?int $time = null;
 
-    public int $song_count;
+    public int $song_count = 0;
 
-    public int $album_count;
+    public int $album_count = 0;
 
-    public int $album_disk_count;
+    public int $album_disk_count = 0;
 
     public int $total_count = 0;
 
@@ -673,8 +674,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
             $mbid = '89ad4ac3-39f7-470e-963a-56509c546377';
         }
 
-        if (isset(self::$_mapcache[$name][$prefix][$mbid])) {
-            return self::$_mapcache[$name][$prefix][$mbid];
+        if (isset(self::$_mapcache[$name][$prefix ?? ''][$mbid ?? ''])) {
+            return self::$_mapcache[$name][$prefix ?? ''][$mbid ?? ''];
         }
 
         $artist_id = 0;
@@ -700,29 +701,26 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
             }
         } else {
             // look for artists with no mbid (if they exist) and then match on mbid artists last
-            $id_array   = [];
-            $sql        = "SELECT `id` FROM `artist` WHERE `mbid` IS NULL AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ORDER BY `id`;";
+            $sql        = "SELECT `id` FROM `artist` WHERE `mbid` IS NULL AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ORDER BY `id` LIMIT 1;";
             $db_results = Dba::read($sql, [$name, $full_name]);
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $id_array[] = (int)$row['id'];
-            }
-
-            $sql        = "SELECT `id`, `mbid` FROM `artist` WHERE `mbid` IS NOT NULL AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ORDER BY `id`;";
-            $db_results = Dba::read($sql, [$name, $full_name]);
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $id_array[] = (int)$row['id'];
-            }
-
-            if ($id_array !== []) {
-                // Pick the first one (nombid and nombid used before matching on mbid)
-                $artist_id = $id_array[0];
+            if ($row = Dba::fetch_assoc($db_results)) {
+                $artist_id = (int)$row['id'];
                 $exists    = true;
+            }
+
+            if (!$exists) {
+                $sql        = "SELECT `id`, `mbid` FROM `artist` WHERE `mbid` IS NOT NULL AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ORDER BY `id` LIMIT 1;";
+                $db_results = Dba::read($sql, [$name, $full_name]);
+                if ($row = Dba::fetch_assoc($db_results)) {
+                    $artist_id = (int)$row['id'];
+                    $exists    = true;
+                }
             }
         }
 
         // cache and return the result
         if ($exists && $artist_id > 0) {
-            self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
+            self::$_mapcache[$name][$prefix ?? ''][$mbid ?? ''] = $artist_id;
 
             return $artist_id;
         }
@@ -735,7 +733,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         if ($mbid !== null && $mbid !== '' && $mbid !== '0') {
             $plugin      = new Plugin('musicbrainz');
             $parsed_mbid = VaInfo::parse_mbid($mbid);
-            $data        = $plugin->_plugin->get_artist($parsed_mbid);
+            $data        = ($parsed_mbid && $plugin->_plugin instanceof AmpacheMusicBrainz)
+                ? $plugin->_plugin->get_artist($parsed_mbid)
+                : [];
             if (array_key_exists('name', $data)) {
                 $trimmed = Catalog::trim_prefix(trim((string)$data['name']));
                 $name    = $trimmed['string'];
@@ -759,7 +759,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         // map the new id
         Catalog::update_map(0, 'artist', $artist_id);
 
-        self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
+        self::$_mapcache[$name][$prefix ?? ''][$mbid ?? ''] = $artist_id;
 
         return $artist_id;
     }
@@ -789,7 +789,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
             // if that fails, insert a new artist and return the id
             $plugin = new Plugin('musicbrainz');
-            $data   = $plugin->_plugin->get_artist($parsed_mbid);
+            $data   = ($plugin->_plugin instanceof AmpacheMusicBrainz)
+                ? $plugin->_plugin->get_artist($parsed_mbid)
+                : [];
             if (array_key_exists('name', $data)) {
                 $trimmed = Catalog::trim_prefix(trim((string)$data['name']));
                 $name    = $trimmed['string'];
@@ -888,6 +890,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      *     summary?: ?string,
      *     placeformed?: ?string,
      *     yearformed?: ?int,
+     *     user?: ?int,
      *     overwrite_childs?: string,
      *     add_to_childs?: string,
      *     edit_tags?: string,
@@ -905,6 +908,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         $summary     = $data['summary'] ?? null;
         $placeformed = $data['placeformed'] ?? null;
         $yearformed  = is_numeric($data['yearformed'] ?? null) ? (int)$data['yearformed'] : null;
+        $user        = is_numeric($data['user'] ?? null) ? (int)$data['user'] : null;
         $current_id  = $this->id;
 
         // Check if name is different than the current name
@@ -955,6 +959,14 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         $this->prefix = $prefix;
         $this->name   = $name;
         $this->mbid   = $mbid;
+
+        if (isset($data['user'])) {
+            $user = ((int)$data['user'] == 0) ? null : (int)$data['user'];
+            if ($this->user != (int)$data['user']) {
+                $sql = 'UPDATE `artist` SET `user` = ? WHERE `id` = ?';
+                Dba::write($sql, [$user, $current_id]);
+            }
+        }
 
         $override_childs = false;
         if (array_key_exists('overwrite_childs', $data) && $data['overwrite_childs'] == 'checked') {
@@ -1056,7 +1068,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album_disk`.`id`) AS `album_disk_count`, `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `album` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `artist_map`.`artist_id` = ? AND `catalog`.`enabled` = '1' GROUP BY `artist_map`.`artist_id`) AS `album_disk` SET `artist`.`album_disk_count` = `album_disk`.`album_disk_count` WHERE `artist`.`album_disk_count` != `album_disk`.`album_disk_count` AND `artist`.`id` = `album_disk`.`artist_id`;";
         Dba::write($sql, $params);
         // empty artist.album_count and artist.album_disk_count
-        $sql = "UPDATE `artist` SET `album_count` = 0, `album_disk_count` = 0 WHERE `artist_map`.`artist_id` = ? AND (`album_count` > 0 OR `album_disk_count` > 0) AND `id` NOT IN (SELECT `artist_id` FROM `artist_map` WHERE `object_type` = 'album');";
+        $sql = "UPDATE `artist` SET `album_count` = 0, `album_disk_count` = 0 WHERE `artist`.`id` = ? AND (`album_count` > 0 OR `album_disk_count` > 0) AND `id` NOT IN (SELECT `artist_id` FROM `artist_map` WHERE `object_type` = 'album');";
         Dba::write($sql, $params);
         // artist.song_count
         $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `artist_map`.`artist_id` = ? AND `catalog`.`enabled` = '1' GROUP BY `artist_map`.`artist_id`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist_id`;";

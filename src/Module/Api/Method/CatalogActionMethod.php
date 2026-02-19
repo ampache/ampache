@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -54,7 +54,8 @@ final class CatalogActionMethod
      *
      * @param array{
      *     task: string,
-     *     catalog: int,
+     *     filter?: int,
+     *     catalog?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -63,12 +64,15 @@ final class CatalogActionMethod
      */
     public static function catalog_action(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, ['catalog', 'task'], self::ACTION)) {
-            return false;
-        }
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
+
+        $input['catalog'] = $input['filter'] ?? $input['catalog'] ?? null;
+        if (!Api::check_parameter($input, ['catalog', 'task'], self::ACTION)) {
+            return false;
+        }
+
         $task = (string) $input['task'];
         // confirm the correct data
         if (!in_array($task, ['add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'garbage_collect'])) {

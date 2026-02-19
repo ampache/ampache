@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -204,16 +204,10 @@ class Song extends database_object implements
             return;
         }
 
-        $info = $this->has_info($song_id);
-        if ($info === []) {
+        if (!$this->has_info($song_id)) {
             return;
         }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
-
-        $this->id   = (int)$song_id;
         $this->type = strtolower(pathinfo((string)$this->file, PATHINFO_EXTENSION));
         $this->mime = self::type_to_mime($this->type);
     }
@@ -241,34 +235,34 @@ class Song extends database_object implements
             return $check_file;
         }
         //debug_event(self::class, "insert results: " . print_r($results, true), 4);
-
-        $catalog          = $results['catalog'];
-        $file             = $results['file'];
-        $title            = (isset($results['title'])) ? Catalog::check_length(Catalog::check_title($results['title'], $file)) : null;
-        $artist           = (isset($results['artist'])) ? Catalog::check_length($results['artist']) : null;
-        $album            = (isset($results['album'])) ? Catalog::check_length($results['album']) : null;
-        $albumartist      = (isset($results['albumartist'])) ? Catalog::check_length($results['albumartist']) : null;
-        $bitrate          = $results['bitrate'] ?? 0;
-        $rate             = $results['rate'] ?? 0;
-        $mode             = $results['mode'] ?? null;
-        $size             = $results['size'] ?? 0;
-        $time             = $results['time'] ?? 0;
-        $track            = Catalog::check_track((string) $results['track']);
-        $track_mbid       = $results['mb_trackid'] ?? $results['mbid'] ?? null;
-        $album_mbid       = $results['mb_albumid'] ?? null;
-        $album_mbid_group = $results['mb_albumid_group'] ?? null;
-        $artist_mbid      = $results['mb_artistid'] ?? null;
-        $albumartist_mbid = $results['mb_albumartistid'] ?? null;
-        $disk             = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
-        $disksubtitle     = $results['disksubtitle'] ?? null;
-        $isrc             = $results['isrc'] ?? [];
-        $year             = Catalog::normalize_year($results['year'] ?? 0);
-        $comment          = $results['comment'] ?? null;
-        $tags             = $results['genre'] ?? []; // multiple genre support makes this an array
-        $lyrics           = $results['lyrics'] ?? null;
-        $user_upload      = $results['user_upload'] ?? null;
-        $composer         = (isset($results['composer'])) ? Catalog::check_length($results['composer']) : null;
-        $label            = (isset($results['publisher'])) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
+        $filtered_results = Catalog::filter_tag_results($results);
+        $catalog          = $filtered_results['catalog'];
+        $file             = $filtered_results['file'];
+        $title            = $filtered_results['title'];
+        $artist           = $filtered_results['artist'];
+        $album            = $filtered_results['album'];
+        $albumartist      = $filtered_results['albumartist'];
+        $bitrate          = $filtered_results['bitrate'];
+        $rate             = $filtered_results['rate'];
+        $mode             = $filtered_results['mode'];
+        $size             = $filtered_results['size'];
+        $time             = $filtered_results['time'];
+        $track            = $filtered_results['track'];
+        $track_mbid       = $filtered_results['mbid'];
+        $album_mbid       = $filtered_results['mb_albumid'];
+        $album_mbid_group = $filtered_results['mb_albumid_group'];
+        $artist_mbid      = $filtered_results['mb_artistid'];
+        $albumartist_mbid = $filtered_results['mb_albumartistid'];
+        $disk             = $filtered_results['disk'];
+        $disksubtitle     = $filtered_results['disksubtitle'];
+        $isrc             = $filtered_results['isrc'];
+        $year             = $filtered_results['year'];
+        $comment          = $filtered_results['comment'];
+        $tags             = $filtered_results['genre']; // multiple genre support makes this an array
+        $lyrics           = $filtered_results['lyrics'];
+        $user_upload      = $filtered_results['user_upload'];
+        $composer         = $filtered_results['composer'];
+        $label            = $filtered_results['label'];
         if ($label && AmpConfig::get('label')) {
             // create the label if missing
             foreach (array_map('trim', explode(';', $label)) as $label_name) {
@@ -277,9 +271,9 @@ class Song extends database_object implements
         }
 
         // info for the artist_map table.
-        $artists_array          = $results['artists'] ?? [];
-        $artist_mbid_array      = $results['mb_artistid_array'] ?? [];
-        $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? [];
+        $artists_array          = $filtered_results['artists'];
+        $artist_mbid_array      = $filtered_results['mb_artistid_array'];
+        $albumartist_mbid_array = $filtered_results['mb_albumartistid_array'];
         // if you have an artist array this will be named better than what your tags will give you
         if (!empty($artists_array)) {
             if (
@@ -297,57 +291,55 @@ class Song extends database_object implements
             $artist = (string)$artists_array[0];
         }
 
-        $license_id = null;
-        if (isset($results['license']) && (int)$results['license'] > 0) {
-            $license_id = (int)$results['license'];
-        }
+        $license_id            = $filtered_results['license_id'];
+        $language              = $filtered_results['language'];
+        $channels              = $filtered_results['channels'];
+        $release_type          = $filtered_results['release_type'];
+        $release_status        = $filtered_results['release_status'];
+        $replaygain_track_gain = $filtered_results['replaygain_track_gain'];
+        $replaygain_track_peak = $filtered_results['replaygain_track_peak'];
+        $replaygain_album_gain = $filtered_results['replaygain_album_gain'];
+        $replaygain_album_peak = $filtered_results['replaygain_album_peak'];
+        $r128_track_gain       = $filtered_results['r128_track_gain'];
+        $r128_album_gain       = $filtered_results['r128_album_gain'];
+        $original_year         = $filtered_results['original_year'];
+        $barcode               = $filtered_results['barcode'];
+        $catalog_number        = $filtered_results['catalog_number'];
+        $version               = $filtered_results['version'];
 
-        $language              = (isset($results['language'])) ? Catalog::check_length($results['language'], 128) : null;
-        $channels              = $results['channels'] ?? null;
-        $release_type          = (isset($results['release_type'])) ? Catalog::check_length($results['release_type'], 32) : null;
-        $release_status        = $results['release_status'] ?? null;
-        $replaygain_track_gain = $results['replaygain_track_gain'] ?? null;
-        $replaygain_track_peak = $results['replaygain_track_peak'] ?? null;
-        $replaygain_album_gain = $results['replaygain_album_gain'] ?? null;
-        $replaygain_album_peak = $results['replaygain_album_peak'] ?? null;
-        $r128_track_gain       = $results['r128_track_gain'] ?? null;
-        $r128_album_gain       = $results['r128_album_gain'] ?? null;
-        $original_year         = Catalog::normalize_year($results['original_year'] ?? 0);
-        $barcode               = (isset($results['barcode'])) ? Catalog::check_length($results['barcode'], 64) : null;
-        $catalog_number        = (isset($results['catalog_number'])) ? Catalog::check_length($results['catalog_number'], 64) : null;
-        $version               = (isset($results['version'])) ? Catalog::check_length($results['version'], 64) : null;
-
-        if (!in_array($mode, ['vbr', 'cbr', 'abr'])) {
-            debug_event(self::class, 'Error analyzing: ' . $file . ' unknown file bitrate mode: ' . $mode, 2);
-            $mode = null;
-        }
-
-        if (!isset($results['albumartist_id'])) {
-            $albumartist_id = null;
-            if ($albumartist !== null && $albumartist !== '' && $albumartist !== '0') {
-                $albumartist_mbid = Catalog::trim_slashed_list($albumartist_mbid);
-                $albumartist_id   = Artist::check($albumartist, $albumartist_mbid);
-            }
-        } else {
+        $albumartist_id = null;
+        if (isset($results['albumartist_id'])) {
             $albumartist_id = (int)($results['albumartist_id']);
+        } elseif (
+            $albumartist !== null &&
+            $albumartist !== '' &&
+            $albumartist !== '0'
+        ) {
+            $albumartist_mbid = Catalog::trim_slashed_list($albumartist_mbid);
+            $albumartist_id   = Artist::check($albumartist, $albumartist_mbid);
         }
 
-        if (!isset($results['artist_id'])) {
-            $artist_id = null;
-            if ($artist !== null && $artist !== '' && $artist !== '0') {
-                $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
-                $artist_id   = (int)Artist::check($artist, $artist_mbid);
-            }
-        } else {
+        // song artist text is the same as album artist so don't worry about looking up id's if they match
+        $artist_id = null;
+        if (
+            $albumartist_id &&
+            $albumartist &&
+            $albumartist === $artist
+        ) {
+            $artist_id = $albumartist_id;
+        } elseif (isset($results['artist_id'])) {
             $artist_id = (int)($results['artist_id']);
+        } elseif ($artist !== null && $artist !== '' && $artist !== '0') {
+            $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
+            $artist_id   = (int)Artist::check($artist, $artist_mbid);
         }
 
-        if (!isset($results['album_id'])) {
+        if (isset($results['album_id'])) {
+            $album_id = (int)($results['album_id']);
+        } else {
             $album_id = (empty($album))
                 ? 0
                 : Album::check($catalog, $album, $year, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
-        } else {
-            $album_id = (int)($results['album_id']);
         }
 
         // create the album_disk (if missing)
@@ -556,10 +548,15 @@ class Song extends database_object implements
         return true;
     }
 
-    private function has_info(int $song_id): array
+    private function has_info(int $song_id): bool
     {
         if (parent::is_cached('song', $song_id)) {
-            return parent::get_from_cache('song', $song_id);
+            $results = parent::get_from_cache('song', $song_id);
+            foreach ($results as $key => $value) {
+                $this->$key = $value;
+            }
+
+            return true;
         }
 
         $sql        = "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `album`.`album_artist` AS `albumartist`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?";
@@ -567,11 +564,14 @@ class Song extends database_object implements
         $results    = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
             parent::add_to_cache('song', $song_id, $results);
+            foreach ($results as $key => $value) {
+                $this->$key = $value;
+            }
 
-            return $results;
+            return true;
         }
 
-        return [];
+        return false;
     }
 
     public static function has_id(int|string $song_id): bool
@@ -1032,6 +1032,10 @@ class Song extends database_object implements
      * the ones in the database to see if they have changed
      * it returns false if nothing has changes, or the true
      * if they have. Static because it doesn't need this
+     * @return array{
+     *     change: bool,
+     *     element: array<string, string>
+     * }
      */
     public static function compare_song_information(Song $song, Song $new_song): array
     {
@@ -1076,6 +1080,10 @@ class Song extends database_object implements
      * compare_media_information
      * @param string[] $string_array
      * @param string[] $skip_array
+     * @return array{
+     *     change: bool,
+     *     element: array<string, string>
+     * }
      */
     public static function compare_media_information(Video|Song $media, Video|Song $new_media, array $string_array, array $skip_array): array
     {
@@ -1242,6 +1250,7 @@ class Song extends database_object implements
                 case 'size':
                 case 'title':
                 case 'track':
+                case 'user_upload':
                 case 'year':
                     // Check to see if it needs to be updated
                     if ($value != $this->$key) {
@@ -1249,6 +1258,7 @@ class Song extends database_object implements
                          * @see self::update_year()
                          * @see self::update_title()
                          * @see self::update_track()
+                         * @see self::update_user_upload()
                          * @see self::update_mbid()
                          * @see self::update_license()
                          * @see self::update_composer()
@@ -1456,6 +1466,16 @@ class Song extends database_object implements
     }
 
     /**
+     * update_user_upload
+     * this updates the user_upload field
+     */
+    public static function update_user_upload(?int $new_user_upload, int $song_id): void
+    {
+        $value = ((int)$new_user_upload === 0) ? null : (int)$new_user_upload;
+        self::_update_item('user_upload', $value, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
+    }
+
+    /**
      * update_mbid
      * updates mbid field
      * @param string $new_mbid
@@ -1514,7 +1534,8 @@ class Song extends database_object implements
         if ($old_artist != $new_artist && self::_update_item('artist', $new_artist, $song_id, AccessLevelEnum::CONTENT_MANAGER) !== false) {
             if ($update_counts && $old_artist) {
                 self::migrate_artist($new_artist, $old_artist);
-                Artist::update_table_counts();
+                Artist::update_artist_count($new_artist);
+                Artist::update_artist_count($old_artist);
             }
 
             return true;
@@ -1532,7 +1553,8 @@ class Song extends database_object implements
         if ($old_album != $new_album && self::_update_item('album', $new_album, $song_id, AccessLevelEnum::CONTENT_MANAGER, true) !== false) {
             self::migrate_album($new_album, $song_id, $old_album);
             if ($update_counts) {
-                Album::update_table_counts();
+                Album::update_album_count($new_album);
+                Album::update_album_count($old_album);
             }
 
             return true;
@@ -1805,7 +1827,7 @@ class Song extends database_object implements
     public function get_isrcs(): array
     {
         if ($this->isrc === null) {
-            $this->isrc = self::get_song_map($this->id);
+            $this->isrc = self::get_song_map_array($this->id);
         }
 
         return $this->isrc ?? [];
@@ -1904,7 +1926,7 @@ class Song extends database_object implements
      * Get song data from the song_map table (ISRC's only right now).
      * @return string[]
      */
-    public static function get_song_map(int $song_id, ?string $type = 'isrc'): array
+    public static function get_song_map_array(int $song_id, ?string $type = 'isrc'): array
     {
         $results = [];
         if (!$song_id) {
@@ -1919,6 +1941,25 @@ class Song extends database_object implements
         }
 
         return $results;
+    }
+
+    /**
+     * Get an ID or unique value from the song_map table.
+     */
+    public static function get_song_map_object_id(int $song_id, string $type): ?string
+    {
+        if (!$song_id) {
+            return null;
+        }
+
+        $sql = "SELECT DISTINCT `object_id` FROM `song_map` WHERE `object_type` = ? AND `song_id` = ?;";
+
+        $db_results = Dba::read($sql, [$type, $song_id]);
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return (string)$row['object_id'];
+        }
+
+        return null;
     }
 
     /**
@@ -2175,7 +2216,10 @@ class Song extends database_object implements
         if ($user instanceof User) {
             foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin instanceof PluginGetLyricsInterface && $plugin->load($user)) {
+                if (
+                    $plugin->_plugin instanceof PluginGetLyricsInterface &&
+                    $plugin->load($user)
+                ) {
                     $lyrics = $plugin->_plugin->get_lyrics($this);
                     if (!empty($lyrics)) {
                         // save the lyrics if not set before
@@ -2340,17 +2384,17 @@ class Song extends database_object implements
             Catalog::migrate_map('artist', $old_artist, $new_artist);
             // update mapping tables
             $sql = "UPDATE IGNORE `album_map` SET `object_id` = ? WHERE `object_id` = ?";
-            if (Dba::write($sql, [$new_artist, $old_artist]) === false) {
+            if (Dba::write($sql, [$new_artist, $old_artist]) === null) {
                 return false;
             }
 
             $sql = "UPDATE IGNORE `artist_map` SET `artist_id` = ? WHERE `artist_id` = ?";
-            if (Dba::write($sql, [$new_artist, $old_artist]) === false) {
+            if (Dba::write($sql, [$new_artist, $old_artist]) === null) {
                 return false;
             }
 
             $sql = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-            if (Dba::write($sql, [$new_artist, 'artist', $old_artist]) === false) {
+            if (Dba::write($sql, [$new_artist, 'artist', $old_artist]) === null) {
                 return false;
             }
 
@@ -2385,29 +2429,29 @@ class Song extends database_object implements
 
         // update mapping tables
         $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `album_id` = ?";
-        if (Dba::write($sql, [$new_album, $old_album]) === false) {
+        if (Dba::write($sql, [$new_album, $old_album]) === null) {
             return false;
         }
 
         if ($song_id > 0) {
             $sql = "UPDATE IGNORE `album_map` SET `album_id` = ? WHERE `album_id` = ? AND `object_id` = ? AND `object_type` = 'song'";
-            if (Dba::write($sql, [$new_album, $old_album, $song_id]) === false) {
+            if (Dba::write($sql, [$new_album, $old_album, $song_id]) === null) {
                 return false;
             }
         } else {
             $sql = "UPDATE IGNORE `album_map` SET `album_id` = ? WHERE `album_id` = ? AND `object_type` = 'song'";
-            if (Dba::write($sql, [$new_album, $old_album]) === false) {
+            if (Dba::write($sql, [$new_album, $old_album]) === null) {
                 return false;
             }
         }
 
         $sql = "UPDATE IGNORE `artist_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-        if (Dba::write($sql, [$new_album, 'album', $old_album]) === false) {
+        if (Dba::write($sql, [$new_album, 'album', $old_album]) === null) {
             return false;
         }
 
         $sql = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-        if (Dba::write($sql, [$new_album, 'album', $old_album]) === false) {
+        if (Dba::write($sql, [$new_album, 'album', $old_album]) === null) {
             return false;
         }
 

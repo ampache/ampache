@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -115,6 +115,32 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                 <td><input type="text" name="year" value="<?php echo scrub_out((string)$libitem->year); ?>" /></td>
             </tr>
             <tr>
+                <td>
+                    <?php echo T_('Owner'); ?><br />
+                </td>
+                <td>
+                <?php if ($has_access) {
+                    $selected = (!$libitem->user_upload) ? ' selected="selected"' : '';
+                    $options  = [
+                        '<option value="0"' . $selected . '></option>'
+                    ];
+                    if (!empty($users)) {
+                        /** @var string[] $users */
+                        foreach ($users as $user_id => $username) {
+                            if ($user_id < 1) {
+                                continue;
+                            }
+                            $selected  = ($user_id == $libitem->user_upload) ? ' selected="selected"' : '';
+                            $options[] = '<option value="' . $user_id . '"' . $selected . '>' . scrub_out($username) . '</option>';
+                        }
+                        echo '<select name="user_upload">' . implode("\n", $options) . '</select>';
+                    } ?>
+                <?php } else {
+                    echo '<input type="hidden" name="user_upload" value="' . $libitem->user_upload . '"/>' . $libitem->user_upload;
+                } ?>
+                </td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres'); ?></td>
                 <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display(Tag::get_top_tags('song', $libitem->id, 0)); ?>" /></td>
             </tr>
@@ -136,7 +162,7 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                     <div class="metadataAccordion">
                     <table class="tabledata">
                         <?php
-                        $dismetas = $metadataManager->getDisabledMetadataFields();
+                    $dismetas = $metadataManager->getDisabledMetadataFields();
             foreach ($metadataManager->getMetadata($libitem) as $metadata) {
                 /** @var Metadata $metadata */
                 $field = $metadata->getField();

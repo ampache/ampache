@@ -1,5 +1,81 @@
 # CHANGELOG
 
+## Ampache 7.9.0
+
+Ampache and Subsonic catalogs will store the filename instead of the remote URL.
+
+URL paths are stil supported but they will be converted on the next catalog update.
+
+**Note** that this may cause duplicate file paths which can not be updated for existing files.
+
+### Added
+
+* Translations 2026-01-20
+* Database 790001
+  * Update Dropbox catalog `authtoken` (if installed)
+* Build for PHP 8.5
+* Add a warning to playlist sort commands because it saves a new order
+* Allow hiding upload artist and album selection rows with CSS (`upload_select_row`)
+* Custom CSS in `public/templates/custom.css` when the file exists
+* Add the remote id of songs to the `song_map` table
+* Extend `Dba::check_database_inserted()` tables a bit more
+* Support Update from tags actions for Remote Ampache and Subsonic catalogs
+* Support download actions on remote song objects
+* Added another cleanup check on zip downloads
+* Allow owner selection on Song and Artist objects
+* Add license tags to VaInfo output
+
+### Changed
+
+* CLI
+  * install: Ignore user exist failure
+  * install: Check database is a valid database before failing without overwrite
+* Plugin
+  * Use a custom generated keay for Libre.FM instead of the Last.FM key
+* Update copyright to 2026
+* Update `/rest` htaccess rewrite rules for Ampache REST implemtation
+* Artist lookup for Song Artist will match with Album Artist ID if the text matches
+* `Artist::check()` will only pull one result when searching by name or name and mbid
+* Convert remote Ampache catalog filenames from URL to the local filename
+* Convert remote Subsonic catalog filenames from URL to the local filename
+* Update and Insert Song tags now use the same function and process to filter data
+* When inserting and updating tags, check Song artist after Album Artist to allow text fallback
+* Show album uploads on Song owner OR Artist owner
+* Don't delete empy artists when they are owned by a user
+* Don't overwrite upload objects with tag values when set
+* Subsonic
+  * Extend playlists for OpenSubsonic [pull #204](https://github.com/opensubsonic/open-subsonic-api/pull/204/)
+
+### Fixed
+
+* Art raw column can be null
+* ISRC could be sent as a string from some places
+* Subsonic remote catalog missing data keys for Song updates
+* Genre for remote Ampache and Subsonic catalogs not being read correctly
+* Error missing tag values when updating remote files
+* Subsonic remote catalog missing `getAlbum` as a command
+* Call download actions on remote caching action
+* Emails without `fullname`
+* Updating Art was hidden when you were the owner of the object
+* Song tag insert and update issues
+* SQL error in `Artist::update_artist_count()`
+* Scrub output on Broadcast and Song_Preview pages
+* Language tags would not be set in some cases
+* Hinting for genre tags corrected
+* Missing album_group check when updating songs
+* Set default count values for Album, Album Disk and Artist
+* Check that a path is writeable before downloading a podcast episode
+* Subsonic
+  * Objects missing `playCount`
+  * OpenSubsonic playlist data inserted incorrectly
+  * Add `created` where missing to workaround some Navidrome clients
+  * Missing Podcast Episode from id conversion
+  * Incorrect assumption of 0 being false after check parameter
+  * Genres missing from xml for objects
+* Dropbox remote catalog
+  * References to dead code
+  * Catch and log download exceptions
+
 ## Ampache 7.8.0
 
 Bitrate options in the database for transcoding are defined in units of 1000 (e.g. 128 == 128000)
@@ -47,7 +123,7 @@ If you are also having issues try downgrading to composer [2.8.12](https://getco
 * Don't change the page title when `song_page_title` is enabled
 * Update translation guidelines for new CLI Transifex version
 * Update composer and npm packages
-* Update alternative streaming action (Play2Action) to try and stop closing transcode streams early 
+* Update alternative streaming action (Play2Action) to try and stop closing transcode streams early
 * Subsonic
   * Filter list calls by your user instead of public/shared information by default (disable `subsonic_single_user_data` to restore old behavior)
 
@@ -164,7 +240,7 @@ If you are also having issues try downgrading to composer [2.8.12](https://getco
 * Art inserted from URL would insert as a PHP mime type
 * Garbage Collection from the Web UI didn't send catalogs correctly
 * Filename checked as a change in tag comparison
-* Bad regex in MusicBrainz art collector 
+* Bad regex in MusicBrainz art collector
 * Null values in `parse_mbid_array`
 * Search
   * Local image `has_image` search didn't count missing joins
@@ -958,7 +1034,7 @@ Fixed some slowdowns due to preference name and location look ups happening for 
 
 ## Ampache 7.0.0
 
-Information and changes for this major release are recorded in the wiki. [Ampache7 for Admins](https://github.com/ampache/ampache/wiki/ampache7-for-admins) and [Ampache7 for Users](https://github.com/ampache/ampache/wiki/ampache7-for-users).
+Information and changes for this major release are recorded in the wiki. [Ampache7 for Admins](https://ampache.org/docs/help/troubleshooting/ampache7-for-admins) and [Ampache7 for Users](https://ampache.org/docs/help/troubleshooting/ampache7-for-users).
 
 Ampache7 still supports upgrading your database from any version higher than 3.6.0 (released in 2013!)
 
@@ -1312,7 +1388,7 @@ This release has made greater use of browses reducing reliance on customizing mi
 
 Work on Ampache7 is ongoing.
 
-Check out the [wiki](https://github.com/ampache/ampache/wiki/ampache7-for-admins) for information as some changes will be backported to Ampache6.
+Check out the [wiki](https://ampache.org/docs/help/troubleshooting/ampache7-for-admins) for information as some changes will be backported to Ampache6.
 
 There has been a change to the way Random Searches work for Artist and Albums
 These searches will now use to rules for that object type and then return the songs contained in those objects
@@ -1696,7 +1772,7 @@ Use `php bin/installer htaccess -e` to update your htaccess files
 ### Added
 
 * Plugins
-  * Lyrist Lyrics (https://github.com/asrvd/lyrist)
+  * Lyrist Lyrics (`https://github.com/asrvd/lyrist`)
 
 ### Changed
 
@@ -1727,11 +1803,11 @@ Use `php bin/installer htaccess -e` to update your htaccess files
 
 **NOTE** For database update 600005; please consider using the CLI update command (`php bin/cli admin:updateDatabase -e`)
 
-For information about Admin and backend changes check out [Ampache6 for Admins](https://github.com/ampache/ampache/wiki/ampache6-details)
+For information about Admin and backend changes check out [Ampache6 for Admins](https://ampache.org/docs/old-information/ampache6-details)
 
-For information about what you'll see and changed behavior's check out [Ampache6 for Users](https://github.com/ampache/ampache/wiki/ampache6-for-users)
+For information about what you'll see and changed behavior's check out [Ampache6 for Users](https://ampache.org/docs/old-information/ampache6-for-users)
 
-You can now use a permanent session token for streaming. (check out the [wiki](https://github.com/ampache/ampache/wiki/ampache6-details#allow-permalink-user-streams)!)
+You can now use a permanent session token for streaming. (check out the [wiki](https://ampache.org/docs/old-information/ampache6-details#allow-permalink-user-streams)!)
 
 You can find example Subsonic responses from an official server and Ampache server [here](https://ampache.org/api/subsonic)
 
@@ -1856,13 +1932,13 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Change all the Information pages into browses (Default to Album/Album Disk)
 * Add extra types to the Information pages
 * Combined all Albums into single Album objects
-* Remove Channels from Ampache (Use [icecast](https://github.com/ampache/ampache/wiki/Ampache-Icecast-and-Liquidsoap) instead)
+* Remove Channels from Ampache (Use [icecast](https://ampache.org/docs/configuration/Ampache-Icecast-and-Liquidsoap/) instead)
 * Download URL parameter order matching "client, action, cache"
 * Add `barcode`, `catalog_number` and `subtitle` to Album::check() for comparison checks
 * Rework user_playlists (used for Now Playing & Play Queue operations)
 * Workaround time for dsub playqueue by converting to UTC
 * An upload_catalog should only be a music catalog
-* Redirect Democratic and Random Play actions with a http 308 response (https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308)
+* Redirect Democratic and Random Play actions with a http 308 response (`https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308`)
 * Add username column to playlist and search rows and allow sorting
 * Show empty properties on song pages
 * Split filename and folder properties on song and video pages
@@ -1911,7 +1987,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Art from share page
 * Remove the auth parameter from image URLs
 * Option to 'Force Democratic Play' has been removed from the config page
-  * Check the [wiki](https://github.com/ampache/ampache/wiki/ampache6-details#configure-democratic-playlist-options-directly) for details
+  * Check the [wiki](https://ampache.org/docs/old-information/ampache6-details#configure-democratic-playlist-options-directly) for details
 * Remove all reference to deleted database updates (not required)
 * Plugins
   * The Movie Database (TMDB) plugin
@@ -1986,7 +2062,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 ### Added
 
-* Fork https://github.com/scaron/prettyphoto and add jQuery3 support
+* Fork `https://github.com/scaron/prettyphoto` and add jQuery3 support
 * Added an empty example plugin to the docs folder AmpacheExample.php
 * CLI
   * New cli command `bin/cli show:version` (Print the Ampache version number)
@@ -2247,7 +2323,7 @@ You will get this error when using the zip releases so we need to do it. At leas
 
 Private catalogs have been given a lot of love. This feature allows you to assign a catalog to multiple users instead of just one.
 
-Check out the [wiki](https://github.com/ampache/ampache/wiki/catalog-filters) for more information about this feature.
+Check out the [wiki](https://ampache.org/docs/configuration/catalog-filters/) for more information about this feature.
 
 **NOTE** Any user that has a private catalog will have their own filter group created which includes all public catalogs
 
@@ -2297,7 +2373,7 @@ PHP8.1 has now been fixed up completely and is now fully supported.
 
 ### Changed
 
-* Private catalogs have been migrated into [Catalog filters](https://github.com/ampache/ampache/wiki/catalog-filters)
+* Private catalogs have been migrated into [Catalog filters](https://ampache.org/docs/configuration/catalog-filters/)
 * Interface cookies for the sidebar state have new names matching their page and group
 * Made getID function required for library_item's
 * Update codeql-analysis.yml to v2
@@ -2492,7 +2568,7 @@ This cycle we have added support for multiple Album and Song artists.
 
 This allows multiple artists to be part of a single song/album object and is created from file tags.
 
-Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for more information about this feature.
+Check out the [wiki](https://ampache.org/docs/configuration/multi-artist/) for more information about this feature.
 
 The old and long ignored module [jPlayer](https://github.com/jplayer/jPlayer) has been forked into the base Ampache code.
 
@@ -2901,10 +2977,10 @@ API3 is not recommended for use outside of running old applications and it is re
 
 Ampache 5 is here and it's big!
 
-* Check out [Ampache 5 for Admins](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
-* As well as [Ampache 5 for Users](https://github.com/ampache/ampache/wiki/Ampache-5-for-users)
-* The bin folder has had a major [rework](https://github.com/ampache/ampache/wiki/cli-faq)
-* You can pre cache files using [Transcode Caching](https://github.com/ampache/ampache/wiki/Transcode-Caching)
+* Check out [Ampache 5 for Admins](https://ampache.org/docs/old-information/ampache5-changes)
+* As well as [Ampache 5 for Users](https://ampache.org/docs/old-information/ampache5-for-users)
+* The bin folder has had a major [rework](https://ampache.org/docs/help/troubleshooting/cli)
+* You can pre cache files using [Transcode Caching](https://ampache.org/docs/configuration/transcoding/transcode-caching)
 
 **IMPORTANT** instead of using date() we are now using IntlDateFormatter and your locale to identify formats.
 This means that 'custom_datetime' based on the date() format is incorrect and will look weird.
@@ -2927,7 +3003,7 @@ If you want to keep utf8 make sure you set it before running updates.
 ### Added
 
 * Private catalogs! You can now set a public or per user catalog for your music folders
-* Cache transcoded files before a user requests them with [Transcode Caching](https://github.com/ampache/ampache/wiki/Transcode-Caching)
+* Cache transcoded files before a user requests them with [Transcode Caching](https://ampache.org/docs/configuration/transcoding/transcode-caching)
 * Added a CONTRIBUTING.md file
 * php-intl is now required for translation of date formats into your locale
 * Added %R (Release Status) to catalog pattern matching
@@ -2982,7 +3058,7 @@ If you want to keep utf8 make sure you set it before running updates.
   * catalog_ignore_pattern: Allow you to ignore audio, video and playlist files with a regex
 * NEW cli commands
   * `run:moveCatalogPath`: Change a Catalog path
-  * `run:cacheProcess`: Run the [cache process](https://github.com/ampache/ampache/wiki/Transcode-Caching)
+  * `run:cacheProcess`: Run the [cache process](https://ampache.org/docs/configuration/transcoding/transcode-caching)
   * `export:databaseArt`: Export all database art to local_metadata_dir
 
 ### Changed
@@ -3168,7 +3244,7 @@ If you want to keep utf8 make sure you set it before running updates.
 
 ## Ampache 4.4.0-release
 
-Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
+Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://ampache.org/docs/old-information/ampache5-changes)
 
 ### Added
 
@@ -3488,7 +3564,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Added Spotify art searches for both album and artist images.
 * Updated component installer and php-cs-fixer package.
 * Translation updates (April 2020, May 2020, July 2020)
-* Added declare(strict_types=0); to lib/* and lib/class/* (requires more work before it can be enabled)
+* Added declare(strict_types=0); to `lib/*` and `lib/class/*` (requires more work before it can be enabled)
 * Add 250 for search form limits in the web UI. (Jump from 100 to 500 is pretty big)
 * Add Recently updated/added to search rules
 * Add regex searching to text fields. ([<https://mariadb.com/kb/en/regexp/>])
@@ -3764,7 +3840,7 @@ Notes about this release that can't be summed up in a log line
 * HTML5 doctype across the board. (DOCTYPE html)
 * Lots of HTML and UI fixes courtesy of @kuzi-moto
 * If you are using charts/graphs there has been a change regarding c-pchart
-  * [chart-faq](https://github.com/ampache/ampache/wiki/chart-faq)
+  * [chart-faq](https://ampache.org/docs/help/troubleshooting/cli)
 * Numerous catalog updates to allow data migration when updating file tags meaning faster tag updates/catalog verify! (Updating an album would update each file multiple times)
   * UserActivity::migrate, Userflag::migrate, Rating::migrate, Catalog::migrate,
   * Shoutbox::migrate, Recommendation::migrate, Tag::migrate, Share::migrate
@@ -4546,7 +4622,7 @@ Notes about this release that can't be summed up in a log line
   %10 reduces cpu load due to javascript excution (Thx Dmole)
 * Add bmp to the list of allowed / supported album art types
 * Strip extranious whitespace from cmdline catalog update (Thx ascheel)
-* Fix catalog size math for catalogs up to 4TB (Thx Joost.t.Hart@planet.nl)
+* Fix catalog size math for catalogs up to 4TB (Thx <Joost.t.Hart@planet.nl>)
 * Fix httpQ not correctly skipping to new song
 * Fix refreshing of Localplay playlist when an item is skipped to
 * Fix missing Content-Disposition filename= on non-transcoded songs
@@ -4592,7 +4668,7 @@ Notes about this release that can't be summed up in a log line
 * Fix random methods not working for Localplay
 * Fixed extra space on prefixed albums (Thx ibizaman)
 * Add missing operator on tag and rating searches so they will
-  work with other methods (Thx kiehnet@netscape.net)
+  work with other methods (Thx <kiehnet@netscape.net>)
 * Add MusicBrainz MBID support to uniqly identify albums and
   also get more album art (Thx flowerysong)
 * Fix the URL to song function

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -653,7 +653,7 @@ final class PlayAction implements ApplicationActionInterface
                     ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic) &&
                     (bool)AmpConfig::get('cache_remote', false)
                 ) {
-                    $media_file = $catalog->getRemoteStreamingUrl($media);
+                    $media_file = $catalog->getRemoteStreamingUrl($media, 'download');
                     if ($file_target && $media_file) {
                         $catalog->cache_catalog_file($file_target, $media_file);
                     }
@@ -701,7 +701,7 @@ final class PlayAction implements ApplicationActionInterface
                 return null;
             } else {
                 // Some catalogs redirect you to the remote url so stop here
-                $remoteStreamingUrl = $catalog->getRemoteStreamingUrl($media);
+                $remoteStreamingUrl = $catalog->getRemoteStreamingUrl($media, $action);
                 if ($remoteStreamingUrl !== null) {
                     $this->logger->debug(
                         'Started remote stream - ' . $remoteStreamingUrl,

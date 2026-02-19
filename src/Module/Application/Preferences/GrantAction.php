@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,6 +29,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Plugin\AmpacheLastfm;
+use Ampache\Plugin\Ampachelibrefm;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -82,7 +84,13 @@ final class GrantAction implements ApplicationActionInterface
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->_plugin !== null) {
                     $plugin->load($user);
-                    if ($plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))) {
+                    if (
+                        (
+                            $plugin->_plugin instanceof Ampachelibrefm ||
+                            $plugin->_plugin instanceof AmpacheLastfm
+                        ) &&
+                        $plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))
+                    ) {
                         $title = T_('No Problem');
                         $text  = T_('Your account has been updated') . ' : ' . $plugin_name;
                     } else {

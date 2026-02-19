@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,7 +55,8 @@ final class RecordPlayMethod
      * date   = (integer) UNIXTIME() //optional
      *
      * @param array{
-     *     id: string,
+     *     filter?: string,
+     *     id?: string,
      *     user?: int|string,
      *     client?: string,
      *     date?: int,
@@ -67,6 +68,7 @@ final class RecordPlayMethod
      */
     public static function record_play(array $input, User $user): bool
     {
+        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
         if (!Api::check_parameter($input, ['id'], self::ACTION)) {
             return false;
         }

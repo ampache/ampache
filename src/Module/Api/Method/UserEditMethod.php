@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -68,7 +68,8 @@ final class UserEditMethod
      * clear_stats       = (integer) 0,1 true reset all stats for this user //optional
      *
      * @param array{
-     *     username: string,
+     *     filter?: string,
+     *     username?: string,
      *     fullname?: string,
      *     password?: string,
      *     email?: string,
@@ -93,13 +94,17 @@ final class UserEditMethod
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
+
+        $input['username'] = $input['filter'] ?? $input['username'] ?? null;
         if (!Api::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
 
         // identify the user to modify
         $username    = $input['username'];
-        $update_user = User::get_from_username($username);
+        $update_user = ($username !== null)
+            ? User::get_from_username($username)
+            : null;
         if ($update_user === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,7 +48,8 @@ final class ToggleFollowMethod
      * username = (string) $username
      *
      * @param array{
-     *     username: string,
+     *     filter?: string,
+     *     username?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -62,9 +63,12 @@ final class ToggleFollowMethod
 
             return false;
         }
+
+        $input['username'] = $input['filter'] ?? $input['username'] ?? null;
         if (!Api::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
+
         $username = $input['username'];
         if (!empty($username)) {
             $leader = User::get_from_username($username);

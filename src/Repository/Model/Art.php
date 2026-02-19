@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -75,7 +75,7 @@ class Art extends database_object
 
     public int $height = 0;
 
-    public string $raw = '';
+    public ?string $raw = null;
 
     public string $raw_mime = '';
 
@@ -203,10 +203,6 @@ class Art extends database_object
             }
         }
 
-        if ($test && $image && imagedestroy($image) === false) {
-            throw new RuntimeException('The image handle from source: ' . $source . ' could not be destroyed');
-        }
-
         return $test;
     }
 
@@ -251,7 +247,7 @@ class Art extends database_object
         }
 
         if ($size === 'original' || !$this->thumb) {
-            return $this->raw;
+            return $this->raw ?? '';
         } else {
             return $this->thumb;
         }
@@ -270,6 +266,9 @@ class Art extends database_object
             if (AmpConfig::get('album_art_store_disk')) {
                 $this->raw = (string)self::read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
             } else {
+                if (empty($results['image'])) {
+                    return false;
+                }
                 $this->raw = $results['image'];
             }
 
@@ -350,7 +349,9 @@ class Art extends database_object
 
         // If there is no thumb in the database and we want one we have to generate it
         if ($this->get_image($fallback, $size)) {
-            $data = $this->generate_thumb($this->raw, $thumb_size, $this->raw_mime);
+            $data = ($this->raw)
+                ? $this->generate_thumb($this->raw, $thumb_size, $this->raw_mime)
+                : [];
 
             // thumb wasn't generated
             if ($data === []) {
@@ -1642,7 +1643,13 @@ class Art extends database_object
             echo "<div class=\"item_art_actions\">";
             if (
                 $user instanceof User &&
-                ($user->has_access(AccessLevelEnum::CONTENT_MANAGER) || $user->has_access(AccessLevelEnum::USER) && $user->id == $libitem->get_user_owner())
+                (
+                    $user->has_access(AccessLevelEnum::CONTENT_MANAGER) ||
+                    (
+                        $user->has_access(AccessLevelEnum::USER) &&
+                        $user->id == $libitem->get_user_owner()
+                    )
+                )
             ) {
                 $ajax_str = ((AmpConfig::get('ajax_load')) ? '#' : '');
                 echo "<a href=\"javascript:NavigateTo('" . $web_path . "/" . $ajax_str . "arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";

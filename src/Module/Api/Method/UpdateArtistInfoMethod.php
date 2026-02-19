@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,7 +51,8 @@ final class UpdateArtistInfoMethod
      * id = (string) $artist_id
      *
      * @param array{
-     *     id: string,
+     *     filter?: string,
+     *     id?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -60,13 +61,14 @@ final class UpdateArtistInfoMethod
      */
     public static function update_artist_info(array $input, User $user): bool
     {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
+            return false;
+        }
+        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
         if (!Api::check_parameter($input, ['id'], self::ACTION)) {
             return false;
         }
 
-        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
         $object_id = (int) $input['id'];
         $item      = new Artist($object_id);
         if ($item->isNew()) {

@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -115,9 +115,11 @@ final class RefreshUpdatedAction extends AbstractEditAction
             case 'song_row':
                 /** @var Song $libitem */
                 $hide_genres    = AmpConfig::get('hide_genres');
+                $is_group       = AmpConfig::get('album_group');
                 $show_license   = AmpConfig::get('licensing') && AmpConfig::get('show_license');
-                $argument_param = '&hide=' . Core::get_request('hide');
-                $argument       = explode(',', Core::get_request('hide'));
+                $hide           = Core::get_request('hide');
+                $argument_param = '&hide=' . $hide;
+                $argument       = explode(',', $hide);
                 $hide_artist    = in_array('cel_artist', $argument);
                 $hide_album     = in_array('cel_album', $argument);
                 $hide_year      = in_array('cel_year', $argument);
@@ -133,7 +135,8 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
                         ->setContext('ARGUMENT_PARAM', $argument_param)
                         ->setContext('IS_TABLE_VIEW', true)
-                        ->setContext('IS_SHOW_TRACK', (!empty($argument)))
+                        ->setContext('IS_ALBUM_GROUP', $is_group)
+                        ->setContext('IS_SHOW_TRACK', (!empty($hide)))
                         ->setContext('IS_SHOW_LICENSE', $show_license)
                         ->setContext('IS_HIDE_GENRE', $hide_genres)
                         ->setContext('IS_HIDE_ARTIST', $hide_artist)

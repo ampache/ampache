@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,7 +36,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
 {
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
-    private const VERSION = '7.8.0'; // AMPACHE_VERSION
+    private const VERSION = '7.9.0'; // AMPACHE_VERSION
 
     private const CONFIG_VERSION = '85';
 
