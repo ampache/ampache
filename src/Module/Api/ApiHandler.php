@@ -125,6 +125,30 @@ final class ApiHandler implements ApiHandlerInterface
             $input['auth'] = $gatekeeper->getAuth();
         }
 
+        // normalize input types (REST paths)
+        if (isset($input['type'])) {
+            $input['type'] = match ($input['type']) {
+                'album_artists', 'album-artists', 'album-artist' => 'album_artist',
+                'albums' => 'album',
+                'artists' => 'artist',
+                'bookmarks' => 'bookmark',
+                'catalogs' => 'catalog',
+                'genres', 'tags' => 'genre',
+                'labels' => 'label',
+                'live_streams', 'live-streams', 'live-stream' => 'live_stream',
+                'playlists' => 'playlist',
+                'podcast_episodes', 'podcast-episodes', 'podcast-episode' => 'podcast_episode',
+                'podcasts' => 'podcast',
+                'shares' => 'share',
+                'smartlists' => 'smartlist',
+                'song_artists', 'song-artists', 'song-artist' => 'song_artist',
+                'songs' => 'song',
+                'users' => 'user',
+                'videos' => 'video',
+                default => $input['type'],
+            };
+        }
+
         $api_format = $input['api_format'];
         $version    = (isset($input['version']))
             ? $input['version']
