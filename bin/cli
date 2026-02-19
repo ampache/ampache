@@ -24,7 +24,6 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Cli;
 use Ampache\Repository\Model\User;
@@ -46,7 +45,7 @@ $app = new Ahc\Cli\Application(
     $dic->get(ConfigContainerInterface::class)->get('version')
 );
 
-if (AmpConfig::get('cli_no_color')) {
+if ($dic->get(ConfigContainerInterface::class)->get('cli_no_color')) {
     Ahc\Cli\Output\Color::$enabled = false;
 }
 
