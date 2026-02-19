@@ -3850,15 +3850,21 @@ class OpenSubsonic_Api
         }
 
         // check that all the objects are valid
-        $all_media = [];
+        $valid_media = [];
         foreach ($sub_ids as $sub_id) {
-            $media     = self::getAmpacheObject((string)$sub_id);
-            if (!$media instanceof Media || !isset($media->time) || !isset($media->id)) {
-                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-
-                return;
+            $object      = self::getAmpacheObject((string)$sub_id);
+            $object_type = self::getAmpacheType($sub_id);
+            if ($object_type === "" || !$object instanceof Media || !method_exists($object, 'isNew') || $object->isNew() || !isset($object->time) || !isset($object->id)) {
+                continue;
             }
-            $all_media[] = [$media, $sub_id];
+
+            $valid_media[] = [$object, $object_type];
+        }
+
+        if ($valid_media === []) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
         }
 
         $submission = (array_key_exists('submission', $input) && (strtolower($input['submission']) === 'true' || $input['submission'] === '1'));
@@ -3868,14 +3874,13 @@ class OpenSubsonic_Api
         $now_time       = time();
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
-            foreach ($all_media as list($media, $sub_id)) {
+            foreach ($valid_media as list($media, $type)) {
                 $time = (isset($input['time']))
                     ? (int)(((int)$input['time']) / 1000)
                     : time();
                 $previous  = Stats::get_last_play($user->id, $client, $time);
                 $prev_obj  = $previous['object_id'] ?: 0;
                 $prev_date = $previous['date'];
-                $type      = self::getAmpacheType($sub_id);
 
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
