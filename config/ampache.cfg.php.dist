@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 85
+config_version = 86
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -14,6 +14,12 @@ config_version = 85
 ; EXAMPLE VALUES: "UTC", "Europe/London", "America/Los_Angeles" (https://www.php.net/manual/en/timezones.php)
 ; DEFAULT: "UTC"
 ;date_timezone = "UTC"
+
+; Disable colors for cli output to have better reading on white-on-black terminal
+; You  can temporarily disable all color output by settin NO_COLOR env var to 1
+; Example : NO_COLOR=1 bin/cli show:version
+; DEFAULT: false
+;cli_no_color = "false"
 
 ;#########################################################
 ; Auto Update                                            #
