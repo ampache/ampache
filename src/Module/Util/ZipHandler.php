@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,6 +32,7 @@ use Ampache\Module\System\LegacyLogger;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Exception;
 use ZipArchive;
 
 final class ZipHandler implements ZipHandlerInterface
@@ -54,6 +55,16 @@ final class ZipHandler implements ZipHandlerInterface
             $object_type,
             $this->configContainer->getTypesAllowedForZip()
         );
+    }
+
+    /**
+     * Clean up the generated zip file
+     */
+    public static function destroyZip(?string $zipFile): void
+    {
+        if ($zipFile && is_file($zipFile)) {
+            @unlink($zipFile);
+        }
     }
 
     /**
@@ -137,23 +148,33 @@ final class ZipHandler implements ZipHandlerInterface
         // Various different browsers dislike various characters here. Strip them all for safety.
         $normalizedArchiveName = trim(str_replace(['"', "'", '\\', ';', "\n", "\r"], '', $archiveName . '.zip'));
 
+        $body    = $this->streamFactory->createStreamFromFile($this->zipFile);
+        $zipPath = $this->zipFile;
+
+        register_shutdown_function(static function () use ($body, $zipPath): void {
+            try {
+                // close stream resource first (helps on Windows)
+                if (method_exists($body, 'close')) {
+                    $body->close();
+                }
+            } catch (Exception $error) {
+                debug_event(self::class, 'zip error: ' . $error->getMessage(), 5);
+            }
+
+            self::destroyZip($zipPath);
+        });
+
         return $response
             ->withHeader('Content-Type', 'application/zip')
             ->withHeader('Content-Disposition', sprintf('attachment; filename*=UTF-8\'\'%s', rawurlencode($normalizedArchiveName)))
             ->withHeader('Pragma', 'public')
             ->withHeader('Cache-Control', 'public, must-revalidate')
             ->withHeader('Content-Transfer-Encoding', 'binary')
-            ->withBody(
-                $this->streamFactory->createStreamFromFile($this->zipFile)
-            );
+            ->withBody($body);
     }
 
     public function __destruct()
     {
-        // cleanup the generated file
-        if ($this->zipFile && is_file($this->zipFile)) {
-            @unlink($this->zipFile);
-        }
-        $this->zipFile = null;
+        self::destroyZip($this->zipFile);
     }
 }

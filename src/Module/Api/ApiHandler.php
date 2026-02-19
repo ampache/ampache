@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -115,7 +115,8 @@ final class ApiHandler implements ApiHandlerInterface
         $is_register  = $action == RegisterMethod::ACTION;
         $is_forgotten = $action == LostPasswordMethod::ACTION;
         $is_public    = ($is_handshake || $is_ping || $is_register || $is_forgotten);
-        $post         = ($request->getMethod() === 'POST')
+        $method       = strtoupper($request->getMethod());
+        $post         = (in_array($method, ['POST', 'PATCH', 'PUT', 'DELETE']))
             ? (array)$request->getParsedBody()
             : [];
         $input        = array_merge($request->getQueryParams(), $post);
@@ -123,6 +124,31 @@ final class ApiHandler implements ApiHandlerInterface
         if (!isset($input['auth'])) {
             $header_auth   = true;
             $input['auth'] = $gatekeeper->getAuth();
+        }
+
+        // normalize input types (REST paths)
+        if (isset($input['type'])) {
+            $input['type'] = match ($input['type']) {
+                'album_artists', 'album-artists', 'album-artist' => 'album_artist',
+                'albums' => 'album',
+                'artists' => 'artist',
+                'bookmarks' => 'bookmark',
+                'catalogs' => 'catalog',
+                'genres', 'tags' => 'genre',
+                'labels' => 'label',
+                'live_streams', 'live-streams', 'live-stream' => 'live_stream',
+                'playlists' => 'playlist',
+                'podcast_episodes', 'podcast-episodes', 'podcast-episode' => 'podcast_episode',
+                'podcasts' => 'podcast',
+                'searches' => 'search',
+                'shares' => 'share',
+                'smartlists' => 'smartlist',
+                'song_artists', 'song-artists', 'song-artist' => 'song_artist',
+                'songs' => 'song',
+                'users' => 'user',
+                'videos' => 'video',
+                default => $input['type'],
+            };
         }
 
         $api_format = $input['api_format'];

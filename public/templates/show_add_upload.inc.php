@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -300,15 +300,13 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
 </script>
 
 <table class="tabledata">
-    <tr>
-        <small>
-            <?php echo Ui::get_material_symbol('info'); ?>
-            <?php echo T_('Leave the artist and album fields blank to read file tags'); ?>
-        </small>
-    </tr>
-</table>
-<table class="tabledata">
-<tr>
+<tr class="upload_select_row">
+    <small class="upload_select_row">
+        <?php echo Ui::get_material_symbol('info'); ?>
+        <?php echo T_('Leave the artist and album fields blank to read file tags'); ?>
+    </small>
+</tr>
+<tr class="upload_select_row">
     <td class="edit_dialog_content_header"><?php echo T_('Artist'); ?></td>
     <td id="artist_select" class="upload_select">
         <div id="artist_select">
@@ -317,7 +315,7 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
         </div>
     </td>
 </tr>
-<tr>
+<tr class="upload_select_row">
     <td class="edit_dialog_content_header"><?php echo T_('Album'); ?></td>
     <td id="album_select" class="upload_select">
         <div id="album_select">

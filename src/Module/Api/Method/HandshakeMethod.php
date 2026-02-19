@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -165,11 +165,12 @@ final class HandshakeMethod
                     $token = $input['auth'];
                 } else {
                     // Create the session
-                    $data             = [];
-                    $data['username'] = (string)$client->username;
-                    $data['type']     = 'api';
-                    $data['apikey']   = (string)$client->apikey;
-                    $data['value']    = $data_version;
+                    $data                = [];
+                    $data['username']    = (string)$client->username;
+                    $data['type']        = 'api';
+                    $data['apikey']      = (string)$client->apikey;
+                    $data['streamtoken'] = (string)$client->streamtoken;
+                    $data['value']       = $data_version;
                     if (isset($input['client'])) {
                         $data['agent'] = scrub_in((string)$input['client']);
                     }

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -243,7 +243,11 @@ final class InstallationHelper implements InstallationHelperInterface
         if (is_object($db_exists) && $create_db) {
             if ($overwrite) {
                 Dba::write('DROP DATABASE `' . $database . '`');
+            } elseif (Dba::check_database_inserted()) {
+                // The database exists and is a valid Ampache DB
+                $create_db = false;
             } else {
+                // when you have a database but it is empty
                 AmpError::add('general', T_('Database already exists and "overwrite" was not checked'));
 
                 return false;
@@ -265,7 +269,7 @@ final class InstallationHelper implements InstallationHelperInterface
         if (strlen((string) $db_user) && strlen((string) $db_pass)) {
             $db_host = AmpConfig::get('database_hostname');
             // create the user account
-            $sql_user = "CREATE USER '" . Dba::escape($db_user) . "'";
+            $sql_user = "CREATE USER IF NOT EXISTS '" . Dba::escape($db_user) . "'";
             if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
                 $sql_user .= "@'localhost'";
             }

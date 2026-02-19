@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,6 +35,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\System\Session;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Plugin\PluginLocationInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
@@ -68,7 +69,9 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                             $name = Stats::get_cached_place_name($latitude, $longitude);
                             if ($name === null || $name === '' || $name === '0') {
                                 foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::GEO_LOCATION, $user) as $plugin) {
-                                    $name = $plugin->_plugin->get_location_name($latitude, $longitude);
+                                    $name = ($plugin->_plugin instanceof PluginLocationInterface)
+                                        ? $plugin->_plugin->get_location_name($latitude, $longitude)
+                                        : null;
                                     if (!empty($name)) {
                                         break;
                                     }

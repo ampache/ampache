@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -148,6 +148,10 @@ class Api
         Method\ShareEditMethod::ACTION => Method\ShareEditMethod::class,
         Method\ShareMethod::ACTION => Method\ShareMethod::class,
         Method\SharesMethod::ACTION => Method\SharesMethod::class,
+        Method\SmartlistDeleteMethod::ACTION => Method\SmartlistDeleteMethod::class,
+        Method\SmartlistMethod::ACTION => Method\SmartlistMethod::class,
+        Method\SmartlistsMethod::ACTION => Method\SmartlistsMethod::class,
+        Method\SmartlistSongsMethod::ACTION => Method\SmartlistSongsMethod::class,
         Method\SongDeleteMethod::ACTION => Method\SongDeleteMethod::class,
         Method\SongMethod::ACTION => Method\SongMethod::class,
         Method\SongTagsMethod::ACTION => Method\SongTagsMethod::class,
@@ -189,9 +193,9 @@ class Api
 
     public static string $auth_version = '350001';
 
-    public static string $version = '6.9.0'; // AMPACHE_VERSION
+    public static string $version = '6.9.1'; // AMPACHE_VERSION
 
-    public static string $version_numeric = '690010'; // AMPACHE_VERSION
+    public static string $version_numeric = '691011'; // AMPACHE_VERSION
 
     public static ?Browse $browse = null;
 
@@ -399,7 +403,12 @@ class Api
         $playlists = (AmpConfig::get('hide_search', false))
             ? $counts['playlist']
             : $counts['playlist'] + $counts['search'];
-        $autharray = (!empty($token)) ? ['auth' => $token] : [];
+        $autharray = (!empty($token))
+            ? [
+                'auth' => $token,
+                'streamtoken' => $client->streamtoken
+            ]
+            : [];
         // perpetual sessions do not expire
         $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
         $session_expire = ($perpetual)

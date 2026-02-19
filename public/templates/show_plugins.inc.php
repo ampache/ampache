@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,11 +44,13 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
     <tbody>
         <?php
         foreach ($plugins as $plugin_name) {
-            $plugin            = new Plugin($plugin_name);
-            $installed_version = ($plugin->_plugin !== null)
-                ? Plugin::get_plugin_version($plugin->_plugin->name)
-                : 0;
-            if ($installed_version == 0) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->_plugin === null) {
+                continue;
+            }
+
+            $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
+            if ($installed_version === 0) {
                 $action = "<a href=\"" . $admin_path . "/modules.php?action=confirm_install_plugin&plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Activate') . "</a>";
             } else {

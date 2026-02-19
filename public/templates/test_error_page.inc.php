@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,7 +56,7 @@ $dir       = $dir ?? 'ltr'; ?>
         <div class="jumbotron" style="margin-top: 70px">
         <h1><?php echo T_('Error'); ?></h1>
             <p><?php echo T_('You may have reached this page because Ampache was unable to load the required dependencies'); ?></p>
-            <p><a href="https://github.com/ampache/ampache/wiki/Installation" rel="nofollow"><?php echo T_('Please visit the wiki for help'); ?></a></p>
+            <p><a href="https://ampache.org/docs/" rel="nofollow"><?php echo T_('Please visit the wiki for help'); ?></a></p>
         </div>
         <?php echo AmpError::display('general'); ?>
     </div>

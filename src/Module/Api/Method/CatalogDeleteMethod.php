@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,12 +58,13 @@ final class CatalogDeleteMethod
      */
     public static function catalog_delete(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
+            return false;
+        }
+
         $catalog_id = (int)$input['filter'];
         $catalog    = Catalog::create_from_id($catalog_id);
         if ($catalog === null) {

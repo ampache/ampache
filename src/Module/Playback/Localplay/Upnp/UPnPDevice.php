@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -79,7 +79,6 @@ class UPnPDevice
         curl_setopt($curl, CURLOPT_URL, $descriptionUrl);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($curl);
-        curl_close($curl);
         //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
 
         $responseXML = simplexml_load_string((string)$response);
@@ -151,7 +150,6 @@ class UPnPDevice
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
 
         $response = curl_exec($curl);
-        curl_close($curl);
         //debug_event('upnpdevice', 'sendRequestToDevice response: ' . $response, 5);
 
         $headers = [];
@@ -212,7 +210,6 @@ class UPnPDevice
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'SUBSCRIBE');
 
         $response = curl_exec($curl);
-        curl_close( $curl );
         debug_event('upnpdevice', 'Subscribe response: ' . $response, 5);
 
         $lines = explode("\r\n", trim($response));
@@ -262,7 +259,6 @@ class UPnPDevice
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'UNSUBSCRIBE');
 
         $response = curl_exec($curl);
-        curl_close( $curl );
     }
     */
 }

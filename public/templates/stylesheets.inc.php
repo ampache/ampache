@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,7 +53,6 @@ if (is_string($theme_css_base)) {
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/base.css?v=' . $ampache_version; ?>" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $theme_color . '.css?v=' . $ampache_version; ?>" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/print.css'; ?>" type="text/css" media="print">
-
 <?php
 if (
     is_rtl(AmpConfig::get('lang', 'en_US')) &&
@@ -61,5 +60,7 @@ if (
 ) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/rtl.css" type="text/css" media="screen">
 <?php } ?>
-
+<?php if (file_exists(__DIR__ . '/custom.css')) { ?>
+    <link rel="stylesheet" href="<?php echo $web_path . '/templates/custom.css'; ?>" type="text/css" media="screen">
+<?php } ?>
 <?php Ui::show_custom_style(); ?>

@@ -8,7 +8,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -417,6 +417,7 @@ class OpenSubsonic_Api
             case self::SUBID_LIVESTREAM:
             case self::SUBID_PLAYLIST:
             case self::SUBID_PODCAST:
+            case self::SUBID_PODCASTEP:
             case self::SUBID_SHARE:
             case self::SUBID_SMARTPL:
             case self::SUBID_SONG:
@@ -880,7 +881,6 @@ class OpenSubsonic_Api
                 if (curl_exec($curl) === false) {
                     debug_event(self::class, 'Stream error: ' . curl_error($curl), 1);
                 }
-                curl_close($curl);
             }
         } else {
             // Stream media using http redirect if no curl support
@@ -1099,7 +1099,7 @@ class OpenSubsonic_Api
     public static function addchatmessage(array $input, User $user): void
     {
         $message = self::_check_parameter($input, 'message', __FUNCTION__);
-        if (!$message) {
+        if ($message === false) {
             return;
         }
 
@@ -1125,12 +1125,12 @@ class OpenSubsonic_Api
     public static function changepassword(array $input, User $user): void
     {
         $username = self::_check_parameter($input, 'username', __FUNCTION__);
-        if (!$username) {
+        if ($username === false) {
             return;
         }
 
         $inp_pass = self::_check_parameter($input, 'password', __FUNCTION__);
-        if (!$inp_pass) {
+        if ($inp_pass === false) {
             return;
         }
 
@@ -1159,12 +1159,12 @@ class OpenSubsonic_Api
     public static function createbookmark(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
         $position = self::_check_parameter($input, 'position', __FUNCTION__);
-        if (!$position) {
+        if ($position === false) {
             return;
         }
 
@@ -1205,12 +1205,12 @@ class OpenSubsonic_Api
     public static function createinternetradiostation(array $input, User $user): void
     {
         $url = self::_check_parameter($input, 'streamUrl', __FUNCTION__);
-        if (!$url) {
+        if ($url === false) {
             return;
         }
 
         $name = self::_check_parameter($input, 'name', __FUNCTION__);
-        if (!$name) {
+        if ($name === false) {
             return;
         }
 
@@ -1267,10 +1267,10 @@ class OpenSubsonic_Api
                 $playlist = new Playlist($playlistId);
                 if ($format === 'xml') {
                     $response = self::_addXmlResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, true);
+                    $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, $user, true);
                 } else {
                     $response = self::_addJsonResponse(__FUNCTION__);
-                    $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, true);
+                    $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, $user, true);
                 }
                 self::_responseOutput($input, __FUNCTION__, $response);
             } else {
@@ -1292,7 +1292,7 @@ class OpenSubsonic_Api
     public static function createpodcastchannel(array $input, User $user): void
     {
         $url = self::_check_parameter($input, 'url', __FUNCTION__);
-        if (!$url) {
+        if ($url === false) {
             return;
         }
 
@@ -1332,7 +1332,7 @@ class OpenSubsonic_Api
     public static function createshare(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -1438,17 +1438,17 @@ class OpenSubsonic_Api
     public static function createuser(array $input, User $user): void
     {
         $username = self::_check_parameter($input, 'username', __FUNCTION__);
-        if (!$username) {
+        if ($username === false) {
             return;
         }
 
         $password = self::_check_parameter($input, 'password', __FUNCTION__);
-        if (!$password) {
+        if ($password === false) {
             return;
         }
 
         $email = self::_check_parameter($input, 'email', __FUNCTION__);
-        if (!$email) {
+        if ($email === false) {
             return;
         }
 
@@ -1499,7 +1499,7 @@ class OpenSubsonic_Api
     public static function deletebookmark(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -1527,7 +1527,7 @@ class OpenSubsonic_Api
     public static function deleteinternetradiostation(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -1562,7 +1562,7 @@ class OpenSubsonic_Api
     public static function deleteplaylist(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -1598,7 +1598,7 @@ class OpenSubsonic_Api
     public static function deletepodcastchannel(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -1630,7 +1630,7 @@ class OpenSubsonic_Api
     public static function deletepodcastepisode(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -1661,7 +1661,7 @@ class OpenSubsonic_Api
     public static function deleteshare(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -1699,7 +1699,7 @@ class OpenSubsonic_Api
     public static function deleteuser(array $input, User $user): void
     {
         $username = self::_check_parameter($input, 'username', __FUNCTION__);
-        if (!$username) {
+        if ($username === false) {
             return;
         }
 
@@ -1728,7 +1728,7 @@ class OpenSubsonic_Api
     public static function download(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -1756,7 +1756,7 @@ class OpenSubsonic_Api
     public static function downloadpodcastepisode(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -1786,7 +1786,7 @@ class OpenSubsonic_Api
     {
         unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -1820,7 +1820,7 @@ class OpenSubsonic_Api
     {
         unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -1867,7 +1867,7 @@ class OpenSubsonic_Api
     public static function getalbumlist(array $input, User $user): void
     {
         $type = self::_check_parameter($input, 'type', __FUNCTION__);
-        if (!$type) {
+        if ($type === false) {
             return;
         }
 
@@ -1904,7 +1904,7 @@ class OpenSubsonic_Api
     public static function getalbumlist2(array $input, User $user): void
     {
         $type = self::_check_parameter($input, 'type', __FUNCTION__);
-        if (!$type) {
+        if ($type === false) {
             return;
         }
 
@@ -1942,7 +1942,7 @@ class OpenSubsonic_Api
     {
         unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -1976,7 +1976,7 @@ class OpenSubsonic_Api
     {
         unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -2015,7 +2015,7 @@ class OpenSubsonic_Api
     {
         unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -2082,7 +2082,7 @@ class OpenSubsonic_Api
     public static function getavatar(array $input, User $user): void
     {
         $username = self::_check_parameter($input, 'username', __FUNCTION__);
-        if (!$username) {
+        if ($username === false) {
             return;
         }
 
@@ -2200,7 +2200,7 @@ class OpenSubsonic_Api
     public static function getcoverart(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -2473,7 +2473,7 @@ class OpenSubsonic_Api
     {
         unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
         $song = self::getAmpacheObject($sub_id);
@@ -2506,7 +2506,7 @@ class OpenSubsonic_Api
     {
         unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -2656,9 +2656,8 @@ class OpenSubsonic_Api
      */
     public static function getplaylist(array $input, User $user): void
     {
-        unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -2675,10 +2674,10 @@ class OpenSubsonic_Api
         $format = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, true);
+            $response = OpenSubsonic_Xml_Data::addPlaylist($response, $playlist, $user, true);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, true);
+            $response = OpenSubsonic_Json_Data::addPlaylist($response, $playlist, $user, true);
         }
 
         self::_responseOutput($input, __FUNCTION__, $response);
@@ -2787,7 +2786,7 @@ class OpenSubsonic_Api
     {
         unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -3001,7 +3000,7 @@ class OpenSubsonic_Api
         }
 
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
         $object_id = self::getAmpacheId($sub_id);
@@ -3093,7 +3092,7 @@ class OpenSubsonic_Api
     {
         unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -3134,7 +3133,7 @@ class OpenSubsonic_Api
     {
         unset($user);
         $genre = self::_check_parameter($input, 'genre', __FUNCTION__);
-        if (!$genre) {
+        if ($genre === false) {
             return;
         }
 
@@ -3244,7 +3243,7 @@ class OpenSubsonic_Api
     {
         unset($user);
         $name = self::_check_parameter($input, 'artist', __FUNCTION__);
-        if (!$name) {
+        if ($name === false) {
             return;
         }
 
@@ -3283,7 +3282,7 @@ class OpenSubsonic_Api
     public static function geuser(array $input, User $user): void
     {
         $username = self::_check_parameter($input, 'username', __FUNCTION__);
-        if (!$username) {
+        if ($username === false) {
             return;
         }
 
@@ -3324,7 +3323,7 @@ class OpenSubsonic_Api
     public static function getuser(array $input, User $user): void
     {
         $username = self::_check_parameter($input, 'username', __FUNCTION__);
-        if (!$username) {
+        if ($username === false) {
             return;
         }
 
@@ -3392,7 +3391,7 @@ class OpenSubsonic_Api
     {
         unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -3450,7 +3449,7 @@ class OpenSubsonic_Api
     {
         unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -3502,7 +3501,7 @@ class OpenSubsonic_Api
     public static function jukeboxcontrol(array $input, User $user): void
     {
         $action = self::_check_parameter($input, 'action', __FUNCTION__);
-        if (!$action) {
+        if ($action === false) {
             return;
         }
 
@@ -3840,7 +3839,7 @@ class OpenSubsonic_Api
     public static function scrobble(array $input, User $user): void
     {
         $sub_ids = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_ids) {
+        if ($sub_ids === false) {
             return;
         }
 
@@ -4031,12 +4030,12 @@ class OpenSubsonic_Api
     public static function setrating(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
         $rating = self::_check_parameter($input, 'rating', __FUNCTION__);
-        if (!$rating) {
+        if ($rating === false) {
             return;
         }
 
@@ -4099,7 +4098,7 @@ class OpenSubsonic_Api
     public static function stream(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -4181,17 +4180,17 @@ class OpenSubsonic_Api
     public static function updateinternetradiostation(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
         $url = self::_check_parameter($input, 'streamUrl', __FUNCTION__);
-        if (!$url) {
+        if ($url === false) {
             return;
         }
 
         $name = self::_check_parameter($input, 'name', __FUNCTION__);
-        if (!$name) {
+        if ($name === false) {
             return;
         }
 
@@ -4231,7 +4230,7 @@ class OpenSubsonic_Api
     {
         unset($user);
         $sub_id = self::_check_parameter($input, 'playlistId', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -4273,7 +4272,7 @@ class OpenSubsonic_Api
     public static function updateshare(array $input, User $user): void
     {
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if (!$sub_id) {
+        if ($sub_id === false) {
             return;
         }
 
@@ -4314,7 +4313,7 @@ class OpenSubsonic_Api
     public static function updateuser(array $input, User $user): void
     {
         $username = self::_check_parameter($input, 'username', __FUNCTION__);
-        if (!$username) {
+        if ($username === false) {
             return;
         }
 

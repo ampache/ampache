@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,7 +56,8 @@ final class DownloadMethod
      * stats   = (integer) 0,1, if false disable stat recording when playing the object (default: 1) //optional
      *
      * @param array{
-     *     id: string,
+     *     filter?: string,
+     *     id?: string,
      *     type: string,
      *     bitrate?: int,
      *     format?: int,
@@ -69,6 +70,7 @@ final class DownloadMethod
      */
     public static function download(array $input, User $user): bool
     {
+        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
         if (!Api::check_parameter($input, ['id', 'type'], self::ACTION)) {
             http_response_code(400);
 
@@ -86,7 +88,7 @@ final class DownloadMethod
             )
         ) {
             // The API can use searches as playlists so check for those too
-            $object_id = (int)str_replace('smart_', '', $input['id']);
+            $object_id = (int)str_replace('smart_', '', ($input['id'] ?? '0'));
             $type      = 'search';
         }
 
