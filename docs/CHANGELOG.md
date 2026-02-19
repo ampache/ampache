@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache develop
+## Ampache 7.9.0
 
 Ampache and Subsonic catalogs will store the filename instead of the remote URL.
 
