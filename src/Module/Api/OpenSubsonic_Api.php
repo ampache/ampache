@@ -3843,30 +3843,44 @@ class OpenSubsonic_Api
             return;
         }
 
-        $submission = (array_key_exists('submission', $input) && (strtolower($input['submission']) === 'true' || $input['submission'] === '1'));
-        $client     = scrub_in((string) ($input['c'] ?? 'Subsonic'));
-
         if (!is_array($sub_ids)) {
             $rid     = [];
             $rid[]   = $sub_ids;
             $sub_ids = $rid;
         }
+
+        // check that all the objects are valid
+        $valid_media = [];
+        foreach ($sub_ids as $sub_id) {
+            $object      = self::getAmpacheObject((string)$sub_id);
+            $object_type = self::getAmpacheType($sub_id);
+            if ($object_type === "" || !$object instanceof Media || !method_exists($object, 'isNew') || $object->isNew() || !isset($object->time) || !isset($object->id)) {
+                continue;
+            }
+
+            $valid_media[] = [$object, $object_type];
+        }
+
+        if ($valid_media === []) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        $submission = (array_key_exists('submission', $input) && (strtolower($input['submission']) === 'true' || $input['submission'] === '1'));
+        $client     = scrub_in((string) ($input['c'] ?? 'Subsonic'));
+
         $playqueue_time = (int)User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
         $now_time       = time();
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
-            foreach ($sub_ids as $sub_id) {
+            foreach ($valid_media as list($media, $type)) {
                 $time = (isset($input['time']))
                     ? (int)(((int)$input['time']) / 1000)
                     : time();
                 $previous  = Stats::get_last_play($user->id, $client, $time);
                 $prev_obj  = $previous['object_id'] ?: 0;
                 $prev_date = $previous['date'];
-                $type      = self::getAmpacheType($sub_id);
-                $media     = self::getAmpacheObject((string)$sub_id);
-                if (!$media instanceof Media || !isset($media->time) || !isset($media->id)) {
-                    continue;
-                }
 
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
