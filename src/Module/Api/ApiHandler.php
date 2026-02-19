@@ -115,7 +115,8 @@ final class ApiHandler implements ApiHandlerInterface
         $is_register  = $action == RegisterMethod::ACTION;
         $is_forgotten = $action == LostPasswordMethod::ACTION;
         $is_public    = ($is_handshake || $is_ping || $is_register || $is_forgotten);
-        $post         = ($request->getMethod() === 'POST')
+        $method       = strtoupper($request->getMethod());
+        $post         = (in_array($method, ['POST', 'PATCH', 'PUT', 'DELETE']))
             ? (array)$request->getParsedBody()
             : [];
         $input        = array_merge($request->getQueryParams(), $post);
