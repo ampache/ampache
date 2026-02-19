@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -52,14 +52,14 @@ class Dba
      * @param array $params
      * @param bool $silent
      * @param Interactor|null $interactor
-     * @return PDOStatement|false
+     * @return PDOStatement|null
      */
-    public static function query($sql, $params = [], $silent = false, $interactor = null)
+    public static function query($sql, $params = [], $silent = false, $interactor = null): ?PDOStatement
     {
         // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
         //debug_event(self::class, $sql . ' ' . json_encode($params), 5);
         if (empty(trim($sql))) {
-            return false;
+            return null;
         }
 
         // Be aggressive, be strong, be dumb
@@ -68,14 +68,14 @@ class Dba
             $stmt = self::_query($sql, $params, $silent);
         } while (!$stmt && $tries++ < 3);
 
-        if ($stmt === false) {
+        if ($stmt === null) {
             $interactor?->error(
                 self::error(),
                 true
             );
         }
 
-        return $stmt;
+        return $stmt ?: null;
     }
 
     /**
@@ -83,15 +83,15 @@ class Dba
      * @param string $sql
      * @param array $params
      * @param bool $silent
-     * @return PDOStatement|false
+     * @return PDOStatement|null
      */
-    private static function _query($sql, $params, $silent = false)
+    private static function _query($sql, $params, $silent = false): ?PDOStatement
     {
         $dbh = self::dbh();
         if (!$dbh) {
             debug_event(self::class, 'Error: failed to get database handle', 1);
 
-            return false;
+            return null;
         }
 
         self::$_sql = $sql;
@@ -111,7 +111,7 @@ class Dba
                 debug_event(self::class, 'Error_query MSG: ' . $error->getMessage(), 1);
             }
 
-            return false;
+            return null;
         }
 
         if (!$stmt) {
@@ -132,11 +132,11 @@ class Dba
             self::finish($stmt);
             self::disconnect();
 
-            return false;
+            return null;
         }
         self::$stats['query']++;
 
-        return $stmt;
+        return $stmt ?: null;
     }
 
     /**
@@ -144,11 +144,11 @@ class Dba
      * @param string $sql
      * @param array $params
      * @param bool $silent
-     * @return PDOStatement|false
+     * @return PDOStatement|null
      */
-    public static function read($sql, $params = [], $silent = false)
+    public static function read($sql, $params = [], $silent = false): ?PDOStatement
     {
-        return self::query($sql, $params, $silent);
+        return self::query($sql, $params, $silent) ?: null;
     }
 
     /**
@@ -156,9 +156,9 @@ class Dba
      * @param string $sql
      * @param array $params
      * @param bool $silent
-     * @return PDOStatement|false
+     * @return PDOStatement|null
      */
-    public static function write($sql, $params = [], $silent = false)
+    public static function write($sql, $params = [], $silent = false): ?PDOStatement
     {
         return self::query($sql, $params, $silent);
     }
@@ -210,7 +210,7 @@ class Dba
      * We force it to always return an array, albeit an empty one
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
-     * @param false|PDOStatement $resource
+     * @param PDOStatement|null $resource
      * @param bool $finish
      * @return array
      */
@@ -240,7 +240,7 @@ class Dba
      * we force it to always return an array, albeit an empty one
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
-     * @param false|PDOStatement $resource
+     * @param PDOStatement|null $resource
      * @param bool $finish
      * @return array
      */
@@ -302,7 +302,7 @@ class Dba
     }
 
     /**
-     * @param false|PDOStatement $resource
+     * @param PDOStatement|null $resource
      * @param class-string<object> $class
      * @param bool $finish
      * @return null|object
@@ -332,7 +332,7 @@ class Dba
      * This emulates the mysql_num_rows function which is really
      * just a count of rows returned by our select statement, this
      * doesn't work for updates or inserts.
-     * @param false|PDOStatement $resource
+     * @param PDOStatement|null $resource
      */
     public static function num_rows($resource): int
     {
@@ -350,7 +350,7 @@ class Dba
      * finish
      *
      * This closes a result handle and clears the memory associated with it
-     * @param false|PDOStatement $resource
+     * @param PDOStatement|null $resource
      */
     public static function finish($resource): void
     {
@@ -363,7 +363,7 @@ class Dba
      * affected_rows
      *
      * This emulates the mysql_affected_rows function
-     * @param false|PDOStatement $resource
+     * @param PDOStatement|null $resource
      */
     public static function affected_rows($resource): int
     {

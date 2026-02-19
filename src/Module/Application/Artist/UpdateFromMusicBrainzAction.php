@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Artist;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\Core;
+use Ampache\Plugin\AmpacheMusicBrainz;
 use Ampache\Repository\Model\Artist;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -64,7 +65,7 @@ final class UpdateFromMusicBrainzAction implements ApplicationActionInterface
 
         // load up musicbrainz or cause an error
         $plugin = new Plugin('musicbrainz');
-        if ($plugin->_plugin !== null) {
+        if ($plugin->_plugin instanceof AmpacheMusicBrainz) {
             if (!$plugin->load($user)) {
                 throw new AccessDeniedException('Unable to load musicbrainz plugin');
             }

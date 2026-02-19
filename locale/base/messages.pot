@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-01-09 14:16+1000\n"
+"POT-Creation-Date: 2026-01-20 08:36+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2181,6 +2181,9 @@ msgid "Missing Artists"
 msgstr ""
 
 msgid "No missing artists found"
+msgstr ""
+
+msgid "Are you sure? This will replace the current track order"
 msgstr ""
 
 msgid "Sort Tracks by Artist, Album, Song"

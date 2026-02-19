@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -119,7 +119,7 @@ if (!AmpConfig::get('simple_user_mode')) { ?>
         <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'preference_help', 'header-img ' . $state_preference_help); ?>
       </h4>
       <ul class="sb3" id="sb_preference_help" <?php echo ($state_preference_help == 'collapsed') ? 'style="display: none;"' : ''; ?>>
-        <li id="sb_preference_help_wiki"><a href="https://github.com/ampache/ampache/wiki" target=\"_blank\"><?php echo T_('Ampache Wiki'); ?></a></li>
+        <li id="sb_preference_help_wiki"><a href="https://ampache.org/docs/" target=\"_blank\"><?php echo T_('Ampache Wiki'); ?></a></li>
         <li id="sb_preference_help_api"><a href="https://ampache.org/api/" target=\"_blank\"><?php echo T_('API Documentation'); ?></a></li>
         <?php if (AmpConfig::get('cookie_disclaimer')) { ?>
             <li id="sb_preference_help_cookies"><a href="<?php echo $web_path; ?>/cookie_disclaimer.php"><?php echo T_('Cookie Information'); ?></a></li>

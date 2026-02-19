@@ -1,8 +1,4 @@
----
-title: "advanced_search"
-metaTitle: "advanced_search"
-description: "API documentation"
----
+# API Advanced Search
 
 Advanced search is the API method to access the search rules used in the WEB UI.
 
@@ -10,7 +6,7 @@ It can be confusing to process how the rules are generated so this has been spli
 
 **NOTE** We have also condensed this page into subpages for each search type as well so you can focus on the objects you want.
 
-### Search Types
+## Search Types
 
 You can search for multiple object types in advanced_search.
 
@@ -30,7 +26,7 @@ This is passed as a type argument and will only return this object in results
 * [user](https://ampache.org/api/advanced-search/user-advanced-search)
 * [video](https://ampache.org/api/advanced-search/video-advanced-search)
 
-### advanced_search parameters
+## advanced_search parameters
 
 @param array $input
 

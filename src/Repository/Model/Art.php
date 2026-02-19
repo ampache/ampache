@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -201,10 +201,6 @@ class Art extends database_object
                 debug_event(self::class, 'Image failed PHP-GD test', 1);
                 $test = false;
             }
-        }
-
-        if ($test && $image && imagedestroy($image) === false) {
-            throw new RuntimeException('The image handle from source: ' . $source . ' could not be destroyed');
         }
 
         return $test;
@@ -1647,7 +1643,13 @@ class Art extends database_object
             echo "<div class=\"item_art_actions\">";
             if (
                 $user instanceof User &&
-                ($user->has_access(AccessLevelEnum::CONTENT_MANAGER) || $user->has_access(AccessLevelEnum::USER) && $user->id == $libitem->get_user_owner())
+                (
+                    $user->has_access(AccessLevelEnum::CONTENT_MANAGER) ||
+                    (
+                        $user->has_access(AccessLevelEnum::USER) &&
+                        $user->id == $libitem->get_user_owner()
+                    )
+                )
             ) {
                 $ajax_str = ((AmpConfig::get('ajax_load')) ? '#' : '');
                 echo "<a href=\"javascript:NavigateTo('" . $web_path . "/" . $ajax_str . "arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";

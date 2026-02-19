@@ -1,8 +1,4 @@
----
-title: "XML Methods"
-metaTitle: "XML Methods"
-description: "API documentation"
----
+# API XML Methods
 
 Let's go through come calls and examples that you can do for each XML method.
 
@@ -233,6 +229,11 @@ Get your server preferences
 
 **ACCESS REQUIRED:** 100 (Admin)
 
+* You can modify and update your preferences using the following methods
+  * [preference_create](#preference_create)
+  * [preference_delete](#preference_delete)
+  * [preference_edit](#preference_edit)
+
 * return
 
 ```XML
@@ -272,6 +273,11 @@ Get ids and usernames for your site
 ### user_preferences
 
 Get your user preferences
+
+* You can modify and update your preferences using the following methods
+  * [preference_create](#preference_create)
+  * [preference_delete](#preference_delete)
+  * [preference_edit](#preference_edit)
 
 * return
 
@@ -2539,13 +2545,12 @@ Delete a non-system preference by name
 
 Edit a preference value and apply to all users if allowed
 
-**ACCESS REQUIRED:** 100 (Admin)
-
-| Input    | Type    | Description                                       | Optional |
-|----------|---------|---------------------------------------------------|---------:|
-| 'filter' | string  | Preference name e.g ('notify_email', 'ajax_load') |       NO |
-| 'value'  | mixed   | (string/integer) Preference value                 |       NO |
-| 'all'    | boolean | `0`, `1` apply to all users                       |      YES |
+| Input     | Type    | Description                                                                                   | Optional |
+|-----------|---------|-----------------------------------------------------------------------------------------------|---------:|
+| 'filter'  | string  | Preference name e.g ('notify_email', 'ajax_load')                                             |       NO |
+| 'value'   | mixed   | (string/integer) Preference value                                                             |       NO |
+| 'all'     | boolean | `0`, `1` apply to all users **ACCESS REQUIRED:** 100 (Admin)                                  |      YES |
+| 'default' | boolean | `0`, `1` set as system default (New and public users)  **ACCESS REQUIRED:** 100 (Admin) |      YES |
 
 * return
 
@@ -2942,6 +2947,117 @@ Takes the share id to update with optional description and expires parameters.
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/share_edit.xml)
+
+### smartlists
+
+This returns smartlists based on the specified filter
+
+| Input         | Type       | Description                                                                                        | Optional |
+|---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'      | string     | Filter results to match this string                                                                |      YES |
+| 'exact'       | boolean    | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)                                    |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
+| 'cond'        | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
+|               |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
+| 'sort'        | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
+|               |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <playlist>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/smartlists.xml)
+
+### smartlist
+
+This returns a single smartlist
+
+| Input    | Type   | Description                             | Optional |
+|----------|--------|-----------------------------------------|---------:|
+| 'filter' | string | UID of smartlist, returns smartlist XML |       NO |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <playlist>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/smartlist.xml)
+
+### smartlist_songs
+
+This returns the songs for a smartlist
+
+| Input    | Type    | Description                                       | Optional |
+|----------|---------|---------------------------------------------------|---------:|
+| 'filter' | string  | UID of smartlist, returns song XML                |       NO |
+| 'random' | integer | `0`, `1` (if true get random songs using limit)   |      YES |
+| 'offset' | integer | Return results starting from this index position  |      YES |
+| 'limit'  | integer | Maximum number of results to return               |      YES |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <song>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/smartlist_songs.xml)
+
+### smartlist_delete
+
+This deletes a smartlist
+
+| Input    | Type   | Description      | Optional |
+|----------|--------|------------------|---------:|
+| 'filter' | string | UID of smartlist |       NO |
+
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/smartlist_delete.xml)
 
 ### songs
 
@@ -3749,3 +3865,4 @@ This is for controlling democratic play (Songs only)
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/democratic%20\(vote\).xml)
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/democratic%20\(playlist\).xml)
+

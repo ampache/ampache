@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -70,6 +70,7 @@ final class VaInfo implements VaInfoInterface
         'genre' => null,
         'isrc' => null,
         'language' => null,
+        'license' => null,
         'lyrics' => null,
         'mb_albumartistid' => null,
         'mb_albumartistid_array' => null,
@@ -454,7 +455,7 @@ final class VaInfo implements VaInfoInterface
             } else {
                 $command = 'metaflac --remove --block-type=PICTURE ' . escapeshellarg($this->filename);
             }
-            $commandError = `$command`;
+            $commandError = shell_exec($command);
         }
         if ($tagWriter->WriteTags()) {
             foreach ($tagWriter->warnings as $message) {
@@ -612,9 +613,10 @@ final class VaInfo implements VaInfoInterface
      *     'encoding': ?string,
      *     'file': ?string,
      *     'frame_rate': ?float,
-     *     'genre': ?string,
+     *     'genre': ?string[],
      *     'isrc': ?string[],
      *     'language': ?string,
+     *     'license': ?string,
      *     'lyrics': ?string,
      *     'mb_albumartistid': ?string,
      *     'mb_albumartistid_array': ?string[],
@@ -693,7 +695,7 @@ final class VaInfo implements VaInfoInterface
             $info['publisher'] = (!$info['publisher'] && array_key_exists('publisher', $tags)) ? trim((string)$tags['publisher']) : $info['publisher'];
 
             // genre is an array treat it as one
-            $info['genre'] = (!$info['genre'] && array_key_exists('genre', $tags) && !empty($tags['genre']))
+            $info['genre'] = (!$info['genre'] && array_key_exists('genre', $tags) && is_array($tags['genre']) && !empty($tags['genre']))
                 ? $tags['genre']
                 : $info['genre'];
 
@@ -731,6 +733,7 @@ final class VaInfo implements VaInfoInterface
             $info['version']        = (!$info['version'] && array_key_exists('version', $tags)) ? trim((string)$tags['version']) : $info['version'];
 
             $info['language'] = (!$info['language'] && array_key_exists('language', $tags)) ? trim((string)$tags['language']) : $info['language'];
+            $info['license']  = (!$info['license'] && array_key_exists('license', $tags)) ? trim((string)$tags['license']) : $info['license'];
             $info['comment']  = (!$info['comment'] && array_key_exists('comment', $tags)) ? trim((string)$tags['comment']) : $info['comment'];
             $info['lyrics']   = (!$info['lyrics'] && array_key_exists('lyrics', $tags) && is_string($tags['lyrics'])) ? nl2br(strip_tags($tags['lyrics'])) : $info['lyrics'];
 
@@ -985,19 +988,20 @@ final class VaInfo implements VaInfoInterface
         $tag_order = array_diff($tag_order, ['getid3', 'filename']);
         foreach ($tag_order as $tag_source) {
             if (in_array($tag_source, $plugin_names)) {
-                $plugin            = new Plugin($tag_source);
-                $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
-                if ($installed_version > 0) {
-                    if ($plugin->_plugin instanceof PluginGetMetadataInterface && $plugin->load($user)) {
-                        $this->tags[$tag_source] = $plugin->_plugin->get_metadata(
-                            $this->gatherTypes,
-                            self::clean_tag_info(
-                                $this->tags,
-                                self::get_tag_type($this->tags, $this->get_metadata_order_key()),
-                                $this->filename
-                            )
-                        );
-                    }
+                $plugin = new Plugin($tag_source);
+                if (
+                    $plugin->_plugin instanceof PluginGetMetadataInterface &&
+                    Plugin::get_plugin_version($plugin->_plugin->name) > 0 &&
+                    $plugin->load($user)
+                ) {
+                    $this->tags[$tag_source] = $plugin->_plugin->get_metadata(
+                        $this->gatherTypes,
+                        self::clean_tag_info(
+                            $this->tags,
+                            self::get_tag_type($this->tags, $this->get_metadata_order_key()),
+                            $this->filename
+                        )
+                    );
                 }
             } elseif (!in_array($tag_source, ['filename', 'getid3'])) {
                 $this->logger->debug(

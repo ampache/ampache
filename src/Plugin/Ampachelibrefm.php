@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,13 +27,13 @@ namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
-use SimpleXMLElement;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Scrobble\Scrobbler;
+use SimpleXMLElement;
 
 class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
@@ -56,7 +56,7 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
 
     private $challenge;
 
-    private string $api_key = '';
+    public string $api_key = '';
 
     private string $secret = '';
 

@@ -258,7 +258,7 @@ require_localnet_session = "true"
 
 ; Add a STREAMTOKEN to the account when a new user is created
 ; Streamtoken's allow a user to play without having a valid session (links do not expire)
-; https://github.com/ampache/ampache/wiki/ampache6-details#allow-permalink-user-streams
+; https://ampache.org/docs/old-information/ampache6-details#allow-permalink-user-streams
 ; DEFAULT: "true"
 user_create_streamtoken = "true"
 
@@ -714,7 +714,7 @@ playlist_art = "true"
 ; This is false by default due to issues around the licensing of c-pchart.
 ;  https://github.com/ampache/ampache/issues/1515
 ;  http://www.pchart.net/license
-; REFERENCE: https://github.com/ampache/ampache/wiki/chart-faq
+; REFERENCE: https://ampache.org/docs/help/troubleshooting/chart-faq
 ; You can enable c-chart with the following command:
 ;  composer install --dev
 ; Or add it as a non-dev requirement with:

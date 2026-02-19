@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2024
+ * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -246,7 +246,6 @@ class UPnPPlayer
             curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
             curl_setopt($curl, CURLOPT_HEADER, false);
             curl_exec($curl);
-            curl_close($curl);
         }
     }
 
