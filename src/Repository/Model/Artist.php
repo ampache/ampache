@@ -720,7 +720,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
         // cache and return the result
         if ($exists && $artist_id > 0) {
-            self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
+            self::$_mapcache[$name][$prefix ?? ''][$mbid ?? ''] = $artist_id;
 
             return $artist_id;
         }
