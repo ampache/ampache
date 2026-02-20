@@ -29,7 +29,7 @@ use Ahc\Cli\Input\Command;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
-final class AdminUserCommand extends Command
+final class AdminUpdateUserCommand extends Command
 {
     private UserRepositoryInterface $userRepository;
 
