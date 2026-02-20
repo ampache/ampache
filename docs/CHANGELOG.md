@@ -1,5 +1,34 @@
 # CHANGELOG
 
+## Ampache 7.9.1
+
+Ampache and Subsonic catalogs will store the filename instead of the remote URL.
+
+URL paths are stil supported but they will be converted on the next catalog update.
+
+**Note** that this may cause duplicate file paths which can not be updated for existing files.
+
+### Added
+
+* Translations 2026-02-20
+* Config version 87
+  * Add `cli_no_color` to disable colors for cli output
+  * Add `user_create_apikey` to add an API Key to the account when a new user is created
+* CLI
+  * admin:updateUser: Reset user API key, Stream token, RSS token and access level
+  * admin:listUsers: Add `-a|--apikey` parameter to print the user API key
+
+### Changed
+
+* CLI
+  * admin:listUsers: Only print user from username or user id. If both are set use username
+* Subsonic
+  * Return an error when all items in `scrobble` call are not found
+
+### Fixed
+
+* Custom CSS path folder
+
 ## Ampache 7.9.0
 
 Ampache and Subsonic catalogs will store the filename instead of the remote URL.
@@ -31,7 +60,7 @@ URL paths are stil supported but they will be converted on the next catalog upda
   * install: Ignore user exist failure
   * install: Check database is a valid database before failing without overwrite
 * Plugin
-  * Use a custom generated keay for Libre.FM instead of the Last.FM key
+  * Use a custom generated key for Libre.FM instead of the Last.FM key
 * Update copyright to 2026
 * Update `/rest` htaccess rewrite rules for Ampache REST implemtation
 * Artist lookup for Song Artist will match with Album Artist ID if the text matches

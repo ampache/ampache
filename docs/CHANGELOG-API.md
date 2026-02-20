@@ -1,5 +1,18 @@
 # API CHANGELOG
 
+## API 6.9.1 Build 12
+
+This version is being released for Ampache7 **only**
+
+To ensure that there are no issues with clients checking for single int versions
+we will keep on 6.9.x and resume build number versioning until Ampache 8
+
+### Added (691012)
+
+* ALL
+  * Normalize object types paramter (`type`) to allow resource paths
+  * Get parsed body from `PATCH`, `PUT` and `DELETE`
+
 ## API 6.9.1 Build 11
 
 This version is being released for Ampache7 **only**
