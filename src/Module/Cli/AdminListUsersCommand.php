@@ -77,7 +77,7 @@ final class AdminListUsersCommand extends Command
 
         if ($user) {
             $outString = ($apiKey)
-                ? $user->apikey ?? T_('Invalid API key')
+                ? $user->apikey ?? ''
                 : sprintf(
                     T_('%s (%d)'),
                     $user->getusername(),
