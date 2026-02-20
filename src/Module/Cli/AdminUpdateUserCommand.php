@@ -57,6 +57,7 @@ final class AdminUpdateUserCommand extends Command
             ->option('-a|--apikey', T_('Generate new API key'), 'boolval', false)
             ->option('-s|--streamtoken', T_('Generate new Stream key'), 'boolval', false)
             ->option('-r|--rsstoken', T_('Generate new RSS key'), 'boolval', false)
+            ->option('-l|--level', T_('Access Level'), 'intval', -1)
             ->argument('[username]', T_('Username'))
             ->usage('<bold>  admin:updateUser some-user --apikey</end> <comment> ## ' . T_('Update API key for user with the name `some-user`') . '</end><eol/>');
     }
@@ -72,6 +73,7 @@ final class AdminUpdateUserCommand extends Command
         $apiKey      = $this->values()['apikey'] === true;
         $streamToken = $this->values()['streamtoken'] === true;
         $rssToken    = $this->values()['rsstoken'] === true;
+        $accessLevel = $this->values()['level'];
         $user        = ($username)
             ? $this->userRepository->findByUsername($username)
             : null;
@@ -130,6 +132,22 @@ final class AdminUpdateUserCommand extends Command
                     T_('RSS Token'),
                     $user->rsstoken ?? ''
                 ),
+            );
+        }
+
+        if (
+            in_array($accessLevel, [0, 5, 25, 50, 75, 100], true) &&
+            $accessLevel !== $user->access
+        ) {
+            $user->update_access($accessLevel);
+
+            $interactor->ok(
+                sprintf(
+                    '%s (%d)',
+                    T_('Access Level'),
+                    $user->access
+                ),
+                true
             );
         }
     }
