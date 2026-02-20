@@ -51,6 +51,7 @@ if ($dic->get(ConfigContainerInterface::class)->get('cli_no_color')) {
 
 $app->add($dic->get(Cli\AdminAddUserCommand::class));
 $app->add($dic->get(Cli\AdminListUsersCommand::class));
+$app->add($dic->get(Cli\AdminUserCommand::class));
 $app->add($dic->get(Cli\AdminResetPreferencesCommand::class));
 $app->add($dic->get(Cli\AdminUpdateConfigFileCommand::class));
 $app->add($dic->get(Cli\AdminUpdatePluginsCommand::class));
