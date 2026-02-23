@@ -556,7 +556,7 @@ final class ApiHandler implements ApiHandlerInterface
             'playlists_generate', 'playlists-generate', 'playlist-generate' => 'playlist_generate',
             'playlists_delete' => 'playlist_delete',
             'playlists_edit' => 'playlist_edit',
-            'playlists_hash' => 'playlist_hash',
+            'playlists_hash', 'hash' => 'playlist_hash',
             'playlists_songs' => 'playlist_songs',
             'playlists_add' => 'playlist_add',
             'smartlists_delete' => 'smartlist_delete',
@@ -596,7 +596,8 @@ final class ApiHandler implements ApiHandlerInterface
     /**
      * REST type handling
      */
-    public function normalizeType(string $type): string {
+    public function normalizeType(string $type): string
+    {
         return match ($type) {
             'album_artists', 'album-artists', 'album-artist' => 'album_artist',
             'albums' => 'album',

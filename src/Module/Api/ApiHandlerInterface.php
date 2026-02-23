@@ -35,7 +35,7 @@ interface ApiHandlerInterface
         ApiOutputInterface $output
     ): ?ResponseInterface;
 
-    public function normalizeAction (
+    public function normalizeAction(
         string $action,
         bool $hasFilter
     ): string;
