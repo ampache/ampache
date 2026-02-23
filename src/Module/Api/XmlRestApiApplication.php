@@ -73,6 +73,7 @@ final class XmlRestApiApplication implements ApiApplicationInterface
         $request = $this->serverRequestCreator->fromGlobals();
         $method  = strtoupper($request->getMethod());
         $input   = $request->getQueryParams();
+        $action  = $this->apiHandler->normalizeAction((string)$input['action'], isset($input['filter']));
 
         // normalize input types (REST paths)
         $type = (isset($input['type']))
@@ -84,7 +85,7 @@ final class XmlRestApiApplication implements ApiApplicationInterface
             'DELETE' => $type . '_delete',
             'PATCH' => $type . '_edit',
             'PUT' => $type . '_create',
-            default => $this->apiHandler->normalizeAction((string)$input['action']),
+            default => $action,
         };
 
         $parameters = [

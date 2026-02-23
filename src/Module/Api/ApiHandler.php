@@ -536,8 +536,11 @@ final class ApiHandler implements ApiHandlerInterface
     /**
      * REST action handling
      */
-    public function normalizeAction(string $action): string {
-        return match ($action) {
+    public function normalizeAction(
+        string $action,
+        bool $hasFilter
+    ): string {
+        $action = match ($action) {
             'albums_songs' => 'album_songs',
             'artists_albums' => 'artist_albums',
             'artists_songs' => 'artist_songs',
@@ -564,6 +567,30 @@ final class ApiHandler implements ApiHandlerInterface
             'users_smartlists' => 'user_smartlists',
             default => $action,
         };
+
+        if ($hasFilter) {
+            $action = match ($action) {
+                'albums' => 'album',
+                'artists' => 'artist',
+                'bookmarks' => 'bookmark',
+                'catalogs' => 'catalog',
+                'genres' => 'genre',
+                'labels' => 'label',
+                'live_streams' => 'live_stream',
+                'playlists' => 'playlist',
+                'podcast_episodes' => 'podcast_episode',
+                'podcasts' => 'podcast',
+                'searches' => 'search',
+                'shares' => 'share',
+                'smartlists' => 'smartlist',
+                'songs' => 'song',
+                'users' => 'user',
+                'videos' => 'video',
+                default => $action
+            };
+        }
+
+        return $action;
     }
 
     /**

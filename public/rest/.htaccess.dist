@@ -6,8 +6,8 @@
     RewriteRule ^(3|4|5|6)/json/([^/]+?)/([^/]+)/([^/]+)/?$ /server/json.rest.php?version=$1&action=$4&type=$2&filter=$3 [L,QSA]
     RewriteRule ^(3|4|5|6)/xml/([^/]+?)/([^/]+)/([^/]+)/?$ /server/xml.rest.php?version=$1&action=$4&type=$2&filter=$3 [L,QSA]
     RewriteRule ^(3|4|5|6)/json/([^/]+)/([^/]+)/?$ /server/json.rest.php?version=$1&action=$2&filter=$3 [L,QSA]
-    RewriteRule ^(3|4|5|6)/json/([^/]+)/?$ /server/json.rest.php?version=$1&action=$2 [L,QSA]
     RewriteRule ^(3|4|5|6)/xml/([^/]+)/([^/]+)/?$ /server/xml.rest.php?version=$1&action=$2&filter=$3 [L,QSA]
+    RewriteRule ^(3|4|5|6)/json/([^/]+)/?$ /server/json.rest.php?version=$1&action=$2 [L,QSA]
     RewriteRule ^(3|4|5|6)/xml/([^/]+)/?$ /server/xml.rest.php?version=$1&action=$2 [L,QSA]
     # subsonic clients using *.view
     RewriteRule ^([^/]+)\.view$ index.php?ssaction=$1 [L,QSA]

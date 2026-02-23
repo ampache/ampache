@@ -36,7 +36,8 @@ interface ApiHandlerInterface
     ): ?ResponseInterface;
 
     public function normalizeAction (
-        string $action
+        string $action,
+        bool $hasFilter
     ): string;
 
     public function normalizeType(
