@@ -102,9 +102,9 @@ final class JsonRestApiApplication implements ApiApplicationInterface
 
         $request = $request->withQueryParams(
             array_merge(
-                $parameters,
                 $request->getQueryParams(),
-                $post
+                $post,
+                $parameters
             )
         );
 

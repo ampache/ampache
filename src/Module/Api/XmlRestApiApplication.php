@@ -103,9 +103,9 @@ final class XmlRestApiApplication implements ApiApplicationInterface
 
         $request = $request->withQueryParams(
             array_merge(
-                $parameters,
                 $request->getQueryParams(),
-                $post
+                $post,
+                $parameters
             )
         );
 
