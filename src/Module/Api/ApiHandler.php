@@ -109,13 +109,13 @@ final class ApiHandler implements ApiHandlerInterface
         // block html and visual output
         define('API', true);
 
-        $action       = $this->requestParser->getFromRequest('action');
+        $input        = $request->getQueryParams();
+        $action       = $input['action'];
         $is_handshake = $action == HandshakeMethod::ACTION;
         $is_ping      = $action == PingMethod::ACTION;
         $is_register  = $action == RegisterMethod::ACTION;
         $is_forgotten = $action == LostPasswordMethod::ACTION;
         $is_public    = ($is_handshake || $is_ping || $is_register || $is_forgotten);
-        $input        = $request->getQueryParams();
         $header_auth  = false;
         if (!isset($input['auth'])) {
             $header_auth   = true;
