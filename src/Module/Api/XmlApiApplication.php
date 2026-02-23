@@ -71,10 +71,14 @@ final class XmlApiApplication implements ApiApplicationInterface
         header('Content-Disposition: attachment; filename=information.xml');
 
         $request = $this->serverRequestCreator->fromGlobals();
+        $post    = (in_array(strtoupper($request->getMethod()), ['POST', 'PATCH', 'PUT', 'DELETE']))
+            ? (array)$request->getParsedBody()
+            : [];
         $request = $request->withQueryParams(
             array_merge(
                 ['api_format' => 'xml'],
-                $request->getQueryParams()
+                $request->getQueryParams(),
+                $post
             )
         );
 
