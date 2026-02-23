@@ -122,31 +122,6 @@ final class ApiHandler implements ApiHandlerInterface
             $input['auth'] = $gatekeeper->getAuth();
         }
 
-        // normalize input types (REST paths)
-        if (isset($input['type'])) {
-            $input['type'] = match ($input['type']) {
-                'album_artists', 'album-artists', 'album-artist' => 'album_artist',
-                'albums' => 'album',
-                'artists' => 'artist',
-                'bookmarks' => 'bookmark',
-                'catalogs' => 'catalog',
-                'genres', 'tags' => 'genre',
-                'labels' => 'label',
-                'live_streams', 'live-streams', 'live-stream' => 'live_stream',
-                'playlists' => 'playlist',
-                'podcast_episodes', 'podcast-episodes', 'podcast-episode' => 'podcast_episode',
-                'podcasts' => 'podcast',
-                'searches' => 'search',
-                'shares' => 'share',
-                'smartlists' => 'smartlist',
-                'song_artists', 'song-artists', 'song-artist' => 'song_artist',
-                'songs' => 'song',
-                'users' => 'user',
-                'videos' => 'video',
-                default => $input['type'],
-            };
-        }
-
         $api_format = $input['api_format'];
         $version    = (isset($input['version']))
             ? $input['version']
@@ -556,6 +531,66 @@ final class ApiHandler implements ApiHandlerInterface
             $response,
             $output
         );
+    }
+
+    /**
+     * REST action handling
+     */
+    public function normalizeAction(string $action): string {
+        return match ($action) {
+            'albums_songs' => 'album_songs',
+            'artists_albums' => 'artist_albums',
+            'artists_songs' => 'artist_songs',
+            'bookmark-create' => 'bookmark_create',
+            'genres_albums' => 'genre_albums',
+            'genres_artists' => 'genre_artists',
+            'genres_songs' => 'genre_songs',
+            'get_similar_artists', 'get-similar_artists', 'similar_artists' => 'get_similar',
+            'get_similar_songs', 'get-similar_songs', 'similar_songs' => 'get_similar',
+            'labels_artists' => 'label_artists',
+            'licenses_songs' => 'license_songs',
+            'playlist-create' => 'playlist_create',
+            'playlists_generate', 'playlists-generate', 'playlist-generate' => 'playlist_generate',
+            'playlists_delete' => 'playlist_delete',
+            'playlists_edit' => 'playlist_edit',
+            'playlists_hash' => 'playlist_hash',
+            'playlists_songs' => 'playlist_songs',
+            'playlists_add' => 'playlist_add',
+            'smartlists_delete' => 'smartlist_delete',
+            'smartlists_songs' => 'smartlist_songs',
+            'search-songs' => 'search_songs',
+            'songs_delete' => 'song_delete',
+            'users_playlists' => 'user_playlists',
+            'users_smartlists' => 'user_smartlists',
+            default => $action,
+        };
+    }
+
+    /**
+     * REST type handling
+     */
+    public function normalizeType(string $type): string {
+        return match ($type) {
+            'album_artists', 'album-artists', 'album-artist' => 'album_artist',
+            'albums' => 'album',
+            'artists' => 'artist',
+            'bookmarks' => 'bookmark',
+            'catalogs' => 'catalog',
+            'genres', 'tags' => 'genre',
+            'labels' => 'label',
+            'live_streams', 'live-streams', 'live-stream' => 'live_stream',
+            'playlists' => 'playlist',
+            'podcast_episodes', 'podcast-episodes', 'podcast-episode' => 'podcast_episode',
+            'podcasts' => 'podcast',
+            'searches' => 'search',
+            'shares' => 'share',
+            'smartlists' => 'smartlist',
+            'song_artists', 'song-artists', 'song-artist' => 'song_artist',
+            'songs' => 'song',
+            'users' => 'user',
+            'videos' => 'video',
+            default => $type,
+        };
     }
 
     /**

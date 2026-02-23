@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,25 +23,18 @@
  *
  */
 
-namespace Ampache\Module\Api;
+/**
+ * This is accessed remotly to allow outside scripts access to ampache information
+ * as such it needs to verify the session id that is passed
+ */
 
-use Ampache\Module\Api\Output\ApiOutputInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Ampache\Module\Api\JsonRestApiApplication;
+use Psr\Container\ContainerInterface;
 
-interface ApiHandlerInterface
-{
-    public function handle(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        ApiOutputInterface $output
-    ): ?ResponseInterface;
+define('NO_SESSION', '1');
+define('OUTDATED_DATABASE_OK', 1);
 
-    public function normalizeAction (
-        string $action
-    ): string;
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../../src/Config/Init.php';
 
-    public function normalizeType(
-        string $type
-    ): string;
-}
+$dic->get(JsonRestApiApplication::class)->run();
