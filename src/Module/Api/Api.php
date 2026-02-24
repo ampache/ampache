@@ -66,6 +66,7 @@ class Api
         Method\BrowseMethod::ACTION => Method\BrowseMethod::class,
         Method\CatalogActionMethod::ACTION => Method\CatalogActionMethod::class,
         Method\CatalogAddMethod::ACTION => Method\CatalogAddMethod::class,
+        Method\CatalogCreateMethod::ACTION => Method\CatalogCreateMethod::class,
         Method\CatalogDeleteMethod::ACTION => Method\CatalogDeleteMethod::class,
         Method\CatalogFileMethod::ACTION => Method\CatalogFileMethod::class,
         Method\CatalogFolderMethod::ACTION => Method\CatalogFolderMethod::class,
