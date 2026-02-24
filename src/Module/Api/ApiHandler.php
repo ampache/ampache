@@ -598,15 +598,21 @@ final class ApiHandler implements ApiHandlerInterface
             }
 
             if (
-                ($type === 'playlist' && ($action === 'create' || $action === 'delete' || $action === 'add' || $action === 'add_song' || $action === 'remove_song' || $action === 'song')) ||
-                ($type === 'smartlist' && ($action === 'delete' || $action === 'song')) ||
+                $action === 'song' && ($type === 'playlist' || $type === 'smartlist' || $type === 'album' || $type === 'artist' || $type === 'genre' || $type === 'get_similar') ||
+                $action === 'albums' && ($type === 'artist' || $type === 'genre') ||
+                $action === 'artists' && ($type === 'genre' || $type === 'get_similar')
+            ) {
+                $action = $type . '_' . $action . 's';
+            }
+
+            if ($type === 'user' && ($action === 'playlist' || $action === 'smartlist')) {
+                $action = $type . '_' . $action . 's';
+            }
+            if (
+                ($type === 'playlist' && ($action === 'create' || $action === 'delete' || $action === 'add' || $action === 'add_song' || $action === 'remove_song')) ||
+                ($type === 'smartlist' && $action === 'delete') ||
                 ($type === 'bookmark' && $action === 'create') ||
-                ($type === 'podcast' && $action === 'update') ||
-                ($type === 'album' && $action === 'song') ||
-                ($type === 'artist' && ($action === 'album' || $action === 'song')) ||
-                ($type === 'genre' && ($action === 'song' || $action === 'album' || $action === 'artist')) ||
-                ($type === 'get_similar' && ($action === 'artist' || $action === 'song')) ||
-                ($type === 'user' && ($action === 'playlist' || $action === 'smartlist'))
+                ($type === 'podcast' && $action === 'update')
             ) {
                 $action = $type . '_' . $action;
             }
