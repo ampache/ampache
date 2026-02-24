@@ -66,6 +66,7 @@ class Api
         Method\BrowseMethod::ACTION => Method\BrowseMethod::class,
         Method\CatalogActionMethod::ACTION => Method\CatalogActionMethod::class,
         Method\CatalogAddMethod::ACTION => Method\CatalogAddMethod::class,
+        Method\CatalogCreateMethod::ACTION => Method\CatalogCreateMethod::class,
         Method\CatalogDeleteMethod::ACTION => Method\CatalogDeleteMethod::class,
         Method\CatalogFileMethod::ACTION => Method\CatalogFileMethod::class,
         Method\CatalogFolderMethod::ACTION => Method\CatalogFolderMethod::class,
@@ -126,6 +127,7 @@ class Api
         Method\PodcastCreateMethod::ACTION => Method\PodcastCreateMethod::class,
         Method\PodcastDeleteMethod::ACTION => Method\PodcastDeleteMethod::class,
         Method\PodcastEditMethod::ACTION => Method\PodcastEditMethod::class,
+        Method\PodcastUpdateMethod::ACTION => Method\PodcastUpdateMethod::class,
         Method\PodcastEpisodeDeleteMethod::ACTION => Method\PodcastEpisodeDeleteMethod::class,
         Method\PodcastEpisodeMethod::ACTION => Method\PodcastEpisodeMethod::class,
         Method\PodcastEpisodesMethod::ACTION => Method\PodcastEpisodesMethod::class,
@@ -195,7 +197,7 @@ class Api
 
     public static string $version = '6.9.1'; // AMPACHE_VERSION
 
-    public static string $version_numeric = '691011'; // AMPACHE_VERSION
+    public static string $version_numeric = '691012'; // AMPACHE_VERSION
 
     public static ?Browse $browse = null;
 

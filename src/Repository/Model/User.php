@@ -880,6 +880,15 @@ class User extends database_object
             $params[] = bin2hex(random_bytes(20));
         }
 
+        $user_create_apikey = AmpConfig::get('user_create_apikey', false);
+        if ($user_create_apikey) {
+            $sql .= ", `apikey`";
+            $params[] = hash(
+                'md5',
+                time() . $username . bin2hex(random_bytes(20))
+            );
+        }
+
         $sql .= ") VALUES(?, ?, ?, ?, ?, ?, ?, ?";
 
         if ($website !== '' && $website !== '0') {
@@ -895,6 +904,10 @@ class User extends database_object
         }
 
         if ($user_create_streamtoken) {
+            $sql .= ", ?";
+        }
+
+        if ($user_create_apikey) {
             $sql .= ", ?";
         }
 

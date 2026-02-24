@@ -60,7 +60,7 @@ if (
 ) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/rtl.css" type="text/css" media="screen">
 <?php } ?>
-<?php if (file_exists($web_path . '/templates/custom.css')) { ?>
+<?php if (file_exists(__DIR__ . '/custom.css')) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . '/templates/custom.css'; ?>" type="text/css" media="screen">
 <?php } ?>
 <?php Ui::show_custom_style(); ?>

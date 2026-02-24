@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=0);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,27 +23,39 @@
  *
  */
 
-namespace Ampache\Module\Api;
+namespace Ampache\Module\Api\Method;
 
-use Ampache\Module\Api\Output\ApiOutputInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Ampache\Repository\Model\User;
 
-interface ApiHandlerInterface
+/**
+ * Class PodcastUpdateMethod
+ * @package Lib\ApiMethods
+ */
+final class PodcastUpdateMethod
 {
-    public function handle(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        ApiOutputInterface $output
-    ): ?ResponseInterface;
+    public const ACTION = 'podcast_update';
 
-    public function normalizeAction(
-        string $action,
-        string $type,
-        bool $hasFilter
-    ): string;
-
-    public function normalizeType(
-        string $type
-    ): string;
+    /**
+     * update_podcast
+     * MINIMUM_API_VERSION=420000
+     *
+     * Sync and download new podcast episodes
+     *
+     * filter = (string) UID of podcast
+     *
+     * @param array{
+     *     filter?: string,
+     *     id?: string,
+     *     type: string,
+     *     overwrite: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function update_podcast(array $input, User $user): bool
+    {
+        return UpdatePodcastMethod::update_podcast($input, $user);
+    }
 }
