@@ -55,8 +55,6 @@ use Throwable;
 
 final class ApiHandler implements ApiHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
     private StreamFactoryInterface $streamFactory;
 
     private LoggerInterface $logger;
@@ -79,7 +77,6 @@ final class ApiHandler implements ApiHandlerInterface
     ];
 
     public function __construct(
-        RequestParserInterface $requestParser,
         StreamFactoryInterface $streamFactory,
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
@@ -87,7 +84,6 @@ final class ApiHandler implements ApiHandlerInterface
         UserRepositoryInterface $userRepository,
         ContainerInterface $dic
     ) {
-        $this->requestParser   = $requestParser;
         $this->streamFactory   = $streamFactory;
         $this->logger          = $logger;
         $this->configContainer = $configContainer;
@@ -560,6 +556,7 @@ final class ApiHandler implements ApiHandlerInterface
             'playlists_hash', 'hash' => 'playlist_hash',
             'playlists_songs' => 'playlist_songs',
             'playlists_add' => 'playlist_add',
+            'podcast-episodes' => 'podcast_episodes',
             'smartlists_delete' => 'smartlist_delete',
             'smartlists_songs' => 'smartlist_songs',
             'search-songs' => 'search_songs',
