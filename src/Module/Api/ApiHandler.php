@@ -598,7 +598,7 @@ final class ApiHandler implements ApiHandlerInterface
             }
 
             if (
-                ($type === 'playlist' && ($action === 'create' || $action === 'delete' || $action === 'add' || $action === 'add_song' || $action === 'remove_song' || $action === 'songs'))
+                ($type === 'playlist' && ($action === 'create' || $action === 'delete' || $action === 'add' || $action === 'add_song' || $action === 'remove_song' || $action === 'songs')) ||
                 ($type === 'smartlist' && ($action === 'delete' || $action === 'songs')) ||
                 ($type === 'bookmark' && $action === 'create') ||
                 ($type === 'podcast' && $action === 'update') ||
