@@ -538,6 +538,7 @@ final class ApiHandler implements ApiHandlerInterface
      */
     public function normalizeAction(
         string $action,
+        string $type,
         bool $hasFilter
     ): string {
         $action = match ($action) {
@@ -563,6 +564,7 @@ final class ApiHandler implements ApiHandlerInterface
             'smartlists_songs' => 'smartlist_songs',
             'search-songs' => 'search_songs',
             'songs_delete' => 'song_delete',
+            'update-art' => 'update_art',
             'users_playlists' => 'user_playlists',
             'users_smartlists' => 'user_smartlists',
             default => $action,
@@ -588,6 +590,26 @@ final class ApiHandler implements ApiHandlerInterface
                 'videos' => 'video',
                 default => $action
             };
+        }
+
+        if ($type !== '') {
+            if ($type === 'catalog' && ($action === 'create' || $action === 'add')) {
+                $action = 'catalog_create';
+            }
+
+            if (
+                ($type === 'playlist' && ($action === 'create' || $action === 'delete' || $action === 'add' || $action === 'add_song' || $action === 'remove_song' || $action === 'songs'))
+                ($type === 'smartlist' && ($action === 'delete' || $action === 'songs')) ||
+                ($type === 'bookmark' && $action === 'create') ||
+                ($type === 'podcast' && $action === 'update') ||
+                ($type === 'album' && $action === 'songs') ||
+                ($type === 'artist' && ($action === 'albums' || $action === 'songs')) ||
+                ($type === 'genre' && ($action === 'songs' || $action === 'albums' || $action === 'artists')) ||
+                ($type === 'get_similar' && ($action === 'artists' || $action === 'songs')) ||
+                ($type === 'user' && ($action === 'playlists' || $action === 'smartlists'))
+            ) {
+                $action = $type . '_' . $action;
+            }
         }
 
         return $action;
