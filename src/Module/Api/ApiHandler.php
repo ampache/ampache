@@ -599,8 +599,8 @@ final class ApiHandler implements ApiHandlerInterface
 
             if (
                 $action === 'song' && ($type === 'playlist' || $type === 'smartlist' || $type === 'album' || $type === 'artist' || $type === 'genre' || $type === 'get_similar') ||
-                $action === 'albums' && ($type === 'artist' || $type === 'genre') ||
-                $action === 'artists' && ($type === 'genre' || $type === 'get_similar')
+                $action === 'album' && ($type === 'artist' || $type === 'genre') ||
+                $action === 'artist' && ($type === 'genre' || $type === 'get_similar')
             ) {
                 $action = $type . '_' . $action . 's';
             }
