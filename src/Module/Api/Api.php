@@ -127,6 +127,7 @@ class Api
         Method\PodcastCreateMethod::ACTION => Method\PodcastCreateMethod::class,
         Method\PodcastDeleteMethod::ACTION => Method\PodcastDeleteMethod::class,
         Method\PodcastEditMethod::ACTION => Method\PodcastEditMethod::class,
+        Method\PodcastUpdateMethod::ACTION => Method\PodcastUpdateMethod::class,
         Method\PodcastEpisodeDeleteMethod::ACTION => Method\PodcastEpisodeDeleteMethod::class,
         Method\PodcastEpisodeMethod::ACTION => Method\PodcastEpisodeMethod::class,
         Method\PodcastEpisodesMethod::ACTION => Method\PodcastEpisodesMethod::class,
