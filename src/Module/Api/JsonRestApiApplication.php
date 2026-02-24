@@ -31,7 +31,7 @@ use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\ResponseEmitter;
 
-final class XmlApiApplication implements ApiApplicationInterface
+final class JsonRestApiApplication implements ApiApplicationInterface
 {
     private ApiOutputFactoryInterface $apiOutputFactory;
 
@@ -67,25 +67,51 @@ final class XmlApiApplication implements ApiApplicationInterface
 
         // @todo add headers to response after all api methods have been modernized
         /* Set the correct headers */
-        header(sprintf('Content-type: text/xml; charset=%s', $this->configContainer->get('site_charset')));
-        header('Content-Disposition: attachment; filename=information.xml');
+        header(sprintf('Content-type: application/json; charset=%s', $this->configContainer->get('site_charset')));
 
         $request = $this->serverRequestCreator->fromGlobals();
-        $post    = (in_array(strtoupper($request->getMethod()), ['POST', 'PATCH', 'PUT', 'DELETE']))
+        $method  = strtoupper($request->getMethod());
+        $input   = $request->getQueryParams();
+
+        // normalize input types (REST paths)
+        $type = (isset($input['type']))
+            ? $this->apiHandler->normalizeType((string)$input['type'])
+            : '';
+
+        // normalize input actions (REST paths)
+        $action = $this->apiHandler->normalizeAction((string)$input['action'], $type, isset($input['filter']));
+        $action = match (strtoupper($request->getMethod())) {
+            'DELETE' => $type . '_delete',
+            'PATCH' => $type . '_edit',
+            'PUT' => $type . '_create',
+            default => $action,
+        };
+
+        $parameters = [
+            'action' => $action,
+            'api_format' => 'json'
+        ];
+
+        if ($type !== null) {
+            $parameters['type'] = $type;
+        }
+
+        $post = (in_array($method, ['POST', 'PATCH', 'PUT', 'DELETE']))
             ? (array)$request->getParsedBody()
             : [];
+
         $request = $request->withQueryParams(
             array_merge(
-                ['api_format' => 'xml'],
                 $request->getQueryParams(),
-                $post
+                $post,
+                $parameters
             )
         );
 
         $response = $this->apiHandler->handle(
             $request,
             $response,
-            $this->apiOutputFactory->createXmlOutput()
+            $this->apiOutputFactory->createJsonOutput()
         );
 
         // @todo remove condition after all api methods have been modernized

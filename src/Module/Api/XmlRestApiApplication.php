@@ -31,7 +31,7 @@ use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\ResponseEmitter;
 
-final class XmlApiApplication implements ApiApplicationInterface
+final class XmlRestApiApplication implements ApiApplicationInterface
 {
     private ApiOutputFactoryInterface $apiOutputFactory;
 
@@ -71,14 +71,41 @@ final class XmlApiApplication implements ApiApplicationInterface
         header('Content-Disposition: attachment; filename=information.xml');
 
         $request = $this->serverRequestCreator->fromGlobals();
-        $post    = (in_array(strtoupper($request->getMethod()), ['POST', 'PATCH', 'PUT', 'DELETE']))
+        $method  = strtoupper($request->getMethod());
+        $input   = $request->getQueryParams();
+
+        // normalize input types (REST paths)
+        $type = (isset($input['type']))
+            ? $this->apiHandler->normalizeType((string)$input['type'])
+            : '';
+
+        // normalize input actions (REST paths)
+        $action = $this->apiHandler->normalizeAction((string)$input['action'], $type, isset($input['filter']));
+        $action = match (strtoupper($request->getMethod())) {
+            'DELETE' => $type . '_delete',
+            'PATCH' => $type . '_edit',
+            'PUT' => $type . '_create',
+            default => $action,
+        };
+
+        $parameters = [
+            'action' => $action,
+            'api_format' => 'xml'
+        ];
+
+        if ($type !== '') {
+            $parameters['type'] = $type;
+        }
+
+        $post = (in_array($method, ['POST', 'PATCH', 'PUT', 'DELETE']))
             ? (array)$request->getParsedBody()
             : [];
+
         $request = $request->withQueryParams(
             array_merge(
-                ['api_format' => 'xml'],
                 $request->getQueryParams(),
-                $post
+                $post,
+                $parameters
             )
         );
 

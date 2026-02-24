@@ -72,7 +72,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                                     $name = ($plugin->_plugin instanceof PluginLocationInterface)
                                         ? $plugin->_plugin->get_location_name($latitude, $longitude)
                                         : null;
-                                    if (!empty($name)) {
+                                    if ($name !== null && $name !== '' && $name !== '0') {
                                         break;
                                     }
                                 }
@@ -81,7 +81,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                             // Better to check for bugged values here and keep previous user good location
                             // Someone listing music at 0.0,0.0 location would need a waterproof music player btw
                             if (
-                                !empty($name) &&
+                                $name !== null && $name !== '' && $name !== '0' &&
                                 $latitude > 0 &&
                                 $longitude > 0
                             ) {

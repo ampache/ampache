@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 85
+config_version = 87
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -14,6 +14,12 @@ config_version = 85
 ; EXAMPLE VALUES: "UTC", "Europe/London", "America/Los_Angeles" (https://www.php.net/manual/en/timezones.php)
 ; DEFAULT: "UTC"
 ;date_timezone = "UTC"
+
+; Disable colors for cli output to have better reading on white-on-black terminal
+; You  can temporarily disable all color output by settin NO_COLOR env var to 1
+; Example : NO_COLOR=1 bin/cli show:version
+; DEFAULT: false
+;cli_no_color = "false"
 
 ;#########################################################
 ; Auto Update                                            #
@@ -249,6 +255,12 @@ require_localnet_session = "true"
 ; By default Ampache pages can only be displayed in a frame on the same origin as the page itself.
 ; DEFAULT: "false"
 ;disable_xframe_sameorigin = "true"
+
+; Add an API Key to the account when a new user is created
+; API Keys allow a user to access the Ampache API and Subsonic API's without your password.
+; https://https://ampache.org/api/#api-key
+; DEFAULT: "true"
+user_create_apikey = "true"
 
 ; Add a STREAMTOKEN to the account when a new user is created
 ; Streamtoken's allow a user to play without having a valid session (links do not expire)

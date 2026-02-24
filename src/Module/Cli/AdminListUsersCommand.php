@@ -49,6 +49,7 @@ final class AdminListUsersCommand extends Command
         $this->userRepository = $userRepository;
 
         $this
+            ->option('-a|--apikey', T_('API key'), 'boolval', false)
             ->option('-u|--user', T_('User ID'), 'intval', 0)
             ->argument('[username]', T_('Username'))
             ->usage('<bold>  admin:listUsers some-user</end> <comment> ## ' . T_('Find a User with the name `some-user`') . '</end><eol/>');
@@ -63,36 +64,43 @@ final class AdminListUsersCommand extends Command
 
         $interactor = $this->io();
         $user_id    = $this->values()['user'];
-        $users      = $this->userRepository->getValidArray();
+        $apiKey     = $this->values()['apikey'] === true;
+        $users      = [];
+        $user       = null;
+        if ($username) {
+            $user = $this->userRepository->findByUsername($username);
+        } elseif ($user_id) {
+            $user = $this->userRepository->findById($user_id);
+        } else {
+            $users = $this->userRepository->getValidArray();
+        }
+
+        if ($user) {
+            $outString = ($apiKey)
+                ? $user->apikey ?? ''
+                : sprintf(
+                    T_('%s (%d)'),
+                    $user->getusername(),
+                    $user->getId()
+                );
+
+            $interactor->ok(
+                $outString,
+                true
+            );
+
+            return;
+        }
 
         foreach ($users as $userId => $userName) {
-            if (
-                $user_id === $userId ||
-                $username === $userName
-            ) {
-                $interactor->ok(
-                    sprintf(
-                        T_('%s (%d)'),
-                        $userName,
-                        $userId
-                    ),
-                    true
-                );
-
-                return;
-            } elseif (
-                empty($username) &&
-                $user_id === 0
-            ) {
-                $interactor->ok(
-                    sprintf(
-                        T_('%s (%d)'),
-                        $userName,
-                        $userId
-                    ),
-                    true
-                );
-            }
+            $interactor->ok(
+                sprintf(
+                    T_('%s (%d)'),
+                    $userName,
+                    $userId
+                ),
+                true
+            );
         }
     }
 }

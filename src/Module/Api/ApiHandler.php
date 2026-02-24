@@ -55,8 +55,6 @@ use Throwable;
 
 final class ApiHandler implements ApiHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
     private StreamFactoryInterface $streamFactory;
 
     private LoggerInterface $logger;
@@ -79,7 +77,6 @@ final class ApiHandler implements ApiHandlerInterface
     ];
 
     public function __construct(
-        RequestParserInterface $requestParser,
         StreamFactoryInterface $streamFactory,
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
@@ -87,7 +84,6 @@ final class ApiHandler implements ApiHandlerInterface
         UserRepositoryInterface $userRepository,
         ContainerInterface $dic
     ) {
-        $this->requestParser   = $requestParser;
         $this->streamFactory   = $streamFactory;
         $this->logger          = $logger;
         $this->configContainer = $configContainer;
@@ -109,16 +105,13 @@ final class ApiHandler implements ApiHandlerInterface
         // block html and visual output
         define('API', true);
 
-        $action       = $this->requestParser->getFromRequest('action');
+        $input        = $request->getQueryParams();
+        $action       = $input['action'];
         $is_handshake = $action == HandshakeMethod::ACTION;
         $is_ping      = $action == PingMethod::ACTION;
         $is_register  = $action == RegisterMethod::ACTION;
         $is_forgotten = $action == LostPasswordMethod::ACTION;
         $is_public    = ($is_handshake || $is_ping || $is_register || $is_forgotten);
-        $post         = ($request->getMethod() === 'POST')
-            ? (array)$request->getParsedBody()
-            : [];
-        $input        = array_merge($request->getQueryParams(), $post);
         $header_auth  = false;
         if (!isset($input['auth'])) {
             $header_auth   = true;
@@ -534,6 +527,130 @@ final class ApiHandler implements ApiHandlerInterface
             $response,
             $output
         );
+    }
+
+    /**
+     * REST action handling
+     */
+    public function normalizeAction(
+        string $action,
+        string $type,
+        bool $hasFilter
+    ): string {
+        $action = match ($action) {
+            'albums_songs' => 'album_songs',
+            'artists_albums' => 'artist_albums',
+            'artists_songs' => 'artist_songs',
+            'bookmark-create' => 'bookmark_create',
+            'genres_albums' => 'genre_albums',
+            'genres_artists' => 'genre_artists',
+            'genres_songs' => 'genre_songs',
+            'get_similar_artists', 'get-similar_artists', 'similar_artists' => 'get_similar',
+            'get_similar_songs', 'get-similar_songs', 'similar_songs' => 'get_similar',
+            'labels_artists' => 'label_artists',
+            'licenses_songs' => 'license_songs',
+            'playlist-create' => 'playlist_create',
+            'playlists_generate', 'playlists-generate', 'playlist-generate' => 'playlist_generate',
+            'playlists_delete' => 'playlist_delete',
+            'playlists_edit' => 'playlist_edit',
+            'playlists_hash', 'hash' => 'playlist_hash',
+            'playlists_songs' => 'playlist_songs',
+            'playlists_add' => 'playlist_add',
+            'podcast-episodes' => 'podcast_episodes',
+            'smartlists_delete' => 'smartlist_delete',
+            'smartlists_songs' => 'smartlist_songs',
+            'search-songs' => 'search_songs',
+            'songs_delete' => 'song_delete',
+            'update-art' => 'update_art',
+            'users_playlists' => 'user_playlists',
+            'users_smartlists' => 'user_smartlists',
+            default => $action,
+        };
+
+        if ($hasFilter) {
+            $action = match ($action) {
+                'albums' => 'album',
+                'artists' => 'artist',
+                'bookmarks' => 'bookmark',
+                'catalogs' => 'catalog',
+                'genres' => 'genre',
+                'labels' => 'label',
+                'live_streams' => 'live_stream',
+                'playlists' => 'playlist',
+                'podcast_episodes' => 'podcast_episode',
+                'podcasts' => 'podcast',
+                'searches' => 'search',
+                'shares' => 'share',
+                'smartlists' => 'smartlist',
+                'songs' => 'song',
+                'users' => 'user',
+                'videos' => 'video',
+                default => $action
+            };
+        }
+
+        if ($type !== '') {
+            if ($type === 'catalog' && ($action === 'create' || $action === 'add')) {
+                $action = 'catalog_create';
+            }
+            if ($type === 'song' && $action === 'lyrics') {
+                $action = 'get_lyrics';
+            }
+            if ($type === 'podcast' && $action === 'podcast_episode') {
+                $action = 'podcast_episodes';
+            }
+
+            if (
+                $action === 'song' && ($type === 'playlist' || $type === 'smartlist' || $type === 'album' || $type === 'artist' || $type === 'genre' || $type === 'license' || $type === 'get_similar') ||
+                $action === 'album' && ($type === 'artist' || $type === 'genre') ||
+                $action === 'artist' && ($type === 'genre' || $type === 'get_similar' || $type === 'label')
+            ) {
+                $action = $type . '_' . $action . 's';
+            }
+
+            if ($type === 'user' && ($action === 'playlist' || $action === 'smartlist')) {
+                $action = $type . '_' . $action . 's';
+            }
+            if (
+                ($type === 'playlist' && ($action === 'create' || $action === 'delete' || $action === 'add' || $action === 'add_song' || $action === 'remove_song')) ||
+                ($type === 'smartlist' && $action === 'delete') ||
+                ($type === 'bookmark' && $action === 'create') ||
+                ($type === 'podcast' && $action === 'update') ||
+                ($type === 'song' && $action === 'tags')
+            ) {
+                $action = $type . '_' . $action;
+            }
+        }
+
+        return $action;
+    }
+
+    /**
+     * REST type handling
+     */
+    public function normalizeType(string $type): string
+    {
+        return match ($type) {
+            'album_artists', 'album-artists', 'album-artist' => 'album_artist',
+            'albums' => 'album',
+            'artists' => 'artist',
+            'bookmarks' => 'bookmark',
+            'catalogs' => 'catalog',
+            'genres', 'tags' => 'genre',
+            'labels' => 'label',
+            'live_streams', 'live-streams', 'live-stream' => 'live_stream',
+            'playlists' => 'playlist',
+            'podcast_episodes', 'podcast-episodes', 'podcast-episode' => 'podcast_episode',
+            'podcasts' => 'podcast',
+            'searches' => 'search',
+            'shares' => 'share',
+            'smartlists' => 'smartlist',
+            'song_artists', 'song-artists', 'song-artist' => 'song_artist',
+            'songs' => 'song',
+            'users' => 'user',
+            'videos' => 'video',
+            default => $type,
+        };
     }
 
     /**
