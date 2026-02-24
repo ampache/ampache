@@ -543,7 +543,7 @@
         }
       }
     },
-    "/album/{album_id}": {
+    "/albums/{album_id}": {
       "get": {
         "summary": "Get album by ID",
         "tags": ["Albums"],
@@ -665,7 +665,7 @@
         }
       }
     },
-    "/song/{song_id}": {
+    "/songs/{song_id}": {
       "get": {
         "summary": "Get song by ID",
         "tags": ["Songs"],
@@ -686,6 +686,32 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a song",
+        "tags": ["Songs"],
+        "parameters": [
+          {
+            "name": "song_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
                 }
               }
             }
@@ -837,6 +863,44 @@
             }
           }
         }
+      },
+      "put": {
+        "summary": "Create a new playlist",
+        "tags": ["Playlists"],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "public",
+                "private"
+              ]
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Playlist created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/smartlists": {
@@ -925,7 +989,7 @@
         }
       }
     },
-    "/playlist/{playlist_id}": {
+    "/playlists/{playlist_id}": {
       "get": {
         "summary": "Get a single playlist",
         "tags": ["Playlists"],
@@ -951,235 +1015,8 @@
             }
           }
         }
-      }
-    },
-    "/smartlist/{smartlist_id}": {
-      "get": {
-        "summary": "Get a single smartplaylist",
-        "tags": ["Playlists"],
-        "parameters": [
-          {
-            "name": "smartlist_id",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Playlist response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/playlist_add/{playlist_id}": {
-      "post": {
-        "summary": "Add an item to a playlist",
-        "tags": ["Playlists"],
-        "parameters": [
-          {
-            "name": "playlist_id",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "description": "UID of the object to add to playlist"
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "song",
-                "album",
-                "artist",
-                "playlist"
-              ]
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/playlist_add_song/{playlist_id}": {
-      "post": {
-        "summary": "Add a song to a playlist (deprecated in API7)",
-        "tags": ["Playlists"],
-        "deprecated": true,
-        "parameters": [
-          {
-            "name": "playlist_id",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "name": "song",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "name": "check",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "enum": [
-                0,
-                1
-              ]
-            },
-            "required": false,
-            "description": "Ignore duplicates (default 0)"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/playlist_create": {
-      "post": {
-        "summary": "Create a new playlist",
-        "tags": ["Playlists"],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "public",
-                "private"
-              ]
-            },
-            "required": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Playlist created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/playlist_delete/{playlist_id}": {
-      "post": {
-        "summary": "Delete a playlist",
-        "tags": ["Playlists"],
-        "parameters": [
-          {
-            "name": "playlist_id",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/smartlist_delete/{smartlist_id}": {
-      "post": {
-        "summary": "Delete a smartlist",
-        "tags": ["Playlists"],
-        "parameters": [
-          {
-            "name": "smartlist_id",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/playlist_edit/{playlist_id}": {
-      "post": {
+      },
+      "patch": {
         "summary": "Edit playlist metadata and items",
         "tags": ["Playlists"],
         "parameters": [
@@ -1237,6 +1074,187 @@
             },
             "required": false,
             "description": "Comma-separated playlist track numbers matched to items"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a playlist",
+        "tags": ["Playlists"],
+        "parameters": [
+          {
+            "name": "playlist_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/smartlists/{smartlist_id}": {
+      "get": {
+        "summary": "Get a single smartplaylist",
+        "tags": ["Playlists"],
+        "parameters": [
+          {
+            "name": "smartlist_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Playlist response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a smartlist",
+        "tags": ["Playlists"],
+        "parameters": [
+          {
+            "name": "smartlist_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/playlists/{playlist_id}/add": {
+      "post": {
+        "summary": "Add an item to a playlist",
+        "tags": ["Playlists"],
+        "parameters": [
+          {
+            "name": "playlist_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "UID of the object to add to playlist"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "song",
+                "album",
+                "artist",
+                "playlist"
+              ]
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/playlists/{playlist_id}/add_song": {
+      "post": {
+        "summary": "Add a song to a playlist (deprecated in API7)",
+        "tags": ["Playlists"],
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "playlist_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "song",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "check",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                0,
+                1
+              ]
+            },
+            "required": false,
+            "description": "Ignore duplicates (default 0)"
           }
         ],
         "responses": {
@@ -1353,7 +1371,7 @@
         }
       }
     },
-    "/playlist_hash/{playlist_id}": {
+    "/playlists/{playlist_id}/hash": {
       "get": {
         "summary": "Get MD5 hash for playlist songs",
         "tags": ["Playlists"],
@@ -1386,7 +1404,7 @@
         }
       }
     },
-    "/playlist_remove_song/{playlist_id}": {
+    "/playlists/{playlist_id}/remove_song": {
       "post": {
         "summary": "Remove a song (or track) from a playlist",
         "tags": ["Playlists"],
@@ -1430,7 +1448,7 @@
         }
       }
     },
-    "/playlist_songs/{playlist_id}": {
+    "/playlists/{playlist_id}/songs": {
       "get": {
         "summary": "Get songs for a playlist",
         "tags": ["Playlists", "Songs"],
@@ -1486,7 +1504,7 @@
         }
       }
     },
-    "/smartlist_songs/{smartlist_id}": {
+    "/smartlists/{smartlist_id}/songs": {
       "get": {
         "summary": "Get songs for a smartlist",
         "tags": ["Playlists", "Songs"],
@@ -1653,7 +1671,7 @@
         }
       }
     },
-    "/artist/{artist_id}": {
+    "/artists/{artist_id}": {
       "get": {
         "summary": "Get artist by ID",
         "tags": ["Artists"],
@@ -1690,7 +1708,7 @@
         }
       }
     },
-    "/artist_albums/{artist_id}": {
+    "/artists/{artist_id}/albums": {
       "get": {
         "summary": "Get albums for an artist",
         "tags": ["Albums", "Artists"],
@@ -1762,7 +1780,7 @@
         }
       }
     },
-    "/album_songs/{album_id}": {
+    "/albums/{album_id}/songs": {
       "get": {
         "summary": "Get songs for an album",
         "tags": ["Albums", "Songs"],
@@ -1834,7 +1852,7 @@
         }
       }
     },
-    "/artist_songs/{artist_id}": {
+    "/artists/{artist_id}/songs": {
       "get": {
         "summary": "Get songs for an artist",
         "tags": ["Artists", "Songs"],
@@ -1944,50 +1962,8 @@
             }
           }
         }
-      }
-    },
-    "/bookmark/{bookmark_id}": {
-      "get": {
-        "summary": "Get bookmark by ID",
-        "tags": ["Bookmarks"],
-        "parameters": [
-          {
-            "name": "bookmark_id",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "name": "include",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "enum": [
-                0,
-                1
-              ]
-            },
-            "required": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Bookmark object",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/bookmark_create": {
-      "post": {
+      },
+      "put": {
         "summary": "Create a bookmark",
         "tags": ["Bookmarks"],
         "parameters": [
@@ -2064,19 +2040,57 @@
         }
       }
     },
-    "/bookmark_delete/{object_id}": {
-      "post": {
+    "/bookmarks/{bookmark_id}": {
+      "get": {
+        "summary": "Get bookmark by ID",
+        "tags": ["Bookmarks"],
+        "parameters": [
+          {
+            "name": "bookmark_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                0,
+                1
+              ]
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bookmark object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
         "summary": "Delete a bookmark",
         "tags": ["Bookmarks"],
         "parameters": [
           {
-            "name": "object_id",
+            "name": "bookmark_id",
             "in": "path",
             "schema": {
               "type": "string"
             },
             "required": true,
-            "description": "object_id"
+            "description": "bookmark_id"
           },
           {
             "name": "type",
@@ -2112,21 +2126,19 @@
             }
           }
         }
-      }
-    },
-    "/bookmark_edit/{object_id}": {
-      "post": {
+      },
+      "patch": {
         "summary": "Edit a bookmark",
         "tags": ["Bookmarks"],
         "parameters": [
           {
-            "name": "object_id",
+            "name": "bookmark_id",
             "in": "path",
             "schema": {
               "type": "string"
             },
             "required": true,
-            "description": "object_id"
+            "description": "bookmark_id"
           },
           {
             "name": "type",
@@ -2413,78 +2425,8 @@
             }
           }
         }
-      }
-    },
-    "/catalog/{catalog_id}": {
-      "get": {
-        "summary": "Get catalog by ID",
-        "tags": ["Catalogs"],
-        "parameters": [
-          {
-            "name": "catalog_id",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Catalog object",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/catalog_action/{catalog_id}": {
-      "post": {
-        "summary": "Run a catalog task",
-        "tags": ["Catalogs"],
-        "parameters": [
-          {
-            "name": "catalog_id",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "name": "task",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "add_to_catalog",
-                "clean_catalog"
-              ]
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/catalog_add": {
-      "post": {
+      },
+      "put": {
         "summary": "Create a catalog",
         "tags": ["Catalogs"],
         "parameters": [
@@ -2575,8 +2517,34 @@
         }
       }
     },
-    "/catalog_delete/{catalog_id}": {
-      "post": {
+    "/catalogs/{catalog_id}": {
+      "get": {
+        "summary": "Get catalog by ID",
+        "tags": ["Catalogs"],
+        "parameters": [
+          {
+            "name": "catalog_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Catalog object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
         "summary": "Delete a catalog",
         "tags": ["Catalogs"],
         "parameters": [
@@ -2603,7 +2571,140 @@
         }
       }
     },
-    "/catalog_file/{catalog_id}": {
+    "/catalogs/{catalog_id}/action": {
+      "post": {
+        "summary": "Run a catalog task",
+        "tags": ["Catalogs"],
+        "parameters": [
+          {
+            "name": "catalog_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "task",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "add_to_catalog",
+                "clean_catalog"
+              ]
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalog_add": {
+      "post": {
+        "summary": "Create a catalog",
+        "tags": ["Catalogs"],
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "local",
+                "beets",
+                "remote",
+                "subsonic",
+                "seafile",
+                "beetsremote"
+              ]
+            },
+            "required": false
+          },
+          {
+            "name": "media_type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "file_pattern",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "folder_pattern",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "username",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Catalog object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalogs/{catalog_id}/file": {
       "post": {
         "summary": "Perform actions on a catalog file",
         "tags": ["Catalogs"],
@@ -2648,7 +2749,7 @@
         }
       }
     },
-    "/catalog_folder/{catalog_id}": {
+    "/catalogs/{catalog_id}/folder": {
       "post": {
         "summary": "Perform actions on a catalog folder",
         "tags": ["Catalogs"],
@@ -2765,7 +2866,7 @@
         }
       }
     },
-    "/genre/{genre_id}": {
+    "/genres/{genre_id}": {
       "get": {
         "summary": "Get genre by ID",
         "tags": ["Genres"],
@@ -2793,7 +2894,7 @@
         }
       }
     },
-    "/genre_albums/{genre_id}": {
+    "/genres/{genre_id}/albums": {
       "get": {
         "summary": "Get albums for a genre",
         "tags": ["Genres", "Albums"],
@@ -2853,7 +2954,7 @@
         }
       }
     },
-    "/genre_artists/{genre_id}": {
+    "/genres/{genre_id}/artists": {
       "get": {
         "summary": "Get artists for a genre",
         "tags": ["Genres", "Artists"],
@@ -2913,7 +3014,7 @@
         }
       }
     },
-    "/genre_songs/{genre_id}": {
+    "/genres/{genre_id}/songs": {
       "get": {
         "summary": "Get songs for a genre",
         "tags": ["Genres", "Songs"],
@@ -3394,7 +3495,7 @@
         }
       }
     },
-    "/label/{label_id}": {
+    "/labels/{label_id}": {
       "get": {
         "summary": "Get label by ID",
         "tags": ["Labels"],
@@ -3422,7 +3523,7 @@
         }
       }
     },
-    "/label_artists/{label_id}": {
+    "/labels/{label_id}/artists": {
       "get": {
         "summary": "Get artists for a label",
         "tags": ["Labels", "Artists"],
@@ -3572,7 +3673,7 @@
         }
       }
     },
-    "/license/{license_id}": {
+    "/licenses/{license_id}": {
       "get": {
         "summary": "Get license by ID",
         "tags": ["Licenses"],
@@ -3600,7 +3701,7 @@
         }
       }
     },
-    "/license_songs/{license_id}": {
+    "/licenses/{license_id}/songs": {
       "get": {
         "summary": "Get songs for a license",
         "tags": ["Licenses", "Songs"],
@@ -3660,7 +3761,7 @@
         }
       }
     },
-    "/live_streams": {
+    "/live-streams": {
       "get": {
         "summary": "List live streams",
         "tags": ["Live Streams"],
@@ -3748,38 +3849,8 @@
             }
           }
         }
-      }
-    },
-    "/live_stream/{live_stream_id}": {
-      "get": {
-        "summary": "Get live stream by ID",
-        "tags": ["Live Streams"],
-        "parameters": [
-          {
-            "name": "live_stream_id",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Live stream object",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/live_stream_create": {
-      "post": {
+      },
+      "put": {
         "summary": "Create a live stream (radio station)",
         "tags": ["Live Streams"],
         "parameters": [
@@ -3838,8 +3909,34 @@
         }
       }
     },
-    "/live_stream_edit/{live_stream_id}": {
-      "post": {
+    "/live-streams/{live_stream_id}": {
+      "get": {
+        "summary": "Get live stream by ID",
+        "tags": ["Live Streams"],
+        "parameters": [
+          {
+            "name": "live_stream_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Live stream object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
         "summary": "Edit a live stream (radio station)",
         "tags": ["Live Streams"],
         "parameters": [
@@ -3904,10 +4001,8 @@
             }
           }
         }
-      }
-    },
-    "/live_stream_delete/{live_stream_id}": {
-      "post": {
+      },
+      "delete": {
         "summary": "Delete a live stream (radio station)",
         "tags": ["Live Streams"],
         "parameters": [
@@ -4093,7 +4188,7 @@
         }
       }
     },
-    "/share/{share_id}": {
+    "/shares/{share_id}": {
       "get": {
         "summary": "Get share by ID",
         "tags": ["Shares"],
@@ -4119,65 +4214,8 @@
             }
           }
         }
-      }
-    },
-    "/share_create": {
-      "post": {
-        "summary": "Create a public share URL",
-        "tags": ["Shares"],
-        "parameters": [
-          {
-            "name": "filter",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "description": "UID of object you are sharing"
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "description": "object_type"
-          },
-          {
-            "name": "description",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "expires",
-            "in": "query",
-            "schema": {
-              "type": "integer"
-            },
-            "required": false,
-            "description": "days to keep active"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Share created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/share_edit/{share_id}": {
-      "post": {
+      },
+      "patch": {
         "summary": "Edit a share",
         "tags": ["Shares"],
         "parameters": [
@@ -4242,10 +4280,8 @@
             }
           }
         }
-      }
-    },
-    "/share_delete/{share_id}": {
-      "post": {
+      },
+      "delete": {
         "summary": "Delete a share",
         "tags": ["Shares"],
         "parameters": [
@@ -4272,8 +4308,63 @@
         }
       }
     },
-    "/preference_create": {
+    "/share_create": {
       "post": {
+        "summary": "Create a public share URL",
+        "tags": ["Shares"],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "UID of object you are sharing"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "object_type"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "expires",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": "days to keep active"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Share created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/preferences": {
+      "put": {
         "summary": "Create a server preference (Admin)",
         "tags": ["Preferences"],
         "parameters": [
@@ -4333,15 +4424,6 @@
               "type": "string"
             },
             "required": false
-          },
-          {
-            "name": "level",
-            "in": "query",
-            "schema": {
-              "type": "integer"
-            },
-            "required": false,
-            "description": "Access level required (default 100)"
           }
         ],
         "responses": {
@@ -4358,8 +4440,8 @@
         }
       }
     },
-    "/preference_delete/{preference_name}": {
-      "post": {
+    "/preferences/{preference_name}": {
+      "delete": {
         "summary": "Delete a non-system preference by name (Admin)",
         "tags": ["Preferences"],
         "parameters": [
@@ -4384,10 +4466,8 @@
             }
           }
         }
-      }
-    },
-    "/preference_edit/{preference_name}": {
-      "post": {
+      },
+      "patch": {
         "summary": "Edit a preference value",
         "tags": ["Preferences"],
         "parameters": [
@@ -4448,7 +4528,7 @@
         }
       }
     },
-    "/system_preference/{preference_name}": {
+    "/system-preferences/{preference_name}": {
       "get": {
         "summary": "Get a server preference by name (Admin)",
         "tags": ["Preferences"],
@@ -4581,49 +4661,8 @@
             }
           }
         }
-      }
-    },
-    "/podcast/{podcast_id}": {
-      "get": {
-        "summary": "Get podcast by ID",
-        "tags": ["Podcasts"],
-        "parameters": [
-          {
-            "name": "podcast_id",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "name": "include",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "episodes"
-              ]
-            },
-            "required": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Podcast object",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/podcast_create": {
-      "post": {
+      },
+      "put": {
         "summary": "Create a podcast",
         "tags": ["Podcasts"],
         "parameters": [
@@ -4660,8 +4699,45 @@
         }
       }
     },
-    "/podcast_delete/{podcast_id}": {
-      "post": {
+    "/podcasts/{podcast_id}": {
+      "get": {
+        "summary": "Get podcast by ID",
+        "tags": ["Podcasts"],
+        "parameters": [
+          {
+            "name": "podcast_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "episodes"
+              ]
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Podcast object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
         "summary": "Delete a podcast",
         "tags": ["Podcasts"],
         "parameters": [
@@ -4686,10 +4762,8 @@
             }
           }
         }
-      }
-    },
-    "/podcast_edit/{podcast_id}": {
-      "post": {
+      },
+      "patch": {
         "summary": "Edit an existing podcast",
         "tags": ["Podcasts"],
         "parameters": [
@@ -4764,7 +4838,36 @@
         }
       }
     },
-    "/podcast_episodes/{podcast_id}": {
+    "/podcasts/{podcast_id}/update": {
+      "post": {
+        "summary": "Sync and download new podcast episodes",
+        "tags": ["Podcasts"],
+        "parameters": [
+          {
+            "name": "podcast_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Podcast id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sync started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/podcasts/{podcast_id}/podcast-episodes": {
       "get": {
         "summary": "List episodes for a podcast",
         "tags": ["Podcasts"],
@@ -4824,7 +4927,7 @@
         }
       }
     },
-    "/podcast_episode/{episode_id}": {
+    "/podcast-episodes/{episode_id}": {
       "get": {
         "summary": "Get podcast episode by ID",
         "tags": ["Podcasts"],
@@ -4850,10 +4953,8 @@
             }
           }
         }
-      }
-    },
-    "/podcast_episode_delete/{episode_id}": {
-      "post": {
+      },
+      "delete": {
         "summary": "Delete a podcast episode",
         "tags": ["Podcasts"],
         "parameters": [
@@ -4884,6 +4985,7 @@
       "post": {
         "summary": "Sync and download new podcast episodes",
         "tags": ["Podcasts"],
+        "deprecated": true,
         "parameters": [
           {
             "name": "podcast_id",
@@ -5089,7 +5191,7 @@
         }
       }
     },
-    "/video/{video_id}": {
+    "/videos/{video_id}": {
       "get": {
         "summary": "Get video by ID",
         "tags": ["Videos"],
@@ -5418,7 +5520,7 @@
         }
       }
     },
-    "/timeline/{username}": {
+    "/users/{username}/timeline": {
       "get": {
         "summary": "Get a user's timeline",
         "tags": ["Social"],
@@ -5462,7 +5564,7 @@
         }
       }
     },
-    "/followers/{username}": {
+    "/users/{username}/followers": {
       "get": {
         "summary": "Get followers for a username",
         "tags": ["Social"],
@@ -5522,7 +5624,7 @@
         }
       }
     },
-    "/following/{username}": {
+    "/users/{username}/following": {
       "get": {
         "summary": "Get who a user is following",
         "tags": ["Social"],
@@ -5586,7 +5688,7 @@
         }
       }
     },
-    "/toggle_follow/{username}": {
+    "/users/{username}/toggle_follow": {
       "post": {
         "summary": "Follow or unfollow a user",
         "tags": ["Social"],
@@ -5665,58 +5767,8 @@
             }
           }
         }
-      }
-    },
-    "/user/": {
-      "get": {
-        "summary": "Get information about your own user account",
-        "tags": ["Users"],
-        "parameters": [
-        ],
-        "responses": {
-          "200": {
-            "description": "User array",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user/{username}": {
-      "get": {
-        "summary": "Get a user's public information by username",
-        "tags": ["Users"],
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User array",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user_create": {
-      "post": {
+      },
+      "put": {
         "summary": "Create a new user (Admin)",
         "tags": ["Users"],
         "parameters": [
@@ -5788,8 +5840,54 @@
         }
       }
     },
-    "/user_delete/{username}": {
-      "post": {
+    "/user": {
+      "get": {
+        "summary": "Get information about your own user account",
+        "tags": ["Users"],
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "User array",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{username}": {
+      "get": {
+        "summary": "Get a user's public information by username",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User array",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
         "summary": "Delete a user (Admin)",
         "tags": ["Users"],
         "parameters": [
@@ -5814,10 +5912,8 @@
             }
           }
         }
-      }
-    },
-    "/user_edit/{username}": {
-      "post": {
+      },
+      "patch": {
         "summary": "Edit a user (Admin)",
         "tags": ["Users"],
         "parameters": [
@@ -6172,7 +6268,7 @@
         }
       }
     },
-    "/user_preference/{preference_name}": {
+    "/user-preferences/{preference_name}": {
       "get": {
         "summary": "Get a user preference by name",
         "tags": ["Preferences"],
@@ -6260,7 +6356,7 @@
         }
       }
     },
-    "/record_play/{song_id}": {
+    "/songs/{song_id}/record_play": {
       "post": {
         "summary": "Record a play for a song",
         "tags": ["Now Playing"],
@@ -6448,7 +6544,7 @@
         }
       }
     },
-    "/update_artist_info/{artist_id}": {
+    "/artists/{artist_id}/update_artist_info": {
       "post": {
         "summary": "Update artist info and fetch similar artists",
         "tags": ["Utilities"],
@@ -6545,30 +6641,16 @@
         }
       }
     },
-    "/get_external_metadata/{object_id}": {
+    "/albums/{album_id}/get_external_metadata": {
       "get": {
-        "summary": "Get external metadata for an object",
-        "tags": ["Utilities"],
+        "summary": "Get external metadata for an album",
+        "tags": ["Albums", "Utilities"],
         "parameters": [
           {
-            "name": "object_id",
+            "name": "album_id",
             "in": "path",
             "schema": {
               "type": "string"
-            },
-            "required": true
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "song",
-                "album",
-                "artist",
-                "label"
-              ]
             },
             "required": true
           }
@@ -6587,10 +6669,94 @@
         }
       }
     },
-    "/get_lyrics/{song_id}": {
+    "/artists/{artist_id}/get_external_metadata": {
+      "get": {
+        "summary": "Get external metadata for an artist",
+        "tags": ["Artists", "Utilities"],
+        "parameters": [
+          {
+            "name": "artist_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "External metadata array",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/labels/{label_id}/get_external_metadata": {
+      "get": {
+        "summary": "Get external metadata for a label",
+        "tags": ["Labels", "Utilities"],
+        "parameters": [
+          {
+            "name": "label_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "External metadata array",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/songs/{song_id}/get_external_metadata": {
+      "get": {
+        "summary": "Get external metadata for a song",
+        "tags": ["Songs", "Utilities"],
+        "parameters": [
+          {
+            "name": "song_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "External metadata array",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/songs/{song_id}/lyrics": {
       "get": {
         "summary": "Get lyrics from DB or plugins by song id",
-        "tags": ["Utilities"],
+        "tags": ["Songs", "Utilities"],
         "parameters": [
           {
             "name": "song_id",
@@ -6628,28 +6794,16 @@
         }
       }
     },
-    "/get_similar/{object_id}": {
+    "/artists/{artist_id}/get_similar": {
       "get": {
-        "summary": "Get similar songs or artists",
-        "tags": ["Artists", "Songs"],
+        "summary": "Get similar artists",
+        "tags": ["Artists"],
         "parameters": [
           {
-            "name": "object_id",
+            "name": "artist_id",
             "in": "path",
             "schema": {
               "type": "string"
-            },
-            "required": true
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "song",
-                "artist"
-              ]
             },
             "required": true
           },
@@ -6684,9 +6838,9 @@
         }
       }
     },
-    "/song_delete/{song_id}": {
-      "post": {
-        "summary": "Delete a song",
+    "/songs/{song_id}/get_similar": {
+      "get": {
+        "summary": "Get similar songs",
         "tags": ["Songs"],
         "parameters": [
           {
@@ -6696,15 +6850,31 @@
               "type": "string"
             },
             "required": true
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false
           }
         ],
         "responses": {
           "200": {
-            "description": "Deleted",
+            "description": "Similar list",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
+                  "type": "object"
                 }
               }
             }
@@ -6712,10 +6882,10 @@
         }
       }
     },
-    "/song_tags/{song_id}": {
+    "/songs/{song_id}/tags": {
       "get": {
         "summary": "Get full file tags for a song",
-        "tags": ["Utilities"],
+        "tags": ["Songs", "Utilities"],
         "parameters": [
           {
             "name": "song_id",

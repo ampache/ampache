@@ -27,6 +27,7 @@ Documentation available at [ampache.org](https://ampache.org/rest/swagger/).
 ### Fixed
 
 * Custom CSS path folder
+* MPD status incorrectly stopping processes
 
 ## Ampache 7.9.0
 
