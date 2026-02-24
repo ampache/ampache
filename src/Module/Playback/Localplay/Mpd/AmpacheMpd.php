@@ -466,9 +466,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function get(): array
     {
-        if (!$this->_mpd || !$this->_mpd->status) {
+        if (!$this->_mpd) {
             return [];
         }
+
         // If we don't have the playlist yet, pull it
         if (!isset($this->_mpd->playlist)) {
             $this->_mpd->RefreshInfo();
@@ -560,9 +561,12 @@ class AmpacheMpd extends localplay_controller
     public function status(): array
     {
         $array = [];
-        if (!$this->_mpd || !$this->_mpd->status) {
+        if (!$this->_mpd) {
             return $array;
         }
+
+        $this->_mpd->RefreshInfo();
+
         $track = $this->_mpd->status['song'] ?? 0;
 
         /* Construct the Array */
