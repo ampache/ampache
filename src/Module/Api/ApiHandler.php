@@ -596,11 +596,14 @@ final class ApiHandler implements ApiHandlerInterface
             if ($type === 'catalog' && ($action === 'create' || $action === 'add')) {
                 $action = 'catalog_create';
             }
+            if ($type === 'song' && $action === 'lyrics') {
+                $action = 'get_lyrics';
+            }
 
             if (
-                $action === 'song' && ($type === 'playlist' || $type === 'smartlist' || $type === 'album' || $type === 'artist' || $type === 'genre' || $type === 'get_similar') ||
+                $action === 'song' && ($type === 'playlist' || $type === 'smartlist' || $type === 'album' || $type === 'artist' || $type === 'genre' || $type === 'license' || $type === 'get_similar') ||
                 $action === 'album' && ($type === 'artist' || $type === 'genre') ||
-                $action === 'artist' && ($type === 'genre' || $type === 'get_similar')
+                $action === 'artist' && ($type === 'genre' || $type === 'get_similar' || $type === 'label')
             ) {
                 $action = $type . '_' . $action . 's';
             }
@@ -612,7 +615,8 @@ final class ApiHandler implements ApiHandlerInterface
                 ($type === 'playlist' && ($action === 'create' || $action === 'delete' || $action === 'add' || $action === 'add_song' || $action === 'remove_song')) ||
                 ($type === 'smartlist' && $action === 'delete') ||
                 ($type === 'bookmark' && $action === 'create') ||
-                ($type === 'podcast' && $action === 'update')
+                ($type === 'podcast' && $action === 'update') ||
+                ($type === 'song' && $action === 'tags')
             ) {
                 $action = $type . '_' . $action;
             }
