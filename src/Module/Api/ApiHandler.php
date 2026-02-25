@@ -561,6 +561,7 @@ final class ApiHandler implements ApiHandlerInterface
             'search-songs' => 'search_songs',
             'songs_delete' => 'song_delete',
             'update-art' => 'update_art',
+            'get-art', 'art' => 'get_art',
             'users_playlists' => 'user_playlists',
             'users_smartlists' => 'user_smartlists',
             default => $action,
