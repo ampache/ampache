@@ -143,12 +143,6 @@
 ],
   "components": {
     "securitySchemes": {
-      "ApiKeyAuthQuery": {
-        "type": "apiKey",
-        "in": "query",
-        "name": "auth",
-        "description": "Ampache session token or encrypted API key passed as the auth query parameter."
-      },
       "ApiKeyAuthHeader": {
         "type": "apiKey",
         "in": "header",
@@ -214,9 +208,6 @@
   "security": [
     {
       "BearerAuth": []
-    },
-    {
-      "ApiKeyAuthQuery": []
     },
     {
       "ApiKeyAuthHeader": []
@@ -299,9 +290,6 @@
           {},
           {
             "BearerAuth": []
-          },
-          {
-            "ApiKeyAuthQuery": []
           },
           {
             "ApiKeyAuthHeader": []
@@ -402,9 +390,6 @@
           {},
           {
             "BearerAuth": []
-          },
-          {
-            "ApiKeyAuthQuery": []
           },
           {
             "ApiKeyAuthHeader": []
