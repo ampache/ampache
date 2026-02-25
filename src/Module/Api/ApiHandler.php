@@ -32,7 +32,6 @@ use Ampache\Module\Api\Method\LostPasswordMethod;
 use Ampache\Module\Api\Method\RegisterMethod;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Api\Authentication\Gatekeeper;
 use Ampache\Module\Api\Exception\ApiException;
