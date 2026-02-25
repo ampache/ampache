@@ -2,9 +2,9 @@
 
 ## Ampache 7.9.1
 
-Ampache REST implementation is ready for use.
+Ampache REST conversion is making more progress but isn't quite ready. Docs at [ampache.org/rest](https://ampache.org/rest).
 
-Documentation available at [ampache.org](https://ampache.org/rest/swagger/).
+An OpenApi spec document is being developed at [ampache.org/rest/swagger](https://ampache.org/rest/swagger).
 
 ### Added
 
