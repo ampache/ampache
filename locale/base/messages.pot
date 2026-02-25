@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-01-20 08:36+1000\n"
+"POT-Creation-Date: 2026-02-20 15:44+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1360,6 +1360,9 @@ msgstr ""
 msgid "Year Formed"
 msgstr ""
 
+msgid "Owner"
+msgstr ""
+
 msgid "Overwrite tags of sub albums and sub songs"
 msgstr ""
 
@@ -1402,9 +1405,6 @@ msgid "Order"
 msgstr ""
 
 msgid "Confirm"
-msgstr ""
-
-msgid "Owner"
 msgstr ""
 
 msgid "Collaborate"
@@ -4371,6 +4371,9 @@ msgid "Update available"
 msgstr ""
 
 msgid "Update Preference Access Level"
+msgstr ""
+
+msgid "Update API key for user with the name `some-user`"
 msgstr ""
 
 msgid "Remove art which does not fit to the settings"

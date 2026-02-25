@@ -44,8 +44,14 @@ $app = new Ahc\Cli\Application(
     'Ampache CLI',
     $dic->get(ConfigContainerInterface::class)->get('version')
 );
+
+if ($dic->get(ConfigContainerInterface::class)->get('cli_no_color')) {
+    Ahc\Cli\Output\Color::$enabled = false;
+}
+
 $app->add($dic->get(Cli\AdminAddUserCommand::class));
 $app->add($dic->get(Cli\AdminListUsersCommand::class));
+$app->add($dic->get(Cli\AdminUpdateUserCommand::class));
 $app->add($dic->get(Cli\AdminResetPreferencesCommand::class));
 $app->add($dic->get(Cli\AdminUpdateConfigFileCommand::class));
 $app->add($dic->get(Cli\AdminUpdatePluginsCommand::class));

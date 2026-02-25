@@ -75,9 +75,9 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
      */
     private function _query_server(string $path_str, string $query_str = ''): ?array
     {
-        $url = (!empty($query_str))
-            ? $this->site_url . $path_str . '?' . $query_str
-            : $this->site_url . $path_str;
+        $url = ($query_str === '' || $query_str === '0')
+            ? $this->site_url . $path_str
+            : $this->site_url . $path_str . '?' . $query_str;
 
         $headers = [
             'Accept' => 'application/json',
@@ -102,11 +102,7 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('lrclib_site_url', T_('LrcLib site URL'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return true;
+        return Preference::insert('lrclib_site_url', T_('LrcLib site URL'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -137,7 +133,7 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
         $user->set_preferences();
         $data = $user->prefs;
         // load system when nothing is given
-        if (!strlen(trim((string) $data['lrclib_site_url']))) {
+        if (trim((string) $data['lrclib_site_url']) === '') {
             $data                    = [];
             $data['lrclib_site_url'] = Preference::get_by_user(-1, 'lrclib_site_url');
         }
@@ -179,7 +175,7 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
                     !empty($item['plainLyrics'])
                 ) {
                     return [
-                        'text' => nl2br((string)$item['plainLyrics']),
+                        'text' => nl2br($item['plainLyrics']),
                         'url' => $this->site_url . '/api/get/' . $item['id']
                     ];
                 }
