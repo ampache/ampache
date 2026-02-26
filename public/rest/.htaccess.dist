@@ -5,6 +5,8 @@
     RewriteRule ^ - [L]
     # /{version}/{format}/{type}/stats
     RewriteRule ^(3|4|5|6)/(json|xml)/([^/]+)/stats/?$ /server/$2.rest.php?version=$1&action=stats&type=$3 [L,QSA]
+    # /{version}/{format}/{type}/deleted
+    RewriteRule ^(3|4|5|6)/(json|xml)/([^/]+)/stats/?$ /server/$2.rest.php?version=$1&action=deleted&type=$3 [L,QSA]
     # /{version}/{format}/{type}/{filter}/{action}
     RewriteRule ^(3|4|5|6)/(json|xml)/([^/]+)/([^/]+)/([^/]+)/?$ /server/$2.rest.php?version=$1&action=$5&type=$3&filter=$4 [L,QSA]
     # /{version}/{format}/{action}/{filter}

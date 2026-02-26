@@ -541,13 +541,17 @@ final class ApiHandler implements ApiHandlerInterface
             'artists_albums' => 'artist_albums',
             'artists_songs' => 'artist_songs',
             'bookmark-create' => 'bookmark_create',
+            'fetch-info' => 'update_artist_info',
+            'fetch-metadata' => 'get_external_metadata',
+            'friends-timeline' => 'friends_timeline',
             'genres_albums' => 'genre_albums',
             'genres_artists' => 'genre_artists',
             'genres_songs' => 'genre_songs',
-            'get_similar_artists', 'get-similar_artists', 'similar_artists' => 'get_similar',
-            'get_similar_songs', 'get-similar_songs', 'similar_songs' => 'get_similar',
+            'similar', 'get_similar_artists', 'get-similar_artists', 'similar_artists', 'get_similar_songs', 'get-similar_songs', 'similar_songs' => 'get_similar',
             'labels_artists' => 'label_artists',
+            'last-shouts' => 'last_shouts',
             'licenses_songs' => 'license_songs',
+            'now-playing' => 'now_playing',
             'playlist-create' => 'playlist_create',
             'playlists_generate', 'playlists-generate', 'playlist-generate' => 'playlist_generate',
             'playlists_delete' => 'playlist_delete',
@@ -556,11 +560,14 @@ final class ApiHandler implements ApiHandlerInterface
             'playlists_songs' => 'playlist_songs',
             'playlists_add' => 'playlist_add',
             'podcast-episodes' => 'podcast_episodes',
+            'record-play' => 'record_play',
             'smartlists_delete' => 'smartlist_delete',
             'smartlists_songs' => 'smartlist_songs',
             'search-songs' => 'search_songs',
             'songs_delete' => 'song_delete',
             'update-art' => 'update_art',
+            'update-tags' => 'update_from_tags',
+            'url-to-song' => 'url_to_song',
             'get-art', 'art' => 'get_art',
             'users_playlists' => 'user_playlists',
             'users_smartlists' => 'user_smartlists',
@@ -602,6 +609,9 @@ final class ApiHandler implements ApiHandlerInterface
 
             if ($action === 'create' && ($type === 'album' || $type === 'artist' || $type === 'playlist' || $type === 'smartlist' || $type === 'podcast' || $type === 'podcast_episode' || $type === 'song' || $type === 'video')) {
                 $action = 'share_create';
+            }
+            if ($action === 'deleted' && ($type === 'podcast_episode' || $type === 'song' || $type === 'video')) {
+                $action = $action . '_' . $type;
             }
 
             if (
