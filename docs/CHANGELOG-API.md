@@ -11,7 +11,7 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 
 * ALL
   * Split REST processes into separate applications
-  * Normalize object types paramter (`type`) to allow resource paths
+  * Normalize object types parameter (`type`) to allow resource paths
   * Get parsed body from `PATCH`, `PUT` and `DELETE`
 * API6
   * Add alias `catalog_add` for `catalog_create`
