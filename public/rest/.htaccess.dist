@@ -4,7 +4,7 @@
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]
     # /{version}/{format}/me/(playlists|smartlists)
-    RewriteRule ^(3|4|5|6)/(json|xml)/([^/]+)/(deleted|stats|search)/?$ /server/$2.rest.php?version=$1&action=$4&type=user_$3 [L,QSA]
+    RewriteRule ^(3|4|5|6)/(json|xml)/me/(playlists|smartlists)/?$ /server/$2.rest.php?version=$1&action=user_$3 [L,QSA]
     # /{version}/{format}/{type}/(deleted|stats|search)
     RewriteRule ^(3|4|5|6)/(json|xml)/([^/]+)/(deleted|stats|search)/?$ /server/$2.rest.php?version=$1&action=$4&type=$3 [L,QSA]
     # /{version}/{format}/{type}/{filter}/{action}
