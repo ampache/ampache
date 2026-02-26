@@ -551,6 +551,7 @@ final class ApiHandler implements ApiHandlerInterface
             'labels_artists' => 'label_artists',
             'last-shouts' => 'last_shouts',
             'licenses_songs' => 'license_songs',
+            'me' => 'user',
             'now-playing' => 'now_playing',
             'playlist-create' => 'playlist_create',
             'playlists_generate', 'playlists-generate', 'playlist-generate' => 'playlist_generate',
