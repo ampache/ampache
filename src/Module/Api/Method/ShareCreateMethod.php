@@ -65,7 +65,7 @@ final class ShareCreateMethod
      * Takes the file id with optional description and expires parameters.
      *
      * filter      = (string) object_id
-     * type        = (string) object_type ('album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'song', 'video')
+     * type        = (string) object_type ('album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'smartlist', 'song', 'video')
      * description = (string) description (will be filled for you if empty) //optional
      * expires     = (integer) days to keep active //optional
      *
@@ -105,7 +105,7 @@ final class ShareCreateMethod
             return false;
         }
         // searches are playlists but not in the database
-        if ($object_type === 'playlist' && ((int)$object_id) === 0) {
+        if (($object_type === 'playlist' || $object_type === 'smartlist') && ((int)$object_id) === 0) {
             $object_id   = str_replace('smart_', '', (string) $object_id);
             $object_type = 'search';
         }
