@@ -120,7 +120,7 @@ final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterfac
         }
 
         if (
-            is_writeable($destinationFilePath) &&
+            !is_file($destinationFilePath) ||
             Core::get_filesize(Core::conv_lc_file($destinationFilePath)) === 0
         ) {
             // the file doesn't exist locally so download it
