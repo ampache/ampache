@@ -48,6 +48,7 @@ final class FollowersMethod
      * This gets followers of the user
      * Error when user not found or no followers
      *
+     * filter   = (integer|string) filter by user id OR username //optional
      * username = (string) $username //optional
      * offset   = (integer) //optional
      * limit    = (integer) //optional
@@ -55,6 +56,7 @@ final class FollowersMethod
      * sort     = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
+     *     filter?: int|string,
      *     username?: string,
      *     offset?: int,
      *     limit?: int,
@@ -73,10 +75,15 @@ final class FollowersMethod
 
             return false;
         }
+
+        $input['username'] = $input['filter'] ?? $input['username'] ?? null;
+
         $username = (!empty($input['username']))
             ? $input['username']
             : $user->username;
-        $leadUser = User::get_from_username((string)$username);
+        $leadUser = (is_numeric($username))
+            ? User::get_from_id((int)$username)
+            : User::get_from_username((string)$username);
         if ($leadUser === null) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

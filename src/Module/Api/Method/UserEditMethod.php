@@ -52,6 +52,7 @@ final class UserEditMethod
      * Update an existing user.
      * Takes the username with optional parameters.
      *
+     * filter            = (integer|string) filter by user id OR username //optional
      * username          = (string) $username
      * fullname          = (string) $fullname //optional
      * password          = (string) hash('sha256', $password) //optional
@@ -68,7 +69,7 @@ final class UserEditMethod
      * clear_stats       = (integer) 0,1 true reset all stats for this user //optional
      *
      * @param array{
-     *     filter?: string,
+     *     filter?: int|string,
      *     username?: string,
      *     fullname?: string,
      *     password?: string,
@@ -102,9 +103,9 @@ final class UserEditMethod
 
         // identify the user to modify
         $username    = $input['username'];
-        $update_user = ($username !== null)
-            ? User::get_from_username($username)
-            : null;
+        $update_user = (is_numeric($username))
+            ? User::get_from_id((int)$username)
+            : User::get_from_username($username);
         if ($update_user === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
