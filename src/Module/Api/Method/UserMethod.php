@@ -71,8 +71,8 @@ final class UserMethod
         } else {
             $userRepository = self::getUserRepository();
             $check_user     = (is_numeric($username))
-            ? $userRepository->findById((int)$username)
-            : $userRepository->findByUsername((string) $username);
+                ? $userRepository->findById((int)$username)
+                : $userRepository->findByUsername((string) $username);
             if (
                 $check_user === null ||
                 !in_array($check_user->getId(), $userRepository->getValid(true))
