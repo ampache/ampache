@@ -48,12 +48,13 @@ final class TimelineMethod
      *
      * This gets a user timeline from their username
      *
+     * filter   = (integer|string) filter by user id OR username //optional
      * username = (string)
      * limit    = (integer) //optional
      * since    = (integer) UNIXTIME() //optional
      *
      * @param array{
-     *     filter?: string,
+     *     filter?: int|string,
      *     username?: string,
      *     limit?: int,
      *     since?: int,
@@ -77,12 +78,18 @@ final class TimelineMethod
         }
 
         $username = $input['username'];
-        if (!empty($username)) {
+        $leadUser = (is_numeric($username))
+            ? User::get_from_id((int)$username)
+            : User::get_from_username((string)$username);
+        if (!empty($leadUser)) {
             $limit = (int)($input['limit'] ?? 0);
             $since = (int)($input['since'] ?? 0);
-            if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
+            if (
+                $leadUser->getId() === $user->getId() ||
+                Preference::get_by_user($leadUser->getId(), 'allow_personal_info_recent')
+            ) {
                 $results = self::getUseractivityRepository()->getActivities(
-                    $user->getId(),
+                    $leadUser->getId(),
                     $limit,
                     $since
                 );
