@@ -47,11 +47,12 @@ final class LastShoutsMethod
      *
      * This get the latest posted shouts
      *
+     * filter   = (integer|string) filter by user id OR username //optional
      * username = (string) $username //optional
      * limit = (integer) $limit Default: 10 (popular_threshold) //optional
      *
      * @param array{
-     *     filter?: string,
+     *     filter?: int|string,
      *     username?: string,
      *     limit?: int,
      *     api_format: string,
@@ -82,9 +83,15 @@ final class LastShoutsMethod
             ? $input['username']
             : null;
 
-        $results = iterator_to_array(
-            self::getShoutRepository()->getTop($limit, $username)
-        );
+        if (is_numeric($username)) {
+            $results = iterator_to_array(
+                self::getShoutRepository()->getTopById($limit, (int)$username)
+            );
+        } else {
+            $results = iterator_to_array(
+                self::getShoutRepository()->getTop($limit, $username)
+            );
+        }
 
         if (empty($results)) {
             Api::empty('shout', $input['api_format']);
