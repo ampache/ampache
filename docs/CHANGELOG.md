@@ -1,12 +1,24 @@
 # CHANGELOG
 
+## Ampache 7.9.2
+
+Bug with Podcast Episode downloads demands another release
+
+### Changed (7.9.2)
+
+* Update NPM packages
+
+### Fixed (7.9.2)
+
+* Podcst Episode downloader would not get new files
+
 ## Ampache 7.9.1
 
 Ampache REST conversion is making more progress but isn't quite ready. Docs at [ampache.org/rest](https://ampache.org/rest).
 
 An OpenApi spec document is being developed at [ampache.org/rest/swagger](https://ampache.org/rest/swagger).
 
-### Added
+### Added (7.9.1)
 
 * Translations 2026-02-20
 * Config version 87
@@ -17,14 +29,14 @@ An OpenApi spec document is being developed at [ampache.org/rest/swagger](https:
   * admin:listUsers: Add `-a|--apikey` parameter to print the user API key
 * Split REST API handling into separate applications to the regular API
 
-### Changed
+### Changed (7.9.1)
 
 * CLI
   * admin:listUsers: Only print user from username or user id. If both are set use username
 * Subsonic
   * Return an error when all items in `scrobble` call are not found
 
-### Fixed
+### Fixed (7.9.1)
 
 * Custom CSS path folder
 * MPD status incorrectly stopping processes

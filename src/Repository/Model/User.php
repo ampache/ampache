@@ -233,6 +233,16 @@ class User extends database_object
     }
 
     /**
+     * get_from_id
+     * This returns a built user from an ID. This is a
+     * static function so it doesn't require an instance
+     */
+    public static function get_from_id(int $id): ?User
+    {
+        return self::getUserRepository()->findById($id);
+    }
+
+    /**
      * get_user_catalogs
      * This returns the catalogs as an array of ids that this user is allowed to access
      * @return int[]
