@@ -47,10 +47,11 @@ final class UserMethod
      *
      * This get a user's public information
      *
+     * filter   = (integer|string) filter by user id OR username //optional
      * username = (string) $username
      *
      * @param array{
-     *     filter?: string,
+     *     filter?: int|string,
      *     username?: string,
      *     api_format: string,
      *     auth: string,
@@ -69,7 +70,9 @@ final class UserMethod
             $fullinfo = true;
         } else {
             $userRepository = self::getUserRepository();
-            $check_user     = $userRepository->findByUsername((string) $username);
+            $check_user     = (is_numeric($username))
+                ? $userRepository->findById((int)$username)
+                : $userRepository->findByUsername((string) $username);
             if (
                 $check_user === null ||
                 !in_array($check_user->getId(), $userRepository->getValid(true))

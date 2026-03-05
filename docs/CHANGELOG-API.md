@@ -1,5 +1,31 @@
 # API CHANGELOG
 
+## API 6.9.1 Build 13
+
+This version is being released for Ampache7 **only**
+
+To ensure that there are no issues with clients checking for single int versions
+we will keep on 6.9.x and resume build number versioning until Ampache 8
+
+### Added (691013)
+
+* API6
+  * followers: Add `filter` as an alias of `username`
+  * following: Add `filter` as an alias of `username`
+  * Add `smartlist` as a type for `share_create`
+  * Add `smartlist` as a type for `get_art`
+  * Add alias `podcast_update` for `update_podcast`
+
+### Changed (691013)
+
+* REST rewrite rules are still not stable
+* Username methods now all allow `user_id` as well as username lookups
+
+### Fixed (691013)
+
+* API6
+  * timeline would only return timeline for your user
+
 ## API 6.9.1 Build 12
 
 This version is being released for Ampache7 **only**
@@ -11,7 +37,7 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 
 * ALL
   * Split REST processes into separate applications
-  * Normalize object types paramter (`type`) to allow resource paths
+  * Normalize object types parameter (`type`) to allow resource paths
   * Get parsed body from `PATCH`, `PUT` and `DELETE`
 * API6
   * Add alias `catalog_add` for `catalog_create`

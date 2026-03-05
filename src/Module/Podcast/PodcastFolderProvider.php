@@ -77,6 +77,10 @@ final class PodcastFolderProvider implements PodcastFolderProviderInterface
             throw new PodcastFolderException(sprintf('Cannot create folder: %s', $fullPath));
         }
 
+        if (!is_writable($fullPath)) {
+            throw new PodcastFolderException(sprintf('Cannot write to folder: %s', $fullPath));
+        }
+
         return $fullPath;
     }
 }

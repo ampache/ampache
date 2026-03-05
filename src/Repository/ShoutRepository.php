@@ -257,6 +257,69 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
     }
 
     /**
+     * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
+     * number of objects shown
+     *
+     * @return Generator<Shoutbox>
+     */
+    public function getTopById(int $limit, ?int $userId = null): Generator
+    {
+        $result = $this->connection->query('SELECT * FROM `user_shout` WHERE `sticky` = 1 ORDER BY `date` DESC');
+
+        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, $this->getPrototypeParameters());
+
+        while ($shout = $result->fetch()) {
+            /** @var Shoutbox $shout */
+            yield $shout;
+
+            --$limit;
+
+            if ($limit < 1) {
+                break;
+            }
+        }
+
+        $params  = [];
+        $userSql = '';
+        $sql     = <<<SQL
+        SELECT
+            `user_shout`.*
+        FROM
+            `user_shout`
+        LEFT JOIN
+            `user`
+        ON
+            `user`.`id` = `user_shout`.`user`
+        WHERE
+            `user_shout`.`sticky` = 0 %s
+        ORDER BY
+            `user_shout`.`date` DESC
+        LIMIT %d
+        SQL;
+
+        if ($userId !== null) {
+            $userSql  = 'AND `user`.`id` = ?';
+            $params[] = $userId;
+        }
+
+        $result = $this->connection->query(
+            sprintf(
+                $sql,
+                $userSql,
+                $limit
+            ),
+            $params
+        );
+
+        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, $this->getPrototypeParameters());
+
+        while ($shout = $result->fetch()) {
+            /** @var Shoutbox $shout */
+            yield $shout;
+        }
+    }
+
+    /**
      * Migrates an object associate shouts to a new object
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void

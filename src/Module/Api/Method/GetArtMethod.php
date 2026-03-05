@@ -51,7 +51,7 @@ final class GetArtMethod
      * Get an art image.
      *
      * id       = (string) $object_id
-     * type     = (string) 'song', 'artist', 'album', 'label', 'live_stream', 'playlist', 'podcast', 'search', 'user', 'video'
+     * type     = (string) 'song', 'artist', 'album', 'label', 'live_stream', 'playlist', 'podcast', 'search', 'smartlist', 'user', 'video'
      * fallback = (integer) 0,1, if true return default art ('blankalbum.png') //optional
      * size     = (string) width x height ('640x480', 'original') //optional
      *
@@ -100,7 +100,7 @@ final class GetArtMethod
         $fallback  = (array_key_exists('fallback', $input) && (int)$input['fallback'] == 1);
 
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'artist', 'album', 'label', 'live_stream', 'playlist', 'podcast', 'search', 'user', 'video'])) {
+        if (!in_array(strtolower($type), ['song', 'artist', 'album', 'label', 'live_stream', 'playlist', 'podcast', 'search', 'smartlist', 'user', 'video'])) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -114,7 +114,8 @@ final class GetArtMethod
                 $song = new Song($object_id);
                 $art  = new Art($song->album, 'album');
             }
-        } elseif ($type == 'search') {
+        } elseif ($type == 'search' || $type == 'smartlist') {
+            $object_id = (int) str_replace('smart_', '', (string)$object_id);
             $smartlist = new Search($object_id, 'song', $user);
             $listitems = $smartlist->get_items();
             $item      = $listitems[array_rand($listitems)];

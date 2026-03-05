@@ -56,6 +56,14 @@ interface ShoutRepositoryInterface extends BaseRepositoryInterface
     public function getTop(int $limit, ?string $username = null): Traversable;
 
     /**
+     * This returns the top user_shouts, shout-box objects are always shown regardless and count against the total
+     * number of objects shown
+     *
+     * @return Traversable<Shoutbox>
+     */
+    public function getTopById(int $limit, ?int $userId = null): Traversable;
+
+    /**
      * Persists the shout-item in the database
      *
      * If the item is new, it will be created. Otherwise, an update will happen
