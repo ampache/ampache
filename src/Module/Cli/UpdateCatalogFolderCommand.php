@@ -56,7 +56,7 @@ final class UpdateCatalogFolderCommand extends Command
             ->argument('<catalogName>', T_('Catalog Name'))
             ->argument('<folderPath>', T_('Path'))
             /* HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album) */
-            ->usage('<bold>  run:updateCatalogFolder some-catalog  /tmp/Artist/Album -e</end> <comment> ## ' . sprintf(T_('Update %s in the catalog `some-catalog`'), '/tmp/Artist/Album') . '<eol/>');
+            ->usage('<bold>  run:updateCatalogFolder some-catalog /tmp/Artist/Album -e</end> <comment> ## ' . sprintf(T_('Update %s in the catalog `some-catalog`'), '/tmp/Artist/Album') . '<eol/>');
     }
 
     public function execute(
