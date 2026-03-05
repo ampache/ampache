@@ -10,7 +10,7 @@ Bug with Podcast Episode downloads demands another release
 
 ### Fixed (7.9.2)
 
-* Podcst Episode downloader would not get new files
+* Podcast Episode downloader would not get new files
 
 ## Ampache 7.9.1
 
