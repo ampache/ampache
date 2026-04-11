@@ -38,7 +38,11 @@ final class Environment implements EnvironmentInterface
 
     public function check(): bool
     {
-        return $this->check_php() && $this->check_dependencies_folder() && $this->check_php_intl();
+        return (
+            $this->check_php_version() &&
+            $this->check_php() &&
+            $this->check_dependencies_folder()
+        );
     }
 
     /**
@@ -348,12 +352,12 @@ final class Environment implements EnvironmentInterface
     private function check_php(): bool
     {
         return
-            $this->check_php_version() &&
             $this->check_php_hash() &&
             $this->check_php_hash_algo() &&
             $this->check_php_pdo() &&
             $this->check_php_pdo_mysql() &&
             $this->check_php_session() &&
-            $this->check_php_json();
+            $this->check_php_json() &&
+            $this->check_php_intl();
     }
 }
