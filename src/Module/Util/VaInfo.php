@@ -1910,16 +1910,16 @@ final class VaInfo implements VaInfoInterface
         }
 
         if (AmpConfig::get('rating_file_tag_compatibility', false)) {
-            if ($value === 1) {
-                return 1;
-            } elseif ($value <= 64) {
-                return 2;
-            } elseif ($value <= 128) {
-                return 3;
-            } elseif ($value <= 196) {
-                return 4;
-            } elseif ($value <= 255) {
+            if ($value === 255) {
                 return 5;
+            } elseif ($value >= 196) {
+                return 4;
+            } elseif ($value >= 128) {
+                return 3;
+            } elseif ($value >= 64) {
+                return 2;
+            } elseif ($value >= 1) {
+                return 1;
             }
         } else {
             return (int)($value / 255 * 5);
