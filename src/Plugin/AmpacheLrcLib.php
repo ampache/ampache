@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use WpOrg\Requests\Requests;
+use Collator;
 
 class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
 {
@@ -84,6 +85,7 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
             'User-Agent' => $this->user_agent
         ];
 
+        debug_event(self::class, 'Searching for lyrics: ' . $url, 5);
         $request = Requests::get($url, $headers);
 
         // sleep for 0.5s
@@ -164,20 +166,38 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
             '/api/search',
             'track_name=' . urlencode((string)$song->title) . '&artist_name=' . urlencode($song->get_artist_fullname()) . '&album_name=' . urlencode($song->get_album_fullname())
         );
+        $collator = new Collator('root');
+        $collator->setStrength(Collator::PRIMARY);
         if (is_array($response)) {
             foreach ($response as $item) {
-                if (
-                    $item['duration'] &&
-                    (int)$item['duration'] === $song->time &&
-                    $item['trackName'] === $song->title &&
-                    $item['artistName'] === $song->get_artist_fullname() &&
-                    $item['albumName'] === $song->get_album_fullname() &&
-                    !empty($item['plainLyrics'])
-                ) {
+                $checks = [
+                  'duration matches' => !($item['duration'] && $song->time) || abs((int)$item['duration'] - $song->time) < 5,
+                  'song title matches' => $collator->compare($item['trackName'], (string)$song->title) === 0,
+                  'artist matches' => $collator->compare($item['artistName'], $song->get_artist_fullname()) === 0,
+                  'album matches' => $collator->compare($item['albumName'], $song->get_album_fullname()) === 0,
+                  'has plain lyrics' => !empty($item['plainLyrics'])
+                ];
+                $checks_result = array_all(
+                    $checks,
+                    function (bool $value) {
+                        return $value === true;
+                    }
+                );
+
+                if ($checks_result === true) {
                     return [
-                        'text' => nl2br($item['plainLyrics']),
+                        'text' => (string)nl2br($item['plainLyrics']),
                         'url' => $this->site_url . '/api/get/' . $item['id']
                     ];
+                } else {
+                    $checks_values = [
+                        'durations' => ((int)$item['duration']) . " /vs/ " . $song->time,
+                        'song title' => $item['trackName'] . ' /vs/ ' . $song->title,
+                        'artist' => $item['artistName'] . ' /vs/ ' . $song->get_artist_fullname(),
+                        'album' => $item['albumName'] . ' /vs/ ' . $song->get_album_fullname(),
+                        'has plain lyrics' => !empty($item['plainLyrics'])
+                    ];
+                    debug_event(self::class, 'get_lyrics check failed: ' . var_export($checks, true) . '\n' . var_export($checks_values, true), 5);
                 }
             }
         }
