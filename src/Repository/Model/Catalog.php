@@ -2745,14 +2745,14 @@ abstract class Catalog extends database_object
         $results['disksubtitle'] = $results['disksubtitle'] ?: null;
         $results['isrc']         = (isset($results['isrc']) && is_string($results['isrc'])) ? [$results['isrc']] : $results['isrc'] ?? [];
         $results['title']        = self::check_length(self::check_title($results['title'], $results['file']));
-        $results['bitrate']      = $results['bitrate'];
+        //$results['bitrate']      = $results['bitrate'];
         $results['rate']         = $results['rate'] ?? 0;
         if (!in_array($results['mode'], ['vbr', 'cbr', 'abr'])) {
             debug_event(self::class, 'Error analyzing: ' . $results['file'] . ' unknown file bitrate mode: ' . $results['mode'], 2);
         }
         $results['mode']     = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
-        $results['channels'] = $results['channels'];
-        $results['size']     = $results['size'];
+        //$results['channels'] = $results['channels'];
+        //$results['size']     = $results['size'];
         $results['time']     = (strlen((string)$results['time']) > 5)
             ? (int)substr((string) $results['time'], -5, 5)
             : (int)($results['time']);
@@ -2764,21 +2764,32 @@ abstract class Catalog extends database_object
         $results['track']    = self::check_track((string)$results['track']);
         $results['mbid']     = (!empty($results['mb_trackid'])) ? $results['mb_trackid'] : null;
         $results['composer'] = (!empty($results['composer'])) ? self::check_length($results['composer']) : null;
-        $results['mime']     = $results['mime']; // UPDATE ONLY (Generated from the filename)
+        //$results['mime']     = $results['mime']; // UPDATE ONLY (Generated from the filename)
 
         // info for the song_data table. used in Song::update_song
         if (!empty($results['license'])) {
             $licenseRepository = self::getLicenseRepository();
-            $licenseName       = (string) $results['license'];
-            $licenseId         = $licenseRepository->find($licenseName);
+            // Lookup by ID first
+            $license = (is_numeric($results['license']))
+                ? $licenseRepository->findById((int)$results['license'])
+                : null;
+            $licenseId = $license?->getId();
+            // only lookup string licenses from tags
+            if ($licenseId === null) {
+                $licenseName = (string)$results['license'];
+                $licenseId   = $licenseRepository->find($licenseName);
 
-            if ($licenseId === 0 || $licenseId === null) {
-                $license = $licenseRepository->prototype()
-                    ->setName($licenseName);
+                if (
+                    $licenseId === 0 ||
+                    $licenseId === null
+                ) {
+                    $license = $licenseRepository->prototype()
+                        ->setName($licenseName);
 
-                $license->save();
+                    $license->save();
 
-                $licenseId = $license->getId();
+                    $licenseId = $license->getId();
+                }
             }
 
             $results['license_id'] = $licenseId;
