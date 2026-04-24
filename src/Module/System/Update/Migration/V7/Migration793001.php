@@ -50,9 +50,6 @@ final class Migration793001 extends AbstractMigration
             }
         }
 
-        $db_results = Dba::query($sql);
-        if (Dba::num_rows($db_results) === 0) {
-            $this->updateDatabase("DELETE FROM `license` WHERE `name` REGEXP '^-?[0-9]+$' AND CAST(`name` AS UNSIGNED) > 0 AND `description` = '' AND `external_link` = '' AND `order` IS NULL;");
-        }
+        $this->updateDatabase("DELETE FROM `license` WHERE `name` REGEXP '^-?[0-9]+$' AND CAST(`name` AS UNSIGNED) > 0 AND `description` = '' AND `external_link` = '' AND `order` IS NULL;");
     }
 }
