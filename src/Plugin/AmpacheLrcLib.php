@@ -171,8 +171,8 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
         if (is_array($response)) {
             foreach ($response as $item) {
                 $checks = [
-                  'duration matches' => $item['duration'] and $song->time ? abs((int)$item['duration'] - $song->time) < 5 : true,
-                  'song title matches' => $collator->compare($item['trackName'], $song->title) === 0,
+                  'duration matches' => !($item['duration'] && $song->time) || abs((int)$item['duration'] - $song->time) < 5,
+                  'song title matches' => $collator->compare($item['trackName'], (string)$song->title) === 0,
                   'artist matches' => $collator->compare($item['artistName'], $song->get_artist_fullname()) === 0,
                   'album matches' => $collator->compare($item['albumName'], $song->get_album_fullname()) === 0,
                   'has plain lyrics' => !empty($item['plainLyrics'])
@@ -186,12 +186,12 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
 
                 if ($checks_result === true) {
                     return [
-                        'text' => nl2br($item['plainLyrics']),
+                        'text' => (string)nl2br($item['plainLyrics']),
                         'url' => $this->site_url . '/api/get/' . $item['id']
                     ];
                 } else {
                     $checks_values = [
-                        'durations' => (int)$item['duration'] . " /vs/ " . $song->time,
+                        'durations' => ((int)$item['duration']) . " /vs/ " . $song->time,
                         'song title' => $item['trackName'] . ' /vs/ ' . $song->title,
                         'artist' => $item['artistName'] . ' /vs/ ' . $song->get_artist_fullname(),
                         'album' => $item['albumName'] . ' /vs/ ' . $song->get_album_fullname(),
