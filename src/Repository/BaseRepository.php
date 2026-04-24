@@ -64,12 +64,12 @@ abstract class BaseRepository
         );
         $result->setFetchMode(PDO::FETCH_CLASS, $this->getModelClass(), $this->getPrototypeParameters());
 
-        $shout = $result->fetch();
-        if ($shout === false) {
+        $object = $result->fetch();
+        if ($object === false) {
             return null;
         }
 
-        return $shout;
+        return $object;
     }
 
     /**
