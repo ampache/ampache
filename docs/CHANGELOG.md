@@ -1,5 +1,28 @@
 # CHANGELOG
 
+## Ampache 7.9.3
+
+### Added (7.9.3)
+
+* Translations 2026-01-20
+* Database 793001
+  * Fix Licenses on uploaded Songs and delete bad data
+
+### Changed (7.9.3)
+
+* Updated supported versions in the security policy
+* Update Composer packages
+* Plugins
+  * Loosen up song data checks in the LyrLib lyrics plugin
+
+### Fixed (7.9.3)
+
+* Catch any Garbage Collection error for Albums
+* License checks on upload not considering int ID's
+* Star ratings scale
+* Subsonic
+  * Correct structuredLyrics array
+
 ## Ampache 7.9.2
 
 Bug with Podcast Episode downloads demands another release
