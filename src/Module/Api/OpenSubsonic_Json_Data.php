@@ -2646,9 +2646,13 @@ class OpenSubsonic_Json_Data
 
         $json = ['structuredLyrics' => []];
 
-        $json['structuredLyrics'][] = self::_getStructuredLyrics($song);
+        $lyrics = self::_getStructuredLyrics($song);
 
-        $response['subsonic-response']['lyricsList'] = (empty($json)) ? (object)[] : $json;
+        if ($lyrics !== []) {
+            $json['structuredLyrics'][] = $lyrics;
+        }
+
+        $response['subsonic-response']['lyricsList'] = (empty($json['structuredLyrics'])) ? (object)[] : $json;
 
         return $response;
     }
