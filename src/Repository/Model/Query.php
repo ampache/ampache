@@ -1066,6 +1066,10 @@ class Query
         $sql = '';
 
         foreach ($this->_state['join'] as $joins) {
+            // don't add false joins
+            if (!$joins) {
+                continue;
+            }
             foreach ($joins as $join) {
                 $sql .= $join . ' ';
             }

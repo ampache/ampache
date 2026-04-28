@@ -81,6 +81,9 @@ final class SongSearch implements SearchInterface
                 case 'none':
                     break;
                 case 'anywhere':
+                    if ($input === '') {
+                        break;
+                    }
                     // 'anywhere' searches song title, song filename, song genre, album title, artist title, label title and song comment
                     $tag_string = match ($operator_sql) {
                         '!=', 'NOT' => "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` = ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)",
