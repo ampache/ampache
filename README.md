@@ -8,9 +8,9 @@
 
 ## News
 
-**REDUCED CONTRIBUTIONS** Hi everyone, I need to note that as the primary dev I am not able to work as many hours on Ampache right now.
+**INCREASED CONTRIBUTIONS** I'm starting to get back into things now and will be able to work more on the project again.
 
-Significant health issues for a family member are taking precedence for a while and may take about 6 months before I can fully recommit.
+Ampache 8 work will begin soon!
 
 ## Basics
 
