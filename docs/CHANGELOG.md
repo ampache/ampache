@@ -20,6 +20,7 @@
 * Catch any Garbage Collection error for Albums
 * License checks on upload not considering int ID's
 * Star ratings scale
+* Advanced Random actions missing joins for Artist and Album
 * Subsonic
   * Correct structuredLyrics array
 
