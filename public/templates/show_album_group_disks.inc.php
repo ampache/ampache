@@ -340,9 +340,9 @@ foreach ($album->getDisks() as $album_disk) {
     $browse->set_type('song');
     $browse->set_simple_browse(true);
     $browse->set_skip_catalog_check(true);
-    $browse->set_sort('track', 'ASC');
     $browse->set_limit(0);
     $browse->set_offset(0);
+    $browse->set_sort('track', 'ASC', false);
     $browse->set_filter('album_disk', $album_disk->id);
     $browse->get_objects();
     $browse->show_objects([], ['hide' => $hide_array]);

@@ -623,7 +623,7 @@ class Query
      * set_sort
      * This sets the current sort(s)
      */
-    public function set_sort(string $sort, ?string $order = ''): void
+    public function set_sort(string $sort, ?string $order = '', $resort = true): void
     {
         // Don't allow pointless sorts
         if (
@@ -662,7 +662,9 @@ class Query
             'order' => $order,
         ];
 
-        $this->_resort_objects();
+        if ($resort === true) {
+            $this->_resort_objects();
+        }
     }
 
     /**
