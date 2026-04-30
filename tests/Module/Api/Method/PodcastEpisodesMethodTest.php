@@ -289,7 +289,7 @@ class PodcastEpisodesMethodTest extends TestCase
 
         $this->output->expects(static::once())
             ->method('podcastEpisodes')
-            ->with([$episodeId], $this->user, '')
+            ->with([$episodeId], $this->user, 'string')
             ->willReturn($result);
 
         static::assertSame(
