@@ -106,7 +106,6 @@ final class PodcastDeleteMethod implements MethodInterface
         }
 
         $podcastId = (int)($input['filter'] ?? 0);
-
         if ($podcastId === 0) {
             throw new RequestParamMissingException(
                 sprintf(T_('Bad Request: %s'), 'filter')
