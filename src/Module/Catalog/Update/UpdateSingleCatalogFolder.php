@@ -48,7 +48,8 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
         bool $verificationMode,
         bool $addMode,
         bool $cleanupMode,
-        bool $searchArtMode
+        bool $searchArtMode,
+        string|bool|null $moveDirPath,
     ): void {
         $sql        = "SELECT `id` FROM `catalog` WHERE `name` = ? AND `catalog_type`='local'";
         $db_results = Dba::read($sql, [$catname]);
@@ -110,7 +111,40 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                 if (empty($file_path)) {
                     break;
                 }
+
                 $file_test = is_file($file_path);
+
+                // handle file moving
+                if (is_string($moveDirPath)) {
+                    $info     = pathinfo($file_path);
+                    $file     = $info['basename'];
+                    $new_path = rtrim($moveDirPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file;
+
+                    // rename path exist
+                    if (is_file($new_path)) {
+                        $interactor->error(
+                            T_('Error') . ': ' . T_('File already exists') . ' ' . $new_path,
+                            true
+                        );
+
+                        break;
+                    }
+
+                    if ($catalog->move_file($media, $moveDirPath, $type, $interactor)) {
+                        $interactor->info(
+                            sprintf(T_('Updated: %s'), sprintf('`%s` -> `%s`', $file_path, $moveDirPath)),
+                            true
+                        );
+                    } else {
+                        $interactor->error(
+                            T_('Error') . ': ' . $file_path,
+                            true
+                        );
+                    }
+
+                    break;
+                }
+
                 // deleted file
                 if (
                     $media->isNew() === false &&
