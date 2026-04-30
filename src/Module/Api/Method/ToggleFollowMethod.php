@@ -79,7 +79,7 @@ final class ToggleFollowMethod
 
         $leader = (is_numeric($username))
             ? User::get_from_id((int)$username)
-            : User::get_from_username($username);
+            : User::get_from_username((string)$username);
 
         if ($leader instanceof User) {
             self::getUserFollowToggler()->toggle(

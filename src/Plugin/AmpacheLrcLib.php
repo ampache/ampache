@@ -186,7 +186,7 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
 
                 if ($checks_result === true) {
                     return [
-                        'text' => (string)nl2br($item['plainLyrics']),
+                        'text' => nl2br((string)$item['plainLyrics']),
                         'url' => $this->site_url . '/api/get/' . $item['id']
                     ];
                 } else {
