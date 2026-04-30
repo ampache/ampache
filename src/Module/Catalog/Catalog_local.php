@@ -1105,7 +1105,7 @@ class Catalog_local extends Catalog
         $db_results = Dba::read($sql, [$file_path]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
+            return (int)$results['catalog_id'];
         }
 
         return 0;
