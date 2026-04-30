@@ -1052,6 +1052,13 @@ class Catalog_local extends Catalog
             true
         );
 
+        $info      = pathinfo($new_file);
+        $directory = ($info['dirname'] ?? '');
+        if (!Core::is_readable($directory)) {
+            debug_event(self::class, 'mkdir: ' . $directory, 5);
+            mkdir($directory, 0755, true);
+        }
+
         if (empty($media->file) || !copy($media->file, $new_file)) {
             /* HINT: filename (File path) */
             $interactor?->info(
