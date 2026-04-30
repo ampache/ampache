@@ -41,15 +41,15 @@ use Ampache\Module\System\Dba;
 final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements UpdateSingleCatalogFileInterface
 {
     public function update(
-        Interactor $interactor,
-        string $catname,
-        string $filePath,
-        bool $verificationMode,
-        bool $addMode,
-        bool $cleanupMode,
-        bool $searchArtMode,
-        ?string $newFilePath,
-        ?string $moveFilePath,
+        Interactor       $interactor,
+        string           $catname,
+        string           $filePath,
+        bool             $verificationMode,
+        bool             $addMode,
+        bool             $cleanupMode,
+        bool             $searchArtMode,
+        string|bool|null $newFilePath,
+        string|bool|null $moveFilePath,
     ): void {
         $sql        = "SELECT `id` FROM `catalog` WHERE `name` = ? AND `catalog_type`='local'";
         $db_results = Dba::read($sql, [$catname]);
