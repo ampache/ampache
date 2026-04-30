@@ -25,12 +25,15 @@ New CLI commands and bugfixing
 ### Fixed (7.9.3)
 
 * Catch any Garbage Collection error for Albums
+* Garbage collection for Albums missing from the album table
 * License checks on upload not considering int ID's
 * Star ratings scale
 * Advanced Random actions missing joins for Artist and Album
 * Don't limit Album track display by page size
+* Search
+  * Extended `orphan_album` check in Song search
 * Subsonic
-  * Correct structuredLyrics array
+  * Correct `structuredLyrics` array
 
 ## Ampache 7.9.2
 
