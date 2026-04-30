@@ -623,7 +623,7 @@ class Query
      * set_sort
      * This sets the current sort(s)
      */
-    public function set_sort(string $sort, ?string $order = '', $resort = true): void
+    public function set_sort(string $sort, ?string $order = '', bool $resort = true): void
     {
         // Don't allow pointless sorts
         if (

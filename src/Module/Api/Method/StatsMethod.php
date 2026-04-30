@@ -186,7 +186,7 @@ final class StatsMethod
                     case 'playlist':
                         $browse = Api::getBrowse($user);
                         $browse->set_type('playlist_search');
-                        $browse->set_sort('rand');
+                        $browse->set_sort('rand', null, false);
                         $browse->set_filter('playlist_open', $user->getId());
 
                         $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user->getId(), 'api_hidden_playlists')));
@@ -201,7 +201,7 @@ final class StatsMethod
                     case 'podcast_episode':
                         $browse = Api::getBrowse($user);
                         $browse->set_type($type);
-                        $browse->set_sort('rand');
+                        $browse->set_sort('rand', null, false);
 
                         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 

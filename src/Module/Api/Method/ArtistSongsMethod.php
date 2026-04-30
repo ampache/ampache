@@ -84,7 +84,7 @@ final class ArtistSongsMethod
         $browse->set_type('song');
         if (array_key_exists('top50', $input) && (int)$input['top50'] == 1) {
             $browse->set_limit(50);
-            $browse->set_sort('object_count', 'DESC');
+            $browse->set_sort('object_count', 'DESC', false);
             $type = 'top50';
         } else {
             $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
