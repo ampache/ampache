@@ -1144,7 +1144,7 @@ class Catalog_local extends Catalog
                 if (self::_move_file($object, $new_file, $newCatalogId, $interactor)) {
                     if ($object->catalog !== $newCatalog->id) {
                         // update mapping for new catalogs
-                        $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?);";
+                        $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
 
                         return (Dba::write($sql, [$newCatalogId, $media_type, $object->getId()]) !== false);
                     }
