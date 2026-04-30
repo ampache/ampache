@@ -127,7 +127,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                             true
                         );
 
-                        break;
+                        continue;
                     }
 
                     if ($catalog->move_file($media, $moveDirPath, $type, $interactor)) {
@@ -142,7 +142,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                         );
                     }
 
-                    break;
+                    continue;
                 }
 
                 // deleted file
