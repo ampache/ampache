@@ -117,7 +117,7 @@ class PodcastEpisodesMethodTest extends TestCase
                 $this->output,
                 [
                     'filter' => (string) $podcastId,
-                    'auth' => '',
+                    'auth' => 'string',
                     'api_format' => 'xml'
                 ],
                 $this->user
@@ -143,7 +143,7 @@ class PodcastEpisodesMethodTest extends TestCase
                 $this->response,
                 $this->output,
                 [
-                    'auth' => '',
+                    'auth' => 'string',
                     'api_format' => 'xml'
                 ],
                 $this->user
@@ -176,7 +176,7 @@ class PodcastEpisodesMethodTest extends TestCase
                 $this->output,
                 [
                     'filter' => (string) $podcastId,
-                    'auth' => '',
+                    'auth' => 'string',
                     'api_format' => 'xml'
                 ],
                 $this->user
@@ -223,7 +223,7 @@ class PodcastEpisodesMethodTest extends TestCase
                 $this->output,
                 [
                     'filter' => (string) $podcastId,
-                    'auth' => '',
+                    'auth' => 'string',
                     'api_format' => 'xml'
                 ],
                 $this->user
@@ -300,6 +300,7 @@ class PodcastEpisodesMethodTest extends TestCase
                 $this->output,
                 [
                     'filter' => (string) $podcastId,
+                    'auth' => 'string',
                     'limit' => (string) $limit,
                     'offset' => (string) $offset,
                     'api_format' => 'xml'
