@@ -109,7 +109,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
             }
 
             // handle file renaming
-            if ($newFilePath != null) {
+            if (is_string($newFilePath)) {
                 // rename path doesn't exist
                 if (!is_file($newFilePath)) {
                     $interactor->error(
@@ -136,7 +136,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
             }
 
             // handle file moving
-            if ($moveFilePath != null) {
+            if (is_string($moveFilePath) && $moveFilePath != $filePath) {
                 // rename path doesn't exist
                 if (is_file($moveFilePath)) {
                     $interactor->error(
