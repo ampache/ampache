@@ -48,7 +48,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         bool $addMode,
         bool $cleanupMode,
         bool $searchArtMode,
-        ?string $newFilePath
+        ?string $newFilePath,
+        ?string $moveFilePath,
     ): void {
         $sql        = "SELECT `id` FROM `catalog` WHERE `name` = ? AND `catalog_type`='local'";
         $db_results = Dba::read($sql, [$catname]);
@@ -133,6 +134,34 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
 
                 return;
             }
+
+            // handle file moving
+            if ($moveFilePath != null) {
+                // rename path doesn't exist
+                if (is_file($moveFilePath)) {
+                    $interactor->error(
+                        T_('Error') . ': ' . T_('File already exists') . ' ' . $moveFilePath,
+                        true
+                    );
+
+                    return;
+                }
+
+                if ($catalog->move_file($media, $moveFilePath, $type, $interactor)) {
+                    $interactor->info(
+                        sprintf(T_('Updated: %s'), sprintf('`%s` -> `%s`', $filePath, $moveFilePath)),
+                        true
+                    );
+                } else {
+                    $interactor->error(
+                        T_('Error') . ': ' . $moveFilePath,
+                        true
+                    );
+                }
+
+                return;
+            }
+
             $file_test = is_file($filePath);
             // deleted file but it was valid media in the database
             if (
