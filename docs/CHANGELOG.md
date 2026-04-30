@@ -2,11 +2,18 @@
 
 ## Ampache 7.9.3
 
+New CLI commands and bugfixing
+
+**Note** CLI move destinations must be a valid library catalog
+
 ### Added (7.9.3)
 
-* Translations 2026-01-20
+* Translations 2026-05-01
 * Database 793001
   * Fix Licenses on uploaded Songs and delete bad data
+* CLI
+  * run:updateCatalogFile: Add `-m|--move` parameter to move file in the database to a new location
+  * run:updateCatalogFolder: Add `-m|--move` parameter to move all music in a folder to a new location
 
 ### Changed (7.9.3)
 
@@ -18,11 +25,15 @@
 ### Fixed (7.9.3)
 
 * Catch any Garbage Collection error for Albums
+* Garbage collection for Albums missing from the album table
 * License checks on upload not considering int ID's
 * Star ratings scale
 * Advanced Random actions missing joins for Artist and Album
+* Don't limit Album track display by page size
+* Search
+  * Extended `orphan_album` check in Song search
 * Subsonic
-  * Correct structuredLyrics array
+  * Correct `structuredLyrics` array
 
 ## Ampache 7.9.2
 

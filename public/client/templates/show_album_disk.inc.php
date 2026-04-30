@@ -286,7 +286,6 @@ $browse->set_limit(0);
 $browse->set_offset(0);
 $browse->set_sort('track', 'ASC', false);
 $browse->set_filter('album_disk', $albumDisk->id);
-$browse->get_objects();
 $browse->show_objects([], ['hide' => $hide_array]);
 $browse->store(); ?>
 </div>
