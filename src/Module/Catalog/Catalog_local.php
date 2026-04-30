@@ -1039,6 +1039,103 @@ class Catalog_local extends Catalog
         return $missing;
     }
 
+    private function _move_file(Song|Podcast_Episode|Video $media, string $new_file, int $newCatalogId, ?Interactor $interactor = null): bool
+    {
+        if (file_exists($new_file)) {
+            debug_event('local.catalog', 'Error: ' . $new_file . ' already exists', 2);
+
+            return false;
+        }
+        // HINT: %1$s: file, %2$s: directory
+        $interactor?->info(
+            sprintf(T_('Copying "%1$s" to "%2$s"'), $media->file, $new_file),
+            true
+        );
+
+        if (empty($media->file) || !copy($media->file, $new_file)) {
+            /* HINT: filename (File path) */
+            $interactor?->info(
+                sprintf(T_('There was an error trying to copy file to "%s"'), $new_file),
+                true
+            );
+
+            return false;
+        }
+
+        debug_event('local.catalog', 'Copied ' . $media->file . ' to ' . $new_file, 5);
+
+        // Check the filesize
+        $new_sum = Core::get_filesize($new_file);
+        $old_sum = Core::get_filesize($media->file);
+
+        if ($new_sum != $old_sum || $new_sum == 0) {
+            /* HINT: filename (File path) */
+            $interactor?->info(
+                sprintf(T_('Size comparison failed. Not deleting "%s"'), $media->file),
+                true
+            );
+            unlink($new_file); // delete the copied file on failure
+
+            return false;
+        } // end if sum's don't match
+
+        if (!unlink($media->file)) {
+            /* HINT: filename (File path) */
+            $interactor?->info(
+                sprintf(T_('There was an error trying to delete "%s"'), $media->file),
+                true
+            );
+        }
+
+        // Update the catalog
+        $sql = "UPDATE `song` SET `file` = ?, catalog = ? WHERE `id` = ?;";
+
+        return (Dba::write($sql, [$new_file, $newCatalogId, $media->id]) !== false);
+
+    }
+
+    /**
+     * move_file
+     *
+     * Move the file to a new location
+     * New path MUST be within an existing catalog
+     */
+    public function move_file(Song|Podcast_Episode|Video $object, string $new_file, ?string $media_type = null, ?Interactor $interactor = null): bool
+    {
+        if ($this->get_type() !== 'local') {
+            return false;
+        }
+
+        switch ($media_type) {
+            case 'song':
+            case 'video':
+            case 'podcast_episode':
+                $newCatalogId = self::get_id_from_file($new_file, (string)$media_type);
+                $newCatalog   = self::create_from_id($newCatalogId);
+                if ($newCatalog?->get_type() !== 'local') {
+                    debug_event('local.catalog', "move_file: $new_file is not part of a local catalog", 1);
+
+                    return false;
+                }
+
+                if (self::_move_file($object, $new_file, $newCatalogId, $interactor)) {
+                    if ($object->catalog !== $newCatalog->id) {
+                        // update mapping for new catalogs
+                        $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?);";
+
+                        return (Dba::write($sql, [$newCatalogId, $media_type, $object->getId()]) !== false);
+                    }
+
+                    return true;
+                }
+
+                return false;
+            default:
+                return false;
+        }
+
+    }
+
     /**
      * set_file
      *

@@ -35,6 +35,7 @@ interface UpdateSingleCatalogFileInterface
         bool $addMode,
         bool $cleanupMode,
         bool $searchArtMode,
-        ?string $newFilePath
+        ?string $newFilePath,
+        ?string $moveFilePath,
     ): void;
 }
