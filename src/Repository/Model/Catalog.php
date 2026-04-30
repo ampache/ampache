@@ -3871,7 +3871,7 @@ abstract class Catalog extends database_object
 
         if ($song_check) {
             // these files have missing albums so you can't verify them without updating from tags first
-            $sql        = "SELECT `id` FROM `song` WHERE `album` in (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` FROM `album`));";
+            $sql        = "SELECT `id` FROM `song` WHERE (`song`.`album` IN (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` FROM `album`)) OR `song`.`album` NOT IN (SELECT `id` FROM `album`));";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {
                 self::update_single_item('song', $row['id'], true, true);
