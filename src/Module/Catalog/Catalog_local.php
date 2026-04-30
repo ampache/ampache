@@ -1142,15 +1142,28 @@ class Catalog_local extends Catalog
      * Update file path
      * Return true on rename. false on failures
      */
-    public function set_file(int $object_id, string $new_file, ?string $media_type = null): bool
+    public function set_file(Song|Podcast_Episode|Video $object, string $new_file, ?string $media_type = null): bool
     {
         switch ($media_type) {
             case 'song':
             case 'video':
             case 'podcast_episode':
-                $sql = "UPDATE `$media_type` SET `file` = ? WHERE `id` = ?;";
+                $newCatalogId = self::get_id_from_file($new_file, (string)$media_type);
+                $newCatalog   = self::create_from_id($newCatalogId);
+                if ($newCatalog === null) {
+                    return false;
+                }
 
-                return (Dba::write($sql, [$new_file, $object_id]) !== false);
+                if ($object->catalog !== $newCatalog->id) {
+                    // update mapping for new catalogs
+                    $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?);";
+
+                    return (Dba::write($sql, [$newCatalogId, $media_type, $object->getId()]) !== false);
+                }
+
+                $sql = "UPDATE `$media_type` SET `file` = ?, `catalog` = ? WHERE `id` = ?;";
+
+                return (Dba::write($sql, [$new_file, $newCatalogId, $object->getId()]) !== false);
             default:
                 return false;
         }

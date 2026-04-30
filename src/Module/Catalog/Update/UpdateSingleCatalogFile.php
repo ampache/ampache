@@ -120,7 +120,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     return;
                 }
 
-                if ($catalog->set_file($media->getId(), $newFilePath, $type)) {
+                if ($catalog->set_file($media, $newFilePath, $type)) {
                     $interactor->info(
                         sprintf(T_('Updated: %s'), sprintf('`%s` -> `%s`', $filePath, $newFilePath)),
                         true
