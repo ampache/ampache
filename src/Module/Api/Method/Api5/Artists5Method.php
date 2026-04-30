@@ -80,7 +80,7 @@ final class Artists5Method
         } else {
             $browse->set_type('artist');
         }
-        $browse->set_sort('name', 'ASC');
+        $browse->set_sort('name', 'ASC', false);
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');

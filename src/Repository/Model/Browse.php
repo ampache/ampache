@@ -112,7 +112,7 @@ class Browse extends Query
             return;
         }
 
-        $this->set_sort(strtolower($sort_name), strtoupper($sort_type));
+        $this->set_sort(strtolower($sort_name), strtoupper($sort_type), false);
     }
 
     /**

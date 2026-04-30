@@ -681,6 +681,11 @@ parameters:
 			path: src/Module/Api/Method/PodcastEpisodeMethod.php
 
 		-
+			message: "#^Offset 'filter' on array\\{filter\\: string, offset\\?\\: string, limit\\?\\: string, cond\\?\\: string, sort\\?\\: string, api_format\\: string, auth\\: string\\} on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: src/Module/Api/Method/PodcastEpisodesMethod.php
+
+		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PodcastMethod.php

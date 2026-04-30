@@ -1039,21 +1039,180 @@ class Catalog_local extends Catalog
         return $missing;
     }
 
+    private function _move_file(Song|Podcast_Episode|Video $media, string $new_file, int $newCatalogId, ?Interactor $interactor = null): bool
+    {
+        if (file_exists($new_file)) {
+            debug_event('local.catalog', 'Error: ' . $new_file . ' already exists', 2);
+
+            return false;
+        }
+        // HINT: %1$s: file, %2$s: directory
+        $interactor?->info(
+            sprintf(T_('Copying "%1$s" to "%2$s"'), $media->file, $new_file),
+            true
+        );
+
+        $info      = pathinfo($new_file);
+        $directory = ($info['dirname'] ?? '');
+        if (!Core::is_readable($directory)) {
+            debug_event(self::class, 'mkdir: ' . $directory, 5);
+            mkdir($directory, 0755, true);
+        }
+
+        if (empty($media->file) || !copy($media->file, $new_file)) {
+            /* HINT: filename (File path) */
+            $interactor?->info(
+                sprintf(T_('There was an error trying to copy file to "%s"'), $new_file),
+                true
+            );
+
+            return false;
+        }
+
+        debug_event('local.catalog', 'Copied ' . $media->file . ' to ' . $new_file, 5);
+
+        // Check the filesize
+        $new_sum = Core::get_filesize($new_file);
+        $old_sum = Core::get_filesize($media->file);
+
+        if ($new_sum != $old_sum || $new_sum == 0) {
+            /* HINT: filename (File path) */
+            $interactor?->info(
+                sprintf(T_('Size comparison failed. Not deleting "%s"'), $media->file),
+                true
+            );
+            unlink($new_file); // delete the copied file on failure
+
+            return false;
+        } // end if sum's don't match
+
+        if (!unlink($media->file)) {
+            /* HINT: filename (File path) */
+            $interactor?->info(
+                sprintf(T_('There was an error trying to delete "%s"'), $media->file),
+                true
+            );
+        }
+
+        // Update the catalog
+        $sql = "UPDATE `song` SET `file` = ?, catalog = ? WHERE `id` = ?;";
+
+        return (Dba::write($sql, [$new_file, $newCatalogId, $media->id]) !== false);
+
+    }
+
+    /**
+     * get_catalog_id_from_file
+     *
+     * Get catalog id from the file path.
+     */
+    private static function _get_catalog_id_from_file(string $file_path): int
+    {
+        $sql        = 'SELECT `catalog_id` FROM `catalog_local` WHERE ? LIKE CONCAT(`path`, \'%\')';
+        $db_results = Dba::read($sql, [$file_path]);
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['catalog_id'];
+        }
+
+        return 0;
+    }
+    /**
+     * move_file
+     *
+     * Move the file to a new location
+     * New path MUST be within an existing catalog
+     */
+    public function move_file(Song|Podcast_Episode|Video $object, string $new_file, ?string $media_type = null, ?Interactor $interactor = null): bool
+    {
+        if ($this->get_type() !== 'local') {
+            return false;
+        }
+
+        switch ($media_type) {
+            case 'song':
+            case 'video':
+            case 'podcast_episode':
+                $newCatalogId = self::_get_catalog_id_from_file($new_file);
+                $newCatalog   = self::create_from_id($newCatalogId);
+                if ($newCatalog?->get_type() !== 'local') {
+                    debug_event('local.catalog', "move_file: $new_file is not part of a local catalog", 1);
+
+                    return false;
+                }
+
+                if (self::_move_file($object, $new_file, $newCatalogId, $interactor)) {
+                    if ($object->catalog !== $newCatalog->id) {
+                        // update mapping for new catalogs
+                        $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
+
+                        if (Dba::write($sql, [$newCatalogId, $media_type, $object->getId()]) !== false) {
+                            if ($object instanceof Song) {
+                                $sql        = "SELECT `id` FROM `song` WHERE `album` = ? AND `catalog` = ?;";
+                                $db_results = Dba::read($sql);
+                                // you have moved all the songs so update the album catalog too
+                                if (Dba::num_rows($db_results) === 0) {
+                                    Dba::write("UPDATE `album` SET `catalog` = ? WHERE `id` = ?;", [$newCatalogId, $object->album]);
+                                }
+                                $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
+
+                                return (Dba::write($sql, [$newCatalogId, $media_type, $object->album]) !== false);
+                            }
+
+                            if ($object instanceof Podcast_Episode) {
+                                $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND `catalog` = ?;";
+                                $db_results = Dba::read($sql);
+                                // you have moved all the episodes so update the podcast catalog too
+                                if (Dba::num_rows($db_results) === 0) {
+                                    Dba::write("UPDATE `album` SET `catalog` = ? WHERE `id` = ?;", [$newCatalogId, $object->podcast]);
+                                }
+                                $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
+
+                                return (Dba::write($sql, [$newCatalogId, $media_type, $object->getPodcastId()]) !== false);
+                            }
+
+                            return true;
+                        }
+                    }
+
+                    return true;
+                }
+
+                return false;
+            default:
+                return false;
+        }
+
+    }
+
     /**
      * set_file
      *
      * Update file path
      * Return true on rename. false on failures
      */
-    public function set_file(int $object_id, string $new_file, ?string $media_type = null): bool
+    public function set_file(Song|Podcast_Episode|Video $object, string $new_file, ?string $media_type = null): bool
     {
         switch ($media_type) {
             case 'song':
             case 'video':
             case 'podcast_episode':
-                $sql = "UPDATE `$media_type` SET `file` = ? WHERE `id` = ?;";
+                $newCatalogId = self::get_id_from_file($new_file, (string)$media_type);
+                $newCatalog   = self::create_from_id($newCatalogId);
+                if ($newCatalog === null) {
+                    return false;
+                }
 
-                return (Dba::write($sql, [$new_file, $object_id]) !== false);
+                if ($object->catalog !== $newCatalog->id) {
+                    // update mapping for new catalogs
+                    $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
+
+                    return (Dba::write($sql, [$newCatalogId, $media_type, $object->getId()]) !== false);
+                }
+
+                $sql = "UPDATE `$media_type` SET `file` = ?, `catalog` = ? WHERE `id` = ?;";
+
+                return (Dba::write($sql, [$new_file, $newCatalogId, $object->getId()]) !== false);
             default:
                 return false;
         }

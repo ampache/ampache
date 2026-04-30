@@ -53,6 +53,7 @@ final class UpdateCatalogFileCommand extends Command
             ->option('-e|--verify', T_('Reads your files and updates the database to match changes'), 'boolval', false)
             ->option('-a|--add', T_('Adds new media files to the database'), 'boolval', false)
             ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
+            ->option('-m|--move', T_('Move file in the database to a new location'), 'strval', null)
             ->option('-r|--rename', T_('Update file path in the database to a new location'), 'strval', null)
             ->argument('<catalogName>', T_('Catalog Name'))
             ->argument('<filePath>', T_('File Path'))
@@ -72,18 +73,36 @@ final class UpdateCatalogFileCommand extends Command
         $interactor = $this->io();
 
         if (
-            $values['rename'] != null &&
             (
-                $values['verify'] ||
-                $values['add'] ||
-                $values['cleanup'] ||
-                $values['art']
+                $values['rename'] != null &&
+                $values['move'] != null
+            ) ||
+            (
+                (
+                    $values['rename'] != null ||
+                    $values['move'] != null
+                ) &&
+                (
+                    $values['verify'] ||
+                    $values['add'] ||
+                    $values['cleanup'] ||
+                    $values['art']
+                )
             )
         ) {
-            $interactor->error(
-                "\n" . T_('Rename (-r|--rename) cannot be used with other options enabled'),
-                true
-            );
+            if ($values['move'] != null) {
+                $interactor->error(
+                    "\n" . T_('Move (-m|--move) cannot be used with other options enabled'),
+                    true
+                );
+            }
+
+            if ($values['rename'] != null) {
+                $interactor->error(
+                    "\n" . T_('Rename (-r|--rename) cannot be used with other options enabled'),
+                    true
+                );
+            }
 
             return;
         }
@@ -96,7 +115,8 @@ final class UpdateCatalogFileCommand extends Command
             $values['add'],
             $values['cleanup'],
             $values['art'],
-            $values['rename']
+            $values['rename'],
+            $values['move']
         );
     }
 }
