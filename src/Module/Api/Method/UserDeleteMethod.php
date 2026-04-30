@@ -73,7 +73,7 @@ final class UserDeleteMethod
         $username = $input['username'];
         $del_user = (is_numeric($username))
             ? User::get_from_id((int)$username)
-            : User::get_from_username($username);
+            : User::get_from_username((string)$username);
 
         if ($del_user === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

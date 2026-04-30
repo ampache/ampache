@@ -322,7 +322,7 @@ foreach ($multi_object_ids as $key => $object_ids) {
     $browse->set_type($object_type);
     $browse->set_use_filters(false);
     if ($is_album_type) {
-        $browse->set_sort($sort, $order);
+        $browse->set_sort($sort, $order, false);
     }
     $browse->set_use_alpha(false, false);
     if (!empty($key)) {

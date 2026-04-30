@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-02-20 15:44+1000\n"
+"POT-Creation-Date: 2026-05-01 07:49+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4010,6 +4010,22 @@ msgstr ""
 msgid "All files would be removed. Doing nothing"
 msgstr ""
 
+#, php-format
+msgid "Copying \"%1$s\" to \"%2$s\""
+msgstr ""
+
+#, php-format
+msgid "There was an error trying to copy file to \"%s\""
+msgstr ""
+
+#, php-format
+msgid "Size comparison failed. Not deleting \"%s\""
+msgstr ""
+
+#, php-format
+msgid "There was an error trying to delete \"%s\""
+msgstr ""
+
 #. HINT: filename (file path)
 #, php-format
 msgid "File was not found or is 0 Bytes: %s"
@@ -4242,6 +4258,9 @@ msgstr ""
 #. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
 #, php-format
 msgid "Updated: %s"
+msgstr ""
+
+msgid "File already exists"
 msgstr ""
 
 #, php-format
@@ -4671,6 +4690,9 @@ msgstr ""
 msgid "Perform catalog actions for a single file"
 msgstr ""
 
+msgid "Move file in the database to a new location"
+msgstr ""
+
 msgid "Update file path in the database to a new location"
 msgstr ""
 
@@ -4681,6 +4703,9 @@ msgstr ""
 
 #, php-format
 msgid "Rename %s to %s in the catalog `some-catalog`"
+msgstr ""
+
+msgid "Move (-m|--move) cannot be used with other options enabled"
 msgstr ""
 
 msgid "Rename (-r|--rename) cannot be used with other options enabled"
@@ -4828,22 +4853,6 @@ msgstr ""
 
 #, php-format
 msgid "Don't overwrite an existing file: \"%s\""
-msgstr ""
-
-#, php-format
-msgid "Copying \"%1$s\" to \"%2$s\""
-msgstr ""
-
-#, php-format
-msgid "There was an error trying to copy file to \"%s\""
-msgstr ""
-
-#, php-format
-msgid "Size comparison failed. Not deleting \"%s\""
-msgstr ""
-
-#, php-format
-msgid "There was an error trying to delete \"%s\""
 msgstr ""
 
 msgid "View changes"

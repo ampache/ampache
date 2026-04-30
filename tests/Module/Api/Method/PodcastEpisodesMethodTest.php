@@ -80,6 +80,8 @@ class PodcastEpisodesMethodTest extends TestCase
 
     public function testHandleThrowsIfPodcastsDisabled(): void
     {
+        $podcastId = 666;
+
         $stream = $this->createMock(StreamInterface::class);
 
         $result = 'some-error';
@@ -113,12 +115,17 @@ class PodcastEpisodesMethodTest extends TestCase
                 $this->gatekeeper,
                 $this->response,
                 $this->output,
-                ['auth' => ''],
+                [
+                    'filter' => (string) $podcastId,
+                    'auth' => 'string',
+                    'api_format' => 'xml'
+                ],
                 $this->user
             )
         );
     }
 
+    /** @noinspection PhpMissingArrayKeyInspection */
     public function testHandleThrowsIfPodcastWasNotFound(): void
     {
         static::expectException(RequestParamMissingException::class);
@@ -135,7 +142,10 @@ class PodcastEpisodesMethodTest extends TestCase
                 $this->gatekeeper,
                 $this->response,
                 $this->output,
-                ['auth' => ''],
+                [
+                    'auth' => 'string',
+                    'api_format' => 'xml'
+                ],
                 $this->user
             )
         );
@@ -166,7 +176,8 @@ class PodcastEpisodesMethodTest extends TestCase
                 $this->output,
                 [
                     'filter' => (string) $podcastId,
-                    'auth' => '',
+                    'auth' => 'string',
+                    'api_format' => 'xml'
                 ],
                 $this->user
             )
@@ -212,7 +223,8 @@ class PodcastEpisodesMethodTest extends TestCase
                 $this->output,
                 [
                     'filter' => (string) $podcastId,
-                    'auth' => '',
+                    'auth' => 'string',
+                    'api_format' => 'xml'
                 ],
                 $this->user
             )
@@ -277,7 +289,7 @@ class PodcastEpisodesMethodTest extends TestCase
 
         $this->output->expects(static::once())
             ->method('podcastEpisodes')
-            ->with([$episodeId], $this->user, '')
+            ->with([$episodeId], $this->user, 'string')
             ->willReturn($result);
 
         static::assertSame(
@@ -288,9 +300,10 @@ class PodcastEpisodesMethodTest extends TestCase
                 $this->output,
                 [
                     'filter' => (string) $podcastId,
+                    'auth' => 'string',
                     'limit' => (string) $limit,
                     'offset' => (string) $offset,
-                    'auth' => '',
+                    'api_format' => 'xml'
                 ],
                 $this->user
             )

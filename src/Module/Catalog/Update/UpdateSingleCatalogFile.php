@@ -41,14 +41,15 @@ use Ampache\Module\System\Dba;
 final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements UpdateSingleCatalogFileInterface
 {
     public function update(
-        Interactor $interactor,
-        string $catname,
-        string $filePath,
-        bool $verificationMode,
-        bool $addMode,
-        bool $cleanupMode,
-        bool $searchArtMode,
-        ?string $newFilePath
+        Interactor       $interactor,
+        string           $catname,
+        string           $filePath,
+        bool             $verificationMode,
+        bool             $addMode,
+        bool             $cleanupMode,
+        bool             $searchArtMode,
+        string|bool|null $newFilePath,
+        string|bool|null $moveFilePath,
     ): void {
         $sql        = "SELECT `id` FROM `catalog` WHERE `name` = ? AND `catalog_type`='local'";
         $db_results = Dba::read($sql, [$catname]);
@@ -108,7 +109,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
             }
 
             // handle file renaming
-            if ($newFilePath != null) {
+            if (is_string($newFilePath)) {
                 // rename path doesn't exist
                 if (!is_file($newFilePath)) {
                     $interactor->error(
@@ -119,7 +120,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     return;
                 }
 
-                if ($catalog->set_file($media->getId(), $newFilePath, $type)) {
+                if ($catalog->set_file($media, $newFilePath, $type)) {
                     $interactor->info(
                         sprintf(T_('Updated: %s'), sprintf('`%s` -> `%s`', $filePath, $newFilePath)),
                         true
@@ -133,6 +134,34 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
 
                 return;
             }
+
+            // handle file moving
+            if (is_string($moveFilePath) && $moveFilePath != $filePath) {
+                // rename path doesn't exist
+                if (is_file($moveFilePath)) {
+                    $interactor->error(
+                        T_('Error') . ': ' . T_('File already exists') . ' ' . $moveFilePath,
+                        true
+                    );
+
+                    return;
+                }
+
+                if ($catalog->move_file($media, $moveFilePath, $type, $interactor)) {
+                    $interactor->info(
+                        sprintf(T_('Updated: %s'), sprintf('`%s` -> `%s`', $filePath, $moveFilePath)),
+                        true
+                    );
+                } else {
+                    $interactor->error(
+                        T_('Error') . ': ' . $filePath,
+                        true
+                    );
+                }
+
+                return;
+            }
+
             $file_test = is_file($filePath);
             // deleted file but it was valid media in the database
             if (
