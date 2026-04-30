@@ -1101,7 +1101,7 @@ class Catalog_local extends Catalog
      */
     private static function _get_catalog_id_from_file(string $file_path): int
     {
-        $sql        = sprintf('SELECT `id` FROM `catalog_local` WHERE ? LIKE CONCAT(`path`, \'%\')');
+        $sql        = 'SELECT `id` FROM `catalog_local` WHERE ? LIKE CONCAT(`path`, \'%\')';
         $db_results = Dba::read($sql, [$file_path]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
