@@ -154,7 +154,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     );
                 } else {
                     $interactor->error(
-                        T_('Error') . ': ' . $moveFilePath,
+                        T_('Error') . ': ' . $filePath,
                         true
                     );
                 }
