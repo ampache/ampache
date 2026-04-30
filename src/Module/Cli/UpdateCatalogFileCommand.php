@@ -74,14 +74,20 @@ final class UpdateCatalogFileCommand extends Command
 
         if (
             (
-                $values['rename'] != null ||
+                $values['rename'] != null &&
                 $values['move'] != null
-            ) &&
+            ) ||
             (
-                $values['verify'] ||
-                $values['add'] ||
-                $values['cleanup'] ||
-                $values['art']
+                (
+                    $values['rename'] != null ||
+                    $values['move'] != null
+                ) &&
+                (
+                    $values['verify'] ||
+                    $values['add'] ||
+                    $values['cleanup'] ||
+                    $values['art']
+                )
             )
         ) {
             if ($values['move'] != null) {
