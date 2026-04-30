@@ -1095,6 +1095,22 @@ class Catalog_local extends Catalog
     }
 
     /**
+     * get_catalog_id_from_file
+     *
+     * Get catalog id from the file path.
+     */
+    private static function _get_catalog_id_from_file(string $file_path): int
+    {
+        $sql        = sprintf('SELECT `id` FROM `catalog_local` WHERE ? LIKE CONCAT(`path`, \'%\')');
+        $db_results = Dba::read($sql, [$file_path]);
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['id'];
+        }
+
+        return 0;
+    }
+    /**
      * move_file
      *
      * Move the file to a new location
@@ -1110,7 +1126,7 @@ class Catalog_local extends Catalog
             case 'song':
             case 'video':
             case 'podcast_episode':
-                $newCatalogId = self::get_id_from_file($new_file, (string)$media_type);
+                $newCatalogId = self::_get_catalog_id_from_file($new_file);
                 $newCatalog   = self::create_from_id($newCatalogId);
                 if ($newCatalog?->get_type() !== 'local') {
                     debug_event('local.catalog', "move_file: $new_file is not part of a local catalog", 1);
