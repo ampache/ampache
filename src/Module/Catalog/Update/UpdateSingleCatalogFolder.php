@@ -130,9 +130,9 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                         continue;
                     }
 
-                    if ($catalog->move_file($media, $moveDirPath, $type, $interactor)) {
+                    if ($catalog->move_file($media, $new_path, $type, $interactor)) {
                         $interactor->info(
-                            sprintf(T_('Updated: %s'), sprintf('`%s` -> `%s`', $file_path, $moveDirPath)),
+                            sprintf(T_('Updated: %s'), sprintf('`%s` -> `%s`', $file_path, $new_path)),
                             true
                         );
                     } else {
