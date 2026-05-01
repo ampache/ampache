@@ -1117,6 +1117,7 @@ class Catalog_local extends Catalog
 
         return 0;
     }
+
     /**
      * move_file
      *
