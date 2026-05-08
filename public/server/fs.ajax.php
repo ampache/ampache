@@ -33,6 +33,7 @@ use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\FileSystem;
 use Ampache\Module\Util\Upload;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Psr\Container\ContainerInterface;
 
@@ -47,7 +48,7 @@ if (!$current_user instanceof User) {
 }
 
 $catalog_id = (int)AmpConfig::get('upload_catalog', 0);
-$catalog    = Upload::check($catalog_id);
+$catalog    = Catalog::create_from_id($catalog_id);
 
 $rootdir = ($catalog instanceof Catalog_local)
     ? Upload::get_root($catalog, $current_user->username)
