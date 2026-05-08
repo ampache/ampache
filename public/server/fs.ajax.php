@@ -91,16 +91,16 @@ if (isset($_GET['operation'])) {
                 $rslt = $fs->create($node, $_GET['text'] ?? '', (!isset($_GET['type']) || filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'file'));
                 break;
             case 'rename_node':
-                $rslt = $fs->rename($node, $_GET['text'] ?? '');
+                $rslt = $fs->rename($node, $_GET['text'] ?? '', $current_user);
                 break;
             case 'delete_node':
-                $rslt = $fs->remove($node);
+                $rslt = $fs->remove($node, $current_user);
                 break;
             case 'move_node':
                 $parn = (isset($_GET['parent']) && $_GET['parent'] !== '#')
                     ? (string)$_GET['parent']
                     : '/';
-                $rslt = $fs->move($node, $parn);
+                $rslt = $fs->move($node, $parn, $current_user);
                 break;
             case 'copy_node':
                 $parn = (isset($_GET['parent']) && $_GET['parent'] !== '#')
