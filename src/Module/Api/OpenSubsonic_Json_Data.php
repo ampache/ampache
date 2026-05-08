@@ -716,7 +716,8 @@ class OpenSubsonic_Json_Data
      *     'explicitStatus'?: string,
      *     'discTitles'?: array{
      *         'disc': int,
-     *         'title': string
+     *         'title': string,
+     *         'coverArt'?: string,
      *     },
      *     'song'?: array<array<string, mixed>>
      * }
