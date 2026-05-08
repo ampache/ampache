@@ -2468,17 +2468,25 @@ class OpenSubsonic_Json_Data
      *     'id': string,
      *     'name': string,
      *     'streamUrl': string,
-     *     'homepageUrl': string
+     *     'homepageUrl': string,
+     *     'coverArt'?: string,
      * }
      */
     private static function _getInternetRadioStation(Live_Stream $radio): array
     {
-        return [
-            'id' => OpenSubsonic_Api::getLiveStreamSubId($radio->id),
+        $sub_id = OpenSubsonic_Api::getLiveStreamSubId($radio->id);
+        $json = [
+            'id' => $sub_id,
             'name' => (string)$radio->name,
             'streamUrl' => (string)$radio->url,
             'homepageUrl' => (string)$radio->site_url,
         ];
+
+        if ($radio->has_art()) {
+            $json['coverArt'] = $sub_id;
+        }
+
+        return $json;
     }
 
     /**

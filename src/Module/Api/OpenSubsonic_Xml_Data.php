@@ -1432,11 +1432,15 @@ class OpenSubsonic_Xml_Data
      */
     private static function _addInternetRadioStation(SimpleXMLElement $xml, Live_Stream $radio): void
     {
+        $sub_id = OpenSubsonic_Api::getLiveStreamSubId($radio->id);
         $xradio = self::_addChildToResultXml($xml, 'internetRadioStation');
-        $xradio->addAttribute('id', OpenSubsonic_Api::getLiveStreamSubId($radio->id));
+        $xradio->addAttribute('id', $sub_id);
         $xradio->addAttribute('name', (string)$radio->name);
         $xradio->addAttribute('streamUrl', (string)$radio->url);
         $xradio->addAttribute('homepageUrl', (string)$radio->site_url);
+        if ($radio->has_art()) {
+            $xradio->addAttribute('coverArt', $sub_id);
+        }
     }
 
     /**
