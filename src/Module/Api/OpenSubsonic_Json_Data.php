@@ -2476,7 +2476,7 @@ class OpenSubsonic_Json_Data
     private static function _getInternetRadioStation(Live_Stream $radio): array
     {
         $sub_id = OpenSubsonic_Api::getLiveStreamSubId($radio->id);
-        $json = [
+        $json   = [
             'id' => $sub_id,
             'name' => (string)$radio->name,
             'streamUrl' => (string)$radio->url,

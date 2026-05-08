@@ -2980,7 +2980,6 @@ abstract class Catalog extends database_object
             $artist = $artists_array[0];
         }
 
-
         // check whether this artist exists (and the album_artist)
         $is_upload_albumartist = ($song->albumartist) ? Artist::is_upload($song->albumartist) : false;
         if ($is_upload_albumartist) {
