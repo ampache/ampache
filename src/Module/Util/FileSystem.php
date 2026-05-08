@@ -38,11 +38,11 @@ class FileSystem
     {
         $temp = realpath($path);
         if (!$temp) {
-            throw new Exception('Path does not exist: ' . $temp);
+            throw new Exception('Path does not exist');
         }
         if (!empty($this->base)) {
             if (!str_starts_with($temp, $this->base)) {
-                throw new Exception('Path is not inside base: ' . $temp);
+                throw new Exception('Path is not inside base');
             }
         }
 
