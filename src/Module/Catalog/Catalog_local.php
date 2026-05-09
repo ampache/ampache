@@ -1041,8 +1041,12 @@ class Catalog_local extends Catalog
 
     private function _move_file(Song|Podcast_Episode|Video $media, string $new_file, int $newCatalogId, ?Interactor $interactor = null): bool
     {
-        if (file_exists($new_file)) {
+        if (file_exists($new_file) && is_file($new_file)) {
             debug_event('local.catalog', 'Error: ' . $new_file . ' already exists', 2);
+            $interactor?->info(
+                T_('Error') . ': ' . T_('File already exists') . ' ' . $new_file,
+                true
+            );
 
             return false;
         }
