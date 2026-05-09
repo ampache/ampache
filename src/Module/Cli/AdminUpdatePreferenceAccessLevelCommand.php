@@ -74,6 +74,7 @@ final class AdminUpdatePreferenceAccessLevelCommand extends Command
                     true
                 );
             }
+
             $interactor->ok(
                 "\n" . T_('No changes have been made'),
                 true
@@ -93,6 +94,7 @@ final class AdminUpdatePreferenceAccessLevelCommand extends Command
                     true
                 );
             }
+
             $interactor->error(
                 "\n" . T_('Error'),
                 true

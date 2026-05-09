@@ -64,6 +64,7 @@ final class UpdateDbCommand extends Command
         if ($this->app() === null) {
             return;
         }
+
         $interactor = $this->io();
         $dryRun     = $this->values()['execute'] === false;
 
