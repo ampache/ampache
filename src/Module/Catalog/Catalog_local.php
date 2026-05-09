@@ -1058,7 +1058,7 @@ class Catalog_local extends Catalog
 
         $info      = pathinfo($new_file);
         $directory = ($info['dirname'] ?? '');
-        if (!Core::is_readable($directory)) {
+        if (!Core::is_readable($directory) || !is_dir($directory)) {
             debug_event(self::class, 'mkdir: ' . $directory, 5);
             mkdir($directory, 0755, true);
         }
