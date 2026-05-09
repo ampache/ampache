@@ -105,13 +105,13 @@ final class SongSorter implements SongSorterInterface
         while ($row = Dba::fetch_assoc($db_results)) {
             $this->catalog = Catalog::create_from_id($row['id']);
             if ($this->catalog === null) {
-                continue;
+                break;
             }
 
             if ($customPath !== null) {
                 // when you've set a sort path do not continue with full catalog sort
                 $this->processPath($customPath, $interactor);
-                continue;
+                break;
             }
 
             /* HINT: Catalog Name */
