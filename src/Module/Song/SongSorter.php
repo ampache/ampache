@@ -375,6 +375,7 @@ final class SongSorter implements SongSorterInterface
             );
 
             if (empty($media->file) || !copy($media->file, $fullname)) {
+                unlink($fullname); // delete the copied file on failure
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('There was an error trying to copy file to "%s"'), $fullname),

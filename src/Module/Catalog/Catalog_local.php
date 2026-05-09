@@ -1064,6 +1064,7 @@ class Catalog_local extends Catalog
         }
 
         if (empty($media->file) || !copy($media->file, $new_file)) {
+            unlink($new_file); // delete the copied file on failure
             /* HINT: filename (File path) */
             $interactor?->info(
                 sprintf(T_('There was an error trying to copy file to "%s"'), $new_file),
