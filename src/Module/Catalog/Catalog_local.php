@@ -1060,7 +1060,15 @@ class Catalog_local extends Catalog
         $directory = ($info['dirname'] ?? '');
         if (!Core::is_readable($directory) || !is_dir($directory)) {
             debug_event(self::class, 'mkdir: ' . $directory, 5);
-            mkdir($directory, 0755, true);
+            if (!mkdir($directory, 0755, true)) {
+                debug_event('local.catalog', T_('Error') . ': ' . sprintf(T_('Create directory "%s"'), $directory), 2);
+                $interactor?->info(
+                    T_('Error') . ': ' . sprintf(T_('Create directory "%s"'), $directory),
+                    true
+                );
+
+                return false;
+            }
         }
 
         if (empty($media->file) || !copy($media->file, $new_file)) {
@@ -1363,7 +1371,11 @@ class Catalog_local extends Catalog
 
                     if (!Core::is_readable($directory)) {
                         debug_event(self::class, 'mkdir: ' . $directory, 5);
-                        mkdir($directory, 0755, true);
+                        if (!mkdir($directory, 0755, true)) {
+                            debug_event('local.catalog', T_('Error') . ': ' . sprintf(T_('Create directory "%s"'), $directory), 2);
+
+                            return null;
+                        }
                     }
 
                     // Now that we've got the correct directory structure let's try to copy it
