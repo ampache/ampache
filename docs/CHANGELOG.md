@@ -15,7 +15,7 @@
 
 ### Fixed (7.9.4)
 
-* Catalog sync would not respec podcast download limits
+* Catalog sync would not respect podcast download limits
 * Ajax FS not looking for current user early enough to validate
 * Could not create a folder when using default `.htaccess` (not enabled by default)
 * CLI
