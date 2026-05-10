@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## Ampache 7.9.4
+
+### Added (7.9.4)
+
+* Don't people move/rename/delete upload folders when you don't own all the content
+* Subsonic
+  * Add `coverArt` for radio stations
+
+### Changed (7.9.4)
+
+* Remove path printing from FileSystem output
+* Fail if `upload_subdir` is enabled but can't create the folder
+
+### Fixed (7.9.4)
+
+* Catalog sync would not respec podcast download limits
+* Ajax FS not looking for current user early enough to validate
+* Could not create a folder when using default `.htaccess` (not enabled by default)
+* CLI
+  * cleanup:sortSongs was not stopping after using single folder
+  * run:updateCatalogFile better file checks and error warnings
+
 ## Ampache 7.9.3
 
 New CLI commands and bugfixing
