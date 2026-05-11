@@ -5703,6 +5703,68 @@
         ]
       }
     },
+    "/podcast-episodes": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "filter",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cond",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Podcast Episode list"
+          }
+        },
+        "summary": "List podcast episodes",
+        "tags": [
+          "Podcasts"
+        ]
+      }
+    },
     "/podcast-episodes/{episode_id}": {
       "delete": {
         "parameters": [
@@ -10247,6 +10309,27 @@
         "summary": "Get stats (song/album/artist etc) by type and filter",
         "tags": [
           "Browsing, Indexes and Lists"
+        ]
+      }
+    },
+    "/update": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Update Ampache"
+          }
+        },
+        "summary": "Get information about your own user account",
+        "tags": [
+          "Maintenance"
         ]
       }
     },
