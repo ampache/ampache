@@ -74,7 +74,8 @@ class Search extends playlist_object
 
     public ?string $type = 'public'; // override playlist_object
 
-    public $rules; // rules used to run a search (User chooses rules from available types for that object). JSON string to decoded to array
+    /** @var array<int, array<int, mixed>> $rules */
+    public array $rules = []; // rules used to run a search (User chooses rules from available types for that object). JSON string to decoded to array
 
     public ?string $logic_operator = 'and';
 
@@ -86,10 +87,11 @@ class Search extends playlist_object
 
     public User $search_user; // user running the search
 
-    public $types = []; // rules that are available to the objectType (title, year, rating, etc)
+    /** @var array<int, array<string, mixed>> $types */
+    public array $types = []; // rules that are available to the objectType (title, year, rating, etc)
 
     /** @var array<string, array<int, array{name: string, description: string, sql: string, preg_match?: string|array{string, string}, preg_replace?:string|array{string, string}}>> $basetypes */
-    public $basetypes = []; // rule operator subtypes (numeric, text, boolean, etc)
+    public array $basetypes = []; // rule operator subtypes (numeric, text, boolean, etc)
 
     private SearchInterface $searchType;
 
@@ -130,10 +132,6 @@ class Search extends playlist_object
                 } else {
                     $this->$key = $value;
                 }
-            }
-
-            if (!is_array($this->rules)) {
-                $this->rules = [];
             }
 
             // make sure saved rules match the correct names
@@ -1872,7 +1870,7 @@ class Search extends playlist_object
      * get_rule_types
      *
      * Return rule list for the current search type
-     * @return array<string, array<string, mixed>>
+     * @return array<int, array<string, mixed>>
      */
     public function get_rule_types(): array
     {
