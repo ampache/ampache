@@ -45,6 +45,8 @@ final class PodcastCreateMethod
 {
     public const ACTION = 'podcast_create';
 
+    public const REST_ACTION = 'podcasts_create';
+
     /**
      * podcast_create
      * MINIMUM_API_VERSION=420000

@@ -43,6 +43,8 @@ final class LiveStreamEditMethod
 {
     public const ACTION = 'live_stream_edit';
 
+    public const REST_ACTION = 'live_streams_edit';
+
     /**
      * live_stream_edit
      * MINIMUM_API_VERSION=6.0.0

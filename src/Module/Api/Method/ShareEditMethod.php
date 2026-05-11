@@ -39,6 +39,8 @@ final class ShareEditMethod
 {
     public const ACTION = 'share_edit';
 
+    public const REST_ACTION = 'shares_edit';
+
     /**
      * share_edit
      * MINIMUM_API_VERSION=420000

@@ -41,6 +41,8 @@ final class PodcastEditMethod
 {
     public const ACTION = 'podcast_edit';
 
+    public const REST_ACTION = 'podcasts_edit';
+
     /**
      * podcast_edit
      * MINIMUM_API_VERSION=420000

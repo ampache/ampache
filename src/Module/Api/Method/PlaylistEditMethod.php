@@ -38,6 +38,8 @@ final class PlaylistEditMethod
 {
     public const ACTION = 'playlist_edit';
 
+    public const REST_ACTION = 'playlists_edit';
+
     /**
      * playlist_edit
      * MINIMUM_API_VERSION=400001

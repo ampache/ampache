@@ -45,6 +45,8 @@ final class BookmarkEditMethod
 {
     public const ACTION = 'bookmark_edit';
 
+    public const REST_ACTION = 'bookmarks_edit';
+
     /**
      * bookmark_edit
      * MINIMUM_API_VERSION=5.0.0

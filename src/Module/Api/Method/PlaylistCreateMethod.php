@@ -41,6 +41,8 @@ final class PlaylistCreateMethod
 {
     public const ACTION = 'playlist_create';
 
+    public const REST_ACTION = 'playlists_create';
+
     /**
      * playlist_create
      * MINIMUM_API_VERSION=380001

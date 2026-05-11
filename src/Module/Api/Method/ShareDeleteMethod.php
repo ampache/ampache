@@ -40,6 +40,8 @@ final class ShareDeleteMethod
 {
     public const ACTION = 'share_delete';
 
+    public const REST_ACTION = 'shares_delete';
+
     /**
      * share_delete
      * MINIMUM_API_VERSION=420000

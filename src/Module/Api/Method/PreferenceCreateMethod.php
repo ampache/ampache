@@ -41,6 +41,8 @@ final class PreferenceCreateMethod
 {
     public const ACTION = 'preference_create';
 
+    public const REST_ACTION = 'preferences_create';
+
     /**
      * preference_create
      * MINIMUM_API_VERSION=5.0.0

@@ -40,6 +40,8 @@ final class SongDeleteMethod
 {
     public const ACTION = 'song_delete';
 
+    public const REST_ACTION = 'songs_delete';
+
     /**
      * song_delete
      * MINIMUM_API_VERSION=5.0.0

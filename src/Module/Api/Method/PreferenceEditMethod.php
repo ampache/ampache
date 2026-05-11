@@ -41,6 +41,8 @@ final class PreferenceEditMethod
 {
     public const ACTION = 'preference_edit';
 
+    public const REST_ACTION = 'preferences_edit';
+
     /**
      * preference_edit
      * MINIMUM_API_VERSION=5.0.0

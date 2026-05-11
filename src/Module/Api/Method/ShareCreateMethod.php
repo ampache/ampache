@@ -58,6 +58,8 @@ final class ShareCreateMethod
 {
     public const ACTION = 'share_create';
 
+    public const REST_ACTION = 'shares_create';
+
     /**
      * share_create
      * MINIMUM_API_VERSION=420000

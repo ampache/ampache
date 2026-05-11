@@ -35,6 +35,8 @@ final class CatalogCreateMethod
 {
     public const ACTION = 'catalog_create';
 
+    public const REST_ACTION = 'catalogs_create';
+
     /**
      * catalog_add
      * MINIMUM_API_VERSION=6.0.0

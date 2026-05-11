@@ -39,6 +39,8 @@ final class SmartlistDeleteMethod
 {
     public const ACTION = 'smartlist_delete';
 
+    public const REST_ACTION = 'smartlists_delete';
+
     /**
      * smartlist_delete
      * MINIMUM_API_VERSION=380001

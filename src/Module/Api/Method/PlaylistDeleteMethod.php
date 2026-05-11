@@ -39,6 +39,8 @@ final class PlaylistDeleteMethod
 {
     public const ACTION = 'playlist_delete';
 
+    public const REST_ACTION = 'playlists_delete';
+
     /**
      * playlist_delete
      * MINIMUM_API_VERSION=380001

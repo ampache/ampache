@@ -45,6 +45,8 @@ final class UserEditMethod
 {
     public const ACTION = 'user_edit';
 
+    public const REST_ACTION = 'users_edit';
+
     /**
      * user_edit
      * MINIMUM_API_VERSION=6.0.0

@@ -45,6 +45,8 @@ final class BookmarkCreateMethod
 {
     public const ACTION = 'bookmark_create';
 
+    public const REST_ACTION = 'bookmarks_create';
+
     /**
      * bookmark_create
      * MINIMUM_API_VERSION=5.0.0

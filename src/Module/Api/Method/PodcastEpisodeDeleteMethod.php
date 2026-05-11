@@ -42,6 +42,8 @@ final class PodcastEpisodeDeleteMethod
 {
     public const ACTION = 'podcast_episode_delete';
 
+    public const REST_ACTION = 'podcasts_episode_delete';
+
     /**
      * podcast_episode_delete
      * MINIMUM_API_VERSION=420000

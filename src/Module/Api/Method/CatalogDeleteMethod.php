@@ -40,6 +40,8 @@ final class CatalogDeleteMethod
 {
     public const ACTION = 'catalog_delete';
 
+    public const REST_ACTION = 'catalogs_delete';
+
     /**
      * catalog_delete
      * MINIMUM_API_VERSION=6.0.0

@@ -41,6 +41,8 @@ final class UserCreateMethod
 {
     public const ACTION = 'user_create';
 
+    public const REST_ACTION = 'users_create';
+
     /**
      * user_create
      * MINIMUM_API_VERSION=400001

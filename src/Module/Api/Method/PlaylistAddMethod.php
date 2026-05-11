@@ -43,6 +43,8 @@ final class PlaylistAddMethod
 {
     public const ACTION = 'playlist_add';
 
+    public const REST_ACTION = 'playlist_add_edit';
+
     /**
      * playlist_add
      * MINIMUM_API_VERSION=6.3.0

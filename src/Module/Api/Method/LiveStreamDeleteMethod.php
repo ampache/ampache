@@ -40,6 +40,8 @@ final class LiveStreamDeleteMethod
 {
     public const ACTION = 'live_stream_delete';
 
+    public const REST_ACTION = 'live_streams_delete';
+
     /**
      * live_stream_delete
      * MINIMUM_API_VERSION=6.0.0

@@ -43,6 +43,8 @@ final class LiveStreamCreateMethod
 {
     public const ACTION = 'live_stream_create';
 
+    public const REST_ACTION = 'live_streams_create';
+
     /**
      * live_stream_create
      * MINIMUM_API_VERSION=6.0.0

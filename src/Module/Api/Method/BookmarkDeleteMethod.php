@@ -44,6 +44,8 @@ final class BookmarkDeleteMethod
 {
     public const ACTION = 'bookmark_delete';
 
+    public const REST_ACTION = 'bookmarks_delete';
+
     /**
      * bookmark_delete
      * MINIMUM_API_VERSION=5.0.0

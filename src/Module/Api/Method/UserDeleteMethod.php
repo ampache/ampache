@@ -40,6 +40,8 @@ final class UserDeleteMethod
 {
     public const ACTION = 'user_delete';
 
+    public const REST_ACTION = 'users_delete';
+
     /**
      * user_delete
      * MINIMUM_API_VERSION=400001

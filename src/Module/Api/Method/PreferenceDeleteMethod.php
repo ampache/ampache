@@ -40,6 +40,8 @@ final class PreferenceDeleteMethod
 {
     public const ACTION = 'preference_delete';
 
+    public const REST_ACTION = 'preferences_delete';
+
     /**
      * preference_delete
      * MINIMUM_API_VERSION=5.0.0
