@@ -613,8 +613,8 @@ class Search extends playlist_object
 
         $t_song_data = T_('Song Data');
         $this->_add_type_text('title', T_('Title'), $t_song_data);
-        $this->_add_type_text('album', T_('Album'), $t_song_data);
-        $this->_add_type_text('artist', T_('Song Artist'), $t_song_data);
+        $this->_add_type_text('album', T_('Album Title'), $t_song_data);
+        $this->_add_type_text('song_artist', T_('Song Artist'), $t_song_data);
         $this->_add_type_text('album_artist', T_('Album Artist'), $t_song_data);
         $this->_add_type_text('composer', T_('Composer'), $t_song_data);
         $this->_add_type_numeric('track', T_('Track'), 'numeric', $t_song_data);
@@ -876,7 +876,7 @@ class Search extends playlist_object
     {
         $t_album_data = T_('Album Data');
         $this->_add_type_text('title', T_('Title'), $t_album_data);
-        $this->_add_type_text('artist', T_('Album Artist'), $t_album_data);
+        $this->_add_type_text('album_artist', T_('Album Artist'), $t_album_data);
         $this->_add_type_text('song_artist', T_('Song Artist'), $t_album_data);
         $this->_add_type_text('song', T_('Song Title'), $t_album_data);
         $this->_add_type_numeric('year', T_('Year'), 'numeric', $t_album_data);
@@ -1667,6 +1667,8 @@ class Search extends playlist_object
                     case 'album_artist_title':
                         $name = 'album_artist';
                         break;
+                    case 'artist':
+                    case 'artist_title':
                     case 'song_artist_title':
                         $name = 'song_artist';
                         break;
@@ -1715,10 +1717,10 @@ class Search extends playlist_object
                     case 'song_title':
                         $name = 'song';
                         break;
-                    case 'album_artist':
+                    case 'artist':
                     case 'album_artist_title':
                     case 'artist_title':
-                        $name = 'artist';
+                        $name = 'album_artist';
                         break;
                     case 'tag':
                     case 'album_tag':

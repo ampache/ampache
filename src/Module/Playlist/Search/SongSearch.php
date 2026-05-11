@@ -162,7 +162,7 @@ final class SongSearch implements SearchInterface
                     $parameters     = array_merge($parameters, [$input, $input]);
                     $table['album'] = "LEFT JOIN `album` ON `song`.`album` = `album`.`id`";
                     break;
-                case 'artist':
+                case 'song_artist':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
                         $where[] = "NOT ((`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?))";
                     } else {
