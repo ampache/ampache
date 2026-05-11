@@ -80,12 +80,17 @@ final class JsonRestApiApplication implements ApiApplicationInterface
 
         // normalize input actions (REST paths)
         $action = $this->apiHandler->normalizeAction((string)$input['action'], $type, isset($input['filter']));
-        $action = match (strtoupper($request->getMethod())) {
+        $action = match ($method) {
             'DELETE' => rtrim($action, 's') . '_delete',
             'PATCH' => rtrim($action, 's') . '_edit',
             'PUT' => rtrim($action, 's') . '_create',
             default => $action,
         };
+
+        // filter out bad requests
+        if ($action === 'register' && $method !== 'POST') {
+            $action = 'bad_request';
+        }
 
         $parameters = [
             'action' => $action,

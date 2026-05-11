@@ -106,6 +106,23 @@ final class ApiHandler implements ApiHandlerInterface
 
         $input        = $request->getQueryParams();
         $action       = $input['action'];
+        if ($action == 'bad_request') {
+            $this->logger->warning(
+                'Bad API request, check your HTTP Method is correct for your action',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
+                        T_('Access Denied'),
+                        $action,
+                        'system'
+                    )
+                )
+            );
+        }
         $is_handshake = $action == HandshakeMethod::ACTION;
         $is_ping      = $action == PingMethod::ACTION;
         $is_register  = $action == RegisterMethod::ACTION;
@@ -169,8 +186,6 @@ final class ApiHandler implements ApiHandlerInterface
         if ($api_format == 'json' && $api_version == 3) {
             $api_version = 6;
         }
-        // send the version to API calls (this is used to determine return data for api4/api5)
-        $input['api_version'] = $api_version;
 
         /*
          * Create a simplified session for header authenticated sessions
