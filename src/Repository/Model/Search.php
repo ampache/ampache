@@ -46,6 +46,7 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use JsonException;
 
 /**
  * Search-related voodoo.  Beware tentacles.
@@ -120,9 +121,10 @@ class Search extends playlist_object
             $info = $this->get_info($search_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 if ($key == 'rules') {
-                    $this->rules = json_decode((string)$value, true);
-                    if (!is_array($this->rules)) {
-                        debug_event(self::class, "Can't decode key 'rules'. Not a valid json.", 1);
+                    try {
+                        $this->rules = json_decode((string) $value, true, 512, JSON_THROW_ON_ERROR);
+                    } catch (JsonException $error) {
+                        debug_event(self::class, "Can't decode key 'rules'. Not a valid json. " . $error, 1);
                         $this->rules = [];
                     }
                 } else {
