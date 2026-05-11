@@ -1060,7 +1060,7 @@ class Catalog_local extends Catalog
         $directory = ($info['dirname'] ?? '');
         if (!Core::is_readable($directory) || !is_dir($directory)) {
             debug_event(self::class, 'mkdir: ' . $directory, 5);
-            if (!mkdir($directory, 0755, true)) {
+            if (!mkdir($directory, 0775, true)) {
                 debug_event('local.catalog', T_('Error') . ': ' . sprintf(T_('Create directory "%s"'), $directory), 2);
                 $interactor?->info(
                     T_('Error') . ': ' . sprintf(T_('Create directory "%s"'), $directory),
@@ -1350,7 +1350,7 @@ class Catalog_local extends Catalog
                     $root .= DIRECTORY_SEPARATOR . User::get_username($song->user_upload);
                     if (!Core::is_readable($root)) {
                         debug_event(self::class, 'Target user directory `' . $root . "` doesn't exist. Creating it...", 5);
-                        mkdir($root);
+                        mkdir($root, 0775);
                     }
                 }
                 // sort_find_home will replace the % with the correct values.
@@ -1371,7 +1371,7 @@ class Catalog_local extends Catalog
 
                     if (!Core::is_readable($directory)) {
                         debug_event(self::class, 'mkdir: ' . $directory, 5);
-                        if (!mkdir($directory, 0755, true)) {
+                        if (!mkdir($directory, 0775, true)) {
                             debug_event('local.catalog', T_('Error') . ': ' . sprintf(T_('Create directory "%s"'), $directory), 2);
 
                             return null;

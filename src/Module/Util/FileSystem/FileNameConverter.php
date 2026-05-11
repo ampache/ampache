@@ -222,7 +222,7 @@ final class FileNameConverter implements FileNameConverterInterface
                     printf(T_('Making directory: %s'), $path),
                     true
                 );
-                $results_mkdir = mkdir($path);
+                $results_mkdir = mkdir($path, 0775);
                 if (!$results_mkdir) {
                     /* HINT: filename (File path) */
                     $interactor->error(

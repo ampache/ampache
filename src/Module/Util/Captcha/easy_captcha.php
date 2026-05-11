@@ -357,7 +357,7 @@ class easy_captcha
     {
         // create dir
         if (!file_exists($dir = $this->getTempDir())) {
-            mkdir($dir);
+            mkdir($dir, 0775);
         }
         // clean up old files
         if ((rand(0, 100) <= 5) && ($dir_handle = opendir($dir))) {

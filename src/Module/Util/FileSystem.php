@@ -229,7 +229,7 @@ class FileSystem
             throw new Exception('Invalid name: ' . $name);
         }
         if ($mkdir) {
-            mkdir($dir . DIRECTORY_SEPARATOR . $name);
+            mkdir($dir . DIRECTORY_SEPARATOR . $name, 0775);
         } else {
             file_put_contents($dir . DIRECTORY_SEPARATOR . $name, '');
         }
@@ -340,7 +340,7 @@ class FileSystem
         }
 
         if (is_dir($dir)) {
-            mkdir($new);
+            mkdir($new, 0775);
             foreach (array_diff(scandir($dir), [".", ".."]) as $file) {
                 $this->copy($this->id($dir . DIRECTORY_SEPARATOR . $file), $this->id($new));
             }

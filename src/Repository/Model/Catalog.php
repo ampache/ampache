@@ -4418,7 +4418,7 @@ abstract class Catalog extends database_object
         // Create subdirectory based on the 2 last digit of the SongID. We prevent having thousands of file in one directory.
         $path .= '/' . $catalog_id . '/' . substr((string)$object_id, -1, 1) . '/' . substr((string)$object_id, -2, 1) . '/';
         if (!file_exists($path)) {
-            mkdir($path, 0755, true);
+            mkdir($path, 0775, true);
         }
 
         return rtrim(trim($path), '/') . '/' . $object_id . '.' . $target;

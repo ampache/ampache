@@ -366,7 +366,7 @@ class Upload
                 $rootdir .= DIRECTORY_SEPARATOR . $username;
                 if (!Core::is_readable($rootdir)) {
                     debug_event(self::class, 'Target user directory `' . $rootdir . "` doesn't exist. Creating it...", 5);
-                    if (!mkdir($rootdir)) {
+                    if (!mkdir($rootdir, 0775)) {
                         return null;
                     }
                 }

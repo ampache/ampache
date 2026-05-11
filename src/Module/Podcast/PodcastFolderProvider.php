@@ -72,7 +72,7 @@ final class PodcastFolderProvider implements PodcastFolderProviderInterface
         // create path if it doesn't exist
         if (
             !is_dir($fullPath) &&
-            @mkdir($fullPath) === false
+            @mkdir($fullPath, 0775) === false
         ) {
             throw new PodcastFolderException(sprintf('Cannot create folder: %s', $fullPath));
         }

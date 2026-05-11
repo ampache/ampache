@@ -333,7 +333,7 @@ final class SongSorter implements SongSorterInterface
                         sprintf('Creating %s directory', $path),
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
-                    if (!mkdir($path)) {
+                    if (!mkdir($path, 0775)) {
                         /* HINT: Directory (File path) */
                         $interactor->info(
                             sprintf(T_("There was a problem creating this directory: %s"), $path),
