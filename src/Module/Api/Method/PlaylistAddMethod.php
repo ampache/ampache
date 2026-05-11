@@ -57,7 +57,8 @@ final class PlaylistAddMethod
      *
      * @param array{
      *     filter: string,
-     *     id: string,
+     *     id?: string,
+     *     song?: string,
      *     type: string,
      *     api_format: string,
      *     auth: string,
@@ -67,6 +68,7 @@ final class PlaylistAddMethod
      */
     public static function playlist_add(array $input, User $user): bool
     {
+        $input['id'] = $input['song'] ?? $input['id'] ?? null;
         if (!Api::check_parameter($input, ['filter', 'id', 'type'], self::ACTION)) {
             return false;
         }
