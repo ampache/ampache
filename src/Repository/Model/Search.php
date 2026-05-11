@@ -631,7 +631,7 @@ class Search extends playlist_object
             $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('albumrating', T_('My Rating (Album)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('artistrating', T_('My Rating (Artist)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_boolean('my_flagged', T_('My Favorite Songs'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_song', T_('My Favorite Songs'), 'boolean', $t_ratings);
             $this->_add_type_boolean('my_flagged_album', T_('My Favorite Albums'), 'boolean', $t_ratings);
             $this->_add_type_boolean('my_flagged_artist', T_('My Favorite Artists'), 'boolean', $t_ratings);
             $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
@@ -795,6 +795,9 @@ class Search extends playlist_object
             $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('songrating', T_('My Rating (Song)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('albumrating', T_('My Rating (Album)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_boolean('my_flagged_song', T_('My Favorite Songs'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_album', T_('My Favorite Albums'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_artist', T_('My Favorite Artists'), 'boolean', $t_ratings);
             $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
             $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
@@ -894,6 +897,9 @@ class Search extends playlist_object
             $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('songrating', T_('My Rating (Song)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('artistrating', T_('My Rating (Artist)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_boolean('my_flagged_song', T_('My Favorite Songs'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_album', T_('My Favorite Albums'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_artist', T_('My Favorite Artists'), 'boolean', $t_ratings);
             $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
             $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
@@ -1684,8 +1690,10 @@ class Search extends playlist_object
                     case 'mbid_song':
                         $name = 'mbid';
                         break;
+                    case 'my_flagged':
                     case 'myflagged':
-                        $name = 'my_flagged';
+                    case 'myflagged_song':
+                        $name = 'my_flagged_song';
                         break;
                     case 'myflagged_album':
                         $name = 'my_flagged_album';
@@ -1736,6 +1744,17 @@ class Search extends playlist_object
                     case 'subtitle':
                         $name = 'version';
                         break;
+                    case 'myflagged_song':
+                        $name = 'my_flagged_song';
+                        break;
+                    case 'my_flagged':
+                    case 'myflagged':
+                    case 'myflagged_album':
+                        $name = 'my_flagged_album';
+                        break;
+                    case 'myflagged_artist':
+                        $name = 'my_flagged_artist';
+                        break;
                 }
 
                 break;
@@ -1768,6 +1787,17 @@ class Search extends playlist_object
                         break;
                     case 'mbid_artist':
                         $name = 'mbid';
+                        break;
+                    case 'myflagged_song':
+                        $name = 'my_flagged_song';
+                        break;
+                    case 'myflagged_album':
+                        $name = 'my_flagged_album';
+                        break;
+                    case 'my_flagged':
+                    case 'myflagged':
+                    case 'myflagged_artist':
+                        $name = 'my_flagged_artist';
                         break;
                 }
 

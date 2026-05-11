@@ -256,6 +256,23 @@ final class ArtistSearch implements SearchInterface
                         $join['song'] = true;
                     }
                     break;
+                case 'my_flagged_song':
+                case 'my_flagged_album':
+                case 'my_flagged_artist':
+                    // combine these as they all do the same thing just different tables
+                    $looking      = str_replace('my_flagged_', '', $rule[0]);
+                    $column       = ($looking == 'artist') ? 'id' : $looking;
+                    $my_type      = ($looking === 'album' && AmpConfig::get('album_group')) ? 'album_disk' : $looking;
+                    $operator_sql = ((int) $operator_sql == 0) ? 'IS NULL' : 'IS NOT NULL';
+                    // played once per user
+                    if (!array_key_exists('my_flagged_', $table)) {
+                        $table['my_flagged_'] = '';
+                    }
+                    $table['my_flagged_'] .= (!strpos((string) $table['my_flagged_'], "my_flagged__" . $my_type . "_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user_flag`.`object_type` = '$my_type' AND `user_flag`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `my_flagged__" . $my_type . "_" . $search_user_id . "` ON `' . $my_type . '`.`$column` = `my_flagged__" . $my_type . "_" . $search_user_id . "`.`object_id` AND `my_flagged__" . $my_type . "_" . $search_user_id . "`.`object_type` = '$my_type'"
+                        : "";
+                    $where[] = "`my_flagged__" . $my_type . "_" . $search_user_id . "`.`object_id` $operator_sql";
+                    break;
                 case 'myplayed':
                     $column       = 'id';
                     $my_type      = 'artist';
