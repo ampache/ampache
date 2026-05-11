@@ -552,6 +552,7 @@ final class ApiHandler implements ApiHandlerInterface
         bool $hasFilter
     ): string {
         $action = match ($action) {
+            'add-song' => 'add_song',
             'albums_songs' => 'album_songs',
             'artists_albums' => 'artist_albums',
             'artists_songs' => 'artist_songs',
@@ -578,6 +579,7 @@ final class ApiHandler implements ApiHandlerInterface
             'playlists_add' => 'playlist_add',
             'podcast-episodes' => 'podcast_episodes',
             'record-play' => 'record_play',
+            'remove-song' => 'remove_song',
             'smartlists_delete' => 'smartlist_delete',
             'smartlists_songs' => 'smartlist_songs',
             'search-songs' => 'search_songs',
