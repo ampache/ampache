@@ -191,6 +191,7 @@ class Api
         Method\SystemUpdateMethod::ACTION => Method\SystemUpdateMethod::class,
         Method\TimelineMethod::ACTION => Method\TimelineMethod::class,
         Method\ToggleFollowMethod::ACTION => Method\ToggleFollowMethod::class,
+        Method\SystemUpdateMethod::REST_ACTION => Method\SystemUpdateMethod::class,
         Method\UpdateArtistInfoMethod::ACTION => Method\UpdateArtistInfoMethod::class,
         Method\UpdateArtMethod::ACTION => Method\UpdateArtMethod::class,
         Method\UpdateFromTagsMethod::ACTION => Method\UpdateFromTagsMethod::class,
