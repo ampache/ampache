@@ -165,4 +165,24 @@ final class PlaylistEditMethod
 
         return true;
     }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     name?: string,
+     *     type?: string,
+     *     owner?: int|string,
+     *     items?: string,
+     *     tracks?: string,
+     *     sort?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function playlists_edit(array $input, User $user): bool
+    {
+        return self::playlist_edit($input, $user);
+    }
 }

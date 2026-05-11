@@ -96,4 +96,19 @@ final class UserDeleteMethod
 
         return false;
     }
+
+    /**
+     * @param array{
+     *     filter?: int|string,
+     *     username?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function users_delete(array $input, User $user): bool
+    {
+        return self::user_delete($input, $user);
+    }
 }

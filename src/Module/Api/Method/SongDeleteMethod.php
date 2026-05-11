@@ -91,6 +91,20 @@ final class SongDeleteMethod
     }
 
     /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function songs_delete(array $input, User $user): bool
+    {
+        return self::song_delete($input, $user);
+    }
+
+    /**
      * @deprecated
      */
     public static function getSongDeleter(): SongDeleterInterface

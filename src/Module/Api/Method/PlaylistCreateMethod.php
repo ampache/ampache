@@ -89,4 +89,19 @@ final class PlaylistCreateMethod
 
         return true;
     }
+
+    /**
+     * @param array{
+     *     name: string,
+     *     type?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function playlists_create(array $input, User $user): bool
+    {
+        return self::playlist_create($input, $user);
+    }
 }

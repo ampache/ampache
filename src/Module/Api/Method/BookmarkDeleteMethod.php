@@ -127,6 +127,22 @@ final class BookmarkDeleteMethod
         return true;
     }
 
+    /**
+     * @param array{
+     *     filter: string,
+     *     type?: string,
+     *     client?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function bookmarks_delete(array $input, User $user): bool
+    {
+        return self::bookmark_delete($input, $user);
+    }
+
     private static function getBookmarkRepository(): BookmarkRepositoryInterface
     {
         global $dic;

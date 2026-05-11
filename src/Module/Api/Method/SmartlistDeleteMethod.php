@@ -74,4 +74,18 @@ final class SmartlistDeleteMethod
 
         return true;
     }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function smartlists_delete(array $input, User $user): bool
+    {
+        return self::smartlist_delete($input, $user);
+    }
 }

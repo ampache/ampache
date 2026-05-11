@@ -93,6 +93,20 @@ final class ShareDeleteMethod
     }
 
     /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function shares_delete(array $input, User $user): bool
+    {
+        return self::share_delete($input, $user);
+    }
+
+    /**
      * @deprecated Inject dependency
      */
     private static function getShareRepository(): ShareRepositoryInterface

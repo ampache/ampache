@@ -124,4 +124,22 @@ final class LiveStreamCreateMethod
 
         return true;
     }
+
+    /**
+     * @param array{
+     *     name: string,
+     *     url: string,
+     *     codec: string,
+     *     catalog: int,
+     *     site_url?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function live_streams_create(array $input, User $user): bool
+    {
+        return self::live_stream_create($input, $user);
+    }
 }

@@ -42,7 +42,7 @@ final class PodcastEpisodeDeleteMethod
 {
     public const ACTION = 'podcast_episode_delete';
 
-    public const REST_ACTION = 'podcasts_episode_delete';
+    public const REST_ACTION = 'podcast_episodes_delete';
 
     /**
      * podcast_episode_delete
@@ -93,5 +93,19 @@ final class PodcastEpisodeDeleteMethod
         }
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function podcasts_episodes_delete(array $input, User $user): bool
+    {
+        return self::podcast_episode_delete($input, $user);
     }
 }

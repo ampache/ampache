@@ -74,4 +74,18 @@ final class PlaylistDeleteMethod
 
         return true;
     }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function playlists_delete(array $input, User $user): bool
+    {
+        return self::playlist_delete($input, $user);
+    }
 }

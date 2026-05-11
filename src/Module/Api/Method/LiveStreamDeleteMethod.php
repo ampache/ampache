@@ -87,6 +87,20 @@ final class LiveStreamDeleteMethod
         return true;
     }
 
+    /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function live_streams_delete(array $input, User $user): bool
+    {
+        return self::live_stream_delete($input, $user);
+    }
+
     private static function getLiveStreamRepository(): LiveStreamRepositoryInterface
     {
         global $dic;

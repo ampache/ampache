@@ -112,6 +112,21 @@ final class PodcastCreateMethod
     }
 
     /**
+     * @param array{
+     *     url: string,
+     *     catalog: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function podcasts_create(array $input, User $user): bool
+    {
+        return self::podcast_create($input, $user);
+    }
+
+    /**
      * @deprecated inject dependency
      */
     private static function getPodcastCreator(): PodcastCreatorInterface

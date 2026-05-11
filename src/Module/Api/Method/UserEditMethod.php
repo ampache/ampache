@@ -193,6 +193,34 @@ final class UserEditMethod
     }
 
     /**
+     * @param array{
+     *     filter?: int|string,
+     *     username?: string,
+     *     fullname?: string,
+     *     password?: string,
+     *     email?: string,
+     *     website?: string,
+     *     state?: string,
+     *     city?: string,
+     *     disable?: int,
+     *     group?: int,
+     *     maxbitrate?: int,
+     *     fullname_public?: int,
+     *     reset_apikey?: int,
+     *     reset_streamtoken?: int,
+     *     clear_stats?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function users_edit(array $input, User $user): bool
+    {
+        return self::user_edit($input, $user);
+    }
+
+    /**
      * @deprecated Inject by constructor
      */
     private static function getUserStateToggler(): UserStateTogglerInterface

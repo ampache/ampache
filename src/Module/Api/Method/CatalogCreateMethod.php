@@ -72,4 +72,26 @@ final class CatalogCreateMethod
     {
         return CatalogAddMethod::catalog_add($input, $user);
     }
+
+    /**
+     * @param array{
+     *     name: string,
+     *     path: string,
+     *     type?: string,
+     *     beetsdb?: string,
+     *     media_type?: string,
+     *     file_pattern?: string,
+     *     folder_pattern?: string,
+     *     username?: string,
+     *     password?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function catalogs_create(array $input, User $user): bool
+    {
+        return CatalogAddMethod::catalog_add($input, $user);
+    }
 }

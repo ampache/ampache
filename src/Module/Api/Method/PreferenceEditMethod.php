@@ -115,4 +115,21 @@ final class PreferenceEditMethod
 
         return true;
     }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     value: string|int,
+     *     all?: int,
+     *     default?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function preferences_edit(array $input, User $user): bool
+    {
+        return self::preference_edit($input, $user);
+    }
 }

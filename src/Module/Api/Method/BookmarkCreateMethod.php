@@ -144,4 +144,23 @@ final class BookmarkCreateMethod
 
         return true;
     }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     position: string,
+     *     client?: string,
+     *     date?: int,
+     *     include?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function bookmarks_create(array $input, User $user): bool
+    {
+        return self::bookmark_create($input, $user);
+    }
 }

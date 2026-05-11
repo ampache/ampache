@@ -116,6 +116,26 @@ final class PodcastEditMethod
     }
 
     /**
+     * @param array{
+     *     filter: string,
+     *     feed?: string,
+     *     title?: string,
+     *     website?: string,
+     *     description?: string,
+     *     generator?: string,
+     *     copyright?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function podcasts_edit(array $input, User $user): bool
+    {
+        return self::podcast_edit($input, $user);
+    }
+
+    /**
      * @todo inject by constructor
      */
     private static function getPodcastRepository(): PodcastRepositoryInterface

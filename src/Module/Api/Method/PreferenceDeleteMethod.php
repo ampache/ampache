@@ -85,4 +85,18 @@ final class PreferenceDeleteMethod
 
         return true;
     }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function preferences_delete(array $input, User $user): bool
+    {
+        return self::preference_delete($input, $user);
+    }
 }

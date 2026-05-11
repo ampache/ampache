@@ -126,6 +126,25 @@ final class UserCreateMethod
     }
 
     /**
+     * @param array{
+     *     username: string,
+     *     fullname?: string,
+     *     password: string,
+     *     email: string,
+     *     disable?: int,
+     *     group?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function users_create(array $input, User $user): bool
+    {
+        return self::user_create($input, $user);
+    }
+
+    /**
      * @todo Inject by constructor
      */
     private static function getUserRepository(): UserRepositoryInterface

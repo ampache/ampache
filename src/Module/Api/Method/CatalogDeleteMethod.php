@@ -86,4 +86,18 @@ final class CatalogDeleteMethod
 
         return true;
     }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function catalogs_delete(array $input, User $user): bool
+    {
+        return self::catalog_delete($input, $user);
+    }
 }

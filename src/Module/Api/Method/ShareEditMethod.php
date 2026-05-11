@@ -114,6 +114,24 @@ final class ShareEditMethod
     }
 
     /**
+     * @param array{
+     *     filter: string,
+     *     stream?: int,
+     *     download?: int,
+     *     expires?: int,
+     *     description?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function shares_edit(array $input, User $user): bool
+    {
+        return self::share_edit($input, $user);
+    }
+
+    /**
      * @deprecated Inject dependency
      */
     private static function getShareRepository(): ShareRepositoryInterface
