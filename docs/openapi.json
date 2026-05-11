@@ -841,7 +841,11 @@
             "description": "Invalid request"
           }
         },
-        "summary": "Search for media entities using rule triplets"
+        "summary": "Search for media entities using rule triplets",
+        "tags": [
+          "Albums",
+          "Search"
+        ]
       }
     },
     "/albums/stats": {
@@ -1734,7 +1738,11 @@
             "description": "Invalid request"
           }
         },
-        "summary": "Search for media entities using rule triplets"
+        "summary": "Search for media entities using rule triplets",
+        "tags": [
+          "Artists",
+          "Search"
+        ]
       }
     },
     "/artists/stats": {
@@ -2509,6 +2517,77 @@
         ]
       }
     },
+    "/democratic/{object_id}/localplay": {
+      "post": {
+        "parameters": [
+          {
+            "description": "Media object id",
+            "in": "path",
+            "name": "object_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "command",
+            "required": true,
+            "schema": {
+              "enum": [
+                "add"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "video",
+                "podcast_episode",
+                "channel",
+                "broadcast",
+                "democratic",
+                "live_stream"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "clear",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Localplay response"
+          }
+        },
+        "summary": "Add media to the localplay server",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
     "/genres": {
       "get": {
         "parameters": [
@@ -2943,7 +3022,11 @@
             "description": "Invalid request"
           }
         },
-        "summary": "Search for media entities using rule triplets"
+        "summary": "Search for media entities using rule triplets",
+        "tags": [
+          "Genres",
+          "Search"
+        ]
       }
     },
     "/goodbye": {
@@ -3540,7 +3623,11 @@
             "description": "Invalid request"
           }
         },
-        "summary": "Search for media entities using rule triplets"
+        "summary": "Search for media entities using rule triplets",
+        "tags": [
+          "Labels",
+          "Search"
+        ]
       }
     },
     "/licenses": {
@@ -4106,56 +4193,13 @@
         ]
       }
     },
-    "/localplay": {
-      "post": {
-        "parameters": [
-          {
-            "in": "query",
-            "name": "command",
-            "required": true,
-            "schema": {
-              "enum": [
-                "next",
-                "prev",
-                "stop",
-                "play",
-                "pause",
-                "volume_up",
-                "volume_down",
-                "volume_mute",
-                "delete_all",
-                "skip",
-                "status"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Localplay response"
-          }
-        },
-        "summary": "Control localplay",
-        "tags": [
-          "Playback Control"
-        ]
-      }
-    },
-    "/localplay/{object_id}": {
+    "/live-streams/{live_stream_id}/localplay": {
       "post": {
         "parameters": [
           {
             "description": "Media object id",
             "in": "path",
-            "name": "object_id",
+            "name": "live_stream_id",
             "required": true,
             "schema": {
               "type": "string"
@@ -4220,6 +4264,49 @@
         ]
       }
     },
+    "/localplay": {
+      "post": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "command",
+            "required": true,
+            "schema": {
+              "enum": [
+                "next",
+                "prev",
+                "stop",
+                "play",
+                "pause",
+                "volume_up",
+                "volume_down",
+                "volume_mute",
+                "delete_all",
+                "skip",
+                "status"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Localplay response"
+          }
+        },
+        "summary": "Control localplay",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
     "/me": {
       "get": {
         "parameters": [],
@@ -4238,6 +4325,102 @@
         "summary": "Get information about your own user account",
         "tags": [
           "Users"
+        ]
+      }
+    },
+    "/me/friends-timeline": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "since",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Activity list"
+          }
+        },
+        "summary": "Get current user's friends timeline",
+        "tags": [
+          "Social"
+        ]
+      }
+    },
+    "/me/last-shouts": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "username",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Shout list"
+          }
+        },
+        "summary": "Get latest shouts",
+        "tags": [
+          "Social"
+        ]
+      }
+    },
+    "/me/now-playing": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Now playing list"
+          }
+        },
+        "summary": "Get what is currently being played by all users",
+        "tags": [
+          "Now Playing"
         ]
       }
     },
@@ -4504,179 +4687,6 @@
         "summary": "Ping server and get status/version",
         "tags": [
           "Authentication"
-        ]
-      }
-    },
-    "/player/{object_id}": {
-      "post": {
-        "parameters": [
-          {
-            "in": "path",
-            "name": "object_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "type",
-            "required": false,
-            "schema": {
-              "enum": [
-                "song",
-                "video",
-                "podcast_episode"
-              ],
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "state",
-            "required": false,
-            "schema": {
-              "enum": [
-                "play",
-                "stop"
-              ],
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "time",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "client",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Now playing response"
-          }
-        },
-        "summary": "Update the server with the client player state",
-        "tags": [
-          "Now Playing"
-        ]
-      }
-    },
-    "/playlist_generate": {
-      "get": {
-        "parameters": [
-          {
-            "in": "query",
-            "name": "mode",
-            "required": false,
-            "schema": {
-              "enum": [
-                "recent",
-                "forgotten",
-                "unplayed",
-                "random"
-              ],
-              "type": "string"
-            }
-          },
-          {
-            "description": "LIKE match to song title",
-            "in": "query",
-            "name": "filter",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "album",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "artist",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "flag",
-            "required": false,
-            "schema": {
-              "enum": [
-                0,
-                1
-              ],
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "format",
-            "required": false,
-            "schema": {
-              "enum": [
-                "song",
-                "index",
-                "id"
-              ],
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "offset",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Generated list"
-          }
-        },
-        "summary": "Generate a playlist result set (song, index, or id)",
-        "tags": [
-          "Playlists"
         ]
       }
     },
@@ -5597,137 +5607,14 @@
             "description": "Invalid request"
           }
         },
-        "summary": "Search for media entities using rule triplets"
+        "summary": "Search for media entities using rule triplets",
+        "tags": [
+          "Playlists",
+          "Search"
+        ]
       }
     },
     "/playlists/stats": {
-      "get": {
-        "parameters": [
-          {
-            "description": "newest, highest, frequent, recent, forgotten, flagged, random",
-            "in": "query",
-            "name": "filter",
-            "required": true,
-            "schema": {
-              "default": "random",
-              "enum": [
-                "newest",
-                "highest",
-                "frequent",
-                "recent",
-                "forgotten",
-                "flagged",
-                "random"
-              ],
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "user_id",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "username",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "offset",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "cond",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Stats result"
-          }
-        },
-        "summary": "Get stats (song/album/artist etc) by type and filter",
-        "tags": [
-          "Browsing, Indexes and Lists"
-        ]
-      }
-    },
-    "/podcast_episodes/deleted": {
-      "get": {
-        "parameters": [
-          {
-            "in": "query",
-            "name": "offset",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Deleted podcast episodes list"
-          }
-        },
-        "summary": "List deleted podcast episodes",
-        "tags": [
-          "Maintenance"
-        ]
-      }
-    },
-    "/podcast_episodes/stats": {
       "get": {
         "parameters": [
           {
@@ -5874,6 +5761,215 @@
         ]
       }
     },
+    "/podcast-episodes/{episode_id}/bookmark": {
+      "delete": {
+        "parameters": [
+          {
+            "description": "episode_id",
+            "in": "path",
+            "name": "episode_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "client",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Success"
+          }
+        },
+        "summary": "Delete a bookmark",
+        "tags": [
+          "Bookmarks"
+        ]
+      },
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "episode_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Bookmark object"
+          }
+        },
+        "summary": "Get bookmark by ID",
+        "tags": [
+          "Bookmarks"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "description": "episode_id",
+            "in": "path",
+            "name": "episode_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "position",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "client",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Bookmark array"
+          }
+        },
+        "summary": "Edit a bookmark",
+        "tags": [
+          "Bookmarks"
+        ]
+      },
+      "put": {
+        "parameters": [
+          {
+            "description": "episode_id",
+            "in": "path",
+            "name": "episode_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "position",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "client",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Bookmark object"
+          }
+        },
+        "summary": "Create a bookmark",
+        "tags": [
+          "Bookmarks"
+        ]
+      }
+    },
     "/podcast-episodes/{episode_id}/download": {
       "get": {
         "parameters": [
@@ -5931,6 +6027,276 @@
         "summary": "Download a media file (binary)",
         "tags": [
           "Streaming and Downloads"
+        ]
+      }
+    },
+    "/podcast-episodes/{episode_id}/flag": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "episode_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "flag",
+            "required": true,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Updated"
+          }
+        },
+        "summary": "Flag or unflag an item as favourite",
+        "tags": [
+          "Ratings and Flags"
+        ]
+      }
+    },
+    "/podcast-episodes/{episode_id}/localplay": {
+      "post": {
+        "parameters": [
+          {
+            "description": "Media object id",
+            "in": "path",
+            "name": "episode_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "command",
+            "required": true,
+            "schema": {
+              "enum": [
+                "add"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "video",
+                "podcast_episode",
+                "channel",
+                "broadcast",
+                "democratic",
+                "live_stream"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "clear",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Localplay response"
+          }
+        },
+        "summary": "Add media to the localplay server",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
+    "/podcast-episodes/{episode_id}/playback": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "episode_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "video",
+                "podcast_episode"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {
+              "enum": [
+                "play",
+                "stop"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "time",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "client",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Now playing response"
+          }
+        },
+        "summary": "Update the server with the client player state",
+        "tags": [
+          "Now Playing"
+        ]
+      }
+    },
+    "/podcast-episodes/{episode_id}/rate": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "episode_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "rating",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Success"
+          }
+        },
+        "summary": "Rate a library item",
+        "tags": [
+          "Ratings and Flags"
+        ]
+      }
+    },
+    "/podcast-episodes/{episode_id}/share": {
+      "post": {
+        "parameters": [
+          {
+            "description": "UID of object you are sharing",
+            "in": "path",
+            "name": "episode_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "description",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "days to keep active",
+            "in": "query",
+            "name": "expires",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Share created"
+          }
+        },
+        "summary": "Create a public share URL",
+        "tags": [
+          "Shares"
         ]
       }
     },
@@ -6014,114 +6380,12 @@
         ]
       }
     },
-    "/podcast-episodes/{podcast_episode_id}/bookmark": {
-      "delete": {
-        "parameters": [
-          {
-            "description": "podcast_episode_id",
-            "in": "path",
-            "name": "podcast_episode_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "client",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            },
-            "description": "Success"
-          }
-        },
-        "summary": "Delete a bookmark",
-        "tags": [
-          "Bookmarks"
-        ]
-      },
+    "/podcast-episodes/deleted": {
       "get": {
         "parameters": [
           {
-            "in": "path",
-            "name": "podcast_episode_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "enum": [
-                0,
-                1
-              ],
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Bookmark object"
-          }
-        },
-        "summary": "Get bookmark by ID",
-        "tags": [
-          "Bookmarks"
-        ]
-      },
-      "patch": {
-        "parameters": [
-          {
-            "description": "podcast_episode_id",
-            "in": "path",
-            "name": "podcast_episode_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "position",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "client",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "date",
+            "name": "offset",
             "required": false,
             "schema": {
               "type": "integer"
@@ -6129,204 +6393,7 @@
           },
           {
             "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "enum": [
-                0,
-                1
-              ],
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Bookmark array"
-          }
-        },
-        "summary": "Edit a bookmark",
-        "tags": [
-          "Bookmarks"
-        ]
-      },
-      "put": {
-        "parameters": [
-          {
-            "description": "podcast_episode_id",
-            "in": "path",
-            "name": "podcast_episode_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "position",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "client",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "date",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "enum": [
-                0,
-                1
-              ],
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Bookmark object"
-          }
-        },
-        "summary": "Create a bookmark",
-        "tags": [
-          "Bookmarks"
-        ]
-      }
-    },
-    "/podcast-episodes/{podcast_episode_id}/flag": {
-      "post": {
-        "parameters": [
-          {
-            "in": "path",
-            "name": "podcast_episode_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "flag",
-            "required": true,
-            "schema": {
-              "enum": [
-                0,
-                1
-              ],
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            },
-            "description": "Updated"
-          }
-        },
-        "summary": "Flag or unflag an item as favourite",
-        "tags": [
-          "Ratings and Flags"
-        ]
-      }
-    },
-    "/podcast-episodes/{podcast_episode_id}/rate": {
-      "post": {
-        "parameters": [
-          {
-            "in": "path",
-            "name": "podcast_episode_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "rating",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            },
-            "description": "Success"
-          }
-        },
-        "summary": "Rate a library item",
-        "tags": [
-          "Ratings and Flags"
-        ]
-      }
-    },
-    "/podcast-episodes/{podcast_episode_id}/share": {
-      "post": {
-        "parameters": [
-          {
-            "description": "UID of object you are sharing",
-            "in": "path",
-            "name": "podcast_episode_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "description",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "description": "days to keep active",
-            "in": "query",
-            "name": "expires",
+            "name": "limit",
             "required": false,
             "schema": {
               "type": "integer"
@@ -6342,12 +6409,12 @@
                 }
               }
             },
-            "description": "Share created"
+            "description": "Deleted podcast episodes list"
           }
         },
-        "summary": "Create a public share URL",
+        "summary": "List deleted podcast episodes",
         "tags": [
-          "Shares"
+          "Maintenance"
         ]
       }
     },
@@ -6492,7 +6559,100 @@
             "description": "Invalid request"
           }
         },
-        "summary": "Search for media entities using rule triplets"
+        "summary": "Search for media entities using rule triplets",
+        "tags": [
+          "Podcasts",
+          "Search"
+        ]
+      }
+    },
+    "/podcast-episodes/stats": {
+      "get": {
+        "parameters": [
+          {
+            "description": "newest, highest, frequent, recent, forgotten, flagged, random",
+            "in": "query",
+            "name": "filter",
+            "required": true,
+            "schema": {
+              "default": "random",
+              "enum": [
+                "newest",
+                "highest",
+                "frequent",
+                "recent",
+                "forgotten",
+                "flagged",
+                "random"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "user_id",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "username",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cond",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Stats result"
+          }
+        },
+        "summary": "Get stats (song/album/artist etc) by type and filter",
+        "tags": [
+          "Browsing, Indexes and Lists"
+        ]
       }
     },
     "/podcasts": {
@@ -7151,7 +7311,11 @@
             "description": "Invalid request"
           }
         },
-        "summary": "Search for media entities using rule triplets"
+        "summary": "Search for media entities using rule triplets",
+        "tags": [
+          "Podcasts",
+          "Search"
+        ]
       }
     },
     "/podcasts/stats": {
@@ -7624,25 +7788,13 @@
         ]
       }
     },
-    "/search_group": {
+    "/search/{search_type}/groups": {
       "get": {
         "parameters": [
           {
-            "in": "query",
-            "name": "operator",
+            "in": "path",
+            "name": "search_type",
             "required": true,
-            "schema": {
-              "enum": [
-                "and",
-                "or"
-              ],
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "type",
-            "required": false,
             "schema": {
               "enum": [
                 "all",
@@ -7651,6 +7803,18 @@
                 "album_artist",
                 "podcast",
                 "video"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "operator",
+            "required": true,
+            "schema": {
+              "enum": [
+                "and",
+                "or"
               ],
               "type": "string"
             }
@@ -7735,7 +7899,7 @@
         ]
       }
     },
-    "/search_rules/{search_type}": {
+    "/search/{search_type}/rules": {
       "get": {
         "parameters": [
           {
@@ -7778,53 +7942,6 @@
         "tags": [
           "Search",
           "Utilities"
-        ]
-      }
-    },
-    "/search_songs": {
-      "get": {
-        "parameters": [
-          {
-            "in": "query",
-            "name": "filter",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "offset",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Song list"
-          }
-        },
-        "summary": "Search songs by text",
-        "tags": [
-          "Search",
-          "Songs"
         ]
       }
     },
@@ -8680,7 +8797,11 @@
             "description": "Invalid request"
           }
         },
-        "summary": "Search for media entities using rule triplets"
+        "summary": "Search for media entities using rule triplets",
+        "tags": [
+          "Playlists",
+          "Search"
+        ]
       }
     },
     "/songs": {
@@ -9209,6 +9330,77 @@
         ]
       }
     },
+    "/songs/{song_id}/localplay": {
+      "post": {
+        "parameters": [
+          {
+            "description": "Media object id",
+            "in": "path",
+            "name": "song_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "command",
+            "required": true,
+            "schema": {
+              "enum": [
+                "add"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "video",
+                "podcast_episode",
+                "channel",
+                "broadcast",
+                "democratic",
+                "live_stream"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "clear",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Localplay response"
+          }
+        },
+        "summary": "Add media to the localplay server",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
     "/songs/{song_id}/lyrics": {
       "get": {
         "parameters": [
@@ -9250,6 +9442,77 @@
         "tags": [
           "Songs",
           "Utilities"
+        ]
+      }
+    },
+    "/songs/{song_id}/playback": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "song_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "video",
+                "podcast_episode"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {
+              "enum": [
+                "play",
+                "stop"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "time",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "client",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Now playing response"
+          }
+        },
+        "summary": "Update the server with the client player state",
+        "tags": [
+          "Now Playing"
         ]
       }
     },
@@ -9648,6 +9911,108 @@
         ]
       }
     },
+    "/songs/playlist_generate": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "mode",
+            "required": false,
+            "schema": {
+              "enum": [
+                "recent",
+                "forgotten",
+                "unplayed",
+                "random"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "LIKE match to song title",
+            "in": "query",
+            "name": "filter",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "album",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "artist",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "flag",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "index",
+                "id"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Generated list"
+          }
+        },
+        "summary": "Generate a playlist result set (song, index, or id)",
+        "tags": [
+          "Playlists"
+        ]
+      }
+    },
     "/songs/search": {
       "get": {
         "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc.",
@@ -9789,7 +10154,11 @@
             "description": "Invalid request"
           }
         },
-        "summary": "Search for media entities using rule triplets"
+        "summary": "Search for media entities using rule triplets",
+        "tags": [
+          "Songs",
+          "Search"
+        ]
       }
     },
     "/songs/stats": {
@@ -10008,15 +10377,15 @@
         ]
       }
     },
-    "/users/{username}": {
+    "/users/{user_id}": {
       "delete": {
         "parameters": [
           {
             "in": "path",
-            "name": "username",
+            "name": "user_id",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           }
         ],
@@ -10041,10 +10410,10 @@
         "parameters": [
           {
             "in": "path",
-            "name": "username",
+            "name": "user_id",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           }
         ],
@@ -10069,10 +10438,10 @@
         "parameters": [
           {
             "in": "path",
-            "name": "username",
+            "name": "user_id",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           },
           {
@@ -10218,15 +10587,101 @@
         ]
       }
     },
-    "/users/{username}/followers": {
+    "/users/{user_id}/follow": {
+      "delete": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Success"
+          }
+        },
+        "summary": "Unfollow a user",
+        "tags": [
+          "Social"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Success"
+          }
+        },
+        "summary": "Follow or unfollow a user (toggle)",
+        "tags": [
+          "Social"
+        ]
+      },
+      "put": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Success"
+          }
+        },
+        "summary": "Follow a user",
+        "tags": [
+          "Social"
+        ]
+      }
+    },
+    "/users/{user_id}/followers": {
       "get": {
         "parameters": [
           {
             "in": "path",
-            "name": "username",
+            "name": "user_id",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           },
           {
@@ -10280,15 +10735,15 @@
         ]
       }
     },
-    "/users/{username}/following": {
+    "/users/{user_id}/following": {
       "get": {
         "parameters": [
           {
             "in": "path",
-            "name": "username",
+            "name": "user_id",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           }
         ],
@@ -10310,15 +10765,15 @@
         ]
       }
     },
-    "/users/{username}/timeline": {
+    "/users/{user_id}/timeline": {
       "get": {
         "parameters": [
           {
             "in": "path",
-            "name": "username",
+            "name": "user_id",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           },
           {
@@ -10351,36 +10806,6 @@
           }
         },
         "summary": "Get a user's timeline",
-        "tags": [
-          "Social"
-        ]
-      }
-    },
-    "/users/{username}/toggle_follow": {
-      "post": {
-        "parameters": [
-          {
-            "in": "path",
-            "name": "username",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            },
-            "description": "Success"
-          }
-        },
-        "summary": "Follow or unfollow a user",
         "tags": [
           "Social"
         ]
@@ -10527,102 +10952,10 @@
             "description": "Invalid request"
           }
         },
-        "summary": "Search for media entities using rule triplets"
-      }
-    },
-    "/users/social/friends-timeline": {
-      "get": {
-        "parameters": [
-          {
-            "in": "query",
-            "name": "limit",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "since",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Activity list"
-          }
-        },
-        "summary": "Get current user's friends timeline",
+        "summary": "Search for media entities using rule triplets",
         "tags": [
-          "Social"
-        ]
-      }
-    },
-    "/users/social/last-shouts": {
-      "get": {
-        "parameters": [
-          {
-            "in": "query",
-            "name": "username",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Shout list"
-          }
-        },
-        "summary": "Get latest shouts",
-        "tags": [
-          "Social"
-        ]
-      }
-    },
-    "/users/social/now-playing": {
-      "get": {
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Now playing list"
-          }
-        },
-        "summary": "Get what is currently being played by all users",
-        "tags": [
-          "Now Playing"
+          "Users",
+          "Search"
         ]
       }
     },
@@ -10981,6 +11314,148 @@
         ]
       }
     },
+    "/videos/{video_id}/localplay": {
+      "post": {
+        "parameters": [
+          {
+            "description": "Media object id",
+            "in": "path",
+            "name": "video_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "command",
+            "required": true,
+            "schema": {
+              "enum": [
+                "add"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "video",
+                "podcast_episode",
+                "channel",
+                "broadcast",
+                "democratic",
+                "live_stream"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "clear",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Localplay response"
+          }
+        },
+        "summary": "Add media to the localplay server",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
+    "/videos/{video_id}/playback": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "video_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "video",
+                "podcast_episode"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {
+              "enum": [
+                "play",
+                "stop"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "time",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "client",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Now playing response"
+          }
+        },
+        "summary": "Update the server with the client player state",
+        "tags": [
+          "Now Playing"
+        ]
+      }
+    },
     "/videos/{video_id}/rate": {
       "post": {
         "parameters": [
@@ -11246,7 +11721,11 @@
             "description": "Invalid request"
           }
         },
-        "summary": "Search for media entities using rule triplets"
+        "summary": "Search for media entities using rule triplets",
+        "tags": [
+          "Videos",
+          "Search"
+        ]
       }
     },
     "/videos/stats": {
