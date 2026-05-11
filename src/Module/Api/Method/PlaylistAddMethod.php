@@ -133,4 +133,20 @@ final class PlaylistAddMethod
 
         return false;
     }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     id: string,
+     *     type: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function playlist_add_edit(array $input, User $user): bool
+    {
+        return self::playlist_add($input, $user);
+    }
 }
