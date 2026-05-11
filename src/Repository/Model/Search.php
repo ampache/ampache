@@ -1684,6 +1684,15 @@ class Search extends playlist_object
                     case 'mbid_song':
                         $name = 'mbid';
                         break;
+                    case 'myflagged':
+                        $name = 'my_flagged';
+                        break;
+                    case 'myflagged_album':
+                        $name = 'my_flagged_album';
+                        break;
+                    case 'myflagged_artist':
+                        $name = 'my_flagged_artist';
+                        break;
                 }
 
                 break;
