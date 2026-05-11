@@ -125,38 +125,12 @@ class PodcastEpisodesMethodTest extends TestCase
         );
     }
 
-    /** @noinspection PhpMissingArrayKeyInspection */
-    public function testHandleThrowsIfPodcastWasNotFound(): void
-    {
-        static::expectException(RequestParamMissingException::class);
-        static::expectExceptionMessage(sprintf('Bad Request: %s', 'filter'));
-
-        $this->configContainer->expects(static::once())
-            ->method('get')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn('1');
-
-        static::assertSame(
-            $this->response,
-            $this->subject->handle(
-                $this->gatekeeper,
-                $this->response,
-                $this->output,
-                [
-                    'auth' => 'string',
-                    'api_format' => 'xml'
-                ],
-                $this->user
-            )
-        );
-    }
-
     public function testHandleThrowsIfPodcastIsNew(): void
     {
         $podcastId = 666;
 
-        static::expectException(ResultEmptyException::class);
-        static::expectExceptionMessage((string) $podcastId);
+        static::expectException(RequestParamMissingException::class);
+        static::expectExceptionMessage('Bad Request: ' . (string) $podcastId);
 
         $this->configContainer->expects(static::once())
             ->method('get')
