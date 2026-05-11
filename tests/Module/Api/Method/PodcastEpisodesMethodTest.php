@@ -130,7 +130,7 @@ class PodcastEpisodesMethodTest extends TestCase
         $podcastId = 666;
 
         static::expectException(RequestParamMissingException::class);
-        static::expectExceptionMessage('Bad Request: ' . (string) $podcastId);
+        static::expectExceptionMessage('Bad Request: filter');
 
         $this->configContainer->expects(static::once())
             ->method('get')
