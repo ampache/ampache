@@ -49,7 +49,7 @@ final class Migration794001 extends AbstractMigration
         ];
         foreach ($tables as $type) {
             Dba::write("ALTER TABLE `$type` DROP COLUMN `weight`;", [], true);
-            $this->updateDatabase("ALTER TABLE `$type` ADD COLUMN `weight` int(11) UNSIGNED NOT NULL DEFAULT '0';");
+            $this->updateDatabase("ALTER TABLE `$type` ADD COLUMN `weight` int(11) SIGNED NOT NULL DEFAULT '0';");
 
             $this->updateDatabase("UPDATE `$type` LEFT JOIN (SELECT `object_id`, COUNT(*) AS `rating_count` FROM `rating`  WHERE `object_type` = '$type' GROUP BY `object_id`) `rating` ON `$type`.`id` = `rating`.`object_id` LEFT JOIN (SELECT `object_id`, COUNT(*) AS `flag_count` FROM `user_flag` WHERE `object_type` = '$type' GROUP BY `object_id`) `flag` ON `$type`.`id` = `flag`.`object_id` SET `$type`.`weight` = COALESCE(`rating`.`rating_count`, 0) + COALESCE(`flag`.`flag_count`, 0) + (COALESCE(`$type`.`total_count`, 0) - COALESCE(`$type`.`total_skip`, 0));");
         }
