@@ -608,7 +608,7 @@ final class ApiHandler implements ApiHandlerInterface
             if ($type === 'podcast' && $action === 'podcast_episode') {
                 $action = 'podcast_episodes';
             }
-            if ($type === 'users' && $action === 'preferences') {
+            if ($type === 'user' && $action === 'preferences') {
                 $action = 'user_preferences';
             }
 
