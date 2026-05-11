@@ -115,6 +115,8 @@ class Song extends database_object implements
 
     public int $total_skip = 0;
 
+    private int $weight = 0;
+
     /**
      * song_data table
      */
