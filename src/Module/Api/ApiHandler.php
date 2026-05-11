@@ -608,6 +608,9 @@ final class ApiHandler implements ApiHandlerInterface
             if ($type === 'podcast' && $action === 'podcast_episode') {
                 $action = 'podcast_episodes';
             }
+            if ($type === 'users' && $action === 'preferences') {
+                $action = 'user_preferences';
+            }
 
             if ($action === 'create' && ($type === 'album' || $type === 'artist' || $type === 'playlist' || $type === 'smartlist' || $type === 'podcast' || $type === 'podcast_episode' || $type === 'song' || $type === 'video')) {
                 $action = 'share_create';
