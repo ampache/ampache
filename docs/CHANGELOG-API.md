@@ -1,5 +1,17 @@
 # API CHANGELOG
 
+## API 6.9.1 Build 14
+
+This version is being released for Ampache7 **only**
+
+To ensure that there are no issues with clients checking for single int versions
+we will keep on 6.9.x and resume build number versioning until Ampache 8
+
+### Changed (691014)
+
+* API6
+  * Make `filter` optional for `podcast_episodes`
+
 ## API 6.9.1 Build 13
 
 This version is being released for Ampache7 **only**
