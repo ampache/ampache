@@ -184,7 +184,7 @@ class Stats
             case 'song':
             case 'video':
                 $sql = ($count_type == 'down')
-                    ? "SET `weight` = CASE WHEN `weight` > 0 THEN `weight` - 1 ELSE `weight` END, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = CASE WHEN `total_count` > 0 THEN `total_skip` + 1 ELSE `total_skip` END WHERE `id` = ?;"
+                    ? "SET `weight` = `weight` - 1, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = CASE WHEN `total_count` > 0 THEN `total_skip` + 1 ELSE `total_skip` END WHERE `id` = ?;"
                     : "UPDATE `$type` SET `total_count` = `total_count` + 1, `weight` = `weight` + 1 WHERE `id` = ?;";
                 Dba::write($sql, $params);
                 break;
