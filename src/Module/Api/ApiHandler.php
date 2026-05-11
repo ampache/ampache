@@ -533,7 +533,7 @@ final class ApiHandler implements ApiHandlerInterface
      */
     public function normalizeAction(
         string $action,
-        string $type,
+        ?string $type,
         bool $hasFilter
     ): string {
         $action = match ($action) {
@@ -598,7 +598,7 @@ final class ApiHandler implements ApiHandlerInterface
             };
         }
 
-        if ($type !== '') {
+        if ($type !== null && $type !== '') {
             if ($type === 'catalog' && ($action === 'create' || $action === 'add')) {
                 $action = 'catalog_create';
             }
