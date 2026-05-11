@@ -339,6 +339,7 @@ final class Versions
         780004 => Migration\V7\Migration780004::class,
         790001 => Migration\V7\Migration790001::class,
         793001 => Migration\V7\Migration793001::class,
+        794001 => Migration\V7\Migration794001::class,
     ];
 
     /**

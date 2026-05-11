@@ -336,6 +336,8 @@ class Rating extends database_object
             // If score is negative or 0, then remove rating
             $sql    = "DELETE FROM `rating` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
             $params = [$this->id, $this->type, $user_id];
+
+            Dba::write("UPDATE `' . $this->type . '` SET `weight` = `weight` - 1 WHERE `weight` > 0 AND `id` = ?;", [$this->id]);
         } else {
             $sql    = "REPLACE INTO `rating` (`object_id`, `object_type`, `rating`, `user`, `date`) VALUES (?, ?, ?, ?, ?)";
             $params = [
@@ -347,6 +349,8 @@ class Rating extends database_object
             ];
 
             $this->getUserActivityPoster()->post((int) $user_id, 'rating', $this->type, $this->id, $time);
+
+            Dba::write("UPDATE `' . $this->type . '` SET `weight` = `weight` + 1 WHERE `id` = ?;", [$this->id]);
         }
 
         Dba::write($sql, $params);

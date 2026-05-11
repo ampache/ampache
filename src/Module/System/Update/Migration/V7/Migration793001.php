@@ -28,7 +28,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
- * Update Dropbox catalog `authtoken` if installed (if installed)
+ * Fix Licenses on uploaded Songs and delete bad data
  */
 final class Migration793001 extends AbstractMigration
 {
