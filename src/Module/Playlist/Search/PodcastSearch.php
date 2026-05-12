@@ -179,7 +179,7 @@ final class PodcastSearch implements SearchInterface
                 case 'my_flagged_podcast_episode':
                     // combine these as they all do the same thing just different tables
                     $looking      = str_replace('my_flagged_', '', $rule[0]);
-                    $column       = ($looking == 'podcast') ? 'id' : $looking;
+                    $column       = 'id';
                     $my_type      = $looking;
                     $operator_sql = ((int) $operator_sql == 0) ? 'IS NULL' : 'IS NOT NULL';
                     // played once per user
