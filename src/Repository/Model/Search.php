@@ -1030,6 +1030,19 @@ class Search extends playlist_object
         $this->_add_type_select('state', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
+        $t_ratings = T_('Ratings');
+        if (AmpConfig::get('ratings')) {
+            $this->_add_type_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_select('podcastrating', T_('My Rating (Podcast)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_select('podcast_episoderating', T_('My Rating (Podcast Episode)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_boolean('my_flagged_podcast', T_('My Favorite Podcasts'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_podcast_episode', T_('My Favorite Podcast Episodes'), 'boolean', $t_ratings);
+            $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
+            $users = $this->getUserRepository()->getValidArray();
+            $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
+        }
+
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
         $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
@@ -1077,6 +1090,20 @@ class Search extends playlist_object
         $this->_add_type_select('state', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
         $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_podcast_episodes);
+
+
+        $t_ratings = T_('Ratings');
+        if (AmpConfig::get('ratings')) {
+            $this->_add_type_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_select('podcastrating', T_('My Rating (Podcast)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_select('podcast_episoderating', T_('My Rating (Podcast Episode)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_boolean('my_flagged_podcast', T_('My Favorite Podcasts'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_podcast_episode', T_('My Favorite Podcast Episodes'), 'boolean', $t_ratings);
+            $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
+            $users = $this->getUserRepository()->getValidArray();
+            $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
+        }
 
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
