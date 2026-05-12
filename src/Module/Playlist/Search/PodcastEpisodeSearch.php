@@ -164,8 +164,8 @@ final class PodcastEpisodeSearch implements SearchInterface
                     $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $search_user_id))
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = " . $search_user_id . " AND `object_type` = '" . $my_type . "') AS `rating_" . $my_type . "_" . $search_user_id . "` ON `rating_" . $my_type . "_" . $search_user_id . "`.`object_id` = $column"
                         : "";
-                    if ($my_type == 'podcast_episode') {
-                        $join['podcast_episode'] = true;
+                    if ($my_type == 'podcast') {
+                        $join['podcast'] = true;
                     }
                     break;
                 case 'my_flagged_podcast':
@@ -183,6 +183,9 @@ final class PodcastEpisodeSearch implements SearchInterface
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user_flag`.`object_type` = '" . $my_type . "' AND `user_flag`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `my_flagged__" . $my_type . "_" . $search_user_id . "` ON `" . $my_type . "`.`$column` = `my_flagged__" . $my_type . "_" . $search_user_id . "`.`object_id` AND `my_flagged__" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'"
                         : "";
                     $where[] = "`my_flagged__" . $my_type . "_" . $search_user_id . "`.`object_id` $operator_sql";
+                    if ($my_type == 'podcast') {
+                        $join['podcast'] = true;
+                    }
                     break;
                 case 'played':
                     $where[] = "`podcast_episode`.`played` = '$operator_sql'";
