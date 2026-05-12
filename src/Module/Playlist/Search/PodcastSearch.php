@@ -131,11 +131,11 @@ final class PodcastSearch implements SearchInterface
                     break;
                 case 'favorite':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
-                        $where[] = "NOT `podcast`.`title` SOUNDS LIKE ? AND `favorite_podcast_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_podcast_" . $search_user_id . "`.`object_type` = 'podcast')";
+                        $where[] = "NOT (`podcast`.`title` SOUNDS LIKE ? AND `favorite_podcast_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_podcast_" . $search_user_id . "`.`object_type` = 'podcast')";
                     } else {
                         $where[] = "`podcast`.`title` $operator_sql ? AND `favorite_podcast_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_podcast_" . $search_user_id . "`.`object_type` = 'podcast'";
                     }
-                    $parameters = array_merge($parameters, [$input, $input]);
+                    $parameters = array_merge($parameters, [$input]);
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
                         $table['favorite'] = '';
