@@ -72,10 +72,12 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                 if ($target == 'anywhere' || $target == 'artist') {
                     $searchreq = [
                         'limit' => $limit,
+                        'weight' => true,
                         'type' => 'artist',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
+                        'weight' => true,
                     ];
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
@@ -105,6 +107,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
+                        'weight' => true,
                     ];
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
@@ -134,6 +137,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
+                        'weight' => true,
                     ];
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
@@ -163,6 +167,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
+                        'weight' => true,
                     ];
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
@@ -197,6 +202,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
+                        'weight' => true,
                     ];
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
@@ -226,6 +232,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
+                        'weight' => true,
                     ];
                     $sres = Search::run($searchreq);
 
@@ -279,6 +286,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'username',
+                        'weight' => true,
                     ];
                     $sres = Search::run($searchreq);
 

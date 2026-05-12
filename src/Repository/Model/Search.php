@@ -1354,6 +1354,10 @@ class Search extends playlist_object
         $offset = (int)($data['offset'] ?? 0);
         $random = ((int)($data['random'] ?? 0) > 0) ? 1 : 0;
         $search = new Search(0, $data['type'], $user);
+
+        if ($data['weight'] ?? false) {
+            $search->set_order_by('weight');
+        }
         $search->set_rules($data);
 
         // Generate BASE SQL
@@ -1915,6 +1919,53 @@ class Search extends playlist_object
     public function get_rule_types(): array
     {
         return $this->types;
+    }
+
+    /**
+     * set_order_by
+     * Allow some display flexibility
+     */
+    public function set_order_by($sort): void
+    {
+        switch ($this->objectType) {
+            case 'album':
+                if ($sort === 'weight') {
+                    $this->order_by = '`album`.`weight` DESC, `album`.`name`';
+                }
+                break;
+            case 'album_disk':
+                if ($sort === 'weight') {
+                    $this->order_by = '`album`.`weight` DESC, `album`.`name`';
+                }
+                break;
+            case 'artist':
+            case 'album_artist':
+            case 'song_artist':
+                if ($sort === 'weight') {
+                    $this->order_by = '`artist`.`weight` DESC, `artist`.`name`';
+                }
+                break;
+            case 'podcast':
+                if ($sort === 'weight') {
+                    $this->order_by = '`podcast`.`weight` DESC, `podcast`.`title`';
+                }
+                break;
+            case 'podcast_episode':
+                if ($sort === 'weight') {
+                    $this->order_by = '`podcast_episode`.`weight` DESC, `podcast_episode`.`pubdate` DESC';
+                }
+                break;
+            case 'song':
+                if ($sort === 'weight') {
+                    $this->order_by = '`song`.`weight` DESC, `song`.`file`';
+                }
+                break;
+            case 'video':
+                if ($sort === 'weight') {
+                    $this->order_by = '`video`.`weight` DESC, `video`.`file`';
+                }
+                break;
+        }
     }
 
     /**
