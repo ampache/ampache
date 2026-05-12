@@ -2,9 +2,25 @@
 
 ## Ampache 7.9.4
 
+Many new search enhancements, documentation updates and fixes.
+
+Media weight is calculated based on ratings, flags, play and skip counts.
+
+This allows you to order and search and sort by server popularity
+
 ### Added (7.9.4)
 
+* Translations 2026-05-12
+* Database 794002
+  * Add popularity `weight` columns to media tables
 * Don't people move/rename/delete upload folders when you don't own all the content
+* Missing typing on Search class
+* Documentation updates for searches
+* Search
+  * Add additional aliases to catch different rule names
+  * Add `my_flagged_song`, `my_flagged_album` and `my_flagged_artist` to Album, Artist and Song searches
+  * Add `weight_song`, `weight_album` and `weight_artist` to Album, Artist Podcast, Podcast_Episode and Song searches
+  * Add all rating rules to `podcast` and `podcast_episode` searches
 * Subsonic
   * Add `coverArt` for radio stations
 
@@ -12,15 +28,24 @@
 
 * Remove path printing from FileSystem output
 * Fail if `upload_subdir` is enabled but can't create the folder
+* Assign `0775` permissions on mkdir calls (PHP default is `0777`)
 
 ### Fixed (7.9.4)
 
 * Catalog sync would not respect podcast download limits
 * Ajax FS not looking for current user early enough to validate
 * Could not create a folder when using default `.htaccess` (not enabled by default)
+* Missing collaboration in Playlist browses
+* Public `.htaccess` for creating folders in upload pages
+* PHP-CS-Fixer v4.0 deprecations
 * CLI
   * cleanup:sortSongs was not stopping after using single folder
   * run:updateCatalogFile better file checks and error warnings
+* Search
+  * Errors on `other_user` `unrated` searches
+  * Joins on some searches not applied
+  * Playlist `owner` search
+  * Missing collaboration in Playlist search
 
 ## Ampache 7.9.3
 

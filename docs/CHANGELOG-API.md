@@ -7,11 +7,23 @@ This version is being released for Ampache7 **only**
 To ensure that there are no issues with clients checking for single int versions
 we will keep on 6.9.x and resume build number versioning until Ampache 8
 
+### Added (691014)
+
+* API6
+  * Allow REST calls to block GET requests for sensitive calls (e.g. `register`)
+
 ### Changed (691014)
 
 * API6
   * Make `filter` optional for `podcast_episodes`
+  * Add `song` for `id` in `playlist_add` to match `playlist_add_song`
+  * Fallback to `bookmark` on empty `type` in `bookmark_delete`
 
+### Fixed (691014)
+
+* API6
+  * Bad `podcast_update` function name
+  * REST rewrite rules
 ## API 6.9.1 Build 13
 
 This version is being released for Ampache7 **only**
