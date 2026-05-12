@@ -637,6 +637,9 @@ class Search extends playlist_object
             $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
             $this->_add_type_text('favorite_album', T_('Favorites (Album)'), $t_ratings);
             $this->_add_type_text('favorite_artist', T_('Favorites (Artist)'), $t_ratings);
+            $this->_add_type_numeric('weight_song', T_('Song popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_album', T_('Album popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_artist', T_('Artist popularity score'), 'numeric', $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
             $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
             $this->_add_type_select('other_user_album', T_('Another User (Album)'), 'user_numeric', $users, $t_ratings);
@@ -798,6 +801,9 @@ class Search extends playlist_object
             $this->_add_type_boolean('my_flagged_song', T_('My Favorite Songs'), 'boolean', $t_ratings);
             $this->_add_type_boolean('my_flagged_album', T_('My Favorite Albums'), 'boolean', $t_ratings);
             $this->_add_type_boolean('my_flagged_artist', T_('My Favorite Artists'), 'boolean', $t_ratings);
+            $this->_add_type_numeric('weight_song', T_('Song popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_album', T_('Album popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_artist', T_('Artist popularity score'), 'numeric', $t_ratings);
             $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
             $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
@@ -900,6 +906,9 @@ class Search extends playlist_object
             $this->_add_type_boolean('my_flagged_song', T_('My Favorite Songs'), 'boolean', $t_ratings);
             $this->_add_type_boolean('my_flagged_album', T_('My Favorite Albums'), 'boolean', $t_ratings);
             $this->_add_type_boolean('my_flagged_artist', T_('My Favorite Artists'), 'boolean', $t_ratings);
+            $this->_add_type_numeric('weight_song', T_('Song popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_album', T_('Album popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_artist', T_('Artist popularity score'), 'numeric', $t_ratings);
             $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
             $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
@@ -1038,6 +1047,8 @@ class Search extends playlist_object
             $this->_add_type_select('podcast_episoderating', T_('My Rating (Podcast Episode)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_boolean('my_flagged_podcast', T_('My Favorite Podcasts'), 'boolean', $t_ratings);
             $this->_add_type_boolean('my_flagged_podcast_episode', T_('My Favorite Podcast Episodes'), 'boolean', $t_ratings);
+            $this->_add_type_numeric('weight_podcast', T_('Podcast popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_podcast_episode', T_('Podcast Episode popularity score'), 'numeric', $t_ratings);
             $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
             $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
@@ -1100,6 +1111,8 @@ class Search extends playlist_object
             $this->_add_type_select('podcast_episoderating', T_('My Rating (Podcast Episode)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_boolean('my_flagged_podcast', T_('My Favorite Podcasts'), 'boolean', $t_ratings);
             $this->_add_type_boolean('my_flagged_podcast_episode', T_('My Favorite Podcast Episodes'), 'boolean', $t_ratings);
+            $this->_add_type_numeric('weight_podcast', T_('Podcast popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_podcast_episode', T_('Podcast Episode popularity score'), 'numeric', $t_ratings);
             $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
             $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);

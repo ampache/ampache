@@ -286,6 +286,18 @@ final class ArtistSearch implements SearchInterface
                         : "";
                     $where[] = "`myplayed_" . $my_type . "_" . $search_user_id . "`.`artist_id` $operator_sql";
                     break;
+                case 'weight_album':
+                case 'weight_artist':
+                case 'weight_song':
+                    $my_type = str_replace('weight_', '', $rule[0]);
+                    $where[] = "`" . $my_type . "`.`weight` = '$operator_sql'";
+                    if ($my_type == 'album') {
+                        $join['album'] = true;
+                    }
+                    if ($my_type == 'song') {
+                        $join['song'] = true;
+                    }
+                    break;
                 case 'played':
                     $column       = 'id';
                     $my_type      = 'artist';

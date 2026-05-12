@@ -194,6 +194,14 @@ final class PodcastSearch implements SearchInterface
                         $join['podcast_episode'] = true;
                     }
                     break;
+                case 'weight_podcast':
+                case 'weight_podcast_episode':
+                    $my_type = str_replace('weight_', '', $rule[0]);
+                    $where[] = "`" . $my_type . "`.`weight` = '$operator_sql'";
+                    if ($my_type == 'podcast_episode') {
+                        $join['podcast_episode'] = true;
+                    }
+                    break;
                 case 'played':
                     $where[]                 = "`podcast_episode`.`played` = '$operator_sql'";
                     $join['podcast_episode'] = true;

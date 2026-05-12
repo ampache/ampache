@@ -273,6 +273,18 @@ final class SongSearch implements SearchInterface
                     }
                     $parameters[] = $input;
                     break;
+                case 'weight_album':
+                case 'weight_artist':
+                case 'weight_song':
+                    $my_type = str_replace('weight_', '', $rule[0]);
+                    $where[] = "`" . $my_type . "`.`weight` = '$operator_sql'";
+                    if ($my_type == 'album') {
+                        $join['album'] = true;
+                    }
+                    if ($my_type == 'artist') {
+                        $join['artist'] = true;
+                    }
+                    break;
                 case 'played':
                     $where[] = "`song`.`played` = '$operator_sql'";
                     break;
