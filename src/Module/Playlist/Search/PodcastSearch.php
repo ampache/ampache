@@ -131,9 +131,9 @@ final class PodcastSearch implements SearchInterface
                     break;
                 case 'favorite':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
-                        $where[] = "NOT ((`podcast`.`name` SOUNDS LIKE ? OR LTRIM(CONCAT(COALESCE(`podcast`.`prefix`, ''), ' ', `podcast`.`name`)) SOUNDS LIKE ?) AND `favorite_podcast_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_podcast_" . $search_user_id . "`.`object_type` = 'podcast')";
+                        $where[] = "NOT `podcast`.`title` SOUNDS LIKE ? AND `favorite_podcast_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_podcast_" . $search_user_id . "`.`object_type` = 'podcast')";
                     } else {
-                        $where[] = "(`podcast`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`podcast`.`prefix`, ''), ' ', `podcast`.`name`)) $operator_sql ?) AND `favorite_podcast_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_podcast_" . $search_user_id . "`.`object_type` = 'podcast'";
+                        $where[] = "`podcast`.`title` $operator_sql ? AND `favorite_podcast_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_podcast_" . $search_user_id . "`.`object_type` = 'podcast'";
                     }
                     $parameters = array_merge($parameters, [$input, $input]);
                     // flag once per user
