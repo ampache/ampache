@@ -225,8 +225,9 @@ final class AlbumDiskSearch implements SearchInterface
                 case 'weight_album':
                 case 'weight_artist':
                 case 'weight_song':
-                    $my_type = str_replace('weight_', '', $rule[0]);
-                    $where[] = "`" . $my_type . "`.`weight` = '$operator_sql'";
+                    $my_type      = str_replace('weight_', '', $rule[0]);
+                    $where[]      = "`" . $my_type . "`.`weight` $operator_sql ?";
+                    $parameters[] = $input;
                     if ($my_type == 'artist') {
                         $join['artist'] = true;
                     }
