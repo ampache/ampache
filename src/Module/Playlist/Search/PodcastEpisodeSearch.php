@@ -286,7 +286,8 @@ final class PodcastEpisodeSearch implements SearchInterface
                     } else {
                         $column  = 'id';
                         $my_type = 'podcast_episode';
-                        $where[] = "`rating_podcast_episode_" . $other_userid . '`.' . $operator_sql . " AND `rating_podcast_episode_$other_userid`.`user` = $other_userid AND `rating_podcast_episode_$other_userid`.`object_type` = 'podcast_episode'";
+                        $unrated = ($operator_sql == 'unrated');
+                        $where[] = ($unrated) ? "`" . $my_type . "`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $my_type . "' AND `rating`.`user` = $other_userid)" : "`rating_" . $my_type . "_" . $other_userid . "`.$operator_sql AND `rating_" . $my_type . "_" . $other_userid . "`.`user` = $other_userid AND `rating_" . $my_type . "_" . $other_userid . "`.`object_type` = '" . $my_type . "'";
                         // rating once per user
                         if (!array_key_exists('rating', $table)) {
                             $table['rating'] = '';
