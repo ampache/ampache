@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-05-12 11:24+1000\n"
+"POT-Creation-Date: 2026-05-12 13:02+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5723,6 +5723,15 @@ msgstr ""
 msgid "Favorites (Artist)"
 msgstr ""
 
+msgid "Song popularity score"
+msgstr ""
+
+msgid "Album popularity score"
+msgstr ""
+
+msgid "Artist popularity score"
+msgstr ""
+
 msgid "Another User"
 msgstr ""
 
@@ -5875,6 +5884,12 @@ msgid "My Favorite Podcasts"
 msgstr ""
 
 msgid "My Favorite Podcast Episodes"
+msgstr ""
+
+msgid "Podcast popularity score"
+msgstr ""
+
+msgid "Podcast Episode popularity score"
 msgstr ""
 
 msgid "Video Count"
