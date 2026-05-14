@@ -2814,9 +2814,14 @@ abstract class Catalog extends database_object
         } elseif (!is_array($results['genre'])) {
             $results['genre'] = [$results['genre']];
         }
-        $results['user_upload']      = $results['user_upload'] ?? null;
-        $results['artist_mbid']      = $results['mb_artistid'] ?? null;
-        $results['artist']           = self::check_length($results['artist']);
+
+        $results['user_upload'] = $results['user_upload'] ?? null;
+        $results['artist_mbid'] = $results['mb_artistid'] ?? null;
+        $results['artist']      = self::check_length($results['artist']);
+        if (empty($results['artists']) && !empty($results['artist'])) {
+            $results['artists'] = [$results['artist']];
+        }
+
         $results['album']            = self::check_length($results['album']);
         $results['album_mbid']       = $results['mb_albumid'] ?? null;
         $results['album_mbid_group'] = $results['mb_albumid_group'] ?? null;
