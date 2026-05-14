@@ -2817,15 +2817,26 @@ abstract class Catalog extends database_object
         $results['user_upload']      = $results['user_upload'] ?? null;
         $results['artist_mbid']      = $results['mb_artistid'] ?? null;
         $results['artist']           = self::check_length($results['artist']);
+        $results['album']            = self::check_length($results['album']);
         $results['album_mbid']       = $results['mb_albumid'] ?? null;
         $results['album_mbid_group'] = $results['mb_albumid_group'] ?? null;
-        $results['album']            = self::check_length($results['album']);
         $results['release_type']     = self::check_length($results['release_type'], 32);
-        $results['albumartist_mbid'] = $results['mb_albumartistid'] ?? null;
+        if (empty($results['album'])) {
+            $results['album_id'] = ($song?->album > 0)
+                ? $song->album
+                : Album::check($song?->catalog ?? 0, '', $song?->year ?? 0, null, $song?->get_album_artist_fullname() ?? $song?->get_artist_fullname() ?? null);
+        }
+
         $results['albumartist']      = (empty($results['albumartist']))
             ? $song?->get_album_artist_fullname()
             : self::check_length($results['albumartist']);
         $results['albumartist'] ??= null;
+        $results['albumartist_mbid'] = $results['mb_albumartistid'] ?? null;
+        if (empty($results['albumartist'])) {
+            $results['albumartist_id'] = ($song?->get_album_artist() > 0)
+                ? $song->get_album_artist()
+                : Artist::check($song?->get_album_artist_fullname() ?? $song?->get_artist_fullname() ?? '', $results['albumartist_mbid']);
+        }
 
         $results['original_year']  = (!empty($results['original_year'])) ? (int)$results['original_year'] : null;
         $results['barcode']        = self::check_length($results['barcode'], 64);

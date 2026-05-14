@@ -181,10 +181,8 @@ class Catalog_local extends Catalog
      * Try to figure out which catalog path most closely resembles this one.
      * This is useful when creating a new catalog to make sure we're not
      * doubling up here.
-     * @param string $path
-     * @return int|null
      */
-    public static function get_from_path($path): ?int
+    public static function get_from_path(string $path): ?int
     {
         // First pull a list of all of the paths for the different catalogs
         $sql        = "SELECT `catalog_id`, `path` FROM `catalog_local`";
