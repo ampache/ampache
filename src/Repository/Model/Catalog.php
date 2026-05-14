@@ -3057,12 +3057,8 @@ abstract class Catalog extends database_object
         $new_song_album  = new Album($new_song->album);
 
         // get the artists / album_artists for this song
-        $songArtist_array = ($filtered_results['artist_id'])
-            ? [$new_song->artist, $filtered_results['artist_id']]
-            : [$new_song->artist];
-        $albumArtist_array = ($filtered_results['albumartist_id'])
-            ? [$new_song->albumartist, $filtered_results['albumartist_id']]
-            : [$new_song->albumartist];
+        $songArtist_array  = [$new_song->artist];
+        $albumArtist_array = [$new_song->albumartist];
         // artist_map stores song and album against the artist_id
         $artist_map_song  = Artist::get_artist_map('song', $song->id);
         $artist_map_album = Artist::get_artist_map('album', $new_song->album);
