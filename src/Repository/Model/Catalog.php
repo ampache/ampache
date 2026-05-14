@@ -2827,7 +2827,7 @@ abstract class Catalog extends database_object
                 : Album::check($song?->catalog ?? 0, '', $song?->year ?? 0, null, $song?->get_album_artist_fullname() ?? $song?->get_artist_fullname() ?? null);
         }
 
-        $results['albumartist']      = (empty($results['albumartist']))
+        $results['albumartist'] = (empty($results['albumartist']))
             ? $song?->get_album_artist_fullname()
             : self::check_length($results['albumartist']);
         $results['albumartist'] ??= null;
@@ -2835,7 +2835,7 @@ abstract class Catalog extends database_object
         if (empty($results['albumartist'])) {
             $results['albumartist_id'] = ($song?->get_album_artist() > 0)
                 ? $song->get_album_artist()
-                : Artist::check($song?->get_album_artist_fullname() ?? $song?->get_artist_fullname() ?? '', $results['albumartist_mbid']);
+                : Artist::check($song?->get_album_artist_fullname() ?? $song?->get_artist_fullname() ?? $results['artist'], $results['albumartist_mbid']);
         }
 
         $results['original_year']  = (!empty($results['original_year'])) ? (int)$results['original_year'] : null;
