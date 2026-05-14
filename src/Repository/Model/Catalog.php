@@ -2838,7 +2838,7 @@ abstract class Catalog extends database_object
         $results['albumartist'] ??= null;
         $results['albumartist_mbid'] = $results['mb_albumartistid'] ?? null;
         if (empty($results['albumartist'])) {
-            $results['albumartist_id'] = ($song?->get_album_artist() > 0)
+            $results['albumartist_id'] = ($song?->get_album_artist() > 0 && T_($song?->get_album_artist_fullname()) !== T_('Unknown (Orphaned)'))
                 ? $song->get_album_artist()
                 : Artist::check($song?->get_album_artist_fullname() ?? $song?->get_artist_fullname() ?? $results['artist'], $results['albumartist_mbid']);
         }
