@@ -2839,10 +2839,10 @@ abstract class Catalog extends database_object
             $results['albumartist_id'] = ($song?->get_album_artist() > 0 && T_(($song?->get_album_artist_fullname()) ?? T_('Unknown (Orphaned)')) !== T_('Unknown (Orphaned)'))
                 ? $song->get_album_artist()
                 : Artist::check($song?->get_artist_fullname() ?? $results['artist'], $results['albumartist_mbid']);
+        }
 
-            if ($results['albumartist_id'] < 0) {
-                $results['albumartist'] = Artist::get_fullname_by_id($results['albumartist_id']);
-            }
+        if (empty($results['albumartist']) && $results['albumartist_id'] < 0) {
+            $results['albumartist'] = Artist::get_fullname_by_id($results['albumartist_id']);
         }
 
         $results['original_year']  = (!empty($results['original_year'])) ? (int)$results['original_year'] : null;
