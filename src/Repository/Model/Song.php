@@ -340,7 +340,7 @@ class Song extends database_object implements
             $album_id = (int)($results['album_id']);
         } else {
             $album_id = (empty($album))
-                ? 0
+                ? Album::check($catalog, '', $year, null, $albumartist ?? $artist ?? null)
                 : Album::check($catalog, $album, $year, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
         }
 
