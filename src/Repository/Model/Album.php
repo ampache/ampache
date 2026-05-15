@@ -244,7 +244,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $catalog_number = (empty($catalog_number)) ? null : $catalog_number;
         $version        = (empty($version)) ? null : $version;
 
-        if (!$name) {
+        if (!$name || $name === T_('Unknown (Orphaned)')) {
             $name          = T_('Unknown (Orphaned)');
             $year          = 0;
             $original_year = null;
