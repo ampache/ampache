@@ -27,12 +27,11 @@ namespace Ampache\Module\System\Update\Migration\V7;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Song;
 
 /**
  * Fix up Orphan Album Disk objects to be unique and update from tags
  */
-final class Migration794003 extends AbstractMigration
+final class Migration794004 extends AbstractMigration
 {
     protected array $changelog = ['Fix up Orphan Album Disk objects to be unique and update from tags'];
 
@@ -41,16 +40,34 @@ final class Migration794003 extends AbstractMigration
     public function migrate(): void
     {
         // set the original disk id to be the unique album_disk
-        Dba::write("UPDATE `album_disk` SET `catalog` = 0 WHERE `album_id` IN (SELECT `id` FROM `album` WHERE `name` = 'Unknown (Orphaned)' OR name = 'T_(Unknown (Orphaned))' AND `catalog` = 0) ORDER BY `id` ASC LIMIT 1;", [], true);
+        $this->updateDatabase("UPDATE `album_disk` SET `catalog` = 0 WHERE `album_id` IN (SELECT `id` FROM `album` WHERE `name` = 'Unknown (Orphaned)' OR name = ? AND `catalog` = 0) ORDER BY `id` ASC LIMIT 1;", [T_('Unknown (Orphaned)')], true);
+
         // Find duplicate orphans and remove them
-        $db_results = Dba::read("SELECT `id` FROM `song` WHERE `album` IN (SELECT `id` FROM `album` WHERE `name` = 'Unknown (Orphaned)' OR name = 'T_(Unknown (Orphaned))' AND `catalog` != 0);");
-        $updates    = false;
+        $tables = [
+            'object_count',
+            'rating',
+            'share',
+            'tag_map',
+            'user_activity',
+            'user_flag'
+        ];
+        $db_results = Dba::read("SELECT `album_disk`.`id`, `album_disk`.`catalog` FROM `album_disk` LEFT JOIN `album` ON `album_id` = `album`.id WHERE `album`.`name` = 'Unknown (Orphaned)' OR `album`.`name` = ?;", [T_('Unknown (Orphaned)')]);
+        $orphan_id  = null;
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $updates = true;
-            $song    = new Song($row['id']);
-            Catalog::update_media_from_tags($song);
+            if ($row['catalog'] == 0) {
+                $orphan_id = $row['id'];
+            } else {
+                $results[] = $row['id'];
+            }
         }
-        if ($updates) {
+        foreach ($results as $album_disk_id) {
+            foreach ($tables as $table) {
+                $this->updateDatabase("UPDATE IGNORE `" . $table . "` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = 'album_disk'", [$orphan_id, $album_disk_id]);
+            }
+            Dba::write("DELETE FROM `album_disk` WHERE `id` = ?;", [$album_disk_id]);
+        }
+        if ($results !== []) {
             Catalog::clean_empty_albums();
         }
     }
