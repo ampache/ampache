@@ -1103,6 +1103,21 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
+     * Orphans can be annoying
+     */
+    public static function is_orphan(int $album_id = 0): bool
+    {
+        if ($album_id > 0) {
+            $sql = "SELECT `id` FROM `album` WHERE `name` = 'Unknown (Orphaned)' OR name = ?;";
+            $db_results = Dba::query($sql, [T_('Unknown (Orphaned)')]);
+
+            return Dba::num_rows($db_results) > 0;
+        }
+
+        return false;
+    }
+
+    /**
      * Add the album map for a single item
      */
     public static function add_album_map(int $album_id, string $object_type, int $object_id): void

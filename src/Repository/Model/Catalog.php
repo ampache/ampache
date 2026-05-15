@@ -3037,8 +3037,10 @@ abstract class Catalog extends database_object
             $new_song->artist = $song->artist;
         }
 
+        $is_orphan_album = $song->album && Album::is_orphan($song->album);
+
         // check whether this album exists
-        $new_song->album = ($is_upload_artist || $is_upload_albumartist)
+        $new_song->album = (!$is_orphan_album && ($is_upload_artist || $is_upload_albumartist))
             ? $song->album
             : Album::check($new_song->catalog, $album, $new_song->year, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
         if ($new_song->album === 0) {
