@@ -72,7 +72,6 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                 if ($target == 'anywhere' || $target == 'artist') {
                     $searchreq = [
                         'limit' => $limit,
-                        'weight' => true,
                         'type' => 'artist',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...

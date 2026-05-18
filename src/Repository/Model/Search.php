@@ -1925,7 +1925,7 @@ class Search extends playlist_object
      * set_order_by
      * Allow some display flexibility
      */
-    public function set_order_by($sort): void
+    public function set_order_by(string $sort): void
     {
         switch ($this->objectType) {
             case 'album':
@@ -1935,7 +1935,7 @@ class Search extends playlist_object
                 break;
             case 'album_disk':
                 if ($sort === 'weight') {
-                    $this->order_by = '`album`.`weight` DESC, `album`.`name`';
+                    $this->order_by = '`album_disk`.`weight` DESC, `album`.`name`';
                 }
                 break;
             case 'artist':

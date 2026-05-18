@@ -1996,11 +1996,6 @@ parameters:
 			path: src/Module/Playback/Stream_Url.php
 
 		-
-			message: "#^Call to function array_key_exists\\(\\) with 'count' and array\\{album_map\\?\\: true, image\\?\\: true, song\\: bool, catalog\\: bool, catalog_map\\: mixed\\} will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/AlbumSearch.php
-
-		-
 			message: "#^Call to function array_key_exists\\(\\) with 'count' and array\\{album\\?\\: true, catalog\\: bool, image\\?\\: true, song\\?\\: true, catalog_map\\: mixed\\} will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Playlist/Search/ArtistSearch.php
@@ -3982,11 +3977,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_media_from_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
