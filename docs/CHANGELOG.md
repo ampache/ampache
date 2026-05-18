@@ -11,8 +11,9 @@ This allows you to order and search and sort by server popularity
 ### Added (7.9.4)
 
 * Translations 2026-05-12
-* Database 794002
+* Database 794004
   * Add popularity `weight` columns to media tables
+  * Fix up Orphan Album Disk objects to be unique and update from tags
 * Don't people move/rename/delete upload folders when you don't own all the content
 * Missing typing on Search class
 * Documentation updates for searches
@@ -26,6 +27,7 @@ This allows you to order and search and sort by server popularity
 
 ### Changed (7.9.4)
 
+* Sort header bar searches by popularity weights
 * Remove path printing from FileSystem output
 * Fail if `upload_subdir` is enabled but can't create the folder
 * Assign `0775` permissions on mkdir calls (PHP default is `0777`)
@@ -38,6 +40,10 @@ This allows you to order and search and sort by server popularity
 * Missing collaboration in Playlist browses
 * Public `.htaccess` for creating folders in upload pages
 * PHP-CS-Fixer v4.0 deprecations
+* Orphaned uploads would never be able to change from an orphan album object
+* Display of Orphaned albums when using User catalog filters
+* Tag updates for Orphaned albums would not change when updated from tags
+* Checks for Catalog 0 with Album and AlbumDisk check functions
 * CLI
   * cleanup:sortSongs was not stopping after using single folder
   * run:updateCatalogFile better file checks and error warnings
