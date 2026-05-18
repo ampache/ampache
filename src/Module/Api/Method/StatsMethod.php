@@ -250,7 +250,7 @@ final class StatsMethod
                     case 'json':
                         Json_Data::set_offset($offset);
                         Json_Data::set_limit($limit);
-                        echo Json_Data::artists($results, [], $user, $input['auth']);
+                        echo Json_Data::artists_string($results, [], $user, $input['auth']);
                         break;
                     default:
                         Xml_Data::set_offset($offset);

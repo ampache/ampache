@@ -719,20 +719,15 @@ class Json_Data
      * @param User $user
      * @param string $auth
      * @param bool $encode
-     * @param bool $object (whether to return as a named object array or regular array)
-     * @return array|string JSON Object "artist"
+     * @return array JSON Object "artist"
      */
-    public static function artists(array $objects, array $include, User $user, string $auth, bool $encode = true, bool $object = true): array|string
+    public static function artists(array $objects, array $include, User $user, string $auth, bool $encode = true): array
     {
-        $count  = self::$count ?? count($objects);
-        $output = [
-            "total_count" => $count,
-            "md5" => md5(serialize($objects)),
-        ];
-
+        $count = self::$count ?? count($objects);
         if (($count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+
         Rating::build_cache('artist', $objects);
         $JSON = [];
         foreach ($objects as $artist_id) {
@@ -779,17 +774,34 @@ class Json_Data
             ];
         } // end foreach artists
 
-        if ($encode) {
-            if ($object) {
-                $output["artist"] = $JSON;
-            } else {
-                $output = $JSON[0] ?? [];
-            }
+        return $JSON;
+    }
 
-            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    /**
+     * @param list<int|string> $objects Artist id's to include
+     * @param string[] $include
+     * @param User $user
+     * @param string $auth
+     * @param bool $object (whether to return as a named object array or regular array)
+     * @return string JSON Object "artist"
+     */
+    public static function artists_string(array $objects, array $include, User $user, string $auth, bool $object = true): string
+    {
+        self::$count = self::$count ?? count($objects);
+
+        $JSON = self::artists($objects, $include, $user, $auth);
+
+        if ($object) {
+            $output = [
+                "total_count" => self::$count,
+                "md5" => md5(serialize($objects)),
+                "artist" => $JSON
+            ];
+        } else {
+            $output = $JSON[0] ?? [];
         }
 
-        return $JSON;
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**

@@ -257,7 +257,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 10
+			count: 9
 			path: src/Module/Api/Method/AdvancedSearchMethod.php
 
 		-
@@ -543,17 +543,7 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
-			path: src/Module/Api/Method/ArtistMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
 			path: src/Module/Api/Method/ArtistSongsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/ArtistsMethod.php
 
 		-
 			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
@@ -588,11 +578,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
-			path: src/Module/Api/Method/GenreArtistsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
 			path: src/Module/Api/Method/GenreMethod.php
 
 		-
@@ -607,18 +592,13 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 2
+			count: 1
 			path: src/Module/Api/Method/GetSimilarMethod.php
 
 		-
 			message: "#^Cannot call method getId\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
 			count: 1
 			path: src/Module/Api/Method/HandshakeMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LabelArtistsMethod.php
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
@@ -722,7 +702,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 7
+			count: 6
 			path: src/Module/Api/Method/StatsMethod.php
 
 		-
@@ -1127,7 +1107,7 @@ parameters:
 
 		-
 			message: "#^Variable \\$captcha in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 2
+			count: 1
 			path: src/Module/Application/Register/AddUserAction.php
 
 		-
@@ -1636,11 +1616,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
 		-
-			message: "#^Argument of an invalid type array\\|bool supplied for foreach, only iterables are supported\\.$#"
-			count: 2
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:Find\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
@@ -1994,11 +1969,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Stream_Url\\:\\:\\$properties has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream_Url.php
-
-		-
-			message: "#^Call to function array_key_exists\\(\\) with 'count' and array\\{album\\?\\: true, catalog\\: bool, image\\?\\: true, song\\?\\: true, catalog_map\\: mixed\\} will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/ArtistSearch.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:getId3Metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -3522,21 +3492,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthSignatureMethod_RSA_SHA1\\:\\:fetch_public_cert\\(\\) has parameter \\$request with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/OAuth/OAuthSignatureMethod_RSA_SHA1.php
-
-		-
-			message: "#^Parameter \\#1 \\$key of function openssl_free_key expects OpenSSLAsymmetricKey, OpenSSLAsymmetricKey\\|false given\\.$#"
-			count: 2
-			path: src/Module/Util/OAuth/OAuthSignatureMethod_RSA_SHA1.php
-
-		-
-			message: "#^Parameter \\#3 \\$private_key of function openssl_sign expects array\\|OpenSSLAsymmetricKey\\|OpenSSLCertificate\\|string, OpenSSLAsymmetricKey\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/OAuth/OAuthSignatureMethod_RSA_SHA1.php
-
-		-
-			message: "#^Parameter \\#3 \\$public_key of function openssl_verify expects array\\|OpenSSLAsymmetricKey\\|OpenSSLCertificate\\|string, OpenSSLAsymmetricKey\\|false given\\.$#"
 			count: 1
 			path: src/Module/Util/OAuth/OAuthSignatureMethod_RSA_SHA1.php
 
