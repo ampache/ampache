@@ -1513,7 +1513,7 @@ class Json_Data
             $objArray['license']               = $licenseLink;
             $objArray['publisher']             = $song->label;
             $objArray['language']              = $song->language;
-            $objArray['lyrics']                = $song->lyrics;
+            $objArray['lyrics']                = ($song->lyrics) ? html_entity_decode($song->lyrics) : null;
             $objArray['replaygain_album_gain'] = $song->replaygain_album_gain;
             $objArray['replaygain_album_peak'] = $song->replaygain_album_peak;
             $objArray['replaygain_track_gain'] = $song->replaygain_track_gain;
