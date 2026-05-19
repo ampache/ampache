@@ -2631,7 +2631,7 @@ class OpenSubsonic_Json_Data
                 $json['title'] = (string)$title;
             }
 
-            $json['value'] = htmlspecialchars($text);
+            $json['value'] = html_entity_decode($text);
 
             $response['subsonic-response']['lyrics'] = $json;
         }

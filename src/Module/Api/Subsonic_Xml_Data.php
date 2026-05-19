@@ -1440,7 +1440,7 @@ class Subsonic_Xml_Data
             $text    = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
             $text    = preg_replace('/\\n\\n/i', "\n", (string)$text);
             $text    = str_replace("\r", '', (string)$text);
-            $xlyrics = self::_addChildToResultXml($xml, 'lyrics', htmlspecialchars($text));
+            $xlyrics = self::_addChildToResultXml($xml, 'lyrics', html_entity_decode($text));
             if ($artist) {
                 $xlyrics->addAttribute('artist', $artist);
             }
