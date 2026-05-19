@@ -3336,7 +3336,7 @@ class OpenSubsonic_Json_Data
                 'line' => [],
             ];
 
-            foreach (explode("\n", htmlspecialchars($text)) as $line) {
+            foreach (explode("\n", html_entity_decode($text)) as $line) {
                 if (!empty($line)) {
                     $json['line'][] = ['value' => (string)$line];
                 }

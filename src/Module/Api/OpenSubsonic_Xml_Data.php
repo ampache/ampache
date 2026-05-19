@@ -1616,7 +1616,7 @@ class OpenSubsonic_Xml_Data
             $text = preg_replace('/\\n\\n/i', "\n", (string)$text);
             $text = str_replace("\r", '', (string)$text);
 
-            foreach (explode("\n", htmlspecialchars($text)) as $line) {
+            foreach (explode("\n", html_entity_decode($text)) as $line) {
                 if (!empty($line)) {
                     $xline = self::_addChildToResultXml($xlyrics, 'line');
                     $xline->addAttribute('value', $line);
