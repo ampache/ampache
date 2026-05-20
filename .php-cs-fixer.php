@@ -47,7 +47,9 @@ return (new PhpCsFixer\Config())
         ],
         'single_blank_line_at_eof' => true,
         'strict_param' => false,
-        'visibility_required' => true,
+        'modifier_keywords' => [
+            'elements' => ['const', 'method', 'property']
+        ],
         'no_unused_imports' => true,
     ])
     ->setIndent("    ")

@@ -150,7 +150,6 @@ final class AlbumsMethod implements MethodInterface
         $output->setLimit($input['limit'] ?? 0);
         $output->setCount($browse->get_total());
 
-        /** @var string $result */
         $result = $output->albums(
             $results,
             $include,

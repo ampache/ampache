@@ -39,6 +39,8 @@ final class ShareEditMethod
 {
     public const ACTION = 'share_edit';
 
+    public const REST_ACTION = 'shares_edit';
+
     /**
      * share_edit
      * MINIMUM_API_VERSION=420000
@@ -109,6 +111,24 @@ final class ShareEditMethod
         }
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     stream?: int,
+     *     download?: int,
+     *     expires?: int,
+     *     description?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function shares_edit(array $input, User $user): bool
+    {
+        return self::share_edit($input, $user);
     }
 
     /**

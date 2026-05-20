@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-07-12 08:50+1000\n"
+"POT-Creation-Date: 2025-07-14 08:58+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Fufroma, 2024-2025\n"
 "Language-Team: French (France) (http://app.transifex.com/ampache/ampache/language/fr_FR/)\n"
@@ -2761,9 +2761,6 @@ msgstr "Ce test s'assure que la variable web_path est correctement définie ains
 
 msgid "Update from tags complete"
 msgstr "Mise à jour depuis des étiquettes terminée"
-
-msgid "Amapche"
-msgstr "Ampache"
 
 msgid "Registration Validation"
 msgstr "Validation d'inscription"

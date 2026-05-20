@@ -40,6 +40,8 @@ final class UserDeleteMethod
 {
     public const ACTION = 'user_delete';
 
+    public const REST_ACTION = 'users_delete';
+
     /**
      * user_delete
      * MINIMUM_API_VERSION=400001
@@ -93,5 +95,20 @@ final class UserDeleteMethod
         Api::error(sprintf('Bad Request: %s', $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
         return false;
+    }
+
+    /**
+     * @param array{
+     *     filter?: int|string,
+     *     username?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function users_delete(array $input, User $user): bool
+    {
+        return self::user_delete($input, $user);
     }
 }

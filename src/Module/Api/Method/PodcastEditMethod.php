@@ -41,6 +41,8 @@ final class PodcastEditMethod
 {
     public const ACTION = 'podcast_edit';
 
+    public const REST_ACTION = 'podcasts_edit';
+
     /**
      * podcast_edit
      * MINIMUM_API_VERSION=420000
@@ -111,6 +113,26 @@ final class PodcastEditMethod
         Api::message('podcast ' . $podcast_id . ' updated', $input['api_format']);
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     feed?: string,
+     *     title?: string,
+     *     website?: string,
+     *     description?: string,
+     *     generator?: string,
+     *     copyright?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function podcasts_edit(array $input, User $user): bool
+    {
+        return self::podcast_edit($input, $user);
     }
 
     /**

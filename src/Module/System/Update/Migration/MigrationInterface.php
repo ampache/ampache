@@ -25,12 +25,14 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration;
 
 use Ahc\Cli\IO\Interactor;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Traversable;
 
 interface MigrationInterface
 {
     /**
      * Performs the actual migration steps
+     * @throws DatabaseException
      */
     public function migrate(): void;
 

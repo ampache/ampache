@@ -1024,6 +1024,9 @@ class mpd
         $results = [];
 
         $parsed = self::_parseResponse($response);
+        if (!is_array($parsed)) {
+            return false;
+        }
 
         foreach ($parsed as $key => $value) {
             if ($key == 'Artist') {
@@ -1060,6 +1063,9 @@ class mpd
 
         $results = [];
         $parsed  = self::_parseResponse($response);
+        if (!is_array($parsed)) {
+            return false;
+        }
 
         foreach ($parsed as $key => $value) {
             if ($key == 'Album') {

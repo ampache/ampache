@@ -389,7 +389,7 @@ class Stream
         }
         if (!empty($options['subtitle'])) {
             // This is too specific to ffmpeg/avconv
-            $string_map['%SRTFILE%'] = str_replace(':', '\:', addslashes($options['subtitle']));
+            $string_map['%SRTFILE%'] = str_replace(':', '\:', self::scrub_arg($options['subtitle']));
         }
 
         foreach ($string_map as $search => $replace) {

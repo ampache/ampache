@@ -77,16 +77,21 @@ final class XmlRestApiApplication implements ApiApplicationInterface
         // normalize input types (REST paths)
         $type = (isset($input['type']))
             ? $this->apiHandler->normalizeType((string)$input['type'])
-            : '';
+            : null;
 
         // normalize input actions (REST paths)
         $action = $this->apiHandler->normalizeAction((string)$input['action'], $type, isset($input['filter']));
-        $action = match (strtoupper($request->getMethod())) {
-            'DELETE' => $type . '_delete',
-            'PATCH' => $type . '_edit',
-            'PUT' => $type . '_create',
+        $action = match ($method) {
+            'DELETE' => $action . '_delete',
+            'PATCH' => $action . '_edit',
+            'PUT' => $action . '_create',
             default => $action,
         };
+
+        // filter out bad requests
+        if ($action === 'register' && $method !== 'POST') {
+            $action = 'bad_request';
+        }
 
         $parameters = [
             'action' => $action,

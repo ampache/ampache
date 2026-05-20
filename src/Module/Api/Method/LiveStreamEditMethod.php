@@ -43,6 +43,8 @@ final class LiveStreamEditMethod
 {
     public const ACTION = 'live_stream_edit';
 
+    public const REST_ACTION = 'live_streams_edit';
+
     /**
      * live_stream_edit
      * MINIMUM_API_VERSION=6.0.0
@@ -142,5 +144,24 @@ final class LiveStreamEditMethod
         }
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     name?: string,
+     *     url?: string,
+     *     codec?: string,
+     *     catalog?: int,
+     *     site_url?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function live_streams_edit(array $input, User $user): bool
+    {
+        return self::live_stream_edit($input, $user);
     }
 }

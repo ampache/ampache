@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-07-12 08:50+1000\n"
+"POT-Creation-Date: 2025-07-14 08:58+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: srkns, 2022\n"
 "Language-Team: Turkish (Turkey) (http://app.transifex.com/ampache/ampache/language/tr_TR/)\n"
@@ -2726,9 +2726,6 @@ msgid ""
 msgstr ""
 
 msgid "Update from tags complete"
-msgstr ""
-
-msgid "Amapche"
 msgstr ""
 
 msgid "Registration Validation"

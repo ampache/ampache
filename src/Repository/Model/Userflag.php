@@ -223,12 +223,17 @@ class Userflag extends database_object
             $sql    = "DELETE FROM `user_flag` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
             $params = [$this->id, $this->type, $user_id];
             parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [false]);
+
+            // adjust weight
+            Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` - 1 WHERE `id` = ?;", [$this->id]);
         } else {
             $sql    = "REPLACE INTO `user_flag` (`object_id`, `object_type`, `user`, `date`) VALUES (?, ?, ?, ?)";
             $params = [$this->id, $this->type, $user_id, $date];
             parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [1, $date]);
 
             $this->getUserActivityPoster()->post((int) $user_id, 'userflag', $this->type, $this->id, $date);
+
+            Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` + 1 WHERE `id` = ?;", [$this->id]);
         }
 
         Dba::write($sql, $params);

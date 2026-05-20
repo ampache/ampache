@@ -716,7 +716,8 @@ class OpenSubsonic_Json_Data
      *     'explicitStatus'?: string,
      *     'discTitles'?: array{
      *         'disc': int,
-     *         'title': string
+     *         'title': string,
+     *         'coverArt'?: string,
      *     },
      *     'song'?: array<array<string, mixed>>
      * }
@@ -2468,17 +2469,25 @@ class OpenSubsonic_Json_Data
      *     'id': string,
      *     'name': string,
      *     'streamUrl': string,
-     *     'homepageUrl': string
+     *     'homepageUrl': string,
+     *     'coverArt'?: string,
      * }
      */
     private static function _getInternetRadioStation(Live_Stream $radio): array
     {
-        return [
-            'id' => OpenSubsonic_Api::getLiveStreamSubId($radio->id),
+        $sub_id = OpenSubsonic_Api::getLiveStreamSubId($radio->id);
+        $json   = [
+            'id' => $sub_id,
             'name' => (string)$radio->name,
             'streamUrl' => (string)$radio->url,
             'homepageUrl' => (string)$radio->site_url,
         ];
+
+        if ($radio->has_art()) {
+            $json['coverArt'] = $sub_id;
+        }
+
+        return $json;
     }
 
     /**
@@ -2622,7 +2631,7 @@ class OpenSubsonic_Json_Data
                 $json['title'] = (string)$title;
             }
 
-            $json['value'] = htmlspecialchars($text);
+            $json['value'] = html_entity_decode($text);
 
             $response['subsonic-response']['lyrics'] = $json;
         }
@@ -3327,7 +3336,7 @@ class OpenSubsonic_Json_Data
                 'line' => [],
             ];
 
-            foreach (explode("\n", htmlspecialchars($text)) as $line) {
+            foreach (explode("\n", html_entity_decode($text)) as $line) {
                 if (!empty($line)) {
                     $json['line'][] = ['value' => (string)$line];
                 }

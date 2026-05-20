@@ -23,9 +23,18 @@
 
 // wunderbaum.js file system browser
 
+use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\FileSystem;
 use Ampache\Module\Util\Upload;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\User;
 use Psr\Container\ContainerInterface;
 
 define('AJAX_INCLUDE', '1');
@@ -33,14 +42,39 @@ define('AJAX_INCLUDE', '1');
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';
 
-$rootdir = Upload::get_root();
-if (empty($rootdir)) {
+$current_user = Core::get_global('user');
+if (!$current_user instanceof User) {
     return false;
 }
+
+$catalog_id = (int)AmpConfig::get('upload_catalog', 0);
+$catalog    = Catalog::create_from_id($catalog_id);
+
+$rootdir = ($catalog instanceof Catalog_local)
+    ? Upload::get_root($catalog, $current_user->username)
+    : null;
+
+if ($rootdir === null) {
+    return false;
+}
+
 $rootdir .= DIRECTORY_SEPARATOR;
 
 if (isset($_GET['operation'])) {
     try {
+        $access_level = AccessLevelEnum::tryFrom(
+            (int) AmpConfig::get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL)
+        ) ?? AccessLevelEnum::USER;
+
+        if (
+            AmpConfig::get(ConfigurationKeyEnum::ALLOW_UPLOAD, false) === false ||
+            $access_level === AccessLevelEnum::DEFAULT ||
+            !Access::check(AccessTypeEnum::INTERFACE, $access_level) ||
+            AmpConfig::get(ConfigurationKeyEnum::DEMO_MODE) === true
+        ) {
+            throw new AccessDeniedException();
+        }
+
         $fs   = new FileSystem($rootdir);
         $rslt = null;
         $node = (isset($_GET['id']) && $_GET['id'] !== '#')
@@ -57,16 +91,16 @@ if (isset($_GET['operation'])) {
                 $rslt = $fs->create($node, $_GET['text'] ?? '', (!isset($_GET['type']) || filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'file'));
                 break;
             case 'rename_node':
-                $rslt = $fs->rename($node, $_GET['text'] ?? '');
+                $rslt = $fs->rename($node, $_GET['text'] ?? '', $current_user);
                 break;
             case 'delete_node':
-                $rslt = $fs->remove($node);
+                $rslt = $fs->remove($node, $current_user);
                 break;
             case 'move_node':
                 $parn = (isset($_GET['parent']) && $_GET['parent'] !== '#')
                     ? (string)$_GET['parent']
                     : '/';
-                $rslt = $fs->move($node, $parn);
+                $rslt = $fs->move($node, $parn, $current_user);
                 break;
             case 'copy_node':
                 $parn = (isset($_GET['parent']) && $_GET['parent'] !== '#')

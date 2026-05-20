@@ -62,7 +62,7 @@ final class PodcastEpisodesMethod implements MethodInterface
      *
      * This returns the episodes for a podcast
      *
-     * filter = (string) ID of the podcast
+     * filter = (string) ID of the podcast //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
@@ -72,7 +72,7 @@ final class PodcastEpisodesMethod implements MethodInterface
      * @param ResponseInterface $response
      * @param ApiOutputInterface $output
      * @param array{
-     *     filter: string,
+     *     filter?: string,
      *     offset?: string,
      *     limit?: string,
      *     cond?: string,
@@ -105,18 +105,13 @@ final class PodcastEpisodesMethod implements MethodInterface
         }
 
         $podcastId = (int)($input['filter'] ?? 0);
-        if ($podcastId === 0) {
+        $podcast   = $this->podcastRepository->findById($podcastId);
+        if (isset($input['filter']) && $podcast === null) {
             throw new RequestParamMissingException(
                 sprintf(T_('Bad Request: %s'), 'filter')
             );
         }
 
-        $podcast = $this->podcastRepository->findById($podcastId);
-        if ($podcast === null) {
-            throw new ResultEmptyException(
-                (string) $podcastId
-            );
-        }
 
         $browse = $this->modelFactory->createBrowse(null, false);
 
@@ -126,7 +121,9 @@ final class PodcastEpisodesMethod implements MethodInterface
 
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['pubdate','DESC']);
 
-        $browse->set_filter('podcast', $podcastId);
+        if ($podcast !== null) {
+            $browse->set_filter('podcast', $podcastId);
+        }
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 

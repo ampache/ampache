@@ -78,7 +78,7 @@ final class ShowAction implements ApplicationActionInterface
         $albumId  = (int) ($request->getQueryParams()['album'] ?? 0);
         $album    = $this->modelFactory->createAlbum($albumId);
 
-        if ($album->isNew() || !in_array($album->catalog, $catalogs)) {
+        if ($album->isNew() || ($album->catalog !== 0 && !in_array($album->catalog, $catalogs))) {
             $this->logger->warning(
                 'Requested an album that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]

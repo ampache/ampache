@@ -109,6 +109,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         iterable $catalogs
     ): int {
         $newEpisodeCount = 0;
+        $downloadLimit   = (int)$this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
 
         foreach ($catalogs as $catalog) {
             $podcastIds = $catalog->get_podcast_ids();
@@ -121,14 +122,23 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
 
                 $this->sync($podcast);
 
-                $episodes = $podcast->getEpisodeIds(PodcastEpisodeStateEnum::PENDING);
+                $episodes        = $podcast->getEpisodeIds(PodcastEpisodeStateEnum::PENDING);
+                $newEpisodeCount = $newEpisodeCount + count($episodes);
 
+                // -1 means no downloads
+                if ($downloadLimit < 0) {
+                    continue;
+                }
+
+                $downloadCount = 0;
                 foreach ($episodes as $episodeId) {
-                    $this->podcastEpisodeDownloader->fetch(
-                        $this->modelFactory->createPodcastEpisode($episodeId)
-                    );
+                    if ($downloadLimit === 0 || $downloadCount < $downloadLimit) {
+                        $this->podcastEpisodeDownloader->fetch(
+                            $this->modelFactory->createPodcastEpisode($episodeId)
+                        );
+                    }
 
-                    $newEpisodeCount++;
+                    $downloadCount++;
                 }
             }
         }

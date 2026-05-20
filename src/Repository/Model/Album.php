@@ -84,6 +84,8 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     public int $total_skip = 0;
 
+    private int $weight = 0;
+
     public int $song_count = 0;
 
     public int $artist_count = 0;
@@ -242,7 +244,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $catalog_number = (empty($catalog_number)) ? null : $catalog_number;
         $version        = (empty($version)) ? null : $version;
 
-        if (!$name) {
+        if (!$name || $name === T_('Unknown (Orphaned)')) {
             $name          = T_('Unknown (Orphaned)');
             $year          = 0;
             $original_year = null;
@@ -1098,6 +1100,21 @@ class Album extends database_object implements library_item, CatalogItemInterfac
                 self::add_album_map($album_id, 'album', $artist_id);
             }
         }
+    }
+
+    /**
+     * Orphans can be annoying
+     */
+    public static function is_orphan(int $album_id = 0): bool
+    {
+        if ($album_id > 0) {
+            $sql        = "SELECT `id` FROM `album` WHERE `name` = 'Unknown (Orphaned)' OR name = ?;";
+            $db_results = Dba::query($sql, [T_('Unknown (Orphaned)')]);
+
+            return Dba::num_rows($db_results) > 0;
+        }
+
+        return false;
     }
 
     /**
