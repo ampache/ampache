@@ -40,6 +40,8 @@ final class ShareDeleteMethod
 {
     public const ACTION = 'share_delete';
 
+    public const REST_ACTION = 'shares_delete';
+
     /**
      * share_delete
      * MINIMUM_API_VERSION=420000
@@ -88,6 +90,20 @@ final class ShareDeleteMethod
         Catalog::count_table('share');
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function shares_delete(array $input, User $user): bool
+    {
+        return self::share_delete($input, $user);
     }
 
     /**

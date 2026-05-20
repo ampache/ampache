@@ -73,9 +73,9 @@ final class PlaylistSearchQuery implements QueryInterface
 
     protected string $base = <<<SQL
         SELECT %%SELECT%% FROM (
-            SELECT `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, 'playlist' AS `object_type` FROM `playlist`
+            SELECT `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, `collaborate`, 'playlist' AS `object_type` FROM `playlist`
             UNION
-            SELECT CONCAT('smart_', `id`) AS `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, 'search' AS `object_type` FROM `search`
+            SELECT CONCAT('smart_', `id`) AS `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, `collaborate`, 'search' AS `object_type` FROM `search`
         ) AS `playlist`
         SQL;
 
@@ -163,7 +163,7 @@ final class PlaylistSearchQuery implements QueryInterface
                 break;
             case 'playlist_open':
                 $query->set_join_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`id`', "`user_playlist_map`.`user_id`", (string)$value, 100);
-                $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . (int)$value . " OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
+                $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . (int)$value . " OR FIND_IN_SET(" . (int)$value . ", `playlist`.`collaborate`) > 0 OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
                 break;
             case 'playlist_user':
                 $filter_sql = " `playlist`.`user` = " . (int)$value . " AND ";
@@ -176,7 +176,7 @@ final class PlaylistSearchQuery implements QueryInterface
                     $filter_sql = " (`playlist`.`user`='$user_id') AND ";
                 } else {
                     $query->set_join_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`id`', "`user_playlist_map`.`user_id`", (string)$user_id, 100);
-                    $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . $user_id . " OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
+                    $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . $user_id . " OR FIND_IN_SET(" . $user_id . ", `playlist`.`collaborate`) > 0 OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
                 }
                 break;
             case 'user_flag':

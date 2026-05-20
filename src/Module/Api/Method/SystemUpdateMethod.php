@@ -44,6 +44,8 @@ final class SystemUpdateMethod
 {
     public const ACTION = 'system_update';
 
+    public const REST_ACTION = 'update';
+
     /**
      * system_update
      * MINIMUM_API_VERSION=400001
@@ -101,6 +103,19 @@ final class SystemUpdateMethod
         Api::message('No update available', $input['api_format']);
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function update(array $input, User $user): bool
+    {
+        return self::system_update($input, $user);
     }
 
     /**

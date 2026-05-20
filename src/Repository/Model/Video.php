@@ -96,6 +96,8 @@ class Video extends database_object implements
 
     public int $total_skip = 0;
 
+    private int $weight = 0;
+
     public ?string $link = null;
 
     public string $type;

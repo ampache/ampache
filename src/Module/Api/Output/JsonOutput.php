@@ -118,7 +118,7 @@ final class JsonOutput implements ApiOutputInterface
      * @param bool $encode
      * @param bool $asObject
      *
-     * @return array|string
+     * @return string
      */
     public function albums(
         array $albums,
@@ -127,7 +127,7 @@ final class JsonOutput implements ApiOutputInterface
         string $auth,
         bool $encode = true,
         bool $asObject = true
-    ): array|string {
+    ): string {
         return Json_Data::albums($albums, $include, $user, $auth, $encode, $asObject);
     }
 

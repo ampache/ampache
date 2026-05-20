@@ -41,6 +41,8 @@ final class PlaylistCreateMethod
 {
     public const ACTION = 'playlist_create';
 
+    public const REST_ACTION = 'playlists_create';
+
     /**
      * playlist_create
      * MINIMUM_API_VERSION=380001
@@ -79,12 +81,27 @@ final class PlaylistCreateMethod
         Catalog::count_table('playlist');
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::playlists([$object_id], $user, $input['auth'], false, true, false);
+                echo Json_Data::playlists([$object_id], $user, $input['auth'], false, false);
                 break;
             default:
                 echo Xml_Data::playlists([$object_id], $user, $input['auth']);
         }
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     name: string,
+     *     type?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function playlists_create(array $input, User $user): bool
+    {
+        return self::playlist_create($input, $user);
     }
 }

@@ -41,6 +41,8 @@ final class UserCreateMethod
 {
     public const ACTION = 'user_create';
 
+    public const REST_ACTION = 'users_create';
+
     /**
      * user_create
      * MINIMUM_API_VERSION=400001
@@ -121,6 +123,25 @@ final class UserCreateMethod
         Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
         return false;
+    }
+
+    /**
+     * @param array{
+     *     username: string,
+     *     fullname?: string,
+     *     password: string,
+     *     email: string,
+     *     disable?: int,
+     *     group?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function users_create(array $input, User $user): bool
+    {
+        return self::user_create($input, $user);
     }
 
     /**

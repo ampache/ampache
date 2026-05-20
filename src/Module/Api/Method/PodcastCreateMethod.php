@@ -45,6 +45,8 @@ final class PodcastCreateMethod
 {
     public const ACTION = 'podcast_create';
 
+    public const REST_ACTION = 'podcasts_create';
+
     /**
      * podcast_create
      * MINIMUM_API_VERSION=420000
@@ -100,13 +102,28 @@ final class PodcastCreateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::podcasts([$podcast->getId()], $user, $input['auth'], false, true, false);
+                echo Json_Data::podcasts([$podcast->getId()], $user, $input['auth'], false, false);
                 break;
             default:
                 echo Xml_Data::podcasts([$podcast->getId()], $user, $input['auth']);
         }
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     url: string,
+     *     catalog: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function podcasts_create(array $input, User $user): bool
+    {
+        return self::podcast_create($input, $user);
     }
 
     /**

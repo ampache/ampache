@@ -93,7 +93,7 @@ interface ApiOutputInterface
      * @param bool $encode
      * @param bool $asObject
      *
-     * @return array|string
+     * @return string
      */
     public function albums(
         array $albums,
@@ -102,7 +102,7 @@ interface ApiOutputInterface
         string $auth,
         bool $encode = true,
         bool $asObject = true
-    ): array|string;
+    ): string;
 
     /**
      * This generates a standard JSON Success message

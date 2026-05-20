@@ -40,6 +40,8 @@ final class SongDeleteMethod
 {
     public const ACTION = 'song_delete';
 
+    public const REST_ACTION = 'songs_delete';
+
     /**
      * song_delete
      * MINIMUM_API_VERSION=5.0.0
@@ -86,6 +88,20 @@ final class SongDeleteMethod
         }
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function songs_delete(array $input, User $user): bool
+    {
+        return self::song_delete($input, $user);
     }
 
     /**

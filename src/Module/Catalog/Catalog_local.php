@@ -181,10 +181,8 @@ class Catalog_local extends Catalog
      * Try to figure out which catalog path most closely resembles this one.
      * This is useful when creating a new catalog to make sure we're not
      * doubling up here.
-     * @param string $path
-     * @return int|null
      */
-    public static function get_from_path($path): ?int
+    public static function get_from_path(string $path): ?int
     {
         // First pull a list of all of the paths for the different catalogs
         $sql        = "SELECT `catalog_id`, `path` FROM `catalog_local`";
@@ -1041,8 +1039,12 @@ class Catalog_local extends Catalog
 
     private function _move_file(Song|Podcast_Episode|Video $media, string $new_file, int $newCatalogId, ?Interactor $interactor = null): bool
     {
-        if (file_exists($new_file)) {
+        if (file_exists($new_file) && is_file($new_file)) {
             debug_event('local.catalog', 'Error: ' . $new_file . ' already exists', 2);
+            $interactor?->info(
+                T_('Error') . ': ' . T_('File already exists') . ' ' . $new_file,
+                true
+            );
 
             return false;
         }
@@ -1054,12 +1056,21 @@ class Catalog_local extends Catalog
 
         $info      = pathinfo($new_file);
         $directory = ($info['dirname'] ?? '');
-        if (!Core::is_readable($directory)) {
+        if (!Core::is_readable($directory) || !is_dir($directory)) {
             debug_event(self::class, 'mkdir: ' . $directory, 5);
-            mkdir($directory, 0755, true);
+            if (!mkdir($directory, 0775, true)) {
+                debug_event('local.catalog', T_('Error') . ': ' . sprintf(T_('Create directory "%s"'), $directory), 2);
+                $interactor?->info(
+                    T_('Error') . ': ' . sprintf(T_('Create directory "%s"'), $directory),
+                    true
+                );
+
+                return false;
+            }
         }
 
         if (empty($media->file) || !copy($media->file, $new_file)) {
+            unlink($new_file); // delete the copied file on failure
             /* HINT: filename (File path) */
             $interactor?->info(
                 sprintf(T_('There was an error trying to copy file to "%s"'), $new_file),
@@ -1337,7 +1348,7 @@ class Catalog_local extends Catalog
                     $root .= DIRECTORY_SEPARATOR . User::get_username($song->user_upload);
                     if (!Core::is_readable($root)) {
                         debug_event(self::class, 'Target user directory `' . $root . "` doesn't exist. Creating it...", 5);
-                        mkdir($root);
+                        mkdir($root, 0775);
                     }
                 }
                 // sort_find_home will replace the % with the correct values.
@@ -1358,7 +1369,11 @@ class Catalog_local extends Catalog
 
                     if (!Core::is_readable($directory)) {
                         debug_event(self::class, 'mkdir: ' . $directory, 5);
-                        mkdir($directory, 0755, true);
+                        if (!mkdir($directory, 0775, true)) {
+                            debug_event('local.catalog', T_('Error') . ': ' . sprintf(T_('Create directory "%s"'), $directory), 2);
+
+                            return null;
+                        }
                     }
 
                     // Now that we've got the correct directory structure let's try to copy it

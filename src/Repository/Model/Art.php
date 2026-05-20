@@ -659,24 +659,24 @@ class Art extends database_object
         if ($size !== 'original') {
             $path .= $slash_type . 'thumbnail';
             if ($autocreate && !is_dir($path)) {
-                mkdir($path);
+                mkdir($path, 0775);
             }
         }
 
         $path .= $slash_type . $type;
         if ($autocreate && !is_dir($path)) {
-            mkdir($path);
+            mkdir($path, 0775);
         }
 
         $path .= $slash_type . $uid;
         if ($autocreate && !is_dir($path)) {
-            mkdir($path);
+            mkdir($path, 0775);
         }
 
         if (!empty($kind)) {
             $path .= $slash_type . $kind;
             if ($autocreate && !is_dir($path)) {
-                mkdir($path);
+                mkdir($path, 0775);
             }
         }
 

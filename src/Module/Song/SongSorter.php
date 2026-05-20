@@ -105,13 +105,13 @@ final class SongSorter implements SongSorterInterface
         while ($row = Dba::fetch_assoc($db_results)) {
             $this->catalog = Catalog::create_from_id($row['id']);
             if ($this->catalog === null) {
-                continue;
+                break;
             }
 
             if ($customPath !== null) {
                 // when you've set a sort path do not continue with full catalog sort
                 $this->processPath($customPath, $interactor);
-                continue;
+                break;
             }
 
             /* HINT: Catalog Name */
@@ -333,7 +333,7 @@ final class SongSorter implements SongSorterInterface
                         sprintf('Creating %s directory', $path),
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
-                    if (!mkdir($path)) {
+                    if (!mkdir($path, 0775)) {
                         /* HINT: Directory (File path) */
                         $interactor->info(
                             sprintf(T_("There was a problem creating this directory: %s"), $path),
@@ -375,6 +375,7 @@ final class SongSorter implements SongSorterInterface
             );
 
             if (empty($media->file) || !copy($media->file, $fullname)) {
+                unlink($fullname); // delete the copied file on failure
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('There was an error trying to copy file to "%s"'), $fullname),

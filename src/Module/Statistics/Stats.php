@@ -159,7 +159,7 @@ class Stats
                 while ($row = Dba::fetch_assoc($db_results)) {
                     // reduce the counts for these objects too
                     if (in_array($row['object_type'], ['song', 'album', 'artist', 'video', 'podcast', 'podcast_episode'])) {
-                        self::count($row['object_type'], $row['object_id'], 'down');
+                        self::count($row['object_type'], [$row['object_id']], 'down');
                     }
                 }
                 // delete the row and all related activities
@@ -171,8 +171,9 @@ class Stats
 
     /**
      * update the play_count for an object
+     * @param int[] $params
      */
-    public static function count(string $type, int $object_id, string $count_type): void
+    public static function count(string $type, array $params, string $count_type): void
     {
         switch ($type) {
             case 'album_disk':
@@ -183,9 +184,9 @@ class Stats
             case 'song':
             case 'video':
                 $sql = ($count_type == 'down')
-                    ? "UPDATE `$type` SET `total_count` = `total_count` - 1, `total_skip` = `total_skip` + 1 WHERE `id` = ? AND `total_count` > 0"
-                    : "UPDATE `$type` SET `total_count` = `total_count` + 1 WHERE `id` = ?";
-                Dba::write($sql, [$object_id]);
+                    ? "SET `weight` = `weight` - 1, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = CASE WHEN `total_count` > 0 THEN `total_skip` + 1 ELSE `total_skip` END WHERE `id` = ?;"
+                    : "UPDATE `$type` SET `total_count` = `total_count` + 1, `weight` = `weight` + 1 WHERE `id` = ?;";
+                Dba::write($sql, $params);
                 break;
         }
 
@@ -194,7 +195,7 @@ class Stats
             in_array($type, ['song', 'podcast_episode', 'video'])
         ) {
             $sql = "UPDATE `$type` SET `played` = 0 WHERE `id` = ? AND `total_count` = 0 and `played` = 1;";
-            Dba::write($sql, [$object_id]);
+            Dba::write($sql, $params);
         }
     }
 
@@ -245,7 +246,7 @@ class Stats
                 $count_type === 'stream' && $user_id > 0 &&
                 $agent !== 'debug'
             ) {
-                self::count($type, $object_id, 'up');
+                self::count($type, [$object_id], 'up');
                 // don't register activity for album or artist plays
                 if (!in_array($type, ['album', 'album_disk', 'artist', 'podcast'])) {
                     self::getUserActivityPoster()->post((int)$user_id, 'play', $type, (int)$object_id, (int)$date);
@@ -464,20 +465,19 @@ class Stats
 
         // update the total counts (and total_skip counts) as well
         if ($user_id > 0 && $agent !== 'debug') {
-            self::count($object_type, $object_id, 'down');
+            self::count($object_type, [$object_id], 'down');
             if ($object_type == 'song') {
                 $song = new Song($object_id);
-                self::count('album', $song->album, 'down');
-                $sql = "UPDATE `album_disk` SET `total_count` = `total_count` - 1 WHERE `album_id` = ? AND `disk` = ? AND `total_count` > 0";
-                Dba::write($sql, [$song->album, $song->disk]);
+                self::count('album', [$song->album], 'down');
+                self::count('album_disk', [$song->album_disk], 'down');
                 $artists = array_unique(array_merge(Song::get_parent_array($song->id), Song::get_parent_array($song->album, 'album')));
                 foreach ($artists as $artist_id) {
-                    self::count('artist', $artist_id, 'down');
+                    self::count('artist', [(int)$artist_id], 'down');
                 }
             }
             if ($object_type == 'podcast_episode') {
                 $podcast_episode = new Podcast_Episode($object_id);
-                self::count('podcast', $podcast_episode->podcast, 'down');
+                self::count('podcast', [$podcast_episode->podcast], 'down');
             }
             if (in_array($object_type, ['song', 'video', 'podcast_episode'])) {
                 $sql = "UPDATE `user_data`, (SELECT `$object_type`.`size` FROM `$object_type` WHERE `$object_type`.`id` = ?) AS `$object_type` SET `value` = `value` - `$object_type`.`size` WHERE `user` = ? AND `value` = 'play_size'";

@@ -47,6 +47,8 @@ final class PodcastDeleteMethod implements MethodInterface
 {
     public const ACTION = 'podcast_delete';
 
+    public const REST_ACTION = 'podcasts_delete';
+
     private PodcastDeleterInterface $podcastDeleter;
 
     private ConfigContainerInterface $configContainer;

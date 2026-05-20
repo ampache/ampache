@@ -38,6 +38,8 @@ final class PlaylistEditMethod
 {
     public const ACTION = 'playlist_edit';
 
+    public const REST_ACTION = 'playlists_edit';
+
     /**
      * playlist_edit
      * MINIMUM_API_VERSION=400001
@@ -162,5 +164,25 @@ final class PlaylistEditMethod
         Api::message('playlist changes saved', $input['api_format']);
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     name?: string,
+     *     type?: string,
+     *     owner?: int|string,
+     *     items?: string,
+     *     tracks?: string,
+     *     sort?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function playlists_edit(array $input, User $user): bool
+    {
+        return self::playlist_edit($input, $user);
     }
 }

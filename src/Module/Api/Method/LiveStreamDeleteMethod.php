@@ -40,6 +40,8 @@ final class LiveStreamDeleteMethod
 {
     public const ACTION = 'live_stream_delete';
 
+    public const REST_ACTION = 'live_streams_delete';
+
     /**
      * live_stream_delete
      * MINIMUM_API_VERSION=6.0.0
@@ -83,6 +85,20 @@ final class LiveStreamDeleteMethod
         Api::message('Deleted live_stream: ' . $object_id, $input['api_format']);
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function live_streams_delete(array $input, User $user): bool
+    {
+        return self::live_stream_delete($input, $user);
     }
 
     private static function getLiveStreamRepository(): LiveStreamRepositoryInterface

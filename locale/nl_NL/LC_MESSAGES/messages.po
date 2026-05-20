@@ -4,7 +4,7 @@
 # 
 # Translators:
 # André van schilt <vsandre68@gmail.com>, 2021
-# Ben <bzweekhorst@gmail.com>, 2022
+# e5e47f192c3db43dfafb2b0a494a0643_110d2a5, 2022
 # Chris vandenBerg, 2024
 # Danny Houtworm <Danny@houtworm.net>, 2020
 # Francois Duprez <francoisduprez@gmail.com>, 2016
@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-07-12 08:50+1000\n"
+"POT-Creation-Date: 2025-07-14 08:58+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Chris vandenBerg, 2024\n"
 "Language-Team: Dutch (Netherlands) (http://app.transifex.com/ampache/ampache/language/nl_NL/)\n"
@@ -2731,9 +2731,6 @@ msgid ""
 msgstr "Deze test controleert of de web_path instelling goed is ingesteld. Als je hier geen vinkje ziet staan, dan is de instelling niet goed. "
 
 msgid "Update from tags complete"
-msgstr ""
-
-msgid "Amapche"
 msgstr ""
 
 msgid "Registration Validation"

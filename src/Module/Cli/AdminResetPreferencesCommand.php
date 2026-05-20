@@ -60,6 +60,7 @@ final class AdminResetPreferencesCommand extends Command
         if ($this->app() === null) {
             return;
         }
+
         $interactor = $this->io();
         $dryRun     = $this->values()['execute'] === false;
         $preset     = $this->values()['preset'];
@@ -75,6 +76,7 @@ final class AdminResetPreferencesCommand extends Command
                     true
                 );
             }
+
             $interactor->ok(
                 "\n" . T_('No changes have been made'),
                 true
@@ -94,6 +96,7 @@ final class AdminResetPreferencesCommand extends Command
                     true
                 );
             }
+
             $interactor->error(
                 "\n" . T_('Error'),
                 true

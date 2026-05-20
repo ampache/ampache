@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-07-12 08:50+1000\n"
+"POT-Creation-Date: 2025-07-14 08:58+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Nite <shunite@gmail.com>, 2019-2020\n"
 "Language-Team: Hungarian (Hungary) (http://app.transifex.com/ampache/ampache/language/hu_HU/)\n"
@@ -2722,9 +2722,6 @@ msgstr "Ez a teszt ellenőrzi, hogy a web_path változó helyesen van-e beállí
 
 msgid "Update from tags complete"
 msgstr "Frissítés címkékből kész"
-
-msgid "Amapche"
-msgstr ""
 
 msgid "Registration Validation"
 msgstr "Regisztráció érvényessége"

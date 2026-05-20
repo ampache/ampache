@@ -25,6 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Exception;
 
 class FileSystem
@@ -38,11 +41,11 @@ class FileSystem
     {
         $temp = realpath($path);
         if (!$temp) {
-            throw new Exception('Path does not exist: ' . $path);
+            throw new Exception('Path does not exist');
         }
         if (!empty($this->base)) {
             if (!str_starts_with($temp, $this->base)) {
-                throw new Exception('Path is not inside base (' . $this->base . '): ' . $temp);
+                throw new Exception('Path is not inside base');
             }
         }
 
@@ -226,7 +229,7 @@ class FileSystem
             throw new Exception('Invalid name: ' . $name);
         }
         if ($mkdir) {
-            mkdir($dir . DIRECTORY_SEPARATOR . $name);
+            mkdir($dir . DIRECTORY_SEPARATOR . $name, 0775);
         } else {
             file_put_contents($dir . DIRECTORY_SEPARATOR . $name, '');
         }
@@ -235,14 +238,15 @@ class FileSystem
     }
 
     /**
-     * @param string $fs_id
-     * @param string $name
      * @return array{id: string}
      * @throws Exception
      */
-    public function rename(string $fs_id, string $name): array
+    public function rename(string $fs_id, string $name, User $user): array
     {
         $dir = $this->path($fs_id);
+
+        $this->check($dir, $user);
+
         if ($this->base && $dir === $this->base) {
             throw new Exception('Cannot rename root');
         }
@@ -262,38 +266,53 @@ class FileSystem
     }
 
     /**
-     * @param string $fs_id
      * @return array{status: string}
      * @throws Exception
      */
-    public function remove(string $fs_id): array
+    public function remove(string $fs_id, User $user): array
     {
         $dir = $this->path($fs_id);
         if ($dir === $this->base) {
             throw new Exception('Cannot remove root');
         }
+
         if (is_dir($dir)) {
-            foreach (array_diff(scandir($dir), [".", ".."]) as $file) {
-                $this->remove($this->id($dir . DIRECTORY_SEPARATOR . $file));
+            foreach (array_diff(scandir($dir) ?: [], [".", ".."]) as $file) {
+                $this->remove($this->id($dir . DIRECTORY_SEPARATOR . $file), $user);
             }
-            rmdir($dir);
+
+            if (!rmdir($dir)) {
+                throw new Exception('Cannot remove root');
+            }
         }
+
         if (is_file($dir)) {
-            unlink($dir);
+            $object_id = Catalog::get_id_from_file($dir, 'song');
+            $song      = new Song($object_id);
+            if ($song->isNew()) {
+                throw new Exception('File is not in catalog');
+            }
+
+            if ($user->getId() !== $song->get_user_owner()) {
+                throw new Exception('You do not have permission to delete this file');
+            }
+
+            if (!unlink($dir)) {
+                throw new Exception('Cannot remove file');
+            }
         }
 
         return ['status' => 'OK'];
     }
 
     /**
-     * @param string $fs_id
-     * @param string $par
      * @return array{id: string}
      * @throws Exception
      */
-    public function move(string $fs_id, string $par): array
+    public function move(string $fs_id, string $par, User $user): array
     {
         $dir = $this->path($fs_id);
+        $this->check($dir, $user);
         $par = $this->path($par);
         $new = explode(DIRECTORY_SEPARATOR, $dir);
         $new = array_pop($new);
@@ -321,7 +340,7 @@ class FileSystem
         }
 
         if (is_dir($dir)) {
-            mkdir($new);
+            mkdir($new, 0775);
             foreach (array_diff(scandir($dir), [".", ".."]) as $file) {
                 $this->copy($this->id($dir . DIRECTORY_SEPARATOR . $file), $this->id($new));
             }
@@ -331,5 +350,27 @@ class FileSystem
         }
 
         return ['id' => $this->id($new)];
+    }
+
+    /**
+     * check
+     * @throws Exception
+     */
+    protected function check(string $dir, User $user): void
+    {
+        if (is_dir($dir)) {
+            foreach (array_diff(scandir($dir) ?: [], [".", ".."]) as $file) {
+                $this->check($this->id($dir . DIRECTORY_SEPARATOR . $file), $user);
+            }
+        }
+
+        if (is_file($dir)) {
+            $object_id = Catalog::get_id_from_file($dir, 'song');
+            $song      = new Song($object_id);
+
+            if ($user->getId() !== $song->get_user_owner()) {
+                throw new Exception('You do not have permission to manage this folder');
+            }
+        }
     }
 }

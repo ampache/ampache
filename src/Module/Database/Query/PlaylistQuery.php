@@ -147,7 +147,7 @@ final class PlaylistQuery implements QueryInterface
                 break;
             case 'playlist_open':
                 $query->set_join_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`id`', "`user_playlist_map`.`user_id`", (string)$value, 100);
-                $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . (int)$value . " OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
+                $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . (int)$value . " OR FIND_IN_SET(" . (int)$value . ", `playlist`.`collaborate`) > 0 OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
                 break;
             case 'playlist_user':
                 $filter_sql = " `playlist`.`user` = " . (int)$value . " AND ";
@@ -160,7 +160,7 @@ final class PlaylistQuery implements QueryInterface
                     $filter_sql = " (`playlist`.`user`='$user_id') AND ";
                 } else {
                     $query->set_join_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`id`', "`user_playlist_map`.`user_id`", (string)$user_id, 100);
-                    $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . $user_id . " OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
+                    $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . $user_id . " OR FIND_IN_SET(" . $user_id . ", `playlist`.`collaborate`) > 0 OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
                 }
                 break;
             case 'user_flag':

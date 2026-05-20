@@ -45,6 +45,8 @@ final class BookmarkCreateMethod
 {
     public const ACTION = 'bookmark_create';
 
+    public const REST_ACTION = 'bookmarks_create';
+
     /**
      * bookmark_create
      * MINIMUM_API_VERSION=5.0.0
@@ -141,5 +143,24 @@ final class BookmarkCreateMethod
         }
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     position: string,
+     *     client?: string,
+     *     date?: int,
+     *     include?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function bookmarks_create(array $input, User $user): bool
+    {
+        return self::bookmark_create($input, $user);
     }
 }

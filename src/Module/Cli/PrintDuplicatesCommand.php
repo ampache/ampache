@@ -122,12 +122,12 @@ final class PrintDuplicatesCommand extends Command
             $props = array_intersect_key($props, array_flip($allowedKeys));
 
             if (!$printedHeader) {
+                $printedHeader = true;
                 if ($type === 'song') {
                     print_r(implode("\t", ['prefix', 'name', 'mbid', 'album', 'song_artist']) . "\n");
                 } else {
                     print_r(implode("\t", $allowedKeys) . "\n");
                 }
-                $printedHeader = true;
             }
 
             // Print each row in allowedKeys order

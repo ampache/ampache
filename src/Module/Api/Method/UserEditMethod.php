@@ -45,6 +45,8 @@ final class UserEditMethod
 {
     public const ACTION = 'user_edit';
 
+    public const REST_ACTION = 'users_edit';
+
     /**
      * user_edit
      * MINIMUM_API_VERSION=6.0.0
@@ -188,6 +190,34 @@ final class UserEditMethod
         Api::error(sprintf('Bad Request: %s', $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
         return false;
+    }
+
+    /**
+     * @param array{
+     *     filter?: int|string,
+     *     username?: string,
+     *     fullname?: string,
+     *     password?: string,
+     *     email?: string,
+     *     website?: string,
+     *     state?: string,
+     *     city?: string,
+     *     disable?: int,
+     *     group?: int,
+     *     maxbitrate?: int,
+     *     fullname_public?: int,
+     *     reset_apikey?: int,
+     *     reset_streamtoken?: int,
+     *     clear_stats?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function users_edit(array $input, User $user): bool
+    {
+        return self::user_edit($input, $user);
     }
 
     /**

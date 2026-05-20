@@ -1178,7 +1178,6 @@ final class Play2Action implements ApplicationActionInterface
             )
         );
 
-
         if ($transcode && connection_status() == 0) {
             $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, (string)strlen($buf_all));
             foreach ($headers as $headerName => $value) {

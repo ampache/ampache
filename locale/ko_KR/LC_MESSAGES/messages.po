@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-07-12 08:50+1000\n"
+"POT-Creation-Date: 2025-07-14 08:58+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: LEE Hwanyong <hwan@ajou.ac.kr>, 2022\n"
 "Language-Team: Korean (Korea) (http://app.transifex.com/ampache/ampache/language/ko_KR/)\n"
@@ -2716,9 +2716,6 @@ msgstr "웹 경로가 정확하게 설정되었는지 확인합니다."
 
 msgid "Update from tags complete"
 msgstr "태그에서 갱신하기 완료"
-
-msgid "Amapche"
-msgstr ""
 
 msgid "Registration Validation"
 msgstr "인증 등록"

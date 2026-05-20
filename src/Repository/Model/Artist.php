@@ -76,6 +76,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     public int $total_skip = 0;
 
+    private int $weight = 0;
+
     public ?string $link = null;
 
     /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
@@ -438,9 +440,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         if ($row = Dba::fetch_assoc($db_results)) {
             return [
                 "id" => (string)$row['id'],
-                "name" => $row['name'],
-                "prefix" => $row['prefix'],
-                "basename" => $row['basename']
+                "name" => (string)$row['name'],
+                "prefix" => (string)$row['prefix'],
+                "basename" => (string)$row['basename']
             ];
         }
 
