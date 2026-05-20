@@ -2674,7 +2674,7 @@ abstract class Catalog extends database_object
      *     element?: array<string, string>,
      *     maps?: bool,
      *     error?: bool
-     *  }
+     * }
      */
     public static function update_media_from_tags(
         Song|Video|Podcast_Episode $media,
