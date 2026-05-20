@@ -856,11 +856,6 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Variable \\$captcha in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: src/Module/Application/Register/AddUserAction.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\SearchData\\\\ShowAction\\:\\:arrayToJSON\\(\\) has parameter \\$array with no type specified\\.$#"
 			count: 1
 			path: src/Module/Application/SearchData/ShowAction.php

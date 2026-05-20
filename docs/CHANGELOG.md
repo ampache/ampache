@@ -19,6 +19,8 @@ Work on cleaning up API6 has started as I look to begin Ampache 8
 * Don't people move/rename/delete upload folders when you don't own all the content
 * Missing typing on Search class
 * Documentation updates for searches
+* CLI
+  * Add more information to move and rename command output
 * Search
   * Add additional aliases to catch different rule names
   * Add `my_flagged_song`, `my_flagged_album` and `my_flagged_artist` to Album, Artist and Song searches
