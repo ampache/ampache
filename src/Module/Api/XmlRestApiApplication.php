@@ -98,7 +98,7 @@ final class XmlRestApiApplication implements ApiApplicationInterface
             'api_format' => 'xml'
         ];
 
-        if ($type !== '') {
+        if ($type !== null && $type !== '') {
             $parameters['type'] = $type;
         }
 
