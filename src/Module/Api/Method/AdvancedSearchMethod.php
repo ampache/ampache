@@ -125,7 +125,7 @@ final class AdvancedSearchMethod
                     case 'song_artist':
                     case 'album_artist':
                     case 'artist':
-                        echo Json_Data::artists_string($results, [], $user, $input['auth']);
+                        echo Json_Data::artists($results, [], $user, $input['auth']);
                         break;
                     case 'label':
                         echo Json_Data::labels($results);

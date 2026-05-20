@@ -81,7 +81,7 @@ final class SmartlistMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::playlists([$object_id], $user, $input['auth'], false, true, false);
+                echo Json_Data::playlists([$object_id], $user, $input['auth'], false, false);
                 break;
             default:
                 echo Xml_Data::playlists([$object_id], $user, $input['auth']);

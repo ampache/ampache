@@ -102,7 +102,7 @@ final class GetSimilarMethod
                 Json_Data::set_count(count($results));
                 switch ($type) {
                     case 'artist':
-                        echo Json_Data::artists_string($results, [], $user, $input['auth']);
+                        echo Json_Data::artists($results, [], $user, $input['auth']);
                         break;
                     case 'song':
                         echo Json_Data::songs($results, $user, $input['auth']);

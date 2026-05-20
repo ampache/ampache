@@ -102,7 +102,7 @@ final class PodcastCreateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::podcasts([$podcast->getId()], $user, $input['auth'], false, true, false);
+                echo Json_Data::podcasts([$podcast->getId()], $user, $input['auth'], false, false);
                 break;
             default:
                 echo Xml_Data::podcasts([$podcast->getId()], $user, $input['auth']);

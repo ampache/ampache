@@ -110,7 +110,6 @@ final class AlbumMethod implements MethodInterface
             }
         }
 
-        /** @var string $result */
         $result = $output->albums(
             [$album->getId()],
             $include,

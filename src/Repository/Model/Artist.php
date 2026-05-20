@@ -440,9 +440,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         if ($row = Dba::fetch_assoc($db_results)) {
             return [
                 "id" => (string)$row['id'],
-                "name" => $row['name'],
-                "prefix" => $row['prefix'],
-                "basename" => $row['basename']
+                "name" => (string)$row['name'],
+                "prefix" => (string)$row['prefix'],
+                "basename" => (string)$row['basename']
             ];
         }
 
