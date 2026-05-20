@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-07-12 08:50+1000\n"
+"POT-Creation-Date: 2025-07-14 08:58+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Parviz Homayun <parviz.homayun@gmail.com>, 2021\n"
 "Language-Team: Persian (Iran) (http://app.transifex.com/ampache/ampache/language/fa_IR/)\n"
@@ -2721,9 +2721,6 @@ msgstr "این تست اطمینان حاصل می کند متغیر web_path ش
 
 msgid "Update from tags complete"
 msgstr "به روز رسانی برچسب ها کامل شد"
-
-msgid "Amapche"
-msgstr ""
 
 msgid "Registration Validation"
 msgstr "اعتبار سنجی ثبت نام"
