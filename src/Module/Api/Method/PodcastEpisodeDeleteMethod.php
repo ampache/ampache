@@ -104,7 +104,7 @@ final class PodcastEpisodeDeleteMethod
      * @param User $user
      * @return bool
      */
-    public static function podcasts_episodes_delete(array $input, User $user): bool
+    public static function podcast_episodes_delete(array $input, User $user): bool
     {
         return self::podcast_episode_delete($input, $user);
     }

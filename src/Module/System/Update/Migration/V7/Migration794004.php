@@ -40,7 +40,7 @@ final class Migration794004 extends AbstractMigration
     public function migrate(): void
     {
         // set the original disk id to be the unique album_disk
-        $this->updateDatabase("UPDATE `album_disk` SET `catalog` = 0 WHERE `album_id` IN (SELECT `id` FROM `album` WHERE `name` = 'Unknown (Orphaned)' OR name = ? AND `catalog` = 0) ORDER BY `id` ASC LIMIT 1;", [T_('Unknown (Orphaned)')]);
+        $this->updateDatabase("UPDATE `album_disk` SET `catalog` = 0 WHERE `album_id` IN (SELECT `id` FROM `album` WHERE (`name` = 'Unknown (Orphaned)' OR `name` = ?) AND `catalog` = 0) ORDER BY `id` ASC LIMIT 1;", [T_('Unknown (Orphaned)')]);
 
         // Find duplicate orphans and remove them
         $tables = [
@@ -51,24 +51,27 @@ final class Migration794004 extends AbstractMigration
             'user_activity',
             'user_flag'
         ];
-        $db_results = Dba::read("SELECT `album_disk`.`id`, `album_disk`.`catalog` FROM `album_disk` LEFT JOIN `album` ON `album_id` = `album`.id WHERE `album`.`name` = 'Unknown (Orphaned)' OR `album`.`name` = ?;", [T_('Unknown (Orphaned)')]);
+        $db_results = Dba::read("SELECT `album_disk`.`id`, `album_disk`.`catalog` FROM `album_disk` LEFT JOIN `album` ON `album_id` = `album`.id WHERE (`album`.`name` = 'Unknown (Orphaned)' OR `album`.`name` = ?);", [T_('Unknown (Orphaned)')]);
         $orphan_id  = null;
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['catalog'] == 0) {
-                $orphan_id = $row['id'];
+                $orphan_id = (int)$row['id'];
             } else {
-                $results[] = $row['id'];
+                $results[] = (int)$row['id'];
             }
         }
-        foreach ($results as $album_disk_id) {
-            foreach ($tables as $table) {
-                $this->updateDatabase("UPDATE IGNORE `" . $table . "` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = 'album_disk'", [$orphan_id, $album_disk_id]);
+
+        if (is_int($orphan_id) && $orphan_id > 0) {
+            foreach ($results as $album_disk_id) {
+                foreach ($tables as $table) {
+                    $this->updateDatabase("UPDATE IGNORE `" . $table . "` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = 'album_disk'", [$orphan_id, $album_disk_id]);
+                }
+                Dba::write("DELETE FROM `album_disk` WHERE `id` = ?;", [$album_disk_id]);
             }
-            Dba::write("DELETE FROM `album_disk` WHERE `id` = ?;", [$album_disk_id]);
-        }
-        if ($results !== []) {
-            Catalog::clean_empty_albums();
+            if ($results !== []) {
+                Catalog::clean_empty_albums();
+            }
         }
     }
 }

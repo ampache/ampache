@@ -1108,8 +1108,8 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     public static function is_orphan(int $album_id = 0): bool
     {
         if ($album_id > 0) {
-            $sql        = "SELECT `id` FROM `album` WHERE `name` = 'Unknown (Orphaned)' OR name = ?;";
-            $db_results = Dba::query($sql, [T_('Unknown (Orphaned)')]);
+            $sql        = "SELECT `id` FROM `album` WHERE `id` = ? AND (`name` = 'Unknown (Orphaned)' OR `name` = ?);";
+            $db_results = Dba::query($sql, [$album_id, T_('Unknown (Orphaned)')]);
 
             return Dba::num_rows($db_results) > 0;
         }
