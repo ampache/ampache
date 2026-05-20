@@ -198,7 +198,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         }
 
         // update existing ID
-        if ($current_id) {
+        if (is_int($current_id) && $current_id > 0) {
             $db_results = Dba::read("SELECT * FROM `album_disk` WHERE `id` = ?;", [$current_id]);
             $row        = Dba::fetch_assoc($db_results);
             if (isset($row['id'])) {
@@ -221,7 +221,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         }
 
         // create the album_disk (if missing)
-        $db_results = Dba::write("REPLACE INTO `album_disk` (`album_id`, `disk`, `catalog`, `disksubtitle`) SELECT `album`.`id`, ?, CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END, ? FROM `album` WHERE `album`.`id` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle ?: null]);
+        $db_results = Dba::write("REPLACE INTO `album_disk` (`album_id`, `disk`, `catalog`, `disksubtitle`) SELECT `album`.`id`, ?, CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END, ? FROM `album` WHERE `album`.`id` = ?;", [$disk, $catalog_id, $disksubtitle ?: null, $album_id]);
         if (!$db_results) {
             return 0;
         }

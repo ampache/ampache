@@ -1013,7 +1013,7 @@ class Search extends playlist_object
         ];
         $this->_add_type_select('type', T_('Type'), 'boolean_numeric', $playlist_types, $t_playlist);
         $users = $this->getUserRepository()->getValidArray();
-        $this->_add_type_select('owner', T_('Owner'), 'boolean_numeric', $users, $t_playlist);
+        $this->_add_type_select('owner', T_('Owner'), 'user_numeric', $users, $t_playlist);
         $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_playlist);
     }
 
