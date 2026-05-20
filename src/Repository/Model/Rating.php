@@ -329,6 +329,10 @@ class Rating extends database_object
             return false;
         }
 
+        if (!self::is_valid($this->type)) {
+            return false;
+        }
+
         $time = time();
         // Everything else is a single item
         debug_event(self::class, sprintf('Setting rating for %s %d to %d', $this->type, $this->id, $rating), 5);

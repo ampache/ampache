@@ -42,6 +42,20 @@ class Userflag extends database_object
 {
     protected const DB_TABLENAME = 'user_flag';
 
+    private const FLAG_TYPES = [
+        'album_disk',
+        'album',
+        'artist',
+        'live_stream',
+        'playlist',
+        'podcast_episode',
+        'podcast',
+        'search',
+        'song',
+        'stream',
+        'video',
+    ];
+
     // Public variables
     public int $id; // The object_id of the object flagged
     public string $type; // The object_type of object we want
@@ -62,6 +76,11 @@ class Userflag extends database_object
     public function getId(): int
     {
         return (int)($this->id ?? 0);
+    }
+
+    public static function is_valid(string $type): bool
+    {
+        return in_array($type, self::FLAG_TYPES);
     }
 
     /**
@@ -212,6 +231,10 @@ class Userflag extends database_object
         }
 
         if ($user_id === 0) {
+            return false;
+        }
+
+        if (!self::is_valid($this->type)) {
             return false;
         }
 

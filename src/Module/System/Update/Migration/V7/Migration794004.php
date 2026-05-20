@@ -51,7 +51,7 @@ final class Migration794004 extends AbstractMigration
             'user_activity',
             'user_flag'
         ];
-        $db_results = Dba::read("SELECT `album_disk`.`id`, `album_disk`.`catalog` FROM `album_disk` LEFT JOIN `album` ON `album_id` = `album`.id WHERE (`album`.`name` = 'Unknown (Orphaned)' OR `album`.`name` = ?);", [T_('Unknown (Orphaned)')]);
+        $db_results = Dba::read("SELECT `album_disk`.`id`, `album_disk`.`catalog` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` WHERE (`album`.`name` = 'Unknown (Orphaned)' OR `album`.`name` = ?);", [T_('Unknown (Orphaned)')]);
         $orphan_id  = null;
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
