@@ -17,10 +17,10 @@
 -- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 192.168.1.9
--- Generation Time: Dec 19, 2025 at 10:36 AM
--- Server version: 11.8.3-MariaDB-0+deb13u1 from Debian
--- PHP Version: 8.4.15
+-- Host: 192.168.1.20
+-- Generation Time: May 20, 2026 at 08:00 PM
+-- Server version: 11.8.6-MariaDB-0+deb13u1 from Debian
+-- PHP Version: 8.4.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -101,6 +101,7 @@ CREATE TABLE IF NOT EXISTS `album` (
   `song_count` smallint(5) UNSIGNED DEFAULT 0,
   `artist_count` smallint(5) UNSIGNED DEFAULT 0,
   `song_artist_count` smallint(5) UNSIGNED DEFAULT 0,
+  `weight` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `year` (`year`),
@@ -131,6 +132,7 @@ CREATE TABLE IF NOT EXISTS `album_disk` (
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `disksubtitle` varchar(255) DEFAULT NULL,
+  `weight` int(11) NOT NULL DEFAULT 0,
   UNIQUE KEY `unique_album_disk` (`album_id`,`disk`,`catalog`),
   KEY `id_index` (`id`),
   KEY `album_id_type_index` (`album_id`,`disk`),
@@ -181,6 +183,7 @@ CREATE TABLE IF NOT EXISTS `artist` (
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `addition_time` int(11) UNSIGNED DEFAULT 0,
+  `weight` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -818,6 +821,7 @@ CREATE TABLE IF NOT EXISTS `podcast` (
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `episodes` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `weight` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -855,6 +859,7 @@ CREATE TABLE IF NOT EXISTS `podcast_episode` (
   `mode` enum('abr','vbr','cbr') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `channels` mediumint(9) DEFAULT NULL,
   `waveform` mediumblob DEFAULT NULL,
+  `weight` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1270,6 +1275,7 @@ CREATE TABLE IF NOT EXISTS `song` (
   `channels` mediumint(9) DEFAULT NULL,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `weight` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `album` (`album`),
   KEY `artist` (`artist`),
@@ -1487,7 +1493,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '793001'),
+('db_version', '794004'),
 ('Plugin_Last.FM', '000005'),
 ('Plugin_Home Dashboard', '2');
 
@@ -1913,6 +1919,7 @@ CREATE TABLE IF NOT EXISTS `video` (
   `mode` enum('abr','vbr','cbr') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `weight` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `file` (`file`(333)),
   KEY `enabled` (`enabled`),
