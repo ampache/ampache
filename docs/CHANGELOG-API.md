@@ -18,12 +18,16 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
   * Make `filter` optional for `podcast_episodes`
   * Add `song` for `id` in `playlist_add` to match `playlist_add_song`
   * Fallback to `bookmark` on empty `type` in `bookmark_delete`
+  * Decode HTML for Song lyrics on output
+* API5
+  * Decode HTML for Song lyrics on output
 
 ### Fixed (691014)
 
 * API6
   * Bad `podcast_update` function name
   * REST rewrite rules
+
 ## API 6.9.1 Build 13
 
 This version is being released for Ampache7 **only**

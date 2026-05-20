@@ -8,9 +8,11 @@ Media weight is calculated based on ratings, flags, play and skip counts.
 
 This allows you to order and search and sort by server popularity
 
+Work on cleaning up API6 has started as I look to begin Ampache 8
+
 ### Added (7.9.4)
 
-* Translations 2026-05-12
+* Translations 2026-05-20
 * Database 794004
   * Add popularity `weight` columns to media tables
   * Fix up Orphan Album Disk objects to be unique and update from tags
@@ -52,6 +54,8 @@ This allows you to order and search and sort by server popularity
   * Joins on some searches not applied
   * Playlist `owner` search
   * Missing collaboration in Playlist search
+* Subsonic
+  * Don't show HTML tags being for item lyrics
 
 ## Ampache 7.9.3
 
