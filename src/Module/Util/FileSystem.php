@@ -282,7 +282,7 @@ class FileSystem
             }
 
             if (!rmdir($dir)) {
-                throw new Exception('Cannot remove root');
+                throw new Exception('Cannot remove dir');
             }
         }
 
