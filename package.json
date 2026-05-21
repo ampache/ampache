@@ -13,7 +13,7 @@
     "jquery-datetimepicker": "^2.5.21",
     "jquery-ui": "1.13.*",
     "jquery.qrcode": "^1.0.3",
-    "js-cookie": "^2.2.1",
+    "js-cookie": "^3.0.7",
     "jscroll": "^2.4.1",
     "tag-it": "^2.0.0",
     "wunderbaum": "0.8.2"
