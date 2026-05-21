@@ -333,6 +333,10 @@ class Rating extends database_object
             return false;
         }
 
+        if (self::get_user_rating($user_id) === $rating) {
+            return true;
+        }
+
         $time = time();
         // Everything else is a single item
         debug_event(self::class, sprintf('Setting rating for %s %d to %d', $this->type, $this->id, $rating), 5);
