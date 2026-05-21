@@ -111,7 +111,7 @@ final class SongSorter implements SongSorterInterface
             if ($customPath !== null) {
                 // when you've set a sort path do not continue with full catalog sort
                 $this->processPath($customPath, $interactor);
-                continue;
+                break;
             }
 
             /* HINT: Catalog Name */
@@ -333,7 +333,7 @@ final class SongSorter implements SongSorterInterface
                         sprintf('Creating %s directory', $path),
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
-                    if (!mkdir($path)) {
+                    if (!mkdir($path, 0775)) {
                         /* HINT: Directory (File path) */
                         $interactor->info(
                             sprintf(T_("There was a problem creating this directory: %s"), $path),
@@ -375,6 +375,9 @@ final class SongSorter implements SongSorterInterface
             );
 
             if (empty($media->file) || !copy($media->file, $fullname)) {
+                if (is_file($fullname)) {
+                    unlink($fullname);
+                }
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('There was an error trying to copy file to "%s"'), $fullname),
@@ -397,7 +400,9 @@ final class SongSorter implements SongSorterInterface
                 // copy art that exists
                 if (file_exists($old_art)) {
                     if (copy($old_art, $folder_art) === false) {
-                        unlink($fullname); // delete the copied file on failure
+                        if (is_file($fullname)) {
+                            unlink($fullname);
+                        }
 
                         throw new RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
                     }
@@ -412,12 +417,14 @@ final class SongSorter implements SongSorterInterface
             $old_sum = Core::get_filesize($media->file);
 
             if ($new_sum != $old_sum || $new_sum == 0) {
+                if (is_file($fullname)) {
+                    unlink($fullname);
+                }
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('Size comparison failed. Not deleting "%s"'), $media->file),
                     true
                 );
-                unlink($fullname); // delete the copied file on failure
 
                 return false;
             } // end if sum's don't match

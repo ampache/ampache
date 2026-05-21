@@ -42,6 +42,20 @@ class Userflag extends database_object
 {
     protected const DB_TABLENAME = 'user_flag';
 
+    private const FLAG_TYPES = [
+        'album_disk',
+        'album',
+        'artist',
+        'live_stream',
+        'playlist',
+        'podcast_episode',
+        'podcast',
+        'search',
+        'song',
+        'stream',
+        'video',
+    ];
+
     // Public variables
     public int $id; // The object_id of the object flagged
     public string $type; // The object_type of object we want
@@ -62,6 +76,11 @@ class Userflag extends database_object
     public function getId(): int
     {
         return (int)($this->id ?? 0);
+    }
+
+    public static function is_valid(string $type): bool
+    {
+        return in_array($type, self::FLAG_TYPES);
     }
 
     /**
@@ -215,6 +234,14 @@ class Userflag extends database_object
             return false;
         }
 
+        if (!self::is_valid($this->type)) {
+            return false;
+        }
+
+        if ($this->get_flag($user_id) === $flagged) {
+            return true;
+        }
+
         $date = $date ?? time();
 
         debug_event(self::class, sprintf('Setting userflag for %s %d to %s (%s)', $this->type, $this->id, $flagged, $date), 4);
@@ -223,12 +250,17 @@ class Userflag extends database_object
             $sql    = "DELETE FROM `user_flag` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
             $params = [$this->id, $this->type, $user_id];
             parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [false]);
+
+            // adjust weight
+            Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` - 1 WHERE `id` = ?;", [$this->id]);
         } else {
             $sql    = "REPLACE INTO `user_flag` (`object_id`, `object_type`, `user`, `date`) VALUES (?, ?, ?, ?)";
             $params = [$this->id, $this->type, $user_id, $date];
             parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [1, $date]);
 
             $this->getUserActivityPoster()->post((int) $user_id, 'userflag', $this->type, $this->id, $date);
+
+            Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` + 1 WHERE `id` = ?;", [$this->id]);
         }
 
         Dba::write($sql, $params);

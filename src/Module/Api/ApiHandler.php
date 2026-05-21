@@ -106,6 +106,23 @@ final class ApiHandler implements ApiHandlerInterface
 
         $input        = $request->getQueryParams();
         $action       = $input['action'];
+        if ($action == 'bad_request') {
+            $this->logger->warning(
+                'Bad API request, check your HTTP Method is correct for your action',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
+                        T_('Access Denied'),
+                        $action,
+                        'system'
+                    )
+                )
+            );
+        }
         $is_handshake = $action == HandshakeMethod::ACTION;
         $is_ping      = $action == PingMethod::ACTION;
         $is_register  = $action == RegisterMethod::ACTION;
@@ -169,8 +186,6 @@ final class ApiHandler implements ApiHandlerInterface
         if ($api_format == 'json' && $api_version == 3) {
             $api_version = 6;
         }
-        // send the version to API calls (this is used to determine return data for api4/api5)
-        $input['api_version'] = $api_version;
 
         /*
          * Create a simplified session for header authenticated sessions
@@ -533,10 +548,11 @@ final class ApiHandler implements ApiHandlerInterface
      */
     public function normalizeAction(
         string $action,
-        string $type,
+        ?string $type,
         bool $hasFilter
     ): string {
         $action = match ($action) {
+            'add-song' => 'add_song',
             'albums_songs' => 'album_songs',
             'artists_albums' => 'artist_albums',
             'artists_songs' => 'artist_songs',
@@ -551,6 +567,7 @@ final class ApiHandler implements ApiHandlerInterface
             'labels_artists' => 'label_artists',
             'last-shouts' => 'last_shouts',
             'licenses_songs' => 'license_songs',
+            'live-streams' => 'live_streams',
             'me' => 'user',
             'now-playing' => 'now_playing',
             'playlist-create' => 'playlist_create',
@@ -562,6 +579,7 @@ final class ApiHandler implements ApiHandlerInterface
             'playlists_add' => 'playlist_add',
             'podcast-episodes' => 'podcast_episodes',
             'record-play' => 'record_play',
+            'remove-song' => 'remove_song',
             'smartlists_delete' => 'smartlist_delete',
             'smartlists_songs' => 'smartlist_songs',
             'search-songs' => 'search_songs',
@@ -597,7 +615,7 @@ final class ApiHandler implements ApiHandlerInterface
             };
         }
 
-        if ($type !== '') {
+        if ($type !== null && $type !== '') {
             if ($type === 'catalog' && ($action === 'create' || $action === 'add')) {
                 $action = 'catalog_create';
             }
@@ -606,6 +624,9 @@ final class ApiHandler implements ApiHandlerInterface
             }
             if ($type === 'podcast' && $action === 'podcast_episode') {
                 $action = 'podcast_episodes';
+            }
+            if ($action === 'preferences' && ($type === 'user' || $type === 'system')) {
+                $action = $type . '_' . $action;
             }
 
             if ($action === 'create' && ($type === 'album' || $type === 'artist' || $type === 'playlist' || $type === 'smartlist' || $type === 'podcast' || $type === 'podcast_episode' || $type === 'song' || $type === 'video')) {

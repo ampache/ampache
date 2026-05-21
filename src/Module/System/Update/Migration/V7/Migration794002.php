@@ -28,27 +28,19 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
- * Fix Licenses on uploaded Songs and delete bad data
+ * Add weight columns to album_disk table
  */
-final class Migration793001 extends AbstractMigration
+final class Migration794002 extends AbstractMigration
 {
-    protected array $changelog = ['Fix Licenses on uploaded Songs and delete bad data'];
+    protected array $changelog = ['Add weight columns to album_disk table'];
 
     protected bool $warning = true;
 
     public function migrate(): void
     {
-        $sql        = "SELECT * FROM `license` WHERE `name` REGEXP '^-?[0-9]+$' AND CAST(`name` AS UNSIGNED) > 0 AND `description` = '' AND `external_link` = '' AND `order` IS NULL;";
-        $db_results = Dba::query($sql);
+        Dba::write("ALTER TABLE `album_disk` DROP COLUMN `weight`;", [], true);
+        $this->updateDatabase("ALTER TABLE `album_disk` ADD COLUMN `weight` int(11) SIGNED NOT NULL DEFAULT '0';");
 
-        if (Dba::num_rows($db_results) > 0) {
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $bad_id  = (int) $row['id'];
-                $good_id = (int) $row['name'];
-                $this->updateDatabase("UPDATE `song` SET `license` = ? WHERE `license` = ?;", [$good_id, $bad_id]);
-            }
-        }
-
-        $this->updateDatabase("DELETE FROM `license` WHERE `name` REGEXP '^-?[0-9]+$' AND CAST(`name` AS UNSIGNED) > 0 AND `description` = '' AND `external_link` = '' AND `order` IS NULL;");
+        $this->updateDatabase("UPDATE `album_disk` LEFT JOIN (SELECT `object_id`, COUNT(*) AS `rating_count` FROM `rating`  WHERE `object_type` = 'album_disk' GROUP BY `object_id`) `rating` ON `album_disk`.`id` = `rating`.`object_id` LEFT JOIN (SELECT `object_id`, COUNT(*) AS `flag_count` FROM `user_flag` WHERE `object_type` = 'album_disk' GROUP BY `object_id`) `flag` ON `album_disk`.`id` = `flag`.`object_id` SET `album_disk`.`weight` = COALESCE(`rating`.`rating_count`, 0) + COALESCE(`flag`.`flag_count`, 0) + (COALESCE(`album_disk`.`total_count`, 0) - COALESCE(`album_disk`.`total_skip`, 0));");
     }
 }

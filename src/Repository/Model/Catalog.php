@@ -1051,6 +1051,9 @@ abstract class Catalog extends database_object
             return [-1];
         }
 
+        // orphaned albums are in catalog 0
+        $results[] = 0;
+
         return $results;
     }
 
@@ -2588,7 +2591,7 @@ abstract class Catalog extends database_object
 
             $file = scrub_out($song->file);
             if (array_key_exists('change', $info) && $info['change']) {
-                if ($diff && array_key_exists($type, $info['element'])) {
+                if ($diff && isset($info['element']) && array_key_exists($type, $info['element'])) {
                     $element   = explode(' --> ', (string)$info['element'][$type]);
                     $return_id = (int)$element[1];
                 }
@@ -2666,6 +2669,12 @@ abstract class Catalog extends database_object
      * This is a 'wrapper' function calls the update function for the media
      * type in question
      * @param list<string> $gather_types
+     * @return array{
+     *     change?: bool,
+     *     element?: array<string, string>,
+     *     maps?: bool,
+     *     error?: bool
+     * }
      */
     public static function update_media_from_tags(
         Song|Video|Podcast_Episode $media,
@@ -2814,18 +2823,36 @@ abstract class Catalog extends database_object
         } elseif (!is_array($results['genre'])) {
             $results['genre'] = [$results['genre']];
         }
-        $results['user_upload']      = $results['user_upload'] ?? null;
-        $results['artist_mbid']      = $results['mb_artistid'] ?? null;
-        $results['artist']           = self::check_length($results['artist']);
+
+        $results['user_upload'] = $results['user_upload'] ?? null;
+        $results['artist_mbid'] = $results['mb_artistid'] ?? null;
+        $results['artist']      = self::check_length($results['artist']);
+        if (empty($results['artists']) && !empty($results['artist'])) {
+            $results['artists'] = [$results['artist']];
+        }
+
+        $results['album']            = self::check_length($results['album']);
         $results['album_mbid']       = $results['mb_albumid'] ?? null;
         $results['album_mbid_group'] = $results['mb_albumid_group'] ?? null;
-        $results['album']            = self::check_length($results['album']);
         $results['release_type']     = self::check_length($results['release_type'], 32);
-        $results['albumartist_mbid'] = $results['mb_albumartistid'] ?? null;
-        $results['albumartist']      = (empty($results['albumartist']))
-            ? $song?->get_album_artist_fullname()
-            : self::check_length($results['albumartist']);
+        if (empty($results['album'])) {
+            $results['album_id'] = ($song?->album > 0)
+                ? $song->album
+                : Album::check($song?->catalog ?? 0, '', $song?->year ?? 0, null, null, $song?->get_album_artist_fullname() ?? $song?->get_artist_fullname() ?? null);
+        }
+
+        $results['albumartist'] = self::check_length($results['albumartist']);
         $results['albumartist'] ??= null;
+        $results['albumartist_mbid'] = $results['mb_albumartistid'] ?? null;
+        if (empty($results['albumartist'])) {
+            $results['albumartist_id'] = ($song && $song->get_album_artist() > 0 && T_(($song->get_album_artist_fullname()) ?? T_('Unknown (Orphaned)')) !== T_('Unknown (Orphaned)'))
+                ? $song->get_album_artist()
+                : Artist::check($song?->get_artist_fullname() ?? $results['artist'], $results['albumartist_mbid']);
+        }
+
+        if (empty($results['albumartist']) && $results['albumartist_id'] > 0) {
+            $results['albumartist'] = Artist::get_fullname_by_id($results['albumartist_id']);
+        }
 
         $results['original_year']  = (!empty($results['original_year'])) ? (int)$results['original_year'] : null;
         $results['barcode']        = self::check_length($results['barcode'], 64);
@@ -2980,9 +3007,8 @@ abstract class Catalog extends database_object
             $artist = $artists_array[0];
         }
 
-
         // check whether this artist exists (and the album_artist)
-        $is_upload_albumartist = ($song->albumartist) ? Artist::is_upload($song->albumartist) : false;
+        $is_upload_albumartist = ($song->albumartist && Artist::is_upload($song->albumartist));
         if ($is_upload_albumartist) {
             debug_event(self::class, $song->albumartist . ' : is an uploaded album artist', 4);
             $artists_array          = [];
@@ -3017,8 +3043,10 @@ abstract class Catalog extends database_object
             $new_song->artist = $song->artist;
         }
 
+        $is_orphan_album = $song->album && Album::is_orphan($song->album);
+
         // check whether this album exists
-        $new_song->album = ($is_upload_artist || $is_upload_albumartist)
+        $new_song->album = (!$is_orphan_album && ($is_upload_artist || $is_upload_albumartist))
             ? $song->album
             : Album::check($new_song->catalog, $album, $new_song->year, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
         if ($new_song->album === 0) {
@@ -3404,24 +3432,19 @@ abstract class Catalog extends database_object
      * @param array<string, mixed> $results
      * @return array{
      *     change: bool,
-     *     element: bool,
+     *     element: array<string, string>,
      * }
      */
     public static function update_podcast_episode_from_tags(array $results, Podcast_Episode $podcast_episode): array
     {
         $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `update_time` = ?, `state` = 'completed' WHERE `id` = ?";
-        Dba::write($sql, [$podcast_episode->file, $results['size'], $results['time'], $results['bitrate'], $results['rate'], $results['mode'], $results['channels'], time(), $podcast_episode->id]);
-
-        $podcast_episode->size     = $results['size'];
-        $podcast_episode->time     = $results['time'];
-        $podcast_episode->bitrate  = $results['bitrate'];
-        $podcast_episode->rate     = $results['rate'];
-        $podcast_episode->mode     = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
-        $podcast_episode->channels = $results['channels'];
+        Dba::write($sql, [$podcast_episode->file, $results['size'], $results['time'], $results['bitrate'], $results['rate'], (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr', $results['channels'], time(), $podcast_episode->id]);
 
         $array            = [];
         $array['change']  = true;
-        $array['element'] = false;
+        $array['element'] = [];
+
+        $array['element']['podcast_episode'] = '';
 
         return $array;
     }
@@ -4419,7 +4442,7 @@ abstract class Catalog extends database_object
         // Create subdirectory based on the 2 last digit of the SongID. We prevent having thousands of file in one directory.
         $path .= '/' . $catalog_id . '/' . substr((string)$object_id, -1, 1) . '/' . substr((string)$object_id, -2, 1) . '/';
         if (!file_exists($path)) {
-            mkdir($path, 0755, true);
+            mkdir($path, 0775, true);
         }
 
         return rtrim(trim($path), '/') . '/' . $object_id . '.' . $target;

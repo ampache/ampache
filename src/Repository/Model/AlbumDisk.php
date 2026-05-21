@@ -55,6 +55,8 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public int $total_skip = 0;
 
+    private int $weight = 0;
+
     public ?string $disksubtitle = null;
 
     /**
@@ -188,22 +190,22 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     {
         // check if the album_disk exists
         $db_results = (!empty($disksubtitle))
-            ? Dba::read("SELECT * FROM `album_disk` WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ? AND `disksubtitle` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle])
-            : Dba::read("SELECT * FROM `album_disk` WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ? AND (`disksubtitle` = '' OR `disksubtitle` IS NULL);", [$album_id, $disk, $catalog_id]);
+            ? Dba::read("SELECT `album_disk`.* FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END AND album_disk.`disksubtitle` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle])
+            : Dba::read("SELECT `album_disk`.* FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END AND (`album_disk`.`disksubtitle` = '' OR `album_disk`.`disksubtitle` IS NULL);", [$album_id, $disk, $catalog_id]);
         $row = Dba::fetch_assoc($db_results);
         if (isset($row['id'])) {
             return (int)$row['id'];
         }
 
         // update existing ID
-        if ($current_id) {
+        if (is_int($current_id) && $current_id > 0) {
             $db_results = Dba::read("SELECT * FROM `album_disk` WHERE `id` = ?;", [$current_id]);
             $row        = Dba::fetch_assoc($db_results);
             if (isset($row['id'])) {
                 // alter the existing disk after editing
                 if (!Dba::write("UPDATE `album_disk` SET `album_id` = ?, `disk` = ?, `catalog` = ?, `disksubtitle` = ? WHERE `id` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle, $current_id])) {
                     // Duplicates might collide here
-                    $db_results = Dba::read("SELECT `id` FROM `album_disk` WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ? AND `disksubtitle` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle ?: null, $current_id]);
+                    $db_results = Dba::read("SELECT `album_disk`.`id` FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END AND `album_disk`.`disksubtitle` = ?;", [$album_id, $disk, $catalog_id, ($disksubtitle ?: null)]);
                     if ($row = Dba::fetch_assoc($db_results)) {
                         $current_id = (int)$row['id'];
                     }
@@ -219,20 +221,20 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         }
 
         // create the album_disk (if missing)
-        $db_results = Dba::write("REPLACE INTO `album_disk` (`album_id`, `disk`, `catalog`, `disksubtitle`) VALUES (?, ?, ?, ?);", [$album_id, $disk, $catalog_id, $disksubtitle ?: null]);
+        $db_results = Dba::write("REPLACE INTO `album_disk` (`album_id`, `disk`, `catalog`, `disksubtitle`) SELECT `album`.`id`, ?, CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END, ? FROM `album` WHERE `album`.`id` = ?;", [$disk, $catalog_id, $disksubtitle ?: null, $album_id]);
         if (!$db_results) {
             return 0;
         }
 
-        $album_id = Dba::insert_id();
+        $album_disk_id = Dba::insert_id();
 
         // count a new song on the new disk right away
-        $sql = "UPDATE `album_disk` SET `song_count` = `song_count` + 1 WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ?";
-        Dba::write($sql, [$album_id, $disk, $catalog_id]);
+        $sql = "UPDATE `album_disk` SET `song_count` = `song_count` + 1 WHERE `id` = ?;";
+        Dba::write($sql, [$album_disk_id]);
         if (!empty($disksubtitle)) {
             // set the subtitle on insert too
-            $sql = "UPDATE `album_disk` SET `disksubtitle` = ? WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ?";
-            Dba::write($sql, [$disksubtitle, $album_id, $disk, $catalog_id]);
+            $sql = "UPDATE `album_disk` SET `disksubtitle` = ? WHERE `id` = ?;";
+            Dba::write($sql, [$disksubtitle, $album_disk_id]);
         }
 
         return (int)$album_id;

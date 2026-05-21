@@ -59,6 +59,9 @@ class Upload
             debug_event(self::class, 'Uploading to catalog ID ' . $catalog_id, 4);
 
             $rootdir = self::get_root($catalog);
+            if ($rootdir === null) {
+                return self::rerror();
+            }
             // check the catalog path is valid
             $targetdir = self::check_target_dir($rootdir);
             if (!$targetdir) {
@@ -279,8 +282,12 @@ class Upload
     {
         debug_event(self::class, 'check_album: looking for ' . $album_name, 5);
         if ($album_name !== '') {
-            $album_id = Album::check(AmpConfig::get('upload_catalog'), $album_name, 0, null, null, $artist_id);
-            if ((int)$album_id === 0) {
+            $upload_catalog = AmpConfig::get('upload_catalog', 0);
+            if ($upload_catalog === 0) {
+                return null;
+            }
+            $album_id = Album::check($upload_catalog, $album_name, 0, null, null, $artist_id);
+            if ($album_id === 0) {
                 debug_event(self::class, 'Album information required, uploaded song skipped.', 3);
 
                 return null;
@@ -338,31 +345,29 @@ class Upload
     /**
      * get_root
      */
-    public static function get_root(?Catalog $catalog = null, ?string $username = null): string
+    public static function get_root(Catalog $catalog, ?string $username = null): ?string
     {
-        if ($catalog == null) {
-            $catalog_id = AmpConfig::get('upload_catalog');
-            if ($catalog_id > 0) {
-                $catalog = Catalog::create_from_id($catalog_id);
-            }
-        }
         if ($username === null) {
             $username = Core::get_global('user')?->username;
         }
 
-        $rootdir = "";
-        if ($catalog !== null && $catalog->id) {
-            $pathname = realpath($catalog->get_path());
-            if (
-                is_string($pathname) &&
-                !empty($pathname)
-            ) {
-                $rootdir = $pathname;
-                if (AmpConfig::get('upload_subdir')) {
-                    $rootdir .= DIRECTORY_SEPARATOR . $username;
-                    if (!Core::is_readable($rootdir)) {
-                        debug_event(self::class, 'Target user directory `' . $rootdir . "` doesn't exist. Creating it...", 5);
-                        mkdir($rootdir);
+        $rootdir  = "";
+        $pathname = realpath($catalog->get_path());
+        if (
+            is_string($pathname) &&
+            !empty($pathname)
+        ) {
+            $rootdir = $pathname;
+            if (AmpConfig::get('upload_subdir')) {
+                if (empty($username)) {
+                    return null;
+                }
+
+                $rootdir .= DIRECTORY_SEPARATOR . $username;
+                if (!Core::is_readable($rootdir)) {
+                    debug_event(self::class, 'Target user directory `' . $rootdir . "` doesn't exist. Creating it...", 5);
+                    if (!mkdir($rootdir, 0775)) {
+                        return null;
                     }
                 }
             }

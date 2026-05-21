@@ -44,6 +44,8 @@ final class BookmarkDeleteMethod
 {
     public const ACTION = 'bookmark_delete';
 
+    public const REST_ACTION = 'bookmarks_delete';
+
     /**
      * bookmark_delete
      * MINIMUM_API_VERSION=5.0.0
@@ -56,7 +58,7 @@ final class BookmarkDeleteMethod
      *
      * @param array{
      *     filter: string,
-     *     type: string,
+     *     type?: string,
      *     client?: string,
      *     api_format: string,
      *     auth: string,
@@ -66,11 +68,11 @@ final class BookmarkDeleteMethod
      */
     public static function bookmark_delete(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, ['filter', 'type'], self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int)$input['filter'];
-        $type      = $input['type'];
+        $type      = $input['type'] ?? 'bookmark';
         $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : null;
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
@@ -123,6 +125,22 @@ final class BookmarkDeleteMethod
         Api::message('Deleted Bookmark: ' . $object_id, $input['api_format']);
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     type?: string,
+     *     client?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function bookmarks_delete(array $input, User $user): bool
+    {
+        return self::bookmark_delete($input, $user);
     }
 
     private static function getBookmarkRepository(): BookmarkRepositoryInterface

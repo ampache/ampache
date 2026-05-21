@@ -201,71 +201,6 @@ parameters:
 			path: src/Module/Api/Json5_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:artists\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:genre_array\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:genres\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:labels\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:playlists\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:podcast_episodes\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:podcasts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:songs\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:users\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:videos\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 10
-			path: src/Module/Api/Method/AdvancedSearchMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/AlbumSongsMethod.php
-
-		-
 			message: "#^Cannot call method getId\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Handshake3Method.php
@@ -536,26 +471,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/UrlToSong5Method.php
 
 		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/ArtistAlbumsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/ArtistMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/ArtistSongsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/ArtistsMethod.php
-
-		-
 			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
 			count: 1
 			path: src/Module/Api/Method/CatalogActionMethod.php
@@ -571,69 +486,9 @@ parameters:
 			path: src/Module/Api/Method/CatalogFolderMethod.php
 
 		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/FollowersMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/FollowingMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/GenreAlbumsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/GenreArtistsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/GenreMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/GenreSongsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/GenresMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 2
-			path: src/Module/Api/Method/GetSimilarMethod.php
-
-		-
 			message: "#^Cannot call method getId\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
 			count: 1
 			path: src/Module/Api/Method/HandshakeMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LabelArtistsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LabelMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LabelsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LicenseSongsMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\MethodInterface\\:\\:handle\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -641,94 +496,9 @@ parameters:
 			path: src/Module/Api/Method/MethodInterface.php
 
 		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistCreateMethod.php
-
-		-
 			message: "#^Variable \\$items in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PlaylistEditMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistGenerateMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistSongsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PodcastCreateMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PodcastEpisodeMethod.php
-
-		-
-			message: "#^Offset 'filter' on array\\{filter\\: string, offset\\?\\: string, limit\\?\\: string, cond\\?\\: string, sort\\?\\: string, api_format\\: string, auth\\: string\\} on left side of \\?\\? always exists and is not nullable\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PodcastEpisodesMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PodcastMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PodcastsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/SearchSongsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/SmartlistMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/SmartlistSongsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/SmartlistsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/SongMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/SongsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 7
-			path: src/Module/Api/Method/StatsMethod.php
 
 		-
 			message: "#^If condition is always true\\.$#"
@@ -739,51 +509,6 @@ parameters:
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Module/Api/Method/SystemUpdateMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UrlToSongMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserPlaylistsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UserSmartlistsMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UsersMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/VideoMethod.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/VideosMethod.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\ApiOutputInterface\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Output/ApiOutputInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\JsonOutput\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Output/JsonOutput.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Output\\\\JsonOutput\\:\\:podcastEpisodes\\(\\) should return string but returns array\\|string\\.$#"
-			count: 1
-			path: src/Module/Api/Output/JsonOutput.php
 
 		-
 			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
@@ -1129,11 +854,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<1, max\\>, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Variable \\$captcha in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 2
-			path: src/Module/Application/Register/AddUserAction.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\SearchData\\\\ShowAction\\:\\:arrayToJSON\\(\\) has parameter \\$array with no type specified\\.$#"
@@ -1641,11 +1361,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
 		-
-			message: "#^Argument of an invalid type array\\|bool supplied for foreach, only iterables are supported\\.$#"
-			count: 2
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:Find\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
@@ -1999,16 +1714,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Stream_Url\\:\\:\\$properties has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream_Url.php
-
-		-
-			message: "#^Call to function array_key_exists\\(\\) with 'count' and array\\{album_map\\?\\: true, image\\?\\: true, song\\: bool, catalog\\: bool, catalog_map\\: mixed\\} will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/AlbumSearch.php
-
-		-
-			message: "#^Call to function array_key_exists\\(\\) with 'count' and array\\{album\\?\\: true, catalog\\: bool, image\\?\\: true, song\\?\\: true, catalog_map\\: mixed\\} will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/ArtistSearch.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:getId3Metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -3007,7 +2712,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$array of function array_diff expects array, array\\<int, string\\>\\|false given\\.$#"
-			count: 2
+			count: 1
 			path: src/Module/Util/FileSystem.php
 
 		-
@@ -3536,21 +3241,6 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthSignatureMethod_RSA_SHA1.php
 
 		-
-			message: "#^Parameter \\#1 \\$key of function openssl_free_key expects OpenSSLAsymmetricKey, OpenSSLAsymmetricKey\\|false given\\.$#"
-			count: 2
-			path: src/Module/Util/OAuth/OAuthSignatureMethod_RSA_SHA1.php
-
-		-
-			message: "#^Parameter \\#3 \\$private_key of function openssl_sign expects array\\|OpenSSLAsymmetricKey\\|OpenSSLCertificate\\|string, OpenSSLAsymmetricKey\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/OAuth/OAuthSignatureMethod_RSA_SHA1.php
-
-		-
-			message: "#^Parameter \\#3 \\$public_key of function openssl_verify expects array\\|OpenSSLAsymmetricKey\\|OpenSSLCertificate\\|string, OpenSSLAsymmetricKey\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/OAuth/OAuthSignatureMethod_RSA_SHA1.php
-
-		-
 			message: "#^Binary operation \"\\.\" between 'oauth_token\\=' and array\\<string\\>\\|string results in an error\\.$#"
 			count: 1
 			path: src/Module/Util/OAuth/OAuthToken.php
@@ -3991,11 +3681,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_media_from_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_song_from_tags\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -4117,16 +3802,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:year_search\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$rules has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$types has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 

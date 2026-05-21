@@ -136,8 +136,17 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
             }
 
             // handle file moving
-            if (is_string($moveFilePath) && $moveFilePath != $filePath) {
-                // rename path doesn't exist
+            if (is_string($moveFilePath)) {
+                if ($moveFilePath === $filePath) {
+                    $interactor->error(
+                        T_('Error') . ': ' . T_('File already exists') . ' ' . $moveFilePath,
+                        true
+                    );
+
+                    return;
+                }
+
+                // rename path exists
                 if (is_file($moveFilePath)) {
                     $interactor->error(
                         T_('Error') . ': ' . T_('File already exists') . ' ' . $moveFilePath,
@@ -152,12 +161,14 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                         sprintf(T_('Updated: %s'), sprintf('`%s` -> `%s`', $filePath, $moveFilePath)),
                         true
                     );
-                } else {
-                    $interactor->error(
-                        T_('Error') . ': ' . $filePath,
-                        true
-                    );
+
+                    return;
                 }
+
+                $interactor->error(
+                    T_('Error') . ': ' . $filePath,
+                    true
+                );
 
                 return;
             }

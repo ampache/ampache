@@ -38,6 +38,8 @@ final class PlaylistRemoveSongMethod
 {
     public const ACTION = 'playlist_remove_song';
 
+    public const REST_ACTION = 'playlist_remove_song_edit';
+
     /**
      * playlist_remove_song
      * MINIMUM_API_VERSION=380001
@@ -103,5 +105,22 @@ final class PlaylistRemoveSongMethod
         }
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     song?: string,
+     *     track?: string,
+     *     clear?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function playlist_remove_song_edit(array $input, User $user): bool
+    {
+        return self::playlist_remove_song($input, $user);
     }
 }

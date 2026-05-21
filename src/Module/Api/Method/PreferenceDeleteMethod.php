@@ -40,6 +40,8 @@ final class PreferenceDeleteMethod
 {
     public const ACTION = 'preference_delete';
 
+    public const REST_ACTION = 'preferences_delete';
+
     /**
      * preference_delete
      * MINIMUM_API_VERSION=5.0.0
@@ -82,5 +84,19 @@ final class PreferenceDeleteMethod
         Api::message("Deleted: $pref_name", $input['api_format']);
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function preferences_delete(array $input, User $user): bool
+    {
+        return self::preference_delete($input, $user);
     }
 }

@@ -1432,11 +1432,15 @@ class OpenSubsonic_Xml_Data
      */
     private static function _addInternetRadioStation(SimpleXMLElement $xml, Live_Stream $radio): void
     {
+        $sub_id = OpenSubsonic_Api::getLiveStreamSubId($radio->id);
         $xradio = self::_addChildToResultXml($xml, 'internetRadioStation');
-        $xradio->addAttribute('id', OpenSubsonic_Api::getLiveStreamSubId($radio->id));
+        $xradio->addAttribute('id', $sub_id);
         $xradio->addAttribute('name', (string)$radio->name);
         $xradio->addAttribute('streamUrl', (string)$radio->url);
         $xradio->addAttribute('homepageUrl', (string)$radio->site_url);
+        if ($radio->has_art()) {
+            $xradio->addAttribute('coverArt', $sub_id);
+        }
     }
 
     /**
@@ -1575,7 +1579,7 @@ class OpenSubsonic_Xml_Data
             $text    = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
             $text    = preg_replace('/\\n\\n/i', "\n", (string)$text);
             $text    = str_replace("\r", '', (string)$text);
-            $xlyrics = self::_addChildToResultXml($xml, 'lyrics', htmlspecialchars($text));
+            $xlyrics = self::_addChildToResultXml($xml, 'lyrics', html_entity_decode($text));
             if ($artist) {
                 $xlyrics->addAttribute('artist', $artist);
             }
@@ -1612,7 +1616,7 @@ class OpenSubsonic_Xml_Data
             $text = preg_replace('/\\n\\n/i', "\n", (string)$text);
             $text = str_replace("\r", '', (string)$text);
 
-            foreach (explode("\n", htmlspecialchars($text)) as $line) {
+            foreach (explode("\n", html_entity_decode($text)) as $line) {
                 if (!empty($line)) {
                     $xline = self::_addChildToResultXml($xlyrics, 'line');
                     $xline->addAttribute('value', $line);

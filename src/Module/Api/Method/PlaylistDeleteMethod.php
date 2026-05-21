@@ -39,6 +39,8 @@ final class PlaylistDeleteMethod
 {
     public const ACTION = 'playlist_delete';
 
+    public const REST_ACTION = 'playlists_delete';
+
     /**
      * playlist_delete
      * MINIMUM_API_VERSION=380001
@@ -71,5 +73,19 @@ final class PlaylistDeleteMethod
         }
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function playlists_delete(array $input, User $user): bool
+    {
+        return self::playlist_delete($input, $user);
     }
 }

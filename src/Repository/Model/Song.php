@@ -115,6 +115,8 @@ class Song extends database_object implements
 
     public int $total_skip = 0;
 
+    private int $weight = 0;
+
     /**
      * song_data table
      */
@@ -338,7 +340,7 @@ class Song extends database_object implements
             $album_id = (int)($results['album_id']);
         } else {
             $album_id = (empty($album))
-                ? 0
+                ? Album::check($catalog, '', $year, null, null, ($albumartist ?? $artist ?? null))
                 : Album::check($catalog, $album, $year, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
         }
 
@@ -992,7 +994,7 @@ class Song extends database_object implements
             // followup on some stats too
             Stats::insert('album', $this->album, $user_id, $agent, $location, 'stream', $date);
             if ($this->album_disk) {
-                Stats::count('album_disk', $this->album_disk, 'up');
+                Stats::count('album_disk', [$this->album_disk], 'up');
             }
             // insert plays for song and album artists
             $artists = array_unique(array_merge(self::get_parent_array($this->id), self::get_parent_array($this->album, 'album')));

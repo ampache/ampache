@@ -40,6 +40,8 @@ final class CatalogDeleteMethod
 {
     public const ACTION = 'catalog_delete';
 
+    public const REST_ACTION = 'catalogs_delete';
+
     /**
      * catalog_delete
      * MINIMUM_API_VERSION=6.0.0
@@ -83,5 +85,19 @@ final class CatalogDeleteMethod
         Api::message('Deleted Catalog: ' . $catalog_id, $input['api_format']);
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function catalogs_delete(array $input, User $user): bool
+    {
+        return self::catalog_delete($input, $user);
     }
 }

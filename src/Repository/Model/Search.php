@@ -46,6 +46,7 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use JsonException;
 
 /**
  * Search-related voodoo.  Beware tentacles.
@@ -73,7 +74,8 @@ class Search extends playlist_object
 
     public ?string $type = 'public'; // override playlist_object
 
-    public $rules; // rules used to run a search (User chooses rules from available types for that object). JSON string to decoded to array
+    /** @var array<int, array<int, mixed>> $rules */
+    public array $rules = []; // rules used to run a search (User chooses rules from available types for that object). JSON string to decoded to array
 
     public ?string $logic_operator = 'and';
 
@@ -85,10 +87,11 @@ class Search extends playlist_object
 
     public User $search_user; // user running the search
 
-    public $types = []; // rules that are available to the objectType (title, year, rating, etc)
+    /** @var array<int, array<string, mixed>> $types */
+    public array $types = []; // rules that are available to the objectType (title, year, rating, etc)
 
     /** @var array<string, array<int, array{name: string, description: string, sql: string, preg_match?: string|array{string, string}, preg_replace?:string|array{string, string}}>> $basetypes */
-    public $basetypes = []; // rule operator subtypes (numeric, text, boolean, etc)
+    public array $basetypes = []; // rule operator subtypes (numeric, text, boolean, etc)
 
     private SearchInterface $searchType;
 
@@ -120,18 +123,15 @@ class Search extends playlist_object
             $info = $this->get_info($search_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 if ($key == 'rules') {
-                    $this->rules = json_decode((string)$value, true);
-                    if (!is_array($this->rules)) {
-                        debug_event(self::class, "Can't decode key 'rules'. Not a valid json.", 1);
+                    try {
+                        $this->rules = json_decode((string) $value, true, 512, JSON_THROW_ON_ERROR);
+                    } catch (JsonException $error) {
+                        debug_event(self::class, "Can't decode key 'rules'. Not a valid json. " . $error, 1);
                         $this->rules = [];
                     }
                 } else {
                     $this->$key = $value;
                 }
-            }
-
-            if (!is_array($this->rules)) {
-                $this->rules = [];
             }
 
             // make sure saved rules match the correct names
@@ -613,8 +613,8 @@ class Search extends playlist_object
 
         $t_song_data = T_('Song Data');
         $this->_add_type_text('title', T_('Title'), $t_song_data);
-        $this->_add_type_text('album', T_('Album'), $t_song_data);
-        $this->_add_type_text('artist', T_('Song Artist'), $t_song_data);
+        $this->_add_type_text('album', T_('Album Title'), $t_song_data);
+        $this->_add_type_text('song_artist', T_('Song Artist'), $t_song_data);
         $this->_add_type_text('album_artist', T_('Album Artist'), $t_song_data);
         $this->_add_type_text('composer', T_('Composer'), $t_song_data);
         $this->_add_type_numeric('track', T_('Track'), 'numeric', $t_song_data);
@@ -631,12 +631,15 @@ class Search extends playlist_object
             $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('albumrating', T_('My Rating (Album)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('artistrating', T_('My Rating (Artist)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_boolean('my_flagged', T_('My Favorite Songs'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_song', T_('My Favorite Songs'), 'boolean', $t_ratings);
             $this->_add_type_boolean('my_flagged_album', T_('My Favorite Albums'), 'boolean', $t_ratings);
             $this->_add_type_boolean('my_flagged_artist', T_('My Favorite Artists'), 'boolean', $t_ratings);
             $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
             $this->_add_type_text('favorite_album', T_('Favorites (Album)'), $t_ratings);
             $this->_add_type_text('favorite_artist', T_('Favorites (Artist)'), $t_ratings);
+            $this->_add_type_numeric('weight_song', T_('Song popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_album', T_('Album popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_artist', T_('Artist popularity score'), 'numeric', $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
             $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
             $this->_add_type_select('other_user_album', T_('Another User (Album)'), 'user_numeric', $users, $t_ratings);
@@ -795,6 +798,12 @@ class Search extends playlist_object
             $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('songrating', T_('My Rating (Song)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('albumrating', T_('My Rating (Album)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_boolean('my_flagged_song', T_('My Favorite Songs'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_album', T_('My Favorite Albums'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_artist', T_('My Favorite Artists'), 'boolean', $t_ratings);
+            $this->_add_type_numeric('weight_song', T_('Song popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_album', T_('Album popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_artist', T_('Artist popularity score'), 'numeric', $t_ratings);
             $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
             $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
@@ -873,7 +882,7 @@ class Search extends playlist_object
     {
         $t_album_data = T_('Album Data');
         $this->_add_type_text('title', T_('Title'), $t_album_data);
-        $this->_add_type_text('artist', T_('Album Artist'), $t_album_data);
+        $this->_add_type_text('album_artist', T_('Album Artist'), $t_album_data);
         $this->_add_type_text('song_artist', T_('Song Artist'), $t_album_data);
         $this->_add_type_text('song', T_('Song Title'), $t_album_data);
         $this->_add_type_numeric('year', T_('Year'), 'numeric', $t_album_data);
@@ -894,6 +903,12 @@ class Search extends playlist_object
             $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('songrating', T_('My Rating (Song)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('artistrating', T_('My Rating (Artist)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_boolean('my_flagged_song', T_('My Favorite Songs'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_album', T_('My Favorite Albums'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_artist', T_('My Favorite Artists'), 'boolean', $t_ratings);
+            $this->_add_type_numeric('weight_song', T_('Song popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_album', T_('Album popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_artist', T_('Artist popularity score'), 'numeric', $t_ratings);
             $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
             $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
@@ -1024,6 +1039,21 @@ class Search extends playlist_object
         $this->_add_type_select('state', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
+        $t_ratings = T_('Ratings');
+        if (AmpConfig::get('ratings')) {
+            $this->_add_type_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_select('podcastrating', T_('My Rating (Podcast)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_select('podcast_episoderating', T_('My Rating (Podcast Episode)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_boolean('my_flagged_podcast', T_('My Favorite Podcasts'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_podcast_episode', T_('My Favorite Podcast Episodes'), 'boolean', $t_ratings);
+            $this->_add_type_numeric('weight_podcast', T_('Podcast popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_podcast_episode', T_('Podcast Episode popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
+            $users = $this->getUserRepository()->getValidArray();
+            $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
+        }
+
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
         $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
@@ -1071,6 +1101,22 @@ class Search extends playlist_object
         $this->_add_type_select('state', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
         $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_podcast_episodes);
+
+
+        $t_ratings = T_('Ratings');
+        if (AmpConfig::get('ratings')) {
+            $this->_add_type_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_select('podcastrating', T_('My Rating (Podcast)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_select('podcast_episoderating', T_('My Rating (Podcast Episode)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_boolean('my_flagged_podcast', T_('My Favorite Podcasts'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_podcast_episode', T_('My Favorite Podcast Episodes'), 'boolean', $t_ratings);
+            $this->_add_type_numeric('weight_podcast', T_('Podcast popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_numeric('weight_podcast_episode', T_('Podcast Episode popularity score'), 'numeric', $t_ratings);
+            $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
+            $users = $this->getUserRepository()->getValidArray();
+            $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
+        }
 
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
@@ -1308,6 +1354,10 @@ class Search extends playlist_object
         $offset = (int)($data['offset'] ?? 0);
         $random = ((int)($data['random'] ?? 0) > 0) ? 1 : 0;
         $search = new Search(0, $data['type'], $user);
+
+        if ($data['weight'] ?? false) {
+            $search->set_order_by('weight');
+        }
         $search->set_rules($data);
 
         // Generate BASE SQL
@@ -1661,6 +1711,8 @@ class Search extends playlist_object
                     case 'album_artist_title':
                         $name = 'album_artist';
                         break;
+                    case 'artist':
+                    case 'artist_title':
                     case 'song_artist_title':
                         $name = 'song_artist';
                         break;
@@ -1684,6 +1736,17 @@ class Search extends playlist_object
                     case 'mbid_song':
                         $name = 'mbid';
                         break;
+                    case 'my_flagged':
+                    case 'myflagged':
+                    case 'myflagged_song':
+                        $name = 'my_flagged_song';
+                        break;
+                    case 'myflagged_album':
+                        $name = 'my_flagged_album';
+                        break;
+                    case 'myflagged_artist':
+                        $name = 'my_flagged_artist';
+                        break;
                 }
 
                 break;
@@ -1698,10 +1761,10 @@ class Search extends playlist_object
                     case 'song_title':
                         $name = 'song';
                         break;
-                    case 'album_artist':
+                    case 'artist':
                     case 'album_artist_title':
                     case 'artist_title':
-                        $name = 'artist';
+                        $name = 'album_artist';
                         break;
                     case 'tag':
                     case 'album_tag':
@@ -1726,6 +1789,17 @@ class Search extends playlist_object
                     case 'release_comment':
                     case 'subtitle':
                         $name = 'version';
+                        break;
+                    case 'myflagged_song':
+                        $name = 'my_flagged_song';
+                        break;
+                    case 'my_flagged':
+                    case 'myflagged':
+                    case 'myflagged_album':
+                        $name = 'my_flagged_album';
+                        break;
+                    case 'myflagged_artist':
+                        $name = 'my_flagged_artist';
                         break;
                 }
 
@@ -1759,6 +1833,17 @@ class Search extends playlist_object
                         break;
                     case 'mbid_artist':
                         $name = 'mbid';
+                        break;
+                    case 'myflagged_song':
+                        $name = 'my_flagged_song';
+                        break;
+                    case 'myflagged_album':
+                        $name = 'my_flagged_album';
+                        break;
+                    case 'my_flagged':
+                    case 'myflagged':
+                    case 'myflagged_artist':
+                        $name = 'my_flagged_artist';
                         break;
                 }
 
@@ -1829,11 +1914,58 @@ class Search extends playlist_object
      * get_rule_types
      *
      * Return rule list for the current search type
-     * @return array<string, array<string, mixed>>
+     * @return array<int, array<string, mixed>>
      */
     public function get_rule_types(): array
     {
         return $this->types;
+    }
+
+    /**
+     * set_order_by
+     * Allow some display flexibility
+     */
+    public function set_order_by(string $sort): void
+    {
+        switch ($this->objectType) {
+            case 'album':
+                if ($sort === 'weight') {
+                    $this->order_by = '`album`.`weight` DESC, `album`.`name`';
+                }
+                break;
+            case 'album_disk':
+                if ($sort === 'weight') {
+                    $this->order_by = '`album_disk`.`weight` DESC, `album`.`name`';
+                }
+                break;
+            case 'artist':
+            case 'album_artist':
+            case 'song_artist':
+                if ($sort === 'weight') {
+                    $this->order_by = '`artist`.`weight` DESC, `artist`.`name`';
+                }
+                break;
+            case 'podcast':
+                if ($sort === 'weight') {
+                    $this->order_by = '`podcast`.`weight` DESC, `podcast`.`title`';
+                }
+                break;
+            case 'podcast_episode':
+                if ($sort === 'weight') {
+                    $this->order_by = '`podcast_episode`.`weight` DESC, `podcast_episode`.`pubdate` DESC';
+                }
+                break;
+            case 'song':
+                if ($sort === 'weight') {
+                    $this->order_by = '`song`.`weight` DESC, `song`.`file`';
+                }
+                break;
+            case 'video':
+                if ($sort === 'weight') {
+                    $this->order_by = '`video`.`weight` DESC, `video`.`file`';
+                }
+                break;
+        }
     }
 
     /**

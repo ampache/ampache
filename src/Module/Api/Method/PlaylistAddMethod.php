@@ -43,6 +43,8 @@ final class PlaylistAddMethod
 {
     public const ACTION = 'playlist_add';
 
+    public const REST_ACTION = 'playlist_add_edit';
+
     /**
      * playlist_add
      * MINIMUM_API_VERSION=6.3.0
@@ -55,7 +57,8 @@ final class PlaylistAddMethod
      *
      * @param array{
      *     filter: string,
-     *     id: string,
+     *     id?: string,
+     *     song?: string,
      *     type: string,
      *     api_format: string,
      *     auth: string,
@@ -65,6 +68,7 @@ final class PlaylistAddMethod
      */
     public static function playlist_add(array $input, User $user): bool
     {
+        $input['id'] = $input['song'] ?? $input['id'] ?? null;
         if (!Api::check_parameter($input, ['filter', 'id', 'type'], self::ACTION)) {
             return false;
         }
@@ -130,5 +134,21 @@ final class PlaylistAddMethod
         Api::message('nothing was added to the playlist', $input['api_format']);
 
         return false;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     id: string,
+     *     type: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function playlist_add_edit(array $input, User $user): bool
+    {
+        return self::playlist_add($input, $user);
     }
 }

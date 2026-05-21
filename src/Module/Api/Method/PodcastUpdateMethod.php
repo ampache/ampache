@@ -36,7 +36,7 @@ final class PodcastUpdateMethod
     public const ACTION = 'podcast_update';
 
     /**
-     * update_podcast
+     * podcast_update
      * MINIMUM_API_VERSION=420000
      *
      * Sync and download new podcast episodes
@@ -54,7 +54,7 @@ final class PodcastUpdateMethod
      * @param User $user
      * @return bool
      */
-    public static function update_podcast(array $input, User $user): bool
+    public static function podcast_update(array $input, User $user): bool
     {
         return UpdatePodcastMethod::update_podcast($input, $user);
     }

@@ -89,6 +89,8 @@ class Podcast_Episode extends database_object implements
 
     public int $total_skip = 0;
 
+    private int $weight = 0;
+
     public int $catalog;
 
     public int $bitrate;

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-05-01 07:49+1000\n"
+"POT-Creation-Date: 2026-05-12 13:02+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4010,8 +4010,15 @@ msgstr ""
 msgid "All files would be removed. Doing nothing"
 msgstr ""
 
+msgid "File already exists"
+msgstr ""
+
 #, php-format
 msgid "Copying \"%1$s\" to \"%2$s\""
+msgstr ""
+
+#, php-format
+msgid "Create directory \"%s\""
 msgstr ""
 
 #, php-format
@@ -4258,9 +4265,6 @@ msgstr ""
 #. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
 #, php-format
 msgid "Updated: %s"
-msgstr ""
-
-msgid "File already exists"
 msgstr ""
 
 #, php-format
@@ -4845,10 +4849,6 @@ msgstr ""
 
 #, php-format
 msgid "Destin: %s"
-msgstr ""
-
-#, php-format
-msgid "Create directory \"%s\""
 msgstr ""
 
 #, php-format
@@ -5687,6 +5687,9 @@ msgstr ""
 msgid "Song Data"
 msgstr ""
 
+msgid "Album Title"
+msgstr ""
+
 msgid "Length (in minutes)"
 msgstr ""
 
@@ -5718,6 +5721,15 @@ msgid "Favorites (Album)"
 msgstr ""
 
 msgid "Favorites (Artist)"
+msgstr ""
+
+msgid "Song popularity score"
+msgstr ""
+
+msgid "Album popularity score"
+msgstr ""
+
+msgid "Artist popularity score"
 msgstr ""
 
 msgid "Another User"
@@ -5829,9 +5841,6 @@ msgstr ""
 msgid "Artist Data"
 msgstr ""
 
-msgid "Album Title"
-msgstr ""
-
 msgid "My Rating (Song)"
 msgstr ""
 
@@ -5863,6 +5872,24 @@ msgid "private"
 msgstr ""
 
 msgid "Episode Count"
+msgstr ""
+
+msgid "My Rating (Podcast)"
+msgstr ""
+
+msgid "My Rating (Podcast Episode)"
+msgstr ""
+
+msgid "My Favorite Podcasts"
+msgstr ""
+
+msgid "My Favorite Podcast Episodes"
+msgstr ""
+
+msgid "Podcast popularity score"
+msgstr ""
+
+msgid "Podcast Episode popularity score"
 msgstr ""
 
 msgid "Video Count"

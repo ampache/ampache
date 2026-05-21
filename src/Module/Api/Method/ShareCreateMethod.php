@@ -58,6 +58,8 @@ final class ShareCreateMethod
 {
     public const ACTION = 'share_create';
 
+    public const REST_ACTION = 'shares_create';
+
     /**
      * share_create
      * MINIMUM_API_VERSION=420000
@@ -164,5 +166,22 @@ final class ShareCreateMethod
         }
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     description?: string,
+     *     expires?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function shares_create(array $input, User $user): bool
+    {
+        return self::share_create($input, $user);
     }
 }

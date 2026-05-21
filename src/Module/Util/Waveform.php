@@ -176,7 +176,7 @@ class Waveform
         $dir2 = substr((string)$object_id, -2, 1);
         $path .= "/waveform/" . $object_type . '/' . $dir1 . '/' . $dir2 . "/";
         if (!file_exists($path)) {
-            mkdir($path, 0755, true);
+            mkdir($path, 0775, true);
         }
         $old_target_file = $path . "/waveform/" . $dir1 . '/' . $dir2 . "/" . $object_id . ".png";
         // move the song waveforms to the right place if they're in the old path

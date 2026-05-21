@@ -1,5 +1,64 @@
 # CHANGELOG
 
+## Ampache 7.9.4
+
+Many new search enhancements, documentation updates and fixes.
+
+Media weight is calculated based on ratings, flags, play and skip counts.
+
+This allows you to order and search and sort by server popularity
+
+Work on cleaning up API6 has started as I look to begin Ampache 8
+
+### Added (7.9.4)
+
+* Translations 2026-05-20
+* Database 794004
+  * Add popularity `weight` columns to media tables
+  * Fix up Orphan Album Disk objects to be unique and update from tags
+* Don't people move/rename/delete upload folders when you don't own all the content
+* Missing typing on Search class
+* Documentation updates for searches
+* CLI
+  * Add more information to move and rename command output
+* Search
+  * Add additional aliases to catch different rule names
+  * Add `my_flagged_song`, `my_flagged_album` and `my_flagged_artist` to Album, Artist and Song searches
+  * Add `weight_song`, `weight_album` and `weight_artist` to Album, Artist Podcast, Podcast_Episode and Song searches
+  * Add all rating rules to `podcast` and `podcast_episode` searches
+* Subsonic
+  * Add `coverArt` for radio stations
+
+### Changed (7.9.4)
+
+* Sort header bar searches by popularity weights
+* Remove path printing from FileSystem output
+* Fail if `upload_subdir` is enabled but can't create the folder
+* Assign `0775` permissions on mkdir calls (PHP default is `0777`)
+
+### Fixed (7.9.4)
+
+* Catalog sync would not respect podcast download limits
+* Ajax FS not looking for current user early enough to validate
+* Could not create a folder when using default `.htaccess` (not enabled by default)
+* Missing collaboration in Playlist browses
+* Public `.htaccess` for creating folders in upload pages
+* PHP-CS-Fixer v4.0 deprecations
+* Orphaned uploads would never be able to change from an orphan album object
+* Display of Orphaned albums when using User catalog filters
+* Tag updates for Orphaned albums would not change when updated from tags
+* Checks for Catalog 0 with Album and AlbumDisk check functions
+* CLI
+  * cleanup:sortSongs was not stopping after using single folder
+  * run:updateCatalogFile better file checks and error warnings
+* Search
+  * Errors on `other_user` `unrated` searches
+  * Joins on some searches not applied
+  * Playlist `owner` search
+  * Missing collaboration in Playlist search
+* Subsonic
+  * Don't show HTML tags being for item lyrics
+
 ## Ampache 7.9.3
 
 New CLI commands and bugfixing

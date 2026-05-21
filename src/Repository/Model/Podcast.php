@@ -69,6 +69,8 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 
     private int $total_skip = 0;
 
+    private int $weight = 0;
+
     private int $episodes = 0;
 
     private ?string $link = null;

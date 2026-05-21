@@ -84,6 +84,7 @@ final class UpdateCatalogFolderCommand extends Command
 
             return;
         }
+
         $this->updateSingleCatalogFolder->update(
             $this->io(),
             $catalogName,

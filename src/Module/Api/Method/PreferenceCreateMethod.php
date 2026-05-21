@@ -41,6 +41,8 @@ final class PreferenceCreateMethod
 {
     public const ACTION = 'preference_create';
 
+    public const REST_ACTION = 'preferences_create';
+
     /**
      * preference_create
      * MINIMUM_API_VERSION=5.0.0
@@ -125,5 +127,25 @@ final class PreferenceCreateMethod
         User::fix_preferences($user->id);
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     default: string|int,
+     *     category: string,
+     *     description?: string,
+     *     subcategory?: string,
+     *     level?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @param User $user
+     * @return bool
+     */
+    public static function preferences_create(array $input, User $user): bool
+    {
+        return self::preference_create($input, $user);
     }
 }
