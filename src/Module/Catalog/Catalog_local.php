@@ -1070,7 +1070,9 @@ class Catalog_local extends Catalog
         }
 
         if (empty($media->file) || !copy($media->file, $new_file)) {
-            unlink($new_file); // delete the copied file on failure
+            if (is_file($new_file)) {
+                unlink($new_file);
+            }
             /* HINT: filename (File path) */
             $interactor?->info(
                 sprintf(T_('There was an error trying to copy file to "%s"'), $new_file),
@@ -1087,12 +1089,14 @@ class Catalog_local extends Catalog
         $old_sum = Core::get_filesize($media->file);
 
         if ($new_sum != $old_sum || $new_sum == 0) {
+            if (is_file($new_file)) {
+                unlink($new_file);
+            }
             /* HINT: filename (File path) */
             $interactor?->info(
                 sprintf(T_('Size comparison failed. Not deleting "%s"'), $media->file),
                 true
             );
-            unlink($new_file); // delete the copied file on failure
 
             return false;
         } // end if sum's don't match

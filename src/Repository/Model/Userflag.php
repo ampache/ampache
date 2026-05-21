@@ -238,6 +238,10 @@ class Userflag extends database_object
             return false;
         }
 
+        if ($this->get_flag($user_id) === $flagged) {
+            return true;
+        }
+
         $date = $date ?? time();
 
         debug_event(self::class, sprintf('Setting userflag for %s %d to %s (%s)', $this->type, $this->id, $flagged, $date), 4);
