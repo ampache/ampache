@@ -375,7 +375,9 @@ final class SongSorter implements SongSorterInterface
             );
 
             if (empty($media->file) || !copy($media->file, $fullname)) {
-                unlink($fullname); // delete the copied file on failure
+                if (is_file($fullname)) {
+                    unlink($fullname);
+                }
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('There was an error trying to copy file to "%s"'), $fullname),
@@ -398,7 +400,9 @@ final class SongSorter implements SongSorterInterface
                 // copy art that exists
                 if (file_exists($old_art)) {
                     if (copy($old_art, $folder_art) === false) {
-                        unlink($fullname); // delete the copied file on failure
+                        if (is_file($fullname)) {
+                            unlink($fullname);
+                        }
 
                         throw new RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
                     }
@@ -413,12 +417,14 @@ final class SongSorter implements SongSorterInterface
             $old_sum = Core::get_filesize($media->file);
 
             if ($new_sum != $old_sum || $new_sum == 0) {
+                if (is_file($fullname)) {
+                    unlink($fullname);
+                }
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('Size comparison failed. Not deleting "%s"'), $media->file),
                     true
                 );
-                unlink($fullname); // delete the copied file on failure
 
                 return false;
             } // end if sum's don't match

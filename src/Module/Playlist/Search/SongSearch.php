@@ -521,6 +521,12 @@ final class SongSearch implements SearchInterface
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user_flag`.`object_type` = '" . $my_type . "' AND `user_flag`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `my_flagged__" . $my_type . "_" . $search_user_id . "` ON `" . $my_type . "`.`$column` = `my_flagged__" . $my_type . "_" . $search_user_id . "`.`object_id` AND `my_flagged__" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'"
                         : "";
                     $where[] = "`my_flagged__" . $my_type . "_" . $search_user_id . "`.`object_id` $operator_sql";
+                    if ($my_type == 'album') {
+                        $join['album'] = true;
+                    }
+                    if ($my_type == 'artist') {
+                        $join['artist'] = true;
+                    }
                     break;
                 case 'other_user':
                 case 'other_user_album':
