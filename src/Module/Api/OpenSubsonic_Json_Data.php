@@ -3334,7 +3334,21 @@ class OpenSubsonic_Json_Data
 
             foreach (explode("\n", html_entity_decode($text)) as $line) {
                 if (!empty($line)) {
-                    $json['line'][] = ['value' => (string)$line];
+                    if (preg_match('/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)$/', $line, $matches)) {
+                        $minutes      = (int)$matches[1];
+                        $seconds      = (int)$matches[2];
+                        $centiseconds = (int)$matches[3];
+                        $milliseconds = ($minutes * 60 * 1000) + ($seconds * 1000) + ($centiseconds * 10);
+
+                        // Lyrics text
+                        $lyricLine = trim($matches[4]);
+                        $json['line'][] = [
+                            'start' => $milliseconds,
+                            'value' => $lyricLine,
+                        ];
+                    } else {
+                        $json['line'][] = ['value' => (string)$line];
+                    }
                 }
             }
 
