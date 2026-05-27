@@ -20,28 +20,22 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\System;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-use Ampache\Module\System\Plugin\PluginRetriever;
-use Ampache\Module\System\Plugin\PluginRetrieverInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-use function DI\autowire;
+/**
+ * Add ui option 'api_enable_8' to enable/disable API8
+ */
+final class Migration800000 extends AbstractMigration
+{
+    protected array $changelog = ['Add ui option \'api_enable_8\' to enable/disable API8'];
 
-use Psr\Log\LoggerInterface;
-
-return [
-    LoggerInterface::class => autowire(LegacyLogger::class),
-    SessionInterface::class => autowire(Session::class),
-    InstallationHelperInterface::class => autowire(InstallationHelper::class),
-    PreferencesFromRequestUpdaterInterface::class => autowire(PreferencesFromRequestUpdater::class),
-    Update\UpdateHelperInterface::class => autowire(Update\UpdateHelper::class),
-    Update\UpdaterInterface::class => autowire(Update\Updater::class)
-        ->constructorParameter(
-            'updateRunner',
-            autowire(Update\UpdateRunner::class)
-        ),
-    PluginRetrieverInterface::class => autowire(PluginRetriever::class),
-];
+    public function migrate(): void
+    {
+        $this->updatePreferences('api_enable_8', 'Enable API8 responses', '1', AccessLevelEnum::USER->value, 'boolean', 'options');
+    }
+}

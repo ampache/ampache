@@ -24,10 +24,10 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var list<int> $object_ids */

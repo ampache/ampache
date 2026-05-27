@@ -26,11 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Album\Export\AlbumArtExporterInterface;
 use Ampache\Module\Album\Export\Exception\AlbumArtExportException;
 use Ampache\Module\Album\Export\Writer\MetadataWriterTypeEnum;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\Catalog;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 

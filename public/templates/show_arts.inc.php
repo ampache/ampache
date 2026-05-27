@@ -25,9 +25,9 @@ declare(strict_types=0);
 
 // Gotta do some math here!
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Art;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Art;
 
 /** @var array $images */
 /** @var int $object_id */

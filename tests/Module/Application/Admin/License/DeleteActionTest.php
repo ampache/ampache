@@ -27,14 +27,14 @@ namespace Ampache\Module\Application\Admin\License;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
-use Ampache\Module\Application\Exception\ObjectNotFoundException;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\License;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\Model\License;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

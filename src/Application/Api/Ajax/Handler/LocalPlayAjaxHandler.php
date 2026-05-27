@@ -25,15 +25,15 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\Browse;
 use Ampache\Module\Playback\Localplay\LocalPlay;
-use Ampache\Repository\Model\Preference;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
 final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface

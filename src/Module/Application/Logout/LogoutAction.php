@@ -25,9 +25,9 @@ namespace Ampache\Module\Application\Logout;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Psr\Http\Message\ResponseInterface;

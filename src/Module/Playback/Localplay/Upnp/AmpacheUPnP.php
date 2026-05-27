@@ -26,12 +26,12 @@ namespace Ampache\Module\Playback\Localplay\Upnp;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Localplay\localplay_controller;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 
 /**
  * AmpacheUPnp Class

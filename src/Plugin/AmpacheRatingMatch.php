@@ -27,6 +27,7 @@ namespace Ampache\Plugin;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
+use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Plugin;
@@ -35,7 +36,6 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Module\System\Dba;
 
 class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInterface
 {

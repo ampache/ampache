@@ -23,10 +23,10 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Share;
-use Ampache\Module\Authorization\Access;
 
 /** @var Share $libitem */ ?>
 <div>

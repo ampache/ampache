@@ -24,12 +24,12 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Label $libitem */
 /** @var string $cel_cover */

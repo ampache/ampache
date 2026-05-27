@@ -27,9 +27,9 @@ namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Util\AmazonSearch;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Util\AmazonSearch;
 
 class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
 {

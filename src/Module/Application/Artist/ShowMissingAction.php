@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Artist;
 
-use Ampache\Module\Util\VaInfo;
-use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\VaInfo;
+use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

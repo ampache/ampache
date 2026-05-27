@@ -27,10 +27,10 @@ namespace Ampache\Module\Beets;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Metadata\MetadataManagerInterface;
-use Ampache\Repository\Model\Album;
 use Ampache\Module\System\AmpError;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;

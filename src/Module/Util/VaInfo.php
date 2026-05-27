@@ -26,20 +26,20 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Plugin\PluginTypeEnum;
-use Ampache\Plugin\PluginGetMetadataInterface;
-use Ampache\Repository\Model\Plugin;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Plugin\PluginGetMetadataInterface;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
-use Ampache\Module\System\LegacyLogger;
-use Psr\Log\LoggerInterface;
 use Exception;
 use getID3;
 use getid3_writetags;
+use Psr\Log\LoggerInterface;
 
 /**
  * This class handles the retrieval of media tags

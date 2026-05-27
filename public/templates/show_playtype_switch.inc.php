@@ -24,8 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Preference;
 use Ampache\Module\Api\Ajax;
+use Ampache\Repository\Model\Preference;
 
 ?>
 <div id="play_type_switch">
