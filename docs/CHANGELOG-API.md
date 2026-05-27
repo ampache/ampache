@@ -1,5 +1,31 @@
 # API CHANGELOG
 
+## API 6.9.1 Build 15
+
+This version is being released for Ampache7 **only**
+
+To ensure that there are no issues with clients checking for single int versions
+we will keep on 6.9.x and resume build number versioning until Ampache 8
+
+**NOTE** API8 has been added to the code but is not enabled for use.
+
+### Added (691015)
+
+* API8
+  * Add API8 to REST htaccess file
+  * Restructure the backend code to allow API8
+
+### Changed (691015)
+
+* API6
+  * Move API6 classes to allow for API8
+
+### Fixed (691015)
+
+* API6
+  * Bad `podcast_update` function name
+  * REST rewrite rules
+
 ## API 6.9.1 Build 14
 
 This version is being released for Ampache7 **only**
