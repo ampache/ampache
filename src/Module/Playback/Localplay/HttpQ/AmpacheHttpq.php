@@ -335,11 +335,7 @@ class AmpacheHttpq extends localplay_controller
             return true;
         }
 
-        if ($this->_httpq->play() === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_httpq->play() === null));
     }
 
     /**
@@ -349,11 +345,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function stop(): bool
     {
-        if ($this->_httpq->stop() === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_httpq->stop() === null));
     }
 
     /**
@@ -362,11 +354,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function skip(int $track_id): bool
     {
-        if ($this->_httpq->skip($track_id) === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_httpq->skip($track_id) === null));
     }
 
     /**
@@ -391,11 +379,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function next(): bool
     {
-        if ($this->_httpq->next() === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_httpq->next() === null));
     }
 
     /**
@@ -404,11 +388,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function prev(): bool
     {
-        if ($this->_httpq->prev() === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_httpq->prev() === null));
     }
 
     /**
@@ -417,11 +397,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function pause(): bool
     {
-        if ($this->_httpq->pause() === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_httpq->pause() === null));
     }
 
     /**
@@ -441,11 +417,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function repeat(bool $state): bool
     {
-        if ($this->_httpq->repeat($state) === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_httpq->repeat($state) === null));
     }
 
     /**
@@ -455,11 +427,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function random(bool $state): bool
     {
-        if ($this->_httpq->random($state) === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_httpq->random($state) === null));
     }
 
     /**

@@ -178,11 +178,7 @@ class Ui implements UiInterface
      */
     public static function check_iconv(): bool
     {
-        if (function_exists('iconv') && function_exists('iconv_substr')) {
-            return true;
-        }
-
-        return false;
+        return (bool)(function_exists('iconv') && function_exists('iconv_substr'));
     }
 
     /**

@@ -97,11 +97,7 @@ final class Mailer implements MailerInterface
      */
     public static function is_mail_enabled(): bool
     {
-        if (AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode')) {
-            return true;
-        }
-
-        return false;
+        return (bool)(AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode'));
     }
 
     /**

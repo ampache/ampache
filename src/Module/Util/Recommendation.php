@@ -80,11 +80,8 @@ class Recommendation
         $sql        = "SELECT `id` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, [$object_type, $object_id]);
         $row        = Dba::fetch_assoc($db_results);
-        if (empty($row)) {
-            return false;
-        }
 
-        return true;
+        return (!(empty($row)));
     }
 
     /**

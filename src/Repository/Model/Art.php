@@ -286,11 +286,7 @@ class Art extends database_object
         }
 
         // If we get nothing return false
-        if (!$this->raw) {
-            return false;
-        }
-
-        return true;
+        return (!(!$this->raw));
     }
 
     /**
