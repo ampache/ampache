@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## Ampache 7.9.5
+
+Cleanup has begun!
+
+This is a large backend change as we work towards supporting a
+
+### Added (7.9.5)
+
+* Subsonic
+  * Split structured lyrics when you have a time in the line
+
+### Changed (7.9.5)
+
+* Update Composer and NPM dependencies
+* Set some stricter PHP-CS-Fixer rules
+
+### Fixed (7.9.5)
+
+* Sending the name instead of the ID for Album::check on Song insert
+* Subsonic
+  * Send artistInfo2 response correctly
+
 ## Ampache 7.9.4
 
 Many new search enhancements, documentation updates and fixes.
