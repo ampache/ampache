@@ -34,7 +34,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
- * API Class
+ * Api5 Class
  *
  * This handles functions relating to the API written for Ampache, initially
  * this is very focused on providing functionality for Amarok so it can
