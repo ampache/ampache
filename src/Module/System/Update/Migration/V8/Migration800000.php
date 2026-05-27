@@ -22,7 +22,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Ampache\Module\System\Update\Migration\V7;
+namespace Ampache\Module\System\Update\Migration\V8;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
