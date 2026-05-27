@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Method;
+namespace Ampache\Module\Api\Method\Api8;
 
 use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
@@ -38,7 +38,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 
-class AlbumMethodTest extends MockeryTestCase
+class Album8MethodTest extends MockeryTestCase
 {
     /** @var ModelFactoryInterface|MockInterface|null */
     private MockInterface $modelFactory;
@@ -46,14 +46,14 @@ class AlbumMethodTest extends MockeryTestCase
     /** @var StreamFactoryInterface|MockInterface|null */
     private MockInterface $streamFactory;
 
-    private ?AlbumMethod $subject;
+    private ?Album8Method $subject;
 
     protected function setUp(): void
     {
         $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
         $this->streamFactory = $this->mock(StreamFactoryInterface::class);
 
-        $this->subject = new AlbumMethod(
+        $this->subject = new Album8Method(
             $this->modelFactory,
             $this->streamFactory
         );

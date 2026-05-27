@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Method;
+namespace Ampache\Module\Api\Method\Api8;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -44,7 +44,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-class PodcastDeleteMethodTest extends TestCase
+class PodcastDelete8MethodTest extends TestCase
 {
     private PodcastDeleterInterface&MockObject $podcastDeleter;
 
@@ -54,7 +54,7 @@ class PodcastDeleteMethodTest extends TestCase
 
     private PodcastRepositoryInterface&MockObject $podcastRepository;
 
-    private PodcastDeleteMethod $subject;
+    private PodcastDelete8Method $subject;
 
     private GatekeeperInterface&MockObject $gatekeeper;
 
@@ -71,7 +71,7 @@ class PodcastDeleteMethodTest extends TestCase
         $this->privilegeChecker  = $this->createMock(PrivilegeCheckerInterface::class);
         $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
 
-        $this->subject = new PodcastDeleteMethod(
+        $this->subject = new PodcastDelete8Method(
             $this->podcastDeleter,
             $this->configContainer,
             $this->privilegeChecker,
