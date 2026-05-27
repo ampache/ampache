@@ -27,9 +27,9 @@ namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Util\Graph;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Util\Graph;
 
 class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInterface
 {

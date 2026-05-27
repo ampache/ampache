@@ -26,14 +26,14 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
 
 /**
  * Class PlaylistGenerateMethod
@@ -152,12 +152,12 @@ final class PlaylistGenerateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($offset);
-                Json_Data::set_limit($limit);
+                Json8_Data::set_offset($offset);
+                Json8_Data::set_limit($limit);
                 break;
             default:
-                Xml_Data::set_offset($offset);
-                Xml_Data::set_limit($limit);
+                Xml8_Data::set_offset($offset);
+                Xml8_Data::set_limit($limit);
         }
 
         // get db data
@@ -185,26 +185,26 @@ final class PlaylistGenerateMethod
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml_Data::keyed_array($results, false, 'id');
+                        echo Xml8_Data::keyed_array($results, false, 'id');
                 }
                 break;
             case 'index':
                 switch ($input['api_format']) {
                     case 'json':
-                        echo Json_Data::indexes($results, 'song', $user, $input['auth']);
+                        echo Json8_Data::indexes($results, 'song', $user, $input['auth']);
                         break;
                     default:
-                        echo Xml_Data::indexes($results, 'song', $user, $input['auth']);
+                        echo Xml8_Data::indexes($results, 'song', $user, $input['auth']);
                 }
                 break;
             case 'song':
             default:
                 switch ($input['api_format']) {
                     case 'json':
-                        echo Json_Data::songs($results, $user, $input['auth']);
+                        echo Json8_Data::songs($results, $user, $input['auth']);
                         break;
                     default:
-                        echo Xml_Data::songs($results, $user, $input['auth']);
+                        echo Xml8_Data::songs($results, $user, $input['auth']);
                 }
         }
 

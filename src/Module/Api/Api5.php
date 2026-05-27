@@ -26,11 +26,11 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**

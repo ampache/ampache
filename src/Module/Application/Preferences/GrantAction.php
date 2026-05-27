@@ -26,17 +26,17 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\System\Plugin\PluginTypeEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Plugin\AmpacheLastfm;
-use Ampache\Plugin\Ampachelibrefm;
-use Ampache\Repository\Model\Plugin;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Plugin\AmpacheLastfm;
+use Ampache\Plugin\Ampachelibrefm;
+use Ampache\Repository\Model\Plugin;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

@@ -27,8 +27,8 @@ namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
-use Exception;
 use Ampache\Repository\Model\Preference;
+use Exception;
 use WpOrg\Requests\Requests;
 
 /**

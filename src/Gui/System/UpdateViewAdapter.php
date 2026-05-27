@@ -25,12 +25,12 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\System;
 
-use Ampache\Module\System\Update\UpdateHelperInterface;
-use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Update\UpdateAction;
 use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Update\UpdateHelperInterface;
+use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\UpdateInfoEnum;
 use Ampache\Repository\UpdateInfoRepositoryInterface;

@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PreferenceRepositoryInterface;
 
 /**

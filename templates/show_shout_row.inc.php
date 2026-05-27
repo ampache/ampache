@@ -23,9 +23,9 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Shoutbox;
-use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 
 /** @var Shoutbox $libitem */

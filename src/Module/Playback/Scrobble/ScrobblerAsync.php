@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback\Scrobble;
 
 use Ampache\Repository\Model\Song;
-use WpOrg\Requests;
-use Thread;
 use Ampache\Repository\Model\User;
+use Thread;
+use WpOrg\Requests;
 
 abstract class ScrobblerAsync extends Thread
 {

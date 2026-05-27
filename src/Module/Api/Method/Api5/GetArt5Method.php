@@ -25,15 +25,15 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\System\Session;
 
 /**
  * Class GetArt5Method

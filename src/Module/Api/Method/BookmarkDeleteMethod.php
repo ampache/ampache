@@ -26,14 +26,14 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\Model\Video;
 
 /**

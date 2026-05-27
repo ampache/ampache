@@ -25,14 +25,14 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Stats;
 
-use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\LibraryItemLoaderInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserFollowerRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;

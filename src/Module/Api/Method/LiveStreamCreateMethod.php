@@ -25,15 +25,15 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
 
 /**
  * Class LiveStreamCreateMethod
@@ -116,10 +116,10 @@ final class LiveStreamCreateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::live_streams([(int)$results], false);
+                echo Json8_Data::live_streams([(int)$results], false);
                 break;
             default:
-                echo Xml_Data::live_streams([(int)$results], $user);
+                echo Xml8_Data::live_streams([(int)$results], $user);
         }
 
         return true;

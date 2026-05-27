@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 
 class AmpacheLibravatar extends AmpachePlugin implements PluginGetAvatarUrlInterface
 {

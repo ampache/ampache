@@ -24,9 +24,9 @@ declare(strict_types=0);
  */
 
 use Ampache\Module\Api\Ajax;
-use Ampache\Repository\Model\Browse;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Browse;
 
 /** @var Localplay $localplay */
 /** @var list<int> $objects */

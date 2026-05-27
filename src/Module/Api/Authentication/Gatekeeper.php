@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Authentication;
 
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\User;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;

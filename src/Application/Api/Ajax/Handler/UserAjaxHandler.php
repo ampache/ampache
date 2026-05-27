@@ -29,10 +29,10 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\User;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
+use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\User;
 
 final readonly class UserAjaxHandler implements AjaxHandlerInterface
 {

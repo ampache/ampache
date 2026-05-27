@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Repository\Model\Artist;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
 

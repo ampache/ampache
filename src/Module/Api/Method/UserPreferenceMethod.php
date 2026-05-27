@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Xml_Data;
 
 /**
  * Class UserPreferenceMethod
@@ -81,7 +81,7 @@ final class UserPreferenceMethod
                 echo json_encode($results[0], JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml_Data::object_array($results, 'preference');
+                echo Xml8_Data::object_array($results, 'preference');
         }
 
         return true;

@@ -24,18 +24,18 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\User;
 use Gettext\Loader\MoLoader;
 use Gettext\Translator;
 use Gettext\TranslatorFunctions;
@@ -911,7 +911,7 @@ function xoutput_from_array(array $array, bool $callback = false, string $type =
 {
     $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
     if ($output == 'xml') {
-        return Xml_Data::output_xml_from_array($array, $callback, $type);
+        return Xml8_Data::output_xml_from_array($array, $callback, $type);
     } elseif ($output == 'raw') {
         $outputnode = Core::get_request('xoutputnode');
 

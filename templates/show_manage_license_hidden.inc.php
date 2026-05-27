@@ -24,8 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\LicenseRepositoryInterface;
 
 global $dic;
 $licenseRepository = $dic->get(LicenseRepositoryInterface::class);

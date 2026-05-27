@@ -26,20 +26,20 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Session;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Statistics\Stats;
-use Ampache\Module\System\Session;
-use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\ArtistRepositoryInterface;
 
 /**
  * Class StatsMethod
@@ -235,93 +235,93 @@ final class StatsMethod
             case 'song':
                 switch ($input['api_format']) {
                     case 'json':
-                        Json_Data::set_offset($offset);
-                        Json_Data::set_limit($limit);
-                        echo Json_Data::songs($results, $user, $input['auth']);
+                        Json8_Data::set_offset($offset);
+                        Json8_Data::set_limit($limit);
+                        echo Json8_Data::songs($results, $user, $input['auth']);
                         break;
                     default:
-                        Xml_Data::set_offset($offset);
-                        Xml_Data::set_limit($limit);
-                        echo Xml_Data::songs($results, $user, $input['auth']);
+                        Xml8_Data::set_offset($offset);
+                        Xml8_Data::set_limit($limit);
+                        echo Xml8_Data::songs($results, $user, $input['auth']);
                 }
                 break;
             case 'artist':
                 switch ($input['api_format']) {
                     case 'json':
-                        Json_Data::set_offset($offset);
-                        Json_Data::set_limit($limit);
-                        echo Json_Data::artists($results, [], $user, $input['auth']);
+                        Json8_Data::set_offset($offset);
+                        Json8_Data::set_limit($limit);
+                        echo Json8_Data::artists($results, [], $user, $input['auth']);
                         break;
                     default:
-                        Xml_Data::set_offset($offset);
-                        Xml_Data::set_limit($limit);
-                        echo Xml_Data::artists($results, [], $user, $input['auth']);
+                        Xml8_Data::set_offset($offset);
+                        Xml8_Data::set_limit($limit);
+                        echo Xml8_Data::artists($results, [], $user, $input['auth']);
                 }
                 break;
             case 'album':
                 switch ($input['api_format']) {
                     case 'json':
-                        Json_Data::set_offset($offset);
-                        Json_Data::set_limit($limit);
-                        echo Json_Data::albums($results, [], $user, $input['auth']);
+                        Json8_Data::set_offset($offset);
+                        Json8_Data::set_limit($limit);
+                        echo Json8_Data::albums($results, [], $user, $input['auth']);
                         break;
                     default:
-                        Xml_Data::set_offset($offset);
-                        Xml_Data::set_limit($limit);
-                        echo Xml_Data::albums($results, [], $user, $input['auth']);
+                        Xml8_Data::set_offset($offset);
+                        Xml8_Data::set_limit($limit);
+                        echo Xml8_Data::albums($results, [], $user, $input['auth']);
                 }
                 break;
             case 'playlist':
                 switch ($input['api_format']) {
                     case 'json':
-                        Json_Data::set_offset($offset);
-                        Json_Data::set_limit($limit);
-                        echo Json_Data::playlists($results, $user, $input['auth']);
+                        Json8_Data::set_offset($offset);
+                        Json8_Data::set_limit($limit);
+                        echo Json8_Data::playlists($results, $user, $input['auth']);
                         break;
                     default:
-                        Xml_Data::set_offset($offset);
-                        Xml_Data::set_limit($limit);
-                        echo Xml_Data::playlists($results, $user, $input['auth']);
+                        Xml8_Data::set_offset($offset);
+                        Xml8_Data::set_limit($limit);
+                        echo Xml8_Data::playlists($results, $user, $input['auth']);
                 }
                 break;
             case 'video':
                 switch ($input['api_format']) {
                     case 'json':
-                        Json_Data::set_offset($offset);
-                        Json_Data::set_limit($limit);
-                        echo Json_Data::videos($results, $user, $input['auth']);
+                        Json8_Data::set_offset($offset);
+                        Json8_Data::set_limit($limit);
+                        echo Json8_Data::videos($results, $user, $input['auth']);
                         break;
                     default:
-                        Xml_Data::set_offset($offset);
-                        Xml_Data::set_limit($limit);
-                        echo Xml_Data::videos($results, $user, $input['auth']);
+                        Xml8_Data::set_offset($offset);
+                        Xml8_Data::set_limit($limit);
+                        echo Xml8_Data::videos($results, $user, $input['auth']);
                 }
                 Session::extend($input['auth'], AccessTypeEnum::API->value);
                 break;
             case 'podcast':
                 switch ($input['api_format']) {
                     case 'json':
-                        Json_Data::set_offset($offset);
-                        Json_Data::set_limit($limit);
-                        echo Json_Data::podcasts($results, $user, $input['auth']);
+                        Json8_Data::set_offset($offset);
+                        Json8_Data::set_limit($limit);
+                        echo Json8_Data::podcasts($results, $user, $input['auth']);
                         break;
                     default:
-                        Xml_Data::set_offset($offset);
-                        Xml_Data::set_limit($limit);
-                        echo Xml_Data::podcasts($results, $user, $input['auth']);
+                        Xml8_Data::set_offset($offset);
+                        Xml8_Data::set_limit($limit);
+                        echo Xml8_Data::podcasts($results, $user, $input['auth']);
                 }
                 break;
             case 'podcast_episode':
                 switch ($input['api_format']) {
                     case 'json':
-                        Json_Data::set_offset($offset);
-                        Json_Data::set_limit($limit);
-                        echo Json_Data::podcast_episodes($results, $user, $input['auth']);
+                        Json8_Data::set_offset($offset);
+                        Json8_Data::set_limit($limit);
+                        echo Json8_Data::podcast_episodes($results, $user, $input['auth']);
                         break;
                     default:
-                        Xml_Data::set_offset($offset);
-                        Xml_Data::set_limit($limit);
-                        echo Xml_Data::podcast_episodes($results, $user, $input['auth']);
+                        Xml8_Data::set_offset($offset);
+                        Xml8_Data::set_limit($limit);
+                        echo Xml8_Data::podcast_episodes($results, $user, $input['auth']);
                 }
                 break;
         }

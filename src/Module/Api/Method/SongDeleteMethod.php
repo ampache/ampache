@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Song\Deletion\SongDeleterInterface;
 
 /**
  * Class SongDeleteMethod

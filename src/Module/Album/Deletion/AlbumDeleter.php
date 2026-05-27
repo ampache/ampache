@@ -25,15 +25,15 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Album\Deletion;
 
+use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Song\Deletion\SongDeleterInterface;
+use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
-use Ampache\Module\Song\Deletion\SongDeleterInterface;
-use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;

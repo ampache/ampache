@@ -26,16 +26,16 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
 
 /**
  * Class ListMethod
@@ -274,16 +274,16 @@ final class BrowseMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset((int)($input['offset'] ?? 0));
-                Json_Data::set_limit($input['limit'] ?? 0);
-                Json_Data::set_count($browse->get_total());
-                echo Json_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
+                Json8_Data::set_offset((int)($input['offset'] ?? 0));
+                Json8_Data::set_limit($input['limit'] ?? 0);
+                Json8_Data::set_count($browse->get_total());
+                echo Json8_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
                 break;
             default:
-                Xml_Data::set_offset((int)($input['offset'] ?? 0));
-                Xml_Data::set_limit($input['limit'] ?? 0);
-                Xml_Data::set_count($browse->get_total());
-                echo Xml_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
+                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_limit($input['limit'] ?? 0);
+                Xml8_Data::set_count($browse->get_total());
+                echo Xml8_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
         }
 
         return true;

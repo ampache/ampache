@@ -28,9 +28,9 @@ namespace Ampache\Module\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Util\MailerInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Mockery\MockInterface;
 

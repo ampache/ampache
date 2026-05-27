@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -90,10 +90,10 @@ final class UserMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::user($check_user, $fullinfo, $input['auth'], false);
+                echo Json8_Data::user($check_user, $fullinfo, $input['auth'], false);
                 break;
             default:
-                echo Xml_Data::user($check_user, $fullinfo, $input['auth']);
+                echo Xml8_Data::user($check_user, $fullinfo, $input['auth']);
         }
 
         return true;

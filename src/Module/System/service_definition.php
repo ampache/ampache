@@ -27,9 +27,10 @@ namespace Ampache\Module\System;
 
 use Ampache\Module\System\Plugin\PluginRetriever;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
-use Psr\Log\LoggerInterface;
 
 use function DI\autowire;
+
+use Psr\Log\LoggerInterface;
 
 return [
     LoggerInterface::class => autowire(LegacyLogger::class),

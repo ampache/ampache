@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Browse\AlbumAction;
-use Ampache\Module\Application\Browse\AlbumDiskAction;
 use Ampache\Module\Application\Browse\AlbumArtistAction;
+use Ampache\Module\Application\Browse\AlbumDiskAction;
 use Ampache\Module\Application\Browse\ArtistAction;
 use Ampache\Module\Application\Browse\BroadcastAction;
 use Ampache\Module\Application\Browse\CatalogAction;
