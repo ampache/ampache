@@ -26,12 +26,12 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
 
 /**
  * Class IndexMethod
@@ -165,16 +165,16 @@ final class IndexMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset((int)($input['offset'] ?? 0));
-                Json_Data::set_limit($input['limit'] ?? 0);
-                Json_Data::set_count($browse->get_total());
-                echo Json_Data::index($results, $type, $user, $include);
+                Json8_Data::set_offset((int)($input['offset'] ?? 0));
+                Json8_Data::set_limit($input['limit'] ?? 0);
+                Json8_Data::set_count($browse->get_total());
+                echo Json8_Data::index($results, $type, $user, $include);
                 break;
             default:
-                Xml_Data::set_offset((int)($input['offset'] ?? 0));
-                Xml_Data::set_limit($input['limit'] ?? 0);
-                Xml_Data::set_count($browse->get_total());
-                echo Xml_Data::index($results, $type, $user, $include);
+                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_limit($input['limit'] ?? 0);
+                Xml8_Data::set_count($browse->get_total());
+                echo Xml8_Data::index($results, $type, $user, $include);
         }
 
         return true;

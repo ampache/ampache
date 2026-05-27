@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\Model\User;
 
 /**
  * Class BookmarkMethod
@@ -79,10 +79,10 @@ final class BookmarkMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::bookmarks($results, $input['auth'], $include, false);
+                echo Json8_Data::bookmarks($results, $input['auth'], $include, false);
                 break;
             default:
-                echo Xml_Data::bookmarks($results, $input['auth'], $include);
+                echo Xml8_Data::bookmarks($results, $input['auth'], $include);
         }
 
         return true;

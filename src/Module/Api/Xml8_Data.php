@@ -60,12 +60,12 @@ use Ampache\Repository\SongRepositoryInterface;
 use DOMDocument;
 
 /**
- * Xml_Data Class
+ * Xml8_Data Class
  *
  * This class takes care of all of the xml document stuff in Ampache these
  * are all static calls
  */
-class Xml_Data
+class Xml8_Data
 {
     // This is added so that we don't pop any webservers
     private static ?int $limit = 5000;

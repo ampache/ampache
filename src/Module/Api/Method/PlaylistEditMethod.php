@@ -25,10 +25,10 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
 
 /**
  * Class PlaylistEditMethod
@@ -80,7 +80,7 @@ final class PlaylistEditMethod
         $sort  = (int)($input['sort'] ?? 0);
         // calculate whether we are editing the track order too
         $playlist_edit = [];
-        if (!empty($items) && (count($items) == count($order))) {
+        if (count($items) == count($order)) {
             $playlist_edit = array_combine($order, $items);
         }
 

@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -150,16 +150,16 @@ final class PlayerMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset((int)($input['offset'] ?? 0));
-                Json_Data::set_limit($input['limit'] ?? 0);
-                Json_Data::set_count(count($results));
-                echo Json_Data::now_playing($results);
+                Json8_Data::set_offset((int)($input['offset'] ?? 0));
+                Json8_Data::set_limit($input['limit'] ?? 0);
+                Json8_Data::set_count(count($results));
+                echo Json8_Data::now_playing($results);
                 break;
             default:
-                Xml_Data::set_offset((int)($input['offset'] ?? 0));
-                Xml_Data::set_limit($input['limit'] ?? 0);
-                Xml_Data::set_count(count($results));
-                echo Xml_Data::now_playing($results);
+                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_limit($input['limit'] ?? 0);
+                Xml8_Data::set_count(count($results));
+                echo Xml8_Data::now_playing($results);
         }
 
         return true;

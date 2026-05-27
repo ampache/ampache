@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
 
 /**
  * Class SmartlistMethod
@@ -81,10 +81,10 @@ final class SmartlistMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::playlists([$object_id], $user, $input['auth'], false, false);
+                echo Json8_Data::playlists([$object_id], $user, $input['auth'], false, false);
                 break;
             default:
-                echo Xml_Data::playlists([$object_id], $user, $input['auth']);
+                echo Xml8_Data::playlists([$object_id], $user, $input['auth']);
         }
 
         return true;

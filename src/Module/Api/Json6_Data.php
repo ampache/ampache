@@ -58,13 +58,13 @@ use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**
- * Json_Data Class
+ * Json6_Data Class
  *
  * This class takes care of all of the JSON document stuff in Ampache these
  * are all static calls
  *
  */
-class Json_Data
+class Json6_Data
 {
     // This is added so that we don't pop any webservers
     private static ?int $limit = 5000;

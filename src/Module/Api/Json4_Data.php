@@ -52,7 +52,7 @@ use Ampache\Repository\SongRepositoryInterface;
 use Traversable;
 
 /**
- * JSON_Data Class
+ * Json4_Data Class
  *
  * This class takes care of all of the JSON document stuff in Ampache these
  * are all static calls

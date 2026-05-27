@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Module\Api\Method\PodcastEpisodesMethod;
 use Ampache\Module\Api\Output\ApiOutputFactory;
 use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
 
@@ -33,17 +32,22 @@ use function DI\autowire;
 
 return [
     XmlApiApplication::class => autowire(),
+    XmlRestApiApplication::class => autowire(),
     JsonApiApplication::class => autowire(),
+    JsonRestApiApplication::class => autowire(),
     SubsonicApiApplication::class => autowire(),
     DaapApiApplication::class => autowire(),
     SseApiApplication::class => autowire(),
     ApiOutputFactoryInterface::class => autowire(ApiOutputFactory::class),
     ApiHandlerInterface::class => autowire(ApiHandler::class),
     Method\AlbumsMethod::class => autowire(),
+    Method\Api6\Albums6Method::class => autowire(),
     Method\AlbumMethod::class => autowire(),
+    Method\Api6\Album6Method::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),
     Edit\ShowEditPlaylistAction::class => autowire(),
-    PodcastEpisodesMethod::class => autowire(),
+    Method\PodcastEpisodesMethod::class => autowire(),
+    Method\Api6\PodcastEpisodes6Method::class => autowire(),
 ];

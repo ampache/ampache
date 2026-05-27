@@ -25,13 +25,13 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
 
 /**
  * Class DemocraticMethod
@@ -97,7 +97,7 @@ final class DemocraticMethod
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml_Data::keyed_array($results);
+                        echo Xml8_Data::keyed_array($results);
                 }
                 break;
             case 'devote':
@@ -125,7 +125,7 @@ final class DemocraticMethod
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml_Data::keyed_array($results);
+                        echo Xml8_Data::keyed_array($results);
                 }
                 break;
             case 'playlist':
@@ -134,10 +134,10 @@ final class DemocraticMethod
                 Democratic::build_vote_cache($democratic->vote_ids);
                 switch ($input['api_format']) {
                     case 'json':
-                        echo Json_Data::democratic($results, $user, $input['auth']);
+                        echo Json8_Data::democratic($results, $user, $input['auth']);
                         break;
                     default:
-                        echo Xml_Data::democratic($results, $user, $input['auth']);
+                        echo Xml8_Data::democratic($results, $user, $input['auth']);
                 }
                 break;
             case 'play':
@@ -148,7 +148,7 @@ final class DemocraticMethod
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml_Data::keyed_array($results);
+                        echo Xml8_Data::keyed_array($results);
                 }
                 break;
             default:

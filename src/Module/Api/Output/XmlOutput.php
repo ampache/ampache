@@ -25,11 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
-use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Api\Xml6_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Repository\Model\User;
 
 final class XmlOutput implements ApiOutputInterface
@@ -39,22 +39,22 @@ final class XmlOutput implements ApiOutputInterface
      */
     public function podcastEpisodes(array $result, User $user, string $auth): string
     {
-        return Xml_Data::podcast_episodes($result, $user, $auth);
+        return Xml8_Data::podcast_episodes($result, $user, $auth);
     }
 
     public function setOffset(int $offset): void
     {
-        Xml_Data::set_offset($offset);
+        Xml8_Data::set_offset($offset);
     }
 
     public function setLimit(int $limit): void
     {
-        Xml_Data::set_limit($limit);
+        Xml8_Data::set_limit($limit);
     }
 
     public function setCount(int $count): void
     {
-        Xml_Data::set_count($count);
+        Xml8_Data::set_count($count);
     }
 
     /**
@@ -62,7 +62,7 @@ final class XmlOutput implements ApiOutputInterface
      */
     public function writeEmpty(string $emptyType): string
     {
-        return Json_Data::empty($emptyType);
+        return Xml8_Data::empty();
     }
 
     /**
@@ -70,7 +70,7 @@ final class XmlOutput implements ApiOutputInterface
      */
     public function error(int $code, string $message, string $action, string $type): string
     {
-        return Xml_Data::error(
+        return Xml8_Data::error(
             $code,
             $message,
             $action,
@@ -114,6 +114,19 @@ final class XmlOutput implements ApiOutputInterface
     }
 
     /**
+     * At the moment, this method just acts a proxy
+     */
+    public function error6(int $code, string $message, string $action, string $type): string
+    {
+        return Xml6_Data::error(
+            $code,
+            $message,
+            $action,
+            $type
+        );
+    }
+
+    /**
      * At the moment, this method just acts as a proxy
      *
      * @param list<int|string> $albums
@@ -133,7 +146,7 @@ final class XmlOutput implements ApiOutputInterface
         bool $encode = true,
         bool $asObject = true
     ): string {
-        return Xml_Data::albums($albums, $include, $user, $auth, $encode);
+        return Xml8_Data::albums($albums, $include, $user, $auth, $encode);
     }
 
     /**
@@ -146,6 +159,6 @@ final class XmlOutput implements ApiOutputInterface
      */
     public function success(string $string, array $return_data = []): string
     {
-        return Xml_Data::success($string, $return_data);
+        return Xml8_Data::success($string, $return_data);
     }
 }
