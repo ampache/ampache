@@ -295,9 +295,8 @@ class Dba
      * @param PDOStatement|null $resource
      * @param class-string<object> $class
      * @param bool $finish
-     * @return null|object
      */
-    public static function fetch_object($resource, $class = 'stdClass', $finish = true)
+    public static function fetch_object($resource, $class = 'stdClass', $finish = true): ?object
     {
         if (!$resource) {
             return null;
@@ -371,9 +370,8 @@ class Dba
      * _connect
      *
      * This connects to the database, used by the DBH function
-     * @return PDO|null
      */
-    private static function _connect()
+    private static function _connect(): ?PDO
     {
         $username = AmpConfig::get('database_username');
         $hostname = AmpConfig::get('database_hostname', '');
@@ -535,9 +533,8 @@ class Dba
      *
      * This is called by the class to return the database handle
      * for the specified database, if none is found it connects
-     * @return PDO|null
      */
-    public static function dbh()
+    public static function dbh(): ?PDO
     {
         $database = AmpConfig::get('database_name');
         if ($database == '') {
@@ -584,9 +581,8 @@ class Dba
 
     /**
      * insert_id
-     * @return string|false
      */
-    public static function insert_id()
+    public static function insert_id(): false|string
     {
         $dbh = self::dbh();
         if ($dbh !== null) {
