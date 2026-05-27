@@ -32,7 +32,6 @@ final class SongSearch implements SearchInterface
 {
     /**
      * Handles the generation of the SQL for song searches.
-     * @param Search $search
      * @return array{
      *     base: string,
      *     join: array<string, bool>,

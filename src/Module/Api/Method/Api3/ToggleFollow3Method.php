@@ -46,7 +46,6 @@ final class ToggleFollow3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function toggle_follow(array $input, User $user): void
     {

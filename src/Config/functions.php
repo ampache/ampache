@@ -594,7 +594,6 @@ function debug_event($type, $message, $level, $username = ''): bool
 }
 
 /**
- * @param string $action
  * @param int[]|null $catalogs
  * @param array<string, bool>|null $options
  */
@@ -1009,7 +1008,6 @@ function T_(string $msgid): string
  * @param string $original
  * @param string $plural
  * @param int|string|float $value
- * @return string
  */
 function nT_($original, $plural, $value): string
 {

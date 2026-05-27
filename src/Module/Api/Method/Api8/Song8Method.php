@@ -53,8 +53,6 @@ final class Song8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function song(array $input, User $user): bool
     {

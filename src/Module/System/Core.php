@@ -193,7 +193,6 @@ class Core
      * returns an empty array if PHP-GD is not currently installed, returns
      * false on error
      *
-     * @param string $image_data
      * @return array{width: int, height: int}
      */
     public static function image_dimensions(string $image_data): array

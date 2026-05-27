@@ -57,8 +57,6 @@ final class GenreArtists4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function genre_artists(array $input, User $user): bool
     {

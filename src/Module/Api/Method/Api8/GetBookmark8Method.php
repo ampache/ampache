@@ -65,8 +65,6 @@ final class GetBookmark8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function get_bookmark(array $input, User $user): bool
     {

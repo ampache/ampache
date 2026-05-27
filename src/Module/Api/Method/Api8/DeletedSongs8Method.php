@@ -55,8 +55,6 @@ final class DeletedSongs8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function deleted_songs(array $input, User $user): bool
     {

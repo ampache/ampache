@@ -67,8 +67,6 @@ final class CatalogFolder8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function catalog_folder(array $input, User $user): bool
     {

@@ -101,10 +101,7 @@ class SubsonicClient
     }
 
     /**
-     * @param string $action
      * @param array<string, int|string> $object
-     * @param bool $rawAnswer
-     * @return array|bool|object|string
      */
     public function querySubsonic(string $action, array $object = [], ?bool $rawAnswer = false): object|bool|array|string
     {
@@ -112,9 +109,7 @@ class SubsonicClient
     }
 
     /**
-     * @param string $url
      * @param array<string, int|string>|null $object
-     * @return string
      */
     public function parameterize(string $url, ?array $object = []): string
     {
@@ -124,10 +119,7 @@ class SubsonicClient
     }
 
     /**
-     * @param string $action
      * @param array<string, int|string>|null $object
-     * @param bool $rawAnswer
-     * @return array|bool|object|string
      */
     protected function _querySubsonic(string $action, ?array $object = [], ?bool $rawAnswer = false): object|bool|array|string
     {
@@ -201,9 +193,7 @@ class SubsonicClient
     }
 
     /**
-     * @param string $error
      * @param array<string, int|string>|null $data
-     * @return object
      */
     protected function error(string $error, ?array $data = null): object
     {
@@ -218,7 +208,6 @@ class SubsonicClient
 
     /**
      * @param bool|string $response
-     * @return array|object
      */
     protected function parseResponse($response): object|array
     {

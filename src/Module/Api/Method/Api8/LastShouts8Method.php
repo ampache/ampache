@@ -58,8 +58,6 @@ final class LastShouts8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function last_shouts(array $input, User $user): bool
     {

@@ -505,7 +505,6 @@ class Democratic extends Tmp_Playlist
      *     level: int,
      *     make_default: int,
      * } $data
-     * @return string|null
      */
     public static function create(array $data): ?string
     {

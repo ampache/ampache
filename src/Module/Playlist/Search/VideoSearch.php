@@ -32,7 +32,6 @@ final class VideoSearch implements SearchInterface
 {
     /**
      * Handles the generation of the SQL for video searches.
-     * @param Search $search
      * @return array{
      *     base: string,
      *     join: array<string, bool>,

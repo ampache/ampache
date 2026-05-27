@@ -86,7 +86,7 @@ class Query
 
     public ?int $user_id = null;
 
-    /** @var array $_state */
+    /**  */
     protected array $_state = [
         'album_artist' => false, // Used by $browse->set_type() to filter artists to album artist only
         'base' => null,
@@ -199,8 +199,6 @@ class Query
      *
      * Attempts to produce a more compact representation for large result
      * sets by collapsing ranges.
-     * @param array $data
-     * @return string
      */
     private function _serialize(array $data): string
     {
@@ -211,8 +209,6 @@ class Query
      * _unserialize
      *
      * Reverses serialization.
-     * @param string $data
-     * @return mixed
      */
     private function _unserialize(string $data): mixed
     {
@@ -1153,7 +1149,6 @@ class Query
      * _post_process
      * This does some additional work on the results that we've received
      * before returning them. TODO this is only for tags/genres? should do this in the select/return if possible
-     * @param array $data
      * @return array<array{id: int}>
      */
     private function _post_process(array $data): array
@@ -1367,7 +1362,6 @@ class Query
      * save_objects
      * This takes the full array of object ids, often passed into show and if necessary it saves them
      * @param int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}> $object_ids
-     * @return bool
      */
     public function save_objects(array $object_ids): bool
     {

@@ -48,11 +48,6 @@ class Scrobbler
     /**
      * Constructor
      * This is the constructer it takes a username and password
-     * @param string $api_key
-     * @param string|null $scheme
-     * @param string|null $host
-     * @param string|null $challenge
-     * @param string|null $secret
      */
     public function __construct(
         string  $api_key,
@@ -95,10 +90,7 @@ class Scrobbler
      * call_url
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
-     * @param string $url
-     * @param string $method
      * @param array<string, string>|null $vars
-     * @return string|null
      */
     public function call_url(string $url, string $method = 'GET', ?array $vars = []): ?string
     {

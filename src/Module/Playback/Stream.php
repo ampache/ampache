@@ -237,10 +237,6 @@ class Stream
      * Get transcode settings for media.
      * It can be confusing but when waveforms are enabled it will transcode the file twice.
      *
-     * @param string $source
-     * @param string|null $target
-     * @param string|null $player
-     * @param string $media_type
      * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
      * @return array{format?: string, command?: string}
      */
@@ -329,7 +325,6 @@ class Stream
      *
      * This is a rather complex function that starts the transcoding or
      * resampling of a media and returns the opened file handle.
-     * @param Podcast_Episode|Song|Video $media
      * @param array{format?: string, command?: string} $transcode_settings
      * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float}|string $options
      * @return array{
@@ -429,10 +424,8 @@ class Stream
      * get_max_bitrate
      *
      * get the transcoded bitrate for players that require a bit of guessing and without actually transcoding
-     * @param Podcast_Episode|Song|Video $media
      * @param array{format?: string, command?: string} $transcode_settings
      * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
-     * @return int
      */
     public static function get_max_bitrate(
         Podcast_Episode|Video|Song $media,
@@ -468,7 +461,6 @@ class Stream
     /**
      * get_image_preview
      * @param Video $media
-     * @return string|null
      */
     public static function get_image_preview($media): ?string
     {
@@ -506,7 +498,6 @@ class Stream
 
     /**
      * start_process
-     * @param string $command
      * @param array{format?: string} $settings
      * @return array{
      *     handle: resource|null,
@@ -641,7 +632,6 @@ class Stream
      * get_now_playing
      *
      * This returns the Now Playing information
-     * @param int $user_id
      * @return list<array{
      *     media: library_item,
      *     client: User,

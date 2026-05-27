@@ -67,8 +67,6 @@ final class Search6Method
      * limit           = (integer) //optional
      *
      * @param array<string, mixed> $input
-     * @param User $user
-     * @return bool
      */
     public static function search(array $input, User $user): bool
     {

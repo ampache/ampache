@@ -59,8 +59,6 @@ final class CatalogAction6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function catalog_action(array $input, User $user): bool
     {

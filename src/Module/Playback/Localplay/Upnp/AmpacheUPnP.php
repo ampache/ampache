@@ -164,7 +164,6 @@ class AmpacheUPnP extends localplay_controller
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
-     * @param int $uid
      * @param array{
      *     url: string,
      *     name: string,
@@ -197,7 +196,6 @@ class AmpacheUPnP extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all it's variables
-     * @param string|null $instance
      * @return array{
      *     id?: int,
      *     name?: string,
@@ -273,8 +271,6 @@ class AmpacheUPnP extends localplay_controller
     /**
      * delete_track
      * Delete a track from the UPnP playlist
-     * @param int $object_id
-     * @return bool
      */
     public function delete_track(int $object_id): bool
     {

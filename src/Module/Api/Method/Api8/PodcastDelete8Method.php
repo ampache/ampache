@@ -77,16 +77,11 @@ final class PodcastDelete8Method implements MethodInterface
      *
      * filter = (string) ID of podcast to delete
      *
-     * @param GatekeeperInterface $gatekeeper
-     * @param ResponseInterface $response
-     * @param ApiOutputInterface $output
      * @param array{
      *     filter?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return ResponseInterface
      * @throws AccessDeniedException|RequestParamMissingException|ResultEmptyException
      */
     public function handle(

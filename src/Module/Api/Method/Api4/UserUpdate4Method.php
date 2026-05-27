@@ -76,8 +76,6 @@ final class UserUpdate4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function user_update(array $input, User $user): bool
     {

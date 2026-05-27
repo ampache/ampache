@@ -144,7 +144,6 @@ final class Mailer implements MailerInterface
      * get_users
      * This returns an array of userids for people who have e-mail
      * addresses based on the passed filter
-     * @param string $filter
      * @return array<int, array{id: string, fullname: ?string, username: string, email: string}>
      */
     public static function get_users(string $filter): array

@@ -104,7 +104,6 @@ class Search extends playlist_object
      * constructor
      * @param int $search_id // saved searches have rules already
      * @param string $object_type // map to self::VALID_TYPES
-     * @param User|null $user
      */
     public function __construct(
         int $search_id = 0,
@@ -1299,7 +1298,6 @@ class Search extends playlist_object
     /**
      * get_search_array
      * Returns a list of searches accessible by the user with formatted name.
-     * @param int|null $user_id
      * @return string[]
      */
     public static function get_search_array(?int $user_id = null): array
@@ -1341,7 +1339,6 @@ class Search extends playlist_object
      *
      * This function prepares the sql and parameters for execution.
      * @param array<string, mixed> $data
-     * @param User|null $user
      * @param bool $require_rules // require a valid rule to return search items (instead of returning all items)
      * @return array{
      *     sql: string,
@@ -1410,7 +1407,6 @@ class Search extends playlist_object
      * This function actually runs the search and returns an array of the
      * results.
      * @param array<string, mixed> $data
-     * @param User|null $user
      * @param bool $require_rules // require a valid rule to return search items (instead of returning all items)
      * @return int[]
      */
@@ -2137,8 +2133,6 @@ class Search extends playlist_object
      * Private convenience function.  Mangles the input according to a set
      * of predefined rules so that we don't have to include this logic in
      * _get_sql_foo.
-     * @param string $data
-     * @param string $type
      * @param array{
      *     name?: string,
      *     description?: string,
@@ -2146,7 +2140,6 @@ class Search extends playlist_object
      *     preg_match?: string|array,
      *     preg_replace?: string|array,
      * } $operator
-     * @return bool|int|null|string
      */
     public function filter_data(string $data, string $type, array $operator): bool|int|string|null
     {

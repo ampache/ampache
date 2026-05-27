@@ -63,8 +63,6 @@ final class UserSmartlists8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function user_smartlists(array $input, User $user): bool
     {

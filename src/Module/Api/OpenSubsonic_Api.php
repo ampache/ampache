@@ -508,8 +508,6 @@ class OpenSubsonic_Api
     /**
      * _albumList
      * @param array<string, mixed> $input
-     * @param User $user
-     * @param string $type
      * @return int[]|null
      */
     private static function _albumList(array $input, User $user, string $type): ?array
@@ -591,8 +589,6 @@ class OpenSubsonic_Api
     /**
      * _setStar
      * @param array<string, mixed> $input
-     * @param User $user
-     * @param bool $star
      */
     private static function _setStar(array $input, User $user, bool $star): void
     {
@@ -751,8 +747,6 @@ class OpenSubsonic_Api
     /**
      * check_parameter
      * @param array<string, mixed> $input
-     * @param string $parameter
-     * @param string $function
      * @return false|mixed
      */
     private static function _check_parameter(array $input, string $parameter, string $function): mixed
@@ -893,12 +887,8 @@ class OpenSubsonic_Api
 
     /**
      * _updatePlaylist
-     * @param int $playlist_id
-     * @param string $name
      * @param int[]|string[] $songsIdToAdd
      * @param int[]|string[] $songIndexToRemove
-     * @param bool $public
-     * @param bool $clearFirst
      */
     private static function _updatePlaylist(
         int $playlist_id,
@@ -940,7 +930,6 @@ class OpenSubsonic_Api
 
     /**
      * _xmlOutput
-     * @param SimpleXMLElement $xml
      */
     private static function _xmlOutput(SimpleXMLElement $xml): void
     {
@@ -988,7 +977,6 @@ class OpenSubsonic_Api
     /**
      * _jsonpOutput
      * @param array{'subsonic-response': array<string, mixed>} $json
-     * @param string $callback
      */
     private static function _jsonpOutput(array $json, string $callback): void
     {
@@ -1094,7 +1082,6 @@ class OpenSubsonic_Api
      * Adds a message to the chat log.
      * https://opensubsonic.netlify.app/docs/endpoints/addchatmessage/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function addchatmessage(array $input, User $user): void
     {
@@ -1120,7 +1107,6 @@ class OpenSubsonic_Api
      * Changes the password of an existing user on the server.
      * https://opensubsonic.netlify.app/docs/endpoints/changepassword/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function changepassword(array $input, User $user): void
     {
@@ -1154,7 +1140,6 @@ class OpenSubsonic_Api
      * Creates or updates a bookmark.
      * https://opensubsonic.netlify.app/docs/endpoints/createbookmark/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function createbookmark(array $input, User $user): void
     {
@@ -1200,7 +1185,6 @@ class OpenSubsonic_Api
      * Adds a new internet radio station.
      * https://opensubsonic.netlify.app/docs/endpoints/createinternetradiostation/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function createinternetradiostation(array $input, User $user): void
     {
@@ -1241,7 +1225,6 @@ class OpenSubsonic_Api
      * Creates (or updates) a playlist.
      * https://opensubsonic.netlify.app/docs/endpoints/createplaylist/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function createplaylist(array $input, User $user): void
     {
@@ -1287,7 +1270,6 @@ class OpenSubsonic_Api
      * Adds a new Podcast channel.
      * https://opensubsonic.netlify.app/docs/endpoints/createpodcastchannel/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function createpodcastchannel(array $input, User $user): void
     {
@@ -1327,7 +1309,6 @@ class OpenSubsonic_Api
      * Creates a public URL that can be used by anyone to stream music or video from the server.
      * https://opensubsonic.netlify.app/docs/endpoints/createshare/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function createshare(array $input, User $user): void
     {
@@ -1433,7 +1414,6 @@ class OpenSubsonic_Api
      * Creates a new user on the server.
      * https://opensubsonic.netlify.app/docs/endpoints/createuser/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function createuser(array $input, User $user): void
     {
@@ -1494,7 +1474,6 @@ class OpenSubsonic_Api
      * Creates or updates a bookmark.
      * https://opensubsonic.netlify.app/docs/endpoints/deletebookmark/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function deletebookmark(array $input, User $user): void
     {
@@ -1522,7 +1501,6 @@ class OpenSubsonic_Api
      * Deletes an existing internet radio station.
      * https://opensubsonic.netlify.app/docs/endpoints/deleteinternetradiostation/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function deleteinternetradiostation(array $input, User $user): void
     {
@@ -1557,7 +1535,6 @@ class OpenSubsonic_Api
      * Deletes a saved playlist.
      * https://opensubsonic.netlify.app/docs/endpoints/deleteplaylist/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function deleteplaylist(array $input, User $user): void
     {
@@ -1593,7 +1570,6 @@ class OpenSubsonic_Api
      * Deletes a Podcast channel.
      * https://opensubsonic.netlify.app/docs/endpoints/deletepodcastchannel/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function deletepodcastchannel(array $input, User $user): void
     {
@@ -1625,7 +1601,6 @@ class OpenSubsonic_Api
      * Deletes a Podcast episode.
      * https://opensubsonic.netlify.app/docs/endpoints/deletepodcastepisode/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function deletepodcastepisode(array $input, User $user): void
     {
@@ -1656,7 +1631,6 @@ class OpenSubsonic_Api
      * Deletes an existing share.
      * https://opensubsonic.netlify.app/docs/endpoints/deleteshare/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function deleteshare(array $input, User $user): void
     {
@@ -1694,7 +1668,6 @@ class OpenSubsonic_Api
      * Deletes an existing user on the server.
      * https://opensubsonic.netlify.app/docs/endpoints/deleteuser/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function deleteuser(array $input, User $user): void
     {
@@ -1723,7 +1696,6 @@ class OpenSubsonic_Api
      * Downloads a given media file.
      * https://opensubsonic.netlify.app/docs/endpoints/download/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function download(array $input, User $user): void
     {
@@ -1751,7 +1723,6 @@ class OpenSubsonic_Api
      * Request the server to start downloading a given Podcast episode.
      * https://opensubsonic.netlify.app/docs/endpoints/downloadpodcastepisode/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function downloadpodcastepisode(array $input, User $user): void
     {
@@ -1780,7 +1751,6 @@ class OpenSubsonic_Api
      * Returns details for an album.
      * https://opensubsonic.netlify.app/docs/endpoints/getalbum/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getalbum(array $input, User $user): void
     {
@@ -1814,7 +1784,6 @@ class OpenSubsonic_Api
      * Returns album info.
      * https://opensubsonic.netlify.app/docs/endpoints/getalbuminfo/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getalbuminfo(array $input, User $user): void
     {
@@ -1849,7 +1818,6 @@ class OpenSubsonic_Api
      * Returns album info.
      * https://opensubsonic.netlify.app/docs/endpoints/getalbuminfo2/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getalbuminfo2(array $input, User $user): void
     {
@@ -1862,7 +1830,6 @@ class OpenSubsonic_Api
      * Returns a list of random, newest, highest rated etc. albums.
      * https://opensubsonic.netlify.app/docs/endpoints/getalbumlist/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getalbumlist(array $input, User $user): void
     {
@@ -1899,7 +1866,6 @@ class OpenSubsonic_Api
      * Returns a list of random, newest, highest rated etc. albums.
      * https://opensubsonic.netlify.app/docs/endpoints/getalbumlist2/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getalbumlist2(array $input, User $user): void
     {
@@ -1936,7 +1902,6 @@ class OpenSubsonic_Api
      * Returns details for an artist.
      * https://opensubsonic.netlify.app/docs/endpoints/getartist/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getartist(array $input, User $user): void
     {
@@ -1970,7 +1935,6 @@ class OpenSubsonic_Api
      * Returns artist info.
      * https://opensubsonic.netlify.app/docs/endpoints/getartistinfo/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getartistinfo(array $input, User $user): void
     {
@@ -2009,7 +1973,6 @@ class OpenSubsonic_Api
      * Returns artist info.
      * https://opensubsonic.netlify.app/docs/endpoints/getartistinfo2/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getartistinfo2(array $input, User $user): void
     {
@@ -2048,7 +2011,6 @@ class OpenSubsonic_Api
      * Returns all artists.
      * https://opensubsonic.netlify.app/docs/endpoints/getartists/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getartists(array $input, User $user): void
     {
@@ -2077,7 +2039,6 @@ class OpenSubsonic_Api
      * Returns the avatar (personal image) for a user.
      * https://opensubsonic.netlify.app/docs/endpoints/getavatar/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getavatar(array $input, User $user): void
     {
@@ -2115,7 +2076,6 @@ class OpenSubsonic_Api
      * Returns all bookmarks for this user.
      * https://opensubsonic.netlify.app/docs/endpoints/getbookmarks/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getbookmarks(array $input, User $user): void
     {
@@ -2147,7 +2107,6 @@ class OpenSubsonic_Api
      * Returns captions (subtitles) for a video.
      * https://opensubsonic.netlify.app/docs/endpoints/getcaptions/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getcaptions(array $input, User $user): void
     {
@@ -2162,7 +2121,6 @@ class OpenSubsonic_Api
      * Returns the current visible (non-expired) chat messages.
      * https://opensubsonic.netlify.app/docs/endpoints/getchatmessages/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getchatmessages(array $input, User $user): void
     {
@@ -2195,7 +2153,6 @@ class OpenSubsonic_Api
      * Returns a cover art image.
      * https://opensubsonic.netlify.app/docs/endpoints/getcoverart/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getcoverart(array $input, User $user): void
     {
@@ -2275,7 +2232,6 @@ class OpenSubsonic_Api
      * Returns all genres.
      * https://opensubsonic.netlify.app/docs/endpoints/getgenres/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getgenres(array $input, User $user): void
     {
@@ -2298,7 +2254,6 @@ class OpenSubsonic_Api
      * Returns an indexed structure of all artists.
      * https://opensubsonic.netlify.app/docs/endpoints/getindexes/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getindexes(array $input, User $user): void
     {
@@ -2367,7 +2322,6 @@ class OpenSubsonic_Api
      * Returns all internet radio stations.
      * https://opensubsonic.netlify.app/docs/endpoints/getinternetradiostations/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getinternetradiostations(array $input, User $user): void
     {
@@ -2389,7 +2343,6 @@ class OpenSubsonic_Api
      * Get details about the software license.
      * https://opensubsonic.netlify.app/docs/endpoints/getlicense/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getlicense(array $input, User $user): void
     {
@@ -2412,7 +2365,6 @@ class OpenSubsonic_Api
      * Searches for and returns lyrics for a given song.
      * https://opensubsonic.netlify.app/docs/endpoints/getlyrics/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getlyrics(array $input, User $user): void
     {
@@ -2467,7 +2419,6 @@ class OpenSubsonic_Api
      * Add support for synchronized lyrics, multiple languages, and retrieval by song ID
      * https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getlyricsbysongid(array $input, User $user): void
     {
@@ -2500,7 +2451,6 @@ class OpenSubsonic_Api
      * Returns a listing of all files in a music directory.
      * https://opensubsonic.netlify.app/docs/endpoints/getmusicdirectory/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getmusicdirectory(array $input, User $user): void
     {
@@ -2545,7 +2495,6 @@ class OpenSubsonic_Api
      * Returns all configured top-level music folders.
      * https://opensubsonic.netlify.app/docs/endpoints/getmusicfolders/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getmusicfolders(array $input, User $user): void
     {
@@ -2567,7 +2516,6 @@ class OpenSubsonic_Api
      * Returns the most recently published Podcast episodes.
      * https://opensubsonic.netlify.app/docs/endpoints/getnewestpodcasts/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getnewestpodcasts(array $input, User $user): void
     {
@@ -2597,7 +2545,6 @@ class OpenSubsonic_Api
      * Returns what is currently being played by all users.
      * https://opensubsonic.netlify.app/docs/endpoints/getnowplaying/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getnowplaying(array $input, User $user): void
     {
@@ -2620,7 +2567,6 @@ class OpenSubsonic_Api
      * List the OpenSubsonic extensions supported by this server.
      * https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getopensubsonicextensions(array $input, User $user): void
     {
@@ -2652,7 +2598,6 @@ class OpenSubsonic_Api
      * Returns a listing of files in a saved playlist.
      * https://opensubsonic.netlify.app/docs/endpoints/getplaylist/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getplaylist(array $input, User $user): void
     {
@@ -2689,7 +2634,6 @@ class OpenSubsonic_Api
      * Returns all playlists a user is allowed to play.
      * https://opensubsonic.netlify.app/docs/endpoints/getplaylists/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getplaylists(array $input, User $user): void
     {
@@ -2732,7 +2676,6 @@ class OpenSubsonic_Api
      * Returns the state of the play queue for this user.
      * https://opensubsonic.netlify.app/docs/endpoints/getplayqueue/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getplayqueue(array $input, User $user): void
     {
@@ -2756,7 +2699,6 @@ class OpenSubsonic_Api
      * Returns the state of the play queue for this user.
      * https://opensubsonic.netlify.app/docs/endpoints/getplayqueue/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getplayqueuebyindex(array $input, User $user): void
     {
@@ -2780,7 +2722,6 @@ class OpenSubsonic_Api
      * Returns details for a podcast episode.
      * https://opensubsonic.netlify.app/docs/endpoints/getpodcastepisode/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getpodcastepisode(array $input, User $user): void
     {
@@ -2820,7 +2761,6 @@ class OpenSubsonic_Api
      * Returns all Podcast channels the server subscribes to, and (optionally) their episodes.
      * https://opensubsonic.netlify.app/docs/endpoints/getpodcasts/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getpodcasts(array $input, User $user): void
     {
@@ -2864,7 +2804,6 @@ class OpenSubsonic_Api
      * Returns random songs matching the given criteria.
      * https://opensubsonic.netlify.app/docs/endpoints/getrandomsongs/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getrandomsongs(array $input, User $user): void
     {
@@ -2945,7 +2884,6 @@ class OpenSubsonic_Api
      * Returns the current status for media library scanning.
      * https://opensubsonic.netlify.app/docs/endpoints/getscanstatus/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getscanstatus(array $input, User $user): void
     {
@@ -2966,7 +2904,6 @@ class OpenSubsonic_Api
      * Returns information about shared media this user is allowed to manage.
      * https://opensubsonic.netlify.app/docs/endpoints/getshares/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getshares(array $input, User $user): void
     {
@@ -3073,7 +3010,6 @@ class OpenSubsonic_Api
      * Returns a random collection of songs from the given artist and similar artists.
      * https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs2/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getsimilarsongs2(array $input, User $user): void
     {
@@ -3086,7 +3022,6 @@ class OpenSubsonic_Api
      * Returns details for a song.
      * https://opensubsonic.netlify.app/docs/endpoints/getsong/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getsong(array $input, User $user): void
     {
@@ -3127,7 +3062,6 @@ class OpenSubsonic_Api
      * Returns songs in a given genre.
      * https://opensubsonic.netlify.app/docs/endpoints/getsongsbygenre/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getsongsbygenre(array $input, User $user): void
     {
@@ -3224,7 +3158,6 @@ class OpenSubsonic_Api
      * Returns starred songs, albums and artists.
      * https://opensubsonic.netlify.app/docs/endpoints/getstarred2/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getstarred2(array $input, User $user): void
     {
@@ -3237,7 +3170,6 @@ class OpenSubsonic_Api
      * Returns top songs for the given artist.
      * https://opensubsonic.netlify.app/docs/endpoints/gettopsongs/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function gettopsongs(array $input, User $user): void
     {
@@ -3277,7 +3209,6 @@ class OpenSubsonic_Api
      * Get details about a given user, including which authorization roles and folder access it has.
      * https://opensubsonic.netlify.app/docs/endpoints/getuser/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function geuser(array $input, User $user): void
     {
@@ -3318,7 +3249,6 @@ class OpenSubsonic_Api
      * Get details about all users, including which authorization roles and folder access they have.
      * https://opensubsonic.netlify.app/docs/endpoints/getuser/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getuser(array $input, User $user): void
     {
@@ -3357,7 +3287,6 @@ class OpenSubsonic_Api
      * Get details about all users, including which authorization roles and folder access they have.
      * https://opensubsonic.netlify.app/docs/endpoints/getusers/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getusers(array $input, User $user): void
     {
@@ -3385,7 +3314,6 @@ class OpenSubsonic_Api
      * Returns details for a video.
      * https://opensubsonic.netlify.app/docs/endpoints/getvideoinfo/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getvideoinfo(array $input, User $user): void
     {
@@ -3419,7 +3347,6 @@ class OpenSubsonic_Api
      * Returns all video files.
      * https://opensubsonic.netlify.app/docs/endpoints/getvideos/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function getvideos(array $input, User $user): void
     {
@@ -3443,7 +3370,6 @@ class OpenSubsonic_Api
      * Downloads a given media file.
      * https://opensubsonic.netlify.app/docs/endpoints/hls/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function hls(array $input, User $user): void
     {
@@ -3496,7 +3422,6 @@ class OpenSubsonic_Api
      * Controls the jukebox, i.e., playback directly on the server’s audio hardware.
      * https://opensubsonic.netlify.app/docs/endpoints/jukeboxcontrol/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function jukeboxcontrol(array $input, User $user): void
     {
@@ -3620,7 +3545,6 @@ class OpenSubsonic_Api
      * Used to test connectivity with the server.
      * https://opensubsonic.netlify.app/docs/endpoints/ping/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function ping(array $input, User $user): void
     {
@@ -3635,7 +3559,6 @@ class OpenSubsonic_Api
      * Requests the server to check for new Podcast episodes.
      * https://opensubsonic.netlify.app/docs/endpoints/refreshpodcasts/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function refreshpodcasts(array $input, User $user): void
     {
@@ -3659,7 +3582,6 @@ class OpenSubsonic_Api
      * Saves the state of the play queue for this user.
      * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueue/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function saveplayqueue(array $input, User $user): void
     {
@@ -3743,7 +3665,6 @@ class OpenSubsonic_Api
      * Saves the state of the play queue for this user.
      * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueuebyindex/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function saveplayqueuebyindex(array $input, User $user): void
     {
@@ -3834,7 +3755,6 @@ class OpenSubsonic_Api
      * Registers the local playback of one or more media files.
      * https://opensubsonic.netlify.app/docs/endpoints/scrobble/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function scrobble(array $input, User $user): void
     {
@@ -3906,7 +3826,6 @@ class OpenSubsonic_Api
      *
      * https://opensubsonic.netlify.app/docs/endpoints/search/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function search(array $input, User $user): void
     {
@@ -3982,7 +3901,6 @@ class OpenSubsonic_Api
      * Returns a listing of files matching the given search criteria. Supports paging through the result.
      * https://opensubsonic.netlify.app/docs/endpoints/search2/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function search2(array $input, User $user): void
     {
@@ -4006,7 +3924,6 @@ class OpenSubsonic_Api
      * Returns albums, artists and songs matching the given search criteria. Supports paging through the result.
      * https://opensubsonic.netlify.app/docs/endpoints/search3/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function search3(array $input, User $user): void
     {
@@ -4030,7 +3947,6 @@ class OpenSubsonic_Api
      * Sets the rating for a music file.
      * https://opensubsonic.netlify.app/docs/endpoints/setrating/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function setrating(array $input, User $user): void
     {
@@ -4064,7 +3980,6 @@ class OpenSubsonic_Api
      * Attaches a star to a song, album or artist.
      * https://opensubsonic.netlify.app/docs/endpoints/star/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function star(array $input, User $user): void
     {
@@ -4077,7 +3992,6 @@ class OpenSubsonic_Api
      * Initiates a rescan of the media libraries.
      * https://opensubsonic.netlify.app/docs/endpoints/startscan/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function startscan(array $input, User $user): void
     {
@@ -4098,7 +4012,6 @@ class OpenSubsonic_Api
      * Streams a given media file.
      * https://opensubsonic.netlify.app/docs/endpoints/stream/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function stream(array $input, User $user): void
     {
@@ -4146,7 +4059,6 @@ class OpenSubsonic_Api
      * Returns information about an API key.
      * https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function tokeninfo(array $input, User $user): void
     {
@@ -4167,7 +4079,6 @@ class OpenSubsonic_Api
      * Attaches a star to a song, album or artist.
      * https://opensubsonic.netlify.app/docs/endpoints/unstar/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function unstar(array $input, User $user): void
     {
@@ -4180,7 +4091,6 @@ class OpenSubsonic_Api
      * Updates an existing internet radio station.
      * https://opensubsonic.netlify.app/docs/endpoints/updateinternetradiostation/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function updateinternetradiostation(array $input, User $user): void
     {
@@ -4229,7 +4139,6 @@ class OpenSubsonic_Api
      * Updates a playlist. Only the owner of a playlist is allowed to update it.
      * https://opensubsonic.netlify.app/docs/endpoints/updateplaylist/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function updateplaylist(array $input, User $user): void
     {
@@ -4272,7 +4181,6 @@ class OpenSubsonic_Api
      * Updates the description and/or expiration date for an existing share.
      * https://opensubsonic.netlify.app/docs/endpoints/updateshare/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function updateshare(array $input, User $user): void
     {
@@ -4313,7 +4221,6 @@ class OpenSubsonic_Api
      * Modifies an existing user on the server.
      * https://opensubsonic.netlify.app/docs/endpoints/updateuser/
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function updateuser(array $input, User $user): void
     {

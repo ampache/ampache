@@ -96,7 +96,6 @@ class easy_captcha
     // init data
     /**
      * easy_captcha constructor.
-     * @param $captcha_id
      * @param int $ignore_expiration
      */
     public function __construct(
@@ -163,7 +162,6 @@ class easy_captcha
     // examine if captcha data is fresh
 
     /**
-     * @return bool
      */
     public function is_valid(): bool
     {
@@ -183,7 +181,6 @@ class easy_captcha
     // check backends for correctness of solution
 
     /**
-     * @param $input
      * @return bool
      */
     public function solved($input = null)
@@ -287,9 +284,6 @@ class easy_captcha
     // noteworthy stuff goes here
 
     /**
-     * @param $error
-     * @param $category
-     * @param $message
      * @return bool
      */
     public function log($error, $category, $message)
@@ -391,7 +385,6 @@ class easy_captcha
     // unreversable hash from passphrase, with time() slice encoded
 
     /**
-     * @param $text
      * @param int $dtime
      * @param int $length
      * @return string

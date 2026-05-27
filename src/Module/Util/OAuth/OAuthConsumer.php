@@ -48,9 +48,6 @@ class OAuthConsumer
 
     /**
      * OAuthConsumer constructor.
-     * @param $key
-     * @param $secret
-     * @param $callback_url
      */
     public function __construct(
         $key,

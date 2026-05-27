@@ -55,8 +55,6 @@ final class SongDelete8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function song_delete(array $input, User $user): bool
     {
@@ -96,8 +94,6 @@ final class SongDelete8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function songs_delete(array $input, User $user): bool
     {

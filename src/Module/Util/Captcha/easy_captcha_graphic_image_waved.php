@@ -183,9 +183,6 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
     // get 4 pixels from source image, merges BLUE value simply
 
     /**
-     * @param $image
-     * @param $xaxis
-     * @param $yaxis
      * @return int
      */
     public function get_2x2_greyscale(&$image, $xaxis, $yaxis)
@@ -203,9 +200,6 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
     // smooth pixel reading (with x,y being reals, not integers)
 
     /**
-     * @param $i
-     * @param $x
-     * @param $y
      * @return array
      */
     public function get_2x2_smooth(&$i, $x, $y)
@@ -236,9 +230,6 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
     // imagegetcolor from current ->$img split up into RGB array
 
     /**
-     * @param $img
-     * @param $x
-     * @param $y
      * @return array
      */
     public function get_RGB(&$img, $x, $y)

@@ -61,7 +61,6 @@ final class Register6Method
      *     email: string,
      *     api_format: string,
      * } $input
-     * @return bool
      */
     public static function register(array $input): bool
     {

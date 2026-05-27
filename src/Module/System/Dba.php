@@ -52,7 +52,6 @@ class Dba
      * @param array $params
      * @param bool $silent
      * @param Interactor|null $interactor
-     * @return PDOStatement|null
      */
     public static function query($sql, $params = [], $silent = false, $interactor = null): ?PDOStatement
     {
@@ -83,7 +82,6 @@ class Dba
      * @param string $sql
      * @param array $params
      * @param bool $silent
-     * @return PDOStatement|null
      */
     private static function _query($sql, $params, $silent = false): ?PDOStatement
     {
@@ -144,7 +142,6 @@ class Dba
      * @param string $sql
      * @param array $params
      * @param bool $silent
-     * @return PDOStatement|null
      */
     public static function read($sql, $params = [], $silent = false): ?PDOStatement
     {
@@ -156,7 +153,6 @@ class Dba
      * @param string $sql
      * @param array $params
      * @param bool $silent
-     * @return PDOStatement|null
      */
     public static function write($sql, $params = [], $silent = false): ?PDOStatement
     {
@@ -168,7 +164,6 @@ class Dba
      *
      * This runs an escape on a variable so that it can be safely inserted
      * into the sql
-     * @param mixed $var
      */
     public static function escape($var): ?string
     {
@@ -212,7 +207,6 @@ class Dba
      * up the result set after the last row is read.
      * @param PDOStatement|null $resource
      * @param bool $finish
-     * @return array
      */
     public static function fetch_assoc($resource, $finish = true): array
     {
@@ -242,7 +236,6 @@ class Dba
      * up the result set after the last row is read.
      * @param PDOStatement|null $resource
      * @param bool $finish
-     * @return array
      */
     public static function fetch_row($resource, $finish = true): array
     {
@@ -269,10 +262,7 @@ class Dba
      * Returns just the first column of a db-query result
      * (or null, if the query fails). Useful, e.g. for count-results
      *
-     * @param string $query
      * @param list<scalar> $parameter
-     * @param bool $finish
-     * @return string|null
      */
     public static function fetch_single_column(
         string $query,
@@ -620,7 +610,6 @@ class Dba
      *
      * This translates the specified charset to a mysql charset.
      * @param string|null $charset
-     * @return array
      */
     public static function translate_to_mysqlcharset($charset): array
     {

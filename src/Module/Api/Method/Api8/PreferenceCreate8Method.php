@@ -70,8 +70,6 @@ final class PreferenceCreate8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function preference_create(array $input, User $user): bool
     {
@@ -141,8 +139,6 @@ final class PreferenceCreate8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function preferences_create(array $input, User $user): bool
     {

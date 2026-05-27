@@ -78,8 +78,6 @@ final class GetIndexes8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function get_indexes(array $input, User $user): bool
     {

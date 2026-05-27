@@ -65,8 +65,6 @@ final class CatalogCreate8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function catalog_add(array $input, User $user): bool
     {
@@ -87,8 +85,6 @@ final class CatalogCreate8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function catalogs_create(array $input, User $user): bool
     {

@@ -32,7 +32,6 @@ final class PlaylistSearch implements SearchInterface
 {
     /**
      * Handles the generation of the SQL for playlist searches.
-     * @param Search $search
      * @return array{
      *     base: string,
      *     join: array<string, bool>,

@@ -70,8 +70,6 @@ final class BookmarkEdit8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function bookmark_edit(array $input, User $user): bool
     {
@@ -156,8 +154,6 @@ final class BookmarkEdit8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function bookmarks_edit(array $input, User $user): bool
     {

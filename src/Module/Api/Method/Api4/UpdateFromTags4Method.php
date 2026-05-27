@@ -55,8 +55,6 @@ final class UpdateFromTags4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function update_from_tags(array $input, User $user): bool
     {

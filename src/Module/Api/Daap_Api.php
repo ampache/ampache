@@ -491,8 +491,6 @@ class Daap_Api
     }
 
     /**
-     * @param $songs
-     * @param $meta
      */
     private static function tlv_songs($songs, $meta): string
     {
@@ -607,8 +605,6 @@ class Daap_Api
     }
 
     /**
-     * @param $tag
-     * @param $value
      */
     private static function tlv($tag, $value): string
     {
@@ -645,8 +641,6 @@ class Daap_Api
     }
 
     /**
-     * @param $tag
-     * @param $value
      */
     private static function tlv_string($tag, $value): string
     {
@@ -654,8 +648,6 @@ class Daap_Api
     }
 
     /**
-     * @param $tag
-     * @param $value
      */
     private static function tlv_long($tag, $value): string
     {
@@ -670,8 +662,6 @@ class Daap_Api
     }
 
     /**
-     * @param $tag
-     * @param $value
      */
     private static function tlv_int($tag, $value): string
     {
@@ -679,8 +669,6 @@ class Daap_Api
     }
 
     /**
-     * @param $tag
-     * @param $value
      */
     private static function tlv_short($tag, $value): string
     {
@@ -688,8 +676,6 @@ class Daap_Api
     }
 
     /**
-     * @param $tag
-     * @param $value
      */
     private static function tlv_byte($tag, $value): string
     {
@@ -697,8 +683,6 @@ class Daap_Api
     }
 
     /**
-     * @param $tag
-     * @param $value
      */
     private static function tlv_version($tag, $value): string
     {
@@ -713,8 +697,6 @@ class Daap_Api
     }
 
     /**
-     * @param $tag
-     * @param $value
      */
     private static function tlv_date($tag, $value): string
     {
@@ -722,8 +704,6 @@ class Daap_Api
     }
 
     /**
-     * @param $tag
-     * @param $value
      */
     private static function tlv_list($tag, $value): string
     {
@@ -844,7 +824,6 @@ class Daap_Api
     }
 
     /**
-     * @param $type
      */
     private static function get_type_id($type): int
     {
@@ -903,7 +882,6 @@ class Daap_Api
     }
 
     /**
-     * @param $code
      */
     public static function createError($code): bool
     {

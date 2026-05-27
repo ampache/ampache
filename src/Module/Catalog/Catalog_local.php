@@ -547,8 +547,6 @@ class Catalog_local extends Catalog
     /**
      * add_to_catalog
      * @param null|array<string, string|bool> $options
-     * @param null|Interactor $interactor
-     * @return int
      */
     public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
@@ -1438,7 +1436,6 @@ class Catalog_local extends Catalog
      * here
      * @param string $file
      * @param array<string, mixed> $options
-     * @return int
      * @throws Exception
      * @throws Exception
      */
@@ -1497,7 +1494,6 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Video $media
      * @return array{
      *     file_path: string,
      *     file_name: string,

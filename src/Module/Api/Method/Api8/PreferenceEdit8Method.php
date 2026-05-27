@@ -62,8 +62,6 @@ final class PreferenceEdit8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function preference_edit(array $input, User $user): bool
     {
@@ -125,8 +123,6 @@ final class PreferenceEdit8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function preferences_edit(array $input, User $user): bool
     {

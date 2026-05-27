@@ -54,8 +54,6 @@ final class TagArtists4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function tag_artists(array $input, User $user): bool
     {

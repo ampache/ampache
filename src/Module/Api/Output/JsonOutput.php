@@ -127,12 +127,7 @@ final class JsonOutput implements ApiOutputInterface
      *
      * @param list<int|string> $albums
      * @param string[] $include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
-     * @param bool $asObject
      *
-     * @return string
      */
     public function albums(
         array $albums,
@@ -151,7 +146,6 @@ final class JsonOutput implements ApiOutputInterface
      *
      * @param string $string success message
      * @param array<string, string> $return_data
-     * @return string
      */
     public function success(string $string, array $return_data = []): string
     {

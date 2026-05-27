@@ -537,7 +537,6 @@ class Stream_Playlist
      *     transcode_to?: string,
      *     custom_play_action?: string
      * }> $media
-     * @param string $additional_params
      */
     public function add(array $media = [], string $additional_params = ''): void
     {

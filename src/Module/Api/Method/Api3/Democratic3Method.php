@@ -47,7 +47,6 @@ final class Democratic3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function democratic(array $input, User $user): void
     {

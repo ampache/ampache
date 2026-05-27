@@ -64,7 +64,6 @@ final class AdvancedSearch4Method
      * limit           = (integer)
      *
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function advanced_search(array $input, User $user): void
     {

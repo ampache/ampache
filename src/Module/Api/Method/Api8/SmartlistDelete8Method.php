@@ -54,8 +54,6 @@ final class SmartlistDelete8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function smartlist_delete(array $input, User $user): bool
     {
@@ -81,8 +79,6 @@ final class SmartlistDelete8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function smartlists_delete(array $input, User $user): bool
     {

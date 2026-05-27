@@ -65,8 +65,6 @@ final class Download8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function download(array $input, User $user): bool
     {

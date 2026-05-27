@@ -48,7 +48,6 @@ final class PlaylistRemoveSong3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function playlist_remove_song(array $input, User $user): void
     {

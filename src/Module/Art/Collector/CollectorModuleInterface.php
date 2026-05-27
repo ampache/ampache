@@ -28,8 +28,6 @@ use Ampache\Repository\Model\Art;
 interface CollectorModuleInterface
 {
     /**
-     * @param Art $art
-     * @param int $limit
      * @param array{
      *     mb_albumid?: string,
      *     artist?: string,

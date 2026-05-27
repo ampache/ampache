@@ -50,8 +50,6 @@ final class Song4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function song(array $input, User $user): bool
     {

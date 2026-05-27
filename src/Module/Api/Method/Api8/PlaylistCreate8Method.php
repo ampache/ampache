@@ -58,8 +58,6 @@ final class PlaylistCreate8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function playlist_create(array $input, User $user): bool
     {
@@ -97,8 +95,6 @@ final class PlaylistCreate8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function playlists_create(array $input, User $user): bool
     {

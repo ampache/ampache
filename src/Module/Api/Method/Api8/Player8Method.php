@@ -68,8 +68,6 @@ final class Player8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function player(array $input, User $user): bool
     {

@@ -420,7 +420,6 @@ class VlcPlayer
      * xmltoarray
      * this function parses the xml page into an array thx to bin-co
      * warning VLC returns it's complete media lib if asked for playlist
-     * @param $contents
      * @param int $get_attributes
      * @param string $priority
      * @return array<string, mixed>

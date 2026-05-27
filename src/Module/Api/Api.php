@@ -251,8 +251,6 @@ class Api
     /**
      * message
      * call the correct success message depending on format
-     * @param string $message
-     * @param string $format
      * @param array<string, string> $return_data
      */
     public static function message(string $message, string $format = 'xml', array $return_data = []): void
@@ -304,7 +302,6 @@ class Api
      *
      * @param array<string, mixed> $input
      * @param string[] $parameters e.g. array('auth', type')
-     * @return bool|string
      */
     public static function parameter_exists(array $input, array $parameters): bool|string
     {
@@ -326,8 +323,6 @@ class Api
      *
      * @param array<string, mixed> $input
      * @param string[] $parameters e.g. array('auth', type')
-     * @param string $method
-     * @return bool
      */
     public static function check_parameter(array $input, array $parameters, string $method): bool
     {
@@ -368,7 +363,6 @@ class Api
      *
      * get the server counts for pings and handshakes
      *
-     * @param string $token
      * @return array{
      *     auth?: ?string,
      *     api?: string,

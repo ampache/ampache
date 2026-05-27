@@ -48,8 +48,6 @@ final class Tag4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function tag(array $input, User $user): bool
     {
