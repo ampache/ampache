@@ -27,9 +27,9 @@ namespace Ampache\Module\Util\FileSystem;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Catalog;
 
 final class FileNameConverter implements FileNameConverterInterface
 {

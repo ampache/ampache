@@ -29,15 +29,15 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\Model\Rating;
 use Mockery\MockInterface;
-use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
-use Ampache\Module\Util\ZipHandlerInterface;
 
 class PlaylistViewAdapterTest extends MockeryTestCase
 {

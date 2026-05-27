@@ -24,8 +24,8 @@ declare(strict_types=1);
  */
 
 use Ampache\Module\Application\ApplicationRunner;
-use Ampache\Module\Application\Search\SaveAsSmartPlaylistAction;
 use Ampache\Module\Application\Search\SaveAsPlaylistAction;
+use Ampache\Module\Application\Search\SaveAsSmartPlaylistAction;
 use Ampache\Module\Application\Search\SearchAction;
 use Ampache\Module\Application\Search\ShowAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;

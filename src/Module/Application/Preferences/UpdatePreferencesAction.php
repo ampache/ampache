@@ -25,16 +25,16 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Preferences;
 
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\Preference;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\PreferencesFromRequestUpdaterInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Preference;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

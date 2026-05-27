@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
-use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Shoutbox;
 
 /** @var ShoutObjectLoaderInterface $shoutObjectLoader */
 /** @var list<Shoutbox> $shouts */

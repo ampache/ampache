@@ -26,8 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\WebDav;
 
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Media;
 use Sabre\DAV;
 
 /**

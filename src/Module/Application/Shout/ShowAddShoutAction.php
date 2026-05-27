@@ -25,15 +25,15 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Shout;
 
-use Ampache\Module\Shout\ShoutObjectLoaderInterface;
-use Ampache\Module\Shout\ShoutRendererInterface;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Shout\ShoutObjectLoaderInterface;
+use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\System\AmpError;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

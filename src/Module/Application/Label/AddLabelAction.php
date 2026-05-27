@@ -27,14 +27,14 @@ namespace Ampache\Module\Application\Label;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\Label;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Label;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

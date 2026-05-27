@@ -27,8 +27,8 @@ namespace Ampache\Module\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**

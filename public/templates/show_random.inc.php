@@ -26,8 +26,8 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\VideoRepositoryInterface;
 

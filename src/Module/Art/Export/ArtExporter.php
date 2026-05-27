@@ -27,10 +27,10 @@ namespace Ampache\Module\Art\Export;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\ImageRepositoryInterface;
-use Ampache\Repository\Model\Art;
 use Ampache\Module\Art\Export;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\ImageRepositoryInterface;
+use Ampache\Repository\Model\Art;
 use Psr\Log\LoggerInterface;
 
 /**

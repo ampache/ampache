@@ -25,9 +25,9 @@ namespace Ampache\Module\Application\Stream;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;

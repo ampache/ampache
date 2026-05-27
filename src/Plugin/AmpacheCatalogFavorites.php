@@ -26,9 +26,12 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
@@ -36,9 +39,6 @@ use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Module\Api\Ajax;
-use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Util\Ui;
 
 class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHomeInterface
 {

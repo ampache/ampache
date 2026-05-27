@@ -28,10 +28,10 @@ namespace Ampache\Module\Album\Export;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Album\Export;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Module\Album\Export;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**

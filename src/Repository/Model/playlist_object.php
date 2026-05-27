@@ -23,14 +23,14 @@
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /**

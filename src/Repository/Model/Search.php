@@ -41,10 +41,10 @@ use Ampache\Module\Playlist\Search\SongSearch;
 use Ampache\Module\Playlist\Search\TagSearch;
 use Ampache\Module\Playlist\Search\UserSearch;
 use Ampache\Module\Playlist\Search\VideoSearch;
-use Ampache\Module\System\Dba;
 use Ampache\Module\System\Core;
-use Ampache\Repository\MetadataFieldRepositoryInterface;
+use Ampache\Module\System\Dba;
 use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use JsonException;
 

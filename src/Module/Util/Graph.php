@@ -26,16 +26,16 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginLocationInterface;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\System\Core;
-use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\UserRepositoryInterface;
 use CpChart;
 use CpChart\Data;
-use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Plugin;
 
 class Graph
 {

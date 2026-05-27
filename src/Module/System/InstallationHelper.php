@@ -27,9 +27,9 @@ namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Util\Horde_Browser;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Util\Horde_Browser;
 use Exception;
 
 final class InstallationHelper implements InstallationHelperInterface

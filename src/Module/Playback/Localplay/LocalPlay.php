@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback\Localplay;
 
-use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;

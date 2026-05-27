@@ -25,14 +25,14 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Module\Wanted\WantedManagerInterface;
+use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;

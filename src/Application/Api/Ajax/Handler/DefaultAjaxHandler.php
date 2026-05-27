@@ -25,22 +25,22 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
-use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
 final readonly class DefaultAjaxHandler implements AjaxHandlerInterface

@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\System;
 
-use Teapot\StatusCode\RFC\RFC7231;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -39,6 +38,7 @@ use Mockery\MockInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Teapot\StatusCode\RFC\RFC7231;
 
 class WriteConfigActionTest extends MockeryTestCase
 {
