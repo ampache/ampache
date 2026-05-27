@@ -27,24 +27,24 @@ namespace Ampache\Gui\Album;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Application\Album\DeleteAction;
 use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
-use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Module\Api\Ajax;
-use Ampache\Module\Application\Album\DeleteAction;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
-use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\ZipHandlerInterface;
 
 final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
 {

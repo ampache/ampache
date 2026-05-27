@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
 
 /**
  * Class SongMethod
@@ -73,10 +73,10 @@ final class SongMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::songs([$object_id], $user, $input['auth'], true, false);
+                echo Json8_Data::songs([$object_id], $user, $input['auth'], true, false);
                 break;
             default:
-                echo Xml_Data::songs([$object_id], $user, $input['auth']);
+                echo Xml8_Data::songs([$object_id], $user, $input['auth']);
         }
 
         return true;

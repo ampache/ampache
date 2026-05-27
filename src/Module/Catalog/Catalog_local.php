@@ -28,7 +28,14 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
+use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\Recommendation;
+use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
@@ -39,13 +46,6 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
-use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Recommendation;
-use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\VaInfo;
 use Exception;
 
 /**

@@ -23,8 +23,8 @@
 
 namespace Ampache\Module\User\Authorization;
 
-use Ampache\Repository\Model\User;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Exception;
 use Psr\Log\LoggerInterface;

@@ -25,20 +25,20 @@ declare(strict_types=0);
 
 namespace Ampache\Module\System;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Query;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Horde_Browser;
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Query;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tmp_Playlist;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * This class handles all of the session related stuff in Ampache

@@ -24,8 +24,8 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\User;
 
 /** @var string $object_type */

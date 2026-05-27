@@ -26,17 +26,17 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\User\Tracking\UserTrackerInterface;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
+use Ampache\Module\User\Tracking\UserTrackerInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -142,7 +142,7 @@ final class HandshakeMethod
                 }
 
                 // Now we're sure that there is an ACL line that matches this user or ALL USERS, pull the user's password and then see what we come out with
-                $realpwd = self::getUserRepository()->retrievePasswordFromUser($client->getId());
+                $realpwd = self::getUserRepository()->retrievePasswordFromUser($client?->getId() ?? 0);
 
                 if (!$realpwd) {
                     debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
@@ -206,7 +206,7 @@ final class HandshakeMethod
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml_Data::keyed_array($results);
+                        echo Xml8_Data::keyed_array($results);
                 }
 
                 return true;

@@ -24,8 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\PrivateMsg;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\PrivateMsg;
 
 /** @var PrivateMsg $pvmsg */
 

@@ -53,6 +53,9 @@ return (new PhpCsFixer\Config())
             'elements' => ['const', 'method', 'property']
         ],
         'no_unused_imports' => true,
+        'ordered_imports' => [
+            'sort_algorithm' => 'alpha'
+        ]
     ])
     ->setIndent("    ")
     ->setFinder($finder)

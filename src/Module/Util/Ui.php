@@ -25,10 +25,13 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Plugin\AmpacheLastfm;
@@ -37,11 +40,8 @@ use Ampache\Plugin\PluginDisplayOnFooterInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Search;
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 
 /**

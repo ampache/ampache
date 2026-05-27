@@ -24,8 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Catalog;
 
 $admin_path  = AmpConfig::get_web_path('/admin');
 $t_name      = T_('Filter Name');

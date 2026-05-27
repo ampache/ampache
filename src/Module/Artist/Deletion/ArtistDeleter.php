@@ -23,18 +23,18 @@
 
 namespace Ampache\Module\Artist\Deletion;
 
-use Ampache\Repository\LabelRepositoryInterface;
-use Ampache\Module\Art\ArtCleanupInterface;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Album\Deletion\AlbumDeleterInterface;
 use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
+use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Artist\Deletion\Exception\ArtistDeletionException;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Log\LoggerInterface;

@@ -26,10 +26,10 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Catalog\PlaylistImporter;
-use Ampache\Module\System\Core;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\PlaylistImporter;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;

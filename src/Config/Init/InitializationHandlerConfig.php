@@ -28,15 +28,15 @@ namespace Ampache\Config\Init;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\Init\Exception\ConfigFileNotFoundException;
 use Ampache\Config\Init\Exception\ConfigFileNotParsableException;
-use Ampache\Repository\Model\Preference;
 use Ampache\Module\Util\EnvironmentInterface;
+use Ampache\Repository\Model\Preference;
 use DateTimeZone;
 
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
-    private const VERSION = '7.9.4'; // AMPACHE_VERSION
+    private const VERSION = '7.9.5'; // AMPACHE_VERSION
 
     private const CONFIG_VERSION = '87';
 

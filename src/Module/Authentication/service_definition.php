@@ -31,9 +31,10 @@ use Ampache\Module\Authentication\Authenticator\ExternalAuthenticator;
 use Ampache\Module\Authentication\Authenticator\HttpAuthenticator;
 use Ampache\Module\Authentication\Authenticator\LdapAuthenticator;
 use Ampache\Module\Authentication\Authenticator\PamAuthenticator;
-use Psr\Container\ContainerInterface;
 
 use function DI\factory;
+
+use Psr\Container\ContainerInterface;
 
 return [
     AuthenticationManagerInterface::class => factory(static function (ContainerInterface $dic): AuthenticationManagerInterface {

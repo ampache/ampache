@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Config\Init;
 
-use Ampache\Repository\Model\Preference;
 use Ampache\Module\System\SessionInterface;
 use Ampache\Module\Util\EnvironmentInterface;
+use Ampache\Repository\Model\Preference;
 
 final class InitializationHandlerAuth implements InitializationHandlerInterface
 {

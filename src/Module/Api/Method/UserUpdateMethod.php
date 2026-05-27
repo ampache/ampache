@@ -29,7 +29,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Repository\Model\User;
 
 /**
- * Class UserUpdateMethod
+ * Class UserUpdate6Method
  */
 final class UserUpdateMethod
 {

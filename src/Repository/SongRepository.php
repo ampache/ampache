@@ -27,11 +27,11 @@ namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Generator;

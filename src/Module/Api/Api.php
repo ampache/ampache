@@ -26,13 +26,13 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Module\Authorization\Access;
-use Ampache\Repository\Model\Browse;
-use Ampache\Repository\Model\User;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -218,16 +218,17 @@ class Api
         3,
         4,
         5,
-        6
+        6,
+        8
     ];
 
     public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
     public static string $auth_version = '350001';
 
-    public static string $version = '6.9.1'; // AMPACHE_VERSION
+    public static string $version = '8.0.0'; // AMPACHE_VERSION
 
-    public static string $version_numeric = '691014'; // AMPACHE_VERSION
+    public static string $version_numeric = '800000'; // AMPACHE_VERSION
 
     public static ?Browse $browse = null;
 
@@ -260,10 +261,10 @@ class Api
     {
         switch ($format) {
             case 'json':
-                echo Json_Data::success($message, $return_data);
+                echo Json8_Data::success($message, $return_data);
                 break;
             default:
-                echo Xml_Data::success($message, $return_data);
+                echo Xml8_Data::success($message, $return_data);
         }
     }
 
@@ -275,10 +276,10 @@ class Api
     {
         switch ($format) {
             case 'json':
-                echo Json_Data::error($error_code, $message, $method, $error_type);
+                echo Json8_Data::error($error_code, $message, $method, $error_type);
                 break;
             default:
-                echo Xml_Data::error($error_code, $message, $method, $error_type);
+                echo Xml8_Data::error($error_code, $message, $method, $error_type);
         }
     }
 
@@ -290,10 +291,10 @@ class Api
     {
         switch ($format) {
             case 'json':
-                echo Json_Data::empty($empty_type);
+                echo Json8_Data::empty($empty_type);
                 break;
             default:
-                echo Xml_Data::empty();
+                echo Xml8_Data::empty();
         }
     }
 

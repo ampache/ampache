@@ -86,6 +86,16 @@ interface ApiOutputInterface
     ): string;
 
     /**
+     * This generates an error message
+     */
+    public function error6(
+        int $code,
+        string $message,
+        string $action,
+        string $type
+    ): string;
+
+    /**
      * @param list<int|string> $albums
      * @param string[] $include
      * @param User $user

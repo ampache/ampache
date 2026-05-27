@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepository;
 use Ampache\Repository\PodcastRepositoryInterface;

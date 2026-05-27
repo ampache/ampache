@@ -26,11 +26,11 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\User;
 
 /**
@@ -79,10 +79,10 @@ final class PodcastEpisodeMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::podcast_episodes([$object_id], $user, $input['auth'], false);
+                echo Json8_Data::podcast_episodes([$object_id], $user, $input['auth'], false);
                 break;
             default:
-                echo Xml_Data::podcast_episodes([$object_id], $user, $input['auth']);
+                echo Xml8_Data::podcast_episodes([$object_id], $user, $input['auth']);
         }
 
         return true;

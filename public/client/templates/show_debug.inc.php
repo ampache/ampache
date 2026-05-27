@@ -24,10 +24,10 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Preference;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Preference;
 
 global $dic;
 $environment = $dic->get(EnvironmentInterface::class);

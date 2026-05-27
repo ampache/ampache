@@ -25,26 +25,26 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Plugin\AmpacheDiscogs;
-use Ampache\Plugin\AmpacheMusicBrainz;
-use Ampache\Plugin\AmpacheTheaudiodb;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Art\Collector\MetaTagCollectorModule;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
+use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\UtilityFactoryInterface;
-use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\System\Core;
+use Ampache\Plugin\AmpacheDiscogs;
+use Ampache\Plugin\AmpacheMusicBrainz;
+use Ampache\Plugin\AmpacheTheaudiodb;
 use Ampache\Repository\SongRepositoryInterface;
-use WpOrg\Requests\Autoload;
-use WpOrg\Requests\Requests;
 use Exception;
 use RuntimeException;
+use WpOrg\Requests\Autoload;
+use WpOrg\Requests\Requests;
 
 /**
  * This class handles the images / artwork in ampache

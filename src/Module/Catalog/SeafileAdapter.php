@@ -26,11 +26,11 @@ namespace Ampache\Module\Catalog;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Exception;
+use GuzzleHttp\Exception\ClientException;
 use Seafile\Client\Http\Client;
-use Seafile\Client\Resource\Library;
 use Seafile\Client\Resource\Directory;
 use Seafile\Client\Resource\File;
-use GuzzleHttp\Exception\ClientException;
+use Seafile\Client\Resource\Library;
 
 class SeafileAdapter
 {

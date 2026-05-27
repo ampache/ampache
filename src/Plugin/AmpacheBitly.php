@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 

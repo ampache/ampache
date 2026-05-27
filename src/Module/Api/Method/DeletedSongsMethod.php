@@ -25,10 +25,10 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
 /**
@@ -71,16 +71,16 @@ final class DeletedSongsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset((int)($input['offset'] ?? 0));
-                Json_Data::set_limit($input['limit'] ?? 0);
-                Json_Data::set_count(count($results));
-                echo Json_Data::deleted('song', $results);
+                Json8_Data::set_offset((int)($input['offset'] ?? 0));
+                Json8_Data::set_limit($input['limit'] ?? 0);
+                Json8_Data::set_count(count($results));
+                echo Json8_Data::deleted('song', $results);
                 break;
             default:
-                Xml_Data::set_offset((int)($input['offset'] ?? 0));
-                Xml_Data::set_limit($input['limit'] ?? 0);
-                Xml_Data::set_count(count($results));
-                echo Xml_Data::deleted('song', $results);
+                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_limit($input['limit'] ?? 0);
+                Xml8_Data::set_count(count($results));
+                echo Xml8_Data::deleted('song', $results);
         }
 
         return true;

@@ -31,8 +31,8 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use WpOrg\Requests\Requests;
 use Collator;
+use WpOrg\Requests\Requests;
 
 class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
 {

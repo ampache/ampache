@@ -25,9 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Authentication\Gatekeeper;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;

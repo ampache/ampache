@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Broadcast;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\User;
 
 final readonly class PlayerAjaxHandler implements AjaxHandlerInterface

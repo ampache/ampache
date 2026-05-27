@@ -26,11 +26,11 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\User;
 
 /**
@@ -79,10 +79,10 @@ final class LicenseMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::licenses([$object_id], false);
+                echo Json8_Data::licenses([$object_id], false);
                 break;
             default:
-                echo Xml_Data::licenses([$object_id], $user);
+                echo Xml8_Data::licenses([$object_id], $user);
         }
 
         return true;

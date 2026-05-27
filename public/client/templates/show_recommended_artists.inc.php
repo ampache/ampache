@@ -27,11 +27,11 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Module\Util\Ui;
 
 /** @var int[] $object_ids */
 /** @var array $missing_objects */

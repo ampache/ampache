@@ -27,15 +27,15 @@ namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\LastFm\Exception\LastFmQueryFailedException;
+use Ampache\Module\LastFm\LastFmQueryInterface;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\LastFm\LastFmQueryInterface;
-use Ampache\Module\System\Dba;
-use SimpleXMLElement;
 use Ampache\Repository\Model\Song;
+use SimpleXMLElement;
 
 class Recommendation
 {

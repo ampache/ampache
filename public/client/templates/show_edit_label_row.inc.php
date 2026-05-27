@@ -23,11 +23,11 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Label;
-use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\User;
 
 /** @var Label $libitem */

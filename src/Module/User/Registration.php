@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\User;
 
-use Ampache\Module\Util\Mailer;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\Mailer;
 
 /**
  * Registration Class

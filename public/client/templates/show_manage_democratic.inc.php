@@ -24,10 +24,10 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Democratic;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\Playlist;
 
 /** @var list<int> $playlists */
 

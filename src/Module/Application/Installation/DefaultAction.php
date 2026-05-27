@@ -24,7 +24,6 @@
 namespace Ampache\Module\Application\Installation;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Preference;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
@@ -33,6 +32,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\InstallationHelperInterface;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Preference;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

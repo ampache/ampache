@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Authentication\Authenticator;
 
-use Ampache\Repository\Model\User;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\User;
 
 final class DatabaseAuthenticator implements AuthenticatorInterface
 {

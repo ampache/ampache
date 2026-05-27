@@ -28,7 +28,7 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginGetMetadataInterface;
 use Ampache\Repository\Model\Album;
@@ -155,7 +155,7 @@ final class GetExternalMetadataMethod
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml_Data::keyed_array($results);
+                echo Xml8_Data::keyed_array($results);
         }
 
         return true;

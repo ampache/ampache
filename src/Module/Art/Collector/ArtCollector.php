@@ -26,13 +26,13 @@ declare(strict_types=0);
 namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginGatherArtsInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\User;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;

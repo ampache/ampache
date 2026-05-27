@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Catalog;
 
 final class VideoRepository implements VideoRepositoryInterface
 {

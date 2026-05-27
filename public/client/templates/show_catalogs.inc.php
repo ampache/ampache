@@ -23,8 +23,8 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Catalog;
 
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var list<int> $object_ids */

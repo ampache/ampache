@@ -25,9 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\System\Core;
 use WpOrg\Requests\Requests;
 
 class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterface

@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\Preference;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
 final readonly class StreamAjaxHandler implements AjaxHandlerInterface
