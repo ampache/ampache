@@ -2195,7 +2195,7 @@ class OpenSubsonic_Json_Data
      */
     public static function addArtistInfo2(array $response, array $info, Artist $artist, array $similars): array
     {
-        $response['subsonic-response']['artistInfo'] = self::_getArtistInfo($artist, $info, $similars, 'artistInfo2');
+        $response['subsonic-response']['artistInfo2'] = self::_getArtistInfo($artist, $info, $similars, 'artistInfo2');
 
         return $response;
     }
