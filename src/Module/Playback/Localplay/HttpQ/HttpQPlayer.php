@@ -89,14 +89,10 @@ class HttpQPlayer
 
         $results = $this->sendCommand('playurl', $args);
 
-        if (
+        return ! (
             !$results ||
             $results == '0'
-        ) {
-            return false;
-        }
-
-        return true;
+        );
     }
 
     /**
@@ -121,14 +117,10 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand("delete", $args);
 
-        if (
+        return ! (
             !$results ||
             $results == '0'
-        ) {
-            return false;
-        }
-
-        return true;
+        );
     }
 
     /**
@@ -140,14 +132,10 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand("next", $args);
 
-        if (
+        return ! (
             !$results ||
             $results == '0'
-        ) {
-            return false;
-        }
-
-        return true;
+        ) ;
     }
 
     /**
@@ -159,14 +147,10 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand("prev", $args);
 
-        if (
+        return ! (
             !$results ||
             $results == '0'
-        ) {
-            return false;
-        }
-
-        return true;
+        ) ;
     }
 
     /**
@@ -201,14 +185,10 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand("play", $args);
 
-        if (
+        return ! (
             !$results ||
             $results == '0'
-        ) {
-            return false;
-        }
-
-        return true;
+        );
     }
 
     /**
@@ -220,14 +200,10 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand("pause", $args);
 
-        if (
+        return ! (
             !$results ||
             $results == '0'
-        ) {
-            return false;
-        }
-
-        return true;
+        );
     }
 
     /**
@@ -239,14 +215,10 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand('stop', $args);
 
-        if (
+        return ! (
             !$results ||
             $results == '0'
-        ) {
-            return false;
-        }
-
-        return true;
+        );
     }
 
     /**
@@ -258,14 +230,10 @@ class HttpQPlayer
         $args    = ['enable' => $state];
         $results = $this->sendCommand('repeat', $args);
 
-        if (
+        return ! (
             !$results ||
             $results == '0'
-        ) {
-            return false;
-        }
-
-        return true;
+        );
     }
 
     /**
@@ -277,14 +245,10 @@ class HttpQPlayer
         $args    = ['enable' => $state];
         $results = $this->sendCommand('shuffle', $args);
 
-        if (
+        return ! (
             !$results ||
             $results == '0'
-        ) {
-            return false;
-        }
-
-        return true;
+        );
     }
 
     /**
@@ -296,14 +260,10 @@ class HttpQPlayer
         $args    = ['index' => $track];
         $results = $this->sendCommand('deletepos', $args);
 
-        if (
+        return ! (
             !$results ||
             $results == '0'
-        ) {
-            return false;
-        }
-
-        return true;
+        ) ;
     }
 
     /**
@@ -360,14 +320,10 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand('volumeup', $args);
 
-        if (
+        return ! (
             !$results ||
             $results == '0'
-        ) {
-            return false;
-        }
-
-        return true;
+        ) ;
     }
 
     /**
@@ -379,14 +335,10 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand('volumedown', $args);
 
-        if (
+        return ! (
             !$results ||
             $results == '0'
-        ) {
-            return false;
-        }
-
-        return true;
+        ) ;
     }
 
     /**
@@ -401,14 +353,10 @@ class HttpQPlayer
         $args    = ['level' => $volume];
         $results = $this->sendCommand('setvolume', $args);
 
-        if (
+        return ! (
             !$results ||
             $results == '0'
-        ) {
-            return false;
-        }
-
-        return true;
+        );
     }
 
     /**
@@ -420,14 +368,10 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand('flushplaylist', $args);
 
-        if (
+        return ! (
             !$results ||
             $results == '0'
-        ) {
-            return false;
-        }
-
-        return true;
+        );
     }
 
     /**

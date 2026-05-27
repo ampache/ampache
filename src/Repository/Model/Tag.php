@@ -543,11 +543,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $db_results = Dba::read($sql, [$tag_id, 0, $object_id, $type]);
         $results    = Dba::fetch_assoc($db_results);
 
-        if (array_key_exists('id', $results)) {
-            return true;
-        }
-
-        return false;
+        return (bool)(array_key_exists('id', $results));
     }
 
     /**

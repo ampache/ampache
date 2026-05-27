@@ -43,6 +43,7 @@ final class ShowAction implements ApplicationActionInterface
     private LoggerInterface $logger;
 
     private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         UiInterface $ui,
         LoggerInterface $logger,

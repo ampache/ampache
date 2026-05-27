@@ -65,7 +65,6 @@ final class Albums5Method
      *     auth: string,
      * } $input
      */
-
     public static function albums(array $input, User $user): bool
     {
         $browse = Api::getBrowse($user);

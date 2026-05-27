@@ -263,6 +263,7 @@ class Subsonic_Api
     {
         return (string)(self::OLD_SUBID_PODCASTEP + $ampache_id);
     }
+
     public static function getShareSubId(int|string $ampache_id): string
     {
         return self::SUBID_SHARE . $ampache_id;

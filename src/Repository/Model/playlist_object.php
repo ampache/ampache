@@ -226,15 +226,11 @@ abstract class playlist_object extends database_object implements library_item
             ? $user
             : Core::get_global('user');
 
-        if (
+        return (bool)(
             $user instanceof User &&
             !empty($this->collaborate) &&
             in_array($user->getId(), explode(',', (string)$this->collaborate))
-        ) {
-            return true;
-        }
-
-        return false;
+        );
     }
 
     /**

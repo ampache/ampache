@@ -395,14 +395,11 @@ function check_config_values(array $conf): bool
     if (!isset($conf['session_cookiesecure'])) {
         return false;
     }
-    if (
+
+    return ! (
         isset($conf['debug']) &&
         !isset($conf['log_path'])
-    ) {
-        return false;
-    }
-
-    return true;
+    );
 }
 
 /**

@@ -334,11 +334,7 @@ class AmpacheVlc extends localplay_controller
             return true;
         }
 
-        if ($this->_vlc->play() === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_vlc->play() === null));
     }
 
     /**
@@ -348,11 +344,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function stop(): bool
     {
-        if ($this->_vlc->stop() === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_vlc->stop() === null));
     }
 
     /**
@@ -399,11 +391,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function next(): bool
     {
-        if ($this->_vlc->next() === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_vlc->next() === null));
     }
 
     /**
@@ -412,11 +400,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function prev(): bool
     {
-        if ($this->_vlc->prev() === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_vlc->prev() === null));
     }
 
     /**
@@ -425,11 +409,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function pause(): bool
     {
-        if ($this->_vlc->pause() === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_vlc->pause() === null));
     }
 
     /**
@@ -448,11 +428,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function repeat(bool $state): bool
     {
-        if ($this->_vlc->repeat($state) === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_vlc->repeat($state) === null));
     }
 
     /**
@@ -461,11 +437,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function random(bool $state): bool
     {
-        if ($this->_vlc->random($state) === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_vlc->random($state) === null));
     }
 
     /**
