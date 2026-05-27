@@ -116,13 +116,12 @@ class Ui implements UiInterface
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         if (($extension != 'php' || AmpConfig::get('allow_php_themes')) && file_exists($realpath) && is_file($realpath)) {
             return $path;
-        } else {
-            if ($extern === true) {
-                return '/templates/' . $template;
-            }
-
-            return __DIR__ . '/../../../public/templates/' . $template;
         }
+        if ($extern === true) {
+            return '/templates/' . $template;
+        }
+
+        return __DIR__ . '/../../../public/templates/' . $template;
     }
 
     public function showObjectNotFound(): void

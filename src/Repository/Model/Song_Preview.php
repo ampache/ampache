@@ -229,11 +229,10 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         if ($this->artist) {
             return (string) (new Artist($this->artist))->get_fullname();
-        } else {
-            $wartist = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
-
-            return $wartist['name'] ?? '';
         }
+        $wartist = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
+
+        return $wartist['name'] ?? '';
     }
 
     /**
@@ -277,11 +276,10 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         if ($this->artist) {
             return "<a href=\"" . AmpConfig::get_web_path() . "/artists.php?action=show&artist=" . $this->artist . "\" title=\"" . scrub_out($this->get_artist_fullname()) . "\"> " . scrub_out($this->get_artist_fullname()) . "</a>";
-        } else {
-            $wartist = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
-
-            return $wartist['link'] ?? '';
         }
+        $wartist = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
+
+        return $wartist['link'] ?? '';
     }
 
     /**

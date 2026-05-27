@@ -193,9 +193,9 @@ class Ldap
             }
 
             return $entries[0];
-        } else {
-            return $entries;
         }
+
+        return $entries;
     }
 
     /**

@@ -116,12 +116,12 @@ final class PlaylistEdit8Method
                 Api::message('playlist track changes saved', $input['api_format']);
 
                 return true;
-            } else {
-                // you didn't have edit access
-                Api::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
-
-                return false;
             }
+            // you didn't have edit access
+            Api::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+
+            return false;
+
         }
 
         $name  = $input['name'] ?? $playlist->name;

@@ -1101,7 +1101,6 @@ class Search extends playlist_object
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
         $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_podcast_episodes);
 
-
         $t_ratings = T_('Ratings');
         if (AmpConfig::get('ratings')) {
             $this->_add_type_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);

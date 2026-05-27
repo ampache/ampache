@@ -105,42 +105,42 @@ final class AccessListManager implements AccessListManagerInterface
         // Check existing ACLs to make sure we're not duplicating values here
         if ($this->accessRepository->exists($startIp, $endIp, $type, $userId) === true) {
             throw new AclItemDuplicationException();
-        } else {
-            $this->accessRepository->create(
-                $startIp,
-                $endIp,
-                $name,
-                $userId,
-                $level,
-                $type
-            );
+        }
+        $this->accessRepository->create(
+            $startIp,
+            $endIp,
+            $name,
+            $userId,
+            $level,
+            $type
+        );
 
-            // Create Additional stuff based on the type
-            if (in_array($additionalType, [AccessTypeEnum::STREAM, AccessTypeEnum::ALL])) {
-                if ($this->accessRepository->exists($startIp, $endIp, AccessTypeEnum::STREAM, $userId) === false) {
-                    $this->accessRepository->create(
-                        $startIp,
-                        $endIp,
-                        $name,
-                        $userId,
-                        $level,
-                        AccessTypeEnum::STREAM
-                    );
-                }
-            }
-            if ($additionalType === AccessTypeEnum::ALL) {
-                if ($this->accessRepository->exists($startIp, $endIp, AccessTypeEnum::INTERFACE, $userId) === false) {
-                    $this->accessRepository->create(
-                        $startIp,
-                        $endIp,
-                        $name,
-                        $userId,
-                        $level,
-                        AccessTypeEnum::INTERFACE
-                    );
-                }
+        // Create Additional stuff based on the type
+        if (in_array($additionalType, [AccessTypeEnum::STREAM, AccessTypeEnum::ALL])) {
+            if ($this->accessRepository->exists($startIp, $endIp, AccessTypeEnum::STREAM, $userId) === false) {
+                $this->accessRepository->create(
+                    $startIp,
+                    $endIp,
+                    $name,
+                    $userId,
+                    $level,
+                    AccessTypeEnum::STREAM
+                );
             }
         }
+        if ($additionalType === AccessTypeEnum::ALL) {
+            if ($this->accessRepository->exists($startIp, $endIp, AccessTypeEnum::INTERFACE, $userId) === false) {
+                $this->accessRepository->create(
+                    $startIp,
+                    $endIp,
+                    $name,
+                    $userId,
+                    $level,
+                    AccessTypeEnum::INTERFACE
+                );
+            }
+        }
+
     }
 
     /**

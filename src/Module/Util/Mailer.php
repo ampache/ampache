@@ -250,11 +250,10 @@ final class Mailer implements MailerInterface
         $retval = $mail->send();
         if ($retval === true) {
             return true;
-        } else {
-            debug_event(self::class, 'Did not send mail. ErrorInfo: ' . $mail->ErrorInfo, 5);
-
-            return false;
         }
+        debug_event(self::class, 'Did not send mail. ErrorInfo: ' . $mail->ErrorInfo, 5);
+
+        return false;
     }
 
     /**

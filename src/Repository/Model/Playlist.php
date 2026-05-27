@@ -660,9 +660,10 @@ class Playlist extends playlist_object
         if ($existing_id > 0) {
             if (!$existing) {
                 return null;
-            } else {
-                return $existing_id;
             }
+
+            return $existing_id;
+
         }
 
         // get the public_name/username

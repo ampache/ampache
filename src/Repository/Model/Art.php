@@ -248,9 +248,9 @@ class Art extends database_object
 
         if ($size === 'original' || !$this->thumb) {
             return $this->raw ?? '';
-        } else {
-            return $this->thumb;
         }
+
+        return $this->thumb;
     }
 
     /**
@@ -970,9 +970,9 @@ class Art extends database_object
                 return ['thumb' => (AmpConfig::get('album_art_store_disk'))
                     ? self::read_from_dir($sizetext, $this->object_type, $this->object_id, $this->kind, $results['mime'])
                     : $results['image'], 'thumb_mime' => $results['mime']];
-            } else {
-                debug_event(self::class, 'Thumb entry found in database but associated data cannot be found.', 3);
             }
+            debug_event(self::class, 'Thumb entry found in database but associated data cannot be found.', 3);
+
         }
 
         // If we didn't get a result try again
@@ -1162,9 +1162,10 @@ class Art extends database_object
             if ($row = Dba::fetch_assoc($db_results)) {
                 if (AmpConfig::get('album_art_store_disk')) {
                     return (string)self::read_from_dir('original', $type, $row['object_id'], 'default', $row['mime']);
-                } else {
-                    return $row['image'];
                 }
+
+                return $row['image'];
+
             }
         } // came from the db
 

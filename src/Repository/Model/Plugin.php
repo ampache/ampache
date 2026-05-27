@@ -260,19 +260,18 @@ class Plugin
             $cache = database_object::get_from_cache('plugin_version_update_info', 1);
 
             return (int)($cache[$name] ?? 0);
-        } else {
-            $sql        = "SELECT `key`, `value` FROM `update_info`;";
-            $db_results = Dba::read($sql, [$name]);
-
-            $results=[];
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $results[$row['key']] = $row['value'];
-            }
-
-            database_object::add_to_cache('plugin_version_update_info', 1, $results);
-
-            return (int)($results[$name] ?? 0);
         }
+        $sql        = "SELECT `key`, `value` FROM `update_info`;";
+        $db_results = Dba::read($sql, [$name]);
+
+        $results=[];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[$row['key']] = $row['value'];
+        }
+
+        database_object::add_to_cache('plugin_version_update_info', 1, $results);
+
+        return (int)($results[$name] ?? 0);
     }
 
     /**

@@ -415,9 +415,9 @@ class Stream
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             return '"' . str_replace(['"', '%'], ['', ''], (string)$arg) . '"';
-        } else {
-            return "'" . str_replace("'", "'\\''", (string)$arg) . "'";
         }
+
+        return "'" . str_replace("'", "'\\''", (string)$arg) . "'";
     }
 
     /**

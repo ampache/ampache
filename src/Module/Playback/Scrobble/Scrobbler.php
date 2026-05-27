@@ -175,21 +175,21 @@ class Scrobbler
                 if ($status == 'ok') {
                     if ($xml->session && $xml->session->key) {
                         return $xml->session->key;
-                    } else {
-                        $this->error_msg = 'Did not receive a valid response';
-
-                        return null;
                     }
-                } else {
-                    $this->error_msg = $xml->error;
+                    $this->error_msg = 'Did not receive a valid response';
 
                     return null;
+
                 }
-            } else {
-                $this->error_msg = 'Did not receive a valid response';
+                $this->error_msg = $xml->error;
 
                 return null;
+
             }
+            $this->error_msg = 'Did not receive a valid response';
+
+            return null;
+
         }
         $this->error_msg = 'Need a token to call getSession';
 
@@ -277,16 +277,15 @@ class Scrobbler
             $status = (string)$xml['status'];
             if ($status == 'ok') {
                 return true;
-            } else {
-                $this->error_msg = $xml->error;
-
-                return false;
             }
-        } else {
-            $this->error_msg = 'Did not receive a valid response';
+            $this->error_msg = $xml->error;
 
             return false;
+
         }
+        $this->error_msg = 'Did not receive a valid response';
+
+        return false;
     }
 
     /**
@@ -317,15 +316,14 @@ class Scrobbler
             $status = (string)$xml['status'];
             if ($status == 'ok') {
                 return true;
-            } else {
-                $this->error_msg = $xml->error;
-
-                return false;
             }
-        } else {
-            $this->error_msg = 'Did not receive a valid response';
+            $this->error_msg = $xml->error;
 
             return false;
+
         }
+        $this->error_msg = 'Did not receive a valid response';
+
+        return false;
     }
 }

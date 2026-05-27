@@ -233,9 +233,9 @@ class AutoUpdate
         $commit = self::get_current_commit();
         if (!empty($commit)) {
             return $commit;
-        } else {
-            return AmpConfig::get('version');
         }
+
+        return AmpConfig::get('version');
     }
 
     /**

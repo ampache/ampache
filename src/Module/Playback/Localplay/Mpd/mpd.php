@@ -325,45 +325,44 @@ class mpd
             $this->_error('SendCommand', 'Not connected');
 
             return false;
-        } else {
-            $response_string = '';
+        }
+        $response_string = '';
 
-            // Check the command compatibility:
-            if (!$this->_checkCompatibility($command, $this->mpd_version)) {
+        // Check the command compatibility:
+        if (!$this->_checkCompatibility($command, $this->mpd_version)) {
+            return false;
+        }
+
+        if (isset($arguments)) {
+            if (is_array($arguments)) {
+                foreach ($arguments as $arg) {
+                    $command .= ' "' . $arg . '"';
+                }
+            } else {
+                $command .= ' "' . $arguments . '"';
+            }
+        }
+
+        fputs($this->_mpd_sock, "$command\n");
+        while (!feof($this->_mpd_sock)) {
+            $response = fgets($this->_mpd_sock, 1024);
+
+            // An OK signals the end of transmission
+            if (strncmp(self::RESPONSE_OK, (string)$response, strlen(self::RESPONSE_OK)) == 0) {
+                break;
+            }
+
+            // An ERR signals an error!
+            if (strncmp(self::RESPONSE_ERR, (string)$response, strlen(self::RESPONSE_ERR)) == 0) {
+                $this->_error('SendCommand', "MPD Error: $response");
+
                 return false;
             }
 
-            if (isset($arguments)) {
-                if (is_array($arguments)) {
-                    foreach ($arguments as $arg) {
-                        $command .= ' "' . $arg . '"';
-                    }
-                } else {
-                    $command .= ' "' . $arguments . '"';
-                }
-            }
-
-            fputs($this->_mpd_sock, "$command\n");
-            while (!feof($this->_mpd_sock)) {
-                $response = fgets($this->_mpd_sock, 1024);
-
-                // An OK signals the end of transmission
-                if (strncmp(self::RESPONSE_OK, (string)$response, strlen(self::RESPONSE_OK)) == 0) {
-                    break;
-                }
-
-                // An ERR signals an error!
-                if (strncmp(self::RESPONSE_ERR, (string)$response, strlen(self::RESPONSE_ERR)) == 0) {
-                    $this->_error('SendCommand', "MPD Error: $response");
-
-                    return false;
-                }
-
-                // Build the response string
-                $response_string .= $response;
-            }
-            $this->_debug('SendCommand', "response: $response_string", 5);
+            // Build the response string
+            $response_string .= $response;
         }
+        $this->_debug('SendCommand', "response: $response_string", 5);
 
         if ($refresh_info) {
             $this->RefreshInfo();
@@ -525,10 +524,10 @@ class mpd
             $this->RefreshInfo(); // Get the latest volume
             if ($this->status['volume'] === null) {
                 return false;
-            } else {
-                $command = self::COMMAND_VOLUME;
-                $value   = $value - $this->status['volume'];
             }
+            $command = self::COMMAND_VOLUME;
+            $value   = $value - $this->status['volume'];
+
         }
 
         $response = $this->SendCommand($command, $value);

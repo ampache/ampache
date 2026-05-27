@@ -91,11 +91,10 @@ final class ConfigAction implements ApplicationActionInterface
         if (!class_exists('Gettext\Translations')) {
             require_once __DIR__ . '/../../../../public/templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
-        } else {
-            load_gettext();
-            // Load template
-            require_once __DIR__ . '/../../../../public/templates/show_test.inc.php';
         }
+        load_gettext();
+        // Load template
+        require_once __DIR__ . '/../../../../public/templates/show_test.inc.php';
 
         return null;
     }

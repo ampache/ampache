@@ -534,14 +534,14 @@ class Catalog_local extends Catalog
             } // if it's not an m3u
 
             return true;
-        } else {
-            // if it matches the pattern
-            if ($counter % 1000 == 0) {
-                debug_event('local.catalog', "$full_file ignored, non-audio file or 0 bytes", 5);
-            }
+        }
+        // if it matches the pattern
+        if ($counter % 1000 == 0) {
+            debug_event('local.catalog', "$full_file ignored, non-audio file or 0 bytes", 5);
+        }
 
-            return false;
-        } // else not an audio file
+        return false;
+        // else not an audio file
     }
 
     /**
@@ -1111,7 +1111,6 @@ class Catalog_local extends Catalog
         $sql = "UPDATE `song` SET `file` = ?, catalog = ? WHERE `id` = ?;";
 
         return (Dba::write($sql, [$new_file, $newCatalogId, $media->id]) !== false);
-
     }
 
     /**

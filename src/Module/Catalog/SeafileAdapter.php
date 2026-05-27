@@ -233,27 +233,28 @@ class SeafileAdapter
 
             if ($directory) {
                 return $directory;
-            } else {
+            }
+
+            return null;
+
+        }
+        try {
+            $directory = $this->throttle_check(function () use ($path) {
+                return $this->client['Directories']->getAll($this->library, $path);
+            });
+            $this->directory_cache[$path] = $directory;
+
+            return $directory;
+        } catch (ClientException $error) {
+            if ($error->getResponse()->getStatusCode() == 404) {
+                $this->directory_cache[$path] = false;
+
                 return null;
             }
-        } else {
-            try {
-                $directory = $this->throttle_check(function () use ($path) {
-                    return $this->client['Directories']->getAll($this->library, $path);
-                });
-                $this->directory_cache[$path] = $directory;
+            throw $error;
 
-                return $directory;
-            } catch (ClientException $error) {
-                if ($error->getResponse()->getStatusCode() == 404) {
-                    $this->directory_cache[$path] = false;
-
-                    return null;
-                } else {
-                    throw $error;
-                }
-            }
         }
+
     }
 
     /**

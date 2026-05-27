@@ -74,14 +74,14 @@ function scrub_in($input)
 {
     if (!is_array($input)) {
         return stripslashes(htmlspecialchars(strip_tags((string) $input), ENT_NOQUOTES, AmpConfig::get('site_charset', 'UTF-8')));
-    } else {
-        $results = [];
-        foreach ($input as $item) {
-            $results[] = scrub_in((string) $item);
-        }
-
-        return $results;
     }
+    $results = [];
+    foreach ($input as $item) {
+        $results[] = scrub_in((string) $item);
+    }
+
+    return $results;
+
 }
 
 /**
@@ -912,9 +912,10 @@ function xoutput_from_array(array $array, bool $callback = false, string $type =
         $outputnode = Core::get_request('xoutputnode');
 
         return (string)($array[$outputnode] ?? '');
-    } else {
-        return json_encode($array) ?: '';
     }
+
+    return json_encode($array) ?: '';
+
 }
 
 /**
