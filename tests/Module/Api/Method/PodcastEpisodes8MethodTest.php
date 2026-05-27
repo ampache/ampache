@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Method;
+namespace Ampache\Module\Api\Method\Api8;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -41,7 +41,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-class PodcastEpisodesMethodTest extends TestCase
+class PodcastEpisodes8MethodTest extends TestCase
 {
     private ModelFactoryInterface&MockObject $modelFactory;
 
@@ -49,7 +49,7 @@ class PodcastEpisodesMethodTest extends TestCase
 
     private ConfigContainerInterface&MockObject $configContainer;
 
-    private PodcastEpisodesMethod $subject;
+    private PodcastEpisodes8Method $subject;
 
     private GatekeeperInterface&MockObject $gatekeeper;
 
@@ -65,7 +65,7 @@ class PodcastEpisodesMethodTest extends TestCase
         $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
         $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
 
-        $this->subject = new PodcastEpisodesMethod(
+        $this->subject = new PodcastEpisodes8Method(
             $this->modelFactory,
             $this->podcastRepository,
             $this->configContainer,
@@ -103,7 +103,7 @@ class PodcastEpisodesMethodTest extends TestCase
             ->with(
                 ErrorCodeEnum::ACCESS_DENIED,
                 'Enable: podcast',
-                PodcastEpisodesMethod::ACTION,
+                PodcastEpisodes8Method::ACTION,
                 'system'
             )
             ->willReturn($result);
