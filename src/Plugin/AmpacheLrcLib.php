@@ -189,16 +189,16 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
                         'text' => nl2br((string)$item['plainLyrics']),
                         'url' => $this->site_url . '/api/get/' . $item['id']
                     ];
-                } else {
-                    $checks_values = [
-                        'durations' => ((int)$item['duration']) . " /vs/ " . $song->time,
-                        'song title' => $item['trackName'] . ' /vs/ ' . $song->title,
-                        'artist' => $item['artistName'] . ' /vs/ ' . $song->get_artist_fullname(),
-                        'album' => $item['albumName'] . ' /vs/ ' . $song->get_album_fullname(),
-                        'has plain lyrics' => !empty($item['plainLyrics'])
-                    ];
-                    debug_event(self::class, 'get_lyrics check failed: ' . var_export($checks, true) . '\n' . var_export($checks_values, true), 5);
                 }
+                $checks_values = [
+                    'durations' => ((int)$item['duration']) . " /vs/ " . $song->time,
+                    'song title' => $item['trackName'] . ' /vs/ ' . $song->title,
+                    'artist' => $item['artistName'] . ' /vs/ ' . $song->get_artist_fullname(),
+                    'album' => $item['albumName'] . ' /vs/ ' . $song->get_album_fullname(),
+                    'has plain lyrics' => !empty($item['plainLyrics'])
+                ];
+                debug_event(self::class, 'get_lyrics check failed: ' . var_export($checks, true) . '\n' . var_export($checks_values, true), 5);
+
             }
         }
 

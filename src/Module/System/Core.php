@@ -329,9 +329,10 @@ class Core
         if (php_sapi_name() !== 'cli') {
             if (version_compare(phpversion(), '5.4.0', '>=')) {
                 return session_status() === PHP_SESSION_ACTIVE;
-            } else {
-                return !(session_id() === '');
             }
+
+            return !(session_id() === '');
+
         }
 
         return false;

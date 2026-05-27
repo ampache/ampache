@@ -804,25 +804,25 @@ final class ApiHandler implements ApiHandlerInterface
                 $gatekeeper->extendSession($input['auth']);
 
                 return $response;
-            } else {
-                $params = [$input];
-
-                /** @var callable $callback */
-                $callback = [$handlerClassName, $action];
-
-                if (!$is_public) {
-                    $params[] = $user;
-                }
-
-                call_user_func_array(
-                    $callback,
-                    $params
-                );
-
-                $gatekeeper->extendSession($input['auth']);
-
-                return null;
             }
+            $params = [$input];
+
+            /** @var callable $callback */
+            $callback = [$handlerClassName, $action];
+
+            if (!$is_public) {
+                $params[] = $user;
+            }
+
+            call_user_func_array(
+                $callback,
+                $params
+            );
+
+            $gatekeeper->extendSession($input['auth']);
+
+            return null;
+
         } catch (ApiException $error) {
             switch ($api_version) {
                 case 3:
@@ -988,24 +988,23 @@ final class ApiHandler implements ApiHandlerInterface
             $gatekeeper->extendSession($input['auth']);
 
             return $response;
-        } else {
-            $params = [$input];
-
-            /** @var callable $callback */
-            $callback = [$handlerClassName, $action];
-
-            if (!$is_public) {
-                $params[] = $user;
-            }
-
-            call_user_func_array(
-                $callback,
-                $params
-            );
-
-            $gatekeeper->extendSession($input['auth']);
-
-            return null;
         }
+        $params = [$input];
+
+        /** @var callable $callback */
+        $callback = [$handlerClassName, $action];
+
+        if (!$is_public) {
+            $params[] = $user;
+        }
+
+        call_user_func_array(
+            $callback,
+            $params
+        );
+
+        $gatekeeper->extendSession($input['auth']);
+
+        return null;
     }
 }

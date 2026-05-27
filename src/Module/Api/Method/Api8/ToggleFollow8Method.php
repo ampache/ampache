@@ -94,7 +94,6 @@ final class ToggleFollow8Method
         Api::error(sprintf('Not Found: %s', $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
         return false;
-
     }
 
     private static function getUserFollowToggler(): UserFollowTogglerInterface

@@ -279,9 +279,9 @@ abstract class playlist_object extends database_object implements library_item
                 $this->get_items(),
                 static fn (array $item): bool => $item['object_type']->value === $filter_type
             );
-        } else {
-            return $this->get_items();
         }
+
+        return $this->get_items();
     }
 
     /**

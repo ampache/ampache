@@ -328,9 +328,9 @@ final class VaInfo implements VaInfoInterface
 
         if ($encoding != 'ASCII') {
             return (string)$encoding;
-        } else {
-            return 'ISO-8859-1';
         }
+
+        return 'ISO-8859-1';
     }
 
     /**

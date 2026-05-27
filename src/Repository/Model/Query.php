@@ -164,21 +164,20 @@ class Query
             $this->id = (int)$insert_id;
 
             return;
-        } else {
-            $sql = 'SELECT `data`, `object_data` FROM `tmp_browse` WHERE `id` = ? AND `sid` = ?';
+        }
+        $sql = 'SELECT `data`, `object_data` FROM `tmp_browse` WHERE `id` = ? AND `sid` = ?';
 
-            $db_results = Dba::read($sql, [$query_id, $sid]);
-            if ($results = Dba::fetch_assoc($db_results)) {
-                $this->id     = (int)$query_id;
-                $this->_state = (array)$this->_unserialize($results['data']);
-                $this->_cache = (array_key_exists('object_data', $results) && !empty($results['object_data']))
-                    ? (array)$this->_unserialize($results['object_data'])
-                    : [];
-                // queryType isn't set by restoring state
-                $this->set_type($this->_state['type']);
+        $db_results = Dba::read($sql, [$query_id, $sid]);
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $this->id     = (int)$query_id;
+            $this->_state = (array)$this->_unserialize($results['data']);
+            $this->_cache = (array_key_exists('object_data', $results) && !empty($results['object_data']))
+                ? (array)$this->_unserialize($results['object_data'])
+                : [];
+            // queryType isn't set by restoring state
+            $this->set_type($this->_state['type']);
 
-                return;
-            }
+            return;
         }
 
         AmpError::add('browse', T_('Browse was not found or expired, try reloading the page'));
@@ -1039,9 +1038,10 @@ class Query
         if ($this->_state['limit'] > 0) {
             if ($offset > 0) {
                 return ' LIMIT ' . (string)($this->_state['limit']) . ', ' . (string)($offset);
-            } else {
-                return ' LIMIT ' . (string)($this->_state['limit']);
             }
+
+            return ' LIMIT ' . (string)($this->_state['limit']);
+
         }
         $start = $this->get_start();
         if (!$this->is_simple() || $start < 0 || ($start == 0 && $offset == 0)) {

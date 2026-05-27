@@ -364,15 +364,15 @@ class Catalog_dropbox extends Catalog
             if ($is_audio_file) {
                 if (count($this->get_gather_types('music')) > 0 && $this->insert_song($dropbox, $path)) {
                     return true;
-                } else {
-                    debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this catalog.", 5);
                 }
+                debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this catalog.", 5);
+
             } elseif (count($this->get_gather_types('video')) > 0) {
                 if ($is_video_file && $this->insert_video($dropbox, $path)) {
                     return true;
-                } else {
-                    debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this video catalog.", 5);
                 }
+                debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this video catalog.", 5);
+
             }
         } else {
             debug_event('dropbox.catalog', "read " . $path . " ignored, 0 bytes", 5);
@@ -498,11 +498,10 @@ class Catalog_dropbox extends Catalog
             Dba::write($sql, [$results['file'], $video_id]);
 
             return $video_id;
-        } else {
-            debug_event('dropbox.catalog', 'failed to download file', 5);
-
-            return 0;
         }
+        debug_event('dropbox.catalog', 'failed to download file', 5);
+
+        return 0;
     }
 
     /**

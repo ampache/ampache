@@ -143,9 +143,10 @@ class SubsonicClient
                 $answer = curl_exec($curl);
                 if ($rawAnswer) {
                     return $answer;
-                } else {
-                    return $this->parseResponse($answer);
                 }
+
+                return $this->parseResponse($answer);
+
             }
         } else {
             return $this->error("Error: Invalid subsonic command: " . $action, $object);
@@ -222,11 +223,10 @@ class SubsonicClient
                 "success" => ($response['status'] == "ok"),
                 "data" => $data
             ];
-        } else {
-            debug_event(self::class, 'parseResponse ERROR: ' . print_r($response, true), 1);
-
-            return $this->error("Invalid response from server!");
         }
+        debug_event(self::class, 'parseResponse ERROR: ' . print_r($response, true), 1);
+
+        return $this->error("Invalid response from server!");
     }
 
     public function isCommand(string $command): bool

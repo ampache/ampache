@@ -246,9 +246,9 @@ class WebPlayer
             if ($item->type == 'broadcast') {
                 $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
                 break;
-            } else {
-                $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
             }
+            $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
+
         }
 
         return $addjs;
@@ -266,9 +266,9 @@ class WebPlayer
             if ($item->type == 'broadcast') {
                 $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
                 break;
-            } else {
-                $addjs .= $callback_container . "playNext(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
             }
+            $addjs .= $callback_container . "playNext(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
+
         }
 
         return $addjs;

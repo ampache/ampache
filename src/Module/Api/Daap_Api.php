@@ -633,9 +633,8 @@ class Daap_Api
             }
 
             return $code . pack("N", strlen((string)$value)) . $value;
-        } else {
-            debug_event(self::class, 'Unknown DAAP tag `' . $tag . '`.', 3);
         }
+        debug_event(self::class, 'Unknown DAAP tag `' . $tag . '`.', 3);
 
         return '';
     }
@@ -689,9 +688,8 @@ class Daap_Api
         $values = explode('.', $value);
         if (count($values) == 4) {
             return $tag . "\x00\x00\x00\x04" . pack("C", $values[0]) . pack("C", $values[1]) . pack("C", $values[2]) . pack("C", $values[3]);
-        } else {
-            debug_event(self::class, 'Malformed `' . $tag . '` version `' . $value . '`.', 3);
         }
+        debug_event(self::class, 'Malformed `' . $tag . '` version `' . $value . '`.', 3);
 
         return '';
     }
