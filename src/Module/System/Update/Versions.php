@@ -342,6 +342,7 @@ final class Versions
         794001 => Migration\V7\Migration794001::class,
         794002 => Migration\V7\Migration794002::class,
         794004 => Migration\V7\Migration794004::class,
+        //800000 => Migration\V8\Migration800000::class, // DO NOT USE YET
     ];
 
     /**
