@@ -1663,7 +1663,75 @@ class Json8_Data
      * @param list<int|string> $objects
      * @param User $user
      * @param string $auth
-     * @return array<mixed>
+     * @return list<array{
+     *     id: string,
+     *     title: string|null,
+     *     name: string|null,
+     *     artist: array{
+     *         id: string,
+     *         name: string,
+     *         prefix: string,
+     *         basename: string
+     *     },
+     *     artists: list<array{
+     *         id: string,
+     *         name: string,
+     *         prefix: string,
+     *         basename: string
+     *     }>,
+     *     album: array{
+     *         id: string,
+     *         name: string,
+     *         prefix: string,
+     *         basename: string
+     *     },
+     *     albumartist?: array{
+     *         id: string,
+     *         name: string,
+     *         prefix: string,
+     *         basename: string
+     *     },
+     *     disk: int,
+     *     disksubtitle: string|null,
+     *     track: int,
+     *     filename: string|null,
+     *     genre: list<array<string, string>>,
+     *     playlisttrack: int,
+     *     time: int,
+     *     year: int,
+     *     format: string|null,
+     *     stream_format: string|null,
+     *     bitrate: int|null,
+     *     stream_bitrate: int|null,
+     *     rate: int,
+     *     mode: string|null,
+     *     mime: string|null,
+     *     stream_mime: string|null,
+     *     url: string,
+     *     size: int,
+     *     mbid: string|null,
+     *     art: string|null,
+     *     has_art: bool,
+     *     flag: bool,
+     *     rating: int|null,
+     *     averagerating: float|null,
+     *     playcount: int,
+     *     catalog: string,
+     *     composer: string|null,
+     *     channels: int|null,
+     *     comment: string|null,
+     *     license: string|null,
+     *     publisher: string|null,
+     *     language: string|null,
+     *     lyrics: string|null,
+     *     replaygain_album_gain: float|null,
+     *     replaygain_album_peak: float|null,
+     *     replaygain_track_gain: float|null,
+     *     replaygain_track_peak: float|null,
+     *     r128_album_gain: float|null,
+     *     r128_track_gain: float|null,
+     *     metadata?: array<string, string>
+     * }>
      */
     public static function songs_array(array $objects, User $user, string $auth): array
     {
@@ -1763,7 +1831,7 @@ class Json8_Data
             $objArray['rating']                = $user_rating;
             $objArray['averagerating']         = $rating->get_average_rating();
             $objArray['playcount']             = (int)$song->total_count;
-            $objArray['catalog']               = $song->getCatalogId();
+            $objArray['catalog']               = (string)$song->getCatalogId();
             $objArray['composer']              = $song->composer;
             $objArray['channels']              = $song->channels;
             $objArray['comment']               = $song->comment;
@@ -1783,12 +1851,15 @@ class Json8_Data
                 $field = $metadata->getField();
 
                 if ($field !== null) {
-                    $meta_name = str_replace(
+                    if (!isset($objArray['metadata'])) {
+                        $objArray['metadata'] = [];
+                    }
+                    $meta_name = (string)str_replace(
                         [' ', '(', ')', '/', '\\', '#'],
                         '_',
                         $field->getName()
                     );
-                    $objArray[$meta_name] = $metadata->getData();
+                    $objArray['metadata'][$meta_name] = $metadata->getData();
                 }
             }
             $JSON[] = $objArray;
