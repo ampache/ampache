@@ -124,7 +124,7 @@ abstract class localplay_controller
      * get_url
      * This returns the URL for the passed object
      */
-    public function get_url($object)
+    public function get_url($object): string
     {
         // This might not be an object!
         if (!is_object($object)) {

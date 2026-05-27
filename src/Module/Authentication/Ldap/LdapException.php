@@ -43,7 +43,7 @@ class LdapException extends Exception
      * Otherwise, the provided message will be used.
      *
      */
-    public function __construct($message)
+    public function __construct(int|string $message)
     {
         if (is_int($message)) {
             $message = 'LDAP error: [' . $message . '] ' . ldap_err2str($message);
