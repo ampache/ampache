@@ -1477,7 +1477,7 @@ class Subsonic_Xml_Data
             foreach (explode("\n", html_entity_decode($text)) as $line) {
                 if (!empty($line)) {
                     if (preg_match('/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)$/', $line, $matches)) {
-                        $xlyrics->addAttribute('synced', 'false');
+                        $xlyrics->addAttribute('synced', 'true');
                         $xline        = self::_addChildToResultXml($xlyrics, 'line');
                         $minutes      = (int)$matches[1];
                         $seconds      = (int)$matches[2];
@@ -1489,7 +1489,7 @@ class Subsonic_Xml_Data
                         $xline->addAttribute('start', (string)$milliseconds);
                         $xline->addAttribute('value', $lyricLine);
                     } else {
-                        $xlyrics->addAttribute('synced', 'true');
+                        $xlyrics->addAttribute('synced', 'false');
                         $xline = self::_addChildToResultXml($xlyrics, 'line');
                         $xline->addAttribute('value', $line);
                     }
