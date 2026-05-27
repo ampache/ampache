@@ -50,8 +50,6 @@ final class Goodbye4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function goodbye(array $input, User $user): bool
     {

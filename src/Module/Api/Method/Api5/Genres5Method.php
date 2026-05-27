@@ -59,8 +59,6 @@ final class Genres5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function genres(array $input, User $user): bool
     {

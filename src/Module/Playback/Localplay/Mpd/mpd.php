@@ -311,7 +311,6 @@ class mpd
      *
      * Sends a generic command to the MPD server. Several command constants
      * are pre-defined for use (see self::COMMAND_* constant definitions above).
-     * @param string $command
      * @param array<string|int, scalar>|string|float|int|null $arguments
      * @param bool $refresh_info
      * @return string|bool
@@ -564,7 +563,6 @@ class mpd
      * Adds each track listed in a single-dimensional <trackArray>, which
      * contains filenames of tracks to add to the end of the playlist. This
      * is used to add many, many tracks to the playlist in one swoop.
-     * @param $trackArray
      * @return bool|string
      */
     public function PLAddBulk($trackArray)
@@ -602,8 +600,6 @@ class mpd
      *
      * Moves track number <current_position> to position <new_position> in
      * the playlist. This is used to reorder the songs in the playlist.
-     * @param $current_position
-     * @param $new_position
      */
     public function PLMoveTrack($current_position, $new_position): bool|string
     {
@@ -650,7 +646,6 @@ class mpd
      *
      * Retrieves the playlist from <file>.m3u and loads it into the current
      * playlist.
-     * @param $file
      * @return bool|string
      */
     public function PLLoad($file)
@@ -667,7 +662,6 @@ class mpd
      *
      * Saves the playlist to <file>.m3u for later retrieval. The file is
      * saved in the MPD playlist directory.
-     * @param $file
      * @return bool|string
      */
     public function PLSave($file)
@@ -719,7 +713,6 @@ class mpd
      *
      * Enables 'loop' mode -- tells MPD continually loop the playlist. The
      * <repVal> parameter is either 1 (on) or 0 (off).
-     * @param $value
      * @return bool|string
      */
     public function SetRepeat($value)
@@ -737,7 +730,6 @@ class mpd
      *
      * Enables 'randomize' mode -- tells MPD to play songs in the playlist
      * in random order. The parameter is either 1 (on) or 0 (off).
-     * @param $value
      * @return bool|string
      */
     public function SetRandom($value)
@@ -839,7 +831,6 @@ class mpd
      * SeekTo
      *
      * Skips directly to the <idx> song in the MPD playlist.
-     * @param $idx
      * @return bool|float|int|string
      */
     public function SkipTo($idx)
@@ -864,7 +855,6 @@ class mpd
      * to locate. The <track> argument, if supplied, is the track number in
      * the playlist. If <track> is not specified, the current track is
      * assumed.
-     * @param $pos
      * @param int $track
      * @return bool|float|int|string
      */
@@ -1045,7 +1035,6 @@ class mpd
      * Returns the list of albums in the database in an associative array.
      * Optional parameter is an artist Name which will list all albums by a
      * particular artist.
-     * @param $artist
      * @return array|bool
      */
     public function GetAlbums($artist = null)
@@ -1166,7 +1155,6 @@ class mpd
     /**
      * _parseResponse
      * Turns a response into an array
-     * @param $response
      * @return array|bool
      */
     private static function _parseResponse($response)

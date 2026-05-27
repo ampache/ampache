@@ -478,8 +478,6 @@ final class VaInfo implements VaInfoInterface
     /**
      * prepare_metadata_for_writing
      * Prepares vorbiscomments/id3v2 metadata for writing tag to file
-     * @param array $frames
-     * @return array
      */
     public function prepare_metadata_for_writing(array $frames): array
     {
@@ -508,7 +506,6 @@ final class VaInfo implements VaInfoInterface
      * read_id3
      *
      * This function runs the various steps to gathering the metadata
-     * @return array
      */
     public function read_id3(): array
     {
@@ -536,8 +533,6 @@ final class VaInfo implements VaInfoInterface
      * file and tries to figure out which tag type(s) it should use. If your
      * tag_order doesn't match anything then it throws up its hands and uses
      * everything in random order.
-     * @param array $results
-     * @param string $configKey
      * @return string[]
      */
     public static function get_tag_type(array $results, string $configKey = 'metadata_order'): array
@@ -591,7 +586,6 @@ final class VaInfo implements VaInfoInterface
      * sanitized format that Ampache can actually use
      * @param array<string, mixed> $results
      * @param string[] $keys
-     * @param string|null $filename
      * @return array{
      *     'albumartist': ?string,
      *     'album': ?string,
@@ -1931,7 +1925,6 @@ final class VaInfo implements VaInfoInterface
     /**
      * _parse_filename
      * This function uses the file and directory patterns to pull out extra tag information.
-     * @param string $filepath
      * @return array<string, mixed>
      */
     private function _parse_filename(string $filepath): array
@@ -1955,9 +1948,6 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * parse_pattern
-     * @param string $filepath
-     * @param string $dirPattern
-     * @param string $filePattern
      * @return array<string, mixed>
      */
     public static function parse_pattern(string $filepath, string $dirPattern, string $filePattern): array
@@ -2046,7 +2036,6 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * parseGenres
-     * @param array|string $data
      * @return string[]
      * @throws Exception
      */
@@ -2100,7 +2089,6 @@ final class VaInfo implements VaInfoInterface
      * Split items by configurable delimiter
      * Return first item as string = default
      * Return all items as array if doTrim = false passed as optional parameter
-     * @param string $data
      * @return string[]
      * @throws Exception
      */

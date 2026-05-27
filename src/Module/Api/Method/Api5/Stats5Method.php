@@ -76,8 +76,6 @@ final class Stats5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function stats(array $input, User $user): bool
     {

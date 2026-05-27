@@ -42,7 +42,6 @@ class LdapException extends Exception
      *
      * Otherwise, the provided message will be used.
      *
-     * @param mixed $message
      */
     public function __construct($message)
     {

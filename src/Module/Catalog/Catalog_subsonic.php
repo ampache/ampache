@@ -211,8 +211,6 @@ class Catalog_subsonic extends Catalog
     /**
      * add_to_catalog
      * @param null|array<string, string|bool> $options
-     * @param null|Interactor $interactor
-     * @return int
      */
     public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
@@ -682,7 +680,6 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Video $media
      * @return null|array{
      *     file_path: string,
      *     file_name: string,

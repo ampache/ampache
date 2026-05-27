@@ -63,8 +63,6 @@ final class LiveStreams6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function live_streams(array $input, User $user): bool
     {

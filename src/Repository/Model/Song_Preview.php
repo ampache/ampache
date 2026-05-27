@@ -324,7 +324,6 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * Search for direct children of an object
-     * @param string $name
      * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
@@ -404,8 +403,6 @@ class Song_Preview extends database_object implements Media, playable_item
      * get_transcode_settings
      *
      * FIXME: Song Preview transcoding is not implemented
-     * @param string|null $target
-     * @param string|null $player
      * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
      * @return array{format?: string, command?: string}
      */

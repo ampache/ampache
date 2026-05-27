@@ -62,7 +62,6 @@ class Stream_Url extends MemoryObject
      * parse
      *
      * Takes an url and parses out all the chewy goodness.
-     * @param string $url
      * @return array<string, string>
      */
     public static function parse(string $url): array

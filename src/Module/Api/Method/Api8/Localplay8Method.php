@@ -67,8 +67,6 @@ final class Localplay8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function localplay(array $input, User $user): bool
     {

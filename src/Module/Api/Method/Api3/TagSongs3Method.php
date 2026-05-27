@@ -49,7 +49,6 @@ final class TagSongs3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function tag_songs(array $input, User $user): void
     {
@@ -75,7 +74,6 @@ final class TagSongs3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function genre_songs(array $input, User $user): void
     {

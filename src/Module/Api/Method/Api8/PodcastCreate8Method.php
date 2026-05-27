@@ -62,8 +62,6 @@ final class PodcastCreate8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function podcast_create(array $input, User $user): bool
     {
@@ -118,8 +116,6 @@ final class PodcastCreate8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function podcasts_create(array $input, User $user): bool
     {

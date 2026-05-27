@@ -167,7 +167,6 @@ class UPnPDevice
 
     /**
      * helper function for calls that require only an instance id
-     * @param $command
      * @param string $type
      * @param int $instance_id
      */

@@ -176,8 +176,6 @@ class Api4
      *
      * @param array<string, mixed> $input
      * @param string[] $parameters e.g. array('auth', type')
-     * @param string $method
-     * @return bool
      */
     public static function check_parameter(array $input, array $parameters, string $method = ''): bool
     {

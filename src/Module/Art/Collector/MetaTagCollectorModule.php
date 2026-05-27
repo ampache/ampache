@@ -71,8 +71,6 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     /**
      * This looks for the art in the meta-tags of the file itself
      *
-     * @param Art $art
-     * @param int $limit
      * @param array{
      *     mb_albumid?: string,
      *     artist?: string,
@@ -152,8 +150,6 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Gather tags from audio files.
-     * @param Art $art
-     * @param int $limit
      * @return array<int, array{raw: string, mime: string, title: string}>
      */
     private function gatherSongTags(Art $art, int $limit = 5): array
@@ -285,7 +281,6 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Gather tags from files. (rotate through existing images so you don't return a tone of dupes)
-     * @param Song|Video $media
      * @param array|array<int, array{raw: string, mime: string, title: string}> $data
      * @return array<int, array{raw: string, mime: string, title: string}>
      */
@@ -318,8 +313,6 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     /**
      * Gather tags from single song instead of full album
      * (taken from function gather_song_tags with some changes)
-     * @param Art $art
-     * @param int $limit
      * @return array<int, array{raw: string, mime: string, title: string}>
      */
     public function gatherSongTagsSingle(Art $art, int $limit = 5): array

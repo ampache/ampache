@@ -61,8 +61,6 @@ final class Shares4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function shares(array $input, User $user): bool
     {

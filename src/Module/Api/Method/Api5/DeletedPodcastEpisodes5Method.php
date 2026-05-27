@@ -55,8 +55,6 @@ final class DeletedPodcastEpisodes5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function deleted_podcast_episodes(array $input, User $user): bool
     {

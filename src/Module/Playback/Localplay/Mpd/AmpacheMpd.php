@@ -183,7 +183,6 @@ class AmpacheMpd extends localplay_controller
      * get_instance
      * This returns the specified instance and all it's pretty variables
      * If no instance is passed current is used
-     * @param string|null $instance
      * @return array{
      *     id?: int,
      *     name?: string,
@@ -218,7 +217,6 @@ class AmpacheMpd extends localplay_controller
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
-     * @param int $uid
      * @param array{
      *     host?: string,
      *     port?: string,
@@ -441,8 +439,6 @@ class AmpacheMpd extends localplay_controller
     /**
      * move
      * This tells MPD to move a song
-     * @param $source
-     * @param $destination
      * @return bool|string
      */
     public function move($source, $destination)

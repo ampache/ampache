@@ -32,7 +32,6 @@ final class LabelSearch implements SearchInterface
 {
     /**
      * Handles the generation of the SQL for label searches.
-     * @param Search $search
      * @return array{
      *     base: string,
      *     join: array<string, bool>,

@@ -71,8 +71,6 @@ final class CatalogAdd8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function catalog_add(array $input, User $user): bool
     {

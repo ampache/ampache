@@ -53,9 +53,6 @@ final class ShowAction implements ApplicationActionInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @param GuiGatekeeperInterface $gatekeeper
-     * @return ResponseInterface|null
      * @throws Exception
      */
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

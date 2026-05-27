@@ -79,8 +79,6 @@ final class ShareCreate6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -177,8 +175,6 @@ final class ShareCreate6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function shares_create(array $input, User $user): bool
     {

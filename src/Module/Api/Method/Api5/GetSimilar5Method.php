@@ -58,8 +58,6 @@ final class GetSimilar5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function get_similar(array $input, User $user): bool
     {

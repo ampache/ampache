@@ -61,8 +61,6 @@ final class Timeline6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function timeline(array $input, User $user): bool
     {

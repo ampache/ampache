@@ -66,8 +66,6 @@ final class BookmarkEdit5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function bookmark_edit(array $input, User $user): bool
     {

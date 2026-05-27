@@ -537,7 +537,6 @@ class Browse extends Query
 
     /**
      * show_next_link
-     * @param string $argument_param
      */
     public function show_next_link(string $argument_param = ''): void
     {

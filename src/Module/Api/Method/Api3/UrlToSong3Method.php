@@ -47,7 +47,6 @@ final class UrlToSong3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function url_to_song(array $input, User $user): void
     {

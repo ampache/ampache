@@ -50,7 +50,6 @@ final class Tags3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function tags(array $input, User $user): void
     {
@@ -84,7 +83,6 @@ final class Tags3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function genres(array $input, User $user): void
     {

@@ -197,10 +197,6 @@ final class FileNameConverter implements FileNameConverterInterface
     /**
      * This just takes a source / dest and does the renaming
      *
-     * @param Interactor $interactor
-     * @param string $full_file
-     * @param string $translated_filename
-     * @return bool
      */
     private function charset_rename_file(
         Interactor $interactor,

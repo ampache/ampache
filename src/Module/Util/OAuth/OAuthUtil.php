@@ -33,7 +33,6 @@ use Ampache\Module\System\Core;
 class OAuthUtil
 {
     /**
-     * @param $input
      * @return array|string|string[]
      */
     public static function urlencode_rfc3986($input)
@@ -141,7 +140,6 @@ class OAuthUtil
     // parameters like this
     // array('a' => array('b', 'c'), 'd' => 'e')
     /**
-     * @param $input
      * @return array
      */
     public static function parse_parameters($input)
@@ -180,7 +178,6 @@ class OAuthUtil
     }
 
     /**
-     * @param $params
      */
     public static function build_http_query($params): string
     {

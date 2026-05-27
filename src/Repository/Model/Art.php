@@ -901,10 +901,7 @@ class Art extends database_object
     /**
      * save_thumb
      * This saves the thumbnail that we're passed
-     * @param string $source
-     * @param string $mime
      * @param array{width: int, height: int} $size
-     * @return bool
      */
     public function save_thumb(string $source, string $mime, array $size): bool
     {
@@ -1004,9 +1001,7 @@ class Art extends database_object
      * Automatically resizes the image for thumbnail viewing.
      * Only works on gif/jpg/png/bmp. Fails if PHP-GD isn't available
      * or lacks support for the requested image type.
-     * @param string $image
      * @param array{width: int, height: int} $size
-     * @param string $mime
      * @return array{thumb?: string, thumb_mime?: string}
      */
     public function generate_thumb(string $image, array $size, string $mime): array
@@ -1152,8 +1147,6 @@ class Art extends database_object
      *     db?: int,
      *     song?: string,
      * } $data
-     * @param string $type
-     * @return string
      */
     public static function get_from_source(array $data, string $type): string
     {
@@ -1356,8 +1349,6 @@ class Art extends database_object
 
     /**
      * Gather metadata from plugin.
-     * @param AmpacheDiscogs|AmpacheMusicBrainz|AmpacheTheaudiodb $plugin
-     * @param string $type
      * @param array<string, mixed> $options
      * @return list<array{
      *     url: string,

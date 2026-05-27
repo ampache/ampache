@@ -46,7 +46,6 @@ final class FriendsTimeline3Method
      *     since?: int,
      *     api_format: string,
      * } $input
-     * @param User $user
      */
     public static function friends_timeline(array $input, User $user): void
     {

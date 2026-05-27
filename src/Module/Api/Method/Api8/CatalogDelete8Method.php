@@ -55,8 +55,6 @@ final class CatalogDelete8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function catalog_delete(array $input, User $user): bool
     {
@@ -93,8 +91,6 @@ final class CatalogDelete8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function catalogs_delete(array $input, User $user): bool
     {

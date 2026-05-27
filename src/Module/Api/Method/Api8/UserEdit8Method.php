@@ -89,8 +89,6 @@ final class UserEdit8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function user_edit(array $input, User $user): bool
     {
@@ -212,8 +210,6 @@ final class UserEdit8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function users_edit(array $input, User $user): bool
     {

@@ -55,8 +55,6 @@ final class UrlToSong8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function url_to_song(array $input, User $user): bool
     {

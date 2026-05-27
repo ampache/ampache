@@ -79,10 +79,7 @@ class WebPlayer
 
     /**
      * Get types information for an item.
-     * @param Stream_Url $item
-     * @param string $force_type
      * @param array<string, string> $urlinfo
-     * @param string $transcode_cfg
      * @return array{
      *     real: string,
      *     player: string,
@@ -125,7 +122,6 @@ class WebPlayer
     /**
      * Check if the playlist is a video playlist.
      * @param array<string, string> $urlinfo
-     * @return Media|null
      */
     public static function get_media_object(array $urlinfo): ?Media
     {
@@ -150,8 +146,6 @@ class WebPlayer
      *     real: string,
      *     player: string,
      * } $types
-     * @param string $file_type
-     * @param bool $transcode
      * @return array{
      *     real: string,
      *     player: string,
@@ -185,16 +179,11 @@ class WebPlayer
 
     /**
      * Check if we can transcode this file type
-     * @param string $media_type
-     * @param string $file_type
      * @param array{
      *     real: string,
      *     player: string,
      * } $types
      * @param array<string, string> $urlinfo
-     * @param string $transcode_cfg
-     * @param string $force_type
-     * @return bool
      */
     public static function can_transcode(
         string $media_type,

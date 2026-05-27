@@ -59,8 +59,6 @@ final class Rate8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function rate(array $input, User $user): bool
     {

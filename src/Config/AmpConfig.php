@@ -122,7 +122,6 @@ class AmpConfig
      *
      * This is the same as the set function except it takes an array as input.
      * @param array<string, mixed> $array
-     * @param bool $clobber
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

@@ -46,7 +46,6 @@ final class Following3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function following(array $input, User $user): void
     {

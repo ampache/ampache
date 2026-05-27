@@ -59,8 +59,6 @@ final class SearchSongs6Method
      * limit           = (integer) //optional
      *
      * @param array<string, mixed> $input
-     * @param User $user
-     * @return bool
      */
     public static function search_songs(array $input, User $user): bool
     {

@@ -69,8 +69,6 @@ final class Podcasts8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function podcasts(array $input, User $user): bool
     {

@@ -68,8 +68,6 @@ final class CatalogFile6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function catalog_file(array $input, User $user): bool
     {

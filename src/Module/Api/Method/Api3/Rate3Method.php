@@ -50,7 +50,6 @@ final class Rate3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function rate(array $input, User $user): void
     {

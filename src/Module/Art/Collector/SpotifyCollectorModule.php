@@ -54,8 +54,6 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
     /**
      * This function gathers art from the spotify catalog
      *
-     * @param Art $art
-     * @param int $limit
      * @param array{
      *     mb_albumid?: string,
      *     artist?: string,

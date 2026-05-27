@@ -62,8 +62,6 @@ final class ShareEdit8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function share_edit(array $input, User $user): bool
     {
@@ -123,8 +121,6 @@ final class ShareEdit8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function shares_edit(array $input, User $user): bool
     {

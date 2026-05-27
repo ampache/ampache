@@ -83,7 +83,6 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param ConnectionInterface $from
      * @param string $msg
      */
     public function onMessage(ConnectionInterface $from, $msg): void
@@ -153,7 +152,6 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param ConnectionInterface $from
      * @param int $song_id
      */
     protected function notifySong(ConnectionInterface $from, $song_id): void
@@ -178,7 +176,6 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param ConnectionInterface $from
      * @param int $song_position
      */
     protected function notifySongPosition(ConnectionInterface $from, $song_position): void
@@ -203,7 +200,6 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param ConnectionInterface $from
      * @param bool $play
      */
     protected function notifyPlayerPlay(ConnectionInterface $from, $play): void
@@ -228,7 +224,6 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param ConnectionInterface $from
      */
     protected function notifyEnded(ConnectionInterface $from): void
     {
@@ -248,7 +243,6 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param ConnectionInterface $from
      * @param string $broadcast_key
      */
     protected function registerBroadcast(ConnectionInterface $from, $broadcast_key): void
@@ -264,7 +258,6 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param ConnectionInterface $conn
      */
     protected function unregisterBroadcast(ConnectionInterface $conn): void
     {
@@ -285,7 +278,6 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      * getRunningBroadcast
      * @param int $broadcast_id
-     * @return Broadcast|null
      */
     protected function getRunningBroadcast($broadcast_id): ?Broadcast
     {
@@ -302,7 +294,6 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param ConnectionInterface $from
      * @param int $broadcast_id
      */
     protected function registerListener(ConnectionInterface $from, $broadcast_id): void
@@ -329,7 +320,6 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param ConnectionInterface $conn
      * @param string $sid
      */
     protected function authSid(ConnectionInterface $conn, $sid): void
@@ -343,7 +333,6 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param ConnectionInterface $conn
      */
     protected function unregisterListener(ConnectionInterface $conn): void
     {
@@ -371,7 +360,6 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param Broadcast $broadcast
      */
     protected function notifyNbListeners(Broadcast $broadcast): void
     {
@@ -387,7 +375,6 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param Broadcast $broadcast
      * @return ConnectionInterface[]
      */
     protected function getListeners(Broadcast $broadcast): array
@@ -423,7 +410,6 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param ConnectionInterface $conn
      */
     public function onClose(ConnectionInterface $conn): void
     {
@@ -439,8 +425,6 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      * onError
-     * @param ConnectionInterface $conn
-     * @param Exception $error
      * @noinspection PhpParameterNameChangedDuringInheritanceInspection
      */
     public function onError(ConnectionInterface $conn, Exception $error): void

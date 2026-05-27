@@ -43,8 +43,6 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
     // config
     /**
      * easy_captcha_graphic constructor.
-     * @param $x
-     * @param $y
      */
     public function __construct(
         $x = null,
@@ -68,7 +66,6 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
     // return a single .ttf font filename
 
     /**
-     * @return mixed
      */
     public function font()
     {
@@ -105,8 +102,6 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
     // return GD color
 
     /**
-     * @param $a
-     * @param $b
      * @return false|int
      */
     public function random_color($a, $b)
@@ -117,9 +112,6 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
     }
 
     /**
-     * @param $r
-     * @param $g
-     * @param $b
      * @return false|int
      */
     public function rgb($r, $g, $b)

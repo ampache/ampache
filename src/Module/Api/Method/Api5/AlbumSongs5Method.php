@@ -60,8 +60,6 @@ class AlbumSongs5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function album_songs(array $input, User $user): bool
     {

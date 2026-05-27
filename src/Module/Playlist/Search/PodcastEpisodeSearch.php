@@ -32,7 +32,6 @@ final class PodcastEpisodeSearch implements SearchInterface
 {
     /**
      * Handles the generation of the SQL for podcast_episode searches.
-     * @param Search $search
      * @return array{
      *     base: string,
      *     join: array<string, bool>,

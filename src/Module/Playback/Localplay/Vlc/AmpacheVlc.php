@@ -176,7 +176,6 @@ class AmpacheVlc extends localplay_controller
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
-     * @param int $uid
      * @param array{
      *     host: string,
      *     port: string,
@@ -213,7 +212,6 @@ class AmpacheVlc extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all it's variables
-     * @param string|null $instance
      * @return array{
      *     id?: int,
      *     name?: string,

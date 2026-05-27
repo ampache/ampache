@@ -50,7 +50,6 @@ class AlbumSongs3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function album_songs(array $input, User $user): void
     {

@@ -55,8 +55,6 @@ final class LiveStreamDelete8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function live_stream_delete(array $input, User $user): bool
     {
@@ -93,8 +91,6 @@ final class LiveStreamDelete8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function live_streams_delete(array $input, User $user): bool
     {

@@ -52,8 +52,6 @@ final class Video8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function video(array $input, User $user): bool
     {

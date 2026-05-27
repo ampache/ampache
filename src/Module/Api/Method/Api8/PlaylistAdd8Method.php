@@ -63,8 +63,6 @@ final class PlaylistAdd8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function playlist_add(array $input, User $user): bool
     {
@@ -144,8 +142,6 @@ final class PlaylistAdd8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function playlist_add_edit(array $input, User $user): bool
     {

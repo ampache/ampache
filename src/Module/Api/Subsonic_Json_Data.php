@@ -899,7 +899,6 @@ class Subsonic_Json_Data
      * _getArtistInfo
      *
      * Artist info.
-     * @param Artist $artist
      * @param array{
      *     id: ?int,
      *     summary: ?string,
@@ -916,7 +915,6 @@ class Subsonic_Json_Data
      *     rel?: ?string,
      *     mbid?: ?string
      * }> $similars
-     * @param string $elementName
      *@return array{
      *     'biography'?: string,
      *     'musicBrainzId': string,
@@ -2293,7 +2291,6 @@ class Subsonic_Json_Data
      *     catalog_id: int,
      *     has_art: int
      * }> $artists
-     * @param int $lastModified
      * @return array{'subsonic-response': array<string, mixed>}
      */
     public static function addIndexes(array $response, array $artists, int $lastModified = 0): array
@@ -2821,7 +2818,6 @@ class Subsonic_Json_Data
      *
      * Podcasts.Subsonic
      * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param Podcast_Episode $episode
      * @return array{'subsonic-response': array<string, mixed>}
      */
     public static function addPodcastEpisode(array $response, Podcast_Episode $episode): array
@@ -3298,7 +3294,6 @@ class Subsonic_Json_Data
      *
      * song.Subsonic
      * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param int $song_id
      * @return array{'subsonic-response': array<string, mixed>}
      */
     public static function addSong(array $response, int $song_id): array

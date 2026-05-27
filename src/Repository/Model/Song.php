@@ -485,8 +485,6 @@ class Song extends database_object implements
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point.
      * @param list<int|string> $song_ids
-     * @param string $limit_threshold
-     * @return bool
      */
     public static function build_cache(array $song_ids, string $limit_threshold = ''): bool
     {
@@ -1316,8 +1314,6 @@ class Song extends database_object implements
     /**
      * update_disk
      * update the disk tag
-     * @param int $new_disk
-     * @param int $song_id
      */
     public static function update_disk(int $new_disk, int $song_id): void
     {
@@ -1327,8 +1323,6 @@ class Song extends database_object implements
     /**
      * update_year
      * update the year tag
-     * @param int $new_year
-     * @param int $song_id
      */
     public static function update_year(int $new_year, int $song_id): void
     {
@@ -1338,8 +1332,6 @@ class Song extends database_object implements
     /**
      * update_label
      * This updates the label tag of the song
-     * @param string $new_value
-     * @param int $song_id
      */
     public static function update_label(string $new_value, int $song_id): void
     {
@@ -1349,8 +1341,6 @@ class Song extends database_object implements
     /**
      * update_language
      * This updates the language tag of the song
-     * @param string $new_lang
-     * @param int $song_id
      */
     public static function update_language(string $new_lang, int $song_id): void
     {
@@ -1360,8 +1350,6 @@ class Song extends database_object implements
     /**
      * update_comment
      * updates the comment field
-     * @param string $new_comment
-     * @param int $song_id
      */
     public static function update_comment(string $new_comment, int $song_id): void
     {
@@ -1371,8 +1359,6 @@ class Song extends database_object implements
     /**
      * update_lyrics
      * updates the lyrics field
-     * @param string $new_lyrics
-     * @param int $song_id
      */
     public static function update_lyrics(string $new_lyrics, int $song_id): void
     {
@@ -1382,8 +1368,6 @@ class Song extends database_object implements
     /**
      * update_title
      * updates the title field
-     * @param string $new_title
-     * @param int $song_id
      */
     public static function update_title(string $new_title, int $song_id): void
     {
@@ -1393,8 +1377,6 @@ class Song extends database_object implements
     /**
      * update_composer
      * updates the composer field
-     * @param string $new_composer
-     * @param int $song_id
      */
     public static function update_composer(string $new_composer, int $song_id): void
     {
@@ -1404,8 +1386,6 @@ class Song extends database_object implements
     /**
      * update_bitrate
      * updates the bitrate field
-     * @param int $new_bitrate
-     * @param int $song_id
      */
     public static function update_bitrate(int $new_bitrate, int $song_id): void
     {
@@ -1415,8 +1395,6 @@ class Song extends database_object implements
     /**
      * update_rate
      * updates the rate field
-     * @param int $new_rate
-     * @param int $song_id
      */
     public static function update_rate(int $new_rate, int $song_id): void
     {
@@ -1426,8 +1404,6 @@ class Song extends database_object implements
     /**
      * update_mode
      * updates the mode field
-     * @param string $new_mode
-     * @param int $song_id
      */
     public static function update_mode(string $new_mode, int $song_id): void
     {
@@ -1437,8 +1413,6 @@ class Song extends database_object implements
     /**
      * update_size
      * updates the size field
-     * @param int $new_size
-     * @param int $song_id
      */
     public static function update_size(int $new_size, int $song_id): void
     {
@@ -1448,8 +1422,6 @@ class Song extends database_object implements
     /**
      * update_time
      * updates the time field
-     * @param int $new_time
-     * @param int $song_id
      */
     public static function update_time(int $new_time, int $song_id): void
     {
@@ -1459,8 +1431,6 @@ class Song extends database_object implements
     /**
      * update_track
      * this updates the track field
-     * @param int $new_track
-     * @param int $song_id
      */
     public static function update_track(int $new_track, int $song_id): void
     {
@@ -1480,8 +1450,6 @@ class Song extends database_object implements
     /**
      * update_mbid
      * updates mbid field
-     * @param string $new_mbid
-     * @param int $song_id
      */
     public static function update_mbid(string $new_mbid, int $song_id): void
     {
@@ -1491,8 +1459,6 @@ class Song extends database_object implements
     /**
      * update_license
      * updates license field
-     * @param int|null $new_license
-     * @param int $song_id
      */
     public static function update_license(?int $new_license, int $song_id): void
     {
@@ -1568,8 +1534,6 @@ class Song extends database_object implements
     /**
      * update_utime
      * sets a new update time
-     * @param int $song_id
-     * @param int $time
      */
     public static function update_utime(int $song_id, int $time = 0): void
     {
@@ -1584,8 +1548,6 @@ class Song extends database_object implements
     /**
      * update_played
      * sets the played flag
-     * @param bool $new_played
-     * @param int $song_id
      */
     public static function update_played(bool $new_played, int $song_id): void
     {
@@ -1595,8 +1557,6 @@ class Song extends database_object implements
     /**
      * update_enabled
      * sets the enabled flag
-     * @param bool $new_enabled
-     * @param int $song_id
      */
     public static function update_enabled(bool $new_enabled, int $song_id): void
     {
@@ -1974,7 +1934,6 @@ class Song extends database_object implements
 
     /**
      * Search for direct children of an object
-     * @param string $name
      * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
@@ -2178,8 +2137,6 @@ class Song extends database_object implements
 
     /**
      * Get transcode settings.
-     * @param string|null $target
-     * @param string|null $player
      * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
      * @return array{format?: string, command?: string}
      */

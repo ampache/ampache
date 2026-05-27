@@ -70,8 +70,6 @@ final class AdvancedSearch8Method
      * limit           = (integer) //optional
      *
      * @param array<string, mixed> $input
-     * @param User $user
-     * @return bool
      */
     public static function advanced_search(array $input, User $user): bool
     {

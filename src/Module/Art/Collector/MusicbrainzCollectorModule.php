@@ -51,8 +51,6 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
      * This function retrieves art based on MusicBrainz' Advanced
      * Relationships
      *
-     * @param Art $art
-     * @param int $limit
      * @param array{
      *     mb_albumid?: string,
      *     artist?: string,

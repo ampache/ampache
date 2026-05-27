@@ -48,7 +48,6 @@ class Ldap
      * This function is here to return a real array {number} => {field} => {value array}
      * instead of the custom LDAP search results provided by the ldap_* library.
      * @param array $searchresult
-     * @return array
      */
     private static function clean_search_results($searchresult): array
     {
@@ -76,7 +75,6 @@ class Ldap
      *
      * @param array $array
      * @param callable-string $callback
-     * @return array
      */
     private static function array_filter_key($array, $callback): array
     {
@@ -119,7 +117,6 @@ class Ldap
 
     /**
      * Binds to the LDAP
-     * @param $link
      * @param string $username
      * @param string $password
      * @throws LdapException
@@ -139,7 +136,6 @@ class Ldap
 
     /**
      * Unbinds from the LDAP
-     * @param $link
      */
     private static function unbind($link): void
     {
@@ -148,11 +144,9 @@ class Ldap
 
     /**
      * Read attributes for a DN from the LDAP
-     * @param $link
      * @param string $base_dn
      * @param array $attrs
      * @param string $filter
-     * @return mixed
      * @throws LdapException
      */
     private static function read($link, $base_dn, $attrs = [], $filter = 'objectClass=*')
@@ -173,11 +167,8 @@ class Ldap
 
     /**
      * Search for a DN in the LDAP
-     * @param $link
-     * @param $base_dn
      * @param string $filter
      * @param bool $only_one_result
-     * @return array
      * @throws LdapException
      */
     private static function search($link, $base_dn, $filter, $only_one_result = true): array

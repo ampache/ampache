@@ -99,7 +99,6 @@ abstract class localplay_controller
     abstract public function delete_instance(int $uid): void;
 
     /**
-     * @param int $uid
      * @param array<string, string> $data
      */
     abstract public function update_instance(int $uid, array $data): void;
@@ -124,8 +123,6 @@ abstract class localplay_controller
     /**
      * get_url
      * This returns the URL for the passed object
-     * @param $object
-     * @return mixed
      */
     public function get_url($object)
     {
@@ -148,7 +145,6 @@ abstract class localplay_controller
      * always possible
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @param $object
      */
     public function get_file($object)
     {

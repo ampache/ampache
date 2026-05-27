@@ -31,7 +31,6 @@ final class UserSearch implements SearchInterface
 {
     /**
      * Handles the generation of the SQL for user searches.
-     * @param Search $search
      * @return array{
      *     base: string,
      *     join: array<string, bool>,

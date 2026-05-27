@@ -57,9 +57,6 @@ final class ShowAddUserAction implements ApplicationActionInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @param GuiGatekeeperInterface $gatekeeper
-     * @return ResponseInterface|null
      */
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

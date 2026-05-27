@@ -972,7 +972,6 @@ class OpenSubsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/artistinfo/
      * https://opensubsonic.netlify.app/docs/responses/artistinfo2/
      * Artist info.
-     * @param Artist $artist
      * @param array{
      *     id: ?int,
      *     summary: ?string,
@@ -989,7 +988,6 @@ class OpenSubsonic_Json_Data
      *     rel?: ?string,
      *     mbid?: ?string
      * }> $similars
-     * @param string $elementName
      *@return array{
      *     'biography'?: string,
      *     'musicBrainzId': string,
@@ -2433,7 +2431,6 @@ class OpenSubsonic_Json_Data
      *     catalog_id: int,
      *     has_art: int
      * }> $artists
-     * @param int $lastModified
      * @return array{'subsonic-response': array<string, mixed>}
      */
     public static function addIndexes(array $response, array $artists, int $lastModified = 0): array
@@ -2995,7 +2992,6 @@ class OpenSubsonic_Json_Data
      * Podcasts.
      * https://opensubsonic.netlify.app/docs/responses/podcastepisode/
      * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param Podcast_Episode $episode
      * @return array{'subsonic-response': array<string, mixed>}
      */
     public static function addPodcastEpisode(array $response, Podcast_Episode $episode): array
@@ -3487,7 +3483,6 @@ class OpenSubsonic_Json_Data
      * song.
      * https://opensubsonic.netlify.app/docs/responses/song/
      * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param int $song_id
      * @return array{'subsonic-response': array<string, mixed>}
      */
     public static function addSong(array $response, int $song_id): array

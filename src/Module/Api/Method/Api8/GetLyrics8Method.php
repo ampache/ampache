@@ -57,8 +57,6 @@ final class GetLyrics8Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function get_lyrics(array $input, User $user): bool
     {
