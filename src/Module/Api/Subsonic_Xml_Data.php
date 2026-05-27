@@ -1469,7 +1469,6 @@ class Subsonic_Xml_Data
             $xlyrics->addAttribute('displayArtist', $song->get_artist_fullname());
             $xlyrics->addAttribute('displayTitle', (string)$song->title);
             $xlyrics->addAttribute('lang', 'xxx');
-            $xlyrics->addAttribute('synced', 'false');
 
             $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
             $text = preg_replace('/\\n\\n/i', "\n", (string)$text);
@@ -1479,6 +1478,7 @@ class Subsonic_Xml_Data
                 if (!empty($line)) {
                     $xline = self::_addChildToResultXml($xlyrics, 'line');
                     if (preg_match('/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)$/', $line, $matches)) {
+                        $xlyrics->addAttribute('synced', 'false');
                         $minutes      = (int)$matches[1];
                         $seconds      = (int)$matches[2];
                         $centiseconds = (int)$matches[3];
@@ -1489,6 +1489,8 @@ class Subsonic_Xml_Data
                         $xline->addAttribute('start', (string)$milliseconds);
                         $xline->addAttribute('value', $lyricLine);
                     } else {
+                        $xlyrics->addAttribute('synced', 'true');
+                        $xline = self::_addChildToResultXml($xlyrics, 'line');
                         $xline->addAttribute('value', $line);
                     }
                 }
