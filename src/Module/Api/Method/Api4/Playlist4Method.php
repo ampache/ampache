@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Search;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Playlist4Method

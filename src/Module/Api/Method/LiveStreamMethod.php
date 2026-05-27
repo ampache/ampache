@@ -26,11 +26,11 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Repository\Model\Live_Stream;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\User;
 
 /**
@@ -79,10 +79,10 @@ final class LiveStreamMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::live_streams([$object_id], false);
+                echo Json8_Data::live_streams([$object_id], false);
                 break;
             default:
-                echo Xml_Data::live_streams([$object_id], $user);
+                echo Xml8_Data::live_streams([$object_id], $user);
         }
 
         return true;

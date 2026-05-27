@@ -28,10 +28,10 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
 
 /**
  * Class SearchGroupMethod
@@ -165,16 +165,16 @@ final class SearchGroupMethod
         switch ($input['api_format']) {
             case 'json':
                 $output = ['search' => []];
-                Json_Data::set_offset($offset);
-                Json_Data::set_limit($limit);
+                Json8_Data::set_offset($offset);
+                Json8_Data::set_limit($limit);
                 foreach ($results as $key => $search) {
-                    Json_Data::set_count($count[$key]);
+                    Json8_Data::set_count($count[$key]);
                     switch ($key) {
                         case 'album':
                             if ((count($search) > $limit || $offset > 0) && $limit) {
                                 $search = array_slice($search, $offset, $limit);
                             }
-                            $output['search'][$key] = Json_Data::albums_array($search, [], $user, $input['auth'], false);
+                            $output['search'][$key] = Json8_Data::albums_array($search, [], $user, $input['auth'], false);
                             break;
                         case 'song_artist':
                         case 'album_artist':
@@ -182,48 +182,48 @@ final class SearchGroupMethod
                             if ((count($search) > $limit || $offset > 0) && $limit) {
                                 $search = array_slice($search, $offset, $limit);
                             }
-                            $output['search'][$key] = Json_Data::artists_array($search, [], $user, $input['auth'], false);
+                            $output['search'][$key] = Json8_Data::artists_array($search, [], $user, $input['auth'], false);
                             break;
                         case 'label':
-                            $output['search'][$key] = Json_Data::labels_array($search);
+                            $output['search'][$key] = Json8_Data::labels_array($search);
                             break;
                         case 'playlist':
-                            $output['search'][$key] = Json_Data::playlists_array($search, $user, $input['auth']);
+                            $output['search'][$key] = Json8_Data::playlists_array($search, $user, $input['auth']);
                             break;
                         case 'podcast':
-                            $output['search'][$key] = Json_Data::podcasts_array($search, $user, $input['auth']);
+                            $output['search'][$key] = Json8_Data::podcasts_array($search, $user, $input['auth']);
                             break;
                         case 'podcast_episode':
                             if ((count($search) > $limit || $offset > 0) && $limit) {
                                 $search = array_slice($search, $offset, $limit);
                             }
-                            $output['search'][$key] = Json_Data::podcast_episodes_array($search, $user, $input['auth'], false);
+                            $output['search'][$key] = Json8_Data::podcast_episodes_array($search, $user, $input['auth'], false);
                             break;
                         case 'genre':
                         case 'tag':
-                            $output['search'][$key] = Json_Data::genres_array($search);
+                            $output['search'][$key] = Json8_Data::genres_array($search);
                             break;
                         case 'user':
-                            $output['search'][$key] = Json_Data::users_array($search);
+                            $output['search'][$key] = Json8_Data::users_array($search);
                             break;
                         case 'video':
-                            $output['search'][$key] = Json_Data::videos_array($search, $user, $input['auth']);
+                            $output['search'][$key] = Json8_Data::videos_array($search, $user, $input['auth']);
                             break;
                         case 'song':
                             if ((count($search) > $limit || $offset > 0) && $limit) {
                                 $search = array_slice($search, $offset, $limit);
                             }
-                            $output['search'][$key] = Json_Data::songs_array($search, $user, $input['auth']);
+                            $output['search'][$key] = Json8_Data::songs_array($search, $user, $input['auth']);
                             break;
                     }
                 }
                 echo json_encode($output, JSON_PRETTY_PRINT);
                 break;
             default:
-                Xml_Data::set_offset((int)($input['offset'] ?? 0));
-                Xml_Data::set_limit($input['limit'] ?? 0);
+                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_limit($input['limit'] ?? 0);
                 // don't set count here as each type of object will count themselves
-                echo Xml_Data::searches($results, $count, $user, $input['auth']);
+                echo Xml8_Data::searches($results, $count, $user, $input['auth']);
         }
 
         return true;

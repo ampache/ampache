@@ -27,8 +27,8 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Xml3_Data;
-use Ampache\Repository\Model\User;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
+use Ampache\Repository\Model\User;
 
 /**
  * Class ToggleFollow3Method

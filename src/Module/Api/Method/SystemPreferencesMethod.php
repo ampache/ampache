@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Xml_Data;
 use Ampache\Repository\PreferenceRepositoryInterface;
 
 /**
@@ -65,7 +65,7 @@ final class SystemPreferencesMethod
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml_Data::object_array($results['preference'], 'preference');
+                echo Xml8_Data::object_array($results['preference'], 'preference');
         }
 
         return true;

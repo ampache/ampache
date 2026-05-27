@@ -25,13 +25,13 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
 
 /**
  * Class SmartlistSongsMethod
@@ -107,16 +107,16 @@ final class SmartlistSongsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset((int)($input['offset'] ?? 0));
-                Json_Data::set_limit($input['limit'] ?? 0);
-                Json_Data::set_count(count($results));
-                echo Json_Data::songs($results, $user, $input['auth']);
+                Json8_Data::set_offset((int)($input['offset'] ?? 0));
+                Json8_Data::set_limit($input['limit'] ?? 0);
+                Json8_Data::set_count(count($results));
+                echo Json8_Data::songs($results, $user, $input['auth']);
                 break;
             default:
-                Xml_Data::set_offset((int)($input['offset'] ?? 0));
-                Xml_Data::set_limit($input['limit'] ?? 0);
-                Xml_Data::set_count(count($results));
-                echo Xml_Data::songs($results, $user, $input['auth']);
+                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_limit($input['limit'] ?? 0);
+                Xml8_Data::set_count(count($results));
+                echo Xml8_Data::songs($results, $user, $input['auth']);
         }
 
         return true;

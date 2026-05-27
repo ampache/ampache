@@ -28,10 +28,10 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
 
 /**
  * Class AdvancedSearchMethod
@@ -115,80 +115,80 @@ final class AdvancedSearchMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset((int)($input['offset'] ?? 0));
-                Json_Data::set_limit($input['limit'] ?? 0);
-                Json_Data::set_count($count);
+                Json8_Data::set_offset((int)($input['offset'] ?? 0));
+                Json8_Data::set_limit($input['limit'] ?? 0);
+                Json8_Data::set_count($count);
                 switch ($type) {
                     case 'album':
-                        echo Json_Data::albums($results, [], $user, $input['auth']);
+                        echo Json8_Data::albums($results, [], $user, $input['auth']);
                         break;
                     case 'song_artist':
                     case 'album_artist':
                     case 'artist':
-                        echo Json_Data::artists($results, [], $user, $input['auth']);
+                        echo Json8_Data::artists($results, [], $user, $input['auth']);
                         break;
                     case 'label':
-                        echo Json_Data::labels($results);
+                        echo Json8_Data::labels($results);
                         break;
                     case 'playlist':
-                        echo Json_Data::playlists($results, $user, $input['auth']);
+                        echo Json8_Data::playlists($results, $user, $input['auth']);
                         break;
                     case 'podcast':
-                        echo Json_Data::podcasts($results, $user, $input['auth']);
+                        echo Json8_Data::podcasts($results, $user, $input['auth']);
                         break;
                     case 'podcast_episode':
-                        echo Json_Data::podcast_episodes($results, $user, $input['auth']);
+                        echo Json8_Data::podcast_episodes($results, $user, $input['auth']);
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Json_Data::genres($results);
+                        echo Json8_Data::genres($results);
                         break;
                     case 'user':
-                        echo Json_Data::users($results);
+                        echo Json8_Data::users($results);
                         break;
                     case 'video':
-                        echo Json_Data::videos($results, $user, $input['auth']);
+                        echo Json8_Data::videos($results, $user, $input['auth']);
                         break;
                     default:
-                        echo Json_Data::songs($results, $user, $input['auth']);
+                        echo Json8_Data::songs($results, $user, $input['auth']);
                         break;
                 }
                 break;
             default:
-                Xml_Data::set_offset((int)($input['offset'] ?? 0));
-                Xml_Data::set_limit($input['limit'] ?? 0);
-                Xml_Data::set_count($count);
+                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_limit($input['limit'] ?? 0);
+                Xml8_Data::set_count($count);
                 switch ($type) {
                     case 'album':
-                        echo Xml_Data::albums($results, [], $user, $input['auth']);
+                        echo Xml8_Data::albums($results, [], $user, $input['auth']);
                         break;
                     case 'artist':
-                        echo Xml_Data::artists($results, [], $user, $input['auth']);
+                        echo Xml8_Data::artists($results, [], $user, $input['auth']);
                         break;
                     case 'label':
-                        echo Xml_Data::labels($results, $user);
+                        echo Xml8_Data::labels($results, $user);
                         break;
                     case 'playlist':
-                        echo Xml_Data::playlists($results, $user, $input['auth']);
+                        echo Xml8_Data::playlists($results, $user, $input['auth']);
                         break;
                     case 'podcast':
-                        echo Xml_Data::podcasts($results, $user, $input['auth']);
+                        echo Xml8_Data::podcasts($results, $user, $input['auth']);
                         break;
                     case 'podcast_episode':
-                        echo Xml_Data::podcast_episodes($results, $user, $input['auth']);
+                        echo Xml8_Data::podcast_episodes($results, $user, $input['auth']);
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Xml_Data::genres($results, $user);
+                        echo Xml8_Data::genres($results, $user);
                         break;
                     case 'user':
-                        echo Xml_Data::users($results);
+                        echo Xml8_Data::users($results);
                         break;
                     case 'video':
-                        echo Xml_Data::videos($results, $user, $input['auth']);
+                        echo Xml8_Data::videos($results, $user, $input['auth']);
                         break;
                     default:
-                        echo Xml_Data::songs($results, $user, $input['auth']);
+                        echo Xml8_Data::songs($results, $user, $input['auth']);
                         break;
                 }
         }

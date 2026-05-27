@@ -26,12 +26,12 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json8_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Repository\Model\User;
 
 /**
  * Class UrlToSongMethod
@@ -75,10 +75,10 @@ final class UrlToSongMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::songs([(int)$url_data['id']], $user, $input['auth'], true, false);
+                echo Json8_Data::songs([(int)$url_data['id']], $user, $input['auth'], true, false);
                 break;
             default:
-                echo Xml_Data::songs([(int)$url_data['id']], $user, $input['auth']);
+                echo Xml8_Data::songs([(int)$url_data['id']], $user, $input['auth']);
         }
 
         return true;
