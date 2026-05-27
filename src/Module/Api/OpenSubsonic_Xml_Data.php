@@ -1619,6 +1619,7 @@ class OpenSubsonic_Xml_Data
                 if (!empty($line)) {
                     if (preg_match('/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)$/', $line, $matches)) {
                         $xlyrics->addAttribute('synced', 'false');
+                        $xline        = self::_addChildToResultXml($xlyrics, 'line');
                         $minutes      = (int)$matches[1];
                         $seconds      = (int)$matches[2];
                         $centiseconds = (int)$matches[3];
