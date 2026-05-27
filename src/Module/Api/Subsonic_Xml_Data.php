@@ -1485,7 +1485,7 @@ class Subsonic_Xml_Data
                         $milliseconds = ($minutes * 60 * 1000) + ($seconds * 1000) + ($centiseconds * 10);
 
                         // Lyrics text
-                        $xline->addAttribute('start', $milliseconds);
+                        $xline->addAttribute('start', (string)$milliseconds);
                         $xline->addAttribute('value', $lyricLine);
                     } else {
                         $xline->addAttribute('value', $line);
