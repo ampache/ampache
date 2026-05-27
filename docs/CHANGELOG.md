@@ -4,7 +4,7 @@
 
 Cleanup has begun!
 
-This is a large backend change as we work towards supporting a
+This is a large backend change as we work towards supporting Ampache8
 
 ### Added (7.9.5)
 
