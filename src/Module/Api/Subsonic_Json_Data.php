@@ -3156,7 +3156,7 @@ class Subsonic_Json_Data
                         $milliseconds = ($minutes * 60 * 1000) + ($seconds * 1000) + ($centiseconds * 10);
 
                         // Lyrics text
-                        $lyricLine = trim($matches[4]);
+                        $lyricLine      = trim($matches[4]);
                         $json['line'][] = [
                             'start' => $milliseconds,
                             'value' => $lyricLine,

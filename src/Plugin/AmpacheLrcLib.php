@@ -179,17 +179,16 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
                 ];
                 $checks_result = array_all(
                     $checks,
-                    function (bool $value) {
-                        return $value === true;
-                    }
+                    fn(bool $value) => $value
                 );
 
-                if ($checks_result === true) {
+                if ($checks_result) {
                     return [
                         'text' => nl2br((string)$item['plainLyrics']),
                         'url' => $this->site_url . '/api/get/' . $item['id']
                     ];
                 }
+
                 $checks_values = [
                     'durations' => ((int)$item['duration']) . " /vs/ " . $song->time,
                     'song title' => $item['trackName'] . ' /vs/ ' . $song->title,
