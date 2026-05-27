@@ -90,10 +90,9 @@ final class Handshake8Method
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
         Api::$version = ((int)$version >= 350001) ? Api::$version_numeric : Api::$version;
         $data_version = (int)substr($version, 0, 1);
-        $data_version = ($data_version == 7) ? 6 : $data_version;
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
-        if ((int)($version) < Api::$auth_version && $data_version !== 6) {
+        if ((int)($version) < Api::$auth_version && $data_version < 8) {
             debug_event(self::class, 'Login Failed: Version too old', 1);
             Api::error('Received Invalid Handshake', ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'version', $input['api_format']);
 
