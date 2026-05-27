@@ -551,6 +551,7 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 }
+                break;
             case 8:
             default:
                 if (in_array($action, $this->deprecated)) {
