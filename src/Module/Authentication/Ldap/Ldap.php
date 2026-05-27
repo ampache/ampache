@@ -251,7 +251,7 @@ class Ldap
             /* Test if the user is in the required group (optional) */
 
             if ($group_dn = AmpConfig::get('ldap_require_group')) {
-                $member_attribute = AmpConfig::get('ldap_member_attribute', 'member');
+                $member_attribute = (string)AmpConfig::get('ldap_member_attribute', 'member');
 
                 $group_infos = self::read($link, $group_dn, [$member_attribute]);
 
