@@ -32,7 +32,7 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 
 /**
- * Class SearchMethod
+ * Class Search6Method
  */
 final class Search6Method
 {

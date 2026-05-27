@@ -31,11 +31,11 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Authentication\Gatekeeper;
 use Ampache\Module\Api\Exception\ApiException;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Method\HandshakeMethod;
-use Ampache\Module\Api\Method\LostPasswordMethod;
+use Ampache\Module\Api\Method\Api8\Handshake8Method;
+use Ampache\Module\Api\Method\Api8\LostPassword8Method;
 use Ampache\Module\Api\Method\MethodInterface;
-use Ampache\Module\Api\Method\PingMethod;
-use Ampache\Module\Api\Method\RegisterMethod;
+use Ampache\Module\Api\Method\Api8\Ping8Method;
+use Ampache\Module\Api\Method\Api8\Register8Method;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -125,10 +125,10 @@ final class ApiHandler implements ApiHandlerInterface
                 )
             );
         }
-        $is_handshake = $action == HandshakeMethod::ACTION;
-        $is_ping      = $action == PingMethod::ACTION;
-        $is_register  = $action == RegisterMethod::ACTION;
-        $is_forgotten = $action == LostPasswordMethod::ACTION;
+        $is_handshake = $action == Handshake8Method::ACTION;
+        $is_ping      = $action == Ping8Method::ACTION;
+        $is_register  = $action == Register8Method::ACTION;
+        $is_forgotten = $action == LostPassword8Method::ACTION;
         $is_public    = ($is_handshake || $is_ping || $is_register || $is_forgotten);
         $header_auth  = false;
         if (!isset($input['auth'])) {
