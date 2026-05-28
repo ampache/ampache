@@ -2529,7 +2529,6 @@ class Subsonic_Json_Data
                     'name' => (string)$catalog->name,
                 ];
             }
-
         }
 
         $response['subsonic-response']['musicFolders'] = (empty($json['musicFolder'])) ? (object)[] : $json;

@@ -140,7 +140,6 @@ final class AccessListManager implements AccessListManagerInterface
                 );
             }
         }
-
     }
 
     /**

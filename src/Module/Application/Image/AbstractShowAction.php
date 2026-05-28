@@ -97,7 +97,6 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                     'Access denied: No valid session found'
                 );
             }
-
         }
 
         // If we aren't resizing just trash thumb
