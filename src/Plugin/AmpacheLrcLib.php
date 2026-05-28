@@ -179,7 +179,7 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
                 ];
                 $checks_result = array_all(
                     $checks,
-                    fn(bool $value) => $value
+                    fn (bool $value) => $value
                 );
 
                 if ($checks_result) {
