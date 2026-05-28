@@ -146,7 +146,6 @@ class SubsonicClient
                 }
 
                 return $this->parseResponse($answer);
-
             }
         } else {
             return $this->error("Error: Invalid subsonic command: " . $action, $object);
