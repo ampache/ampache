@@ -274,6 +274,9 @@ final class ArtistSearch implements SearchInterface
                     if ($my_type == 'album') {
                         $join['album'] = true;
                     }
+                    if ($my_type == 'album_disk') {
+                        $join['album_disk'] = true;
+                    }
                     if ($my_type == 'artist') {
                         $join['artist'] = true;
                     }
