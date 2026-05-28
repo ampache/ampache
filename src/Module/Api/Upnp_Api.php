@@ -190,8 +190,6 @@ class Upnp_Api
         }
     }
 
-    /**
-     */
     public static function notify_request($unpacked, $remote): void
     {
         $headers = self::get_headers($unpacked);
@@ -278,8 +276,6 @@ class Upnp_Api
 
     /* ================================== End SSDP functions ================================== */
 
-    /**
-     */
     public static function parseUPnPRequest($prmRequest): array
     {
         $retArr = [];
@@ -383,8 +379,6 @@ class Upnp_Api
         return in_array($testKey, $filt, true); // this is necessary, (rather than strpos) because "res" turns up in many keys, whose results may not be wanted
     }
 
-    /**
-     */
     public static function createDIDL($prmItems, $filterValue): DOMDocument
     {
         $xmlDoc               = new DOMDocument('1.0' /*, 'utf-8'*/);
@@ -746,8 +740,6 @@ class Upnp_Api
         return $meta;
     }
 
-    /**
-     */
     public static function _slice($items, $start, $count): array
     {
         $maxCount = count($items);
@@ -759,8 +751,6 @@ class Upnp_Api
         ];
     }
 
-    /**
-     */
     public static function _musicChilds($prmPath, $prmQuery, $start, $count): array
     {
         $mediaItems = [];
@@ -1027,8 +1017,6 @@ class Upnp_Api
         return $meta;
     }
 
-    /**
-     */
     public static function _videoChilds($prmPath, $prmQuery, $start, $count): array
     {
         $mediaItems = [];
@@ -1206,8 +1194,6 @@ class Upnp_Api
         return 'song';
     }
 
-    /**
-     */
     private static function parse_upnp_searchcriteria($query, $type): array
     {
         // Transforms a upnp search query into an Ampache search query
@@ -1324,8 +1310,6 @@ class Upnp_Api
         return $data;
     }
 
-    /**
-     */
     public static function _callSearch($criteria, $filter, $start, $count): array
     {
         $type = self::parse_upnp_filter($filter);
@@ -1661,8 +1645,6 @@ class Upnp_Api
         return $ret;
     }
 
-    /**
-     */
     private static function _getFileTypes(): array
     {
         return [

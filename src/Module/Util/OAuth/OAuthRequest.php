@@ -297,8 +297,6 @@ class OAuthRequest
         return $this->to_url();
     }
 
-    /**
-     */
     public function sign_request($signature_method, $consumer, $token)
     {
         $this->set_parameter("oauth_signature_method", $signature_method->get_name(), false);
@@ -306,8 +304,6 @@ class OAuthRequest
         $this->set_parameter("oauth_signature", $signature, false);
     }
 
-    /**
-     */
     public function build_signature($signature_method, $consumer, $token)
     {
         return $signature_method->build_signature($this, $consumer, $token);

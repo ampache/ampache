@@ -210,8 +210,6 @@ class UPnPPlayer
         return false;
     }
 
-    /**
-     */
     private function prepareURIRequest($song, $prefix): ?array
     {
         if ($song == null) {

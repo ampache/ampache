@@ -490,8 +490,6 @@ class Daap_Api
         return true;
     }
 
-    /**
-     */
     private static function tlv_songs($songs, $meta): string
     {
         if (array_search('all', $meta) > -1) {
@@ -604,8 +602,6 @@ class Daap_Api
         return self::tlv('dmap.listingitem', $plist);
     }
 
-    /**
-     */
     private static function tlv($tag, $value): string
     {
         if (array_key_exists($tag, self::$tags)) {
@@ -639,15 +635,11 @@ class Daap_Api
         return '';
     }
 
-    /**
-     */
     private static function tlv_string($tag, $value): string
     {
         return $tag . pack("N", strlen((string)$value)) . $value;
     }
 
-    /**
-     */
     private static function tlv_long($tag, $value): string
     {
         // Really?! PHP...
@@ -660,29 +652,21 @@ class Daap_Api
         return $tag . "\x00\x00\x00\x08" . pack("NN", $higher, $lower);
     }
 
-    /**
-     */
     private static function tlv_int($tag, $value): string
     {
         return $tag . "\x00\x00\x00\x04" . pack("N", $value);
     }
 
-    /**
-     */
     private static function tlv_short($tag, $value): string
     {
         return $tag . "\x00\x00\x00\x02" . pack("n", $value);
     }
 
-    /**
-     */
     private static function tlv_byte($tag, $value): string
     {
         return $tag . "\x00\x00\x00\x01" . pack("C", $value);
     }
 
-    /**
-     */
     private static function tlv_version($tag, $value): string
     {
         $values = explode('.', $value);
@@ -694,15 +678,11 @@ class Daap_Api
         return '';
     }
 
-    /**
-     */
     private static function tlv_date($tag, $value): string
     {
         return self::tlv_int($tag, $value);
     }
 
-    /**
-     */
     private static function tlv_list($tag, $value): string
     {
         return self::tlv_string($tag, $value);
@@ -821,8 +801,6 @@ class Daap_Api
         ];
     }
 
-    /**
-     */
     private static function get_type_id($type): int
     {
         switch ($type) {
@@ -879,8 +857,6 @@ class Daap_Api
         }
     }
 
-    /**
-     */
     public static function createError($code): bool
     {
         $error = "";
