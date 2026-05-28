@@ -25,14 +25,14 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
 
 /**
  * This class handles democratic play, which is a fancy
@@ -268,18 +268,17 @@ class Democratic extends Tmp_Playlist
             $data = $base_playlist->get_random_items('1');
 
             return $data[0]['object_id'];
-        } else {
-            $sql = "SELECT `id` FROM `song` WHERE `enabled`='1'";
-            if (AmpConfig::get('catalog_filter')) {
-                $sql .= " AND" . Catalog::get_user_filter("song", Core::get_global('user')?->id ?? -1);
-            }
-
-            $sql .= " ORDER BY RAND() LIMIT 1";
-            $db_results = Dba::read($sql);
-            $results    = Dba::fetch_assoc($db_results);
-
-            return $results['id'];
         }
+        $sql = "SELECT `id` FROM `song` WHERE `enabled`='1'";
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= " AND" . Catalog::get_user_filter("song", Core::get_global('user')?->id ?? -1);
+        }
+
+        $sql .= " ORDER BY RAND() LIMIT 1";
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_assoc($db_results);
+
+        return $results['id'];
     }
 
     /**
@@ -505,7 +504,6 @@ class Democratic extends Tmp_Playlist
      *     level: int,
      *     make_default: int,
      * } $data
-     * @return string|null
      */
     public static function create(array $data): ?string
     {

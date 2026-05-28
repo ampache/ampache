@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
-use Ampache\Module\Util\MemoryObject;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\MemoryObject;
 
 /**
  * Stream_Url Class
@@ -62,7 +62,6 @@ class Stream_Url extends MemoryObject
      * parse
      *
      * Takes an url and parses out all the chewy goodness.
-     * @param string $url
      * @return array<string, string>
      */
     public static function parse(string $url): array

@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class User3Method
@@ -44,7 +44,6 @@ final class User3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function user(array $input, User $user): void
     {

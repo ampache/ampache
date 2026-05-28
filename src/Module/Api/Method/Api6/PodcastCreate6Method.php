@@ -1,0 +1,134 @@
+<?php
+
+declare(strict_types=0);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+namespace Ampache\Module\Api\Method\Api6;
+
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api6;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json6_Data;
+use Ampache\Module\Api\Xml6_Data;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Podcast\Exception\PodcastCreationException;
+use Ampache\Module\Podcast\PodcastCreatorInterface;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\User;
+
+/**
+ * Class PodcastCreate6Method
+ * @package Lib\Api6Methods
+ */
+final class PodcastCreate6Method
+{
+    public const ACTION = 'podcast_create';
+
+    public const REST_ACTION = 'podcasts_create';
+
+    /**
+     * podcast_create
+     * MINIMUM_API_VERSION=420000
+     * Create a public url that can be used by anyone to stream media.
+     * Takes the file id with optional description and expires parameters.
+     *
+     * url     = (string) rss url for podcast
+     * catalog = (string) podcast catalog
+     *
+     * @param array{
+     *     url: string,
+     *     catalog: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function podcast_create(array $input, User $user): bool
+    {
+        if (!AmpConfig::get('podcast')) {
+            Api6::error('Enable: podcast', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+        if (!Api6::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
+            return false;
+        }
+        if (!Api6::check_parameter($input, ['url', 'catalog'], self::ACTION)) {
+            return false;
+        }
+
+        $catalog = Catalog::create_from_id((int)$input['catalog']);
+
+        if ($catalog === null) {
+            Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+
+        try {
+            $podcast = self::getPodcastCreator()->create(
+                urldecode($input['url']),
+                $catalog
+            );
+        } catch (PodcastCreationException) {
+            Api6::error('Bad Request', '4710', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+
+        Catalog::count_table('podcast');
+        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                echo Json6_Data::podcasts([$podcast->getId()], $user, $input['auth'], false, false);
+                break;
+            default:
+                echo Xml6_Data::podcasts([$podcast->getId()], $user, $input['auth']);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array{
+     *     url: string,
+     *     catalog: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function podcasts_create(array $input, User $user): bool
+    {
+        return self::podcast_create($input, $user);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPodcastCreator(): PodcastCreatorInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastCreatorInterface::class);
+    }
+}

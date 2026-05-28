@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
@@ -52,7 +52,6 @@ final class FriendsTimeline4Method
      *     since?: int,
      *     api_format: string,
      * } $input
-     * @param User $user
      */
     public static function friends_timeline(array $input, User $user): void
     {

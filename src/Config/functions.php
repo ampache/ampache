@@ -24,18 +24,18 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\User;
 use Gettext\Loader\MoLoader;
 use Gettext\Translator;
 use Gettext\TranslatorFunctions;
@@ -74,14 +74,14 @@ function scrub_in($input)
 {
     if (!is_array($input)) {
         return stripslashes(htmlspecialchars(strip_tags((string) $input), ENT_NOQUOTES, AmpConfig::get('site_charset', 'UTF-8')));
-    } else {
-        $results = [];
-        foreach ($input as $item) {
-            $results[] = scrub_in((string) $item);
-        }
-
-        return $results;
     }
+    $results = [];
+    foreach ($input as $item) {
+        $results[] = scrub_in((string) $item);
+    }
+
+    return $results;
+
 }
 
 /**
@@ -395,14 +395,11 @@ function check_config_values(array $conf): bool
     if (!isset($conf['session_cookiesecure'])) {
         return false;
     }
-    if (
+
+    return ! (
         isset($conf['debug']) &&
         !isset($conf['log_path'])
-    ) {
-        return false;
-    }
-
-    return true;
+    );
 }
 
 /**
@@ -594,7 +591,6 @@ function debug_event($type, $message, $level, $username = ''): bool
 }
 
 /**
- * @param string $action
  * @param int[]|null $catalogs
  * @param array<string, bool>|null $options
  */
@@ -911,14 +907,15 @@ function xoutput_from_array(array $array, bool $callback = false, string $type =
 {
     $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
     if ($output == 'xml') {
-        return Xml_Data::output_xml_from_array($array, $callback, $type);
+        return Xml8_Data::output_xml_from_array($array, $callback, $type);
     } elseif ($output == 'raw') {
         $outputnode = Core::get_request('xoutputnode');
 
         return (string)($array[$outputnode] ?? '');
-    } else {
-        return json_encode($array) ?: '';
     }
+
+    return json_encode($array) ?: '';
+
 }
 
 /**
@@ -1009,7 +1006,6 @@ function T_(string $msgid): string
  * @param string $original
  * @param string $plural
  * @param int|string|float $value
- * @return string
  */
 function nT_($original, $plural, $value): string
 {

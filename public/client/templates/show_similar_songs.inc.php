@@ -26,14 +26,14 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 
 /** @var Ampache\Repository\Model\Artist $artist */
 /** @var Ampache\Repository\Model\Browse $browse */

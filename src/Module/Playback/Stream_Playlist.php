@@ -25,25 +25,25 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Playback\Localplay\LocalPlay;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
+use Ampache\Module\System\Session;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
-use Ampache\Module\Playback\Localplay\LocalPlay;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Art;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
-use Ampache\Module\System\Session;
-use Ampache\Module\Util\Ui;
-use Ampache\Module\Api\Xml_Data;
 use Ampache\Repository\Model\Video;
 
 /**
@@ -537,7 +537,6 @@ class Stream_Playlist
      *     transcode_to?: string,
      *     custom_play_action?: string
      * }> $media
-     * @param string $additional_params
      */
     public function add(array $media = [], string $additional_params = ''): void
     {
@@ -680,7 +679,7 @@ class Stream_Playlist
                 $xml['track']['trackNum'] = $url->track_num;
             }
 
-            $result .= Xml_Data::keyed_array($xml, true);
+            $result .= Xml8_Data::keyed_array($xml, true);
         } // end foreach
 
         $ret = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n<title>" . $this->title . "</title>\n<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n<info>" . AmpConfig::get_web_path('/client') . "</info>\n<trackList>\n";

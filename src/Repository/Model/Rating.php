@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Module\System\Dba;
-use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Plugin\AmpacheRatingMatch;
@@ -128,10 +128,7 @@ class Rating extends database_object
      * build_cache
      * This attempts to get everything we'll need for this page load in a
      * single query, saving on connection overhead
-     * @param string $type
      * @param list<int|string> $ids
-     * @param int|null $user_id
-     * @return bool
      */
     public static function build_cache(string $type, array $ids, ?int $user_id = null): bool
     {

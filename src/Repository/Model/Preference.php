@@ -25,13 +25,13 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\System\Dba;
-use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 
 /**
  * This handles all of the preference stuff for Ampache
@@ -430,9 +430,8 @@ class Preference extends database_object
             parent::remove_from_cache('get_by_user', $user_id);
 
             return true;
-        } else {
-            debug_event(self::class, (Core::get_global('user')?->username ?? T_('Unknown')) . ' attempted to update ' . $name . ' but does not have sufficient permissions', 3);
         }
+        debug_event(self::class, (Core::get_global('user')?->username ?? T_('Unknown')) . ' attempted to update ' . $name . ' but does not have sufficient permissions', 3);
 
         return false;
     }
@@ -657,8 +656,6 @@ class Preference extends database_object
     /**
      * get
      * This returns a nice flat array of all of the possible preferences for the specified user
-     * @param string $pref_name
-     * @param int $user_id
      * @return list<array{
      *     id: int,
      *     name: string,

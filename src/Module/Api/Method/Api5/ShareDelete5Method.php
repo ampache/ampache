@@ -26,10 +26,10 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api5;
 use Ampache\Repository\ShareRepositoryInterface;
 
 /**
@@ -52,8 +52,6 @@ final class ShareDelete5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function share_delete(array $input, User $user): bool
     {

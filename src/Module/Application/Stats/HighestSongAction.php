@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Stats;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Rating;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Rating;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

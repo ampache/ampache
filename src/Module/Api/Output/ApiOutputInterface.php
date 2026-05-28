@@ -86,14 +86,19 @@ interface ApiOutputInterface
     ): string;
 
     /**
+     * This generates an error message
+     */
+    public function error6(
+        int $code,
+        string $message,
+        string $action,
+        string $type
+    ): string;
+
+    /**
      * @param list<int|string> $albums
      * @param string[] $include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
-     * @param bool $asObject
      *
-     * @return string
      */
     public function albums(
         array $albums,
@@ -110,7 +115,6 @@ interface ApiOutputInterface
      *
      * @param string $string success message
      * @param array<string, string> $return_data
-     * @return string
      */
     public function success(string $string, array $return_data = []): string;
 }

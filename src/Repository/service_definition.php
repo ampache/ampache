@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\ModelFactory;
 use Ampache\Repository\Model\LibraryItemLoader;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\ModelFactory;
+use Ampache\Repository\Model\ModelFactoryInterface;
 
 use function DI\autowire;
 

@@ -27,9 +27,9 @@ namespace Ampache\Module\Util\FileSystem;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Catalog;
 
 final class FileNameConverter implements FileNameConverterInterface
 {
@@ -197,10 +197,6 @@ final class FileNameConverter implements FileNameConverterInterface
     /**
      * This just takes a source / dest and does the renaming
      *
-     * @param Interactor $interactor
-     * @param string $full_file
-     * @param string $translated_filename
-     * @return bool
      */
     private function charset_rename_file(
         Interactor $interactor,

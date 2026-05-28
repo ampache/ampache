@@ -25,17 +25,17 @@ namespace Ampache\Module\Playback\Localplay\Mpd;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
+use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Playback\Stream_Url;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
  * AmpacheMpd Class
@@ -183,7 +183,6 @@ class AmpacheMpd extends localplay_controller
      * get_instance
      * This returns the specified instance and all it's pretty variables
      * If no instance is passed current is used
-     * @param string|null $instance
      * @return array{
      *     id?: int,
      *     name?: string,
@@ -218,7 +217,6 @@ class AmpacheMpd extends localplay_controller
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
-     * @param int $uid
      * @param array{
      *     host?: string,
      *     port?: string,
@@ -441,8 +439,6 @@ class AmpacheMpd extends localplay_controller
     /**
      * move
      * This tells MPD to move a song
-     * @param $source
-     * @param $destination
      * @return bool|string
      */
     public function move($source, $destination)

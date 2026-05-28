@@ -1,0 +1,91 @@
+<?php
+
+declare(strict_types=0);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+namespace Ampache\Module\Api\Method\Api6;
+
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api6;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json6_Data;
+use Ampache\Module\Api\Xml6_Data;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
+
+/**
+ * Class DeletedVideos6Method
+ * @package Lib\Api6Methods
+ */
+final class DeletedVideos6Method
+{
+    public const ACTION = 'deleted_videos';
+
+    /**
+     * deleted_videos
+     * This returns video objects that have been deleted
+     *
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
+     *
+     * @param array{
+     *     limit?: string,
+     *     offset?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function deleted_videos(array $input, User $user): bool
+    {
+        if (!AmpConfig::get('allow_video')) {
+            Api6::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+        unset($user);
+
+        $results = Video::get_deleted();
+        if (empty($results)) {
+            Api6::empty('deleted_videos', $input['api_format']);
+
+            return false;
+        }
+
+        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                Json6_Data::set_offset((int)($input['offset'] ?? 0));
+                Json6_Data::set_limit($input['limit'] ?? 0);
+                Json6_Data::set_count(count($results));
+                echo Json6_Data::deleted('video', $results);
+                break;
+            default:
+                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_limit($input['limit'] ?? 0);
+                Xml6_Data::set_count(count($results));
+                echo Xml6_Data::deleted('video', $results);
+        }
+
+        return true;
+    }
+}

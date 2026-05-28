@@ -29,10 +29,10 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 
 /** @var User $client */
 /** @var array<string, mixed> $preferences */

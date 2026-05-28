@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Repository\Model\Tag;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\User;
 
 /**
  * Class GenreAlbums5Method
@@ -57,8 +57,6 @@ final class GenreAlbums5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function genre_albums(array $input, User $user): bool
     {

@@ -27,7 +27,9 @@ namespace Ampache\Module\Catalog\GarbageCollector;
 
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Recommendation;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
@@ -39,8 +41,6 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
-use Ampache\Module\Statistics\Stats;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;

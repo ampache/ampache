@@ -27,9 +27,9 @@ namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\LastFm\Exception\LastFmQueryFailedException;
-use Ampache\Repository\Model\Art;
 use Ampache\Module\LastFm\LastFmQueryInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\Art;
 use Exception;
 use Psr\Log\LoggerInterface;
 
@@ -57,8 +57,6 @@ final class LastFmCollectorModule implements CollectorModuleInterface
      * This returns the art from lastfm. It doesn't currently require an
      * account but may in the future.
      *
-     * @param Art $art
-     * @param int $limit
      * @param array{
      *     mb_albumid?: string,
      *     artist?: string,

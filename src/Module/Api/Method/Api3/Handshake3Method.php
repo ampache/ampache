@@ -26,18 +26,18 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
-use Ampache\Module\User\Tracking\UserTrackerInterface;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api3;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
+use Ampache\Module\User\Tracking\UserTrackerInterface;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -66,7 +66,6 @@ final class Handshake3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

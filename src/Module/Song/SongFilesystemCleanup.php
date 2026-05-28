@@ -30,7 +30,6 @@ use Ampache\Module\System\Dba;
 final class SongFilesystemCleanup implements SongFilesystemCleanupInterface
 {
     /**
-     * @param bool $dryRun
      * @return string[] List of files which will be/got deleted
      */
     public function cleanup(bool $dryRun = true): array

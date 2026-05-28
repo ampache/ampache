@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
+use Ampache\Repository\Model\User;
 
 /**
  * Class ToggleFollow4Method
@@ -50,8 +50,6 @@ final class ToggleFollow4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function toggle_follow(array $input, User $user): bool
     {

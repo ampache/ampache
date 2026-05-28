@@ -52,8 +52,6 @@ abstract class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod
     //
     // Either way should return a string representation of the certificate
     /**
-     * @param $request
-     * @return mixed
      */
     abstract protected function fetch_public_cert(&$request);
 
@@ -62,8 +60,6 @@ abstract class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod
     //
     // Either way should return a string representation of the certificate
     /**
-     * @param $request
-     * @return mixed
      */
     abstract protected function fetch_private_cert(&$request);
 

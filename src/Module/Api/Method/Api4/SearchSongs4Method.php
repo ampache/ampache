@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
-use Ampache\Repository\Model\Search;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\User;
 
 /**
  * Class SearchSongs4Method
@@ -49,8 +49,6 @@ final class SearchSongs4Method
      * limit  = (integer) //optional
      *
      * @param array<string, mixed> $input
-     * @param User $user
-     * @return bool
      */
     public static function search_songs(array $input, User $user): bool
     {

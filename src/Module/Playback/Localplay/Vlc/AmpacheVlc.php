@@ -27,14 +27,14 @@ namespace Ampache\Module\Playback\Localplay\Vlc;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 
 /**
  * This is the class for the VLC Localplay method to remote control
@@ -176,7 +176,6 @@ class AmpacheVlc extends localplay_controller
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
-     * @param int $uid
      * @param array{
      *     host: string,
      *     port: string,
@@ -213,7 +212,6 @@ class AmpacheVlc extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all it's variables
-     * @param string|null $instance
      * @return array{
      *     id?: int,
      *     name?: string,
@@ -336,11 +334,7 @@ class AmpacheVlc extends localplay_controller
             return true;
         }
 
-        if ($this->_vlc->play() === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_vlc->play() === null));
     }
 
     /**
@@ -350,11 +344,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function stop(): bool
     {
-        if ($this->_vlc->stop() === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_vlc->stop() === null));
     }
 
     /**
@@ -401,11 +391,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function next(): bool
     {
-        if ($this->_vlc->next() === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_vlc->next() === null));
     }
 
     /**
@@ -414,11 +400,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function prev(): bool
     {
-        if ($this->_vlc->prev() === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_vlc->prev() === null));
     }
 
     /**
@@ -427,11 +409,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function pause(): bool
     {
-        if ($this->_vlc->pause() === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_vlc->pause() === null));
     }
 
     /**
@@ -450,11 +428,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function repeat(bool $state): bool
     {
-        if ($this->_vlc->repeat($state) === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_vlc->repeat($state) === null));
     }
 
     /**
@@ -463,11 +437,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function random(bool $state): bool
     {
-        if ($this->_vlc->random($state) === null) {
-            return false;
-        }
-
-        return true;
+        return (! ($this->_vlc->random($state) === null));
     }
 
     /**

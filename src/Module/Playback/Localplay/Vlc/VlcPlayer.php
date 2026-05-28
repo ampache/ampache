@@ -66,11 +66,8 @@ class VlcPlayer
 
         $args    = ['command' => 'in_enqueue', '&input' => $aurl];
         $results = $this->sendCommand('status.xml?', $args);
-        if ($results === null) {
-            return false;
-        }
 
-        return true;
+        return (!($results === null));
     }
 
     /**
@@ -109,11 +106,8 @@ class VlcPlayer
     {
         $args    = ['command' => 'pl_next'];
         $results = $this->sendCommand('status.xml?', $args);
-        if ($results === null) {
-            return false;
-        }
 
-        return true;
+        return (!($results === null));
     }
 
     /**
@@ -142,13 +136,8 @@ class VlcPlayer
             '&id' => $track_id,
         ];
         $results = $this->sendCommand('status.xml?', $args);
-        if ($results === null) {
-            return false;
-        }
 
-        // Works but if user clicks next afterwards player goes to first song our last song played before
-
-        return true;
+        return (!($results === null));
     }
 
     /**
@@ -159,11 +148,8 @@ class VlcPlayer
     {
         $args    = ['command' => 'pl_play'];
         $results = $this->sendCommand("status.xml?", $args);
-        if ($results === null) {
-            return false;
-        }
 
-        return true;
+        return (!($results === null));
     }
 
     /**
@@ -189,11 +175,8 @@ class VlcPlayer
     {
         $args    = ['command' => 'pl_stop'];
         $results = $this->sendCommand('status.xml?', $args);
-        if ($results === null) {
-            return false;
-        }
 
-        return true;
+        return (!($results === null));
     }
 
     /**
@@ -204,11 +187,8 @@ class VlcPlayer
     {
         $args    = ['command' => 'pl_repeat'];
         $results = $this->sendCommand('status.xml?', $args);
-        if ($results === null) {
-            return false;
-        }
 
-        return true;
+        return (!($results === null));
     }
 
     /**
@@ -219,11 +199,8 @@ class VlcPlayer
     {
         $args    = ['command' => 'pl_random'];
         $results = $this->sendCommand('status.xml?', $args);
-        if ($results === null) {
-            return false;
-        }
 
-        return true;
+        return (!($results === null));
     }
 
     /**
@@ -234,11 +211,8 @@ class VlcPlayer
     {
         $args    = ['command' => 'pl_delete', '&id' => $track];
         $results = $this->sendCommand('status.xml?', $args);
-        if ($results === null) {
-            return false;
-        }
 
-        return true;
+        return (!($results === null));
     }
 
     /**
@@ -289,11 +263,8 @@ class VlcPlayer
     {
         $args    = ['command' => 'volume', '&val' => '%2B20'];
         $results = $this->sendCommand('status.xml?', $args);
-        if ($results === null) {
-            return false;
-        }
 
-        return true;
+        return (!($results === null));
     }
 
     /**
@@ -304,11 +275,8 @@ class VlcPlayer
     {
         $args    = ['command' => 'volume', '&val' => '-20'];
         $results = $this->sendCommand('status.xml?', $args);
-        if ($results === null) {
-            return false;
-        }
 
-        return true;
+        return (!($results === null));
     }
 
     /**
@@ -321,11 +289,8 @@ class VlcPlayer
         $value   = $value * 4;
         $args    = ['command' => 'volume', '&val' => $value];
         $results = $this->sendCommand('status.xml?', $args);
-        if ($results === null) {
-            return false;
-        }
 
-        return true;
+        return (!($results === null));
     }
 
     /**
@@ -336,11 +301,8 @@ class VlcPlayer
     {
         $args    = ['command' => 'pl_empty'];
         $results = $this->sendCommand('status.xml?', $args);
-        if ($results === null) {
-            return false;
-        }
 
-        return true;
+        return (!($results === null));
     }
 
     /**
@@ -420,7 +382,6 @@ class VlcPlayer
      * xmltoarray
      * this function parses the xml page into an array thx to bin-co
      * warning VLC returns it's complete media lib if asked for playlist
-     * @param $contents
      * @param int $get_attributes
      * @param string $priority
      * @return array<string, mixed>

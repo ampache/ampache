@@ -26,11 +26,11 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\Preference;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Playback\Stream;
+use Ampache\Repository\Model\Preference;
 use DateTimeZone;
 
 final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdaterInterface

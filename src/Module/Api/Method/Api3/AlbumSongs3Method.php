@@ -25,9 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
-use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\User;
 
 /**
@@ -50,7 +50,6 @@ class AlbumSongs3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function album_songs(array $input, User $user): void
     {

@@ -28,14 +28,14 @@ namespace Ampache\Gui\Song;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Application\Song\DeleteAction;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
-use Ampache\Module\Application\Song\DeleteAction;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Mockery\MockInterface;
 
 class SongViewAdapterTest extends MockeryTestCase

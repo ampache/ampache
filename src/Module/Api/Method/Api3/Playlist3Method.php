@@ -44,7 +44,6 @@ final class Playlist3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function playlist(array $input, User $user): void
     {

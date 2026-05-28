@@ -26,10 +26,10 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

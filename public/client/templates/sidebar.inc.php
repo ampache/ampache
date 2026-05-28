@@ -24,14 +24,14 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 
 /** require@ public/templates/header.inc.php */
 /** require@ src/Application/Api/Ajax/Handler/IndexAjaxHandler.php */

@@ -471,7 +471,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     /**
      * Search for direct children of an object
-     * @param string $name
      * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array

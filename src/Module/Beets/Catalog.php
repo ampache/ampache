@@ -27,10 +27,10 @@ namespace Ampache\Module\Beets;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Metadata\MetadataManagerInterface;
-use Ampache\Repository\Model\Album;
 use Ampache\Module\System\AmpError;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
@@ -86,7 +86,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * prepare_media
-     * @param Podcast_Episode|Song|Video $media
      * @return array{
      *   file_path: string,
      *   file_name: string,
@@ -138,8 +137,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * add_to_catalog
      * @param null|array<string, string|bool> $options
-     * @param null|Interactor $interactor
-     * @return int
      */
     public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {

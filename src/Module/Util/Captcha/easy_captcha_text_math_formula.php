@@ -46,7 +46,6 @@ class easy_captcha_text_math_formula extends easy_captcha
     // simple IS-EQUAL check
 
     /**
-     * @param $input
      * @return bool
      */
     public function solved($input = null)
@@ -88,7 +87,6 @@ class easy_captcha_text_math_formula extends easy_captcha
     // "solve" simple calculations
 
     /**
-     * @param $formula
      * @return int
      */
     public function calculate_formula($formula)

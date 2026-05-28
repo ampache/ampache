@@ -27,11 +27,11 @@ namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Util\Graph;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Util\Graph;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInterface
 {

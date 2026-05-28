@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
+use Ampache\Repository\Model\User;
 
 /**
- * Class UserUpdateMethod
+ * Class UserUpdate6Method
  */
 final class UserEdit5Method
 {
@@ -75,8 +75,6 @@ final class UserEdit5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function user_edit(array $input, User $user): bool
     {

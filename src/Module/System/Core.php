@@ -193,7 +193,6 @@ class Core
      * returns an empty array if PHP-GD is not currently installed, returns
      * false on error
      *
-     * @param string $image_data
      * @return array{width: int, height: int}
      */
     public static function image_dimensions(string $image_data): array
@@ -330,9 +329,10 @@ class Core
         if (php_sapi_name() !== 'cli') {
             if (version_compare(phpversion(), '5.4.0', '>=')) {
                 return session_status() === PHP_SESSION_ACTIVE;
-            } else {
-                return !(session_id() === '');
             }
+
+            return !(session_id() === '');
+
         }
 
         return false;

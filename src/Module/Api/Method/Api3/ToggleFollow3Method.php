@@ -27,8 +27,8 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Xml3_Data;
-use Ampache\Repository\Model\User;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
+use Ampache\Repository\Model\User;
 
 /**
  * Class ToggleFollow3Method
@@ -46,7 +46,6 @@ final class ToggleFollow3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function toggle_follow(array $input, User $user): void
     {

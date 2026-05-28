@@ -24,7 +24,6 @@
 namespace Ampache\Module\Application\Installation;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Preference;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
@@ -33,6 +32,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\InstallationHelperInterface;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Preference;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -145,9 +145,9 @@ final class DefaultAction implements ApplicationActionInterface
         if (!class_exists('Gettext\Translations')) {
             require_once __DIR__ . '/../../../../public/client/templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
-        } else {
-            load_gettext();
         }
+        load_gettext();
+
         header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset', 'UTF-8'));
 
         // Correct potential \ or / in the dirname

@@ -25,16 +25,16 @@ namespace Ampache\Module\Catalog;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
+use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
-use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Dba;
-use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\VaInfo;
 use Exception;
 
 /**
@@ -211,8 +211,6 @@ class Catalog_subsonic extends Catalog
     /**
      * add_to_catalog
      * @param null|array<string, string|bool> $options
-     * @param null|Interactor $interactor
-     * @return int
      */
     public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
@@ -682,7 +680,6 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Video $media
      * @return null|array{
      *     file_path: string,
      *     file_name: string,

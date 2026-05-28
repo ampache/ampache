@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api5;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -61,8 +61,6 @@ final class RecordPlay5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function record_play(array $input, User $user): bool
     {

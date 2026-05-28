@@ -27,13 +27,13 @@ namespace Ampache\Module\Application\Label;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\LabelRepositoryInterface;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Label\Deletion\LabelDeleterInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Album;
 
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

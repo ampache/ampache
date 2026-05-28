@@ -25,14 +25,14 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Module\Wanted\WantedManagerInterface;
+use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
@@ -726,7 +726,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Search for direct children of an object
-     * @param string $name
      * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array

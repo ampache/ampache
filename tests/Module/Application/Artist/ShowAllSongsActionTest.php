@@ -26,10 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Artist;
 
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;

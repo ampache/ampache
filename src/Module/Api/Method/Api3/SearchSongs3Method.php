@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Repository\Model\Search;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 
 /**
@@ -41,7 +41,6 @@ final class SearchSongs3Method
      * This searches the songs and returns... songs
      *
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function search_songs(array $input, User $user): void
     {

@@ -25,9 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\User;
 
 /**
@@ -47,7 +47,6 @@ final class PlaylistCreate3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function playlist_create(array $input, User $user): void
     {

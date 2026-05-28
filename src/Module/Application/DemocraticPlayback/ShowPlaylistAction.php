@@ -27,15 +27,15 @@ namespace Ampache\Module\Application\DemocraticPlayback;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\Democratic;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Song;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

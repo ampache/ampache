@@ -23,14 +23,14 @@
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /**
@@ -226,15 +226,11 @@ abstract class playlist_object extends database_object implements library_item
             ? $user
             : Core::get_global('user');
 
-        if (
+        return (bool)(
             $user instanceof User &&
             !empty($this->collaborate) &&
             in_array($user->getId(), explode(',', (string)$this->collaborate))
-        ) {
-            return true;
-        }
-
-        return false;
+        );
     }
 
     /**
@@ -283,9 +279,9 @@ abstract class playlist_object extends database_object implements library_item
                 $this->get_items(),
                 static fn (array $item): bool => $item['object_type']->value === $filter_type
             );
-        } else {
-            return $this->get_items();
         }
+
+        return $this->get_items();
     }
 
     /**
@@ -414,7 +410,6 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * Search for direct children of an object
-     * @param string $name
      * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array

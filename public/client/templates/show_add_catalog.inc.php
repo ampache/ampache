@@ -24,10 +24,10 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Catalog;
 
 $default_rename = "%T - %t";
 $default_sort   = "%a/%A";

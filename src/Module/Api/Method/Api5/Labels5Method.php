@@ -61,8 +61,6 @@ final class Labels5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function labels(array $input, User $user): bool
     {

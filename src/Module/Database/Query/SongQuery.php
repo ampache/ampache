@@ -263,7 +263,6 @@ final class SongQuery implements QueryInterface
      * @param Query $query
      * @param string|null $field
      * @param string|null $order
-     * @return string
      */
     public function get_sql_sort($query, $field, $order): string
     {

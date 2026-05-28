@@ -27,16 +27,16 @@ namespace Ampache\Module\Catalog;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Util\UtilityFactoryInterface;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 use Exception;
 use ReflectionException;
 
@@ -279,8 +279,6 @@ class Catalog_Seafile extends Catalog
     /**
      * add_to_catalog
      * @param null|array<string, string|bool> $options
-     * @param null|Interactor $interactor
-     * @return int
      */
     public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
@@ -341,7 +339,6 @@ class Catalog_Seafile extends Catalog
      * _insert_local_song
      *
      * Insert a song that isn't already in the database.
-     * @param $file
      */
     private function insert_song($file): ?int
     {
@@ -383,7 +380,6 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @param $file
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @param null|string[] $gather_types
@@ -449,7 +445,6 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @return int
      * @throws ReflectionException
      */
     public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
@@ -643,7 +638,6 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Video $media
      * @return array{
      *    file_path: string,
      *    file_name: string,

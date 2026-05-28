@@ -26,11 +26,11 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Playlists4Method
@@ -69,7 +69,6 @@ final class Playlists4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function playlists(array $input, User $user): void
     {

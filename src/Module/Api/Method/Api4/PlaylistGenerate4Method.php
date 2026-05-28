@@ -26,12 +26,12 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Json4_Data;
+use Ampache\Module\Api\Xml4_Data;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
 
 /**
  * Class PlaylistGenerate4Method
@@ -71,7 +71,6 @@ final class PlaylistGenerate4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function playlist_generate(array $input, User $user): void
     {

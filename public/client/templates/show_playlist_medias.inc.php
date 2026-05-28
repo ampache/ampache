@@ -24,12 +24,12 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Util\Ui;
 
 global $dic;
 $libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);

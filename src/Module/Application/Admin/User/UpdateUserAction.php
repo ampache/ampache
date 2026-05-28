@@ -27,14 +27,14 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;

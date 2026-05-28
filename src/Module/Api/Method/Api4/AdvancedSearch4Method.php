@@ -25,10 +25,10 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
-use Ampache\Repository\Model\Search;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\User;
 
 /**
  * Class AdvancedSearch4Method
@@ -64,7 +64,6 @@ final class AdvancedSearch4Method
      * limit           = (integer)
      *
      * @param array<string, mixed> $input
-     * @param User $user
      */
     public static function advanced_search(array $input, User $user): void
     {

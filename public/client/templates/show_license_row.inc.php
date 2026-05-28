@@ -23,8 +23,8 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Repository\Model\License;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\License;
 
 /** @var string $admin_path */
 /** @var string $t_edit */

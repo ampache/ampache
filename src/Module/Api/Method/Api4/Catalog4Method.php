@@ -50,8 +50,6 @@ final class Catalog4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function catalog(array $input, User $user): bool
     {

@@ -27,7 +27,8 @@ namespace Ampache\Module\Api\Output;
 
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Json_Data;
+use Ampache\Module\Api\Json6_Data;
+use Ampache\Module\Api\Json8_Data;
 use Ampache\Repository\Model\User;
 
 final class JsonOutput implements ApiOutputInterface
@@ -37,22 +38,22 @@ final class JsonOutput implements ApiOutputInterface
      */
     public function podcastEpisodes(array $result, User $user, string $auth): string
     {
-        return Json_Data::podcast_episodes($result, $user, $auth);
+        return Json8_Data::podcast_episodes($result, $user, $auth);
     }
 
     public function setOffset(int $offset): void
     {
-        Json_Data::set_offset($offset);
+        Json8_Data::set_offset($offset);
     }
 
     public function setLimit(int $limit): void
     {
-        Json_Data::set_limit($limit);
+        Json8_Data::set_limit($limit);
     }
 
     public function setCount(int $count): void
     {
-        Json_Data::set_count($count);
+        Json8_Data::set_count($count);
     }
 
     /**
@@ -60,7 +61,7 @@ final class JsonOutput implements ApiOutputInterface
      */
     public function writeEmpty(string $emptyType): string
     {
-        return Json_Data::empty($emptyType);
+        return Json8_Data::empty($emptyType);
     }
 
     /**
@@ -68,7 +69,7 @@ final class JsonOutput implements ApiOutputInterface
      */
     public function error(int $code, string $message, string $action, string $type): string
     {
-        return Json_Data::error(
+        return Json8_Data::error(
             $code,
             $message,
             $action,
@@ -110,15 +111,23 @@ final class JsonOutput implements ApiOutputInterface
 
     /**
      * At the moment, this method just acts as a proxy
+     */
+    public function error6(int $code, string $message, string $action, string $type): string
+    {
+        return Json6_Data::error(
+            $code,
+            $message,
+            $action,
+            $type
+        );
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
      *
      * @param list<int|string> $albums
      * @param string[] $include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
-     * @param bool $asObject
      *
-     * @return string
      */
     public function albums(
         array $albums,
@@ -128,7 +137,7 @@ final class JsonOutput implements ApiOutputInterface
         bool $encode = true,
         bool $asObject = true
     ): string {
-        return Json_Data::albums($albums, $include, $user, $auth, $encode, $asObject);
+        return Json8_Data::albums($albums, $include, $user, $auth, $encode, $asObject);
     }
 
     /**
@@ -137,10 +146,9 @@ final class JsonOutput implements ApiOutputInterface
      *
      * @param string $string success message
      * @param array<string, string> $return_data
-     * @return string
      */
     public function success(string $string, array $return_data = []): string
     {
-        return Json_Data::success($string, $return_data);
+        return Json8_Data::success($string, $return_data);
     }
 }

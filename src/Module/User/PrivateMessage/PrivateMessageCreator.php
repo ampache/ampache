@@ -26,9 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\User\PrivateMessage;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 
 final class PrivateMessageCreator implements PrivateMessageCreatorInterface

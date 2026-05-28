@@ -56,8 +56,6 @@ interface VaInfoInterface
     /**
      * prepare_metadata_for_writing
      * Prepares vorbiscomments/id3v2 metadata for writing tag to file
-     * @param array $frames
-     * @return array
      */
     public function prepare_metadata_for_writing(array $frames): array;
 
@@ -65,7 +63,6 @@ interface VaInfoInterface
      * read_id3
      *
      * This function runs the various steps to gathering the metadata
-     * @return array
      */
     public function read_id3(): array;
 
@@ -76,8 +73,6 @@ interface VaInfoInterface
      * file and tries to figure out which tag type(s) it should use. If your
      * tag_order doesn't match anything then it throws up its hands and uses
      * everything in random order.
-     * @param array $results
-     * @param string $configKey
      * @return string[]
      */
     public static function get_tag_type(array $results, string $configKey = 'metadata_order'): array;
@@ -88,18 +83,12 @@ interface VaInfoInterface
      * This function takes the array from vainfo along with the
      * key we've decided on and the filename and returns it in a
      * sanitized format that Ampache can actually use
-     * @param array $results
-     * @param array $keys
-     * @param string|null $filename
      * @return array<string, mixed>
      */
     public static function clean_tag_info(array $results, array $keys, ?string $filename = null): array;
 
     /**
      * parse_pattern
-     * @param string $filepath
-     * @param string $dirPattern
-     * @param string $filePattern
      * @return array<string, mixed>
      */
     public static function parse_pattern(string $filepath, string $dirPattern, string $filePattern): array;

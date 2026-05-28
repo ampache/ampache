@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Song\Deletion\SongDeleterInterface;
 
 /**
  * Class SongDelete5Method
@@ -52,8 +52,6 @@ final class SongDelete5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function song_delete(array $input, User $user): bool
     {

@@ -25,13 +25,13 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Api\Api4;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api4;
 
 /**
  * Class UpdateFromTags4Method
@@ -55,8 +55,6 @@ final class UpdateFromTags4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function update_from_tags(array $input, User $user): bool
     {

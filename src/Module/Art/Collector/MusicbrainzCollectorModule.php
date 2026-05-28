@@ -25,9 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Art\Collector;
 
-use Ampache\Repository\Model\Art;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\Art;
 use Exception;
 use MusicBrainz\MusicBrainz;
 use Psr\Log\LoggerInterface;
@@ -51,8 +51,6 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
      * This function retrieves art based on MusicBrainz' Advanced
      * Relationships
      *
-     * @param Art $art
-     * @param int $limit
      * @param array{
      *     mb_albumid?: string,
      *     artist?: string,
