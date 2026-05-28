@@ -1616,11 +1616,11 @@ class OpenSubsonic_Xml_Data
             $text = preg_replace('/\\n\\n/i', "\n", (string)$text);
             $text = str_replace("\r", '', (string)$text);
 
+            $synced = [];
+            $lines  = [];
             foreach (explode("\n", html_entity_decode($text)) as $line) {
                 if (!empty($line)) {
                     if (preg_match('/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)$/', $line, $matches)) {
-                        $xlyrics->addAttribute('synced', 'true');
-                        $xline        = self::_addChildToResultXml($xlyrics, 'line');
                         $minutes      = (int)$matches[1];
                         $seconds      = (int)$matches[2];
                         $centiseconds = (int)$matches[3];
@@ -1628,13 +1628,28 @@ class OpenSubsonic_Xml_Data
 
                         // Lyrics text
                         $lyricLine = trim($matches[4]);
-                        $xline->addAttribute('start', (string)$milliseconds);
-                        $xline->addAttribute('value', $lyricLine);
+                        $synced[]  = [
+                            'start' => $milliseconds,
+                            'value' => $lyricLine,
+                        ];
                     } else {
-                        $xlyrics->addAttribute('synced', 'false');
-                        $xline = self::_addChildToResultXml($xlyrics, 'line');
-                        $xline->addAttribute('value', $line);
+                        $lines[] = ['value' => (string)$line];
                     }
+                }
+            }
+
+            if ($synced !== []) {
+                $xlyrics->addAttribute('synced', 'true');
+                foreach ($synced as $line) {
+                    $xline = self::_addChildToResultXml($xlyrics, 'line');
+                    $xline->addAttribute('start', $line['start']);
+                    $xline->addAttribute('value', $line['value']);
+                }
+            } elseif ($lines !== []) {
+                $xlyrics->addAttribute('synced', 'false');
+                foreach ($lines as $line) {
+                    $xline = self::_addChildToResultXml($xlyrics, 'line');
+                    $xline->addAttribute('value', $line);
                 }
             }
         }
