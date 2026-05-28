@@ -244,7 +244,6 @@ class Random
      * advanced
      * This processes the results of a post from a form and returns an
      * array of song items that were returned from said randomness
-     * @param string $type
      * @param array<string, mixed> $data
      * @return int[]
      */
@@ -274,7 +273,6 @@ class Random
      * get_songs
      * This processes the results of a post from a form and returns an
      * array of song items that were returned from said randomness
-     * @param string $type
      * @param int[] $results
      * @return int[]
      */
@@ -306,7 +304,6 @@ class Random
     /**
      * advanced_results
      * Run the query generated above by self::advanced so we can while it
-     * @param string $sql_query
      * @param array<int, mixed> $sql_params
      * @param array<string, mixed> $data
      * @return int[]
@@ -385,8 +382,6 @@ class Random
      * advanced_sql
      * Generate the sql query for self::advanced
      * @param array<string, mixed> $data
-     * @param string $type
-     * @param string $limit_sql
      * @return array{
      *     sql: string,
      *     parameters: array<int, mixed>

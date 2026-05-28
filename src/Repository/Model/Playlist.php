@@ -85,7 +85,6 @@ class Playlist extends playlist_object
      * build_cache
      * This is what builds the cache from the objects
      * @param int[]|string[] $ids
-     * @return bool
      */
     public static function build_cache(array $ids): bool
     {
@@ -183,7 +182,6 @@ class Playlist extends playlist_object
     /**
      * get_playlist_array
      * Returns a list of playlists accessible by the user with formatted name.
-     * @param int|null $user_id
      * @return string[]
      */
     public static function get_playlist_array(?int $user_id = null): array
@@ -662,9 +660,10 @@ class Playlist extends playlist_object
         if ($existing_id > 0) {
             if (!$existing) {
                 return null;
-            } else {
-                return $existing_id;
             }
+
+            return $existing_id;
+
         }
 
         // get the public_name/username

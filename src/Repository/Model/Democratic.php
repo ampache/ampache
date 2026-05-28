@@ -268,18 +268,17 @@ class Democratic extends Tmp_Playlist
             $data = $base_playlist->get_random_items('1');
 
             return $data[0]['object_id'];
-        } else {
-            $sql = "SELECT `id` FROM `song` WHERE `enabled`='1'";
-            if (AmpConfig::get('catalog_filter')) {
-                $sql .= " AND" . Catalog::get_user_filter("song", Core::get_global('user')?->id ?? -1);
-            }
-
-            $sql .= " ORDER BY RAND() LIMIT 1";
-            $db_results = Dba::read($sql);
-            $results    = Dba::fetch_assoc($db_results);
-
-            return $results['id'];
         }
+        $sql = "SELECT `id` FROM `song` WHERE `enabled`='1'";
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= " AND" . Catalog::get_user_filter("song", Core::get_global('user')?->id ?? -1);
+        }
+
+        $sql .= " ORDER BY RAND() LIMIT 1";
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_assoc($db_results);
+
+        return $results['id'];
     }
 
     /**
@@ -505,7 +504,6 @@ class Democratic extends Tmp_Playlist
      *     level: int,
      *     make_default: int,
      * } $data
-     * @return string|null
      */
     public static function create(array $data): ?string
     {

@@ -46,7 +46,6 @@ final class UserPreferences5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function user_preferences(array $input, User $user): void
     {

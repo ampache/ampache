@@ -108,7 +108,6 @@ class Json8_Data
      *
      * Set the total count of returned objects
      *
-     * @param int $count
      */
     public static function set_count(int $count): void
     {
@@ -148,7 +147,6 @@ class Json8_Data
      *
      * @param string $string success message
      * @param array<string, string> $return_data
-     * @return string
      */
     public static function success(string $string, array $return_data = []): string
     {
@@ -225,7 +223,6 @@ class Json8_Data
      *
      * @param list<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
-     * @param User $user
      * @param bool $include (add child id's of the object (in sub array by type))
      * @return string JSON Object "catalog"|"artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
@@ -367,8 +364,6 @@ class Json8_Data
      *
      * @param list<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
-     * @param User $user
-     * @param string $auth
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
@@ -781,9 +776,6 @@ class Json8_Data
      *
      * @param list<int|string> $objects Artist id's to include
      * @param string[] $include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @return array <int, array{
      *     "id": string,
      *     "name": null|string,
@@ -865,8 +857,6 @@ class Json8_Data
     /**
      * @param list<int|string> $objects Artist id's to include
      * @param string[] $include
-     * @param User $user
-     * @param string $auth
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "artist"
      */
@@ -894,9 +884,6 @@ class Json8_Data
      *
      * @param list<int|string> $objects Album id's to include
      * @param string[] $include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @return array<int, array{
      *     "id": string,
      *     "name": null|string,
@@ -1022,9 +1009,6 @@ class Json8_Data
      *
      * @param list<int|string> $objects Album id's to include
      * @param string[] $include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "album"
      */
@@ -1055,9 +1039,6 @@ class Json8_Data
      * playlists_array
      *
      * @param list<int|string> $objects Playlist id's to include
-     * @param User $user
-     * @param string $auth
-     * @param bool $songs
      * @return array<int, array{
      *     "id": string,
      *     "name": null|string,
@@ -1167,9 +1148,6 @@ class Json8_Data
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
      * @param list<int|string> $objects Playlist id's to include
-     * @param User $user
-     * @param string $auth
-     * @param bool $songs
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "playlist"
      */
@@ -1402,8 +1380,6 @@ class Json8_Data
      * podcasts_array
      *
      * @param list<int|string> $objects Podcast id's to include
-     * @param User $user
-     * @param string $auth
      * @param bool $episodes include the episodes of the podcast
      * @return array<int, array{
      *     "id": string,
@@ -1492,8 +1468,6 @@ class Json8_Data
      * This returns podcasts to the user, in a pretty json document with the information
      *
      * @param list<int|string> $objects Podcast id's to include
-     * @param User $user
-     * @param string $auth
      * @param bool $episodes include the episodes of the podcast
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "podcast"
@@ -1525,9 +1499,6 @@ class Json8_Data
      * podcast_episodes_array
      *
      * @param list<int|string> $objects Podcast_Episode id's to include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @return array<int, array{
      *     "id": string,
      *     "title": null|string,
@@ -1629,9 +1600,6 @@ class Json8_Data
      * This returns podcasts to the user, in a pretty json document with the information
      *
      * @param list<int|string> $objects Podcast_Episode id's to include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "podcast_episode"
      */
@@ -1661,9 +1629,75 @@ class Json8_Data
      * songs_array
      *
      * @param list<int|string> $objects
-     * @param User $user
-     * @param string $auth
-     * @return array<mixed>
+     * @return list<array{
+     *     id: string,
+     *     title: string|null,
+     *     name: string|null,
+     *     artist: array{
+     *         id: string,
+     *         name: string,
+     *         prefix: string,
+     *         basename: string
+     *     },
+     *     artists: list<array{
+     *         id: string,
+     *         name: string,
+     *         prefix: string,
+     *         basename: string
+     *     }>,
+     *     album: array{
+     *         id: string,
+     *         name: string,
+     *         prefix: string,
+     *         basename: string
+     *     },
+     *     albumartist?: array{
+     *         id: string,
+     *         name: string,
+     *         prefix: string,
+     *         basename: string
+     *     },
+     *     disk: int,
+     *     disksubtitle: string|null,
+     *     track: int,
+     *     filename: string|null,
+     *     genre: list<array<string, string>>,
+     *     playlisttrack: int,
+     *     time: int,
+     *     year: int,
+     *     format: string|null,
+     *     stream_format: string|null,
+     *     bitrate: int|null,
+     *     stream_bitrate: int|null,
+     *     rate: int,
+     *     mode: string|null,
+     *     mime: string|null,
+     *     stream_mime: string|null,
+     *     url: string,
+     *     size: int,
+     *     mbid: string|null,
+     *     art: string|null,
+     *     has_art: bool,
+     *     flag: bool,
+     *     rating: int|null,
+     *     averagerating: float|null,
+     *     playcount: int,
+     *     catalog: string,
+     *     composer: string|null,
+     *     channels: int|null,
+     *     comment: string|null,
+     *     license: string|null,
+     *     publisher: string|null,
+     *     language: string|null,
+     *     lyrics: string|null,
+     *     replaygain_album_gain: float|null,
+     *     replaygain_album_peak: float|null,
+     *     replaygain_track_gain: float|null,
+     *     replaygain_track_peak: float|null,
+     *     r128_album_gain: float|null,
+     *     r128_track_gain: float|null,
+     *     metadata?: array<string, string>
+     * }>
      */
     public static function songs_array(array $objects, User $user, string $auth): array
     {
@@ -1763,7 +1797,7 @@ class Json8_Data
             $objArray['rating']                = $user_rating;
             $objArray['averagerating']         = $rating->get_average_rating();
             $objArray['playcount']             = (int)$song->total_count;
-            $objArray['catalog']               = $song->getCatalogId();
+            $objArray['catalog']               = (string)$song->getCatalogId();
             $objArray['composer']              = $song->composer;
             $objArray['channels']              = $song->channels;
             $objArray['comment']               = $song->comment;
@@ -1783,12 +1817,15 @@ class Json8_Data
                 $field = $metadata->getField();
 
                 if ($field !== null) {
-                    $meta_name = str_replace(
+                    if (!isset($objArray['metadata'])) {
+                        $objArray['metadata'] = [];
+                    }
+                    $meta_name = (string)str_replace(
                         [' ', '(', ')', '/', '\\', '#'],
                         '_',
                         $field->getName()
                     );
-                    $objArray[$meta_name] = $metadata->getData();
+                    $objArray['metadata'][$meta_name] = $metadata->getData();
                 }
             }
             $JSON[] = $objArray;
@@ -1803,9 +1840,6 @@ class Json8_Data
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
      * @param list<int|string> $objects
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "song"
      */
@@ -1837,7 +1871,6 @@ class Json8_Data
      * This returns an array of song tags populated from an array of song ids.
      *
      * @param list<int|string> $objects
-     * @param string $auth
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "song"
      */
@@ -1939,8 +1972,6 @@ class Json8_Data
      * videos_array
      *
      * @param list<int|string> $objects Video id's to include
-     * @param User $user
-     * @param string $auth
      * @return array<int, array{
      *     "id": string,
      *     "title": null|string,
@@ -2001,8 +2032,6 @@ class Json8_Data
      * videos_string
      *
      * @param list<int|string> $objects Video id's to include
-     * @param User $user
-     * @param string $auth
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "video"
      */
@@ -2039,10 +2068,7 @@ class Json8_Data
      *    object_id: int,
      *    track_id: int,
      *    track: int}> $object_ids Object IDs
-     * @param User $user
-     * @param string $auth
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string
      */
     public static function democratic(array $object_ids, User $user, string $auth, bool $object = true): string
     {

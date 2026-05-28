@@ -57,8 +57,6 @@ final class GenreAlbums5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function genre_albums(array $input, User $user): bool
     {

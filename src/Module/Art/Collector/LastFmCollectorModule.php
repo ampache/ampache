@@ -57,8 +57,6 @@ final class LastFmCollectorModule implements CollectorModuleInterface
      * This returns the art from lastfm. It doesn't currently require an
      * account but may in the future.
      *
-     * @param Art $art
-     * @param int $limit
      * @param array{
      *     mb_albumid?: string,
      *     artist?: string,

@@ -47,7 +47,6 @@ final class LastShouts3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function last_shouts(array $input, User $user): void
     {

@@ -31,11 +31,11 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Authentication\Gatekeeper;
 use Ampache\Module\Api\Exception\ApiException;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Method\HandshakeMethod;
-use Ampache\Module\Api\Method\LostPasswordMethod;
+use Ampache\Module\Api\Method\Api8\Handshake8Method;
+use Ampache\Module\Api\Method\Api8\LostPassword8Method;
+use Ampache\Module\Api\Method\Api8\Ping8Method;
+use Ampache\Module\Api\Method\Api8\Register8Method;
 use Ampache\Module\Api\Method\MethodInterface;
-use Ampache\Module\Api\Method\PingMethod;
-use Ampache\Module\Api\Method\RegisterMethod;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -125,10 +125,10 @@ final class ApiHandler implements ApiHandlerInterface
                 )
             );
         }
-        $is_handshake = $action == HandshakeMethod::ACTION;
-        $is_ping      = $action == PingMethod::ACTION;
-        $is_register  = $action == RegisterMethod::ACTION;
-        $is_forgotten = $action == LostPasswordMethod::ACTION;
+        $is_handshake = $action == Handshake8Method::ACTION;
+        $is_ping      = $action == Ping8Method::ACTION;
+        $is_register  = $action == Register8Method::ACTION;
+        $is_forgotten = $action == LostPassword8Method::ACTION;
         $is_public    = ($is_handshake || $is_ping || $is_register || $is_forgotten);
         $header_auth  = false;
         if (!isset($input['auth'])) {
@@ -139,7 +139,7 @@ final class ApiHandler implements ApiHandlerInterface
         $api_format = $input['api_format'];
         $version    = (isset($input['version']))
             ? $input['version']
-            : Api::$version;
+            : Api::DEFAULT_VERSION;
 
         $user = (!empty($input['auth']))
             ? $gatekeeper->getUser()
@@ -173,7 +173,7 @@ final class ApiHandler implements ApiHandlerInterface
 
             if (
                 $api_version == 7 ||
-                ($api_version == 8 && !Preference::get_by_user($userId, 'api_enable_8'))
+                $api_version == 8 //|| ($api_version == 8 && !Preference::get_by_user($userId, 'api_enable_8'))
             ) {
                 $this->logger->warning(
                     'No API version available; check your options!',
@@ -551,6 +551,7 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 }
+                break;
             case 8:
             default:
                 if (in_array($action, $this->deprecated)) {
@@ -803,25 +804,25 @@ final class ApiHandler implements ApiHandlerInterface
                 $gatekeeper->extendSession($input['auth']);
 
                 return $response;
-            } else {
-                $params = [$input];
-
-                /** @var callable $callback */
-                $callback = [$handlerClassName, $action];
-
-                if (!$is_public) {
-                    $params[] = $user;
-                }
-
-                call_user_func_array(
-                    $callback,
-                    $params
-                );
-
-                $gatekeeper->extendSession($input['auth']);
-
-                return null;
             }
+            $params = [$input];
+
+            /** @var callable $callback */
+            $callback = [$handlerClassName, $action];
+
+            if (!$is_public) {
+                $params[] = $user;
+            }
+
+            call_user_func_array(
+                $callback,
+                $params
+            );
+
+            $gatekeeper->extendSession($input['auth']);
+
+            return null;
+
         } catch (ApiException $error) {
             switch ($api_version) {
                 case 3:
@@ -987,24 +988,23 @@ final class ApiHandler implements ApiHandlerInterface
             $gatekeeper->extendSession($input['auth']);
 
             return $response;
-        } else {
-            $params = [$input];
-
-            /** @var callable $callback */
-            $callback = [$handlerClassName, $action];
-
-            if (!$is_public) {
-                $params[] = $user;
-            }
-
-            call_user_func_array(
-                $callback,
-                $params
-            );
-
-            $gatekeeper->extendSession($input['auth']);
-
-            return null;
         }
+        $params = [$input];
+
+        /** @var callable $callback */
+        $callback = [$handlerClassName, $action];
+
+        if (!$is_public) {
+            $params[] = $user;
+        }
+
+        call_user_func_array(
+            $callback,
+            $params
+        );
+
+        $gatekeeper->extendSession($input['auth']);
+
+        return null;
     }
 }

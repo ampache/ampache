@@ -145,9 +145,9 @@ final class DefaultAction implements ApplicationActionInterface
         if (!class_exists('Gettext\Translations')) {
             require_once __DIR__ . '/../../../../templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
-        } else {
-            load_gettext();
         }
+        load_gettext();
+
         header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset', 'UTF-8'));
 
         // Correct potential \ or / in the dirname

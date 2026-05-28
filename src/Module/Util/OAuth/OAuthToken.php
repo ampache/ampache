@@ -37,8 +37,6 @@ class OAuthToken
     /**
      * key = the token
      * secret = the token secret
-     * @param $key
-     * @param $secret
      */
     public function __construct(
         $key,

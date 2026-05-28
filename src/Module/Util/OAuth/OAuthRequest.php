@@ -42,9 +42,6 @@ class OAuthRequest
 
     /**
      * OAuthRequest constructor.
-     * @param $http_method
-     * @param $http_url
-     * @param $parameters
      */
     public function __construct(
         $http_method,
@@ -133,7 +130,6 @@ class OAuthRequest
 
     /**
      * @param string $name
-     * @param $value
      * @param bool $allow_duplicates
      */
     public function set_parameter($name, $value, $allow_duplicates = true)
@@ -266,8 +262,6 @@ class OAuthRequest
 
     /**
      * builds the Authorization: header
-     * @param $realm
-     * @return string
      * @throws Exception\OAuthException
      */
     public function to_header($realm = null): string
@@ -304,9 +298,6 @@ class OAuthRequest
     }
 
     /**
-     * @param $signature_method
-     * @param $consumer
-     * @param $token
      */
     public function sign_request($signature_method, $consumer, $token)
     {
@@ -316,10 +307,6 @@ class OAuthRequest
     }
 
     /**
-     * @param $signature_method
-     * @param $consumer
-     * @param $token
-     * @return mixed
      */
     public function build_signature($signature_method, $consumer, $token)
     {

@@ -548,8 +548,6 @@ class Stats
      * get_object_history
      * This returns the objects that have happened for $user_id sometime after $time
      * used primarily by the democratic cooldown code
-     * @param int $time
-     * @param bool $newest
      * @return int[]
      */
     public static function get_object_history(int $time, bool $newest = true): array
@@ -787,11 +785,6 @@ class Stats
     /**
      * get_recent
      * This returns the recent X for type Y
-     * @param string $input_type
-     * @param int $count
-     * @param int $offset
-     * @param User|null $user
-     * @param bool $newest
      * @return int[]
      */
     public static function get_recent(
@@ -831,10 +824,6 @@ class Stats
      * get_recently_played
      * This function returns the last X played media objects ('live_stream','podcast_episode','song','video')
      * It uses the popular threshold to figure out how many to pull it will only return unique object
-     * @param null|int $user_id
-     * @param string $count_type
-     * @param string|null $object_type
-     * @param bool $user_only
      * @return list<array{
      *     object_id: int,
      *     catalog_id: int,

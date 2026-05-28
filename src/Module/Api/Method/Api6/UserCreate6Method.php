@@ -67,8 +67,6 @@ final class UserCreate6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function user_create(array $input, User $user): bool
     {
@@ -136,8 +134,6 @@ final class UserCreate6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function users_create(array $input, User $user): bool
     {

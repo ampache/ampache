@@ -54,8 +54,6 @@ final class PodcastEpisode6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function podcast_episode(array $input, User $user): bool
     {

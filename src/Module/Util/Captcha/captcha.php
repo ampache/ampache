@@ -36,8 +36,6 @@ class captcha
     }
 
     /**
-     * @param string $text
-     * @return string
      */
     public static function form(
         string $text = ''

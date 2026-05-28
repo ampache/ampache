@@ -60,8 +60,6 @@ final class FolderCollectorModule implements CollectorModuleInterface
      * If a limit is passed or the preferred filename is found the current
      * results set is returned
      *
-     * @param Art $art
-     * @param int $limit
      * @param array{
      *     mb_albumid?: string,
      *     artist?: string,

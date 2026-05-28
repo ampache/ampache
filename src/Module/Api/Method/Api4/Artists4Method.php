@@ -66,7 +66,6 @@ final class Artists4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function artists(array $input, User $user): void
     {

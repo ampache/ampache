@@ -50,9 +50,6 @@ class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod
      *
      * Please note that the second encoding MUST NOT happen in the SignatureMethod, as
      * OAuthRequest handles this!
-     * @param $request
-     * @param $consumer
-     * @param $token
      */
     public function build_signature($request, $consumer, $token): string
     {

@@ -42,9 +42,6 @@ class Recommendation
     /**
      * get_lastfm_results
      * Runs a last.fm query and returns the parsed results
-     * @param string $method
-     * @param string $query
-     * @return SimpleXMLElement
      * @throws LastFmQueryFailedException
      */
     public static function get_lastfm_results(string $method, string $query): SimpleXMLElement
@@ -83,17 +80,11 @@ class Recommendation
         $sql        = "SELECT `id` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, [$object_type, $object_id]);
         $row        = Dba::fetch_assoc($db_results);
-        if (empty($row)) {
-            return false;
-        }
 
-        return true;
+        return (!(empty($row)));
     }
 
     /**
-     * @param string $type
-     * @param int $object_id
-     * @param bool $get_items
      * @return null|array{
      *     id: int,
      *     last_update: string,
@@ -151,15 +142,12 @@ class Recommendation
      * update_recommendation_cache
      * Updates the recommendation cache for a given object type and object ID with provided recommendations.
      *
-     * @param string $type
-     * @param int $object_id
      * @param array<array{
      *     id?: ?int,
      *     name?: ?string,
      *     rel?: ?string,
      *     mbid?: ?string
      * }> $recommendations
-     * @return void
      */
     protected static function update_recommendation_cache(string $type, int $object_id, array $recommendations): void
     {
@@ -184,9 +172,6 @@ class Recommendation
     /**
      * get_songs_like
      * Returns a list of similar songs
-     * @param int $song_id
-     * @param int $limit
-     * @param bool $local_only
      * @return list<array{
      *     id: ?int,
      *     name: string,
@@ -309,9 +294,6 @@ class Recommendation
     /**
      * get_artists_like
      * Returns a list of similar artists
-     * @param int $artist_id
-     * @param int $limit
-     * @param bool $local_only
      * @return list<array{
      *     id: ?int,
      *     name: string,
@@ -458,7 +440,6 @@ class Recommendation
     /**
      * get_artist_info
      * Returns artist information
-     * @param int $artist_id
      * @return array{
      *     id: ?int,
      *     summary: ?string,
@@ -546,7 +527,6 @@ class Recommendation
     /**
      * get_album_info
      * Returns album information
-     * @param int $album_id
      * @return array{
      *     id: int,
      *     summary: ?string,

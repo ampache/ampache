@@ -257,13 +257,12 @@ class Ajax
     {
         if (defined('AJAX_INCLUDE') && !self::$include_override) {
             return true;
-        } else {
-            echo '<div id="' . scrub_out($name) . '"';
-            if (!empty($class)) {
-                echo ' class="' . scrub_out($class) . '"';
-            }
-            echo '>';
         }
+        echo '<div id="' . scrub_out($name) . '"';
+        if (!empty($class)) {
+            echo ' class="' . scrub_out($class) . '"';
+        }
+        echo '>';
 
         return false;
     }
@@ -276,10 +275,9 @@ class Ajax
     {
         if (defined('AJAX_INCLUDE') && !self::$include_override) {
             return true;
-        } else {
-            echo "</div>";
-            self::$include_override = false;
         }
+        echo "</div>";
+        self::$include_override = false;
 
         return false;
     }

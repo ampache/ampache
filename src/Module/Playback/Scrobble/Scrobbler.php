@@ -48,11 +48,6 @@ class Scrobbler
     /**
      * Constructor
      * This is the constructer it takes a username and password
-     * @param string $api_key
-     * @param string|null $scheme
-     * @param string|null $host
-     * @param string|null $challenge
-     * @param string|null $secret
      */
     public function __construct(
         string  $api_key,
@@ -95,10 +90,7 @@ class Scrobbler
      * call_url
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
-     * @param string $url
-     * @param string $method
      * @param array<string, string>|null $vars
-     * @return string|null
      */
     public function call_url(string $url, string $method = 'GET', ?array $vars = []): ?string
     {
@@ -183,21 +175,21 @@ class Scrobbler
                 if ($status == 'ok') {
                     if ($xml->session && $xml->session->key) {
                         return $xml->session->key;
-                    } else {
-                        $this->error_msg = 'Did not receive a valid response';
-
-                        return null;
                     }
-                } else {
-                    $this->error_msg = $xml->error;
+                    $this->error_msg = 'Did not receive a valid response';
 
                     return null;
+
                 }
-            } else {
-                $this->error_msg = 'Did not receive a valid response';
+                $this->error_msg = $xml->error;
 
                 return null;
+
             }
+            $this->error_msg = 'Did not receive a valid response';
+
+            return null;
+
         }
         $this->error_msg = 'Need a token to call getSession';
 
@@ -285,16 +277,15 @@ class Scrobbler
             $status = (string)$xml['status'];
             if ($status == 'ok') {
                 return true;
-            } else {
-                $this->error_msg = $xml->error;
-
-                return false;
             }
-        } else {
-            $this->error_msg = 'Did not receive a valid response';
+            $this->error_msg = $xml->error;
 
             return false;
+
         }
+        $this->error_msg = 'Did not receive a valid response';
+
+        return false;
     }
 
     /**
@@ -325,15 +316,14 @@ class Scrobbler
             $status = (string)$xml['status'];
             if ($status == 'ok') {
                 return true;
-            } else {
-                $this->error_msg = $xml->error;
-
-                return false;
             }
-        } else {
-            $this->error_msg = 'Did not receive a valid response';
+            $this->error_msg = $xml->error;
 
             return false;
+
         }
+        $this->error_msg = 'Did not receive a valid response';
+
+        return false;
     }
 }

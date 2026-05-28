@@ -44,7 +44,6 @@ final class User3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function user(array $input, User $user): void
     {

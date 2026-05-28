@@ -59,7 +59,6 @@ final class LostPassword6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @return bool
      */
     public static function lost_password(array $input): bool
     {

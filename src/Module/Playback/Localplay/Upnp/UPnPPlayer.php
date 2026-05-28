@@ -211,8 +211,6 @@ class UPnPPlayer
     }
 
     /**
-     * @param $song
-     * @param $prefix
      */
     private function prepareURIRequest($song, $prefix): ?array
     {

@@ -63,8 +63,6 @@ final class UserCreate5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function user_create(array $input, User $user): bool
     {

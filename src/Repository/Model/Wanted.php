@@ -311,9 +311,9 @@ class Wanted extends database_object
             }
 
             return $result;
-        } else {
-            return Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . (($this->artist) ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode((string)$this->name) . '&year=' . (int) $this->year, 'saved_search', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
         }
+
+        return Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . (($this->artist) ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode((string)$this->name) . '&year=' . (int) $this->year, 'saved_search', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
     }
 
     /**
@@ -467,9 +467,9 @@ class Wanted extends database_object
             $wartist = self::getMissingArtistRetriever()->retrieve($this->artist_mbid);
 
             return $wartist['link'] ?? '';
-        } else {
-            return '';
         }
+
+        return '';
     }
 
     /**

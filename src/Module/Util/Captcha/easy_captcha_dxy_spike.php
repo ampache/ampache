@@ -33,8 +33,6 @@ namespace Ampache\Module\Util\Captcha;
 class easy_captcha_dxy_spike
 {
     /**
-     * @param $x
-     * @param $y
      * @return array
      */
     public function dxy($x, $y)

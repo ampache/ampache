@@ -54,8 +54,6 @@ final class ToggleFollow6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function toggle_follow(array $input, User $user): bool
     {
@@ -96,7 +94,6 @@ final class ToggleFollow6Method
         Api6::error(sprintf('Not Found: %s', $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
         return false;
-
     }
 
     private static function getUserFollowToggler(): UserFollowTogglerInterface

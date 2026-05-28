@@ -64,8 +64,6 @@ final class Stream4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function stream(array $input, User $user): bool
     {

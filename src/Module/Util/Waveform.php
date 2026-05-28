@@ -231,7 +231,6 @@ class Waveform
     /**
      * Great function slightly modified as posted by Minux at
      * http://forums.clantemplates.com/showthread.php?t=133805
-     * @param string $input
      * @return array{float|int, float|int, float|int}
      */
     protected static function html2rgb(string $input): array

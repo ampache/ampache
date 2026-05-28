@@ -38,7 +38,6 @@ class JsonHandler extends Handler
 
     /**
      * Seperator between command and arguments
-     * @var string
      */
     protected string $commandSeperator = '/';
 
@@ -153,7 +152,6 @@ class JsonHandler extends Handler
     /**
      * convert the json string into a song array
      * @param string $item
-     * @return array
      */
     public function parse($item): array
     {

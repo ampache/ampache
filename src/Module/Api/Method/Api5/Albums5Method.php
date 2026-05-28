@@ -64,10 +64,7 @@ final class Albums5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
-
     public static function albums(array $input, User $user): bool
     {
         $browse = Api::getBrowse($user);

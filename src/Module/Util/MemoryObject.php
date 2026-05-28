@@ -33,7 +33,6 @@ class MemoryObject
 
     /**
      * memory_object constructor.
-     * @param $data
      */
     public function __construct($data)
     {
@@ -46,7 +45,6 @@ class MemoryObject
 
     /**
      * @param string $name
-     * @param $value
      */
     public function __set($name, $value)
     {

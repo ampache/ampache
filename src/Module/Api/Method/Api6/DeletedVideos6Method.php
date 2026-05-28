@@ -54,8 +54,6 @@ final class DeletedVideos6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function deleted_videos(array $input, User $user): bool
     {

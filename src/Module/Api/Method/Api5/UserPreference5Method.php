@@ -51,8 +51,6 @@ final class UserPreference5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function user_preference(array $input, User $user): bool
     {

@@ -33,7 +33,6 @@ namespace Ampache\Module\Util\OAuth;
 class OAuthDataStore
 {
     /**
-     * @param $consumer_key
      */
     public function lookup_consumer($consumer_key)
     {
@@ -41,9 +40,6 @@ class OAuthDataStore
     }
 
     /**
-     * @param $consumer
-     * @param $token_type
-     * @param $token
      */
     public function lookup_token($consumer, $token_type, $token)
     {
@@ -51,10 +47,6 @@ class OAuthDataStore
     }
 
     /**
-     * @param $consumer
-     * @param $token
-     * @param $nonce
-     * @param $timestamp
      */
     public function lookup_nonce($consumer, $token, $nonce, $timestamp)
     {
@@ -62,8 +54,6 @@ class OAuthDataStore
     }
 
     /**
-     * @param $consumer
-     * @param $callback
      */
     public function new_request_token($consumer, $callback = null)
     {
@@ -71,9 +61,6 @@ class OAuthDataStore
     }
 
     /**
-     * @param $token
-     * @param $consumer
-     * @param $verifier
      */
     public function new_access_token($token, $consumer, $verifier = null)
     {

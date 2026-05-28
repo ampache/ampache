@@ -93,8 +93,6 @@ class FileSystem
     }
 
     /**
-     * @param string $fs_id
-     * @param bool $with_root
      * @return array<int, array{
      *     title: string,
      *     children?: array<array{title: string, key: string, lazy: bool}>,
@@ -215,9 +213,6 @@ class FileSystem
     }
 
     /**
-     * @param string $fs_id
-     * @param string $name
-     * @param bool $mkdir
      * @return array{id: string}
      * @throws Exception
      */
@@ -323,8 +318,6 @@ class FileSystem
     }
 
     /**
-     * @param string $fs_id
-     * @param string $par
      * @return array{id: string}
      * @throws Exception
      */

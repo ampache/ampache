@@ -74,8 +74,6 @@ final class PlaylistGenerate6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function playlist_generate(array $input, User $user): bool
     {

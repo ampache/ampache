@@ -71,7 +71,6 @@ final class PlaylistGenerate4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function playlist_generate(array $input, User $user): void
     {

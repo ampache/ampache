@@ -213,10 +213,7 @@ class Xml4_Data
      *
      * This will build an xml document from a key'd array,
      *
-     * @param array $array
      * @param bool $callback (don't output xml when true)
-     * @param bool|string $object
-     * @return string
      */
     public static function keyed_array(array $array, bool $callback = false, bool|string $object = false): string
     {
@@ -257,11 +254,8 @@ class Xml4_Data
      *
      * @param list<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
      * @param bool $include include episodes from podcasts or tracks in a playlist
-     * @return string
      */
     public static function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
     {
@@ -433,10 +427,7 @@ class Xml4_Data
      *
      * @param list<int|string> $artists
      * @param string[] $include Array of other items to include
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
-     * @return string
      */
     public static function artists(array $artists, array $include, User $user, string $auth, bool $full_xml = true): string
     {
@@ -486,10 +477,7 @@ class Xml4_Data
      *
      * @param list<int|string> $albums
      * @param string[] $include Array of other items to include
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
-     * @return string
      */
     public static function albums(array $albums, array $include, User $user, string $auth, bool $full_xml = true): string
     {
@@ -537,9 +525,6 @@ class Xml4_Data
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
      * @param list<int|string> $playlists Playlist id's to include
-     * @param User $user
-     * @param string $auth
-     * @return string
      */
     public static function playlists(array $playlists, User $user, string $auth): string
     {
@@ -594,7 +579,6 @@ class Xml4_Data
      *
      * @param list<int|string> $shares
      * @param bool $full_xml whether to return a full XML document or just the node, bool $full_xml = true
-     * @return string
      */
     public static function shares(array $shares, bool $full_xml = true): string
     {
@@ -642,11 +626,8 @@ class Xml4_Data
      * This returns podcasts to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $podcasts
-     * @param User $user
-     * @param string $auth
      * @param bool $episodes include the episodes of the podcast //optional
      * @param bool $full_xml whether to return a full XML document or just the node
-     * @return string
      */
     public static function podcasts(array $podcasts, User $user, string $auth, bool $episodes = false, bool $full_xml = true): string
     {
@@ -685,10 +666,7 @@ class Xml4_Data
      * This returns podcasts to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $podcast_episodes Podcast_Episode id's to include
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
-     * @return string
      */
     public static function podcast_episodes(array $podcast_episodes, User $user, string $auth, bool $full_xml = true): string
     {
@@ -718,10 +696,6 @@ class Xml4_Data
      *
      * This returns an xml document from an array of song ids. (Spiffy isn't it!)
      * @param list<int|string> $songs
-     * @param User $user
-     * @param string $auth
-     * @param bool $full_xml
-     * @return string
      */
     public static function songs(array $songs, User $user, string $auth, bool $full_xml = true): string
     {
@@ -789,10 +763,7 @@ class Xml4_Data
      * This builds the xml document for displaying video objects
      *
      * @param list<int|string> $videos
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
-     * @return string
      */
     public static function videos(array $videos, User $user, string $auth, bool $full_xml = true): string
     {
@@ -828,9 +799,6 @@ class Xml4_Data
      *     object_id: int,
      *     track_id: int,
      *     track: int}> $object_ids Object IDs
-     * @param User $user
-     * @param string $auth
-     * @return string
      */
     public static function democratic(array $object_ids, User $user, string $auth): string
     {

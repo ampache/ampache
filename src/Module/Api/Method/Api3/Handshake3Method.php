@@ -66,7 +66,6 @@ final class Handshake3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

@@ -116,13 +116,12 @@ class Ui implements UiInterface
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         if (($extension != 'php' || AmpConfig::get('allow_php_themes')) && file_exists($realpath) && is_file($realpath)) {
             return $path;
-        } else {
-            if ($extern === true) {
-                return '/templates/' . $template;
-            }
-
-            return __DIR__ . '/../../../templates/' . $template;
         }
+        if ($extern === true) {
+            return '/templates/' . $template;
+        }
+
+        return __DIR__ . '/../../../templates/' . $template;
     }
 
     public function showObjectNotFound(): void
@@ -178,11 +177,7 @@ class Ui implements UiInterface
      */
     public static function check_iconv(): bool
     {
-        if (function_exists('iconv') && function_exists('iconv_substr')) {
-            return true;
-        }
-
-        return false;
+        return (bool)(function_exists('iconv') && function_exists('iconv_substr'));
     }
 
     /**

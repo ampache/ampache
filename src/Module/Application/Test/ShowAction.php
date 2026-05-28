@@ -53,9 +53,6 @@ final class ShowAction implements ApplicationActionInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @param GuiGatekeeperInterface $gatekeeper
-     * @return ResponseInterface|null
      * @throws Exception
      */
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -90,11 +87,10 @@ final class ShowAction implements ApplicationActionInterface
         if (!class_exists('Gettext\Translations')) {
             require_once __DIR__ . '/../../../../templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
-        } else {
-            load_gettext();
-            // Load template
-            require_once __DIR__ . '/../../../../templates/show_test.inc.php';
         }
+        load_gettext();
+        // Load template
+        require_once __DIR__ . '/../../../../templates/show_test.inc.php';
 
         return null;
     }

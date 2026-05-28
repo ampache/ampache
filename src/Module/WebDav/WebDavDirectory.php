@@ -95,9 +95,9 @@ class WebDavDirectory extends DAV\Collection
 
         if ($libitem instanceof Media) {
             return new WebDavFile($libitem);
-        } else {
-            return new WebDavDirectory($libitem);
         }
+
+        return new WebDavDirectory($libitem);
     }
 
     /**

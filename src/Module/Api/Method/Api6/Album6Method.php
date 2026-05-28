@@ -64,17 +64,12 @@ final class Album6Method implements MethodInterface
      * filter  = (string) UID of Album
      * include = (array|string) 'songs' //optional
      *
-     * @param GatekeeperInterface $gatekeeper
-     * @param ResponseInterface $response
-     * @param ApiOutputInterface $output
      * @param array{
      *     filter?: string,
      *     include?: string|string[],
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return ResponseInterface
      *
      * @throws RequestParamMissingException
      * @throws ResultEmptyException

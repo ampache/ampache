@@ -534,21 +534,19 @@ class Catalog_local extends Catalog
             } // if it's not an m3u
 
             return true;
-        } else {
-            // if it matches the pattern
-            if ($counter % 1000 == 0) {
-                debug_event('local.catalog', "$full_file ignored, non-audio file or 0 bytes", 5);
-            }
+        }
+        // if it matches the pattern
+        if ($counter % 1000 == 0) {
+            debug_event('local.catalog', "$full_file ignored, non-audio file or 0 bytes", 5);
+        }
 
-            return false;
-        } // else not an audio file
+        return false;
+        // else not an audio file
     }
 
     /**
      * add_to_catalog
      * @param null|array<string, string|bool> $options
-     * @param null|Interactor $interactor
-     * @return int
      */
     public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
@@ -1113,7 +1111,6 @@ class Catalog_local extends Catalog
         $sql = "UPDATE `song` SET `file` = ?, catalog = ? WHERE `id` = ?;";
 
         return (Dba::write($sql, [$new_file, $newCatalogId, $media->id]) !== false);
-
     }
 
     /**
@@ -1438,7 +1435,6 @@ class Catalog_local extends Catalog
      * here
      * @param string $file
      * @param array<string, mixed> $options
-     * @return int
      * @throws Exception
      * @throws Exception
      */
@@ -1497,7 +1493,6 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Video $media
      * @return array{
      *     file_path: string,
      *     file_name: string,

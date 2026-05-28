@@ -71,8 +71,6 @@ final class Scrobble6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function scrobble(array $input, User $user): bool
     {

@@ -39,7 +39,6 @@ class SeafileAdapter
      * @param string $server_uri
      * @param string $username
      * @param string $password
-     * @return mixed
      * @throws Exception
      */
     public static function request_api_key($server_uri, $username, $password)
@@ -77,10 +76,6 @@ class SeafileAdapter
 
     /**
      * SeafileAdapter constructor.
-     * @param $server_uri
-     * @param $library_name
-     * @param $call_delay
-     * @param $api_key
      */
     public function __construct(
         $server_uri,
@@ -172,8 +167,6 @@ class SeafileAdapter
     // run a function that hits the Seafile API, but catch throttling errors and retry
 
     /**
-     * @param $func
-     * @return mixed
      */
     private function throttle_check($func)
     {
@@ -206,7 +199,6 @@ class SeafileAdapter
     // given a given path & filename, return the "virtual" path string which will be stored in the database
 
     /**
-     * @param $file
      */
     public function to_virtual_path($file): string
     {
@@ -216,7 +208,6 @@ class SeafileAdapter
     // given a database-stored "virtual" path, return the path & filename
 
     /**
-     * @param string $file_path
      * @return array{
      *     path: string,
      *     filename: string
@@ -233,7 +224,6 @@ class SeafileAdapter
     }
 
     /**
-     * @param $path
      * @return mixed|null
      */
     private function get_cached_directory($path)
@@ -243,27 +233,28 @@ class SeafileAdapter
 
             if ($directory) {
                 return $directory;
-            } else {
+            }
+
+            return null;
+
+        }
+        try {
+            $directory = $this->throttle_check(function () use ($path) {
+                return $this->client['Directories']->getAll($this->library, $path);
+            });
+            $this->directory_cache[$path] = $directory;
+
+            return $directory;
+        } catch (ClientException $error) {
+            if ($error->getResponse()->getStatusCode() == 404) {
+                $this->directory_cache[$path] = false;
+
                 return null;
             }
-        } else {
-            try {
-                $directory = $this->throttle_check(function () use ($path) {
-                    return $this->client['Directories']->getAll($this->library, $path);
-                });
-                $this->directory_cache[$path] = $directory;
+            throw $error;
 
-                return $directory;
-            } catch (ClientException $error) {
-                if ($error->getResponse()->getStatusCode() == 404) {
-                    $this->directory_cache[$path] = false;
-
-                    return null;
-                } else {
-                    throw $error;
-                }
-            }
         }
+
     }
 
     /**
@@ -271,7 +262,6 @@ class SeafileAdapter
      * the function receives a DirectoryItem and should return 1 if the file was added, 0 otherwise
      * (https://github.com/rene-s/Seafile-PHP-SDK/blob/master/src/Type/DirectoryItem.php)
      * Returns number added, or -1 on failure
-     * @param $func
      * @param string $path
      */
     public function for_all_files($func, $path = '/'): int
@@ -298,7 +288,6 @@ class SeafileAdapter
     }
 
     /**
-     * @param $path
      * @param string $name
      * @return mixed|null
      */
@@ -320,7 +309,6 @@ class SeafileAdapter
     // download a file, optionally limited to just enough to be able to read its metadata tags(currently 2MB)
 
     /**
-     * @param $file
      * @param bool $partial
      */
     public function download($file, $partial = false): string

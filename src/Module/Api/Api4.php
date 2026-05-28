@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 
 /**
- * API Class
+ * Api4 Class
  *
  * This handles functions relating to the API written for Ampache, initially
  * this is very focused on providing functionality for Amarok so it can
@@ -176,8 +176,6 @@ class Api4
      *
      * @param array<string, mixed> $input
      * @param string[] $parameters e.g. array('auth', type')
-     * @param string $method
-     * @return bool
      */
     public static function check_parameter(array $input, array $parameters, string $method = ''): bool
     {

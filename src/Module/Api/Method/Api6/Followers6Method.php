@@ -65,8 +65,6 @@ final class Followers6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function followers(array $input, User $user): bool
     {

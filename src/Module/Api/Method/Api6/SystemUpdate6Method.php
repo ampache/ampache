@@ -56,8 +56,6 @@ final class SystemUpdate6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function system_update(array $input, User $user): bool
     {
@@ -110,8 +108,6 @@ final class SystemUpdate6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function update(array $input, User $user): bool
     {

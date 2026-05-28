@@ -167,8 +167,6 @@ class Userflag extends database_object
 
     /**
      * get_flag
-     * @param int|null $user_id
-     * @param bool $get_date
      * @return bool|array{bool, int}
      */
     public function get_flag(?int $user_id = null, bool $get_date = false): bool|array

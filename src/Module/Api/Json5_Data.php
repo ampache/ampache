@@ -132,7 +132,6 @@ class Json5_Data
      *
      * @param string $string success message
      * @param array<string, string> $return_data
-     * @return string
      */
     public static function success(string $string, array $return_data = []): string
     {
@@ -198,8 +197,6 @@ class Json5_Data
      *
      * @param list<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
-     * @param User $user
-     * @param string $auth
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
@@ -406,9 +403,6 @@ class Json5_Data
      *
      * @param list<int|string> $artists Artist id's to include
      * @param string[] $include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "artist"
      */
@@ -479,9 +473,6 @@ class Json5_Data
      *
      * @param list<int|string> $albums Album id's to include
      * @param string[] $include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "album"
      */
@@ -561,11 +552,7 @@ class Json5_Data
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
      * @param list<int|string> $playlists Playlist id's to include
-     * @param User $user
-     * @param string $auth
-     * @param bool $songs
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string
      */
     public static function playlists(array $playlists, User $user, string $auth, bool $songs = false, bool $object = true): string
     {
@@ -797,11 +784,8 @@ class Json5_Data
      * This returns podcasts to the user, in a pretty json document with the information
      *
      * @param list<int|string> $podcasts Podcast id's to include
-     * @param User $user
-     * @param string $auth
      * @param bool $episodes include the episodes of the podcast
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string
      */
     public static function podcasts(array $podcasts, User $user, string $auth, bool $episodes = false, bool $object = true): string
     {
@@ -870,9 +854,6 @@ class Json5_Data
      * This returns podcasts to the user, in a pretty json document with the information
      *
      * @param list<int|string> $podcast_episodes Podcast_Episode id's to include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast_episode"
      */
@@ -935,9 +916,6 @@ class Json5_Data
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
      * @param list<int|string> $songs
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "song"
      */
@@ -1058,10 +1036,7 @@ class Json5_Data
      * This builds the JSON document for displaying video objects
      *
      * @param list<int|string> $videos Video id's to include
-     * @param User $user
-     * @param string $auth
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string
      */
     public static function videos(array $videos, User $user, string $auth, bool $object = true): string
     {
@@ -1112,10 +1087,7 @@ class Json5_Data
      *     object_id: int,
      *     track_id: int,
      *     track: int}> $object_ids Object IDs
-     * @param User $user
-     * @param string $auth
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string
      */
     public static function democratic(array $object_ids, User $user, string $auth, bool $object = true): string
     {

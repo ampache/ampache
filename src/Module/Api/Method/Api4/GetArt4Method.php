@@ -58,8 +58,6 @@ final class GetArt4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function get_art(array $input, User $user): bool
     {
