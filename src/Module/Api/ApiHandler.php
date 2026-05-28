@@ -822,7 +822,6 @@ final class ApiHandler implements ApiHandlerInterface
             $gatekeeper->extendSession($input['auth']);
 
             return null;
-
         } catch (ApiException $error) {
             switch ($api_version) {
                 case 3:

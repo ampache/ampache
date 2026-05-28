@@ -196,8 +196,8 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
                     'album' => $item['albumName'] . ' /vs/ ' . $song->get_album_fullname(),
                     'has plain lyrics' => !empty($item['plainLyrics'])
                 ];
-                debug_event(self::class, 'get_lyrics check failed: ' . var_export($checks, true) . '\n' . var_export($checks_values, true), 5);
 
+                debug_event(self::class, 'get_lyrics check failed: ' . var_export($checks, true) . '\n' . var_export($checks_values, true), 5);
             }
         }
 

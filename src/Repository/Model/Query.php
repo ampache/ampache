@@ -1041,8 +1041,8 @@ class Query
             }
 
             return ' LIMIT ' . (string)($this->_state['limit']);
-
         }
+
         $start = $this->get_start();
         if (!$this->is_simple() || $start < 0 || ($start == 0 && $offset == 0)) {
             return '';

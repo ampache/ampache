@@ -87,7 +87,6 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
                     return null;
                 }
                 $catalog->perform_ready();
-
             }
         }
 
