@@ -971,8 +971,8 @@ class Art extends database_object
                     ? self::read_from_dir($sizetext, $this->object_type, $this->object_id, $this->kind, $results['mime'])
                     : $results['image'], 'thumb_mime' => $results['mime']];
             }
-            debug_event(self::class, 'Thumb entry found in database but associated data cannot be found.', 3);
 
+            debug_event(self::class, 'Thumb entry found in database but associated data cannot be found.', 3);
         }
 
         // If we didn't get a result try again
@@ -1165,7 +1165,6 @@ class Art extends database_object
                 }
 
                 return $row['image'];
-
             }
         } // came from the db
 
