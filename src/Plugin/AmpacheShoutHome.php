@@ -28,10 +28,10 @@ namespace Ampache\Plugin;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Shout\ShoutRendererInterface;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Util\Ui;
 use Ampache\Repository\ShoutRepositoryInterface;
 
 class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterface

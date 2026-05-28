@@ -26,16 +26,16 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginLocationInterface;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\System\Core;
-use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\UserRepositoryInterface;
 use CpChart;
 use CpChart\Data;
-use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Plugin;
 
 class Graph
 {
@@ -71,7 +71,6 @@ class Graph
      * @param int $object_id
      * @param int $start_date
      * @param int $end_date
-     * @return string
      */
     protected function get_user_sql_where(
         $user_id = 0,
@@ -110,7 +109,6 @@ class Graph
      * @param int $catalog_id
      * @param int $start_date
      * @param int $end_date
-     * @return string
      */
     protected function get_catalog_sql_where(
         $object_type = 'song',
@@ -149,7 +147,6 @@ class Graph
      * @param int $start_date
      * @param int $end_date
      * @param string $zoom
-     * @return array
      */
     protected function get_all_type_pts(
         $fct,
@@ -186,7 +183,6 @@ class Graph
 
     /**
      * @param string $fct
-     * @param Data $MyData
      * @param int $user_id
      * @param string $object_type
      * @param int $object_id
@@ -194,7 +190,6 @@ class Graph
      * @param int $end_date
      * @param string $zoom
      * @param bool $show_total
-     * @return array
      */
     protected function get_all_pts(
         $fct,
@@ -221,7 +216,6 @@ class Graph
     /**
      * get_user_all_pts
      * @param string $fct
-     * @param Data $MyData
      * @param int $user_id
      * @param string|null $object_type
      * @param int $object_id
@@ -270,7 +264,6 @@ class Graph
 
     /**
      * @param string $fct
-     * @param Data $MyData
      * @param int $catalog_id
      * @param string $object_type
      * @param int $object_id
@@ -318,7 +311,6 @@ class Graph
      * @param int $start_date
      * @param int $end_date
      * @param string $zoom
-     * @return array
      */
     protected function get_user_hits_pts(
         $user_id = 0,
@@ -349,7 +341,6 @@ class Graph
      * @param int $end_date
      * @param string $zoom
      * @param string $column
-     * @return array
      */
     protected function get_user_object_count_pts(
         $user_id = 0,
@@ -380,7 +371,6 @@ class Graph
      * @param int $start_date
      * @param int $end_date
      * @param string $zoom
-     * @return array
      */
     protected function get_user_bandwidth_pts(
         $user_id = 0,
@@ -400,7 +390,6 @@ class Graph
      * @param int $start_date
      * @param int $end_date
      * @param string $zoom
-     * @return array
      */
     protected function get_user_time_pts(
         $user_id = 0,
@@ -420,7 +409,6 @@ class Graph
      * @param int $start_date
      * @param int $end_date
      * @param string $zoom
-     * @return array
      */
     protected function get_catalog_files_pts(
         $catalog_id = 0,
@@ -451,7 +439,6 @@ class Graph
      * @param int $start_date
      * @param int $end_date
      * @param string $zoom
-     * @return array
      */
     protected function get_catalog_size_pts(
         $catalog_id = 0,
@@ -484,7 +471,6 @@ class Graph
      * @param int $start_date
      * @param int $end_date
      * @param string $zoom
-     * @return array
      */
     protected function get_geolocation_pts(
         $user_id = 0,
@@ -517,7 +503,6 @@ class Graph
 
     /**
      * @param string $title
-     * @param Data $MyData
      * @param string $zoom
      * @param int $width
      * @param int $height

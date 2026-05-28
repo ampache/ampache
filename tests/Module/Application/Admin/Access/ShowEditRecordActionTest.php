@@ -26,14 +26,14 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\MockeryTestCase;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;

@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
-use Ampache\Module\System\Dba;
-use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
 use Ampache\Plugin\PluginSongPreviewInterface;
@@ -229,11 +229,10 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         if ($this->artist) {
             return (string) (new Artist($this->artist))->get_fullname();
-        } else {
-            $wartist = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
-
-            return $wartist['name'] ?? '';
         }
+        $wartist = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
+
+        return $wartist['name'] ?? '';
     }
 
     /**
@@ -277,11 +276,10 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         if ($this->artist) {
             return "<a href=\"" . AmpConfig::get_web_path() . "/artists.php?action=show&artist=" . $this->artist . "\" title=\"" . scrub_out($this->get_artist_fullname()) . "\"> " . scrub_out($this->get_artist_fullname()) . "</a>";
-        } else {
-            $wartist = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
-
-            return $wartist['link'] ?? '';
         }
+        $wartist = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
+
+        return $wartist['link'] ?? '';
     }
 
     /**
@@ -324,7 +322,6 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * Search for direct children of an object
-     * @param string $name
      * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
@@ -404,8 +401,6 @@ class Song_Preview extends database_object implements Media, playable_item
      * get_transcode_settings
      *
      * FIXME: Song Preview transcoding is not implemented
-     * @param string|null $target
-     * @param string|null $player
      * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
      * @return array{format?: string, command?: string}
      */

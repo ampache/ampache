@@ -26,12 +26,12 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api4;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Module\Api\Api4;
 
 /**
  * Class Flag4Method
@@ -60,8 +60,6 @@ final class Flag4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function flag(array $input, User $user): bool
     {

@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PreferenceRepositoryInterface;
 
 /**
@@ -46,7 +46,6 @@ final class UserPreferences5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function user_preferences(array $input, User $user): void
     {

@@ -49,7 +49,6 @@ final class TagArtists3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function tag_artists(array $input, User $user): void
     {
@@ -76,7 +75,6 @@ final class TagArtists3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function genre_artists(array $input, User $user): void
     {

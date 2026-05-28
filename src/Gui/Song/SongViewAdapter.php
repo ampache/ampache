@@ -27,7 +27,14 @@ namespace Ampache\Gui\Song;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Application\Song\DeleteAction;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
@@ -35,13 +42,6 @@ use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Module\Api\Ajax;
-use Ampache\Module\Application\Song\DeleteAction;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 
 final readonly class SongViewAdapter implements SongViewAdapterInterface
 {

@@ -37,6 +37,10 @@ use Ampache\Module\Database\DbaDatabaseConnection;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Cache\ArrayCacheDriver;
 use Ampache\Module\Util\EnvironmentInterface;
+
+use function DI\autowire;
+use function DI\factory;
+
 use getID3;
 use MusicBrainz\MusicBrainz;
 use Nyholm\Psr7\Factory\Psr17Factory;
@@ -53,9 +57,6 @@ use Psr\Http\Message\UriFactoryInterface;
 use Psr\SimpleCache\CacheInterface;
 use Slim\ResponseEmitter;
 use SpotifyWebAPI\SpotifyWebAPI;
-
-use function DI\autowire;
-use function DI\factory;
 
 /**
  * These list contains the crucial services for init as well as all external ones

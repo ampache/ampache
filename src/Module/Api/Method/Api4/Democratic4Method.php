@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
-use Ampache\Repository\Model\Democratic;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Democratic4Method
@@ -54,8 +54,6 @@ final class Democratic4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function democratic(array $input, User $user): bool
     {

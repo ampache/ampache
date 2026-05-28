@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 /**
- * API Class
+ * Api3 Class
  *
  * This handles functions relating to the API written for ampache, initially
  * this is very focused on providing functionality for Amarok so it can

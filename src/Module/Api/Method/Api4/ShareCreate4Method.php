@@ -26,18 +26,18 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api4;
+use Ampache\Module\Api\Json4_Data;
+use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Share\ShareCreatorInterface;
+use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Json4_Data;
-use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
-use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Repository\Model\User;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -68,8 +68,6 @@ final class ShareCreate4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

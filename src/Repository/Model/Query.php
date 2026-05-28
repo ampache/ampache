@@ -86,7 +86,7 @@ class Query
 
     public ?int $user_id = null;
 
-    /** @var array $_state */
+    /**  */
     protected array $_state = [
         'album_artist' => false, // Used by $browse->set_type() to filter artists to album artist only
         'base' => null,
@@ -164,21 +164,20 @@ class Query
             $this->id = (int)$insert_id;
 
             return;
-        } else {
-            $sql = 'SELECT `data`, `object_data` FROM `tmp_browse` WHERE `id` = ? AND `sid` = ?';
+        }
+        $sql = 'SELECT `data`, `object_data` FROM `tmp_browse` WHERE `id` = ? AND `sid` = ?';
 
-            $db_results = Dba::read($sql, [$query_id, $sid]);
-            if ($results = Dba::fetch_assoc($db_results)) {
-                $this->id     = (int)$query_id;
-                $this->_state = (array)$this->_unserialize($results['data']);
-                $this->_cache = (array_key_exists('object_data', $results) && !empty($results['object_data']))
-                    ? (array)$this->_unserialize($results['object_data'])
-                    : [];
-                // queryType isn't set by restoring state
-                $this->set_type($this->_state['type']);
+        $db_results = Dba::read($sql, [$query_id, $sid]);
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $this->id     = (int)$query_id;
+            $this->_state = (array)$this->_unserialize($results['data']);
+            $this->_cache = (array_key_exists('object_data', $results) && !empty($results['object_data']))
+                ? (array)$this->_unserialize($results['object_data'])
+                : [];
+            // queryType isn't set by restoring state
+            $this->set_type($this->_state['type']);
 
-                return;
-            }
+            return;
         }
 
         AmpError::add('browse', T_('Browse was not found or expired, try reloading the page'));
@@ -199,8 +198,6 @@ class Query
      *
      * Attempts to produce a more compact representation for large result
      * sets by collapsing ranges.
-     * @param array $data
-     * @return string
      */
     private function _serialize(array $data): string
     {
@@ -211,8 +208,6 @@ class Query
      * _unserialize
      *
      * Reverses serialization.
-     * @param string $data
-     * @return mixed
      */
     private function _unserialize(string $data): mixed
     {
@@ -1043,9 +1038,10 @@ class Query
         if ($this->_state['limit'] > 0) {
             if ($offset > 0) {
                 return ' LIMIT ' . (string)($this->_state['limit']) . ', ' . (string)($offset);
-            } else {
-                return ' LIMIT ' . (string)($this->_state['limit']);
             }
+
+            return ' LIMIT ' . (string)($this->_state['limit']);
+
         }
         $start = $this->get_start();
         if (!$this->is_simple() || $start < 0 || ($start == 0 && $offset == 0)) {
@@ -1153,7 +1149,6 @@ class Query
      * _post_process
      * This does some additional work on the results that we've received
      * before returning them. TODO this is only for tags/genres? should do this in the select/return if possible
-     * @param array $data
      * @return array<array{id: int}>
      */
     private function _post_process(array $data): array
@@ -1367,7 +1362,6 @@ class Query
      * save_objects
      * This takes the full array of object ids, often passed into show and if necessary it saves them
      * @param int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}> $object_ids
-     * @return bool
      */
     public function save_objects(array $object_ids): bool
     {

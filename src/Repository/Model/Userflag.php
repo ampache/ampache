@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Module\System\Dba;
-use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Plugin\PluginSaveMediaplayInterface;
@@ -167,8 +167,6 @@ class Userflag extends database_object
 
     /**
      * get_flag
-     * @param int|null $user_id
-     * @param bool $get_date
      * @return bool|array{bool, int}
      */
     public function get_flag(?int $user_id = null, bool $get_date = false): bool|array

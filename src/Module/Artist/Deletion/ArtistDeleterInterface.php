@@ -23,8 +23,8 @@
 
 namespace Ampache\Module\Artist\Deletion;
 
-use Ampache\Repository\Model\Artist;
 use Ampache\Module\Artist\Deletion\Exception\ArtistDeletionException;
+use Ampache\Repository\Model\Artist;
 
 interface ArtistDeleterInterface
 {

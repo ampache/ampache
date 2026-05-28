@@ -31,6 +31,11 @@ parameters:
 			path: src/Gui/Playlist/NewPlaylistDialogAdapterInterface.php
 
 		-
+			message: "#^Method Ampache\\\\Gui\\\\TalView\\:\\:setContext\\(\\) has parameter \\$context with no type specified\\.$#"
+			count: 1
+			path: src/Gui/TalView.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\ApiHandler\\:\\:_executeDebugHandler\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/ApiHandler.php
@@ -473,42 +478,57 @@ parameters:
 		-
 			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
 			count: 1
-			path: src/Module/Api/Method/CatalogActionMethod.php
+			path: src/Module/Api/Method/Api6/CatalogAction6Method.php
 
 		-
 			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
 			count: 1
-			path: src/Module/Api/Method/CatalogFileMethod.php
+			path: src/Module/Api/Method/Api6/CatalogFile6Method.php
 
 		-
 			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
 			count: 1
-			path: src/Module/Api/Method/CatalogFolderMethod.php
+			path: src/Module/Api/Method/Api6/CatalogFolder6Method.php
 
 		-
-			message: "#^Cannot call method getId\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
+			message: "#^If condition is always true\\.$#"
 			count: 1
-			path: src/Module/Api/Method/HandshakeMethod.php
+			path: src/Module/Api/Method/Api6/SystemUpdate6Method.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: src/Module/Api/Method/Api6/SystemUpdate6Method.php
+
+		-
+			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
+			count: 1
+			path: src/Module/Api/Method/Api8/CatalogAction8Method.php
+
+		-
+			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
+			count: 1
+			path: src/Module/Api/Method/Api8/CatalogFile8Method.php
+
+		-
+			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
+			count: 1
+			path: src/Module/Api/Method/Api8/CatalogFolder8Method.php
+
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: src/Module/Api/Method/Api8/SystemUpdate8Method.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: src/Module/Api/Method/Api8/SystemUpdate8Method.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\MethodInterface\\:\\:handle\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/MethodInterface.php
-
-		-
-			message: "#^Variable \\$items in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistEditMethod.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Module/Api/Method/SystemUpdateMethod.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: src/Module/Api/Method/SystemUpdateMethod.php
 
 		-
 			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
@@ -821,19 +841,29 @@ parameters:
 			path: src/Module/Api/Xml5_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:keyed_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml6_Data\\:\\:keyed_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Xml_Data.php
+			path: src/Module/Api/Xml6_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:object_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml6_Data\\:\\:object_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Xml_Data.php
+			path: src/Module/Api/Xml6_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:output_xml_from_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml8_Data\\:\\:keyed_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Xml_Data.php
+			path: src/Module/Api/Xml8_Data.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml8_Data\\:\\:object_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Xml8_Data.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml8_Data\\:\\:output_xml_from_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Xml8_Data.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\Admin\\\\Catalog\\\\AbstractCatalogAction\\:\\:getCatalogIds\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -977,6 +1007,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:connect\\(\\) should return resource but returns LDAP\\\\Connection\\.$#"
+			count: 1
+			path: src/Module/Authentication/Ldap/Ldap.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:read\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 
@@ -1246,6 +1281,16 @@ parameters:
 			path: src/Module/Catalog/SeafileAdapter.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SeafileAdapter\\:\\:request_api_key\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Module/Catalog/SeafileAdapter.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SeafileAdapter\\:\\:throttle_check\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Module/Catalog/SeafileAdapter.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SeafileAdapter\\:\\:throttle_check\\(\\) has parameter \\$func with no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/SeafileAdapter.php
@@ -1329,6 +1374,11 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:\\$_httpq has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:add\\(\\) has parameter \\$object with no type specified\\.$#"
+			count: 1
+			path: src/Module/Playback/Localplay/LocalPlay.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -1752,6 +1802,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Dba\\:\\:_query\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/System/Dba.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\Dba\\:\\:escape\\(\\) has parameter \\$var with no type specified\\.$#"
 			count: 1
 			path: src/Module/System/Dba.php
 
@@ -2341,6 +2396,11 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_graphic.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:font\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_graphic.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:random_color\\(\\) has parameter \\$a with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_graphic.php
@@ -2711,6 +2771,11 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_utility.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_utility\\:\\:tmp\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_utility.php
+
+		-
 			message: "#^Parameter \\#1 \\$array of function array_diff expects array, array\\<int, string\\>\\|false given\\.$#"
 			count: 1
 			path: src/Module/Util/FileSystem.php
@@ -2971,6 +3036,11 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthRequest.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:build_signature\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Module/Util/OAuth/OAuthRequest.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:build_signature\\(\\) has parameter \\$consumer with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/OAuth/OAuthRequest.php
@@ -3146,7 +3216,17 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthServer.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthServer\\:\\:fetch_access_token\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Module/Util/OAuth/OAuthServer.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthServer\\:\\:fetch_access_token\\(\\) has parameter \\$request with no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/OAuth/OAuthServer.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthServer\\:\\:fetch_request_token\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/OAuth/OAuthServer.php
 
@@ -3156,12 +3236,27 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthServer.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthServer\\:\\:get_consumer\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Module/Util/OAuth/OAuthServer.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthServer\\:\\:get_consumer\\(\\) has parameter \\$request with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/OAuth/OAuthServer.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthServer\\:\\:get_signature_method\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Module/Util/OAuth/OAuthServer.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthServer\\:\\:get_signature_method\\(\\) has parameter \\$request with no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/OAuth/OAuthServer.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthServer\\:\\:get_token\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/OAuth/OAuthServer.php
 
@@ -3231,7 +3326,17 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthSignatureMethod_PLAINTEXT.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthSignatureMethod_RSA_SHA1\\:\\:fetch_private_cert\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Module/Util/OAuth/OAuthSignatureMethod_RSA_SHA1.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthSignatureMethod_RSA_SHA1\\:\\:fetch_private_cert\\(\\) has parameter \\$request with no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/OAuth/OAuthSignatureMethod_RSA_SHA1.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthSignatureMethod_RSA_SHA1\\:\\:fetch_public_cert\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/OAuth/OAuthSignatureMethod_RSA_SHA1.php
 

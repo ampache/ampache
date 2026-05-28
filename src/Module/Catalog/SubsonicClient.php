@@ -101,10 +101,7 @@ class SubsonicClient
     }
 
     /**
-     * @param string $action
      * @param array<string, int|string> $object
-     * @param bool $rawAnswer
-     * @return array|bool|object|string
      */
     public function querySubsonic(string $action, array $object = [], ?bool $rawAnswer = false): object|bool|array|string
     {
@@ -112,9 +109,7 @@ class SubsonicClient
     }
 
     /**
-     * @param string $url
      * @param array<string, int|string>|null $object
-     * @return string
      */
     public function parameterize(string $url, ?array $object = []): string
     {
@@ -124,10 +119,7 @@ class SubsonicClient
     }
 
     /**
-     * @param string $action
      * @param array<string, int|string>|null $object
-     * @param bool $rawAnswer
-     * @return array|bool|object|string
      */
     protected function _querySubsonic(string $action, ?array $object = [], ?bool $rawAnswer = false): object|bool|array|string
     {
@@ -151,9 +143,10 @@ class SubsonicClient
                 $answer = curl_exec($curl);
                 if ($rawAnswer) {
                     return $answer;
-                } else {
-                    return $this->parseResponse($answer);
                 }
+
+                return $this->parseResponse($answer);
+
             }
         } else {
             return $this->error("Error: Invalid subsonic command: " . $action, $object);
@@ -201,9 +194,7 @@ class SubsonicClient
     }
 
     /**
-     * @param string $error
      * @param array<string, int|string>|null $data
-     * @return object
      */
     protected function error(string $error, ?array $data = null): object
     {
@@ -218,7 +209,6 @@ class SubsonicClient
 
     /**
      * @param bool|string $response
-     * @return array|object
      */
     protected function parseResponse($response): object|array
     {
@@ -233,11 +223,10 @@ class SubsonicClient
                 "success" => ($response['status'] == "ok"),
                 "data" => $data
             ];
-        } else {
-            debug_event(self::class, 'parseResponse ERROR: ' . print_r($response, true), 1);
-
-            return $this->error("Invalid response from server!");
         }
+        debug_event(self::class, 'parseResponse ERROR: ' . print_r($response, true), 1);
+
+        return $this->error("Invalid response from server!");
     }
 
     public function isCommand(string $command): bool

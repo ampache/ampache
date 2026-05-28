@@ -27,9 +27,9 @@ namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;

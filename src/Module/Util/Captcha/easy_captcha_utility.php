@@ -36,7 +36,6 @@ class easy_captcha_utility
 {
     // determine usable temp directory
     /**
-     * @return mixed
      */
     public static function tmp()
     {
@@ -223,7 +222,6 @@ END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END;
     // response javascript
 
     /**
-     * @param $yes
      */
     public static function js_rpc($yes)
     {
@@ -245,7 +243,6 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
     /* static */
     /**
      * patch contributed from Fedora downstream by Patrick Monnerat
-     * @param $url
      * @return string
      */
     public static function canonical_path($url)

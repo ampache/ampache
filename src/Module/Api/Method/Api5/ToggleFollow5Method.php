@@ -26,10 +26,10 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
+use Ampache\Repository\Model\User;
 
 /**
  * Class ToggleFollow5Method
@@ -51,8 +51,6 @@ final class ToggleFollow5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function toggle_follow(array $input, User $user): bool
     {

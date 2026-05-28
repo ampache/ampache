@@ -26,13 +26,13 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Artist;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Plugin\AmpacheMusicBrainz;
 use Ampache\Repository\Model\Artist;
-use Ampache\Module\Application\ApplicationActionInterface;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;

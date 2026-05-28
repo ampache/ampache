@@ -25,11 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\Authorization;
 
-use Exception;
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\User;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use Exception;
 use Mockery;
 use Mockery\MockInterface;
 use Psr\Log\LoggerInterface;

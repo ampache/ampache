@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Wanted;
 
-use Mockery;
 use Ampache\MockeryTestCase;
+use Mockery;
 use Mockery\MockInterface;
 use MusicBrainz\Filters\ArtistFilter;
 use MusicBrainz\MusicBrainz;

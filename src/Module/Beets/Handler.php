@@ -60,8 +60,6 @@ abstract class Handler
 
     /**
      * Resolves the differences between Beets and Ampache properties
-     * @param array $song
-     * @return array
      */
     protected function mapFields(array $song): array
     {

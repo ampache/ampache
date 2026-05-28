@@ -26,16 +26,16 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Random;
-use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
+use Ampache\Repository\Model\Random;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Userflag;
 
 /**
  * Class Stats4Method
@@ -72,8 +72,6 @@ final class Stats4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function stats(array $input, User $user): bool
     {

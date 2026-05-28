@@ -26,11 +26,11 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
@@ -57,8 +57,6 @@ final class Timeline4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function timeline(array $input, User $user): bool
     {

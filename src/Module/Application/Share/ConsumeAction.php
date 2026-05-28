@@ -27,17 +27,17 @@ namespace Ampache\Module\Application\Share;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Batch\DefaultAction;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Stream\DownloadAction;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Preference;
-use Ampache\Module\Application\ApplicationActionInterface;
-use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use DateTime;
 use Psr\Container\ContainerInterface;
@@ -132,12 +132,12 @@ final class ConsumeAction implements ApplicationActionInterface
                 $_REQUEST[$share->object_type . '_id'] = $share->object_id;
 
                 return $this->dic->get(DownloadAction::class)->run($request, $gatekeeper);
-            } else {
-                $_REQUEST['action'] = $share->object_type;
-                $_REQUEST['id']     = $share->object_id;
-
-                return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
             }
+            $_REQUEST['action'] = $share->object_type;
+            $_REQUEST['id']     = $share->object_id;
+
+            return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
+
         } elseif ($action == 'stream') {
             $this->ui->show(
                 'show_share.inc.php',

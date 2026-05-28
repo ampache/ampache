@@ -49,7 +49,6 @@ final class TagAlbums3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function tag_albums(array $input, User $user): void
     {
@@ -76,7 +75,6 @@ final class TagAlbums3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function genre_albums(array $input, User $user): void
     {

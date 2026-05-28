@@ -121,9 +121,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * build_map_cache
      * This builds a cache of the mappings for the specified object, no limit is given
-     * @param string $type
      * @param int[]|string[] $ids
-     * @return bool
      */
     public static function build_map_cache(string $type, array $ids): bool
     {
@@ -545,11 +543,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $db_results = Dba::read($sql, [$tag_id, 0, $object_id, $type]);
         $results    = Dba::fetch_assoc($db_results);
 
-        if (array_key_exists('id', $results)) {
-            return true;
-        }
-
-        return false;
+        return (bool)(array_key_exists('id', $results));
     }
 
     /**
@@ -767,9 +761,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * it also takes a type so that it knows how to return it, this is used
      * by the formatting functions of the different objects
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
-     * @param bool $link
-     * @param string|null $filter_type
-     * @return string
      */
     public static function get_display(array $tags, ?bool $link = false, ?string $filter_type = ''): string
     {
@@ -1044,7 +1035,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     /**
      * Search for direct children of an object
-     * @param string $name
      * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array

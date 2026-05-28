@@ -25,10 +25,10 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Api\Api4;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api4;
 
 /**
  * Class UserDelete4Method
@@ -51,8 +51,6 @@ final class UserDelete4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function user_delete(array $input, User $user): bool
     {

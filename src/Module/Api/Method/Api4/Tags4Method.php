@@ -55,7 +55,6 @@ final class Tags4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function tags(array $input, User $user): void
     {

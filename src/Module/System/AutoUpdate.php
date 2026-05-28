@@ -27,8 +27,8 @@ namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
-use Exception;
 use Ampache\Repository\Model\Preference;
+use Exception;
 use WpOrg\Requests\Requests;
 
 /**
@@ -233,9 +233,9 @@ class AutoUpdate
         $commit = self::get_current_commit();
         if (!empty($commit)) {
             return $commit;
-        } else {
-            return AmpConfig::get('version');
         }
+
+        return AmpConfig::get('version');
     }
 
     /**

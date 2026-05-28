@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
@@ -49,7 +49,6 @@ final class Timeline3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function timeline(array $input, User $user): void
     {

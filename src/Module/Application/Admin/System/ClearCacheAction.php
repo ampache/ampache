@@ -27,16 +27,16 @@ namespace Ampache\Module\Application\Admin\System;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\System\Session;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\Session;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Song;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

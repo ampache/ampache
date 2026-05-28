@@ -28,10 +28,10 @@ namespace Ampache\Module\Authorization\Check;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessFunctionEnum;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\User;
 use Psr\Log\LoggerInterface;
 
 final class FunctionChecker implements FunctionCheckerInterface

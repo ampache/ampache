@@ -26,15 +26,15 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\System\AutoUpdate;
+use Ampache\Module\System\Session;
 use Ampache\Module\System\Update;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\System\AutoUpdate;
-use Ampache\Module\System\Session;
 
 /**
  * Class SystemUpdate5Method
@@ -53,8 +53,6 @@ final class SystemUpdate5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function system_update(array $input, User $user): bool
     {

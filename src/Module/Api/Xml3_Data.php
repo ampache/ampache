@@ -24,28 +24,28 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\Shoutbox;
-use Ampache\Repository\Model\Video;
-use Ampache\Module\Playback\Stream;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Democratic;
-use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
+use Ampache\Repository\Model\Video;
+use Ampache\Repository\SongRepositoryInterface;
 use Traversable;
 
 /**
- * Xml_Data Class
+ * Xml3_Data Class
  *
  * This class takes care of all of the xml document stuff in Ampache these
  * are all static calls
@@ -73,7 +73,6 @@ class Xml3_Data
      *
      * This takes an int and changes the offset
      *
-     * @param int|string $offset
      */
     public static function set_offset(int|string $offset): void
     {
@@ -99,7 +98,7 @@ class Xml3_Data
     /**
      * set_type
      *
-     * This sets the type of Xml_Data we are working on
+     * This sets the type of Xml3_Data we are working on
      */
     public static function set_type(string $type): void
     {
@@ -120,7 +119,7 @@ class Xml3_Data
     {
         $string = "\t<error code=\"$code\"><![CDATA[" . $string . "]]></error>";
 
-        return Xml_Data::output_xml($string);
+        return Xml8_Data::output_xml($string);
     }
 
     /**
@@ -253,7 +252,7 @@ class Xml3_Data
         } // end foreach
 
         if (!$callback) {
-            $string = Xml_Data::output_xml($string);
+            $string = Xml8_Data::output_xml($string);
         }
 
         return $string;
@@ -283,7 +282,7 @@ class Xml3_Data
             $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<stream>0</stream>\n</tag>\n";
         } // end foreach
 
-        return Xml_Data::output_xml($string);
+        return Xml8_Data::output_xml($string);
     }
 
     /**
@@ -294,10 +293,7 @@ class Xml3_Data
      *
      * @param list<int|string> $artists
      * @param string[] $include Array of other items to include
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
-     * @return string
      */
     public static function artists(array $artists, array $include, User $user, string $auth, bool $full_xml = true): string
     {
@@ -344,7 +340,7 @@ class Xml3_Data
             $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<songs>" . $songs . "</songs>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($user_rating ?? 0) . "</preciserating>\n\t<rating>" . ($user_rating ?? 0) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?? 0) . "</averagerating>\n\t<mbid>" . $artist->mbid . "</mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<yearformed>" . $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
         } // end foreach artists
 
-        return Xml_Data::output_xml($string, $full_xml);
+        return Xml8_Data::output_xml($string, $full_xml);
     }
 
     /**
@@ -354,10 +350,7 @@ class Xml3_Data
      *
      * @param list<int|string> $albums
      * @param string[] $include Array of other items to include
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
-     * @return string
      */
     public static function albums(array $albums, array $include, User $user, string $auth, bool $full_xml = true): string
     {
@@ -401,7 +394,7 @@ class Xml3_Data
             $string .= "\t<year>" . $album->year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<disk>" . $album->disk_count . "</disk>\n" . self::tags_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($user_rating ?? 0) . "</preciserating>\n\t<rating>" . ($user_rating ?? 0) . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid>" . $album->mbid . "</mbid>\n</album>\n";
         } // end foreach
 
-        return Xml_Data::output_xml($string, $full_xml);
+        return Xml8_Data::output_xml($string, $full_xml);
     }
 
     /**
@@ -436,7 +429,7 @@ class Xml3_Data
             $string .= "<playlist id=\"" . $playlist->id . "\">\n\t<name><![CDATA[" . $playlist->name . "]]></name>\n\t<owner><![CDATA[" . $playlist->username . "]]></owner>\n\t<items>" . $item_total . "</items>\n\t<type>" . $playlist->type . "</type>\n</playlist>\n";
         } // end foreach
 
-        return Xml_Data::output_xml($string);
+        return Xml8_Data::output_xml($string);
     }
 
     /**
@@ -501,7 +494,7 @@ class Xml3_Data
             $string .= "</song>\n";
         } // end foreach
 
-        return Xml_Data::output_xml($string, $full_xml);
+        return Xml8_Data::output_xml($string, $full_xml);
     }
 
     /**
@@ -532,7 +525,7 @@ class Xml3_Data
             $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution>" . $video->get_f_resolution() . "</resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->get_tags()) . "\t<url><![CDATA[" . $video->play_url('', 'api') . "]]></url>\n</video>\n";
         } // end foreach
 
-        return Xml_Data::output_xml($string);
+        return Xml8_Data::output_xml($string);
     }
 
     /**
@@ -546,9 +539,6 @@ class Xml3_Data
      *     object_id: int,
      *     track_id: int,
      *     track: int}> $object_ids Object IDs
-     * @param User $user
-     * @param string $auth
-     * @return string
      */
     public static function democratic(array $object_ids, User $user, string $auth): string
     {
@@ -579,7 +569,7 @@ class Xml3_Data
                 "\t<genre id=\"" . ($tag->id ?? '') . "\"><![CDATA[" . ($tag->name ?? '') . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n\t<time>" . $song->time . "</time>\n\t<mime>" . $songMime . "</mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($user_rating ?? 0) . "</preciserating>\n\t<rating>" . ($user_rating ?? 0) . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
         } // end foreach
 
-        return Xml_Data::output_xml($string);
+        return Xml8_Data::output_xml($string);
     }
 
     /**
@@ -595,7 +585,7 @@ class Xml3_Data
         }
         $string .= "</user>\n";
 
-        return Xml_Data::output_xml($string);
+        return Xml8_Data::output_xml($string);
     }
 
     /**
@@ -616,7 +606,7 @@ class Xml3_Data
         }
         $string .= "</users>\n";
 
-        return Xml_Data::output_xml($string);
+        return Xml8_Data::output_xml($string);
     }
 
     /**
@@ -641,7 +631,7 @@ class Xml3_Data
         }
         $string .= "</shouts>\n";
 
-        return Xml_Data::output_xml($string);
+        return Xml8_Data::output_xml($string);
     }
 
     /**

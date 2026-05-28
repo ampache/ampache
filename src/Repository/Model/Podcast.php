@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepository;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -211,7 +211,6 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 
     /**
      * Search for direct children of an object
-     * @param string $name
      * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array

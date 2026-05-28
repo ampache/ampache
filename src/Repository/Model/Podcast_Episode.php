@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream;
@@ -32,11 +34,9 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Authorization\Access;
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use DateTime;
@@ -352,7 +352,6 @@ class Podcast_Episode extends database_object implements
 
     /**
      * Search for direct children of an object
-     * @param string $name
      * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
@@ -562,8 +561,6 @@ class Podcast_Episode extends database_object implements
 
     /**
      * Get transcode settings.
-     * @param string|null $target
-     * @param string|null $player
      * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
      * @return array{format?: string, command?: string}
      */

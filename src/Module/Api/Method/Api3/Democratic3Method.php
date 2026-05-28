@@ -25,9 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Song;
-use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\User;
 
 /**
@@ -47,7 +47,6 @@ final class Democratic3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function democratic(array $input, User $user): void
     {

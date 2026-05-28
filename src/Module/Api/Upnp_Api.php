@@ -25,21 +25,15 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Album;
-use Ampache\Module\Playback\Stream;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\System\Core;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Video;
-use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\LiveStreamRepositoryInterface;
-use Ampache\Repository\Model\User;
-use Ampache\Repository\PodcastRepositoryInterface;
-use Ampache\Repository\SongRepositoryInterface;
-use DateTime;
-use DOMDocument;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
@@ -47,6 +41,12 @@ use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
+use Ampache\Repository\PodcastRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
+use DateTime;
+use DOMDocument;
 use Exception;
 use XMLReader;
 
@@ -156,9 +156,6 @@ class Upnp_Api
     }
 
     /**
-     * @param $delaytime
-     * @param $actst
-     * @param $address
      * @throws Exception
      */
     public static function sendResponse($delaytime, $actst, $address): void
@@ -194,8 +191,6 @@ class Upnp_Api
     }
 
     /**
-     * @param $unpacked
-     * @param $remote
      */
     public static function notify_request($unpacked, $remote): void
     {
@@ -284,8 +279,6 @@ class Upnp_Api
     /* ================================== End SSDP functions ================================== */
 
     /**
-     * @param $prmRequest
-     * @return array
      */
     public static function parseUPnPRequest($prmRequest): array
     {
@@ -366,8 +359,6 @@ class Upnp_Api
     }
 
     /**
-     * @param $filterValue
-     * @param $keyisRes
      * @param $keytoCheck
      * Checks whether key is in filter string, taking account of allowable filter wildcards and null strings
      */
@@ -393,9 +384,6 @@ class Upnp_Api
     }
 
     /**
-     * @param $prmItems
-     * @param $filterValue
-     * @return DOMDocument
      */
     public static function createDIDL($prmItems, $filterValue): DOMDocument
     {
@@ -535,12 +523,8 @@ class Upnp_Api
     }
 
     /**
-     * @param $prmDIDL
-     * @param $prmNumRet
-     * @param $prmTotMatches
      * @param string $prmResponseType
      * @param string $prmUpdateID
-     * @return DOMDocument
      */
     public static function createSOAPEnvelope(
         $prmDIDL,
@@ -763,10 +747,6 @@ class Upnp_Api
     }
 
     /**
-     * @param $items
-     * @param $start
-     * @param $count
-     * @return array
      */
     public static function _slice($items, $start, $count): array
     {
@@ -780,11 +760,6 @@ class Upnp_Api
     }
 
     /**
-     * @param $prmPath
-     * @param $prmQuery
-     * @param $start
-     * @param $count
-     * @return array
      */
     public static function _musicChilds($prmPath, $prmQuery, $start, $count): array
     {
@@ -1053,11 +1028,6 @@ class Upnp_Api
     }
 
     /**
-     * @param $prmPath
-     * @param $prmQuery
-     * @param $start
-     * @param $count
-     * @return array
      */
     public static function _videoChilds($prmPath, $prmQuery, $start, $count): array
     {
@@ -1162,7 +1132,6 @@ class Upnp_Api
     /**
      * @param string $query
      * @param string $context
-     * @return array
      */
     private static function parse_upnp_search_term($query, $context): array
     {
@@ -1224,7 +1193,6 @@ class Upnp_Api
 
     /**
      * Cannot be very precious about this as filtering capability ATM just relates to the kind of search we end up doing
-     * @param $filter
      */
     private static function parse_upnp_filter($filter): string
     {
@@ -1239,9 +1207,6 @@ class Upnp_Api
     }
 
     /**
-     * @param $query
-     * @param $type
-     * @return array
      */
     private static function parse_upnp_searchcriteria($query, $type): array
     {
@@ -1360,11 +1325,6 @@ class Upnp_Api
     }
 
     /**
-     * @param $criteria
-     * @param $filter
-     * @param $start
-     * @param $count
-     * @return array
      */
     public static function _callSearch($criteria, $filter, $start, $count): array
     {
@@ -1447,7 +1407,6 @@ class Upnp_Api
 
     /**
      * @param string|null $title
-     * @return string
      */
     private static function _replaceSpecialSymbols($title): string
     {
@@ -1470,7 +1429,6 @@ class Upnp_Api
     /**
      * @param Artist $artist
      * @param string $parent
-     * @return array
      */
     private static function _itemArtist($artist, $parent): array
     {
@@ -1488,7 +1446,6 @@ class Upnp_Api
     /**
      * @param Tag $tag
      * @param string $parent
-     * @return array
      */
     private static function _itemTag($tag, $parent): array
     {
@@ -1506,7 +1463,6 @@ class Upnp_Api
     /**
      * @param Album $album
      * @param string $parent
-     * @return array
      */
     private static function _itemAlbum($album, $parent): array
     {
@@ -1527,9 +1483,7 @@ class Upnp_Api
     }
 
     /**
-     * @param $playlist
      * @param string $parent
-     * @return array
      */
     private static function _itemPlaylist($playlist, $parent): array
     {
@@ -1546,7 +1500,6 @@ class Upnp_Api
     /**
      * @param Search $playlist
      * @param string $parent
-     * @return array
      */
     private static function _itemSmartPlaylist($playlist, $parent): array
     {
@@ -1563,7 +1516,6 @@ class Upnp_Api
     /**
      * @param Song $song
      * @param string $parent
-     * @return array
      */
     public static function _itemSong($song, $parent): array
     {
@@ -1613,7 +1565,6 @@ class Upnp_Api
     /**
      * @param Live_Stream $radio
      * @param string $parent
-     * @return array
      */
     public static function _itemLiveStream($radio, $parent): array
     {
@@ -1639,7 +1590,6 @@ class Upnp_Api
     /**
      * @param Video $video
      * @param string $parent
-     * @return array
      */
     private static function _itemVideo($video, $parent): array
     {
@@ -1666,9 +1616,7 @@ class Upnp_Api
     }
 
     /**
-     * @param $podcast
      * @param string $parent
-     * @return array
      */
     private static function _itemPodcast($podcast, $parent): array
     {
@@ -1685,7 +1633,6 @@ class Upnp_Api
     /**
      * @param Podcast_Episode $episode
      * @param string $parent
-     * @return array
      */
     private static function _itemPodcastEpisode($episode, $parent): array
     {
@@ -1715,7 +1662,6 @@ class Upnp_Api
     }
 
     /**
-     * @return array
      */
     private static function _getFileTypes(): array
     {

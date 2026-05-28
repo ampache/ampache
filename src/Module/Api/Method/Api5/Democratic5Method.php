@@ -25,13 +25,13 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Json5_Data;
+use Ampache\Module\Api\Xml5_Data;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
 
 /**
  * Class Democratic5Method
@@ -55,8 +55,6 @@ final class Democratic5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function democratic(array $input, User $user): bool
     {

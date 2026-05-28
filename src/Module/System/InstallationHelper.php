@@ -27,9 +27,9 @@ namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Util\Horde_Browser;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Util\Horde_Browser;
 use Exception;
 
 final class InstallationHelper implements InstallationHelperInterface
@@ -678,8 +678,6 @@ final class InstallationHelper implements InstallationHelperInterface
     /**
      * This takes an array of results and re-generates the config file
      * this is used by the installer and by the admin/system page
-     * @param array $current
-     * @return string
      * @throws Exception
      */
     public function generate_config(array $current): string

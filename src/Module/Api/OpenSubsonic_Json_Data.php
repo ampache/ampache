@@ -972,7 +972,6 @@ class OpenSubsonic_Json_Data
      * https://opensubsonic.netlify.app/docs/responses/artistinfo/
      * https://opensubsonic.netlify.app/docs/responses/artistinfo2/
      * Artist info.
-     * @param Artist $artist
      * @param array{
      *     id: ?int,
      *     summary: ?string,
@@ -989,7 +988,6 @@ class OpenSubsonic_Json_Data
      *     rel?: ?string,
      *     mbid?: ?string
      * }> $similars
-     * @param string $elementName
      *@return array{
      *     'biography'?: string,
      *     'musicBrainzId': string,
@@ -2197,7 +2195,7 @@ class OpenSubsonic_Json_Data
      */
     public static function addArtistInfo2(array $response, array $info, Artist $artist, array $similars): array
     {
-        $response['subsonic-response']['artistInfo'] = self::_getArtistInfo($artist, $info, $similars, 'artistInfo2');
+        $response['subsonic-response']['artistInfo2'] = self::_getArtistInfo($artist, $info, $similars, 'artistInfo2');
 
         return $response;
     }
@@ -2433,7 +2431,6 @@ class OpenSubsonic_Json_Data
      *     catalog_id: int,
      *     has_art: int
      * }> $artists
-     * @param int $lastModified
      * @return array{'subsonic-response': array<string, mixed>}
      */
     public static function addIndexes(array $response, array $artists, int $lastModified = 0): array
@@ -2995,7 +2992,6 @@ class OpenSubsonic_Json_Data
      * Podcasts.
      * https://opensubsonic.netlify.app/docs/responses/podcastepisode/
      * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param Podcast_Episode $episode
      * @return array{'subsonic-response': array<string, mixed>}
      */
     public static function addPodcastEpisode(array $response, Podcast_Episode $episode): array
@@ -3338,7 +3334,22 @@ class OpenSubsonic_Json_Data
 
             foreach (explode("\n", html_entity_decode($text)) as $line) {
                 if (!empty($line)) {
-                    $json['line'][] = ['value' => (string)$line];
+                    if (preg_match('/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)$/', $line, $matches)) {
+                        $json['synced'] = true;
+                        $minutes        = (int)$matches[1];
+                        $seconds        = (int)$matches[2];
+                        $centiseconds   = (int)$matches[3];
+                        $milliseconds   = ($minutes * 60 * 1000) + ($seconds * 1000) + ($centiseconds * 10);
+
+                        // Lyrics text
+                        $lyricLine      = trim($matches[4]);
+                        $json['line'][] = [
+                            'start' => $milliseconds,
+                            'value' => $lyricLine,
+                        ];
+                    } else {
+                        $json['line'][] = ['value' => (string)$line];
+                    }
                 }
             }
 
@@ -3487,7 +3498,6 @@ class OpenSubsonic_Json_Data
      * song.
      * https://opensubsonic.netlify.app/docs/responses/song/
      * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param int $song_id
      * @return array{'subsonic-response': array<string, mixed>}
      */
     public static function addSong(array $response, int $song_id): array

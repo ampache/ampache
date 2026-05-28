@@ -25,10 +25,10 @@ declare(strict_types=0);
 
 namespace Ampache\Module\WebDav;
 
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Media;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Sabre\DAV;
 use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\Node;
@@ -95,9 +95,9 @@ class WebDavDirectory extends DAV\Collection
 
         if ($libitem instanceof Media) {
             return new WebDavFile($libitem);
-        } else {
-            return new WebDavDirectory($libitem);
         }
+
+        return new WebDavDirectory($libitem);
     }
 
     /**

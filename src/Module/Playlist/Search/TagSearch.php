@@ -31,7 +31,6 @@ final class TagSearch implements SearchInterface
 {
     /**
      * Handles the generation of the SQL for tag (genre) searches.
-     * @param Search $search
      * @return array{
      *     base: string,
      *     join: array<string, bool>,

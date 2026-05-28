@@ -29,10 +29,10 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
-use Exception;
 use ZipArchive;
 
 final class ZipHandler implements ZipHandlerInterface

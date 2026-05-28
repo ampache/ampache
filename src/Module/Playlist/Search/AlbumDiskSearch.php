@@ -32,7 +32,6 @@ final class AlbumDiskSearch implements SearchInterface
 {
     /**
      * Handles the generation of the SQL for albumDisk searches.
-     * @param Search $search
      * @return array{
      *     base: string,
      *     join: array<string, bool>,

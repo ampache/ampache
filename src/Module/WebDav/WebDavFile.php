@@ -26,8 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\WebDav;
 
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Media;
 use Sabre\DAV;
 
 /**
@@ -76,9 +76,9 @@ class WebDavFile extends DAV\File
                 }
 
                 return $filepointer;
-            } else {
-                debug_event(self::class, 'Catalog associated to the media is not local. This is currently unsupported.', 3);
             }
+            debug_event(self::class, 'Catalog associated to the media is not local. This is currently unsupported.', 3);
+
         } else {
             debug_event(self::class, 'No catalog associated to the media.', 3);
         }

@@ -128,11 +128,7 @@ final class Environment implements EnvironmentInterface
      */
     public function check_mbstring_func_overload(): bool
     {
-        if (ini_get('mbstring.func_overload') > 0) {
-            return false;
-        }
-
-        return true;
+        return (! (ini_get('mbstring.func_overload') > 0));
     }
 
     /**
@@ -145,11 +141,7 @@ final class Environment implements EnvironmentInterface
         $current_memory = ini_get('memory_limit');
         $current_memory = substr($current_memory, 0, strlen((string) $current_memory) - 1);
 
-        if ((int) ($current_memory) < 48) {
-            return false;
-        }
-
-        return true;
+        return (! ((int) ($current_memory) < 48));
     }
 
     /**
@@ -181,11 +173,7 @@ final class Environment implements EnvironmentInterface
         // Make sure it actually worked
         $new_memory = ini_get('memory_limit');
 
-        if ($new_limit != $new_memory) {
-            return false;
-        }
-
-        return true;
+        return (! ($new_limit != $new_memory));
     }
 
     /**
@@ -196,11 +184,7 @@ final class Environment implements EnvironmentInterface
         $current = ini_get('max_execution_time');
         set_time_limit((int) $current + 60);
 
-        if ($current == ini_get('max_execution_time')) {
-            return false;
-        }
-
-        return true;
+        return (! ($current == ini_get('max_execution_time')));
     }
 
     /**

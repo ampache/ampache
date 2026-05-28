@@ -25,16 +25,16 @@ namespace Ampache\Module\Song\Tag;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\Util\UtilityFactoryInterface;
-use Ampache\Module\Util\VaInfo;
 use Psr\Log\LoggerInterface;
 
 final class SongTagWriter implements SongTagWriterInterface
@@ -433,7 +433,6 @@ final class SongTagWriter implements SongTagWriterInterface
     /**
      * @param int|string $description
      * @param array $ndata
-     * @return int|null
      */
     private function search_txxx($description, $ndata): ?int
     {

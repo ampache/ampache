@@ -27,9 +27,9 @@ namespace Ampache\Module\Application\Test;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\Preference;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Repository\Model\Preference;
 use Exception;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -91,11 +91,10 @@ final class ConfigAction implements ApplicationActionInterface
         if (!class_exists('Gettext\Translations')) {
             require_once __DIR__ . '/../../../../templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
-        } else {
-            load_gettext();
-            // Load template
-            require_once __DIR__ . '/../../../../templates/show_test.inc.php';
         }
+        load_gettext();
+        // Load template
+        require_once __DIR__ . '/../../../../templates/show_test.inc.php';
 
         return null;
     }

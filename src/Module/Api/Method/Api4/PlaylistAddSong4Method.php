@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api4;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api4;
 
 /**
  * Class PlaylistAddSong4Method
@@ -54,8 +54,6 @@ final class PlaylistAddSong4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function playlist_add_song(array $input, User $user): bool
     {

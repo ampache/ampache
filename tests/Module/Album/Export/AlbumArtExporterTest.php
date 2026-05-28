@@ -25,17 +25,17 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Album\Export;
 
-use Ampache\Module\Album\Export\Exception\AlbumArtExportException;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Album\Export\Exception\AlbumArtExportException;
+use Ampache\Module\Album\Export\Writer\MetadataWriterInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
-use Ampache\Module\Album\Export\Writer\MetadataWriterInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Mockery\MockInterface;
 use org\bovigo\vfs\vfsStream;
