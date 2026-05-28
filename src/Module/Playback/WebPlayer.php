@@ -248,7 +248,6 @@ class WebPlayer
                 break;
             }
             $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
-
         }
 
         return $addjs;
@@ -268,7 +267,6 @@ class WebPlayer
                 break;
             }
             $addjs .= $callback_container . "playNext(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
-
         }
 
         return $addjs;

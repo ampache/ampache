@@ -81,7 +81,6 @@ function scrub_in($input)
     }
 
     return $results;
-
 }
 
 /**
@@ -915,7 +914,6 @@ function xoutput_from_array(array $array, bool $callback = false, string $type =
     }
 
     return json_encode($array) ?: '';
-
 }
 
 /**

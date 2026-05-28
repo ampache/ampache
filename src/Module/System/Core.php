@@ -332,7 +332,6 @@ class Core
             }
 
             return !(session_id() === '');
-
         }
 
         return false;
