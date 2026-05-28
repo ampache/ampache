@@ -51,16 +51,12 @@ abstract class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod
     // (3) some sort of specific discovery code based on request
     //
     // Either way should return a string representation of the certificate
-    /**
-     */
     abstract protected function fetch_public_cert(&$request);
 
     // Up to the SP to implement this lookup of keys. Possible ideas are:
     // (1) do a lookup in a table of trusted certs keyed off of consumer
     //
     // Either way should return a string representation of the certificate
-    /**
-     */
     abstract protected function fetch_private_cert(&$request);
 
     /**

@@ -1195,7 +1195,6 @@ class Catalog_local extends Catalog
             default:
                 return false;
         }
-
     }
 
     /**
