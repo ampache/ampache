@@ -166,8 +166,6 @@ class SeafileAdapter
 
     // run a function that hits the Seafile API, but catch throttling errors and retry
 
-    /**
-     */
     private function throttle_check($func)
     {
         while (true) {
@@ -198,8 +196,6 @@ class SeafileAdapter
 
     // given a given path & filename, return the "virtual" path string which will be stored in the database
 
-    /**
-     */
     public function to_virtual_path($file): string
     {
         return $this->library->name . '|' . $file->dir . '|' . $file->name;
@@ -254,7 +250,6 @@ class SeafileAdapter
             throw $error;
 
         }
-
     }
 
     /**

@@ -35,8 +35,6 @@ class captcha
         return $captcha->solved();
     }
 
-    /**
-     */
     public static function form(
         string $text = ''
     ): string {

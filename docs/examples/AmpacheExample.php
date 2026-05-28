@@ -111,5 +111,4 @@ class AmpacheExample extends AmpachePlugin
     {
         // usually you would do something here
     }
-
 }

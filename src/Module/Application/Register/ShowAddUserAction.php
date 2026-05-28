@@ -56,8 +56,6 @@ final class ShowAddUserAction implements ApplicationActionInterface
         $this->ui                            = $ui;
     }
 
-    /**
-     */
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Check allow_public_registration

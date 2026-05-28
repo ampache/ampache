@@ -65,8 +65,6 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
 
     // return a single .ttf font filename
 
-    /**
-     */
     public function font()
     {
         $fonts = [/*"FreeMono.ttf"*/];

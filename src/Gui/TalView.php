@@ -55,8 +55,6 @@ final class TalView implements TalViewInterface
         return $this;
     }
 
-    /**
-     */
     public function setContext(string $key, $context): TalViewInterface
     {
         $this->getEngine()->set($key, $context);
