@@ -261,7 +261,7 @@ final class ArtistSearch implements SearchInterface
                     // combine these as they all do the same thing just different tables
                     $looking      = str_replace('my_flagged_', '', $rule[0]);
                     $column       = ($looking == 'artist') ? 'id' : $looking;
-                    $my_type      = ($looking === 'album' && AmpConfig::get('album_group')) ? 'album_disk' : $looking;
+                    $my_type      = ($looking === 'album' && !AmpConfig::get('album_group')) ? 'album_disk' : $looking;
                     $operator_sql = ((int) $operator_sql == 0) ? 'IS NULL' : 'IS NOT NULL';
                     // played once per user
                     if (!array_key_exists('my_flagged_', $table)) {
