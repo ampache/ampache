@@ -3332,6 +3332,8 @@ class OpenSubsonic_Json_Data
                 'line' => [],
             ];
 
+            $synced = [];
+            $lines  = [];
             foreach (explode("\n", html_entity_decode($text)) as $line) {
                 if (!empty($line)) {
                     if (preg_match('/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)$/', $line, $matches)) {
@@ -3342,15 +3344,21 @@ class OpenSubsonic_Json_Data
                         $milliseconds   = ($minutes * 60 * 1000) + ($seconds * 1000) + ($centiseconds * 10);
 
                         // Lyrics text
-                        $lyricLine      = trim($matches[4]);
-                        $json['line'][] = [
+                        $lyricLine = trim($matches[4]);
+                        $synced[]  = [
                             'start' => $milliseconds,
                             'value' => $lyricLine,
                         ];
                     } else {
-                        $json['line'][] = ['value' => (string)$line];
+                        $lines[] = ['value' => (string)$line];
                     }
                 }
+            }
+
+            if ($synced !== [] || $lines !== []) {
+                $json['line'] = ($json['synced'])
+                    ? $synced
+                    : $lines;
             }
 
             return $json;
