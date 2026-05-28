@@ -48,8 +48,6 @@ class OAuthServer
         $this->data_store = $data_store;
     }
 
-    /**
-     */
     public function add_signature_method($signature_method)
     {
         $this->signature_methods[$signature_method->get_name()] = $signature_method;

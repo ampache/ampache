@@ -177,8 +177,6 @@ class OAuthUtil
         return $parsed_parameters;
     }
 
-    /**
-     */
     public static function build_http_query($params): string
     {
         if (!$params) {

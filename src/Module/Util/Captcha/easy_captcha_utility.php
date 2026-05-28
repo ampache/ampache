@@ -35,8 +35,6 @@ use Ampache\Module\System\Core;
 class easy_captcha_utility
 {
     // determine usable temp directory
-    /**
-     */
     public static function tmp()
     {
         return current(array_filter( // filter by writability
@@ -221,8 +219,6 @@ END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END;
 
     // response javascript
 
-    /**
-     */
     public static function js_rpc($yes)
     {
         $yes         = $yes ? 1 : 0;
