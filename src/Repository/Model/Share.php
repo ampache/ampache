@@ -149,8 +149,6 @@ class Share extends database_object
         return $this->getObject() !== null;
     }
 
-    /**
-     */
     private function getObject(): ?library_item
     {
         if ($this->object === null) {
