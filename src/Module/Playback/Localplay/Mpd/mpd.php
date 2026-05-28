@@ -527,7 +527,6 @@ class mpd
             }
             $command = self::COMMAND_VOLUME;
             $value   = $value - $this->status['volume'];
-
         }
 
         $response = $this->SendCommand($command, $value);

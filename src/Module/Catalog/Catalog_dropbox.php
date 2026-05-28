@@ -366,13 +366,11 @@ class Catalog_dropbox extends Catalog
                     return true;
                 }
                 debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this catalog.", 5);
-
             } elseif (count($this->get_gather_types('video')) > 0) {
                 if ($is_video_file && $this->insert_video($dropbox, $path)) {
                     return true;
                 }
                 debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this video catalog.", 5);
-
             }
         } else {
             debug_event('dropbox.catalog', "read " . $path . " ignored, 0 bytes", 5);

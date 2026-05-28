@@ -387,7 +387,6 @@ class AmpacheXbmc extends localplay_controller
                 );
             } elseif ($status['state'] == 'stop') {
                 $this->_xbmc->Player->Open(['item' => ['playlistid' => $this->_playlistId]]);
-
             }
 
             return true;

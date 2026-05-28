@@ -159,8 +159,8 @@ class Upload
 
                 return true;
             }
-            debug_event(self::class, 'Cannot copy the file to target directory. Please check write access.', 1);
 
+            debug_event(self::class, 'Cannot copy the file to target directory. Please check write access.', 1);
         } else {
             debug_event(self::class, 'No catalog target upload configured.', 1);
         }

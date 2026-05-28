@@ -232,7 +232,6 @@ class SeafileAdapter
             }
 
             return null;
-
         }
         try {
             $directory = $this->throttle_check(function () use ($path) {
@@ -247,8 +246,8 @@ class SeafileAdapter
 
                 return null;
             }
-            throw $error;
 
+            throw $error;
         }
     }
 
