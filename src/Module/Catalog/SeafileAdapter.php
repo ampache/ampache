@@ -250,7 +250,6 @@ class SeafileAdapter
             throw $error;
 
         }
-
     }
 
     /**
