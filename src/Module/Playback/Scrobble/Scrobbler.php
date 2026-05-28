@@ -179,17 +179,14 @@ class Scrobbler
                     $this->error_msg = 'Did not receive a valid response';
 
                     return null;
-
                 }
                 $this->error_msg = $xml->error;
 
                 return null;
-
             }
             $this->error_msg = 'Did not receive a valid response';
 
             return null;
-
         }
         $this->error_msg = 'Need a token to call getSession';
 
@@ -281,7 +278,6 @@ class Scrobbler
             $this->error_msg = $xml->error;
 
             return false;
-
         }
         $this->error_msg = 'Did not receive a valid response';
 
@@ -320,7 +316,6 @@ class Scrobbler
             $this->error_msg = $xml->error;
 
             return false;
-
         }
         $this->error_msg = 'Did not receive a valid response';
 
