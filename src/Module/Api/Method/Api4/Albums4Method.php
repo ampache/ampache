@@ -64,7 +64,6 @@ final class Albums4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function albums(array $input, User $user): void
     {

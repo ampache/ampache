@@ -61,8 +61,6 @@ final class Videos6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function videos(array $input, User $user): bool
     {

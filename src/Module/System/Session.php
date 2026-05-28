@@ -575,7 +575,6 @@ final class Session implements SessionInterface
     /**
      * get_geolocation
      * Get session geolocation.
-     * @param string $sid
      * @return array{
      *     latitude?: float,
      *     longitude?: float,

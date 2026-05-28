@@ -74,8 +74,6 @@ final class List6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function list(array $input, User $user): bool
     {

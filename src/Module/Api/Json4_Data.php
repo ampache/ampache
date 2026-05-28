@@ -141,7 +141,6 @@ class Json4_Data
      *
      * This returns the formatted 'tags' array for a JSON document
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
-     * @param bool $simple
      * @return array<array{id?: string, name?: string}>
      */
     private static function tags_array(array $tags, bool $simple = false): array
@@ -181,8 +180,6 @@ class Json4_Data
      *
      * @param list<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'
-     * @param User $user
-     * @param string $auth
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"
      */
@@ -307,9 +304,6 @@ class Json4_Data
      *
      * @param list<int|string> $artists
      * @param string[] $include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @return array|string return JSON
      */
     public static function artists(array $artists, array $include, User $user, string $auth, bool $encode = true): array|string
@@ -382,10 +376,6 @@ class Json4_Data
      *
      * @param list<int|string> $albums
      * @param string[] $include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
-     * @return array|string
      */
     public static function albums(array $albums, array $include, User $user, string $auth, bool $encode = true): array|string
     {
@@ -458,10 +448,6 @@ class Json4_Data
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
      * @param list<int|string> $playlists Playlist id's to include
-     * @param User $user
-     * @param string $auth
-     * @param bool $songs
-     * @return string
      */
     public static function playlists(array $playlists, User $user, string $auth, bool $songs = false): string
     {
@@ -640,10 +626,7 @@ class Json4_Data
      * This returns podcasts to the user, in a pretty json document with the information
      *
      * @param list<int|string> $podcasts Podcast id's to include
-     * @param User $user
-     * @param string $auth
      * @param bool $episodes include the episodes of the podcast
-     * @return string
      */
     public static function podcasts(array $podcasts, User $user, string $auth, bool $episodes = false): string
     {
@@ -711,9 +694,6 @@ class Json4_Data
      * This returns podcasts to the user, in a pretty json document with the information
      *
      * @param list<int|string> $podcast_episodes Podcast_Episode id's to include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast_episode"
      */
@@ -772,10 +752,7 @@ class Json4_Data
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
      * @param list<int|string> $songs
-     * @param User $user
-     * @param string $auth
      * @param bool $encode return JSON encoded string
-     * @return array|string
      */
     public static function songs(array $songs, User $user, string $auth, bool $encode = true): array|string
     {
@@ -889,9 +866,6 @@ class Json4_Data
      * This builds the JSON document for displaying video objects
      *
      * @param int[]|string[] $videos
-     * @param User $user
-     * @param string $auth
-     * @return string
      */
     public static function videos(array $videos, User $user, string $auth): string
     {
@@ -940,9 +914,6 @@ class Json4_Data
      *     object_id: int,
      *     track_id: int,
      *     track: int}> $object_ids Object IDs
-     * @param User $user
-     * @param string $auth
-     * @return string
      */
     public static function democratic(array $object_ids, User $user, string $auth): string
     {

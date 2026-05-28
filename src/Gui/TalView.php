@@ -56,7 +56,6 @@ final class TalView implements TalViewInterface
     }
 
     /**
-     * @param mixed $context
      */
     public function setContext(string $key, $context): TalViewInterface
     {

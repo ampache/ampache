@@ -44,8 +44,6 @@ class easy_captcha_dxy_wave
 
     /**
      * easy_captcha_dxy_wave constructor.
-     * @param $max_x
-     * @param $max_y
      */
     public function __construct(
         $max_x,
@@ -60,8 +58,6 @@ class easy_captcha_dxy_wave
     // calculate source pixel position with overlapping sinus x/y-displacement
 
     /**
-     * @param $x
-     * @param $y
      * @return array
      */
     public function dxy($x, $y)
@@ -80,9 +76,6 @@ class easy_captcha_dxy_wave
     // array of values with random start/end values
 
     /**
-     * @param $max
-     * @param $a
-     * @param $b
      * @return array
      */
     public function from_to_rand($max, $a, $b)
@@ -100,8 +93,6 @@ class easy_captcha_dxy_wave
     // returns random value in given interval
 
     /**
-     * @param $a
-     * @param $b
      * @return float|int
      */
     public function real_rand($a, $b)

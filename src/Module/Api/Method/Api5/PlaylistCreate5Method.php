@@ -55,8 +55,6 @@ final class PlaylistCreate5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function playlist_create(array $input, User $user): bool
     {

@@ -69,9 +69,6 @@ final class PodcastEpisodes6Method implements MethodInterface
      * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
      * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
-     * @param GatekeeperInterface $gatekeeper
-     * @param ResponseInterface $response
-     * @param ApiOutputInterface $output
      * @param array{
      *     filter?: string,
      *     offset?: string,
@@ -81,8 +78,6 @@ final class PodcastEpisodes6Method implements MethodInterface
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return ResponseInterface
      * @throws RequestParamMissingException|ResultEmptyException
      */
     public function handle(
@@ -112,7 +107,6 @@ final class PodcastEpisodes6Method implements MethodInterface
                 sprintf(T_('Bad Request: %s'), 'filter')
             );
         }
-
 
         $browse = $this->modelFactory->createBrowse(null, false);
 

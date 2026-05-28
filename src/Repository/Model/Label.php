@@ -245,7 +245,6 @@ class Label extends database_object implements library_item
 
     /**
      * Search for direct children of an object
-     * @param string $name
      * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
@@ -388,8 +387,6 @@ class Label extends database_object implements library_item
      * get_display
      * This returns a csv formatted version of the labels that we are given
      * @param string[] $labels
-     * @param bool $link
-     * @return string
      */
     public static function get_display(array $labels, bool $link = false): string
     {

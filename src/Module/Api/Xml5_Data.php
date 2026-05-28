@@ -135,7 +135,6 @@ class Xml5_Data
      *
      * @param string $string success message
      * @param array<string, string> $return_data
-     * @return string
      */
     public static function success(string $string, array $return_data = []): string
     {
@@ -296,11 +295,8 @@ class Xml5_Data
      *
      * @param list<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node.
      * @param bool $include include episodes from podcasts or tracks in a playlist
-     * @return string
      */
     public static function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
     {
@@ -424,8 +420,6 @@ class Xml5_Data
      * This returns licenses to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $licenses Licence id's assigned to songs and artists
-     * @param User $user
-     * @return string
      */
     public static function licenses(array $licenses, User $user): string
     {
@@ -452,8 +446,6 @@ class Xml5_Data
      * This returns labels to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $labels
-     * @param User $user
-     * @return string
      */
     public static function labels(array $labels, User $user): string
     {
@@ -482,9 +474,7 @@ class Xml5_Data
      * This returns live_streams to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $live_streams
-     * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
-     * @return string
      */
     public static function live_streams(array $live_streams, User $user, bool $full_xml = true): string
     {
@@ -511,8 +501,6 @@ class Xml5_Data
      * This returns genres to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $tags Genre id's to include
-     * @param User $user
-     * @return string
      */
     public static function genres(array $tags, User $user): string
     {
@@ -537,10 +525,7 @@ class Xml5_Data
      *
      * @param list<int|string> $artists Artist id's to include
      * @param string[] $include Array of other items to include.
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node.
-     * @return string
      */
     public static function artists(array $artists, array $include, User $user, string $auth, bool $full_xml = true): string
     {
@@ -586,10 +571,7 @@ class Xml5_Data
      *
      * @param list<int|string> $albums Album id's to include
      * @param string[] $include Array of other items to include.
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node.
-     * @return string
      */
     public static function albums(array $albums, array $include, User $user, string $auth, bool $full_xml = true): string
     {
@@ -642,9 +624,6 @@ class Xml5_Data
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
      * @param list<int|string> $playlists Playlist id's to include
-     * @param User $user
-     * @param string $auth
-     * @return string
      */
     public static function playlists(array $playlists, User $user, string $auth): string
     {
@@ -701,9 +680,7 @@ class Xml5_Data
      * This returns shares to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $shares Share id's to include
-     * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
-     * @return string
      */
     public static function shares(array $shares, User $user, bool $full_xml = true): string
     {
@@ -748,8 +725,6 @@ class Xml5_Data
      * This returns catalogs to the user, in a pretty xml document with the information
      *
      * @param int[] $catalogs group of catalog id's
-     * @param User $user
-     * @return string
      */
     public static function catalogs(array $catalogs, User $user): string
     {
@@ -775,10 +750,7 @@ class Xml5_Data
      * This returns podcasts to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $podcasts Podcast id's to include
-     * @param User $user
-     * @param string $auth
      * @param bool $episodes include the episodes of the podcast //optional
-     * @return string
      */
     public static function podcasts(array $podcasts, User $user, string $auth, bool $episodes = false): string
     {
@@ -819,10 +791,7 @@ class Xml5_Data
      * This returns podcasts to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $podcast_episodes Podcast_Episode id's to include
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node.
-     * @return string
      */
     public static function podcast_episodes(array $podcast_episodes, User $user, string $auth, bool $full_xml = true): string
     {
@@ -852,10 +821,6 @@ class Xml5_Data
      *
      * This returns an xml document from an array of song ids.
      * @param list<int|string> $songs
-     * @param User $user
-     * @param string $auth
-     * @param bool $full_xml
-     * @return string
      */
     public static function songs(array $songs, User $user, string $auth, bool $full_xml = true): string
     {
@@ -930,10 +895,7 @@ class Xml5_Data
      * This builds the xml document for displaying video objects
      *
      * @param list<int|string> $videos Video id's to include
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node.
-     * @return string
      */
     public static function videos(array $videos, User $user, string $auth, bool $full_xml = true): string
     {
@@ -969,9 +931,6 @@ class Xml5_Data
      *     object_id: int,
      *     track_id: int,
      *     track: int}> $object_ids Object IDs
-     * @param User $user
-     * @param string $auth
-     * @return string
      */
     public static function democratic(array $object_ids, User $user, string $auth): string
     {

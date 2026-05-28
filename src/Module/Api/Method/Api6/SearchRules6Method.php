@@ -48,8 +48,6 @@ final class SearchRules6Method
      * filter = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video'
      *
      * @param array<string, mixed> $input
-     * @param User $user
-     * @return bool
      */
     public static function search_rules(array $input, User $user): bool
     {

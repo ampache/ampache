@@ -60,7 +60,6 @@ final class ApplicationRunner
     }
 
     /**
-     * @param ServerRequestInterface $request
      * @param array<string, string> $action_list A dict containing request keys and handler class names
      * @param string $default_action The request key for the default action
      */

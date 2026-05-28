@@ -52,7 +52,6 @@ final class Songs3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function songs(array $input, User $user): void
     {

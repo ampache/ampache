@@ -345,7 +345,6 @@ class Video extends database_object implements
 
     /**
      * Search for direct children of an object
-     * @param string $name
      * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
@@ -486,8 +485,6 @@ class Video extends database_object implements
 
     /**
      * get_transcode_settings
-     * @param string|null $target
-     * @param string|null $player
      * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
      * @return array{format?: string, command?: string}
      */
@@ -1037,8 +1034,6 @@ class Video extends database_object implements
     /**
      * update_played
      * sets the played flag
-     * @param bool $new_played
-     * @param int $video_id
      */
     public static function update_played(bool $new_played, int $video_id): void
     {

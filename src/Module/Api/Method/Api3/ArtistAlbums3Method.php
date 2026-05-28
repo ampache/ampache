@@ -48,7 +48,6 @@ final class ArtistAlbums3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function artist_albums(array $input, User $user): void
     {

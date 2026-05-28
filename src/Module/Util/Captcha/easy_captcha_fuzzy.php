@@ -38,7 +38,6 @@ class easy_captcha_fuzzy extends easy_captcha
     // compare
 
     /**
-     * @param $input
      * @return bool
      */
     public function solved($input = null)

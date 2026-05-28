@@ -60,8 +60,6 @@ final class PlaylistRemoveSong5Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function playlist_remove_song(array $input, User $user): bool
     {

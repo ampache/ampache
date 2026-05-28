@@ -122,9 +122,6 @@ class Xml8_Data
      *
      * @param int|string $code Error code
      * @param string $string Error message
-     * @param string $action
-     * @param string $type
-     * @return string
      */
     public static function error(int|string $code, string $string, string $action, string $type): string
     {
@@ -141,7 +138,6 @@ class Xml8_Data
      *
      * @param string $string success message
      * @param array<string, string> $return_data
-     * @return string
      */
     public static function success(string $string, array $return_data = []): string
     {
@@ -198,10 +194,6 @@ class Xml8_Data
      * output_xml_from_array
      * This takes a one dimensional array and creates a XML document from it. For
      * use primarily by the ajax mojo.
-     * @param array $array
-     * @param bool $callback
-     * @param string $type
-     * @return string
      */
     public static function output_xml_from_array(array $array, bool $callback = false, string $type = ''): string
     {
@@ -355,9 +347,7 @@ class Xml8_Data
      *
      * @param list<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $object_type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
-     * @param User $user
      * @param bool $include include children from objects that have them
-     * @return string
      */
     public static function index(array $objects, string $object_type, User $user, bool $include = false): string
     {
@@ -494,11 +484,8 @@ class Xml8_Data
      *
      * @param list<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $object_type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node.
      * @param bool $include include episodes from podcasts or tracks in a playlist
-     * @return string
      */
     public static function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
     {
@@ -640,9 +627,6 @@ class Xml8_Data
      *
      * @param array{string?: list<int|string>} $searches Array of object_ids by object type
      * @param array{string?: int} $counts Array of counts for each object type
-     * @param User $user
-     * @param string $auth
-     * @return string
      */
     public static function searches(array $searches, array $counts, User $user, string $auth): string
     {
@@ -793,11 +777,6 @@ class Xml8_Data
      * This takes a name array of objects and return the data in XML format
      *
      * @param list<array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
-     * @param int|null $parent_id
-     * @param string $parent_type
-     * @param string $child_type
-     * @param int|null $catalog_id
-     * @return string
      */
     public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
     {
@@ -831,8 +810,6 @@ class Xml8_Data
      * This returns licenses to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $objects Licence id's assigned to songs and artists
-     * @param User $user
-     * @return string
      */
     public static function licenses(array $objects, User $user): string
     {
@@ -861,8 +838,6 @@ class Xml8_Data
      * This returns labels to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $objects
-     * @param User $user
-     * @return string
      */
     public static function labels(array $objects, User $user): string
     {
@@ -894,9 +869,6 @@ class Xml8_Data
      * This returns live_streams to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $objects
-     * @param User $user
-     * @param bool $full_xml
-     * @return string
      */
     public static function live_streams(array $objects, User $user, bool $full_xml = true): string
     {
@@ -922,8 +894,6 @@ class Xml8_Data
      * This returns genres to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $objects Genre id's to include
-     * @param User $user
-     * @return string
      */
     public static function genres(array $objects, User $user): string
     {
@@ -960,10 +930,7 @@ class Xml8_Data
      *
      * @param list<int|string> $objects Artist id's to include
      * @param string[] $include Array of other items to include.
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node.
-     * @return string
      */
     public static function artists(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
@@ -1007,10 +974,7 @@ class Xml8_Data
      *
      * @param list<int|string> $objects Album id's to include
      * @param string[] $include Array of other items to include.
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node.
-     * @return string
      */
     public static function albums(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
@@ -1074,10 +1038,6 @@ class Xml8_Data
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
      * @param list<int|string> $objects Playlist id's to include
-     * @param User $user
-     * @param string $auth
-     * @param bool $songs
-     * @return string
      */
     public static function playlists(array $objects, User $user, string $auth, bool $songs = false): string
     {
@@ -1156,9 +1116,7 @@ class Xml8_Data
      * This returns shares to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $objects Share id's to include
-     * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
-     * @return string
      */
     public static function shares(array $objects, User $user, bool $full_xml = true): string
     {
@@ -1226,9 +1184,7 @@ class Xml8_Data
      * This returns catalogs to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $objects group of catalog id's
-     * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
-     * @return string
      */
     public static function catalogs(array $objects, User $user, bool $full_xml = true): string
     {
@@ -1256,10 +1212,7 @@ class Xml8_Data
      * This returns podcasts to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $objects Podcast id's to include
-     * @param User $user
-     * @param string $auth
      * @param bool $episodes include the episodes of the podcast //optional
-     * @return string
      */
     public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false): string
     {
@@ -1302,10 +1255,7 @@ class Xml8_Data
      * This returns podcasts to the user, in a pretty xml document with the information
      *
      * @param list<int|string> $objects Podcast_Episode id's to include
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node.
-     * @return string
      */
     public static function podcast_episodes(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
@@ -1338,10 +1288,6 @@ class Xml8_Data
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
      * @param list<int|string> $objects
-     * @param User $user
-     * @param string $auth
-     * @param bool $full_xml
-     * @return string
      */
     public static function songs(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
@@ -1426,8 +1372,6 @@ class Xml8_Data
      * This returns an array of song tags populated from an array of song ids.
      *
      * @param list<int|string> $objects
-     * @param string $auth
-     * @return string
      */
     public static function song_tags(array $objects, string $auth): string
     {
@@ -1532,10 +1476,6 @@ class Xml8_Data
      * This builds the xml document for displaying video objects
      *
      * @param list<int|string> $objects Video id's to include
-     * @param User $user
-     * @param string $auth
-     * @param bool $full_xml
-     * @return string
      */
     public static function videos(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
@@ -1573,9 +1513,6 @@ class Xml8_Data
      *     object_id: int,
      *     track_id: int,
      *     track: int}> $object_ids Object IDs
-     * @param User $user
-     * @param string $auth
-     * @return string
      */
     public static function democratic(array $object_ids, User $user, string $auth): string
     {

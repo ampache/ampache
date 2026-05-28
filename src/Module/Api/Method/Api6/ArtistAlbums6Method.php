@@ -60,8 +60,6 @@ final class ArtistAlbums6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function artist_albums(array $input, User $user): bool
     {

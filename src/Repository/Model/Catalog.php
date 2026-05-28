@@ -229,8 +229,6 @@ abstract class Catalog extends database_object
     /**
      * add_to_catalog
      * @param null|array<string, string|bool> $options
-     * @param null|Interactor $interactor
-     * @return int
      */
     abstract public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int;
 
@@ -275,7 +273,6 @@ abstract class Catalog extends database_object
     abstract public function get_f_info(): string;
 
     /**
-     * @param Podcast_Episode|Song|Video $media
      * @return null|array{
      *     file_path: string,
      *     file_name: string,
@@ -933,8 +930,6 @@ abstract class Catalog extends database_object
      * set_update_info
      *
      * write the total_counts to update_info
-     * @param string $key
-     * @param float|int $value
      */
     public static function set_update_info(string $key, float|int $value): void
     {
@@ -978,7 +973,6 @@ abstract class Catalog extends database_object
      * get_all_catalogs
      *
      * Pull all the current catalogs and return an array of ids of what you find
-     * @param string $filter_type
      * @return int[]
      *
      * @see CatalogLoader
@@ -1007,9 +1001,6 @@ abstract class Catalog extends database_object
      * get_catalogs
      *
      * Pull all the current catalogs for your user and return an array of ids
-     * @param string $filter_type
-     * @param int|null $user_id
-     * @param bool $query
      * @return int[]
      *
      * @see CatalogLoader
@@ -1253,7 +1244,6 @@ abstract class Catalog extends database_object
      * This returns an hash with the #'s for the different
      * objects that are associated with this catalog. This is used
      * to build the stats box, it also calculates time.
-     * @param int|null $catalog_id
      * @return array<string, int|string>
      */
     public static function get_stats(?int $catalog_id = 0): array
@@ -1419,7 +1409,6 @@ abstract class Catalog extends database_object
      * get_server_counts
      *
      * This returns the current number of songs, videos, albums, artists, items, etc across all catalogs on the server
-     * @param int $user_id
      * @return array<string, int>
      */
     public static function get_server_counts(int $user_id): array
@@ -1494,7 +1483,6 @@ abstract class Catalog extends database_object
      * count_catalog
      *
      * This returns the current number of songs, videos, podcast_episodes in this catalog.
-     * @param int $catalog_id
      * @return array{items: int, time: int, size: int}
      */
     public static function count_catalog(int $catalog_id): array
@@ -1558,7 +1546,6 @@ abstract class Catalog extends database_object
      *
      * This returns an array of ids of albums that have songs in this
      * catalog's
-     * @param string $filter
      * @return int[]
      */
     public function get_album_ids(string $filter = ''): array
@@ -1584,7 +1571,6 @@ abstract class Catalog extends database_object
      *
      * This returns an array of ids of albums that have songs in this
      * catalog's
-     * @param string $filter
      * @return int[]
      */
     public function get_playlist_ids(string $filter = ''): array
@@ -1609,7 +1595,6 @@ abstract class Catalog extends database_object
      * get_video_ids
      *
      * This returns an array of ids of videos in this catalog
-     * @param string $type
      * @return int[]
      */
     public function get_video_ids(string $type = ''): array
@@ -1634,7 +1619,6 @@ abstract class Catalog extends database_object
     /**
      * get_videos
      * @param int[]|null $catalogs
-     * @param string $type
      * @return Video[]
      */
     public static function get_videos(?array $catalogs = null, string $type = ''): array
@@ -1681,9 +1665,6 @@ abstract class Catalog extends database_object
      *
      * Get each array of fullname's for a object type
      * @param int[]|string[] $objects
-     * @param string $table
-     * @param string $sort
-     * @param string $order
      * @return array{id: int|string, name: string}[]
      */
     public static function get_name_array(array $objects, string $table, string $sort = '', string $order = 'ASC'): array
@@ -1789,7 +1770,6 @@ abstract class Catalog extends database_object
      * get_artist_ids
      *
      * This returns an array of ids of artist that have songs in this catalog
-     * @param string $filter
      * @return int[]
      */
     public function get_artist_ids(string $filter = ''): array
@@ -1829,9 +1809,6 @@ abstract class Catalog extends database_object
      * get_artists
      *
      * This returns an array of artists that have songs in the catalogs parameter
-     * @param array|null $catalogs
-     * @param int $size
-     * @param int $offset
      * @return Artist[]
      */
     public static function get_artists(?array $catalogs = null, int $size = 0, int $offset = 0): array
@@ -1886,8 +1863,6 @@ abstract class Catalog extends database_object
      *
      * Get media id's from a base folder path
      *
-     * @param string $folder_path
-     * @param string $media_type
      * @return int[]
      */
     public static function get_ids_from_folder(string $folder_path, string $media_type): array
@@ -1908,7 +1883,6 @@ abstract class Catalog extends database_object
      * get_label_ids
      *
      * This returns an array of ids of labels
-     * @param string $filter
      * @return int[]
      */
     public function get_label_ids(string $filter): array
@@ -1927,8 +1901,6 @@ abstract class Catalog extends database_object
 
     /**
      * get all artists or artist children of a catalog id (Used for WebDav)
-     * @param string $name
-     * @param int $catalog_id
      * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public static function get_children(string $name, int $catalog_id = 0): array
@@ -1959,8 +1931,6 @@ abstract class Catalog extends database_object
      * get_albums
      *
      * Returns an array of ids of albums that have songs in the catalogs parameter
-     * @param int $size
-     * @param int $offset
      * @param int[]|null $catalogs
      * @return int[]
      */
@@ -1999,8 +1969,6 @@ abstract class Catalog extends database_object
      * get_albums_by_artist
      *
      * Returns an array of ids of albums that have songs in the catalogs parameter, grouped by artist
-     * @param int $size
-     * @param int $offset
      * @param int[]|null $catalogs
      * @return int[]
      * @oaram int $offset
@@ -2345,7 +2313,6 @@ abstract class Catalog extends database_object
      *
      * This runs through all of the labels and refreshes information from musicbrainz
      * @param int[] $object_list
-     * @param string $object_type
      */
     public function update_from_external(array $object_list, string $object_type): void
     {
@@ -4380,8 +4347,6 @@ abstract class Catalog extends database_object
 
     /**
      * Get all tags from all Songs from [type] (artist, album, ...)
-     * @param string $type
-     * @param int $object_id
      * @return string[]
      */
     protected static function getSongTags(string $type, int $object_id): array
@@ -4450,7 +4415,6 @@ abstract class Catalog extends database_object
 
     /**
      * process_action
-     * @param string $action
      * @param null|int[] $catalogs
      * @param null|array<string, bool> $options
      * @noinspection PhpMissingBreakStatementInspection
@@ -4863,10 +4827,6 @@ abstract class Catalog extends database_object
     /**
      * This is run on every individual element of the search before it is put together
      * It removes / and \ and windows-incompatible characters (if you use -w|--windows)
-     * @param int|string|null $string
-     * @param string $return
-     * @param bool $windowsCompat
-     * @return string
      */
     public static function sort_clean_name(int|string|null $string, string $return = '', bool $windowsCompat = false): string
     {

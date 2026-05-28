@@ -74,14 +74,14 @@ function scrub_in($input)
 {
     if (!is_array($input)) {
         return stripslashes(htmlspecialchars(strip_tags((string) $input), ENT_NOQUOTES, AmpConfig::get('site_charset', 'UTF-8')));
-    } else {
-        $results = [];
-        foreach ($input as $item) {
-            $results[] = scrub_in((string) $item);
-        }
-
-        return $results;
     }
+    $results = [];
+    foreach ($input as $item) {
+        $results[] = scrub_in((string) $item);
+    }
+
+    return $results;
+
 }
 
 /**
@@ -395,14 +395,11 @@ function check_config_values(array $conf): bool
     if (!isset($conf['session_cookiesecure'])) {
         return false;
     }
-    if (
+
+    return ! (
         isset($conf['debug']) &&
         !isset($conf['log_path'])
-    ) {
-        return false;
-    }
-
-    return true;
+    );
 }
 
 /**
@@ -594,7 +591,6 @@ function debug_event($type, $message, $level, $username = ''): bool
 }
 
 /**
- * @param string $action
  * @param int[]|null $catalogs
  * @param array<string, bool>|null $options
  */
@@ -916,9 +912,10 @@ function xoutput_from_array(array $array, bool $callback = false, string $type =
         $outputnode = Core::get_request('xoutputnode');
 
         return (string)($array[$outputnode] ?? '');
-    } else {
-        return json_encode($array) ?: '';
     }
+
+    return json_encode($array) ?: '';
+
 }
 
 /**
@@ -1009,7 +1006,6 @@ function T_(string $msgid): string
  * @param string $original
  * @param string $plural
  * @param int|string|float $value
- * @return string
  */
 function nT_($original, $plural, $value): string
 {

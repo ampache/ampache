@@ -49,8 +49,6 @@ final class PlaylistDelete4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function playlist_delete(array $input, User $user): bool
     {

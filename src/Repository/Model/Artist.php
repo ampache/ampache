@@ -150,9 +150,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /**
      * this attempts to build a cache of the data from the passed albums all in one query
      * @param int[] $ids
-     * @param bool $extra
-     * @param string $limit_threshold
-     * @return bool
      */
     public static function build_cache(array $ids, bool $extra = false, string $limit_threshold = ''): bool
     {
@@ -556,7 +553,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Search for direct children of an object
-     * @param string $name
      * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
@@ -1028,7 +1024,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Update artist associated user_id.
-     * @param int $user_id
      */
     public function update_artist_user(int $user_id): void
     {
@@ -1038,8 +1033,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Update artist associated user.
-     * @param string $name
-     * @param string|null $prefix
      */
     public function update_artist_name(string $name, ?string $prefix): void
     {
@@ -1114,7 +1107,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Update artist last_update time.
-     * @param int $object_id
      */
     public static function set_last_update(int $object_id): void
     {

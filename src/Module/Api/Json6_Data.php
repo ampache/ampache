@@ -109,7 +109,6 @@ class Json6_Data
      *
      * Set the total count of returned objects
      *
-     * @param int $count
      */
     public static function set_count(int $count): void
     {
@@ -149,7 +148,6 @@ class Json6_Data
      *
      * @param string $string success message
      * @param array<string, string> $return_data
-     * @return string
      */
     public static function success(string $string, array $return_data = []): string
     {
@@ -226,7 +224,6 @@ class Json6_Data
      *
      * @param list<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
-     * @param User $user
      * @param bool $include (add child id's of the object (in sub array by type))
      * @return string JSON Object "catalog"|"artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
@@ -368,8 +365,6 @@ class Json6_Data
      *
      * @param list<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
-     * @param User $user
-     * @param string $auth
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
@@ -782,9 +777,6 @@ class Json6_Data
      *
      * @param list<int|string> $objects Artist id's to include
      * @param string[] $include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @return array <int, array{
      *     "id": string,
      *     "name": null|string,
@@ -866,8 +858,6 @@ class Json6_Data
     /**
      * @param list<int|string> $objects Artist id's to include
      * @param string[] $include
-     * @param User $user
-     * @param string $auth
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "artist"
      */
@@ -895,9 +885,6 @@ class Json6_Data
      *
      * @param list<int|string> $objects Album id's to include
      * @param string[] $include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @return array<int, array{
      *     "id": string,
      *     "name": null|string,
@@ -1023,9 +1010,6 @@ class Json6_Data
      *
      * @param list<int|string> $objects Album id's to include
      * @param string[] $include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "album"
      */
@@ -1056,9 +1040,6 @@ class Json6_Data
      * playlists_array
      *
      * @param list<int|string> $objects Playlist id's to include
-     * @param User $user
-     * @param string $auth
-     * @param bool $songs
      * @return array<int, array{
      *     "id": string,
      *     "name": null|string,
@@ -1168,9 +1149,6 @@ class Json6_Data
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
      * @param list<int|string> $objects Playlist id's to include
-     * @param User $user
-     * @param string $auth
-     * @param bool $songs
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "playlist"
      */
@@ -1403,8 +1381,6 @@ class Json6_Data
      * podcasts_array
      *
      * @param list<int|string> $objects Podcast id's to include
-     * @param User $user
-     * @param string $auth
      * @param bool $episodes include the episodes of the podcast
      * @return array<int, array{
      *     "id": string,
@@ -1493,8 +1469,6 @@ class Json6_Data
      * This returns podcasts to the user, in a pretty json document with the information
      *
      * @param list<int|string> $objects Podcast id's to include
-     * @param User $user
-     * @param string $auth
      * @param bool $episodes include the episodes of the podcast
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "podcast"
@@ -1526,9 +1500,6 @@ class Json6_Data
      * podcast_episodes_array
      *
      * @param list<int|string> $objects Podcast_Episode id's to include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @return array<int, array{
      *     "id": string,
      *     "title": null|string,
@@ -1630,9 +1601,6 @@ class Json6_Data
      * This returns podcasts to the user, in a pretty json document with the information
      *
      * @param list<int|string> $objects Podcast_Episode id's to include
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "podcast_episode"
      */
@@ -1662,8 +1630,6 @@ class Json6_Data
      * songs_array
      *
      * @param list<int|string> $objects
-     * @param User $user
-     * @param string $auth
      * @return array<mixed>
      */
     public static function songs_array(array $objects, User $user, string $auth): array
@@ -1804,9 +1770,6 @@ class Json6_Data
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
      * @param list<int|string> $objects
-     * @param User $user
-     * @param string $auth
-     * @param bool $encode
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "song"
      */
@@ -1838,7 +1801,6 @@ class Json6_Data
      * This returns an array of song tags populated from an array of song ids.
      *
      * @param list<int|string> $objects
-     * @param string $auth
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "song"
      */
@@ -1940,8 +1902,6 @@ class Json6_Data
      * videos_array
      *
      * @param list<int|string> $objects Video id's to include
-     * @param User $user
-     * @param string $auth
      * @return array<int, array{
      *     "id": string,
      *     "title": null|string,
@@ -2002,8 +1962,6 @@ class Json6_Data
      * videos_string
      *
      * @param list<int|string> $objects Video id's to include
-     * @param User $user
-     * @param string $auth
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "video"
      */
@@ -2040,10 +1998,7 @@ class Json6_Data
      *    object_id: int,
      *    track_id: int,
      *    track: int}> $object_ids Object IDs
-     * @param User $user
-     * @param string $auth
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string
      */
     public static function democratic(array $object_ids, User $user, string $auth, bool $object = true): string
     {

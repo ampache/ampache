@@ -132,12 +132,12 @@ final class ConsumeAction implements ApplicationActionInterface
                 $_REQUEST[$share->object_type . '_id'] = $share->object_id;
 
                 return $this->dic->get(DownloadAction::class)->run($request, $gatekeeper);
-            } else {
-                $_REQUEST['action'] = $share->object_type;
-                $_REQUEST['id']     = $share->object_id;
-
-                return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
             }
+            $_REQUEST['action'] = $share->object_type;
+            $_REQUEST['id']     = $share->object_id;
+
+            return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
+
         } elseif ($action == 'stream') {
             $this->ui->show(
                 'show_share.inc.php',

@@ -50,7 +50,6 @@ final class Videos3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function videos(array $input, User $user): void
     {

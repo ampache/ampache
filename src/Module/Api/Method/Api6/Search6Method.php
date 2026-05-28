@@ -32,7 +32,7 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 
 /**
- * Class SearchMethod
+ * Class Search6Method
  */
 final class Search6Method
 {
@@ -67,8 +67,6 @@ final class Search6Method
      * limit           = (integer) //optional
      *
      * @param array<string, mixed> $input
-     * @param User $user
-     * @return bool
      */
     public static function search(array $input, User $user): bool
     {

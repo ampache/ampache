@@ -53,8 +53,6 @@ final class PodcastEpisodeDelete4Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function podcast_episode_delete(array $input, User $user): bool
     {

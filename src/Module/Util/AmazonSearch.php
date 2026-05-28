@@ -66,9 +66,6 @@ class AmazonSearch
 
     /**
      * Class Constructor
-     * @param $public_key
-     * @param $private_key
-     * @param $associate_tag
      * @param string $base_url_param
      */
     public function __construct(
@@ -185,7 +182,6 @@ class AmazonSearch
      * getProxyConfig
      * Build the proxy options array.
      * Returning the array of proxy config options.
-     * @return array
      */
     public function getProxyConfig(): array
     {
@@ -208,7 +204,6 @@ class AmazonSearch
      *
      * @param array $terms The search terms to include within the query.
      * @param string $type The type of result desired.
-     * @return array
      */
     public function search($terms, $type = 'Music'): array
     {
@@ -268,7 +263,6 @@ class AmazonSearch
      *
      * @param string $asin The 'Amazon standard Identification Number'
      * @param string $type The category of results desired from the web service.
-     * @return array
      */
     public function lookup($asin, $type = 'Music'): array
     {
@@ -339,9 +333,6 @@ class AmazonSearch
 
     /**
      * Start XML Element.
-     * @param $parser
-     * @param $tag
-     * @param $attributes
      */
     public function startElement($parser, $tag, $attributes): void
     {
@@ -364,8 +355,6 @@ class AmazonSearch
 
     /**
      * CDATA handler.
-     * @param $parser
-     * @param $cdata
      */
     public function cdata($parser, $cdata): void
     {
@@ -394,8 +383,6 @@ class AmazonSearch
 
     /**
      * End XML Element
-     * @param $parser
-     * @param $tag
      */
     public function endElement($parser, $tag): void
     {

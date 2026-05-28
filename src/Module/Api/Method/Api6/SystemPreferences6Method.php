@@ -50,8 +50,6 @@ final class SystemPreferences6Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
-     * @return bool
      */
     public static function system_preferences(array $input, User $user): bool
     {

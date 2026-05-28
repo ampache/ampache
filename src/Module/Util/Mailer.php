@@ -97,11 +97,7 @@ final class Mailer implements MailerInterface
      */
     public static function is_mail_enabled(): bool
     {
-        if (AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode')) {
-            return true;
-        }
-
-        return false;
+        return (bool)(AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode'));
     }
 
     /**
@@ -144,7 +140,6 @@ final class Mailer implements MailerInterface
      * get_users
      * This returns an array of userids for people who have e-mail
      * addresses based on the passed filter
-     * @param string $filter
      * @return array<int, array{id: string, fullname: ?string, username: string, email: string}>
      */
     public static function get_users(string $filter): array
@@ -255,11 +250,10 @@ final class Mailer implements MailerInterface
         $retval = $mail->send();
         if ($retval === true) {
             return true;
-        } else {
-            debug_event(self::class, 'Did not send mail. ErrorInfo: ' . $mail->ErrorInfo, 5);
-
-            return false;
         }
+        debug_event(self::class, 'Did not send mail. ErrorInfo: ' . $mail->ErrorInfo, 5);
+
+        return false;
     }
 
     /**

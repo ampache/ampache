@@ -73,7 +73,6 @@ class Xml3_Data
      *
      * This takes an int and changes the offset
      *
-     * @param int|string $offset
      */
     public static function set_offset(int|string $offset): void
     {
@@ -294,10 +293,7 @@ class Xml3_Data
      *
      * @param list<int|string> $artists
      * @param string[] $include Array of other items to include
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
-     * @return string
      */
     public static function artists(array $artists, array $include, User $user, string $auth, bool $full_xml = true): string
     {
@@ -354,10 +350,7 @@ class Xml3_Data
      *
      * @param list<int|string> $albums
      * @param string[] $include Array of other items to include
-     * @param User $user
-     * @param string $auth
      * @param bool $full_xml whether to return a full XML document or just the node
-     * @return string
      */
     public static function albums(array $albums, array $include, User $user, string $auth, bool $full_xml = true): string
     {
@@ -546,9 +539,6 @@ class Xml3_Data
      *     object_id: int,
      *     track_id: int,
      *     track: int}> $object_ids Object IDs
-     * @param User $user
-     * @param string $auth
-     * @return string
      */
     public static function democratic(array $object_ids, User $user, string $auth): string
     {

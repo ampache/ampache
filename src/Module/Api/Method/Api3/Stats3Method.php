@@ -55,7 +55,6 @@ final class Stats3Method
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @param User $user
      */
     public static function stats(array $input, User $user): void
     {
