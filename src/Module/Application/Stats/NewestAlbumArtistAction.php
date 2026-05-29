@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class NewestAlbumArtistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'newest_album_artist';
+    public const string REQUEST_KEY = 'newest_album_artist';
 
     public function __construct(
         private UiInterface $ui,

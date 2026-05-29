@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class UserflagAlbumDiskAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'userflag_album_disk';
+    public const string REQUEST_KEY = 'userflag_album_disk';
 
     public function __construct(
         private UiInterface $ui,

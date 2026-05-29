@@ -39,7 +39,7 @@ use Teapot\StatusCode;
 
 final class UpdateInstanceAction extends AbstractLocalPlayAction
 {
-    public const REQUEST_KEY = 'update_instance';
+    public const string REQUEST_KEY = 'update_instance';
 
     private ConfigContainerInterface $configContainer;
 

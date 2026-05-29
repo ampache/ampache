@@ -41,9 +41,9 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistAdd8Method
 {
-    public const ACTION = 'playlist_add';
+    public const string ACTION = 'playlist_add';
 
-    public const REST_ACTION = 'playlist_add_edit';
+    public const string REST_ACTION = 'playlist_add_edit';
 
     /**
      * playlist_add

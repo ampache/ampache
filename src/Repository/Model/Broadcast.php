@@ -34,7 +34,7 @@ use Ampache\Module\Util\Ui;
 
 class Broadcast extends database_object implements library_item
 {
-    protected const DB_TABLENAME = 'broadcast';
+    protected const string DB_TABLENAME = 'broadcast';
 
     public int $id = 0;
 

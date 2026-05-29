@@ -39,7 +39,7 @@ use Psr\Log\LoggerInterface;
 
 final class ShowSongAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_song';
+    public const string REQUEST_KEY = 'show_song';
 
     private UiInterface $ui;
 

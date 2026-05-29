@@ -36,7 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class RemoveDuplicatesAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'remove_duplicates';
+    public const string REQUEST_KEY = 'remove_duplicates';
 
     private RequestParserInterface $requestParser;
 

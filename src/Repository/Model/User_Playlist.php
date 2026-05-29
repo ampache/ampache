@@ -35,7 +35,7 @@ use Ampache\Module\System\Dba;
  */
 class User_Playlist extends database_object
 {
-    protected const DB_TABLENAME = 'user_playlist';
+    protected const string DB_TABLENAME = 'user_playlist';
 
     public int $user;
 

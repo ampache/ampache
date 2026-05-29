@@ -32,6 +32,7 @@ use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
 use Ampache\Config\Init\Exception\GetTextNotAvailableException;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\EnvironmentInterface;
+use JetBrains\PhpStorm\NoReturn;
 
 /**
  * This class performs the complete init process to build a working ampache application environment
@@ -79,6 +80,7 @@ final class Init
         }
     }
 
+    #[NoReturn]
     private function redirect(string $destination): void
     {
         $this->environment->isSsl() ? $protocol = 'https' : $protocol = 'http';

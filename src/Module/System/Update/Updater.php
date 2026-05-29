@@ -39,7 +39,7 @@ use Psr\Container\ContainerInterface;
  */
 final class Updater implements UpdaterInterface
 {
-    private const MINIMUM_UPDATABLE_VERSION = 350008;
+    private const int MINIMUM_UPDATABLE_VERSION = 350008;
 
     private UpdateHelperInterface $updateHelper;
 

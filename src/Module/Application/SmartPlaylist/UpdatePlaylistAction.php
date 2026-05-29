@@ -35,7 +35,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UpdatePlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_playlist';
+    public const string REQUEST_KEY = 'update_playlist';
 
     private UiInterface $ui;
 

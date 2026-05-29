@@ -41,7 +41,7 @@ use LogicException;
  */
 class Podcast extends database_object implements library_item, CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'podcast';
+    protected const string DB_TABLENAME = 'podcast';
 
     private int $id = 0;
 

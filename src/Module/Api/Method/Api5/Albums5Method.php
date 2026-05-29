@@ -36,7 +36,7 @@ use Ampache\Repository\Model\User;
  */
 final class Albums5Method
 {
-    public const ACTION = 'albums';
+    public const string ACTION = 'albums';
 
     /**
      * MINIMUM_API_VERSION=380001

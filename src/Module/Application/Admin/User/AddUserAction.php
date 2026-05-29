@@ -43,7 +43,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class AddUserAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'add_user';
+    public const string REQUEST_KEY = 'add_user';
 
     private UiInterface $ui;
 

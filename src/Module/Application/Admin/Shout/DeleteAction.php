@@ -39,7 +39,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class DeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'delete';
+    public const string REQUEST_KEY = 'delete';
 
     public function __construct(
         private UiInterface $ui,

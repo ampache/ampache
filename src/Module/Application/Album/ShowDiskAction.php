@@ -43,7 +43,7 @@ use Psr\Log\LoggerInterface;
 
 final class ShowDiskAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_disk';
+    public const string REQUEST_KEY = 'show_disk';
 
     private ModelFactoryInterface $modelFactory;
 

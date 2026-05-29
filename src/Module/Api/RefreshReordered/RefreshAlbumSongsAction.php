@@ -34,7 +34,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class RefreshAlbumSongsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'refresh_album_songs';
+    public const string REQUEST_KEY = 'refresh_album_songs';
 
     private RequestParserInterface $requestParser;
 

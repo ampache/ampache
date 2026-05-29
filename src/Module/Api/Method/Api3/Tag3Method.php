@@ -33,7 +33,7 @@ use Ampache\Repository\Model\User;
  */
 final class Tag3Method
 {
-    public const ACTION = 'tag';
+    public const string ACTION = 'tag';
 
     /**
      * tag

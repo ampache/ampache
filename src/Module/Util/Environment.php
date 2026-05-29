@@ -34,7 +34,7 @@ use PDO;
  */
 final class Environment implements EnvironmentInterface
 {
-    public const PHP_VERSION = 8.5;
+    public const float PHP_VERSION = 8.5;
 
     public function check(): bool
     {

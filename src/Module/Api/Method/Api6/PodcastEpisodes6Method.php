@@ -40,7 +40,7 @@ use Psr\Http\Message\ResponseInterface;
 
 final class PodcastEpisodes6Method implements MethodInterface
 {
-    public const ACTION = 'podcast_episodes';
+    public const string ACTION = 'podcast_episodes';
 
     private ModelFactoryInterface $modelFactory;
 

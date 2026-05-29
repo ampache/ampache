@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class Rate4Method
 {
-    public const ACTION = 'rate';
+    public const string ACTION = 'rate';
 
     /**
      * rate

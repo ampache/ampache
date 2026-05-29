@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class PopularSongAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'popular_song';
+    public const string REQUEST_KEY = 'popular_song';
 
     public function __construct(
         private UiInterface $ui,

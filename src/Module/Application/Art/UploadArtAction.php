@@ -34,7 +34,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UploadArtAction extends AbstractArtAction
 {
-    public const REQUEST_KEY = 'upload_art';
+    public const string REQUEST_KEY = 'upload_art';
 
     private ModelFactoryInterface $modelFactory;
 

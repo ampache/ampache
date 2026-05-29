@@ -42,9 +42,9 @@ use Ampache\Repository\Model\User;
  */
 final class SystemUpdate8Method
 {
-    public const ACTION = 'system_update';
+    public const string ACTION = 'system_update';
 
-    public const REST_ACTION = 'update';
+    public const string REST_ACTION = 'update';
 
     /**
      * system_update

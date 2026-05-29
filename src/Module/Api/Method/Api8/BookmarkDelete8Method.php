@@ -42,9 +42,9 @@ use Ampache\Repository\Model\Video;
  */
 final class BookmarkDelete8Method
 {
-    public const ACTION = 'bookmark_delete';
+    public const string ACTION = 'bookmark_delete';
 
-    public const REST_ACTION = 'bookmarks_delete';
+    public const string REST_ACTION = 'bookmarks_delete';
 
     /**
      * bookmark_delete

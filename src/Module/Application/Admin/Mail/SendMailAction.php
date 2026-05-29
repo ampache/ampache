@@ -42,7 +42,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class SendMailAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'send_mail';
+    public const string REQUEST_KEY = 'send_mail';
 
     private RequestParserInterface $requestParser;
 

@@ -40,7 +40,7 @@ use Teapot\StatusCode;
 
 final class WriteConfigAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'write_config';
+    public const string REQUEST_KEY = 'write_config';
 
     private ConfigContainerInterface $configContainer;
 

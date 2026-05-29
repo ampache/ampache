@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class SearchGroup8Method
 {
-    public const ACTION = 'search_group';
+    public const string ACTION = 'search_group';
 
     /**
      * search_group

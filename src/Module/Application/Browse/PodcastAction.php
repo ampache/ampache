@@ -36,7 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class PodcastAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'podcast';
+    public const string REQUEST_KEY = 'podcast';
 
     private ModelFactoryInterface $modelFactory;
 

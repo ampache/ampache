@@ -39,7 +39,7 @@ use Psr\Log\LoggerInterface;
 
 final class ShowEditPlaylistAction extends AbstractEditAction
 {
-    public const REQUEST_KEY = 'show_edit_playlist';
+    public const string REQUEST_KEY = 'show_edit_playlist';
 
     private ResponseFactoryInterface $responseFactory;
 

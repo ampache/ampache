@@ -42,7 +42,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class DefaultAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'default';
+    public const string REQUEST_KEY = 'default';
 
     public InstallationHelperInterface $installationHelper;
 

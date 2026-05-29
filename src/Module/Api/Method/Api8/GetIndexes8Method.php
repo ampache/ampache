@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class GetIndexes8Method
 {
-    public const ACTION = 'get_indexes';
+    public const string ACTION = 'get_indexes';
 
     /**
      * get_indexes

@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class HighestVideoAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'highest_video';
+    public const string REQUEST_KEY = 'highest_video';
 
     private UiInterface $ui;
 

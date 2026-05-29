@@ -46,7 +46,7 @@ use Psr\Log\LoggerInterface;
  */
 final class VaInfo implements VaInfoInterface
 {
-    private const DEFAULT_INFO = [
+    private const array DEFAULT_INFO = [
         'albumartist' => null,
         'album' => null,
         'artist' => null,
@@ -110,9 +110,9 @@ final class VaInfo implements VaInfoInterface
         'year' => null
     ];
 
-    private const MBID_REGEX = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
+    private const string MBID_REGEX = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
 
-    private const ISRC_REGEX = '/[A-Z]{2}-?[A-Z0-9]{3}-?\d{2}-?\d{5}/';
+    private const string ISRC_REGEX = '/[A-Z]{2}-?[A-Z0-9]{3}-?\d{2}-?\d{5}/';
 
     public string $encoding = '';
 

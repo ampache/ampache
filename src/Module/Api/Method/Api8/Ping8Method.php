@@ -40,7 +40,7 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class Ping8Method
 {
-    public const ACTION = 'ping';
+    public const string ACTION = 'ping';
 
     /**
      * ping

@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class UserflagVideoAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'userflag_video';
+    public const string REQUEST_KEY = 'userflag_video';
 
     public function __construct(
         private UiInterface $ui,

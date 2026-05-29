@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class FindArtAction extends AbstractArtAction
 {
-    public const REQUEST_KEY = 'find_art';
+    public const string REQUEST_KEY = 'find_art';
 
     private ArtCollectorInterface $artCollector;
 

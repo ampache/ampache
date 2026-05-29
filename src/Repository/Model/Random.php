@@ -39,7 +39,7 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 class Random
 {
-    public const VALID_TYPES = [
+    public const array VALID_TYPES = [
         'album',
         'artist',
         'song',

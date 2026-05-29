@@ -36,7 +36,7 @@ use Ampache\Repository\Model\User;
 
 final class PlaylistExporter implements PlaylistExporterInterface
 {
-    public const VALID_FILE_EXTENSIONS = [
+    public const array VALID_FILE_EXTENSIONS = [
         'm3u',
         'xspf',
         'pls',

@@ -40,7 +40,7 @@ use Ampache\Repository\Model\User;
  */
 final class Download8Method
 {
-    public const ACTION = 'download';
+    public const string ACTION = 'download';
 
     /**
      * download

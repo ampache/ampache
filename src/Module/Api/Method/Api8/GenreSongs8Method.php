@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class GenreSongs8Method
 {
-    public const ACTION = 'genre_songs';
+    public const string ACTION = 'genre_songs';
 
     /**
      * genre_songs

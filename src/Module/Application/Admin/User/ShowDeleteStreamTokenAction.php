@@ -37,7 +37,7 @@ final class ShowDeleteStreamTokenAction extends AbstractUserAction
 {
     use UserAdminApplicationTrait;
 
-    public const REQUEST_KEY = 'show_delete_streamtoken';
+    public const string REQUEST_KEY = 'show_delete_streamtoken';
 
     private UiInterface $ui;
 

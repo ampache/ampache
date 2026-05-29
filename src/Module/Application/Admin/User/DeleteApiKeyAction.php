@@ -40,7 +40,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class DeleteApiKeyAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'delete_apikey';
+    public const string REQUEST_KEY = 'delete_apikey';
 
     private RequestParserInterface $requestParser;
 

@@ -35,7 +35,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class RecentSongAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'recent_song';
+    public const string REQUEST_KEY = 'recent_song';
 
     private UiInterface $ui;
 

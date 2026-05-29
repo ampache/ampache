@@ -36,7 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UserAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'user';
+    public const string REQUEST_KEY = 'user';
 
     private UiInterface $ui;
 

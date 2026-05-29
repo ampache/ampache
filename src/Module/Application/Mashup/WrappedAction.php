@@ -39,7 +39,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class WrappedAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'wrapped';
+    public const string REQUEST_KEY = 'wrapped';
 
     public function __construct(
         private ConfigContainerInterface $configContainer,

@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowLocalplayAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_localplay';
+    public const string REQUEST_KEY = 'show_localplay';
 
     private UiInterface $ui;
 

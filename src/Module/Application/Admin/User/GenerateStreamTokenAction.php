@@ -41,7 +41,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class GenerateStreamTokenAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'generate_streamtoken';
+    public const string REQUEST_KEY = 'generate_streamtoken';
 
     private RequestParserInterface $requestParser;
 

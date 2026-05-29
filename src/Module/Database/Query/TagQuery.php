@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Query;
 
 final class TagQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'alpha_match',
         'equal',
         'exact_match',

@@ -32,7 +32,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class CleanCatalogAction extends AbstractCatalogAction
 {
-    public const REQUEST_KEY = 'clean_catalog';
+    public const string REQUEST_KEY = 'clean_catalog';
 
     private ConfigContainerInterface $configContainer;
 

@@ -40,15 +40,15 @@ use Ratchet\MessageComponentInterface;
 
 class Broadcast_Server implements MessageComponentInterface
 {
-    public const BROADCAST_SONG               = "SONG";
-    public const BROADCAST_SONG_POSITION      = "SONG_POSITION";
-    public const BROADCAST_PLAYER_PLAY        = "PLAYER_PLAY";
-    public const BROADCAST_REGISTER_BROADCAST = "REGISTER_BROADCAST";
-    public const BROADCAST_REGISTER_LISTENER  = "REGISTER_LISTENER";
-    public const BROADCAST_ENDED              = "ENDED";
-    public const BROADCAST_INFO               = "INFO";
-    public const BROADCAST_NB_LISTENERS       = "NB_LISTENERS";
-    public const BROADCAST_AUTH_SID           = "AUTH_SID";
+    public const string BROADCAST_SONG               = "SONG";
+    public const string BROADCAST_SONG_POSITION      = "SONG_POSITION";
+    public const string BROADCAST_PLAYER_PLAY        = "PLAYER_PLAY";
+    public const string BROADCAST_REGISTER_BROADCAST = "REGISTER_BROADCAST";
+    public const string BROADCAST_REGISTER_LISTENER  = "REGISTER_LISTENER";
+    public const string BROADCAST_ENDED              = "ENDED";
+    public const string BROADCAST_INFO               = "INFO";
+    public const string BROADCAST_NB_LISTENERS       = "NB_LISTENERS";
+    public const string BROADCAST_AUTH_SID           = "AUTH_SID";
 
     public $verbose;
 

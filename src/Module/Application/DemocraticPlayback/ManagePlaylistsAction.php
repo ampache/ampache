@@ -40,7 +40,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ManagePlaylistsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'manage_playlists';
+    public const string REQUEST_KEY = 'manage_playlists';
 
     private UiInterface $ui;
 

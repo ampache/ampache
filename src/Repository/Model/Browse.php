@@ -46,7 +46,7 @@ use Ampache\Repository\ShoutRepositoryInterface;
  */
 class Browse extends Query
 {
-    private const BROWSE_TYPES = [
+    private const array BROWSE_TYPES = [
         'album_disk',
         'album',
         'artist',

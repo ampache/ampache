@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class SystemPreference6Method
 {
-    public const ACTION = 'system_preference';
+    public const string ACTION = 'system_preference';
 
     /**
      * system_preference

@@ -35,7 +35,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowAction extends AbstractUploadAction
 {
-    public const REQUEST_KEY = 'show';
+    public const string REQUEST_KEY = 'show';
 
     private UiInterface $ui;
 

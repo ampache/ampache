@@ -61,7 +61,7 @@ class Song extends database_object implements
     CatalogItemInterface,
     MetadataEnabledInterface
 {
-    protected const DB_TABLENAME = 'song';
+    protected const string DB_TABLENAME = 'song';
 
     public int $id = 0;
 

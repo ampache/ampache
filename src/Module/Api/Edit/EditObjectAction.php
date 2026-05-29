@@ -45,7 +45,7 @@ use Psr\Log\LoggerInterface;
 
 final class EditObjectAction extends AbstractEditAction
 {
-    public const REQUEST_KEY = 'edit_object';
+    public const string REQUEST_KEY = 'edit_object';
 
     private LabelRepositoryInterface $labelRepository;
 

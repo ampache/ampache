@@ -41,7 +41,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 
 final class GenerateConfigAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'generate_config';
+    public const string REQUEST_KEY = 'generate_config';
 
     private ConfigContainerInterface $configContainer;
 

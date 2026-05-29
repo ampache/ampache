@@ -40,9 +40,9 @@ use Exception;
  */
 class Rating extends database_object
 {
-    protected const DB_TABLENAME = 'rating';
+    protected const string DB_TABLENAME = 'rating';
 
-    private const RATING_TYPES = [
+    private const array RATING_TYPES = [
         'album_disk',
         'album',
         'artist',

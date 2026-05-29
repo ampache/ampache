@@ -40,7 +40,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class AddLabelAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'add_label';
+    public const string REQUEST_KEY = 'add_label';
 
     private UiInterface $ui;
 

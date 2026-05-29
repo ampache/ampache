@@ -39,7 +39,7 @@ use Ampache\Repository\UserActivityRepositoryInterface;
  */
 final class FriendsTimeline8Method
 {
-    public const ACTION = 'friends_timeline';
+    public const string ACTION = 'friends_timeline';
 
     /**
      * friends_timeline

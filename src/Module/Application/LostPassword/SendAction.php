@@ -39,7 +39,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class SendAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'send';
+    public const string REQUEST_KEY = 'send';
 
     private ConfigContainerInterface $configContainer;
 

@@ -41,7 +41,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  */
 final class Album8Method implements MethodInterface
 {
-    public const ACTION = 'album';
+    public const string ACTION = 'album';
 
     private ModelFactoryInterface $modelFactory;
 

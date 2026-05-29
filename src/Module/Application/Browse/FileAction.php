@@ -34,7 +34,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class FileAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'file';
+    public const string REQUEST_KEY = 'file';
 
     private ModelFactoryInterface $modelFactory;
 

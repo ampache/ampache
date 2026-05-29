@@ -43,9 +43,9 @@ use Ampache\Repository\Model\Video;
  */
 final class BookmarkCreate8Method
 {
-    public const ACTION = 'bookmark_create';
+    public const string ACTION = 'bookmark_create';
 
-    public const REST_ACTION = 'bookmarks_create';
+    public const string REST_ACTION = 'bookmarks_create';
 
     /**
      * bookmark_create

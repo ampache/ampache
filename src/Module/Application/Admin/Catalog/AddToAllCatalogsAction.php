@@ -32,7 +32,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class AddToAllCatalogsAction extends AbstractCatalogAction
 {
-    public const REQUEST_KEY = 'add_to_all_catalogs';
+    public const string REQUEST_KEY = 'add_to_all_catalogs';
 
     private ConfigContainerInterface $configContainer;
 

@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class SearchAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'search';
+    public const string REQUEST_KEY = 'search';
 
     private RequestParserInterface $requestParser;
 

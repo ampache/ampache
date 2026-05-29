@@ -40,7 +40,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  */
 final class Albums6Method implements MethodInterface
 {
-    public const ACTION = 'albums';
+    public const string ACTION = 'albums';
 
     private StreamFactoryInterface $streamFactory;
 

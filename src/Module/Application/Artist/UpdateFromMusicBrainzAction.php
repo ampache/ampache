@@ -40,7 +40,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UpdateFromMusicBrainzAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_from_musicbrainz';
+    public const string REQUEST_KEY = 'update_from_musicbrainz';
 
     private ConfigContainerInterface $configContainer;
 

@@ -44,7 +44,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UpdateRecordAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_record';
+    public const string REQUEST_KEY = 'update_record';
 
     private UiInterface $ui;
 

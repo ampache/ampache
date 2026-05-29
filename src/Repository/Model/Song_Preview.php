@@ -36,7 +36,7 @@ use Ampache\Plugin\PluginSongPreviewInterface;
 
 class Song_Preview extends database_object implements Media, playable_item
 {
-    protected const DB_TABLENAME = 'song_preview';
+    protected const string DB_TABLENAME = 'song_preview';
 
     public int $id = 0;
 

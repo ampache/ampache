@@ -39,7 +39,7 @@ use Ampache\Repository\ShoutRepositoryInterface;
  */
 final class LastShouts8Method
 {
-    public const ACTION = 'last_shouts';
+    public const string ACTION = 'last_shouts';
 
     /**
      * last_shouts

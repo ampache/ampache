@@ -42,7 +42,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final readonly class ShowEditAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_edit';
+    public const string REQUEST_KEY = 'show_edit';
 
     public function __construct(
         private UiInterface $ui,

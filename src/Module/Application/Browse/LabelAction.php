@@ -36,7 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class LabelAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'label';
+    public const string REQUEST_KEY = 'label';
 
     private ModelFactoryInterface $modelFactory;
 

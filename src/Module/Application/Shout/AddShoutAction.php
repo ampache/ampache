@@ -46,7 +46,7 @@ use Teapot\StatusCode;
  */
 final class AddShoutAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'add_shout';
+    public const string REQUEST_KEY = 'add_shout';
 
     private ResponseFactoryInterface $responseFactory;
 

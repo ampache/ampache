@@ -37,7 +37,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class ShowUserAvatarAction extends AbstractShowAction
 {
-    public const REQUEST_ACTION = 'show_user_avatar';
+    public const string REQUEST_ACTION = 'show_user_avatar';
 
     public function __construct(
         private UserRepositoryInterface $userRepository,

@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Query;
 
 final class UserQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'access',
         'alpha_match',
         'disabled',

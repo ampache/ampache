@@ -98,13 +98,13 @@ abstract class AbstractMigration implements MigrationInterface
      * @param float|int|string $default
      */
     protected function updatePreferences(
-        string $name,
-        string $description,
-        $default,
-        int $level,
-        string $type,
-        string $category,
-        ?string $subcategory = null
+        string           $name,
+        string           $description,
+        float|int|string $default,
+        int              $level,
+        string           $type,
+        string           $category,
+        ?string          $subcategory = null
     ): void {
         Preference::insert($name, $description, $default, $level, $type, $category, $subcategory, true);
 

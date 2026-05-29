@@ -45,7 +45,7 @@ use Teapot\StatusCode;
 
 final class UpdateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update';
+    public const string REQUEST_KEY = 'update';
 
     private TalFactoryInterface $talFactory;
 

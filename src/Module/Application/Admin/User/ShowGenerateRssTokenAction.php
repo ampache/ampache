@@ -37,7 +37,7 @@ final class ShowGenerateRssTokenAction extends AbstractUserAction
 {
     use UserAdminApplicationTrait;
 
-    public const REQUEST_KEY = 'show_generate_rsstoken';
+    public const string REQUEST_KEY = 'show_generate_rsstoken';
 
     private UiInterface $ui;
 

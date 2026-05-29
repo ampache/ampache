@@ -47,7 +47,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class ClearCacheAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'clear_cache';
+    public const string REQUEST_KEY = 'clear_cache';
 
     private ConfigContainerInterface $configContainer;
 

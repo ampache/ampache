@@ -37,9 +37,9 @@ use Ampache\Repository\Model\User;
  */
 final class SmartlistDelete6Method
 {
-    public const ACTION = 'smartlist_delete';
+    public const string ACTION = 'smartlist_delete';
 
-    public const REST_ACTION = 'smartlists_delete';
+    public const string REST_ACTION = 'smartlists_delete';
 
     /**
      * smartlist_delete

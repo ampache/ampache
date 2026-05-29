@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Query;
 
 final class LiveStreamQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'alpha_match',
         'catalog_enabled',
         'catalog',

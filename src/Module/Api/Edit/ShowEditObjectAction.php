@@ -40,7 +40,7 @@ use Psr\Log\LoggerInterface;
 
 final class ShowEditObjectAction extends AbstractEditAction
 {
-    public const REQUEST_KEY = 'show_edit_object';
+    public const string REQUEST_KEY = 'show_edit_object';
 
     private ResponseFactoryInterface $responseFactory;
 

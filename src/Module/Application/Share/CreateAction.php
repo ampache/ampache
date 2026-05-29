@@ -45,7 +45,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class CreateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'create';
+    public const string REQUEST_KEY = 'create';
 
     public function __construct(
         private ConfigContainerInterface $configContainer,

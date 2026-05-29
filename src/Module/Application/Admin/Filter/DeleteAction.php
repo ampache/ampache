@@ -33,7 +33,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class DeleteAction extends AbstractFilterAction
 {
-    public const REQUEST_KEY = 'delete';
+    public const string REQUEST_KEY = 'delete';
 
     private UiInterface $ui;
 

@@ -32,7 +32,7 @@ use WpOrg\Requests\Requests;
 
 final class LastFmQuery implements LastFmQueryInterface
 {
-    private const API_URL = 'http://ws.audioscrobbler.com/2.0/?method=';
+    private const string API_URL = 'http://ws.audioscrobbler.com/2.0/?method=';
 
     private ConfigContainerInterface $configContainer;
 

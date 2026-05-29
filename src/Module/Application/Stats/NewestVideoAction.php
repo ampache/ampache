@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class NewestVideoAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'newest_video';
+    public const string REQUEST_KEY = 'newest_video';
 
     public function __construct(
         private UiInterface $ui,

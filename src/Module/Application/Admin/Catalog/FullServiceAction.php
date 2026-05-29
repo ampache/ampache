@@ -33,7 +33,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class FullServiceAction extends AbstractCatalogAction
 {
-    public const REQUEST_KEY = 'full_service';
+    public const string REQUEST_KEY = 'full_service';
 
     private ConfigContainerInterface $configContainer;
 

@@ -35,7 +35,7 @@ use Psr\Log\LoggerInterface;
 
 final class RandomAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'random';
+    public const string REQUEST_KEY = 'random';
 
     private ConfigContainerInterface $configContainer;
 

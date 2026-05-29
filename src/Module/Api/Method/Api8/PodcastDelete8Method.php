@@ -46,9 +46,9 @@ use Psr\Http\Message\ResponseInterface;
  */
 final class PodcastDelete8Method implements MethodInterface
 {
-    public const ACTION = 'podcast_delete';
+    public const string ACTION = 'podcast_delete';
 
-    public const REST_ACTION = 'podcasts_delete';
+    public const string REST_ACTION = 'podcasts_delete';
 
     private PodcastDeleterInterface $podcastDeleter;
 

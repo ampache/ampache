@@ -40,7 +40,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class TagAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'tag';
+    public const string REQUEST_KEY = 'tag';
     private ConfigContainerInterface $configContainer;
 
     private RequestParserInterface $requestParser;

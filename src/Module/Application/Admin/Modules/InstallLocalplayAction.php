@@ -42,7 +42,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class InstallLocalplayAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'install_localplay';
+    public const string REQUEST_KEY = 'install_localplay';
 
     private UiInterface $ui;
 

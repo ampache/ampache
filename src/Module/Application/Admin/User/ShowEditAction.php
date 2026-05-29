@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class ShowEditAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'show_edit';
+    public const string REQUEST_KEY = 'show_edit';
 
     private UiInterface $ui;
 

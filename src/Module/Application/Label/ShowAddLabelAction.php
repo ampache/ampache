@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowAddLabelAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_add_label';
+    public const string REQUEST_KEY = 'show_add_label';
 
     private ConfigContainerInterface $configContainer;
 

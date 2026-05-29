@@ -35,7 +35,7 @@ use Psr\Log\LoggerInterface;
 
 final class LastFmCollectorModule implements CollectorModuleInterface
 {
-    private const API_URL = 'http://ws.audioscrobbler.com/2.0/';
+    private const string API_URL = 'http://ws.audioscrobbler.com/2.0/';
 
     private ConfigContainerInterface $configContainer;
 

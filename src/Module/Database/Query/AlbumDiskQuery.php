@@ -32,7 +32,7 @@ use Ampache\Repository\Model\Query;
 
 final class AlbumDiskQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'add_gt',
         'add_lt',
         'album_artist',

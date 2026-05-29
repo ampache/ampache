@@ -36,7 +36,7 @@ use Teapot\StatusCode;
 
 final class RefreshPlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'refresh_playlist';
+    public const string REQUEST_KEY = 'refresh_playlist';
 
     private ModelFactoryInterface $modelFactory;
 

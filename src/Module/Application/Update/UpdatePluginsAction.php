@@ -39,7 +39,7 @@ use Teapot\StatusCode;
 
 final class UpdatePluginsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_plugins';
+    public const string REQUEST_KEY = 'update_plugins';
 
     private ResponseFactoryInterface $responseFactory;
 

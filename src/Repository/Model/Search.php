@@ -53,9 +53,9 @@ use JsonException;
  */
 class Search extends playlist_object
 {
-    protected const DB_TABLENAME = 'search';
+    protected const string DB_TABLENAME = 'search';
 
-    public const VALID_TYPES = [
+    public const array VALID_TYPES = [
         'album_artist',
         'album_disk',
         'album',

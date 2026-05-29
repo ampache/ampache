@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class EditInstanceAction extends AbstractLocalPlayAction
 {
-    public const REQUEST_KEY = 'edit_instance';
+    public const string REQUEST_KEY = 'edit_instance';
 
     private ConfigContainerInterface $configContainer;
 

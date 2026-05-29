@@ -44,7 +44,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class ShowAction extends AbstractShowAction
 {
-    public const REQUEST_ACTION = 'show';
+    public const string REQUEST_ACTION = 'show';
 
     public function __construct(
         RequestParserInterface $requestParser,

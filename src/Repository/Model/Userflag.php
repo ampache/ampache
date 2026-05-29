@@ -40,9 +40,9 @@ use Exception;
  */
 class Userflag extends database_object
 {
-    protected const DB_TABLENAME = 'user_flag';
+    protected const string DB_TABLENAME = 'user_flag';
 
-    private const FLAG_TYPES = [
+    private const array FLAG_TYPES = [
         'album_disk',
         'album',
         'artist',

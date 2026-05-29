@@ -34,7 +34,7 @@ use Psr\Log\LoggerInterface;
 
 final class DownloadAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'download';
+    public const string REQUEST_KEY = 'download';
 
     public function __construct(
         LoggerInterface $logger,

@@ -46,7 +46,7 @@ use Ampache\Repository\Model\User;
  */
 class AmpacheHttpq extends localplay_controller
 {
-    protected const ACTIVE_PREF = 'httpq_active';
+    protected const string ACTIVE_PREF = 'httpq_active';
 
     private string $version = '000002';
 

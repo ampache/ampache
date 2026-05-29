@@ -32,7 +32,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'show';
+    public const string REQUEST_KEY = 'show';
 
     private UiInterface $ui;
 

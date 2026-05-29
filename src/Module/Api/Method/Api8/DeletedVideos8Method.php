@@ -39,7 +39,7 @@ use Ampache\Repository\Model\Video;
  */
 final class DeletedVideos8Method
 {
-    public const ACTION = 'deleted_videos';
+    public const string ACTION = 'deleted_videos';
 
     /**
      * deleted_videos

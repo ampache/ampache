@@ -41,7 +41,7 @@ use Ampache\Repository\Model\User;
  */
 final class UpdateArt5Method
 {
-    public const ACTION = 'update_art';
+    public const string ACTION = 'update_art';
 
     /**
      * update_art

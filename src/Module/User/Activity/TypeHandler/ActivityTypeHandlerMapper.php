@@ -29,7 +29,7 @@ use Ampache\Repository\UserActivityRepositoryInterface;
 
 final class ActivityTypeHandlerMapper implements ActivityTypeHandlerMapperInterface
 {
-    private const MAP = [
+    private const array MAP = [
         ActivityTypeEnum::TYPE_SONG => SongActivityTypeHandler::class,
         ActivityTypeEnum::TYPE_ALBUM => AlbumActivityTypeHandler::class,
         ActivityTypeEnum::TYPE_ARTIST => ArtistActivityTypeHandler::class,

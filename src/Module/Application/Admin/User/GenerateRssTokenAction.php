@@ -41,7 +41,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class GenerateRssTokenAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'generate_rsstoken';
+    public const string REQUEST_KEY = 'generate_rsstoken';
 
     private RequestParserInterface $requestParser;
 

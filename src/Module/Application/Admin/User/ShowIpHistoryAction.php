@@ -39,7 +39,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class ShowIpHistoryAction extends AbstractUserAction
 {
     /** @var string */
-    public const REQUEST_KEY = 'show_ip_history';
+    public const string REQUEST_KEY = 'show_ip_history';
 
     private UiInterface $ui;
 

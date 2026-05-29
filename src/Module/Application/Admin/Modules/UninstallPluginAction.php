@@ -42,7 +42,7 @@ use Psr\Log\LoggerInterface;
 
 final class UninstallPluginAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'uninstall_plugin';
+    public const string REQUEST_KEY = 'uninstall_plugin';
 
     private RequestParserInterface $requestParser;
 

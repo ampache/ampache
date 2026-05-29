@@ -36,7 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class LiveStreamAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'live_stream';
+    public const string REQUEST_KEY = 'live_stream';
 
     private ModelFactoryInterface $modelFactory;
 

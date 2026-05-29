@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class LiveStreams8Method
 {
-    public const ACTION = 'live_streams';
+    public const string ACTION = 'live_streams';
 
     /**
      * live_streams

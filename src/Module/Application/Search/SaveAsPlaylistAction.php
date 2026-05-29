@@ -41,7 +41,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class SaveAsPlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'save_as_playlist';
+    public const string REQUEST_KEY = 'save_as_playlist';
 
     private RequestParserInterface $requestParser;
 

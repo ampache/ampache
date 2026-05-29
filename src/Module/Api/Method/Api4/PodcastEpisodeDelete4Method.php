@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class PodcastEpisodeDelete4Method
 {
-    public const ACTION = 'podcast_episode_delete';
+    public const string ACTION = 'podcast_episode_delete';
 
     /**
      * podcast_episode_delete

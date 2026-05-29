@@ -43,9 +43,9 @@ use Ampache\Repository\Model\User;
  */
 final class PodcastCreate8Method
 {
-    public const ACTION = 'podcast_create';
+    public const string ACTION = 'podcast_create';
 
-    public const REST_ACTION = 'podcasts_create';
+    public const string REST_ACTION = 'podcasts_create';
 
     /**
      * podcast_create

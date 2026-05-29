@@ -37,7 +37,7 @@ use Psr\Log\LoggerInterface;
 
 final class StreamItemAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'stream_item';
+    public const string REQUEST_KEY = 'stream_item';
 
     public function __construct(
         LoggerInterface $logger,

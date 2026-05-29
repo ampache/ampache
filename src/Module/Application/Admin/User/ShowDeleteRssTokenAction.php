@@ -37,7 +37,7 @@ final class ShowDeleteRssTokenAction extends AbstractUserAction
 {
     use UserAdminApplicationTrait;
 
-    public const REQUEST_KEY = 'show_delete_rsstoken';
+    public const string REQUEST_KEY = 'show_delete_rsstoken';
 
     private UiInterface $ui;
 

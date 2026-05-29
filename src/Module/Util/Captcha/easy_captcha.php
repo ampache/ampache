@@ -32,49 +32,49 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha
 {
-    public const CAPTCHA_BASE_URL = '/captcha/captcha.php';
+    public const string CAPTCHA_BASE_URL = '/captcha/captcha.php';
 
-    public const CAPTCHA_PERSISTENT = 1; // cookie-pass after it's solved once (does not work if headers were already sent on innovocation of captcha::solved() check)
+    public const int CAPTCHA_PERSISTENT = 1; // cookie-pass after it's solved once (does not work if headers were already sent on innovocation of captcha::solved() check)
 
-    public const CAPTCHA_NEW_URLS = 0; // force captcha only when URLs submitted
+    public const int CAPTCHA_NEW_URLS = 0; // force captcha only when URLs submitted
 
-    public const CAPTCHA_AJAX = 1; // visual feedback while entering letters
+    public const int CAPTCHA_AJAX = 1; // visual feedback while entering letters
 
-    public const CAPTCHA_LOG = 0; // create /tmp/captcha/log file
+    public const int CAPTCHA_LOG = 0; // create /tmp/captcha/log file
 
-    public const CAPTCHA_NOTEXT = 0; // disables the accessible text/math riddle
+    public const int CAPTCHA_NOTEXT = 0; // disables the accessible text/math riddle
 
-    public const CAPTCHA_IMAGE_TYPE = 1; // 1=wave, 2=whirly
+    public const int CAPTCHA_IMAGE_TYPE = 1; // 1=wave, 2=whirly
 
-    public const CAPTCHA_IMAGE_SIZE = '200x60'; // randomly adapted a little
+    public const string CAPTCHA_IMAGE_SIZE = '200x60'; // randomly adapted a little
 
-    public const CAPTCHA_INPUT_STYLE = "height:46px; font-size:34px; font-weight:500;";
+    public const string CAPTCHA_INPUT_STYLE = "height:46px; font-size:34px; font-weight:500;";
 
-    public const CAPTCHA_PIXEL = 1; // set to 2 for smoother 2x2 grayscale pixel transform
+    public const int CAPTCHA_PIXEL = 1; // set to 2 for smoother 2x2 grayscale pixel transform
 
-    public const CAPTCHA_ONCLICK_HIRES = 1; // use better/slower drawing mode on reloading
+    public const int CAPTCHA_ONCLICK_HIRES = 1; // use better/slower drawing mode on reloading
 
-    public const CAPTCHA_FUZZY = 0.65; // easier solving: accept 1 or 2 misguessed letters
+    public const float CAPTCHA_FUZZY = 0.65; // easier solving: accept 1 or 2 misguessed letters
 
-    public const CAPTCHA_MIN_CHARS = 5; // how many letters to use
+    public const int CAPTCHA_MIN_CHARS = 5; // how many letters to use
 
-    public const CAPTCHA_MAX_CHARS = 7;
+    public const int CAPTCHA_MAX_CHARS = 7;
 
-    public const CAPTCHA_TIMEOUT = 5000; // (in seconds/2) = 3:00 hours to solve a displayed captcha
+    public const int CAPTCHA_TIMEOUT = 5000; // (in seconds/2) = 3:00 hours to solve a displayed captcha
 
-    public const CAPTCHA_PARAM_ID = '__ec_i';
+    public const string CAPTCHA_PARAM_ID = '__ec_i';
 
-    public const CAPTCHA_PARAM_INPUT = '__ec_s';
+    public const string CAPTCHA_PARAM_INPUT = '__ec_s';
 
-    public const CAPTCHA_BGCOLOR = 0xFFFFFF; // initial background color (non-inverse, white)
+    public const int CAPTCHA_BGCOLOR = 0xFFFFFF; // initial background color (non-inverse, white)
 
-    public const CAPTCHA_SALT = ',e?c:7<';
+    public const string CAPTCHA_SALT = ',e?c:7<';
 
-    public const CAPTCHA_PROMPT_TEXT = 'please enter the letters you recognize in the CAPTCHA image to the left';
+    public const string CAPTCHA_PROMPT_TEXT = 'please enter the letters you recognize in the CAPTCHA image to the left';
 
-    public const CAPTCHA_WHATIS_TEXT = 'What is %s = ';
+    public const string CAPTCHA_WHATIS_TEXT = 'What is %s = ';
 
-    public const CAPTCHA_REDRAW_TEXT = 'click on image to redraw';
+    public const string CAPTCHA_REDRAW_TEXT = 'click on image to redraw';
 
     public $ajax_tries;
     public $created;

@@ -41,7 +41,7 @@ use Psr\Log\LoggerInterface;
 
 final class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
+    public const string REQUEST_KEY = 'show';
 
     private RequestParserInterface $requestParser;
 

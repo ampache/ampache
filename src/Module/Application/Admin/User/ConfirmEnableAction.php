@@ -41,7 +41,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class ConfirmEnableAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'confirm_enable';
+    public const string REQUEST_KEY = 'confirm_enable';
 
     private RequestParserInterface $requestParser;
 

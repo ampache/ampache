@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowAddInstanceAction extends AbstractLocalPlayAction
 {
-    public const REQUEST_KEY = 'show_add_instance';
+    public const string REQUEST_KEY = 'show_add_instance';
 
     private UiInterface $ui;
 

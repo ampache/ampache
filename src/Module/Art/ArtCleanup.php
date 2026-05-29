@@ -41,7 +41,7 @@ final class ArtCleanup implements ArtCleanupInterface
 {
     private ConfigContainerInterface $configContainer;
 
-    private const TYPES = [
+    private const array TYPES = [
         'album_disk',
         'album',
         'artist',

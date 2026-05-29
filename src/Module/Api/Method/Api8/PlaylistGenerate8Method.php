@@ -41,7 +41,7 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistGenerate8Method
 {
-    public const ACTION = 'playlist_generate';
+    public const string ACTION = 'playlist_generate';
 
     /**
      * playlist_generate

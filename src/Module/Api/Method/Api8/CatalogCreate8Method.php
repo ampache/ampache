@@ -33,9 +33,9 @@ use Ampache\Repository\Model\User;
  */
 final class CatalogCreate8Method
 {
-    public const ACTION = 'catalog_create';
+    public const string ACTION = 'catalog_create';
 
-    public const REST_ACTION = 'catalogs_create';
+    public const string REST_ACTION = 'catalogs_create';
 
     /**
      * catalog_add

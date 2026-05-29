@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ConfirmUninstallLocalplayAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_uninstall_localplay';
+    public const string REQUEST_KEY = 'confirm_uninstall_localplay';
 
     private UiInterface $ui;
 

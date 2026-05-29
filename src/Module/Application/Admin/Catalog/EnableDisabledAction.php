@@ -34,7 +34,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class EnableDisabledAction extends AbstractCatalogAction
 {
-    public const REQUEST_KEY = 'enable_disabled';
+    public const string REQUEST_KEY = 'enable_disabled';
 
     private ConfigContainerInterface $configContainer;
 

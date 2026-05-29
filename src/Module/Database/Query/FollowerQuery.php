@@ -29,7 +29,7 @@ use Ampache\Repository\Model\Query;
 
 final class FollowerQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'follow_user',
         'user',
     ];

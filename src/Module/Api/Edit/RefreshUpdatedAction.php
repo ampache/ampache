@@ -51,7 +51,7 @@ use Psr\Log\LoggerInterface;
 
 final class RefreshUpdatedAction extends AbstractEditAction
 {
-    public const REQUEST_KEY = 'refresh_updated';
+    public const string REQUEST_KEY = 'refresh_updated';
 
     private ResponseFactoryInterface $responseFactory;
 

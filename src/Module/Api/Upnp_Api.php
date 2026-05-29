@@ -70,7 +70,7 @@ class Upnp_Api
      * object.item.textItem
      * object.container
      */
-    public const SSDP_DEBUG = false;
+    public const false SSDP_DEBUG = false;
 
     /**
      * get_uuidStr

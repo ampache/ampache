@@ -42,7 +42,7 @@ use Psr\Log\LoggerInterface;
 
 final class UpgradePluginAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'upgrade_plugin';
+    public const string REQUEST_KEY = 'upgrade_plugin';
 
     private RequestParserInterface $requestParser;
 

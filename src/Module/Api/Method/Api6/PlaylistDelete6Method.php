@@ -37,9 +37,9 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistDelete6Method
 {
-    public const ACTION = 'playlist_delete';
+    public const string ACTION = 'playlist_delete';
 
-    public const REST_ACTION = 'playlists_delete';
+    public const string REST_ACTION = 'playlists_delete';
 
     /**
      * playlist_delete

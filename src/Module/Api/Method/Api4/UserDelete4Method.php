@@ -35,7 +35,7 @@ use Ampache\Repository\Model\User;
  */
 final class UserDelete4Method
 {
-    public const ACTION = 'user_delete';
+    public const string ACTION = 'user_delete';
 
     /**
      * user_delete

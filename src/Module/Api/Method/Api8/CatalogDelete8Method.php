@@ -38,9 +38,9 @@ use Ampache\Repository\Model\User;
  */
 final class CatalogDelete8Method
 {
-    public const ACTION = 'catalog_delete';
+    public const string ACTION = 'catalog_delete';
 
-    public const REST_ACTION = 'catalogs_delete';
+    public const string REST_ACTION = 'catalogs_delete';
 
     /**
      * catalog_delete

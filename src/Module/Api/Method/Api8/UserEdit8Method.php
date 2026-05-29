@@ -43,9 +43,9 @@ use Ampache\Repository\Model\User;
  */
 final class UserEdit8Method
 {
-    public const ACTION = 'user_edit';
+    public const string ACTION = 'user_edit';
 
-    public const REST_ACTION = 'users_edit';
+    public const string REST_ACTION = 'users_edit';
 
     /**
      * user_edit
