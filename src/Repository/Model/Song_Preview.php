@@ -108,7 +108,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool

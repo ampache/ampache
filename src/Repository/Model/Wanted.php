@@ -109,7 +109,7 @@ class Wanted extends database_object
             $this->f_user = $user->get_fullname();
         }
 
-        return $this?->f_user ?? '';
+        return $this->f_user ?? '';
     }
 
     /**
@@ -174,7 +174,7 @@ class Wanted extends database_object
         if (!empty($martist)) {
             // cache the artist if it's missing from the database
             if ($artist === null) {
-                parent::add_to_cache('missing_artist', $lookupMbid, $martist->{'name'});
+                parent::add_to_cache('missing_artist', $lookupMbid, [$martist->{'name'}]);
             }
             $user = Core::get_global('user');
             foreach ($martist->{'release-groups'} as $group) {
@@ -209,7 +209,7 @@ class Wanted extends database_object
                                 if (strlen((string)$group->{'first-release-date'}) == 4) {
                                     $wanted->year = $group->{'first-release-date'};
                                 } elseif (strtotime((string) $group->{'first-release-date'})) {
-                                    $wanted->year = (int)date("Y", strtotime((string) $group->{'first-release-date'}));
+                                    $wanted->year = (int)date("Y", strtotime((string) $group->{'first-release-date'})?: null);
                                 } else {
                                     $wanted->year = null;
                                 }
@@ -354,7 +354,7 @@ class Wanted extends database_object
                 // Set fresh data
                 $this->name = $group->title;
                 $this->year = (strtotime((string) $group->{'first-release-date'}))
-                    ? (int)date("Y", strtotime((string) $group->{'first-release-date'}))
+                    ? (int)date("Y", strtotime((string) $group->{'first-release-date'})?: null)
                     : null;
 
                 // Load from database if already cached

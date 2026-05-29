@@ -284,7 +284,7 @@ abstract class Catalog extends database_object
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     /**

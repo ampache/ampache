@@ -259,7 +259,7 @@ final readonly class SongRepository implements SongRepositoryInterface
             [$songId]
         );
 
-        return $deleted !== false;
+        return $deleted !== null;
     }
 
     public function collectGarbage(Song $song): void

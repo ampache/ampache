@@ -75,7 +75,7 @@ class Userflag extends database_object
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public static function is_valid(string $type): bool

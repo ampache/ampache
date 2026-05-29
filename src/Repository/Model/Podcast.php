@@ -97,7 +97,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
