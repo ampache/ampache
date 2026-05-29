@@ -63,6 +63,7 @@ class Preference extends database_object
         'api_enable_4',
         'api_enable_5',
         'api_enable_6',
+        'api_enable_8',
         'api_force_version',
         'api_hidden_playlists',
         'api_hide_dupe_searches',
