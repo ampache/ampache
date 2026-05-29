@@ -173,7 +173,7 @@ final class ApiHandler implements ApiHandlerInterface
 
             if (
                 $api_version == 7 ||
-                $api_version == 8 //|| ($api_version == 8 && !Preference::get_by_user($userId, 'api_enable_8'))
+                ($api_version == 8 && !Preference::get_by_user($userId, 'api_enable_8'))
             ) {
                 $this->logger->warning(
                     'No API version available; check your options!',
