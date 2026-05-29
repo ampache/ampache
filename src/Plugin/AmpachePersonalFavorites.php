@@ -22,6 +22,7 @@
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -35,18 +36,25 @@ use Ampache\Repository\Model\User;
 
 class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHomeInterface
 {
+    #[Override]
     public string $name = 'Personal Favorites';
 
+    #[Override]
     public string $categories = 'home';
 
+    #[Override]
     public string $description = 'Personal favorites on homepage';
 
+    #[Override]
     public string $url = '';
 
+    #[Override]
     public string $version = '000003';
 
+    #[Override]
     public string $min_ampache = '370021';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -108,7 +116,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
     public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version == 0) {
+        if ($from_version === 0) {
             return false;
         }
 

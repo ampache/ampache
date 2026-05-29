@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Stats;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\GuiFactoryInterface;
@@ -45,6 +46,7 @@ class StatsViewAdapterTest extends MockeryTestCase
 
     private ?StatsViewAdapter $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);

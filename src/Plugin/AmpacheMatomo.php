@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
@@ -33,18 +34,25 @@ use Ampache\Repository\Model\User;
 
 class AmpacheMatomo extends AmpachePlugin implements PluginDisplayOnFooterInterface
 {
+    #[Override]
     public string $name = 'Matomo';
 
+    #[Override]
     public string $categories = 'stats';
 
+    #[Override]
     public string $description = 'Matomo statistics';
 
+    #[Override]
     public string $url = '';
 
+    #[Override]
     public string $version = '000001';
 
+    #[Override]
     public string $min_ampache = '370034';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out

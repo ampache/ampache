@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\Authorization;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\User;
@@ -44,6 +45,7 @@ class UserKeyGeneratorTest extends MockeryTestCase
 
     private ?UserKeyGenerator $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->userRepository = $this->mock(UserRepositoryInterface::class);

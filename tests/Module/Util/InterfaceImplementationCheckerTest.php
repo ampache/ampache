@@ -37,7 +37,7 @@ class InterfaceImplementationCheckerTest extends MockeryTestCase
     {
         $instance = Mockery::mock(Song_Preview::class, playable_item::class);
 
-        static::assertTrue(
+        self::assertTrue(
             InterfaceImplementationChecker::is_playable_item($instance::class)
         );
     }
@@ -46,7 +46,7 @@ class InterfaceImplementationCheckerTest extends MockeryTestCase
     {
         $instance = new stdClass();
 
-        static::assertFalse(
+        self::assertFalse(
             InterfaceImplementationChecker::is_playable_item($instance::class)
         );
     }
@@ -55,7 +55,7 @@ class InterfaceImplementationCheckerTest extends MockeryTestCase
     {
         $instance = new stdClass();
 
-        static::assertFalse(
+        self::assertFalse(
             InterfaceImplementationChecker::is_library_item($instance::class)
         );
     }
@@ -64,7 +64,7 @@ class InterfaceImplementationCheckerTest extends MockeryTestCase
     {
         $instance = new stdClass();
 
-        static::assertFalse(
+        self::assertFalse(
             InterfaceImplementationChecker::is_media($instance::class)
         );
     }

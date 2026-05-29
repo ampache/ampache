@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Update;
 
+use Override;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\System\UpdateViewAdapterInterface;
 use Ampache\Gui\TalFactoryInterface;
@@ -54,6 +55,7 @@ class ShowActionTest extends MockeryTestCase
 
     private ?ShowAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->talFactory      = $this->mock(TalFactoryInterface::class);

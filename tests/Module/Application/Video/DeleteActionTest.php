@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Video;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -47,6 +48,7 @@ class DeleteActionTest extends MockeryTestCase
 
     private ?DeleteAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);

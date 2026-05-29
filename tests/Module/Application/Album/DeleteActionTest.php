@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -45,6 +46,7 @@ class DeleteActionTest extends MockeryTestCase
 
     private DeleteAction $subject;
 
+    #[Override]
     protected function setup(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
@@ -170,7 +172,7 @@ class DeleteActionTest extends MockeryTestCase
 
         static::expectOutputString('You have requested an object that does not exist');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($request, $gatekeeper)
         );
     }

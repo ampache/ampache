@@ -78,7 +78,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `podcast_episode`.`id` FROM `podcast_episode` LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` WHERE `podcast_episode`.`podcast` = ? AND `catalog`.`enabled` = \'1\' ORDER BY `podcast_episode`.`pubdate` DESC',
+                "SELECT `podcast_episode`.`id` FROM `podcast_episode` LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` WHERE `podcast_episode`.`podcast` = ? AND `catalog`.`enabled` = '1' ORDER BY `podcast_episode`.`pubdate` DESC",
                 [$podcastId],
             )
             ->willReturn($result);
@@ -91,7 +91,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $episodeId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$episodeId],
             $this->subject->getEpisodes($podcast),
         );
@@ -127,7 +127,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $episodeId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$episodeId],
             $this->subject->getEpisodes($podcast, $stateFilter),
         );
@@ -172,7 +172,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->with(ConfigurationKeyEnum::PODCAST_KEEP)
             ->willReturn('');
 
-        static::assertSame(
+        self::assertSame(
             [],
             iterator_to_array($this->subject->getEpisodesEligibleForDeletion($this->createMock(Podcast::class)))
         );
@@ -217,7 +217,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->with($episodeId)
             ->willReturn($episode);
 
-        static::assertSame(
+        self::assertSame(
             [$episode],
             iterator_to_array($this->subject->getEpisodesEligibleForDeletion($podcast))
         );
@@ -278,7 +278,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->with($episodeId)
             ->willReturn($episode);
 
-        static::assertSame(
+        self::assertSame(
             [$episode],
             iterator_to_array($this->subject->getEpisodesEligibleForDownload($podcast, null))
         );
@@ -340,7 +340,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->with($episodeId)
             ->willReturn($episode);
 
-        static::assertSame(
+        self::assertSame(
             [$episode],
             iterator_to_array($this->subject->getEpisodesEligibleForDownload($podcast, $downloadLimit))
         );
@@ -365,7 +365,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
             )
             ->willReturn((string) $result);
 
-        static::assertSame(
+        self::assertSame(
             $result,
             $this->subject->getEpisodeCount($podcast)
         );

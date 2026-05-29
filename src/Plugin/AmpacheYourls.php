@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
@@ -34,18 +35,25 @@ use WpOrg\Requests\Requests;
 
 class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
 {
+    #[Override]
     public string $name = 'YOURLS';
 
+    #[Override]
     public string $categories = 'shortener';
 
+    #[Override]
     public string $description = 'URL shorteners on shared links with YOURLS';
 
+    #[Override]
     public string $url = 'http://yourls.org';
 
+    #[Override]
     public string $version = '000002';
 
+    #[Override]
     public string $min_ampache = '360037';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -123,7 +131,7 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
             if ($this->yourls_use_idn) {
                 // WARNING: idn_to_utf8 requires php-idn module.
                 // WARNING: http_build_url requires php-pecl-http module.
-                $purl = parse_url($shorturl);
+                $purl = parse_url((string) $shorturl);
                 if (
                     is_array($purl) &&
                     array_key_exists('host', $purl)
@@ -176,7 +184,7 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
             return false;
         }
 
-        $this->yourls_use_idn = ((int)($data['yourls_use_idn']) == 1);
+        $this->yourls_use_idn = ((int)($data['yourls_use_idn']) === 1);
 
         return true;
     }

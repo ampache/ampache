@@ -25,21 +25,28 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\User;
 
 class AmpacheMastodon extends AmpachePlugin implements PluginExternalShareInterface
 {
+    #[Override]
     public string $name = 'Mastodon';
 
+    #[Override]
     public string $categories = 'share';
 
+    #[Override]
     public string $description = 'Mastodon share';
 
+    #[Override]
     public string $version = '000001';
 
+    #[Override]
     public string $min_ampache = '370027';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     /**

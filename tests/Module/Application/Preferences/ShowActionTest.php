@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -39,6 +40,7 @@ class ShowActionTest extends MockeryTestCase
 
     private ShowAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->ui = $this->mock(UiInterface::class);

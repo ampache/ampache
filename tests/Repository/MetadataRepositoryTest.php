@@ -104,7 +104,7 @@ class MetadataRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->findById($metadataId)
         );
     }
@@ -133,7 +133,7 @@ class MetadataRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn($metadata);
 
-        static::assertSame(
+        self::assertSame(
             $metadata,
             $this->subject->findById($metadataId)
         );
@@ -172,7 +172,7 @@ class MetadataRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn($metadata);
 
-        static::assertSame(
+        self::assertSame(
             $metadata,
             $this->subject->findByObjectIdAndFieldAndType($objectId, $metadataField, $objectType)
         );
@@ -210,7 +210,7 @@ class MetadataRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->findByObjectIdAndFieldAndType($objectId, $metadataField, $objectType)
         );
     }
@@ -241,7 +241,7 @@ class MetadataRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn($metadata, false);
 
-        static::assertSame(
+        self::assertSame(
             [$metadata],
             iterator_to_array(
                 $this->subject->findByObjectIdAndType($objectId, $objectType)
@@ -273,7 +273,7 @@ class MetadataRepositoryTest extends TestCase
 
     public function testPrototypeReturnsObject(): void
     {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             Metadata::class,
             $this->subject->prototype()
         );
@@ -320,7 +320,7 @@ class MetadataRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn($metadataId);
 
-        static::assertSame(
+        self::assertSame(
             $metadataId,
             $this->subject->persist($metadata)
         );
@@ -368,7 +368,7 @@ class MetadataRepositoryTest extends TestCase
                 ]
             );
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->persist($metadata)
         );
     }

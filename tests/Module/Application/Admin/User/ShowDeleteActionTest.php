@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -49,6 +50,7 @@ class ShowDeleteActionTest extends MockeryTestCase
 
     private ShowDeleteAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->ui              = $this->mock(UiInterface::class);

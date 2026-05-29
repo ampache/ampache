@@ -75,7 +75,7 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
         }
 
         if ($skipDisabledCatalogs) {
-            $sql .= 'AND `catalog`.`enabled` = \'1\' ';
+            $sql .= "AND `catalog`.`enabled` = '1' ";
         }
 
         $sql .= 'ORDER BY `podcast_episode`.`pubdate` DESC';

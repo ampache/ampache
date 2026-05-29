@@ -56,7 +56,7 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
                 if ($type === 'tag_hidden_row') {
                     $tags = Tag::get_display(Tag::get_tags('all_hidden'));
                 } else {
-                    $tags = (in_array($type, ['album_disk_row', 'album_row', 'artist_row', 'song_row', 'tag_row', 'video_row', 'broadcast_row']))
+                    $tags = (in_array($type, ['album_disk_row', 'album_row', 'artist_row', 'song_row', 'tag_row', 'video_row', 'broadcast_row'], true))
                         ? Tag::get_display(Tag::get_tags())
                         : '';
                 }

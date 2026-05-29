@@ -70,7 +70,7 @@ class SongRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $songId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$songId],
             iterator_to_array($this->subject->getByCatalog($catalog))
         );
@@ -93,7 +93,7 @@ class SongRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $songId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$songId],
             iterator_to_array($this->subject->getByCatalog())
         );

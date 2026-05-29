@@ -71,7 +71,7 @@ class IpHistoryRepositoryTest extends TestCase
             )
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->getRecentIpForUser($user)
         );
     }
@@ -97,7 +97,7 @@ class IpHistoryRepositoryTest extends TestCase
             )
             ->willReturn(inet_pton($ip));
 
-        static::assertSame(
+        self::assertSame(
             $ip,
             $this->subject->getRecentIpForUser($user)
         );

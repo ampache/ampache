@@ -115,7 +115,7 @@ class ShareRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $shareId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$shareId],
             $this->subject->getIdsByUser($user)
         );
@@ -154,7 +154,7 @@ class ShareRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $shareId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$shareId],
             $this->subject->getIdsByUser($user)
         );

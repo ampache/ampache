@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -55,6 +56,7 @@ class ShowActionTest extends MockeryTestCase
 
     private ShowAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->modelFactory     = $this->mock(ModelFactoryInterface::class);

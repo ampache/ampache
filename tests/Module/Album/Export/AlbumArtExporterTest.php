@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Album\Export;
 
+use Override;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -53,6 +54,7 @@ class AlbumArtExporterTest extends MockeryTestCase
 
     private ?AlbumArtExporter $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
@@ -219,6 +221,7 @@ class AlbumArtExporterTest extends MockeryTestCase
 
         $art->raw_mime = $raw_mime;
         $art->raw      = $raw_art;
+
         $song->file    = $file_name;
 
         $metadataWriter->shouldReceive('write')

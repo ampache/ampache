@@ -51,7 +51,7 @@ class CatalogExportFactoryTest extends TestCase
         CatalogExportTypeEnum $exportType,
         string $exporterClass
     ): void {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             $exporterClass,
             $this->subject->createFromExportType($exportType)
         );

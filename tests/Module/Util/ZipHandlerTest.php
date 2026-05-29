@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Mockery\MockInterface;
@@ -42,6 +43,7 @@ class ZipHandlerTest extends MockeryTestCase
 
     private ZipHandler $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
@@ -64,7 +66,7 @@ class ZipHandlerTest extends MockeryTestCase
             ->once()
             ->andReturn([$type]);
 
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->isZipable($type)
         );
     }
@@ -78,7 +80,7 @@ class ZipHandlerTest extends MockeryTestCase
             ->once()
             ->andReturn(['snoosnoo']);
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->isZipable($type)
         );
     }

@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
@@ -34,18 +35,25 @@ use WpOrg\Requests\Requests;
 
 class AmpacheGoogleMaps extends AmpachePlugin implements PluginLocationInterface
 {
+    #[Override]
     public string $name = 'GoogleMaps';
 
+    #[Override]
     public string $categories = 'geolocation';
 
-    public string $description = 'Show user\'s location with Google Maps';
+    #[Override]
+    public string $description = "Show user's location with Google Maps";
 
+    #[Override]
     public string $url = 'http://maps.google.com';
 
+    #[Override]
     public string $version = '000001';
 
+    #[Override]
     public string $min_ampache = '370022';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -56,7 +64,7 @@ class AmpacheGoogleMaps extends AmpachePlugin implements PluginLocationInterface
      */
     public function __construct()
     {
-        $this->description = T_('Show user\'s location with Google Maps');
+        $this->description = T_("Show user's location with Google Maps");
     }
 
     /**
@@ -96,7 +104,7 @@ class AmpacheGoogleMaps extends AmpachePlugin implements PluginLocationInterface
             $url     = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" . $latitude . "," . $longitude . "&sensor=false";
             $request = Requests::get($url, [], Core::requests_options());
 
-            $place = json_decode($request->body, true);
+            $place = json_decode((string) $request->body, true);
             if (count($place['results']) > 0) {
                 $name = $place['results'][0]['formatted_address'];
             }

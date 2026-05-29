@@ -82,7 +82,7 @@ class DeletedPodcastEpisodeRepositoryTest extends TestCase
                 false
             );
 
-        static::assertSame(
+        self::assertSame(
             [[
                 'id' => $id,
                 'addition_time' => $additionTime,

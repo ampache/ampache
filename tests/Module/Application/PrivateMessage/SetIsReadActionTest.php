@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\PrivateMessage;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -48,6 +49,7 @@ class SetIsReadActionTest extends MockeryTestCase
 
     private SetIsReadAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
@@ -223,7 +225,7 @@ class SetIsReadActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showConfirmation')
             ->with(
                 'No Problem',
-                'Message\'s state has been changed',
+                "Message's state has been changed",
                 sprintf(
                     '%s/browse.php?action=pvmsg',
                     $webPath

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Shout;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -48,6 +49,7 @@ class DeleteActionTest extends MockeryTestCase
 
     private DeleteAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->ui              = $this->mock(UiInterface::class);

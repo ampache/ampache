@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\Activity\TypeHandler;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
@@ -40,6 +41,7 @@ class ActivityTypeHandlerMapperTest extends MockeryTestCase
 
     private ?ActivityTypeHandlerMapper $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->userActivityRepository = $this->mock(UserActivityRepositoryInterface::class);

@@ -39,7 +39,7 @@ class UpdateHelperTest extends TestCase
     {
         $version = '666042';
 
-        static::assertSame(
+        self::assertSame(
             '6.6.6 Build: 042',
             $this->subject->formatVersion($version)
         );

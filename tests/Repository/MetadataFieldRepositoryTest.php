@@ -73,7 +73,7 @@ class MetadataFieldRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn(['id' => (string) $id, 'name' => $name], false);
 
-        static::assertSame(
+        self::assertSame(
             [$id => $name],
             iterator_to_array($this->subject->getPropertyList())
         );
@@ -102,7 +102,7 @@ class MetadataFieldRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->findById($id)
         );
     }
@@ -131,7 +131,7 @@ class MetadataFieldRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn($item);
 
-        static::assertSame(
+        self::assertSame(
             $item,
             $this->subject->findById($id)
         );
@@ -160,7 +160,7 @@ class MetadataFieldRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->findByName($name)
         );
     }
@@ -189,7 +189,7 @@ class MetadataFieldRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn($item);
 
-        static::assertSame(
+        self::assertSame(
             $item,
             $this->subject->findByName($name)
         );
@@ -226,7 +226,7 @@ class MetadataFieldRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn($result);
 
-        static::assertSame(
+        self::assertSame(
             $result,
             $this->subject->persist($field)
         );
@@ -264,14 +264,14 @@ class MetadataFieldRepositoryTest extends TestCase
                 ]
             );
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->persist($field)
         );
     }
 
     public function testPrototypeReturnsNewItem(): void
     {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             MetadataField::class,
             $this->subject->prototype()
         );

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Mockery\MockInterface;
@@ -36,6 +37,7 @@ class AjaxUriRetrieverTest extends MockeryTestCase
 
     private AjaxUriRetriever $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
@@ -54,7 +56,7 @@ class AjaxUriRetrieverTest extends MockeryTestCase
             ->once()
             ->andReturn($webPath);
 
-        static::assertSame(
+        self::assertSame(
             sprintf(
                 '%s/ajax.server.php',
                 $webPath
@@ -72,7 +74,7 @@ class AjaxUriRetrieverTest extends MockeryTestCase
             ->once()
             ->andReturn($webPath);
 
-        static::assertSame(
+        self::assertSame(
             $webPath,
             $this->subject->getAjaxServerUri()
         );

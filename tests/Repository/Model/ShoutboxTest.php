@@ -54,7 +54,7 @@ class ShoutboxTest extends TestCase
 
     public function testIsNewReturnsTrueIfIdIsZero(): void
     {
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->isNew()
         );
     }
@@ -70,10 +70,10 @@ class ShoutboxTest extends TestCase
 
         $this->subject->save();
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->isNew()
         );
-        static::assertSame(
+        self::assertSame(
             $shoutId,
             $this->subject->getId()
         );
@@ -86,14 +86,14 @@ class ShoutboxTest extends TestCase
         mixed $defaultValue,
         mixed $setValue
     ): void {
-        static::assertSame(
+        self::assertSame(
             $defaultValue,
             call_user_func_array([$this->subject, $getterMethod], [])
         );
 
         call_user_func_array([$this->subject, $setterMethod], [$setValue]);
 
-        static::assertSame(
+        self::assertSame(
             $setValue,
             call_user_func_array([$this->subject, $getterMethod], [])
         );
@@ -112,7 +112,7 @@ class ShoutboxTest extends TestCase
 
         $this->subject->setObjectType($objectType);
 
-        static::assertSame(
+        self::assertSame(
             $objectType,
             $this->subject->getObjectType()
         );
@@ -128,14 +128,14 @@ class ShoutboxTest extends TestCase
             ->method('getId')
             ->willReturn($userId);
 
-        static::assertSame(
+        self::assertSame(
             0,
             $this->subject->getUserId()
         );
 
         $this->subject->setUser($user);
 
-        static::assertSame(
+        self::assertSame(
             $userId,
             $this->subject->getUserId()
         );
@@ -150,7 +150,7 @@ class ShoutboxTest extends TestCase
             ->with(0)
             ->willReturn($user);
 
-        static::assertSame(
+        self::assertSame(
             $user,
             $this->subject->getUser()
         );
@@ -160,14 +160,14 @@ class ShoutboxTest extends TestCase
     {
         $text = '<div>AGGI AGGI é«ü%>?&</div>';
 
-        static::assertSame(
+        self::assertSame(
             '',
             $this->subject->getText()
         );
 
         $this->subject->setText($text);
 
-        static::assertSame(
+        self::assertSame(
             strip_tags(htmlspecialchars($text)),
             $this->subject->getText()
         );
@@ -175,7 +175,7 @@ class ShoutboxTest extends TestCase
 
     public function testGetDateReturnsSetDate(): void
     {
-        static::assertSame(
+        self::assertSame(
             0,
             $this->subject->getDate()->getTimestamp()
         );
@@ -184,7 +184,7 @@ class ShoutboxTest extends TestCase
 
         $this->subject->setDate($date);
 
-        static::assertSame(
+        self::assertSame(
             $date->getTimestamp(),
             $this->subject->getDate()->getTimestamp()
         );

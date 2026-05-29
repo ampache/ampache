@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\SmartPlaylist;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -50,6 +51,7 @@ class DeletePlaylistActionTest extends MockeryTestCase
 
     private ?DeletePlaylistAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->responseFactory = $this->mock(ResponseFactoryInterface::class);

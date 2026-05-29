@@ -140,7 +140,7 @@ class ShowPreferencesActionTest extends TestCase
             ->with($user)
             ->willReturn($preferences);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($request, $gatekeeper)
         );
     }

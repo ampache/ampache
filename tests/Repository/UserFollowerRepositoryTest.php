@@ -70,7 +70,7 @@ class UserFollowerRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $itemId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$itemId],
             $this->subject->getFollowers($user)
         );
@@ -100,7 +100,7 @@ class UserFollowerRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $itemId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$itemId],
             $this->subject->getFollowing($user)
         );
@@ -130,7 +130,7 @@ class UserFollowerRepositoryTest extends TestCase
             )
             ->willReturn(123);
 
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->isFollowedBy($user, $followingUser)
         );
     }

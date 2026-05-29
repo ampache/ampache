@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\System\Dba;
@@ -39,18 +40,25 @@ use Ampache\Repository\Model\Userflag;
 
 class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
+    #[Override]
     public string $name = 'RatingMatch';
 
+    #[Override]
     public string $categories = 'save_rating';
 
+    #[Override]
     public string $description = 'Raise the album and artist rating to match the highest song rating';
 
+    #[Override]
     public string $url = '';
 
+    #[Override]
     public string $version = '000004';
 
+    #[Override]
     public string $min_ampache = '360003';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -155,7 +163,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version == 0) {
+        if ($from_version === 0) {
             return false;
         }
 
@@ -216,7 +224,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
             if ($rating->type === 'album_disk') {
                 $album_disk = new AlbumDisk($rating->id);
                 // rate the album when the disk count is 1
-                if ($album_disk->disk_count == 1) {
+                if ($album_disk->disk_count === 1) {
                     $rAlbum       = new Rating($album_disk->album_id, 'album');
                     $rating_album = (int)$rAlbum->get_user_rating($this->user->id);
                     if ($rating_album < $new_rating) {
@@ -307,7 +315,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
         $skip_result = Dba::fetch_assoc($db_results);
         $skip_count  = (int) $skip_result['counting'];
 
-        if ($play_count == 0 && $skip_count == 0) {
+        if ($play_count === 0 && $skip_count === 0) {
             return false;
         }
 
@@ -368,12 +376,12 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                     (
                         $play > 0 &&
                         $play_count >= $play &&
-                        $skip == 0
+                        $skip === 0
                     ) ||
                     (
                         $skip > 0 &&
                         $skip_count >= $skip &&
-                        $play == 0
+                        $play === 0
                     ) ||
                     (
                         $play > 0 &&

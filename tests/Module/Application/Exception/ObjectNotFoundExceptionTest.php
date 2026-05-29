@@ -40,7 +40,7 @@ class ObjectNotFoundExceptionTest extends TestCase
 
     public function testGetObjectIdReturnsValue(): void
     {
-        static::assertSame(
+        self::assertSame(
             $this->objectId,
             $this->subject->getObjectId()
         );

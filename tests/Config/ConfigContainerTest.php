@@ -37,7 +37,7 @@ class ConfigContainerTest extends MockeryTestCase
 
         $subject = $this->createSubject([$key => $value]);
 
-        static::assertSame(
+        self::assertSame(
             $value,
             $subject->get($key)
         );
@@ -54,21 +54,21 @@ class ConfigContainerTest extends MockeryTestCase
 
         $config = $this->createSubject([$existing_key => $existing_value, $key => $old_value]);
 
-        static::assertSame(
+        self::assertSame(
             $old_value,
             $config->get($key)
         );
 
-        static::assertSame(
+        self::assertSame(
             $config,
             $config->updateConfig($config_data)
         );
 
-        static::assertSame(
+        self::assertSame(
             $value,
             $config->get($key)
         );
-        static::assertSame(
+        self::assertSame(
             $existing_value,
             $config->get($existing_key)
         );
@@ -76,7 +76,7 @@ class ConfigContainerTest extends MockeryTestCase
 
     public function testGetReturnsNullIfKeyNotSet(): void
     {
-        static::assertNull(
+        self::assertNull(
             $this->createSubject([])->get('foobar')
         );
     }
@@ -89,7 +89,7 @@ class ConfigContainerTest extends MockeryTestCase
             ConfigurationKeyEnum::SESSION_NAME => $value
         ]);
 
-        static::assertSame(
+        self::assertSame(
             $value,
             $subject->getSessionName()
         );
@@ -97,7 +97,7 @@ class ConfigContainerTest extends MockeryTestCase
 
     public function testGetSessionNameReturnsEmptyStringIfNotSet(): void
     {
-        static::assertSame(
+        self::assertSame(
             '',
             $this->createSubject()->getSessionName()
         );
@@ -105,28 +105,28 @@ class ConfigContainerTest extends MockeryTestCase
 
     public function testIsWebDavEnabledReturnsValueCasted(): void
     {
-        static::assertTrue(
+        self::assertTrue(
             $this->createSubject([ConfigurationKeyEnum::BACKEND_WEBDAV => '1'])->isWebDavBackendEnabled()
         );
     }
 
     public function testIsWebDavEnabledReturnsDefault(): void
     {
-        static::assertFalse(
+        self::assertFalse(
             $this->createSubject()->isWebDavBackendEnabled()
         );
     }
 
     public function testIsAuthenticationEnabledReturnsValueCasted(): void
     {
-        static::assertFalse(
+        self::assertFalse(
             $this->createSubject([ConfigurationKeyEnum::USE_AUTH => '0'])->isAuthenticationEnabled()
         );
     }
 
     public function testIsAuthenticationEnabledReturnsDefault(): void
     {
-        static::assertTrue(
+        self::assertTrue(
             $this->createSubject()->isAuthenticationEnabled()
         );
     }
@@ -135,7 +135,7 @@ class ConfigContainerTest extends MockeryTestCase
     {
         $value = 'some-path';
 
-        static::assertSame(
+        self::assertSame(
             $value,
             $this->createSubject([ConfigurationKeyEnum::RAW_WEB_PATH => $value])->getRawWebPath()
         );
@@ -143,7 +143,7 @@ class ConfigContainerTest extends MockeryTestCase
 
     public function testGetRawWebPathReturnsDefault(): void
     {
-        static::assertSame(
+        self::assertSame(
             '',
             $this->createSubject()->getRawWebPath()
         );
@@ -153,7 +153,7 @@ class ConfigContainerTest extends MockeryTestCase
     {
         $value = 'some-path';
 
-        static::assertSame(
+        self::assertSame(
             $value,
             $this->createSubject([ConfigurationKeyEnum::WEB_PATH => $value])->getWebPath()
         );
@@ -161,7 +161,7 @@ class ConfigContainerTest extends MockeryTestCase
 
     public function testGetWebPathReturnsDefault(): void
     {
-        static::assertSame(
+        self::assertSame(
             '',
             $this->createSubject([])->getWebPath()
         );
@@ -169,7 +169,7 @@ class ConfigContainerTest extends MockeryTestCase
 
     public function testGetTypesAllowedForZipReturnsEmptyArrayIfNotSet(): void
     {
-        static::assertSame(
+        self::assertSame(
             [],
             $this->createSubject([])->getTypesAllowedForZip()
         );
@@ -180,7 +180,7 @@ class ConfigContainerTest extends MockeryTestCase
         $type1 = ' some-type';
         $type2 = 'some-other-type ';
 
-        static::assertSame(
+        self::assertSame(
             [trim($type1), trim($type2)],
             $this->createSubject([
                 ConfigurationKeyEnum::ALLOWED_ZIP_TYPES => $type1 . ',' . $type2
@@ -195,7 +195,7 @@ class ConfigContainerTest extends MockeryTestCase
     ): void {
         $key = 'some-key';
 
-        static::assertSame(
+        self::assertSame(
             $state,
             $this->createSubject([
                 $key => $value
@@ -221,7 +221,7 @@ class ConfigContainerTest extends MockeryTestCase
     {
         $value = 'some-path';
 
-        static::assertSame(
+        self::assertSame(
             $value,
             $this->createSubject([ConfigurationKeyEnum::THEME_PATH => $value])->getThemePath()
         );

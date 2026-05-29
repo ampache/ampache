@@ -71,7 +71,7 @@ class LabelRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn(['id' => (string) $labelId, 'name' => $labelName], false);
 
-        static::assertSame(
+        self::assertSame(
             $this->subject->getByArtist($artistId),
             [$labelId => $labelName]
         );
@@ -94,7 +94,7 @@ class LabelRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn(['id' => (string) $labelId, 'name' => $labelName], false);
 
-        static::assertSame(
+        self::assertSame(
             $this->subject->getAll(),
             [$labelId => $labelName]
         );
@@ -102,7 +102,7 @@ class LabelRepositoryTest extends TestCase
 
     public function testLookupReturnsNegativeValueOnEmptyName(): void
     {
-        static::assertSame(
+        self::assertSame(
             -1,
             $this->subject->lookup(' ')
         );
@@ -118,7 +118,7 @@ class LabelRepositoryTest extends TestCase
             ->with('SELECT `id` FROM `label` WHERE `name` = ?', [$labelName])
             ->willReturn((string) $rowId);
 
-        static::assertSame(
+        self::assertSame(
             $rowId,
             $this->subject->lookup($labelName)
         );
@@ -134,7 +134,7 @@ class LabelRepositoryTest extends TestCase
             ->with('SELECT `id` FROM `label` WHERE `name` = ? AND `id` != ?', [$labelName, $labelId])
             ->willReturn(false);
 
-        static::assertSame(
+        self::assertSame(
             0,
             $this->subject->lookup($labelName, $labelId)
         );

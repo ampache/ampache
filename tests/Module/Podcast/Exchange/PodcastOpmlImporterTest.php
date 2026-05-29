@@ -146,7 +146,7 @@ class PodcastOpmlImporterTest extends TestCase
                 [LegacyLogger::CONTEXT_TYPE => PodcastOpmlImporter::class]
             );
 
-        static::assertSame(
+        self::assertSame(
             1,
             $this->subject->import($catalog, $xml)
         );

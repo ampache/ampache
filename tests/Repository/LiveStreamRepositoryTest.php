@@ -64,7 +64,7 @@ class LiveStreamRepositoryTest extends TestCase
             ->method('isNew')
             ->willReturn(true);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->findById($objectId)
         );
     }
@@ -84,7 +84,7 @@ class LiveStreamRepositoryTest extends TestCase
             ->method('isNew')
             ->willReturn(false);
 
-        static::assertSame(
+        self::assertSame(
             $item,
             $this->subject->findById($objectId)
         );

@@ -37,7 +37,7 @@ class PodcastOpmlLoaderTest extends TestCase
 
     public function testLoadReturnsEmptyListIfNoInputAvailable(): void
     {
-        static::assertSame(
+        self::assertSame(
             [],
             iterator_to_array($this->subject->load('<asdf'))
         );
@@ -47,7 +47,7 @@ class PodcastOpmlLoaderTest extends TestCase
     {
         $url = 'some-url';
 
-        static::assertSame(
+        self::assertSame(
             [$url],
             iterator_to_array(
                 $this->subject->load('<root><outline xmlUrl="" /><outline xmlUrl="' . $url . '" /></root>')

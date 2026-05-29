@@ -92,7 +92,7 @@ class ShoutRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn($shoutBox, false);
 
-        static::assertSame(
+        self::assertSame(
             [$shoutBox],
             iterator_to_array($this->subject->getBy($objectType, $objectId))
         );
@@ -119,7 +119,7 @@ class ShoutRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->findById($shoutId)
         );
     }
@@ -146,7 +146,7 @@ class ShoutRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn($shout);
 
-        static::assertSame(
+        self::assertSame(
             $shout,
             $this->subject->findById($shoutId)
         );
@@ -292,7 +292,7 @@ class ShoutRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn($shoutId);
 
-        static::assertSame(
+        self::assertSame(
             $shoutId,
             $this->subject->persist($shout)
         );
@@ -355,7 +355,7 @@ class ShoutRepositoryTest extends TestCase
                 ]
             );
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->persist($shout)
         );
     }
@@ -426,7 +426,7 @@ class ShoutRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn($shout2, false);
 
-        static::assertSame(
+        self::assertSame(
             [$shout1, $shout2],
             iterator_to_array($this->subject->getTop($limit, $userName))
         );

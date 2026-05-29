@@ -68,7 +68,7 @@ class LicenseRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn(['id' => (string) $rowId, 'name' => $rowName], false);
 
-        static::assertSame(
+        self::assertSame(
             [$rowId => $rowName],
             iterator_to_array(
                 $this->subject->getList()
@@ -86,7 +86,7 @@ class LicenseRepositoryTest extends TestCase
             ->with('SELECT `id` FROM `license` WHERE `name` = ? LIMIT 1')
             ->willReturn((string) $result);
 
-        static::assertSame(
+        self::assertSame(
             $result,
             $this->subject->find($value)
         );
@@ -105,7 +105,7 @@ class LicenseRepositoryTest extends TestCase
             ))
             ->willReturn(false, (string) $result);
 
-        static::assertSame(
+        self::assertSame(
             $result,
             $this->subject->find($value)
         );
@@ -123,7 +123,7 @@ class LicenseRepositoryTest extends TestCase
             ))
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->find($value)
         );
     }
@@ -178,7 +178,7 @@ class LicenseRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn($licenseId);
 
-        static::assertSame(
+        self::assertSame(
             $licenseId,
             $this->subject->persist($license)
         );
@@ -226,7 +226,7 @@ class LicenseRepositoryTest extends TestCase
                 ]
             );
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->persist($license)
         );
     }

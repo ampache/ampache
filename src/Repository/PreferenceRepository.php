@@ -35,7 +35,7 @@ use Ampache\Repository\Model\User;
 final class PreferenceRepository implements PreferenceRepositoryInterface
 {
     /** @var string[] $HIDE_ARRAY */
-    private const HIDE_ARRAY = [
+    private const array HIDE_ARRAY = [
         'disabled_custom_metadata_fields',
         'geolocation',
         'jp_volume',
@@ -73,7 +73,7 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
         ?bool $api = false
     ): array {
         if ($user !== null) {
-            $userLimit   = 'AND `preference`.`category` != \'system\'';
+            $userLimit   = "AND `preference`.`category` != 'system'";
             $userId      = $user->getId();
             $accessLevel = $user->access;
         } else {

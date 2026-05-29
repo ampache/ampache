@@ -139,7 +139,7 @@ final readonly class UserRepository implements UserRepositoryInterface
         $users = [];
         $sql   = ($includeDisabled)
             ? 'SELECT `id` FROM `user`;'
-            : 'SELECT `id` FROM `user` WHERE `disabled` = \'0\';';
+            : "SELECT `id` FROM `user` WHERE `disabled` = '0';";
 
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
@@ -169,7 +169,7 @@ final readonly class UserRepository implements UserRepositoryInterface
         $users = [];
         $sql   = ($includeDisabled)
             ? 'SELECT `id`, `username` FROM `user`;'
-            : 'SELECT `id`, `username` FROM `user` WHERE `disabled` = \'0\';';
+            : "SELECT `id`, `username` FROM `user` WHERE `disabled` = '0';";
 
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
@@ -394,7 +394,7 @@ final readonly class UserRepository implements UserRepositoryInterface
     public function enable(int $userId): void
     {
         Dba::write(
-            'UPDATE `user` SET `disabled`=\'0\' WHERE `id` = ?',
+            "UPDATE `user` SET `disabled`='0' WHERE `id` = ?",
             [$userId]
         );
     }

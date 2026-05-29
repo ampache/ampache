@@ -75,7 +75,7 @@ class LibraryItemLoaderTest extends TestCase
             ->with($objectId)
             ->willReturn($item);
 
-        static::assertSame(
+        self::assertSame(
             $item,
             $this->subject->load($itemType, $objectId, [$itemClassName]),
         );
@@ -113,7 +113,7 @@ class LibraryItemLoaderTest extends TestCase
             ->with($objectId)
             ->willReturn($item);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->load(LibraryItemEnum::LABEL, $objectId),
         );
     }

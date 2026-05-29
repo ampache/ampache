@@ -86,10 +86,10 @@ final class ControlReplyApplication implements ApplicationInterface
                 // Should reflect changes to the database; Catalog::GetLatestUpdate() doesn't cut it though
                 //debug_event('control-reply', 'SystemUpdate: ' . (string) Catalog::getLastUpdate(), 5);
                 $ud      = sprintf('<Id>%1$04d</Id>', 0); // 0 for now, insert something suitable when found.
-                $soapXML = "<?xml version=\"1.0\"?>" .
-                    "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" .
+                $soapXML = '<?xml version="1.0"?>' .
+                    '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">' .
                     "<SOAP-ENV:Body>" .
-                    "<u:GetSystemUpdateIDResponse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\">" .
+                    '<u:GetSystemUpdateIDResponse xmlns:u="urn:schemas-upnp-org:service:ContentDirectory:1">' .
                     $ud .
                     "</u:GetSystemUpdateIDResponse>" .
                     "</SOAP-ENV:Body> " .
@@ -99,20 +99,20 @@ final class ControlReplyApplication implements ApplicationInterface
                 // "<SearchCaps>dc:creator,dc:date,dc:title,upnp:album,upnp:actor,upnp:artist,upnp:class,upnp:genre,@id,@parentID,@refID</SearchCaps>" .
                 // 17/10 removed upnp:author@role, from searchcaps as this is not trivial to implement
                 // 20/10 put it back because it stops M1000 from searching for anything ("Search not supported on this server")
-                $soapXML = "<?xml version=\"1.0\"?>" .
-                    "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" .
+                $soapXML = '<?xml version="1.0"?>' .
+                    '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">' .
                     "<s:Body>" .
-                    "<u:GetSearchCapabilitiesResponse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\">" .
+                    '<u:GetSearchCapabilitiesResponse xmlns:u="urn:schemas-upnp-org:service:ContentDirectory:1">' .
                     "<SearchCaps>@id,@refID,dc:title,upnp:class,upnp:genre,upnp:artist,upnp:author,upnp:author@role,upnp:album,dc:creator,upnp:rating,upnp:actor,upnp:director,upnp:toc,dc:description</SearchCaps>" .
                     "</u:GetSearchCapabilitiesResponse>" .
                     "</s:Body>" .
                     "</s:Envelope>";
                 break;
             case 'sortcapabilities':
-                $soapXML = "<?xml version=\"1.0\"?>" .
-                    "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" .
+                $soapXML = '<?xml version="1.0"?>' .
+                    '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">' .
                     "<s:Body>" .
-                    "<u:GetSortCapabilitiesResponse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\">" .
+                    '<u:GetSortCapabilitiesResponse xmlns:u="urn:schemas-upnp-org:service:ContentDirectory:1">' .
                     "<SortCaps>dc:title,upnp:genre,upnp:album,dc:creator,upnp:actor,upnp:director,upnp:toc,dc:description</SortCaps>" .
                     "</u:GetSortCapabilitiesResponse>" .
                     "</s:Body>" .
@@ -219,7 +219,7 @@ final class ControlReplyApplication implements ApplicationInterface
                 $numRet  = 0;
             } else {
                 $domDIDL = Upnp_Api::createDIDL($items, $filter);
-                if ($numRet == 0) {
+                if ($numRet === 0) {
                     $numRet = count($items);
                 }
             }

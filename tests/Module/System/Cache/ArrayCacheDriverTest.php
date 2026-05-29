@@ -39,7 +39,7 @@ class ArrayCacheDriverTest extends TestCase
     {
         $default = 'snafu';
 
-        static::assertSame(
+        self::assertSame(
             $default,
             $this->subject->get('booh', $default)
         );
@@ -52,11 +52,11 @@ class ArrayCacheDriverTest extends TestCase
 
         $this->subject->set($key, $value);
 
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->has($key)
         );
 
-        static::assertSame(
+        self::assertSame(
             $value,
             $this->subject->get($key)
         );
@@ -71,11 +71,11 @@ class ArrayCacheDriverTest extends TestCase
 
         $this->subject->clear();
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->has($key)
         );
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->get($key)
         );
     }
@@ -89,7 +89,7 @@ class ArrayCacheDriverTest extends TestCase
 
         $this->subject->delete($key);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->get($key)
         );
     }
@@ -104,7 +104,7 @@ class ArrayCacheDriverTest extends TestCase
 
         $this->subject->setMultiple([$key1 => $value1, $key2 => $value2]);
 
-        static::assertSame(
+        self::assertSame(
             [$key1 => $value1, $key2 => $value2],
             iterator_to_array($this->subject->getMultiple([$key1, $key2]))
         );
@@ -121,7 +121,7 @@ class ArrayCacheDriverTest extends TestCase
         $this->subject->setMultiple([$key1 => $value1, $key2 => $value2]);
         $this->subject->deleteMultiple([$key1]);
 
-        static::assertSame(
+        self::assertSame(
             [$key1 => null, $key2 => $value2],
             iterator_to_array($this->subject->getMultiple([$key1, $key2]))
         );

@@ -47,7 +47,7 @@ class RequestParserTest extends TestCase
 
     public function testGetFromRequestReturnsEmptyStringIfNotContained(): void
     {
-        static::assertSame(
+        self::assertSame(
             '',
             $this->subject->getFromRequest('snafu')
         );
@@ -55,7 +55,7 @@ class RequestParserTest extends TestCase
 
     public function testGetFromPostReturnsEmptyStringIfNotContained(): void
     {
-        static::assertSame(
+        self::assertSame(
             '',
             $this->subject->getFromPost('snafu')
         );
@@ -72,7 +72,7 @@ class RequestParserTest extends TestCase
                 [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
             );
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->verifyForm($formName)
         );
     }
@@ -92,7 +92,7 @@ class RequestParserTest extends TestCase
                 [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
             );
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->verifyForm($formName)
         );
     }
@@ -118,7 +118,7 @@ class RequestParserTest extends TestCase
                 [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
             );
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->verifyForm($formName)
         );
     }
@@ -138,7 +138,7 @@ class RequestParserTest extends TestCase
                 [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
             );
 
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->verifyForm($formName)
         );
     }

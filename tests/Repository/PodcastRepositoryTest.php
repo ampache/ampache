@@ -78,7 +78,7 @@ class PodcastRepositoryTest extends TestCase
             ->with($podcastId)
             ->willReturn($podcast);
 
-        static::assertSame(
+        self::assertSame(
             [$podcast],
             iterator_to_array($this->subject->findAll())
         );
@@ -98,7 +98,7 @@ class PodcastRepositoryTest extends TestCase
             )
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->findByFeedUrl($feedUrl),
         );
     }
@@ -125,7 +125,7 @@ class PodcastRepositoryTest extends TestCase
             ->with($podcastId)
             ->willReturn($podcast);
 
-        static::assertSame(
+        self::assertSame(
             $podcast,
             $this->subject->findByFeedUrl($feedUrl),
         );
@@ -238,7 +238,7 @@ class PodcastRepositoryTest extends TestCase
             ->method('getLastSyncDate')
             ->willReturn($lastSyncDate);
 
-        static::assertSame(
+        self::assertSame(
             $podcastId,
             $this->subject->persist($podcast)
         );
@@ -327,7 +327,7 @@ class PodcastRepositoryTest extends TestCase
             ->method('getId')
             ->willReturn($podcastId);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->persist($podcast)
         );
     }
@@ -347,7 +347,7 @@ class PodcastRepositoryTest extends TestCase
             ->method('isNew')
             ->willReturn(true);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->findById($podcastId)
         );
     }
@@ -367,7 +367,7 @@ class PodcastRepositoryTest extends TestCase
             ->method('isNew')
             ->willReturn(false);
 
-        static::assertSame(
+        self::assertSame(
             $podcast,
             $this->subject->findById($podcastId)
         );
@@ -375,7 +375,7 @@ class PodcastRepositoryTest extends TestCase
 
     public function testPrototypeReturnsNewObject(): void
     {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             Podcast::class,
             $this->subject->prototype()
         );

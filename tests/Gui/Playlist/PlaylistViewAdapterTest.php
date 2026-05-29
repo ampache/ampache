@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Playlist;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -61,6 +62,7 @@ class PlaylistViewAdapterTest extends MockeryTestCase
 
     private PlaylistViewAdapter $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);

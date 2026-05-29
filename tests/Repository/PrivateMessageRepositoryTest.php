@@ -66,12 +66,12 @@ class PrivateMessageRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('fetchOne')
             ->with(
-                'SELECT count(`id`) as `amount` FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = \'0\'',
+                "SELECT count(`id`) as `amount` FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = '0'",
                 [$userId]
             )
             ->willReturn($value);
 
-        static::assertSame(
+        self::assertSame(
             $value,
             $this->subject->getUnreadCount($user)
         );
@@ -96,7 +96,7 @@ class PrivateMessageRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $objectId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$objectId],
             $this->subject->getChatMessages($since)
         );
@@ -173,7 +173,7 @@ class PrivateMessageRepositoryTest extends TestCase
             ->with($messageId)
             ->willReturn($message);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->findById($messageId)
         );
     }
@@ -193,7 +193,7 @@ class PrivateMessageRepositoryTest extends TestCase
             ->with($messageId)
             ->willReturn($message);
 
-        static::assertSame(
+        self::assertSame(
             $message,
             $this->subject->findById($messageId)
         );
@@ -227,7 +227,7 @@ class PrivateMessageRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn($insertedId);
 
-        static::assertSame(
+        self::assertSame(
             $insertedId,
             $this->subject->create(null, $recipient, $subject, $message)
         );
@@ -267,7 +267,7 @@ class PrivateMessageRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn($insertedId);
 
-        static::assertSame(
+        self::assertSame(
             $insertedId,
             $this->subject->create($sender, $recipient, $subject, $message)
         );

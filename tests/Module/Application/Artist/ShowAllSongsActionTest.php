@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Artist;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -47,6 +48,7 @@ class ShowAllSongsActionTest extends MockeryTestCase
 
     private ?ShowAllSongsAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->modelFactory   = $this->mock(ModelFactoryInterface::class);

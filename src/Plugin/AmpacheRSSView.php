@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -34,18 +35,25 @@ use Ampache\Repository\Model\User;
 
 class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
 {
+    #[Override]
     public string $name = 'RSSView';
 
+    #[Override]
     public string $categories = 'home';
 
+    #[Override]
     public string $description = 'RSS View';
 
+    #[Override]
     public string $url = '';
 
+    #[Override]
     public string $version = '000002';
 
+    #[Override]
     public string $min_ampache = '370021';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -100,7 +108,7 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
     public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version == 0) {
+        if ($from_version === 0) {
             return false;
         }
 

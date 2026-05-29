@@ -75,7 +75,7 @@ class ExportPodcastsActionTest extends TestCase
             ->with(ConfigurationKeyEnum::PODCAST)
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }
@@ -101,7 +101,7 @@ class ExportPodcastsActionTest extends TestCase
             ->method('withHeader')
             ->with(
                 ...self::withConsecutive(
-                    ['Content-Disposition', static::stringContains('ampache')],
+                    ['Content-Disposition', self::stringContains('ampache')],
                     ['Content-Type', $contentType]
                 )
             )
@@ -121,7 +121,7 @@ class ExportPodcastsActionTest extends TestCase
             ->method('getContentType')
             ->willReturn($contentType);
 
-        static::assertSame(
+        self::assertSame(
             $response,
             $this->subject->run($this->request, $this->gatekeeper)
         );

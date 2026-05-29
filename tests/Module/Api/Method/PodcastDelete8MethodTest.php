@@ -244,7 +244,7 @@ class PodcastDelete8MethodTest extends TestCase
             ->with(sprintf('podcast %d deleted', $podcastId))
             ->willReturn($result);
 
-        static::assertSame(
+        self::assertSame(
             $this->response,
             $this->subject->handle(
                 $this->gatekeeper,

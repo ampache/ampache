@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream;
@@ -36,18 +37,25 @@ use WpOrg\Requests\Requests;
 
 class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
 {
+    #[Override]
     public string $name = 'LrcLib';
 
+    #[Override]
     public string $categories = 'lyrics';
 
+    #[Override]
     public string $description = 'Get lyrics from an LrcLib compatible server';
 
+    #[Override]
     public string $url = 'https://lrclib.net/';
 
+    #[Override]
     public string $version = '000001';
 
+    #[Override]
     public string $min_ampache = '360022';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     public string $site_url = 'https://lrclib.net';
@@ -91,7 +99,7 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
         // sleep for 0.5s
         usleep(500000);
 
-        $response = json_decode($request->body, true);
+        $response = json_decode((string) $request->body, true);
 
         return ($request->success && is_array($response))
             ? $response

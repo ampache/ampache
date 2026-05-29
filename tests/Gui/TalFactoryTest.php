@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Mockery\MockInterface;
@@ -40,6 +41,7 @@ class TalFactoryTest extends MockeryTestCase
 
     private TalFactory $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);

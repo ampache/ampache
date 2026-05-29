@@ -105,7 +105,7 @@ class ExportActionTest extends TestCase
             ->method('export')
             ->with(null);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }
@@ -149,7 +149,7 @@ class ExportActionTest extends TestCase
             ->method('export')
             ->with($catalog);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }

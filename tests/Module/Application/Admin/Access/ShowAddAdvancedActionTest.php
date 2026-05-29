@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -41,6 +42,7 @@ class ShowAddAdvancedActionTest extends MockeryTestCase
 
     private ?ShowAddAdvancedAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->ui = $this->mock(UiInterface::class);

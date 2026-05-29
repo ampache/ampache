@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\SmartPlaylist;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -44,6 +45,7 @@ class UpdatePlaylistActionTest extends MockeryTestCase
 
     private UpdatePlaylistAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->ui           = $this->mock(UiInterface::class);

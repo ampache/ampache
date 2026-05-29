@@ -62,7 +62,7 @@ class MissingArtistFromMusicBrainzRetrieverTest extends TestCase
 
     public function testRetrieveReturnsNullIfMbidIsInvalid(): void
     {
-        static::assertNull(
+        self::assertNull(
             $this->subject->retrieve(' ')
         );
     }
@@ -76,7 +76,7 @@ class MissingArtistFromMusicBrainzRetrieverTest extends TestCase
             ->with(sprintf('wanted:artist:%s', $this->mbid))
             ->willReturn($item);
 
-        static::assertSame(
+        self::assertSame(
             $item,
             $this->subject->retrieve($this->mbid)
         );
@@ -107,7 +107,7 @@ class MissingArtistFromMusicBrainzRetrieverTest extends TestCase
                 [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
             );
 
-        static::assertSame(
+        self::assertSame(
             [
                 'mbid' => $this->mbid,
                 'name' => 'Unknown Artist',
@@ -138,7 +138,7 @@ class MissingArtistFromMusicBrainzRetrieverTest extends TestCase
             ->with('artist', $this->mbid)
             ->willReturn((object) ['error' => 'some-error']);
 
-        static::assertSame(
+        self::assertSame(
             $defaultItem,
             $this->subject->retrieve($this->mbid)
         );
@@ -172,7 +172,7 @@ class MissingArtistFromMusicBrainzRetrieverTest extends TestCase
             ->with('artist', $this->mbid)
             ->willReturn((object) ['name' => $artistName]);
 
-        static::assertSame(
+        self::assertSame(
             $defaultItem,
             $this->subject->retrieve($this->mbid)
         );

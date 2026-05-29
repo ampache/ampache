@@ -109,7 +109,7 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
 
         if ($objectType !== null) {
             // @todo use php8+ enum to get rid of this check
-            if (in_array($objectType, $types)) {
+            if (in_array($objectType, $types, true)) {
                 $this->connection->query(
                     'DELETE FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?',
                     [$objectType, $objectId]

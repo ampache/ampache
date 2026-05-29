@@ -25,12 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Override;
 use Ampache\MockeryTestCase;
 
 class ApiOutputFactoryTest extends MockeryTestCase
 {
     private ApiOutputFactory $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->subject = new ApiOutputFactory();

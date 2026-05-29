@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authorization;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\Exception\AclItemDuplicationException;
 use Ampache\Module\Authorization\Exception\InvalidEndIpException;
@@ -39,6 +40,7 @@ class AccessListManagerTest extends MockeryTestCase
 
     private AccessListManager $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->accessRepository = $this->mock(AccessRepositoryInterface::class);

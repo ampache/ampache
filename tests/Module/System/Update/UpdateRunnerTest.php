@@ -94,7 +94,7 @@ class UpdateRunnerTest extends TestCase
                 ]
             );
 
-        static::assertSame(
+        self::assertSame(
             $tableName,
             $this->subject->runTableCheck(
                 $updates,
@@ -123,7 +123,7 @@ class UpdateRunnerTest extends TestCase
             ->method('query')
             ->with(sprintf('DESCRIBE `%s`', $tableName));
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->runTableCheck(
                 $updates,
                 true,

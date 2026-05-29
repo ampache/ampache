@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authentication;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authentication\Authenticator\AuthenticatorInterface;
 use Mockery;
@@ -43,6 +44,7 @@ class AuthenticationManagerTest extends MockeryTestCase
 
     private ?AuthenticationManager $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configContainer = Mockery::mock(ConfigContainerInterface::class);
@@ -61,7 +63,7 @@ class AuthenticationManagerTest extends MockeryTestCase
             ->once()
             ->andReturn(['roedlbroem']);
 
-        static::assertSame(
+        self::assertSame(
             [],
             $this->subject->login('foo', 'bar')
         );
@@ -82,7 +84,7 @@ class AuthenticationManagerTest extends MockeryTestCase
             ->once()
             ->andReturn([$this->authenticatorName]);
 
-        static::assertSame(
+        self::assertSame(
             ['success' => false],
             $this->subject->login($username, $password)
         );
@@ -107,7 +109,7 @@ class AuthenticationManagerTest extends MockeryTestCase
             ->once()
             ->andReturn([$this->authenticatorName]);
 
-        static::assertSame(
+        self::assertSame(
             $result,
             $this->subject->login($username, $password)
         );
@@ -129,7 +131,7 @@ class AuthenticationManagerTest extends MockeryTestCase
             ->once()
             ->andReturn([$this->authenticatorName]);
 
-        static::assertSame(
+        self::assertSame(
             $result,
             $this->subject->login($username, $password)
         );
@@ -142,7 +144,7 @@ class AuthenticationManagerTest extends MockeryTestCase
             ->once()
             ->andReturn([$this->authenticatorName]);
 
-        static::assertSame(
+        self::assertSame(
             [],
             $this->subject->postAuth('roedlbroem')
         );
@@ -157,7 +159,7 @@ class AuthenticationManagerTest extends MockeryTestCase
             ->once()
             ->andReturn([$method]);
 
-        static::assertSame(
+        self::assertSame(
             [],
             $this->subject->postAuth($method)
         );
@@ -177,7 +179,7 @@ class AuthenticationManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($result);
 
-        static::assertSame(
+        self::assertSame(
             $result,
             $this->subject->postAuth($this->authenticatorName)
         );

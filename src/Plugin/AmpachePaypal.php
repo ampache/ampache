@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\library_item;
@@ -33,18 +34,25 @@ use Ampache\Repository\Model\User;
 
 class AmpachePaypal extends AmpachePlugin implements PluginDisplayUserFieldInterface
 {
+    #[Override]
     public string $name = 'Paypal';
 
+    #[Override]
     public string $categories = 'user';
 
+    #[Override]
     public string $description = 'PayPal donation button on user page';
 
+    #[Override]
     public string $url = '';
 
+    #[Override]
     public string $version = '000001';
 
+    #[Override]
     public string $min_ampache = '370034';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out

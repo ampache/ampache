@@ -64,7 +64,7 @@ class WantedRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $wantedId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$wantedId],
             $this->subject->findAll()
         );
@@ -94,7 +94,7 @@ class WantedRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $wantedId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$wantedId],
             $this->subject->findAll($user)
         );
@@ -119,7 +119,7 @@ class WantedRepositoryTest extends TestCase
             )
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->find($musicBrainzId, $user)
         );
     }
@@ -144,7 +144,7 @@ class WantedRepositoryTest extends TestCase
             )
             ->willReturn((string) $wantedId);
 
-        static::assertSame(
+        self::assertSame(
             $wantedId,
             $this->subject->find($musicBrainzId, $user)
         );
@@ -194,7 +194,7 @@ class WantedRepositoryTest extends TestCase
             ->with('SELECT COUNT(`id`) AS `wanted_cnt` FROM `wanted` WHERE `accepted` = 1')
             ->willReturn((string) $value);
 
-        static::assertSame(
+        self::assertSame(
             $value,
             $this->subject->getAcceptedCount()
         );
@@ -212,7 +212,7 @@ class WantedRepositoryTest extends TestCase
             )
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->findByName($name)
         );
     }
@@ -229,14 +229,14 @@ class WantedRepositoryTest extends TestCase
             )
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->findByMusicBrainzId($mbid)
         );
     }
 
     public function testPrototypeReturnsNewInstance(): void
     {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             Wanted::class,
             $this->subject->prototype()
         );

@@ -90,7 +90,7 @@ class ShowActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showQueryStats');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($request, $gatekeeper)
         );
     }

@@ -52,7 +52,7 @@ class MetadataTest extends TestCase
 
     public function testIsNewReturnsTrueINew(): void
     {
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->isNew()
         );
     }
@@ -66,17 +66,17 @@ class MetadataTest extends TestCase
             ->with($this->subject)
             ->willReturn($id);
 
-        static::assertSame(
+        self::assertSame(
             0,
             $this->subject->getId()
         );
 
         $this->subject->save();
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->isNew()
         );
-        static::assertSame(
+        self::assertSame(
             $id,
             $this->subject->getId()
         );
@@ -89,14 +89,14 @@ class MetadataTest extends TestCase
         mixed $defaultValue,
         mixed $setValue
     ): void {
-        static::assertSame(
+        self::assertSame(
             $defaultValue,
             call_user_func_array([$this->subject, $getterMethod], [])
         );
 
         call_user_func_array([$this->subject, $setterMethod], [$setValue]);
 
-        static::assertSame(
+        self::assertSame(
             $setValue,
             call_user_func_array([$this->subject, $getterMethod], [])
         );
@@ -115,7 +115,7 @@ class MetadataTest extends TestCase
 
         $this->subject->setType($value);
 
-        static::assertSame(
+        self::assertSame(
             ucfirst($value),
             $this->subject->getType()
         );
@@ -127,7 +127,7 @@ class MetadataTest extends TestCase
 
         $this->subject->setField($field);
 
-        static::assertSame(
+        self::assertSame(
             $field,
             $this->subject->getField()
         );
@@ -146,15 +146,15 @@ class MetadataTest extends TestCase
             ->with($fieldId)
             ->willReturn($field);
 
-        static::assertSame(
+        self::assertSame(
             $field,
             $this->subject->getField()
         );
-        static::assertSame(
+        self::assertSame(
             $field,
             $this->subject->getField()
         );
-        static::assertSame(
+        self::assertSame(
             $fieldId,
             $this->subject->getFieldId()
         );

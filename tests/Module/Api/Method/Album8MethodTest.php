@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api8;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
@@ -48,6 +49,7 @@ class Album8MethodTest extends MockeryTestCase
 
     private ?Album8Method $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
