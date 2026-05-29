@@ -1574,7 +1574,10 @@ class Song extends database_object implements
     {
         if ($check_owner && Core::get_global('user') instanceof User) {
             $item = new Song($song_id);
-            if (isset($item->id) && Core::get_global('user') instanceof User && $item->get_user_owner() == Core::get_global('user')->id) {
+            if (
+                $item->id &&
+                $item->get_user_owner() == Core::get_global('user')->id
+            ) {
                 $level = AccessLevelEnum::USER;
             }
         }
@@ -2182,7 +2185,7 @@ class Song extends database_object implements
                     $lyrics = $plugin->_plugin->get_lyrics($this);
                     if (!empty($lyrics)) {
                         // save the lyrics if not set before
-                        if (array_key_exists('text', $lyrics) && !empty($lyrics['text'])) {
+                        if (!empty($lyrics['text'])) {
                             self::update_lyrics($lyrics['text'], $this->id);
                         }
 

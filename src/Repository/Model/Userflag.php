@@ -96,7 +96,7 @@ class Userflag extends database_object
 
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
         }
 
         if ($user_id === 0) {
@@ -173,7 +173,7 @@ class Userflag extends database_object
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
         }
 
         if ($user_id === 0) {
@@ -225,7 +225,7 @@ class Userflag extends database_object
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
         }
 
         if ($user_id === 0) {

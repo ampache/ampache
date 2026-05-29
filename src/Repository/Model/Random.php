@@ -419,7 +419,7 @@ class Random
             case 'album':
             case 'artist':
                 $sql = sprintf('SELECT `%s`.`id`, SUM(`song`.`size`) AS `size`, SUM(`%s`.`time`) AS `time` FROM `%s` ', $type, $type, $type);
-                if (!array_key_exists('join', $search_info) || !array_key_exists('song', $search_info['join']) || !$search_info['join']['song']) {
+                if (!array_key_exists('song', $search_info['join']) || !$search_info['join']['song']) {
                     $sql .= sprintf('LEFT JOIN `song` ON `song`.`%s`=`%s`.`id` ', $type, $type);
                 }
 
@@ -453,7 +453,7 @@ class Random
     public static function get_play_url(string $object_type, int $object_id): string
     {
         $user = Core::get_global('user');
-        $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . scrub_out((string)($user?->id ?? '')) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string)$object_id);
+        $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . scrub_out((string)($user->id ?? '')) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string)$object_id);
 
         return Stream_Url::format($link);
     }

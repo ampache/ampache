@@ -181,10 +181,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             return 0;
         }
 
-        if (!is_numeric($object_id)) {
-            return 0;
-        }
-
         $cleaned_value = str_replace('Folk, World, & Country', 'Folk World & Country', $value);
         if ((string)$cleaned_value === '') {
             return 0;
@@ -569,10 +565,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = [
-                'id' => $row['id'],
+                'id' => (int)$row['id'],
                 'name' => $row['name'],
                 'is_hidden' => $row['is_hidden'],
-                'count' => $row['count']
+                'count' => (int)$row['count']
             ];
         }
 
@@ -813,7 +809,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $current_tags = self::get_top_tags($object_type, $object_id, 0);
         foreach ($current_tags as $ctv) {
             $found = false;
-            if ($ctv['id'] != '') {
+            if ($ctv['id'] > 0) {
                 $ctag = new Tag($ctv['id']);
                 if ($ctag->isNew()) {
                     continue;

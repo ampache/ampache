@@ -118,7 +118,7 @@ class Playlist extends playlist_object
     ): array {
         if (!$user_id) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
         }
 
         $key = ($includePublic)
@@ -188,7 +188,7 @@ class Playlist extends playlist_object
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
         }
 
         $key = 'playlistarray';
@@ -239,7 +239,7 @@ class Playlist extends playlist_object
 
         $results = [];
         $user    = Core::get_global('user');
-        $user_id = $user?->id ?? -1;
+        $user_id = $user->id ?? -1;
 
         // Iterate over the object types
         $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data`';
@@ -311,7 +311,7 @@ class Playlist extends playlist_object
     {
         $results = [];
         $user    = Core::get_global('user');
-        $user_id = $user?->id ?? -1;
+        $user_id = $user->id ?? -1;
 
         // Iterate over the object types
         $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data`';
@@ -374,7 +374,7 @@ class Playlist extends playlist_object
     {
         $results = [];
         $user    = Core::get_global('user');
-        $user_id = $user?->id ?? -1;
+        $user_id = $user->id ?? -1;
         $params  = [$this->id];
 
         $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track` FROM `playlist_data` INNER JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type`="song" AND `object_id` IS NOT NULL ';
@@ -408,7 +408,7 @@ class Playlist extends playlist_object
     public function get_media_count(string $type = ''): int
     {
         $user      = Core::get_global('user');
-        $user_id   = $user?->id ?? -1;
+        $user_id   = $user->id ?? -1;
         $params    = [$this->id];
         $all_media = empty($type) || !in_array($type, ['broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video']);
 
@@ -625,7 +625,7 @@ class Playlist extends playlist_object
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? -1;
+            $user_id = $user->id ?? -1;
         }
 
         $results    = [];
@@ -652,7 +652,7 @@ class Playlist extends playlist_object
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? -1;
+            $user_id = $user->id ?? -1;
         }
 
         // check for duplicates
