@@ -165,7 +165,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     public function getRandomSongs(
         int $albumId
     ): array {
-        $userId = Core::get_global('user')?->id ?? -1;
+        $userId = Core::get_global('user')->id ?? -1;
         $sql    = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
             ? "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") "
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
@@ -189,7 +189,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     public function getRandomSongsByAlbumDisk(
         int $albumDiskId
     ): array {
-        $userId = Core::get_global('user')?->id ?? -1;
+        $userId = Core::get_global('user')->id ?? -1;
         $sql    = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") "
             : "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? ";

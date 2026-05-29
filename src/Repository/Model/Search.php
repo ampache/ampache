@@ -117,7 +117,7 @@ class Search extends playlist_object
         $this->objectType = (in_array(strtolower($object_type), self::VALID_TYPES))
             ? strtolower($object_type)
             : 'song';
-        $this->user = $this->search_user->id ?? -1; // define a user for live searches (overwriten if saved before)
+        $this->user = $this->search_user->id ?: -1; // define a user for live searches (overwriten if saved before)
         if ($search_id > 0) {
             $info = $this->get_info($search_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
@@ -2079,11 +2079,9 @@ class Search extends playlist_object
     public function to_js(): string
     {
         $javascript = "";
-        if (is_array($this->rules)) {
-            foreach ($this->rules as $rule) {
-                // @see search.js SearchRow.add(ruleType, operator, input, subtype)
-                $javascript .= '<script>SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out($rule[1]) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3] ?? '') . '"); </script>';
-            }
+        foreach ($this->rules as $rule) {
+            // @see search.js SearchRow.add(ruleType, operator, input, subtype)
+            $javascript .= '<script>SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out($rule[1]) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3] ?? '') . '"); </script>';
         }
 
         return $javascript;
