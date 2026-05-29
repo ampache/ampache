@@ -1058,7 +1058,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (228, 'browse_podcast_grid_view', '0', 'Force Grid View on Podcast browse', 25, 'boolean', 'interface', 'cookies'),
 (229, 'browse_podcast_episode_grid_view', '0', 'Force Grid View on Podcast Episode browse', 25, 'boolean', 'interface', 'cookies'),
 (230, 'show_playlist_media_parent', '0', 'Show Artist column on playlist media rows', 25, 'boolean', 'playlist', NULL),
-(231, 'subsonic_legacy', '1', 'Enable legacy Subsonic API responses for compatibility issues', 25, 'boolean', 'options', 'api'),
+(231, 'subsonic_legacy', '0', 'Enable legacy Subsonic API responses for compatibility issues', 25, 'boolean', 'options', 'api'),
 (232, 'subsonic_force_album_artist', '0', 'Only select Album Artists when making Subsonic Artist calls', 25, 'boolean', 'options', 'api'),
 (233, 'subsonic_single_user_data', '1', 'Only show my data when making Subsonic list calls', 25, 'boolean', 'options', 'api');
 
@@ -1825,7 +1825,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
 (-1, 228, 'browse_podcast_grid_view', '0'),
 (-1, 229, 'browse_podcast_episode_grid_view', '0'),
 (-1, 230, 'show_playlist_media_parent', '0'),
-(-1, 231, 'subsonic_legacy', '1'),
+(-1, 231, 'subsonic_legacy', '0'),
 (-1, 232, 'subsonic_force_album_artist', '0'),
 (-1, 233, 'subsonic_single_user_data', '1');
 

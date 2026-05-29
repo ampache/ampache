@@ -1359,7 +1359,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [230, 'show_playlist_media_parent', '0', 'Show Artist column on playlist media rows', AccessLevelEnum::USER->value, 'boolean', 'playlist', null]);
                     break;
                 case 'subsonic_legacy':
-                    Dba::write($pref_sql, [231, 'subsonic_legacy', '1', 'Enable legacy Subsonic API responses for compatibility issues', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
+                    Dba::write($pref_sql, [231, 'subsonic_legacy', '0', 'Enable legacy Subsonic API responses for compatibility issues', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
                 case 'subsonic_force_album_artist':
                     Dba::write($pref_sql, [232, 'subsonic_force_album_artist', '0', 'Force Album Artist for Subsonic API responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
