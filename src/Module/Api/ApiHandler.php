@@ -77,6 +77,13 @@ final class ApiHandler implements ApiHandlerInterface
         'tags',
     ];
 
+    /** @var string[] */
+    private array $deprecated8 = [
+        'get_indexes',
+        'playlist_add_song',
+        'user_update',
+    ];
+
     public function __construct(
         StreamFactoryInterface $streamFactory,
         LoggerInterface $logger,
@@ -554,7 +561,7 @@ final class ApiHandler implements ApiHandlerInterface
                 break;
             case 8:
             default:
-                if (in_array($action, $this->deprecated)) {
+                if (in_array($action, $this->deprecated8)) {
                     ob_end_clean();
 
                     return $response->withBody(
