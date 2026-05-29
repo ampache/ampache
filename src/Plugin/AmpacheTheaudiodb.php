@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Override;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
@@ -37,6 +36,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Exception;
 use MusicBrainz\MusicBrainz;
+use Override;
 use WpOrg\Requests\Requests;
 
 class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterface, PluginGetMetadataInterface
@@ -250,7 +250,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                     debug_event('theaudiodb.plugin', sprintf('Updating %s: ', $object_type) . $object->get_fullname(), 3);
                     $data['name'] = $release->strArtist ?? null;
                     // get the biography based on your locale
-                    $locale          = explode('_', (string) AmpConfig::get('lang', 'en_US'))[0] ?? 'en';
+                    $locale          = explode('_', (string) AmpConfig::get('lang', 'en_US'))[0] ?: 'en';
                     $data['summary'] = match ($locale) {
                         'de' => $release->strBiographyDE ?? null,
                         'fr' => $release->strBiographyFR ?? null,
@@ -316,7 +316,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
      * @param string $func
      * @return mixed|null
      */
-    private function api_call($func)
+    private function api_call($func): mixed
     {
         $url = 'http://www.theaudiodb.com/api/v1/json/' . $this->api_key . '/' . $func;
         //debug_event('theaudiodb.plugin', 'API call: ' . $url, 5);
@@ -331,9 +331,8 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
 
     /**
      * @param null|string $name
-     * @return mixed|null
      */
-    private function search_artists($name)
+    private function search_artists($name): mixed
     {
         return ($name)
             ? $this->api_call('search.php?s=' . rawurlencode($name))
@@ -342,9 +341,8 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
 
     /**
      * @param string $mbid
-     * @return mixed|null
      */
-    private function get_artist($mbid)
+    private function get_artist($mbid): mixed
     {
         return $this->api_call('artist-mb.php?i=' . $mbid);
     }
@@ -352,27 +350,24 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
     /**
      * @param string $artist
      * @param string $album
-     * @return mixed|null
      */
-    private function search_album($artist, $album)
+    private function search_album($artist, $album): mixed
     {
         return $this->api_call('searchalbum.php?s=' . rawurlencode($artist) . '&a=' . rawurlencode($album));
     }
 
     /**
      * @param string $mbid
-     * @return mixed|null
      */
-    private function get_album($mbid)
+    private function get_album($mbid): mixed
     {
         return $this->api_call('album-mb.php?i=' . $mbid);
     }
 
     /**
      * @param string $mbid
-     * @return mixed|null
      */
-    private function get_track($mbid)
+    private function get_track($mbid): mixed
     {
         return $this->api_call('track-mb.php?i=' . $mbid);
     }

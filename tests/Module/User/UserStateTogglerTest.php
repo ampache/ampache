@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User;
 
-use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -34,6 +33,7 @@ use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Mockery\MockInterface;
+use Override;
 
 class UserStateTogglerTest extends MockeryTestCase
 {

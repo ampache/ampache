@@ -33,7 +33,7 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
-/** @var int[] $object_ids */
+/** @var list<int> $object_ids */
 /** @var array $missing_objects */
 /** @var string $limit_threshold */
 

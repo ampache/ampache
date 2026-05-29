@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\RefreshReordered;
 
-use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
@@ -33,6 +32,7 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RefreshPlaylistMediasActionTest extends MockeryTestCase

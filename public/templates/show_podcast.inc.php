@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
 /** @var Ampache\Repository\Model\Podcast $podcast */
-/** @var int[] $object_ids */
+/** @var list<int> $object_ids */
 /** @var string $object_type */
 /** @var User $current_user */
 

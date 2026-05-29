@@ -25,12 +25,12 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authentication;
 
-use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authentication\Authenticator\AuthenticatorInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
+use Override;
 
 class AuthenticationManagerTest extends MockeryTestCase
 {

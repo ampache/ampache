@@ -25,11 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\WebDav;
 
-use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
+use Override;
 use Sabre\DAV\Auth\Backend\BackendInterface;
 use Sabre\DAV\Auth\Plugin;
 use Sabre\DAV\Browser\Plugin as BrowserPlugin;

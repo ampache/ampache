@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Mockery\MockInterface;
+use Override;
 
 class AjaxUriRetrieverTest extends MockeryTestCase
 {

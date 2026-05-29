@@ -25,11 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Gui;
 
-use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\System\ConfigViewAdapterInterface;
 use Ampache\MockeryTestCase;
 use Mockery\MockInterface;
+use Override;
 use PhpTal\PHPTAL;
 use PhpTal\PhpTalInterface;
 use PhpTal\TranslationServiceInterface;

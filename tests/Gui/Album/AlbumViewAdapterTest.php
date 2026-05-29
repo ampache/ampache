@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Album;
 
-use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -41,6 +40,7 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Mockery\MockInterface;
+use Override;
 
 class AlbumViewAdapterTest extends MockeryTestCase
 {

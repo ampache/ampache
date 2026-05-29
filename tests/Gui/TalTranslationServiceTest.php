@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Gui;
 
-use Override;
 use Ampache\MockeryTestCase;
+use Override;
 
 class TalTranslationServiceTest extends MockeryTestCase
 {

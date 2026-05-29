@@ -132,7 +132,7 @@ class SubsonicClient
                     $curl,
                     [
                         CURLOPT_HEADER => 0,
-                        CURLOPT_RETURNTRANSFER => 1,
+                        CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_CONNECTTIMEOUT => 8,
                         CURLOPT_SSL_VERIFYPEER => 0,
                         CURLOPT_FOLLOWLOCATION => true,

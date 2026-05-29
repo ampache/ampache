@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application;
 
-use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
@@ -36,6 +35,7 @@ use DI\NotFoundException;
 use Exception;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

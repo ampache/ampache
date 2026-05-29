@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Art\Collector;
 
-use Override;
 use Ampache\Repository\Model\Art;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Override;
 
 class DbCollectorModuleTest extends MockeryTestCase
 {

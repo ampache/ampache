@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Update;
 
-use Override;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\System\UpdateViewAdapterInterface;
 use Ampache\Gui\TalFactoryInterface;
@@ -33,6 +32,7 @@ use Ampache\Gui\TalViewInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

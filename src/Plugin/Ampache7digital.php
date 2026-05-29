@@ -25,13 +25,13 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\OAuth\OAuthConsumer;
 use Ampache\Module\Util\OAuth\OAuthRequest;
 use Ampache\Module\Util\OAuth\OAuthSignatureMethod_HMAC_SHA1;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Override;
 
 class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterface
 {

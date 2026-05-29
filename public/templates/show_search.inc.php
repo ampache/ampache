@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
 /** @var Search $playlist */
-/** @var int[] $object_ids */
+/** @var list<int> $object_ids */
 
 $web_path = AmpConfig::get_web_path();
 

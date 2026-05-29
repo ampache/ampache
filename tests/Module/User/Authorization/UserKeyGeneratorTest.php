@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\Authorization;
 
-use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\User;
@@ -33,6 +32,7 @@ use Ampache\Repository\UserRepositoryInterface;
 use Exception;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use Psr\Log\LoggerInterface;
 
 class UserKeyGeneratorTest extends MockeryTestCase

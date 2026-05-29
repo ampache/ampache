@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Override;
 use WpOrg\Requests\Requests;
 
 class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface

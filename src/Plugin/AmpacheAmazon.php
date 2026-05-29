@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Override;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\AmazonSearch;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Override;
 
 class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
 {
@@ -274,7 +274,7 @@ class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
 
         /* Foreach through what we've found */
         foreach ($final_results as $result) {
-            $key = '';
+            $key = null;
             /* Recurse through the images found */
             foreach ($possible_keys as $pKey) {
                 if (strlen((string) $result[$pKey]) !== 0) {
@@ -283,7 +283,7 @@ class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
                 }
             } // foreach
 
-            if ($key !== '' && $key !== '0') {
+            if ($key) {
                 // Rudimentary image type detection, only JPG and GIF allowed.
                 if (str_ends_with((string) $result[$key], '.jpg')) {
                     $mime = "image/jpeg";

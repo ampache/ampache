@@ -25,8 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Override;
-use Deprecated;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -37,6 +35,8 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Deprecated;
+use Override;
 
 class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInterface
 {

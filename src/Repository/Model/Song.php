@@ -2005,22 +2005,12 @@ class Song extends database_object implements
      */
     public function display_art(array $size, bool $force = false): void
     {
-        $object_id = null;
-        $type      = null;
-
         if (Art::has_db($this->id, 'song')) {
-            $object_id = $this->id;
-            $type      = 'song';
+            Art::display('song', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
         } elseif (Art::has_db($this->album, 'album')) {
-            $object_id = $this->album;
-            $type      = 'album';
+            Art::display('album', $this->album, (string)$this->get_fullname(), $size, $this->get_link());
         } elseif (($this->artist && Art::has_db($this->artist, 'artist')) || $force) {
-            $object_id = $this->artist;
-            $type      = 'artist';
-        }
-
-        if ($object_id !== null && $type !== null) {
-            Art::display($type, $object_id, (string)$this->get_fullname(), $size, $this->get_link());
+            Art::display('artist', $this->artist, (string)$this->get_fullname(), $size, $this->get_link());
         }
     }
 

@@ -133,24 +133,6 @@ class Plugin
             return false;
         }
 
-        /* Make sure we've got the required methods */
-        if (!method_exists($this->_plugin, 'install')) {
-            return false;
-        }
-
-        if (!method_exists($this->_plugin, 'uninstall')) {
-            return false;
-        }
-
-        if (!method_exists($this->_plugin, 'load')) {
-            return false;
-        }
-
-        if (!method_exists($this->_plugin, 'upgrade')) {
-            // TODO mark upgrade as required for Ampache 7+
-            debug_event(self::class, 'WARNING: Plugin missing upgrade method. ' . $this->_plugin->name . '`.', 1);
-        }
-
         /* Make sure it's within the version confines */
         $db_version = $this->get_ampache_db_version();
 
@@ -203,7 +185,6 @@ class Plugin
     {
         if (
             $this->_plugin instanceof AmpachePlugin &&
-            method_exists($this->_plugin, 'uninstall') &&
             $this->_plugin->uninstall()
         ) {
             $this->remove_plugin_version();
@@ -223,7 +204,6 @@ class Plugin
     {
         if (
             $this->_plugin instanceof AmpachePlugin &&
-            method_exists($this->_plugin, 'upgrade') &&
             $this->_plugin->upgrade()
         ) {
             $this->set_plugin_version($this->_plugin->version);
@@ -308,8 +288,7 @@ class Plugin
             if (
                 $plugin->_plugin instanceof AmpachePlugin &&
                 $installed_version > 0 &&
-                $installed_version < $plugin->_plugin->version &&
-                method_exists($plugin->_plugin, 'upgrade')
+                $installed_version < $plugin->_plugin->version
             ) {
                 if ($plugin->_plugin->upgrade()) {
                     $plugin->set_plugin_version($plugin->_plugin->version);

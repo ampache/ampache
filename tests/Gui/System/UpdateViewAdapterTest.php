@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\System;
 
-use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -35,6 +34,7 @@ use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use ArrayIterator;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class UpdateViewAdapterTest extends MockeryTestCase

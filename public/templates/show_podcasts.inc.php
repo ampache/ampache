@@ -36,7 +36,7 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\PodcastRepositoryInterface;
 
 /** @var Browse $browse */
-/** @var int[] $object_ids */
+/** @var list<int> $object_ids */
 /** @var PodcastRepositoryInterface $podcastRepository */
 
 $webPath            = AmpConfig::get_web_path();

@@ -33,7 +33,7 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var int[] $object_ids */ ?>
+/** @var list<int> $object_ids */ ?>
 <div id="information_actions">
     <ul>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>

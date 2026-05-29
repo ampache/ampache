@@ -37,7 +37,7 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var int[] $object_ids */
+/** @var list<int> $object_ids */
 
 $is_table          = !$browse->is_grid_view();
 $show_art          = AmpConfig::get('playlist_art') || $browse->is_mashup();

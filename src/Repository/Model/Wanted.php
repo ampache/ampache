@@ -209,7 +209,7 @@ class Wanted extends database_object
                                 if (strlen((string)$group->{'first-release-date'}) == 4) {
                                     $wanted->year = $group->{'first-release-date'};
                                 } elseif (strtotime((string) $group->{'first-release-date'})) {
-                                    $wanted->year = (int)date("Y", strtotime((string) $group->{'first-release-date'})?: null);
+                                    $wanted->year = (int)date("Y", strtotime((string) $group->{'first-release-date'}) ?: null);
                                 } else {
                                     $wanted->year = null;
                                 }
@@ -354,7 +354,7 @@ class Wanted extends database_object
                 // Set fresh data
                 $this->name = $group->title;
                 $this->year = (strtotime((string) $group->{'first-release-date'}))
-                    ? (int)date("Y", strtotime((string) $group->{'first-release-date'})?: null)
+                    ? (int)date("Y", strtotime((string) $group->{'first-release-date'}) ?: null)
                     : null;
 
                 // Load from database if already cached

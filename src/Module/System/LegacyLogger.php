@@ -199,7 +199,7 @@ final class LegacyLogger implements LoggerInterface
         $username   = $context['username'] ?? null;
         if (empty($username)) {
             $user     = Core::get_global('user');
-            $username = $user?->username ?? self::FALLBACK_USERNAME;
+            $username = $user->username ?? self::FALLBACK_USERNAME;
         }
 
         if (

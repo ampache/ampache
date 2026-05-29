@@ -35,7 +35,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Label;
 
 /** @var Label $label */
-/** @var int[] $object_ids */
+/** @var list<int> $object_ids */
 /** @var string $object_type */
 /** @var bool $isLabelEditable */
 

@@ -149,7 +149,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * this attempts to build a cache of the data from the passed albums all in one query
-     * @param int[] $ids
+     * @param list<int|string> $ids
      */
     public static function build_cache(array $ids, bool $extra = false, string $limit_threshold = ''): bool
     {
@@ -626,16 +626,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      */
     public function display_art(array $size, bool $force = false): void
     {
-        $artist_id = null;
-        $type      = null;
-
         if (Art::has_db($this->id, 'artist') || $force) {
-            $artist_id = $this->id;
-            $type      = 'artist';
-        }
-
-        if ($artist_id !== null && $type !== null) {
-            Art::display($type, $artist_id, (string)$this->get_fullname(), $size, $this->get_link());
+            Art::display('artist', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
         }
     }
 

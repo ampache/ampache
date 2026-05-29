@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
 use Exception;
+use Override;
 use WpOrg\Requests\Requests;
 
 class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInterface

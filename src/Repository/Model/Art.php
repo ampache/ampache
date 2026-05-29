@@ -137,7 +137,7 @@ class Art extends database_object
      * This attempts to reduce # of queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point
-     * @param int[] $object_ids
+     * @param list<int|string> $object_ids
      */
     public static function build_cache(array $object_ids, ?string $type = null): bool
     {
@@ -171,7 +171,7 @@ class Art extends database_object
         }
 
         $data      = explode('/', $mime);
-        $extension = $data['1'] ?? '';
+        $extension = $data[1] ?? '';
 
         if ($extension == 'jpeg') {
             $extension = 'jpg';
@@ -350,7 +350,7 @@ class Art extends database_object
                 : [];
 
             // thumb wasn't generated
-            if ($data === []) {
+            if ($data === [] || !isset($data['thumb']) || !isset($data['thumb_mime'])) {
                 debug_event(self::class, 'Art id {' . $this->id . '} Unable to generate thumbnail for ' . $this->object_type . ': ' . $this->object_id, 1);
 
                 return false;

@@ -285,10 +285,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             : sprintf('SELECT DISTINCT `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, %s FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? %s GROUP BY `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, %s ORDER BY %s, `album_disk`.`disk`', $original_year, $catalog_where, $original_year, $sql_sort);
         $db_results = Dba::read($sql, [$artistId]);
         $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            if ($group_release_type) {
+        if ($group_release_type) {
+            while ($row = Dba::fetch_assoc($db_results)) {
                 // We assume undefined release type is album
-                $rtype = $row['release_type'] ?? 'album';
+                $rtype = (string)($row['release_type'] ?? 'album');
                 if (!isset($results[$rtype])) {
                     $results[$rtype] = [];
                 }
@@ -309,7 +309,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
 
                     $results = array_merge($results_sort, $results);
                 }
-            } else {
+            }
+        } else {
+            while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = (int)$row['id'];
             }
         }

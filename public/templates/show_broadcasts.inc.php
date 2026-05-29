@@ -28,7 +28,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Broadcast;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var int[] $object_ids */
+/** @var list<int> $object_ids */
 
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');

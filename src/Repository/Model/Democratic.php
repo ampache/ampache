@@ -326,10 +326,10 @@ class Democratic extends Tmp_Playlist
     {
         /* Iterate through the objects if no vote, add to playlist and vote */
         foreach ($items as $element) {
-            $type      = array_shift($element);
-            $object_id = array_shift($element);
-            if (!$this->has_vote((int)$object_id, $type)) {
-                $this->_add_vote((int)$object_id, $type);
+            $type      = (string)array_shift($element);
+            $object_id = (int)array_shift($element);
+            if (!$this->has_vote($object_id, $type)) {
+                $this->_add_vote($object_id, $type);
             }
         }
     }

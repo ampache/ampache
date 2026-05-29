@@ -25,9 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Override;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\User;
+use Override;
 
 class AmpacheMastodon extends AmpachePlugin implements PluginExternalShareInterface
 {

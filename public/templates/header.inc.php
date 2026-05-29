@@ -35,7 +35,6 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Tmp_Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 

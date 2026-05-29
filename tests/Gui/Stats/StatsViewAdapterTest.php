@@ -25,13 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Stats;
 
-use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Repository\VideoRepositoryInterface;
 use Mockery\MockInterface;
+use Override;
 
 class StatsViewAdapterTest extends MockeryTestCase
 {

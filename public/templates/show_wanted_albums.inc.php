@@ -32,7 +32,7 @@ global $dic;
 $wantedRepository = $dic->get(WantedRepositoryInterface::class);
 
 /** @var Browse $browse */
-/** @var int[] $object_ids */
+/** @var list<int> $object_ids */
 ?>
 <table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="wanted">
     <thead>

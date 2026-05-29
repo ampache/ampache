@@ -379,7 +379,7 @@ final class InstallationHelper implements InstallationHelperInterface
         Dba::dbh();
 
         $params = AmpConfig::get_all();
-        if (empty($params['database_username']) || (empty($params['database_password']) && strpos($params['database_hostname'], '/') !== 0)) {
+        if (!$params || empty($params['database_username']) || (empty($params['database_password']) && strpos($params['database_hostname'], '/') !== 0)) {
             AmpError::add('general', T_("Invalid configuration settings"));
 
             return false;
@@ -650,13 +650,14 @@ final class InstallationHelper implements InstallationHelperInterface
     public function write_config(string $current_file_path): bool
     {
         if (
+            !$current_file_path ||
             !is_writeable($current_file_path) ||
             !parse_ini_file($current_file_path)
         ) {
             return false;
         }
 
-        $new_data = $this->generate_config(parse_ini_file($current_file_path));
+        $new_data = $this->generate_config(parse_ini_file($current_file_path) ?: []);
 
         // Start writing into the current config file
         $handle = fopen($current_file_path, 'w+');

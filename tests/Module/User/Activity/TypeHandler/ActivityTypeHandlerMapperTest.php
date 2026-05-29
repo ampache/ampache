@@ -25,11 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\Activity\TypeHandler;
 
-use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Mockery\MockInterface;
+use Override;
 
 class ActivityTypeHandlerMapperTest extends MockeryTestCase
 {

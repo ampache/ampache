@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;

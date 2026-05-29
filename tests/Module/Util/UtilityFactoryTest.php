@@ -25,12 +25,12 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Repository\UserRepositoryInterface;
 use Curl\Curl;
 use Mockery\MockInterface;
+use Override;
 use Psr\Log\LoggerInterface;
 
 class UtilityFactoryTest extends MockeryTestCase
