@@ -823,6 +823,7 @@ class Ui implements UiInterface
             case 'api_enable_4':
             case 'api_enable_5':
             case 'api_enable_6':
+            case 'api_enable_8':
             case 'api_hide_dupe_searches':
             case 'autoupdate_lastversion_new':
             case 'autoupdate':

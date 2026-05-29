@@ -1360,6 +1360,15 @@ class Preference extends database_object
                 case 'subsonic_legacy':
                     Dba::write($pref_sql, [231, 'subsonic_legacy', '1', 'Enable legacy Subsonic API responses for compatibility issues', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
+                case 'subsonic_force_album_artist':
+                    Dba::write($pref_sql, [232, 'subsonic_force_album_artist', '0', 'Force Album Artist for Subsonic API responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
+                    break;
+                case 'subsonic_single_user_data':
+                    Dba::write($pref_sql, [233, 'subsonic_single_user_data', '1', 'Use single user data for Subsonic API responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
+                    break;
+                case 'api_enable_8':
+                    Dba::write($pref_sql, [234, 'api_enable_8', '1', 'Allow Ampache API8 responses', AccessLevelEnum::USER->value, 'boolean', 'options', null]);
+                    break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
             }
@@ -1403,6 +1412,7 @@ class Preference extends database_object
             'api_enable_4' => 'Allow Ampache API4 responses',
             'api_enable_5' => 'Allow Ampache API5 responses',
             'api_enable_6' => 'Allow Ampache API6 responses',
+            'api_enable_8' => 'Allow Ampache API8 responses',
             'api_force_version' => 'Force a specific API response no matter what version you send',
             'api_hidden_playlists' => 'Hide playlists in Subsonic and API clients that start with this string',
             'api_hide_dupe_searches' => 'Hide smartlists that match playlist names in Subsonic and API clients',
@@ -1574,6 +1584,8 @@ class Preference extends database_object
             'stream_control_time_max' => 'Stream control maximal time (minutes)',
             'subsonic_always_download' => 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)',
             'subsonic_backend' => 'Use Subsonic backend',
+            'subsonic_force_album_artist' => 'Force Album Artist for Subsonic API responses',
+            'subsonic_single_user_data' => 'Use single user data for Subsonic API responses',
             'tadb_api_key' => 'TheAudioDb API key',
             'tadb_overwrite_name' => 'Overwrite Artist names that match an mbid',
             'theme_color' => 'Theme color',
@@ -1669,7 +1681,7 @@ class Preference extends database_object
                         "'ajax_load', 'album_group', 'album_release_type', 'album_release_type_sort', 'album_sort'," .
                         " 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent'" .
                         " 'allow_personal_info_time', 'api_always_download', 'api_enable_3', 'api_enable_4'" .
-                        " 'api_enable_5', 'api_enable_6', 'api_force_version', 'api_hidden_playlists'" .
+                        " 'api_enable_5', 'api_enable_6', 'api_enable_8', 'api_force_version', 'api_hidden_playlists'" .
                         " 'api_hide_dupe_searches', 'autoupdate_lastcheck', 'autoupdate_lastversion_new'" .
                         " 'autoupdate_lastversion', 'bookmark_latest', 'broadcast_by_default', 'browse_filter'" .
                         " 'browser_notify_timeout', 'browser_notify', 'custom_datetime', 'custom_logo_user'" .
@@ -1687,7 +1699,7 @@ class Preference extends database_object
                         " 'song_page_title', 'subsonic_always_download', 'topmenu', 'transcode_bitrate', 'transcode'" .
                         " 'ui_fixed', 'unique_playlist', 'use_original_year', 'use_play2', 'webplayer_aurora'" .
                         " 'webplayer_confirmclose', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs'" .
-                        " 'webplayer_removeplayed'" .
+                        " 'webplayer_removeplayed', 'subsonic_force_album_artist', 'subsonic_single_user_data'" .
                         ");",
                         [AccessLevelEnum::USER->value]
                     ) !== null &&
