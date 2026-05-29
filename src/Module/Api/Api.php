@@ -44,15 +44,6 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 class Api
 {
-    public const API_VERSIONS = [
-        3,
-        4,
-        5,
-        6,
-        8
-    ];
-
-    public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
     /**
      * This dict contains all known api-methods (key) and their respective handler (value)
      *
@@ -103,6 +94,7 @@ class Api
         Method\Api8\GenreSongs8Method::ACTION => Method\Api8\GenreSongs8Method::class,
         Method\Api8\GetArt8Method::ACTION => Method\Api8\GetArt8Method::class,
         Method\Api8\GetBookmark8Method::ACTION => Method\Api8\GetBookmark8Method::class,
+        Method\Api8\GetIndexes8Method::ACTION => Method\Api8\GetIndexes8Method::class,
         Method\Api8\GetExternalMetadata8Method::ACTION => Method\Api8\GetExternalMetadata8Method::class,
         Method\Api8\GetLyrics8Method::ACTION => Method\Api8\GetLyrics8Method::class,
         Method\Api8\GetSimilar8Method::ACTION => Method\Api8\GetSimilar8Method::class,
@@ -131,6 +123,8 @@ class Api
         Method\Api8\Ping8Method::ACTION => Method\Api8\Ping8Method::class,
         Method\Api8\PlaylistAdd8Method::ACTION => Method\Api8\PlaylistAdd8Method::class,
         Method\Api8\PlaylistAdd8Method::REST_ACTION => Method\Api8\PlaylistAdd8Method::class,
+        Method\Api8\PlaylistAddSong8Method::ACTION => Method\Api8\PlaylistAddSong8Method::class,
+        Method\Api8\PlaylistAddSong8Method::REST_ACTION => Method\Api8\PlaylistAddSong8Method::class,
         Method\Api8\PlaylistCreate8Method::ACTION => Method\Api8\PlaylistCreate8Method::class,
         Method\Api8\PlaylistCreate8Method::REST_ACTION => Method\Api8\PlaylistCreate8Method::class,
         Method\Api8\PlaylistDelete8Method::ACTION => Method\Api8\PlaylistDelete8Method::class,
@@ -140,8 +134,6 @@ class Api
         Method\Api8\PlaylistGenerate8Method::ACTION => Method\Api8\PlaylistGenerate8Method::class,
         Method\Api8\PlaylistHash8Method::ACTION => Method\Api8\PlaylistHash8Method::class,
         Method\Api8\Playlist8Method::ACTION => Method\Api8\Playlist8Method::class,
-        Method\Api8\PlaylistRemove8Method::ACTION => Method\Api8\PlaylistRemove8Method::class,
-        Method\Api8\PlaylistRemove8Method::REST_ACTION => Method\Api8\PlaylistRemove8Method::class,
         Method\Api8\PlaylistRemoveSong8Method::ACTION => Method\Api8\PlaylistRemoveSong8Method::class,
         Method\Api8\PlaylistRemoveSong8Method::REST_ACTION => Method\Api8\PlaylistRemoveSong8Method::class,
         Method\Api8\Playlists8Method::ACTION => Method\Api8\Playlists8Method::class,
@@ -217,85 +209,26 @@ class Api
         Method\Api8\UserPreferences8Method::ACTION => Method\Api8\UserPreferences8Method::class,
         Method\Api8\UserSmartlists8Method::ACTION => Method\Api8\UserSmartlists8Method::class,
         Method\Api8\Users8Method::ACTION => Method\Api8\Users8Method::class,
+        Method\Api8\UserUpdate8Method::ACTION => Method\Api8\UserUpdate8Method::class,
         Method\Api8\Video8Method::ACTION => Method\Api8\Video8Method::class,
         Method\Api8\Videos8Method::ACTION => Method\Api8\Videos8Method::class,
     ];
 
-    public static ?Browse $browse         = null;
-    public static string $version         = '8.0.0'; // AMPACHE_VERSION
+    public const API_VERSIONS = [
+        3,
+        4,
+        5,
+        6,
+        8
+    ];
+
+    public const DEFAULT_VERSION = 8; // AMPACHE_VERSION
+
+    public static string $version = '8.0.0'; // AMPACHE_VERSION
+
     public static string $version_numeric = '800000'; // AMPACHE_VERSION
 
-    /**
-     * check_access
-     *
-     * This function checks the user can perform the function requested
-     * 'interface', 100, $user->id
-     */
-    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method, string $format = 'xml'): bool
-    {
-        if (!Access::check($type, $level, $user_id)) {
-            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
-            /* HINT: Access level, eg 75, 100 */
-            self::error(sprintf(T_('Require: %s'), $level->value), '4742', $method, 'account', $format);
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * check_parameter
-     *
-     * Return an error for missing parameters for API6
-     *
-     * @param array<string, mixed> $input
-     * @param string[] $parameters e.g. array('auth', type')
-     */
-    public static function check_parameter(array $input, array $parameters, string $method): bool
-    {
-        $parameter = self::parameter_exists($input, $parameters);
-        if ($parameter === true) {
-            return true;
-        }
-
-        debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
-
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
-
-        return false;
-    }
-
-    /**
-     * empty
-     * call the correct empty message depending on format
-     */
-    public static function empty(?string $empty_type, string $format = 'xml'): void
-    {
-        switch ($format) {
-            case 'json':
-                echo Json8_Data::empty($empty_type);
-                break;
-            default:
-                echo Xml8_Data::empty();
-        }
-    }
-
-    /**
-     * error
-     * call the correct error message depending on format
-     */
-    public static function error(string $message, int|string $error_code, string $method, string $error_type, string $format = 'xml'): void
-    {
-        switch ($format) {
-            case 'json':
-                echo Json8_Data::error($error_code, $message, $method, $error_type);
-                break;
-            default:
-                echo Xml8_Data::error($error_code, $message, $method, $error_type);
-        }
-    }
+    public static ?Browse $browse = null;
 
     public static function getBrowse(User $user): Browse
     {
@@ -332,6 +265,36 @@ class Api
     }
 
     /**
+     * error
+     * call the correct error message depending on format
+     */
+    public static function error(string $message, int|string $error_code, string $method, string $error_type, string $format = 'xml'): void
+    {
+        switch ($format) {
+            case 'json':
+                echo Json8_Data::error($error_code, $message, $method, $error_type);
+                break;
+            default:
+                echo Xml8_Data::error($error_code, $message, $method, $error_type);
+        }
+    }
+
+    /**
+     * empty
+     * call the correct empty message depending on format
+     */
+    public static function empty(?string $empty_type, string $format = 'xml'): void
+    {
+        switch ($format) {
+            case 'json':
+                echo Json8_Data::empty($empty_type);
+                break;
+            default:
+                echo Xml8_Data::empty();
+        }
+    }
+
+    /**
      * parameter_exists
      *
      * This function checks the $input actually has the parameter.
@@ -348,6 +311,48 @@ class Api
             }
 
             return $parameter;
+        }
+
+        return true;
+    }
+
+    /**
+     * check_parameter
+     *
+     * Return an error for missing parameters for API6
+     *
+     * @param array<string, mixed> $input
+     * @param string[] $parameters e.g. array('auth', type')
+     */
+    public static function check_parameter(array $input, array $parameters, string $method): bool
+    {
+        $parameter = self::parameter_exists($input, $parameters);
+        if ($parameter === true) {
+            return true;
+        }
+
+        debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
+
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
+
+        return false;
+    }
+
+    /**
+     * check_access
+     *
+     * This function checks the user can perform the function requested
+     * 'interface', 100, $user->id
+     */
+    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method, string $format = 'xml'): bool
+    {
+        if (!Access::check($type, $level, $user_id)) {
+            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
+            /* HINT: Access level, eg 75, 100 */
+            self::error(sprintf(T_('Require: %s'), $level->value), '4742', $method, 'account', $format);
+
+            return false;
         }
 
         return true;
@@ -419,7 +424,7 @@ class Api
             return [];
         }
 
-        $counts    = Catalog::get_server_counts($client->id);
+        $counts    = Catalog::get_server_counts($client->id ?? 0);
         $playlists = (AmpConfig::get('hide_search', false))
             ? $counts['playlist']
             : $counts['playlist'] + $counts['search'];
@@ -430,7 +435,7 @@ class Api
             ]
             : [];
         // perpetual sessions do not expire
-        $perpetual      = (bool) AmpConfig::get('perpetual_api_session', false);
+        $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
         $session_expire = ($perpetual)
             ? 0
             : date("c", time() + AmpConfig::get('session_length', 3600) - 60);
@@ -439,15 +444,15 @@ class Api
         $outarray = [
             'api' => self::$version,
             'session_expire' => $session_expire,
-            'update' => date("c", (int) $details['update']),
-            'add' => date("c", (int) $details['add']),
-            'clean' => date("c", (int) $details['clean']),
-            'max_song' => (int) $details['max_song'],
-            'max_album' => (int) $details['max_album'],
-            'max_artist' => (int) $details['max_artist'],
-            'max_video' => (int) $details['max_video'],
-            'max_podcast' => (int) $details['max_podcast'],
-            'max_podcast_episode' => (int) $details['max_podcast_episode'],
+            'update' => date("c", (int)$details['update']),
+            'add' => date("c", (int)$details['add']),
+            'clean' => date("c", (int)$details['clean']),
+            'max_song' => (int)$details['max_song'],
+            'max_album' => (int)$details['max_album'],
+            'max_artist' => (int)$details['max_artist'],
+            'max_video' => (int)$details['max_video'],
+            'max_podcast' => (int)$details['max_podcast'],
+            'max_podcast_episode' => (int)$details['max_podcast_episode'],
             'songs' => $counts['song'],
             'albums' => $counts['album'],
             'artists' => $counts['artist'],
