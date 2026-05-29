@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\Activity;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\User\Activity\TypeHandler\ActivityTypeHandlerInterface;
@@ -42,6 +43,7 @@ class UserActivityPosterTest extends MockeryTestCase
 
     private ?UserActivityPoster $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->activityTypeHandlerMapper = $this->mock(ActivityTypeHandlerMapperInterface::class);

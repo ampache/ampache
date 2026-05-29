@@ -79,7 +79,7 @@ class ShowActionTest extends TestCase
             ->with(ConfigurationKeyEnum::PODCAST)
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }
@@ -124,7 +124,7 @@ class ShowActionTest extends TestCase
 
         static::expectOutputString('You have requested an object that does not exist');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }
@@ -182,7 +182,7 @@ class ShowActionTest extends TestCase
             ->with(ConfigurationKeyEnum::PODCAST)
             ->willReturn(true);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }

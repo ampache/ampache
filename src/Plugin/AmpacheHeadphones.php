@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -34,18 +35,25 @@ use WpOrg\Requests\Requests;
 
 class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInterface
 {
+    #[Override]
     public string $name = 'Headphones';
 
+    #[Override]
     public string $categories = 'wanted';
 
+    #[Override]
     public string $description = 'Automatically download accepted Wanted List albums with Headphones';
 
+    #[Override]
     public string $url = 'https://github.com/rembo10/headphones/';
 
+    #[Override]
     public string $version = '000001';
 
+    #[Override]
     public string $min_ampache = '360030';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out

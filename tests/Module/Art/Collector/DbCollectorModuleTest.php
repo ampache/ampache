@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Art\Collector;
 
+use Override;
 use Ampache\Repository\Model\Art;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -33,6 +34,7 @@ class DbCollectorModuleTest extends MockeryTestCase
 {
     private ?DbCollectorModule $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->subject = new DbCollectorModule();
@@ -49,7 +51,7 @@ class DbCollectorModuleTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
-        static::assertSame(
+        self::assertSame(
             [
                 [
                     'db' => 6,
@@ -70,7 +72,7 @@ class DbCollectorModuleTest extends MockeryTestCase
             ->once()
             ->andReturnFalse();
 
-        static::assertSame(
+        self::assertSame(
             [],
             $this->subject->collectArt($art)
         );

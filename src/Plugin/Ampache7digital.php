@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\OAuth\OAuthConsumer;
 use Ampache\Module\Util\OAuth\OAuthRequest;
@@ -34,18 +35,25 @@ use Ampache\Repository\Model\User;
 
 class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterface
 {
+    #[Override]
     public string $name = '7digital';
 
+    #[Override]
     public string $categories = 'preview';
 
+    #[Override]
     public string $description = 'Song preview from 7digital';
 
+    #[Override]
     public string $url = 'http://www.7digital.com';
 
+    #[Override]
     public string $version = '000001';
 
+    #[Override]
     public string $min_ampache = '370015';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -109,7 +117,7 @@ class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterfac
     public function stream_song_preview(string $file): void
     {
         if (str_contains($file, "7digital")) {
-            $consumer = new OAuthConsumer($this->api_key, $this->secret, null);
+            $consumer = new OAuthConsumer($this->api_key, $this->secret);
             $request  = OAuthRequest::from_consumer_and_token($consumer, null, 'GET', $file);
             $request->sign_request(new OAuthSignatureMethod_HMAC_SHA1(), $consumer, null);
             $url = $request->to_url();

@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
@@ -34,18 +35,25 @@ use WpOrg\Requests\Requests;
 
 class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterface
 {
+    #[Override]
     public string $name = 'Lyrist Lyrics';
 
+    #[Override]
     public string $categories = 'lyrics';
 
+    #[Override]
     public string $description = 'Get lyrics from a public Lyrist instance';
 
+    #[Override]
     public string $url = 'https://github.com/asrvd/lyrist';
 
+    #[Override]
     public string $version = '000002';
 
+    #[Override]
     public string $min_ampache = '360022';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -117,7 +125,7 @@ class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterf
         $uri     = rtrim((string)preg_replace('/\/api\/?/', '', $this->api_host), '/') . '/api/' . urlencode((string)$song->title) . '/' . urlencode($song->get_artist_fullname());
         $request = Requests::get($uri, [], Core::requests_options());
         if ($request->status_code == 200) {
-            $json = json_decode($request->body);
+            $json = json_decode((string) $request->body);
             if (
                 $json &&
                 !empty($json->lyrics) &&

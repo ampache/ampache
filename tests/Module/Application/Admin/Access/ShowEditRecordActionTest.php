@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -48,6 +49,7 @@ class ShowEditRecordActionTest extends MockeryTestCase
 
     private ?ShowEditRecordAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->ui           = $this->mock(UiInterface::class);

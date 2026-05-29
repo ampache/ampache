@@ -85,7 +85,7 @@ class UpdaterTest extends TestCase
 
         $result = $this->subject->getPendingUpdates()->current();
 
-        static::assertSame(
+        self::assertSame(
             [
                 'versionFormatted' => $formattedVersion,
                 'version' => $version,
@@ -102,7 +102,7 @@ class UpdaterTest extends TestCase
             ->with(UpdateInfoEnum::DB_VERSION)
             ->willReturn('600048');
 
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->hasPendingUpdates()
         );
     }
@@ -129,7 +129,7 @@ class UpdaterTest extends TestCase
         $this->updateRunner->expects(static::once())
             ->method('run')
             ->with(
-                static::isType('iterable'),
+                self::isType('iterable'),
                 null
             );
 
@@ -143,13 +143,13 @@ class UpdaterTest extends TestCase
         $this->updateRunner->expects(static::once())
             ->method('runTableCheck')
             ->with(
-                static::isType('iterable'),
+                self::isType('iterable'),
                 true,
                 600000
             )
             ->willReturn(new ArrayIterator([$table]));
 
-        static::assertSame(
+        self::assertSame(
             $table,
             $this->subject->checkTables(true, 600000)->current()
         );

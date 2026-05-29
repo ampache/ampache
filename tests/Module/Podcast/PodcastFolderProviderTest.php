@@ -162,7 +162,7 @@ class PodcastFolderProviderTest extends TestCase
             ->method('getCatalogId')
             ->willReturn($catalogId);
 
-        static::assertSame(
+        self::assertSame(
             sprintf('%s%s%s', $this->rootFolder->url(), DIRECTORY_SEPARATOR, $podcastTitle),
             $this->subject->getBaseFolder($podcast)
         );
@@ -197,7 +197,7 @@ class PodcastFolderProviderTest extends TestCase
             ->method('getCatalogId')
             ->willReturn($catalogId);
 
-        static::assertSame(
+        self::assertSame(
             sprintf('%s%s%s', $this->rootFolder->url(), DIRECTORY_SEPARATOR, $podcastTitle),
             $this->subject->getBaseFolder($podcast)
         );

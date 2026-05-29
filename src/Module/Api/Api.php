@@ -222,7 +222,7 @@ class Api
         8
     ];
 
-    public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
+    public const DEFAULT_VERSION = 8; // AMPACHE_VERSION
 
     public static string $version = '8.0.0'; // AMPACHE_VERSION
 

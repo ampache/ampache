@@ -25,24 +25,32 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
 class AmpacheGoogleAnalytics extends AmpachePlugin implements PluginDisplayOnFooterInterface
 {
+    #[Override]
     public string $name = 'GoogleAnalytics';
 
+    #[Override]
     public string $categories = 'stats';
 
+    #[Override]
     public string $description = 'Google Analytics statistics';
 
+    #[Override]
     public string $url = '';
 
+    #[Override]
     public string $version = '000001';
 
+    #[Override]
     public string $min_ampache = '370034';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     private $tracking_id;

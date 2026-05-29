@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
@@ -40,18 +41,25 @@ use WpOrg\Requests\Requests;
 
 class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterface, PluginGetMetadataInterface
 {
+    #[Override]
     public string $name = 'TheAudioDb';
 
+    #[Override]
     public string $categories = 'metadata';
 
+    #[Override]
     public string $description = 'TheAudioDb metadata integration';
 
+    #[Override]
     public string $url = 'http://www.theaudiodb.com';
 
+    #[Override]
     public string $version = '000003';
 
+    #[Override]
     public string $min_ampache = '370009';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -101,7 +109,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
     public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version == 0) {
+        if ($from_version === 0) {
             return false;
         }
 
@@ -220,7 +228,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
     {
         $valid_types = ['artist'];
         // Artist metadata only for now
-        if (!in_array($object_type, $valid_types)) {
+        if (!in_array($object_type, $valid_types, true)) {
             debug_event('theaudiodb.plugin', 'get_external_metadata only supports Artists', 5);
 
             return false;
@@ -318,7 +326,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
             return null;
         }
 
-        return json_decode($request->body);
+        return json_decode((string) $request->body);
     }
 
     /**

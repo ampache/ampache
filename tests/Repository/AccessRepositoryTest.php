@@ -75,7 +75,7 @@ class AccessRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $accessId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$accessItem],
             iterator_to_array($this->subject->getAccessLists())
         );
@@ -99,7 +99,7 @@ class AccessRepositoryTest extends TestCase
             )
             ->willReturn(123);
 
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->findByIp($userIp, $level, $type, $userId)
         );
     }
@@ -121,7 +121,7 @@ class AccessRepositoryTest extends TestCase
             )
             ->willReturn(0);
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->findByIp($userIp, $level, $type, null)
         );
     }
@@ -143,7 +143,7 @@ class AccessRepositoryTest extends TestCase
             )
             ->willReturn(0);
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->findByIp($userIp, $level, $type, User::INTERNAL_SYSTEM_USER_ID)
         );
     }
@@ -177,7 +177,7 @@ class AccessRepositoryTest extends TestCase
             )
             ->willReturn(123);
 
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->exists($inAddrStart, $inAddrEnd, $type, $userId)
         );
     }
@@ -197,7 +197,7 @@ class AccessRepositoryTest extends TestCase
             )
             ->willReturn(0);
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->exists($inAddrStart, $inAddrEnd, $type, $userId)
         );
     }

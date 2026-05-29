@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\WebDav;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -45,6 +46,7 @@ class WebDavApplicationTest extends MockeryTestCase
 
     private ?WebDavApplication $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configContainer = Mockery::mock(ConfigContainerInterface::class);

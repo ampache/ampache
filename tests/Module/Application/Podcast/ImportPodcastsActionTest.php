@@ -86,7 +86,7 @@ class ImportPodcastsActionTest extends TestCase
             ->with(ConfigurationKeyEnum::PODCAST)
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }

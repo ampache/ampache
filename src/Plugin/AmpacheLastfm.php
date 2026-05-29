@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Scrobble\Scrobbler;
@@ -35,18 +36,25 @@ use Ampache\Repository\Model\User;
 
 class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
+    #[Override]
     public string $name = 'Last.FM';
 
+    #[Override]
     public string $categories = 'scrobbling';
 
+    #[Override]
     public string $description = 'Records your played songs to your Last.FM account';
 
+    #[Override]
     public string $url = '';
 
+    #[Override]
     public string $version = '000005';
 
+    #[Override]
     public string $min_ampache = '360003';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -111,7 +119,7 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
     public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version == 0) {
+        if ($from_version === 0) {
             return false;
         }
 

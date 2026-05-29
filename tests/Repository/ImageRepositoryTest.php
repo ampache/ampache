@@ -65,7 +65,7 @@ class ImageRepositoryTest extends TestCase
             )
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->getRawImage($objectId, $objectType, $size, $mimeType)
         );
     }
@@ -91,7 +91,7 @@ class ImageRepositoryTest extends TestCase
             )
             ->willReturn($result);
 
-        static::assertSame(
+        self::assertSame(
             $result,
             $this->subject->getRawImage($objectId, $objectType, $size, $mimeType)
         );
@@ -126,7 +126,7 @@ class ImageRepositoryTest extends TestCase
                 false
             );
 
-        static::assertSame(
+        self::assertSame(
             [[
                 'id' => $rowId,
                 'object_id' => $objectId,

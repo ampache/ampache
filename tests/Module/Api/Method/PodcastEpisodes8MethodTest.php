@@ -108,7 +108,7 @@ class PodcastEpisodes8MethodTest extends TestCase
             )
             ->willReturn($result);
 
-        static::assertSame(
+        self::assertSame(
             $this->response,
             $this->subject->handle(
                 $this->gatekeeper,
@@ -141,7 +141,7 @@ class PodcastEpisodes8MethodTest extends TestCase
             ->with($podcastId)
             ->willReturn(null);
 
-        static::assertSame(
+        self::assertSame(
             $this->response,
             $this->subject->handle(
                 $this->gatekeeper,
@@ -188,7 +188,7 @@ class PodcastEpisodes8MethodTest extends TestCase
             ->with('podcast_episode')
             ->willReturn($result);
 
-        static::assertSame(
+        self::assertSame(
             $this->response,
             $this->subject->handle(
                 $this->gatekeeper,
@@ -265,7 +265,7 @@ class PodcastEpisodes8MethodTest extends TestCase
             ->with([$episodeId], $this->user, 'string')
             ->willReturn($result);
 
-        static::assertSame(
+        self::assertSame(
             $this->response,
             $this->subject->handle(
                 $this->gatekeeper,

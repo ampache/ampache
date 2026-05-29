@@ -61,7 +61,7 @@ class UpdateInfoRepositoryTest extends TestCase
             )
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->getValueByKey($key),
         );
     }
@@ -79,7 +79,7 @@ class UpdateInfoRepositoryTest extends TestCase
             )
             ->willReturn($value);
 
-        static::assertSame(
+        self::assertSame(
             (string) $value,
             $this->subject->getValueByKey($key),
         );

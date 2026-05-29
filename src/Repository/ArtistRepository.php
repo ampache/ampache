@@ -64,7 +64,7 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {
-            $sql .= sprintf('AND `artist_map`.`artist_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <= %d AND `rating`.`user` = ', $rating_filter) . $userId . ") ";
+            $sql .= sprintf("AND `artist_map`.`artist_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <= %d AND `rating`.`user` = ", $rating_filter) . $userId . ") ";
         }
 
         $sql .= "ORDER BY RAND() LIMIT " . $count;
@@ -108,7 +108,7 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
     public function findByName(string $name): ?Artist
     {
         $rowId = $this->connection->fetchOne(
-            'SELECT `id` FROM `artist` WHERE `name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, \'\'), \' \', `artist`.`name`)) = ? ',
+            "SELECT `id` FROM `artist` WHERE `name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ? ",
             [$name, $name]
         );
 

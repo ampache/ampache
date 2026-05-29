@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -44,6 +45,7 @@ class UserStateTogglerTest extends MockeryTestCase
 
     private UserStateToggler $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);

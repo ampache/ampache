@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access\Lib;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -40,6 +41,7 @@ class AccessListItemTest extends MockeryTestCase
 
     private AccessListItem $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->access       = $this->mock(Access::class);

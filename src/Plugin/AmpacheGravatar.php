@@ -25,22 +25,30 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Repository\Model\User;
 
 class AmpacheGravatar extends AmpachePlugin implements PluginGetAvatarUrlInterface
 {
+    #[Override]
     public string $name = 'Gravatar';
 
+    #[Override]
     public string $categories = 'avatar';
 
-    public string $description = 'User\'s avatars with Gravatar';
+    #[Override]
+    public string $description = "User's avatars with Gravatar";
 
+    #[Override]
     public string $url = 'https://gravatar.com';
 
+    #[Override]
     public string $version = '000001';
 
+    #[Override]
     public string $min_ampache = '360040';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     /**
@@ -84,9 +92,7 @@ class AmpacheGravatar extends AmpachePlugin implements PluginGetAvatarUrlInterfa
     public function get_avatar_url(User $user, ?int $size = 80): string
     {
         $url = '';
-        if ($user->email !== null &&
-            $user->email !== '' &&
-            $user->email !== '0'
+        if (!in_array($user->email, [null, '', '0'], true)
         ) {
             $url = sprintf(
                 '%s/avatar/%s?s=%d&r=g&d=identicon',
