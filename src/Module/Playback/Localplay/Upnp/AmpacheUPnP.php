@@ -42,7 +42,7 @@ use Ampache\Repository\Model\User;
  */
 class AmpacheUPnP extends localplay_controller
 {
-    protected const ACTIVE_PREF = 'upnp_active';
+    protected const string ACTIVE_PREF = 'upnp_active';
 
     private string $_version = '000001';
 

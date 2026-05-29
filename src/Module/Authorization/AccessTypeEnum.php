@@ -38,7 +38,7 @@ enum AccessTypeEnum: string
     case STREAM    = 'stream';
 
     /** @var list<AccessTypeEnum> */
-    public const CONFIGURABLE_TYPE_LIST = [
+    public const array CONFIGURABLE_TYPE_LIST = [
         AccessTypeEnum::API,
         AccessTypeEnum::INTERFACE,
         AccessTypeEnum::NETWORK,

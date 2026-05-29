@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class GetAdvancedAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'get_advanced';
+    public const string REQUEST_KEY = 'get_advanced';
 
     private UiInterface $ui;
 

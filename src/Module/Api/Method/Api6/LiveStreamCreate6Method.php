@@ -41,9 +41,9 @@ use Ampache\Repository\Model\User;
  */
 final class LiveStreamCreate6Method
 {
-    public const ACTION = 'live_stream_create';
+    public const string ACTION = 'live_stream_create';
 
-    public const REST_ACTION = 'live_streams_create';
+    public const string REST_ACTION = 'live_streams_create';
 
     /**
      * live_stream_create

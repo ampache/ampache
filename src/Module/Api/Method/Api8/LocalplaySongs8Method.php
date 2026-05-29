@@ -40,7 +40,7 @@ use Ampache\Repository\Model\User;
  */
 final class LocalplaySongs8Method
 {
-    public const ACTION = 'localplay_songs';
+    public const string ACTION = 'localplay_songs';
 
     /**
      * localplay_songs

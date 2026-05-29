@@ -38,7 +38,7 @@ use Ampache\Repository\Model\Video;
  */
 final class Video5Method
 {
-    public const ACTION = 'video';
+    public const string ACTION = 'video';
 
     /**
      * video

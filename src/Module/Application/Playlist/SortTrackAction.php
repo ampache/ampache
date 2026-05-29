@@ -36,7 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class SortTrackAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'sort_tracks';
+    public const string REQUEST_KEY = 'sort_tracks';
 
     private RequestParserInterface $requestParser;
 

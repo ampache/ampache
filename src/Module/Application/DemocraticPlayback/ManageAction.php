@@ -40,7 +40,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ManageAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'manage';
+    public const string REQUEST_KEY = 'manage';
 
     private UiInterface $ui;
 

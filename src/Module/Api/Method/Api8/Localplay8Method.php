@@ -42,7 +42,7 @@ use Ampache\Repository\Model\User;
  */
 final class Localplay8Method
 {
-    public const ACTION = 'localplay';
+    public const string ACTION = 'localplay';
 
     /**
      * localplay

@@ -39,7 +39,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ClearNowPlayingAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'clear_now_playing';
+    public const string REQUEST_KEY = 'clear_now_playing';
 
     private UiInterface $ui;
 

@@ -43,7 +43,7 @@ use Psr\Log\LoggerInterface;
 
 final class InstallPluginAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'install_plugin';
+    public const string REQUEST_KEY = 'install_plugin';
 
     private RequestParserInterface $requestParser;
 

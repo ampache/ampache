@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class Goodbye6Method
 {
-    public const ACTION = 'goodbye';
+    public const string ACTION = 'goodbye';
 
     /**
      * goodbye

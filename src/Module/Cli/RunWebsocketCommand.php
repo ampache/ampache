@@ -31,7 +31,7 @@ use Ampache\Module\Broadcast\WebSocketFactoryInterface;
 
 final class RunWebsocketCommand extends Command
 {
-    private const DEFAULT_PORT = 8100;
+    private const int DEFAULT_PORT = 8100;
 
     private ConfigContainerInterface $configContainer;
 

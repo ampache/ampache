@@ -44,7 +44,7 @@ class Video extends database_object implements
     GarbageCollectibleInterface,
     CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'video';
+    protected const string DB_TABLENAME = 'video';
 
     public int $id = 0;
 

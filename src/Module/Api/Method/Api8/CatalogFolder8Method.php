@@ -45,7 +45,7 @@ use Ampache\Repository\Model\Video;
  */
 final class CatalogFolder8Method
 {
-    public const ACTION = 'catalog_folder';
+    public const string ACTION = 'catalog_folder';
 
     /**
      * catalog_folder

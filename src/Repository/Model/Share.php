@@ -34,10 +34,10 @@ use Ampache\Module\Util\Ui;
 
 class Share extends database_object
 {
-    protected const DB_TABLENAME = 'share';
+    protected const string DB_TABLENAME = 'share';
 
     /** @var list<LibraryItemEnum> */
-    public const VALID_TYPES = [
+    public const array VALID_TYPES = [
         LibraryItemEnum::ALBUM,
         LibraryItemEnum::ALBUM_DISK,
         LibraryItemEnum::ARTIST,

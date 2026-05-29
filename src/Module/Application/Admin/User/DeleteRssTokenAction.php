@@ -40,7 +40,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class DeleteRssTokenAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'delete_rsstoken';
+    public const string REQUEST_KEY = 'delete_rsstoken';
 
     private RequestParserInterface $requestParser;
 

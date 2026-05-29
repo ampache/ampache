@@ -39,7 +39,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class ShowAction extends AbstractGraphRendererAction
 {
-    public const REQUEST_KEY = 'show';
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
         private UiInterface $ui,

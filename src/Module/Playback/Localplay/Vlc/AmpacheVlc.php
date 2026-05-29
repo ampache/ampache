@@ -42,7 +42,7 @@ use Ampache\Repository\Model\User;
  */
 class AmpacheVlc extends localplay_controller
 {
-    protected const ACTIVE_PREF = 'vlc_active';
+    protected const string ACTIVE_PREF = 'vlc_active';
 
     private string $version = 'Beta 0.2';
 

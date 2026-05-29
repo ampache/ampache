@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class Licenses4Method
 {
-    public const ACTION = 'licenses';
+    public const string ACTION = 'licenses';
 
     /**
      * licenses

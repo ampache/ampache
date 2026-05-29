@@ -34,7 +34,7 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistRemoveSong4Method
 {
-    public const ACTION = 'playlist_remove_song';
+    public const string ACTION = 'playlist_remove_song';
 
     /**
      * playlist_remove_song

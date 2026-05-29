@@ -38,12 +38,12 @@ use Ampache\Module\System\Dba;
  */
 class Preference extends database_object
 {
-    protected const DB_TABLENAME = 'preference';
+    protected const string DB_TABLENAME = 'preference';
 
     /**
      * This array contains System preferences that can (should) not be edited or deleted from the api
      */
-    public const SYSTEM_LIST = [
+    public const array SYSTEM_LIST = [
         'ajax_load',
         'album_group',
         'album_release_type_sort',
@@ -212,7 +212,7 @@ class Preference extends database_object
     /**
      * plugin and module preferences might not be there but they need to be kept if you're using them
      */
-    public const PLUGIN_LIST = [
+    public const array PLUGIN_LIST = [
         '7digital_api_key',
         '7digital_secret_api_key',
         'amazon_base_url',

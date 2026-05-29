@@ -34,7 +34,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowAddCatalogAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_add_catalog';
+    public const string REQUEST_KEY = 'show_add_catalog';
 
     private UiInterface $ui;
 

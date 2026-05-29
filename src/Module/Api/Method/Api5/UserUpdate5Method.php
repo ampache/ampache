@@ -40,7 +40,7 @@ use Ampache\Repository\Model\User;
  */
 final class UserUpdate5Method
 {
-    public const ACTION = 'user_update';
+    public const string ACTION = 'user_update';
 
     /**
      * user_update

@@ -36,7 +36,7 @@ use Ampache\Repository\Model\User;
  */
 final class GetSimilar4Method
 {
-    public const ACTION = 'get_similar';
+    public const string ACTION = 'get_similar';
 
     /**
      * get_similar

@@ -41,7 +41,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class GenerateApiKeyAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'generate_apikey';
+    public const string REQUEST_KEY = 'generate_apikey';
 
     private RequestParserInterface $requestParser;
 

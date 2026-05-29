@@ -49,7 +49,7 @@ class Api6
      *
      * @var array<string, class-string<object>>
      */
-    public const METHOD_LIST = [
+    public const array METHOD_LIST = [
         Method\Api6\AdvancedSearch6Method::ACTION => Method\Api6\AdvancedSearch6Method::class,
         Method\Api6\Album6Method::ACTION => Method\Api6\Album6Method::class,
         Method\Api6\Albums6Method::ACTION => Method\Api6\Albums6Method::class,

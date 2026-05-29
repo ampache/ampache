@@ -29,7 +29,7 @@ use Ampache\Repository\Model\Query;
 
 final class ShareQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
     ];
 
     /** @var string[] $sorts */

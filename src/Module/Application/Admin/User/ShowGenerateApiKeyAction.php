@@ -37,7 +37,7 @@ final class ShowGenerateApiKeyAction extends AbstractUserAction
 {
     use UserAdminApplicationTrait;
 
-    public const REQUEST_KEY = 'show_generate_apikey';
+    public const string REQUEST_KEY = 'show_generate_apikey';
 
     private UiInterface $ui;
 

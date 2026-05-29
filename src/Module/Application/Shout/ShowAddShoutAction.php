@@ -40,7 +40,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowAddShoutAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_add_shout';
+    public const string REQUEST_KEY = 'show_add_shout';
 
     private RequestParserInterface $requestParser;
 

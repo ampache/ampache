@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowPlaylistAction extends AbstractLocalPlayAction
 {
-    public const REQUEST_KEY = 'show_playlist';
+    public const string REQUEST_KEY = 'show_playlist';
 
     private ConfigContainerInterface $configContainer;
 

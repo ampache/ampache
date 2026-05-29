@@ -45,7 +45,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class AddMessageAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'add_message';
+    public const string REQUEST_KEY = 'add_message';
 
     private ConfigContainerInterface $configContainer;
 

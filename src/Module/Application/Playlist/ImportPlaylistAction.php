@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ImportPlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'import_playlist';
+    public const string REQUEST_KEY = 'import_playlist';
 
     private UiInterface $ui;
 

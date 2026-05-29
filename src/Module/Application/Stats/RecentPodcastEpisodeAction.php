@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class RecentPodcastEpisodeAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'recent_podcast_episode';
+    public const string REQUEST_KEY = 'recent_podcast_episode';
 
     private UiInterface $ui;
 

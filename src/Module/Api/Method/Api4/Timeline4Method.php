@@ -38,7 +38,7 @@ use Ampache\Repository\UserActivityRepositoryInterface;
  */
 final class Timeline4Method
 {
-    public const ACTION = 'timeline';
+    public const string ACTION = 'timeline';
 
     /**
      * timeline

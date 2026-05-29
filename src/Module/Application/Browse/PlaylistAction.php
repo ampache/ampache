@@ -34,7 +34,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class PlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'playlist';
+    public const string REQUEST_KEY = 'playlist';
 
     private ModelFactoryInterface $modelFactory;
 

@@ -40,7 +40,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class DeleteStreamTokenAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'delete_streamtoken';
+    public const string REQUEST_KEY = 'delete_streamtoken';
 
     private RequestParserInterface $requestParser;
 

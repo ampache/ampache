@@ -38,9 +38,9 @@ use Ampache\Repository\Model\User;
  */
 final class UserDelete6Method
 {
-    public const ACTION = 'user_delete';
+    public const string ACTION = 'user_delete';
 
-    public const REST_ACTION = 'users_delete';
+    public const string REST_ACTION = 'users_delete';
 
     /**
      * user_delete

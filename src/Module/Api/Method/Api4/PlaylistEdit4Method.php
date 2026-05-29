@@ -34,7 +34,7 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistEdit4Method
 {
-    public const ACTION = 'playlist_edit';
+    public const string ACTION = 'playlist_edit';
 
     /**
      * playlist_edit

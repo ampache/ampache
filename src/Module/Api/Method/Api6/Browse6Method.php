@@ -43,7 +43,7 @@ use Ampache\Repository\Model\User;
  */
 final class Browse6Method
 {
-    public const ACTION = 'browse';
+    public const string ACTION = 'browse';
 
     /**
      * browse

@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class PreferenceCreate5Method
 {
-    public const ACTION = 'preference_create';
+    public const string ACTION = 'preference_create';
 
     /**
      * preference_create

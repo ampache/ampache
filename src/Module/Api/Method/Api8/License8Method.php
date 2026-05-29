@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class License8Method
 {
-    public const ACTION = 'license';
+    public const string ACTION = 'license';
 
     /**
      * license

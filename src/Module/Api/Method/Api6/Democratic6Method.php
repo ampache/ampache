@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class Democratic6Method
 {
-    public const ACTION = 'democratic';
+    public const string ACTION = 'democratic';
 
     /**
      * democratic

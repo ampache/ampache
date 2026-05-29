@@ -37,7 +37,7 @@ use Ampache\Module\System\Dba;
  */
 class Playlist extends playlist_object
 {
-    protected const DB_TABLENAME = 'playlist';
+    protected const string DB_TABLENAME = 'playlist';
 
     /**
      * @var array<int, array{

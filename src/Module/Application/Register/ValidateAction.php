@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ValidateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'validate';
+    public const string REQUEST_KEY = 'validate';
 
     private ConfigContainerInterface $configContainer;
 

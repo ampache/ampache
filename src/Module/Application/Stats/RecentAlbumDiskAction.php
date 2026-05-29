@@ -35,7 +35,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class RecentAlbumDiskAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'recent_album_disk';
+    public const string REQUEST_KEY = 'recent_album_disk';
 
     private UiInterface $ui;
 

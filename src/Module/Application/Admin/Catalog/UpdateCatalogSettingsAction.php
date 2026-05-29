@@ -34,7 +34,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UpdateCatalogSettingsAction extends AbstractCatalogAction
 {
-    public const REQUEST_KEY = 'update_catalog_settings';
+    public const string REQUEST_KEY = 'update_catalog_settings';
 
     private ConfigContainerInterface $configContainer;
 

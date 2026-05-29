@@ -33,7 +33,7 @@ use Ampache\Repository\Model\User;
  */
 final class PodcastUpdate6Method
 {
-    public const ACTION = 'podcast_update';
+    public const string ACTION = 'podcast_update';
 
     /**
      * podcast_update

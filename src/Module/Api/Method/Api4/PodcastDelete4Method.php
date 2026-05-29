@@ -38,7 +38,7 @@ use Ampache\Repository\PodcastRepositoryInterface;
  */
 final class PodcastDelete4Method
 {
-    public const ACTION = 'podcast_delete';
+    public const string ACTION = 'podcast_delete';
 
     /**
      * podcast_delete

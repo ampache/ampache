@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class PopularAlbumDiskAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'popular_album_disk';
+    public const string REQUEST_KEY = 'popular_album_disk';
 
     public function __construct(
         private UiInterface $ui,

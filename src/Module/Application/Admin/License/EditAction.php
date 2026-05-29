@@ -42,7 +42,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class EditAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'edit';
+    public const string REQUEST_KEY = 'edit';
 
     private UiInterface $ui;
 

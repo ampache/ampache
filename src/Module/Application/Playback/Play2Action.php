@@ -62,7 +62,7 @@ use Psr\Log\LoggerInterface;
 
 final class Play2Action implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'play2';
+    public const string REQUEST_KEY = 'play2';
 
     private RequestParserInterface $requestParser;
 

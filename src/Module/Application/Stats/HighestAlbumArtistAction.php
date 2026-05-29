@@ -35,7 +35,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class HighestAlbumArtistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'highest_album_artist';
+    public const string REQUEST_KEY = 'highest_album_artist';
 
     private UiInterface $ui;
 

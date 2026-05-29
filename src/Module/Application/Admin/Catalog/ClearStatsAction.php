@@ -39,7 +39,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ClearStatsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'clear_stats';
+    public const string REQUEST_KEY = 'clear_stats';
 
     private UiInterface $ui;
 

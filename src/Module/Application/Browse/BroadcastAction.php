@@ -34,7 +34,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class BroadcastAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'broadcast';
+    public const string REQUEST_KEY = 'broadcast';
 
     private ModelFactoryInterface $modelFactory;
 

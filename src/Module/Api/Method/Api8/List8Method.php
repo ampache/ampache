@@ -40,7 +40,7 @@ use Ampache\Repository\Model\User;
  */
 final class List8Method
 {
-    public const ACTION = 'list';
+    public const string ACTION = 'list';
 
     /**
      * list

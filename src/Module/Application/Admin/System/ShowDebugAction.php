@@ -43,7 +43,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowDebugAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_debug';
+    public const string REQUEST_KEY = 'show_debug';
 
     private RequestParserInterface $requestParser;
 

@@ -36,7 +36,7 @@ use Ampache\Repository\Model\User;
  */
 final class NowPlaying6Method
 {
-    public const ACTION = 'now_playing';
+    public const string ACTION = 'now_playing';
 
     /**
      * now_playing

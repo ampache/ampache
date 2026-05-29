@@ -34,7 +34,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ConfirmDeleteAction extends AbstractFilterAction
 {
-    public const REQUEST_KEY = 'confirm_delete';
+    public const string REQUEST_KEY = 'confirm_delete';
 
     private UiInterface $ui;
 

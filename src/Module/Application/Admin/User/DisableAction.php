@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class DisableAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'disable';
+    public const string REQUEST_KEY = 'disable';
 
     private UiInterface $ui;
 

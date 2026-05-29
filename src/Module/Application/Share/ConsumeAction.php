@@ -46,7 +46,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ConsumeAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'consume';
+    public const string REQUEST_KEY = 'consume';
 
     private RequestParserInterface $requestParser;
 

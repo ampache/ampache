@@ -56,9 +56,9 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 final class ShareCreate6Method
 {
-    public const ACTION = 'share_create';
+    public const string ACTION = 'share_create';
 
-    public const REST_ACTION = 'shares_create';
+    public const string REST_ACTION = 'shares_create';
 
     /**
      * share_create

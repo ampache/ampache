@@ -33,7 +33,7 @@ use Psr\Log\LoggerInterface;
 
 final class SearchRandomAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'search_random';
+    public const string REQUEST_KEY = 'search_random';
 
     private ModelFactoryInterface $modelFactory;
 

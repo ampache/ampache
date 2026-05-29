@@ -44,7 +44,7 @@ use Exception;
  */
 class Album extends database_object implements library_item, CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'album';
+    protected const string DB_TABLENAME = 'album';
 
     public int $id = 0;
 

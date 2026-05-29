@@ -38,9 +38,9 @@ use Ampache\Repository\Model\User;
  */
 final class LiveStreamDelete6Method
 {
-    public const ACTION = 'live_stream_delete';
+    public const string ACTION = 'live_stream_delete';
 
-    public const REST_ACTION = 'live_streams_delete';
+    public const string REST_ACTION = 'live_streams_delete';
 
     /**
      * live_stream_delete

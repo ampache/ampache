@@ -37,7 +37,7 @@ use Teapot\StatusCode;
 
 final class DeletePlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'delete_playlist';
+    public const string REQUEST_KEY = 'delete_playlist';
 
     private ModelFactoryInterface $modelFactory;
 

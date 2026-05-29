@@ -36,9 +36,9 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistRemoveSong8Method
 {
-    public const ACTION = 'playlist_remove_song';
+    public const string ACTION = 'playlist_remove_song';
 
-    public const REST_ACTION = 'playlist_remove_song_edit';
+    public const string REST_ACTION = 'playlist_remove_song_edit';
 
     /**
      * playlist_remove_song

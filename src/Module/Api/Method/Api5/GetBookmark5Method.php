@@ -42,7 +42,7 @@ use Ampache\Repository\Model\Video;
  */
 final class GetBookmark5Method
 {
-    public const ACTION = 'get_bookmark';
+    public const string ACTION = 'get_bookmark';
 
     /**
      * get_bookmark

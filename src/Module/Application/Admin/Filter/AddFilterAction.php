@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class AddFilterAction extends AbstractFilterAction
 {
-    public const REQUEST_KEY = 'add_filter';
+    public const string REQUEST_KEY = 'add_filter';
 
     private UiInterface $ui;
 

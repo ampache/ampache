@@ -45,7 +45,7 @@ use Ampache\Repository\Model\User;
  */
 class AmpacheMpd extends localplay_controller
 {
-    protected const ACTIVE_PREF = 'mpd_active';
+    protected const string ACTIVE_PREF = 'mpd_active';
 
     public bool $block_clear = false;
 

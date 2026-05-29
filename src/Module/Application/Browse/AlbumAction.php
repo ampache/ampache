@@ -36,7 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class AlbumAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'album';
+    public const string REQUEST_KEY = 'album';
 
     private ModelFactoryInterface $modelFactory;
 

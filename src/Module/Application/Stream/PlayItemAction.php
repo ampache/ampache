@@ -39,7 +39,7 @@ use Psr\Log\LoggerInterface;
 
 final class PlayItemAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'play_item';
+    public const string REQUEST_KEY = 'play_item';
 
     public function __construct(
         LoggerInterface $logger,

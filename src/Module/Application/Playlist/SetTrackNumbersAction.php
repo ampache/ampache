@@ -36,7 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class SetTrackNumbersAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'set_track_numbers';
+    public const string REQUEST_KEY = 'set_track_numbers';
 
     private RequestParserInterface $requestParser;
 

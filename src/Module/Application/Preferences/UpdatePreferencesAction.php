@@ -40,7 +40,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UpdatePreferencesAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_preferences';
+    public const string REQUEST_KEY = 'update_preferences';
 
     private PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater;
 

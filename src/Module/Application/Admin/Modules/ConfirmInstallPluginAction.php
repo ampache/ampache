@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ConfirmInstallPluginAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_install_plugin';
+    public const string REQUEST_KEY = 'confirm_install_plugin';
 
     private UiInterface $ui;
 

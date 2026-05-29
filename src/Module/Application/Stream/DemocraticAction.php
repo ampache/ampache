@@ -36,7 +36,7 @@ use Psr\Log\LoggerInterface;
 
 final class DemocraticAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'democratic';
+    public const string REQUEST_KEY = 'democratic';
 
     private RequestParserInterface $requestParser;
 

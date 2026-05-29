@@ -70,7 +70,7 @@ class Upnp_Api
      * object.item.textItem
      * object.container
      */
-    public const SSDP_DEBUG = false;
+    public const false SSDP_DEBUG = false;
 
     public static function _callSearch($criteria, $filter, $start, $count): array
     {

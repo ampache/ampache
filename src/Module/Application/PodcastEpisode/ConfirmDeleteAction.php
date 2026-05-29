@@ -42,7 +42,7 @@ use Psr\Log\LoggerInterface;
 
 final class ConfirmDeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_delete';
+    public const string REQUEST_KEY = 'confirm_delete';
 
     private RequestParserInterface $requestParser;
 

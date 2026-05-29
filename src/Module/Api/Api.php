@@ -49,7 +49,7 @@ class Api
      *
      * @var array<string, class-string<object>>
      */
-    public const METHOD_LIST = [
+    public const array METHOD_LIST = [
         Method\Api8\AdvancedSearch8Method::ACTION => Method\Api8\AdvancedSearch8Method::class,
         Method\Api8\Album8Method::ACTION => Method\Api8\Album8Method::class,
         Method\Api8\Albums8Method::ACTION => Method\Api8\Albums8Method::class,
@@ -214,7 +214,7 @@ class Api
         Method\Api8\Videos8Method::ACTION => Method\Api8\Videos8Method::class,
     ];
 
-    public const API_VERSIONS = [
+    public const array API_VERSIONS = [
         3,
         4,
         5,
@@ -222,7 +222,7 @@ class Api
         8
     ];
 
-    public const DEFAULT_VERSION = 8; // AMPACHE_VERSION
+    public const int DEFAULT_VERSION = 8; // AMPACHE_VERSION
 
     public static string $version = '8.0.0'; // AMPACHE_VERSION
 

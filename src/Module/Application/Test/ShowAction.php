@@ -38,7 +38,7 @@ use Teapot\StatusCode;
 
 final class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
+    public const string REQUEST_KEY = 'show';
 
     private ConfigContainerInterface $configContainer;
 

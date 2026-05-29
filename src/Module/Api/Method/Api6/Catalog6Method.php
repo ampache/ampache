@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class Catalog6Method
 {
-    public const ACTION = 'catalog';
+    public const string ACTION = 'catalog';
 
     /**
      * catalog

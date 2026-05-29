@@ -39,7 +39,7 @@ use Ampache\Repository\PodcastRepositoryInterface;
  */
 final class UpdatePodcast5Method
 {
-    public const ACTION = 'update_podcast';
+    public const string ACTION = 'update_podcast';
 
     /**
      * update_podcast

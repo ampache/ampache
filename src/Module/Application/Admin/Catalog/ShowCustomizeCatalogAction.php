@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowCustomizeCatalogAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_customize_catalog';
+    public const string REQUEST_KEY = 'show_customize_catalog';
 
     private RequestParserInterface $requestParser;
 

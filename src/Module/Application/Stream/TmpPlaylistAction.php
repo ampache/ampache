@@ -35,7 +35,7 @@ use Psr\Log\LoggerInterface;
 
 final class TmpPlaylistAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'tmp_playlist';
+    public const string REQUEST_KEY = 'tmp_playlist';
 
     private ModelFactoryInterface $modelFactory;
 

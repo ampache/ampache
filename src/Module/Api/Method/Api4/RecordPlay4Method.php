@@ -37,7 +37,7 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class RecordPlay4Method
 {
-    public const ACTION = 'record_play';
+    public const string ACTION = 'record_play';
 
     /**
      * record_play

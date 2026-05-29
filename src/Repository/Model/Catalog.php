@@ -85,10 +85,10 @@ use RegexIterator;
  */
 abstract class Catalog extends database_object
 {
-    protected const DB_TABLENAME = 'catalog';
+    protected const string DB_TABLENAME = 'catalog';
 
     /** @var array<string, class-string> */
-    public const CATALOG_TYPES = [
+    public const array CATALOG_TYPES = [
         'beets' => Catalog_beets::class,
         'beetsremote' => Catalog_beetsremote::class,
         'dropbox' => Catalog_dropbox::class,
@@ -121,7 +121,7 @@ abstract class Catalog extends database_object
      *     video: int
      * }
      */
-    private const SERVER_COUNTS = [
+    private const array SERVER_COUNTS = [
         'album' => 0,
         'album_disk' => 0,
         'album_group' => 0,

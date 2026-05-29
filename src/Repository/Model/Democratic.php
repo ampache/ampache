@@ -40,7 +40,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 class Democratic extends Tmp_Playlist
 {
-    protected const DB_TABLENAME = 'democratic';
+    protected const string DB_TABLENAME = 'democratic';
 
     public ?string $name = null;
 

@@ -44,7 +44,7 @@ use XBMC_RPC_HTTPClient;
  */
 class AmpacheXbmc extends localplay_controller
 {
-    protected const ACTIVE_PREF = 'xbmc_active';
+    protected const string ACTIVE_PREF = 'xbmc_active';
 
     private string $version = '000001';
 

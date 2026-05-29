@@ -40,7 +40,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class DeleteAvatarAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'delete_avatar';
+    public const string REQUEST_KEY = 'delete_avatar';
 
     private RequestParserInterface $requestParser;
 

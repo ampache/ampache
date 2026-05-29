@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistCreate5Method
 {
-    public const ACTION = 'playlist_create';
+    public const string ACTION = 'playlist_create';
 
     /**
      * playlist_create

@@ -36,7 +36,7 @@ use Ampache\Repository\Model\User;
  */
 final class Artists5Method
 {
-    public const ACTION = 'artists';
+    public const string ACTION = 'artists';
 
     /**
      * artists

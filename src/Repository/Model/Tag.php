@@ -38,7 +38,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
  */
 class Tag extends database_object implements library_item, GarbageCollectibleInterface
 {
-    protected const DB_TABLENAME = 'tag';
+    protected const string DB_TABLENAME = 'tag';
 
     public int $id = 0;
 

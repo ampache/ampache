@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShareAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'share';
+    public const string REQUEST_KEY = 'share';
 
     private UiInterface $ui;
 

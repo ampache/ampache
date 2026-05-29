@@ -36,13 +36,13 @@ use Psr\Log\LoggerInterface;
 
 final class MetaTagCollectorModule implements CollectorModuleInterface
 {
-    private const TAG_ALBUM_ART_PRIORITY = [
+    private const array TAG_ALBUM_ART_PRIORITY = [
         'ID3 Front Cover',
         'ID3 Illustration',
         'ID3 Media',
     ];
 
-    private const TAG_ARTIST_ART_PRIORITY = [
+    private const array TAG_ARTIST_ART_PRIORITY = [
         'ID3 Artist',
         'ID3 Lead Artist',
         'ID3 Band',

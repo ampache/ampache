@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class Label6Method
 {
-    public const ACTION = 'label';
+    public const string ACTION = 'label';
 
     /**
      * label

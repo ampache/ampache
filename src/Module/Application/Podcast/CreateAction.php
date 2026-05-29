@@ -45,7 +45,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class CreateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'create';
+    public const string REQUEST_KEY = 'create';
 
     private ConfigContainerInterface $configContainer;
 

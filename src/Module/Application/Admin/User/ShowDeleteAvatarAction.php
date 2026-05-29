@@ -37,7 +37,7 @@ final class ShowDeleteAvatarAction extends AbstractUserAction
 {
     use UserAdminApplicationTrait;
 
-    public const REQUEST_KEY = 'show_delete_avatar';
+    public const string REQUEST_KEY = 'show_delete_avatar';
 
     private UiInterface $ui;
 

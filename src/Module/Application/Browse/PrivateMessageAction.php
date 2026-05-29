@@ -35,7 +35,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class PrivateMessageAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'pvmsg';
+    public const string REQUEST_KEY = 'pvmsg';
 
     private ModelFactoryInterface $modelFactory;
 

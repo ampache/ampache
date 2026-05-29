@@ -29,7 +29,7 @@ use Ampache\Module\System\Dba;
 
 class Useractivity extends database_object
 {
-    protected const DB_TABLENAME = 'user_activity';
+    protected const string DB_TABLENAME = 'user_activity';
 
     public int $id = 0;
 

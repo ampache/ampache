@@ -27,7 +27,7 @@ namespace Ampache\Module\User;
 
 final class PasswordGenerator implements PasswordGeneratorInterface
 {
-    public const DEFAULT_LENGTH = 8;
+    public const int DEFAULT_LENGTH = 8;
 
     /**
      * This generates a random password of the specified length

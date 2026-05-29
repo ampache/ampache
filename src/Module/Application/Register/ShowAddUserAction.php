@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowAddUserAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_add_user';
+    public const string REQUEST_KEY = 'show_add_user';
 
     private ConfigContainerInterface $configContainer;
 

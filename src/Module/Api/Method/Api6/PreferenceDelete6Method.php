@@ -38,9 +38,9 @@ use Ampache\Repository\Model\User;
  */
 final class PreferenceDelete6Method
 {
-    public const ACTION = 'preference_delete';
+    public const string ACTION = 'preference_delete';
 
-    public const REST_ACTION = 'preferences_delete';
+    public const string REST_ACTION = 'preferences_delete';
 
     /**
      * preference_delete

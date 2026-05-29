@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowHiddenAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_hidden';
+    public const string REQUEST_KEY = 'show_hidden';
 
     private UiInterface $ui;
 

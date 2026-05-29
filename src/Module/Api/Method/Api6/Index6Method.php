@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class Index6Method
 {
-    public const ACTION = 'index';
+    public const string ACTION = 'index';
 
     /**
      * index

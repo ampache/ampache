@@ -50,7 +50,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class DefaultAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'default';
+    public const string REQUEST_KEY = 'default';
 
     public function __construct(
         private RequestParserInterface $requestParser,

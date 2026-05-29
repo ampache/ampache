@@ -38,9 +38,9 @@ use Ampache\Repository\ShareRepositoryInterface;
  */
 final class ShareDelete8Method
 {
-    public const ACTION = 'share_delete';
+    public const string ACTION = 'share_delete';
 
-    public const REST_ACTION = 'shares_delete';
+    public const string REST_ACTION = 'shares_delete';
 
     /**
      * share_delete

@@ -50,9 +50,9 @@ use Exception;
 class User extends database_object
 {
     /** @var int Defines the internal system user-id */
-    public const INTERNAL_SYSTEM_USER_ID = -1;
+    public const int INTERNAL_SYSTEM_USER_ID = -1;
 
-    protected const DB_TABLENAME = 'user';
+    protected const string DB_TABLENAME = 'user';
 
     // Basic Components
     public int $id = 0;

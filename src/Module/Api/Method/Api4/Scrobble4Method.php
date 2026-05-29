@@ -36,7 +36,7 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class Scrobble4Method
 {
-    public const ACTION = 'scrobble';
+    public const string ACTION = 'scrobble';
 
     /**
      * scrobble

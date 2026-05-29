@@ -34,13 +34,13 @@ use DateTimeZone;
 
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
-    public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
+    public const string CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
-    private const VERSION = '8.0.0'; // AMPACHE_VERSION
+    private const string VERSION = '8.0.0'; // AMPACHE_VERSION
 
-    private const CONFIG_VERSION = '87';
+    private const string CONFIG_VERSION = '87';
 
-    private const STRUCTURE = 'public'; // Project release is using either the public html folder or squashed structure
+    private const string STRUCTURE = 'public'; // Project release is using either the public html folder or squashed structure
 
     private EnvironmentInterface $environment;
 

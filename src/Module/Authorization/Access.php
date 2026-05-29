@@ -38,7 +38,7 @@ use Ampache\Module\System\Dba;
  */
 class Access
 {
-    protected const DB_TABLENAME = 'access_list';
+    protected const string DB_TABLENAME = 'access_list';
 
     /** @var int $id */
     public $id;

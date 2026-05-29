@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ConfirmUninstallPluginAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_uninstall_plugin';
+    public const string REQUEST_KEY = 'confirm_uninstall_plugin';
 
     private UiInterface $ui;
 

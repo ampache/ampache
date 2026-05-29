@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class UserflagPodcastEpisodeAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'userflag_podcast_episode';
+    public const string REQUEST_KEY = 'userflag_podcast_episode';
 
     public function __construct(
         private UiInterface $ui,

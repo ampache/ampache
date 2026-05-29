@@ -56,7 +56,7 @@ use Ampache\Repository\Model\Video;
  */
 class Stream_Playlist
 {
-    private const STREAM_PLAYLIST_ROW = [
+    private const array STREAM_PLAYLIST_ROW = [
         'sid' => null,
         'url' => "",
         'info_url' => null,

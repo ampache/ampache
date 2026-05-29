@@ -53,9 +53,9 @@ use WpOrg\Requests\Requests;
  */
 class Art extends database_object
 {
-    protected const DB_TABLENAME = 'image';
+    protected const string DB_TABLENAME = 'image';
 
-    public const VALID_TYPES = [
+    public const array VALID_TYPES = [
         'bmp',
         'gif',
         'jp2',

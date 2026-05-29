@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ConfigAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'config';
+    public const string REQUEST_KEY = 'config';
 
     private ConfigContainerInterface $configContainer;
 

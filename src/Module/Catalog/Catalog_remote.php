@@ -46,25 +46,25 @@ use SimpleXMLElement;
  */
 class Catalog_remote extends Catalog
 {
-    private const CMD_ALBUM = 'album';
+    private const string CMD_ALBUM = 'album';
 
-    private const CMD_ARTIST = 'artist';
+    private const string CMD_ARTIST = 'artist';
 
-    private const CMD_ARTISTS = 'artists';
+    private const string CMD_ARTISTS = 'artists';
 
-    private const CMD_DOWNLOAD = 'download';
+    private const string CMD_DOWNLOAD = 'download';
 
-    private const CMD_PING = 'ping';
+    private const string CMD_PING = 'ping';
 
-    private const CMD_SONGS = 'songs';
+    private const string CMD_SONGS = 'songs';
 
-    private const CMD_SONG = 'song';
+    private const string CMD_SONG = 'song';
 
-    private const CMD_SONG_TAGS = 'song_tags';
+    private const string CMD_SONG_TAGS = 'song_tags';
 
-    private const CMD_STREAM = 'stream';
+    private const string CMD_STREAM = 'stream';
 
-    private const CMD_URL_TO_SONG = 'url_to_song';
+    private const string CMD_URL_TO_SONG = 'url_to_song';
 
     private string $version     = '000001';
     private string $type        = 'remote';

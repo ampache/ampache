@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class SearchSongs8Method
 {
-    public const ACTION = 'search_songs';
+    public const string ACTION = 'search_songs';
 
     /**
      * search_songs

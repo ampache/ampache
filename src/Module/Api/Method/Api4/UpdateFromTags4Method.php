@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class UpdateFromTags4Method
 {
-    public const ACTION = 'update_from_tags';
+    public const string ACTION = 'update_from_tags';
 
     /**
      * update_from_tags

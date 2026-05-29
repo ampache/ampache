@@ -27,10 +27,10 @@ namespace Ampache\Module\Album\Export\Writer;
 
 final class MetadataWriterTypeEnum
 {
-    public const EXPORT_DRIVER_WINDOWS = 'windows';
-    public const EXPORT_DRIVER_LINUX   = 'linux';
+    public const string EXPORT_DRIVER_WINDOWS = 'windows';
+    public const string EXPORT_DRIVER_LINUX   = 'linux';
 
-    public const MAP = [
+    public const array MAP = [
         self::EXPORT_DRIVER_WINDOWS => WindowsMetadataWriter::class,
         self::EXPORT_DRIVER_LINUX => LinuxMetadataWriter::class,
     ];

@@ -34,7 +34,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class CatalogAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'catalog';
+    public const string REQUEST_KEY = 'catalog';
 
     private ModelFactoryInterface $modelFactory;
 

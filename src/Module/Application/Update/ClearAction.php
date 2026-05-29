@@ -39,7 +39,7 @@ use Teapot\StatusCode;
 
 final class ClearAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'clear';
+    public const string REQUEST_KEY = 'clear';
 
     private ResponseFactoryInterface $responseFactory;
 

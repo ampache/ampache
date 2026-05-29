@@ -47,7 +47,7 @@ class Podcast_Episode extends database_object implements
     library_item,
     CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'podcast_episode';
+    protected const string DB_TABLENAME = 'podcast_episode';
 
     public int $id = 0;
 

@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class GetArt4Method
 {
-    public const ACTION = 'get_art';
+    public const string ACTION = 'get_art';
 
     /**
      * get_art

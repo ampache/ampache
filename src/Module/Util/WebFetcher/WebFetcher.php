@@ -39,7 +39,7 @@ use Psr\Log\LoggerInterface;
 final class WebFetcher implements WebFetcherInterface
 {
     /** @var int Curl operation timeout in seconds */
-    private const TIMEOUT = 300;
+    private const int TIMEOUT = 300;
 
     private ConfigContainerInterface $config;
 

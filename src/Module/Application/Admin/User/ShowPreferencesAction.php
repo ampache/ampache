@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class ShowPreferencesAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'show_preferences';
+    public const string REQUEST_KEY = 'show_preferences';
 
     private UiInterface $ui;
 

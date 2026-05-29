@@ -37,7 +37,7 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 class Label extends database_object implements library_item
 {
-    protected const DB_TABLENAME = 'label';
+    protected const string DB_TABLENAME = 'label';
 
     public int $id = 0;
 

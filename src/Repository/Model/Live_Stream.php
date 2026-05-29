@@ -38,7 +38,7 @@ use Ampache\Module\System\Dba;
  */
 class Live_Stream extends database_object implements Media, library_item, CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'live_stream';
+    protected const string DB_TABLENAME = 'live_stream';
 
     /* DB based variables */
     public int $id = 0;

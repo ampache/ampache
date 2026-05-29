@@ -40,7 +40,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class CleanAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'clean';
+    public const string REQUEST_KEY = 'clean';
 
     private ConfigContainerInterface $configContainer;
 

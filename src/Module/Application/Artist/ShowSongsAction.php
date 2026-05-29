@@ -35,7 +35,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowSongsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_songs';
+    public const string REQUEST_KEY = 'show_songs';
 
     private ModelFactoryInterface $modelFactory;
 

@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class AdvancedSearch5Method
 {
-    public const ACTION = 'advanced_search';
+    public const string ACTION = 'advanced_search';
 
     /**
      * advanced_search

@@ -42,7 +42,7 @@ use Ampache\Repository\Model\Video;
  */
 final class BookmarkCreate5Method
 {
-    public const ACTION = 'bookmark_create';
+    public const string ACTION = 'bookmark_create';
 
     /**
      * bookmark_create

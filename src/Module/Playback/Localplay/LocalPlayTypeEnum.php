@@ -27,7 +27,7 @@ namespace Ampache\Module\Playback\Localplay;
 
 final class LocalPlayTypeEnum
 {
-    public const TYPE_MAPPING = [
+    public const array TYPE_MAPPING = [
         'httpq' => HttpQ\AmpacheHttpq::class,
         'mpd' => Mpd\AmpacheMpd::class,
         'upnp' => Upnp\AmpacheUPnP::class,

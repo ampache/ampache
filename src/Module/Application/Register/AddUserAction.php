@@ -46,7 +46,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class AddUserAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'add_user';
+    public const string REQUEST_KEY = 'add_user';
 
     public UiInterface $ui;
 

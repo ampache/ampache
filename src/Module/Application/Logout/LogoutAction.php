@@ -36,7 +36,7 @@ use Psr\Log\LoggerInterface;
 
 final class LogoutAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'logout';
+    public const string REQUEST_KEY = 'logout';
 
     private ConfigContainerInterface $configContainer;
 

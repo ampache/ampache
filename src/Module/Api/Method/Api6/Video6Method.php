@@ -39,7 +39,7 @@ use Ampache\Repository\Model\Video;
  */
 final class Video6Method
 {
-    public const ACTION = 'video';
+    public const string ACTION = 'video';
 
     /**
      * video

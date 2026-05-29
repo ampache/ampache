@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class ToggleFollow6Method
 {
-    public const ACTION = 'toggle_follow';
+    public const string ACTION = 'toggle_follow';
 
     /**
      * toggle_follow

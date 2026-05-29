@@ -41,7 +41,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class CreatePlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'create_playlist';
+    public const string REQUEST_KEY = 'create_playlist';
 
     private RequestParserInterface $requestParser;
 

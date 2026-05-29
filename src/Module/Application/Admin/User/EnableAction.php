@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class EnableAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'enable';
+    public const string REQUEST_KEY = 'enable';
 
     private UiInterface $ui;
 

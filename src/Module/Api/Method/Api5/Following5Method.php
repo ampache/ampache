@@ -38,7 +38,7 @@ use Ampache\Repository\UserFollowerRepositoryInterface;
  */
 final class Following5Method
 {
-    public const ACTION = 'following';
+    public const string ACTION = 'following';
 
     /**
      * following

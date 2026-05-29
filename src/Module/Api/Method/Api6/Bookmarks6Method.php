@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class Bookmarks6Method
 {
-    public const ACTION = 'bookmarks';
+    public const string ACTION = 'bookmarks';
 
     /**
      * bookmarks

@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowCatalogTypesAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_catalog_types';
+    public const string REQUEST_KEY = 'show_catalog_types';
 
     private UiInterface $ui;
 

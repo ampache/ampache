@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class SearchRules8Method
 {
-    public const ACTION = 'search_rules';
+    public const string ACTION = 'search_rules';
 
     /**
      * search_rules

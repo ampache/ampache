@@ -36,7 +36,7 @@ use Ampache\Repository\Model\User;
  */
 final class Users6Method
 {
-    public const ACTION = 'users';
+    public const string ACTION = 'users';
 
     /**
      * users

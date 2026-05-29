@@ -35,7 +35,7 @@ use Ampache\Repository\Model\User;
  */
 final class Download4Method
 {
-    public const ACTION = 'download';
+    public const string ACTION = 'download';
 
     /**
      * download

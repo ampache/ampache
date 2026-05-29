@@ -42,7 +42,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class GrantAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'grant';
+    public const string REQUEST_KEY = 'grant';
 
     private RequestParserInterface $requestParser;
 

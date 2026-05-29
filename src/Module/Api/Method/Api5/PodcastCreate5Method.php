@@ -42,7 +42,7 @@ use Ampache\Repository\Model\User;
  */
 final class PodcastCreate5Method
 {
-    public const ACTION = 'podcast_create';
+    public const string ACTION = 'podcast_create';
 
     /**
      * podcast_create

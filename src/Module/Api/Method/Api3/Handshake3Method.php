@@ -47,7 +47,7 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 final class Handshake3Method
 {
-    public const ACTION = 'handshake';
+    public const string ACTION = 'handshake';
 
     /**
      * handshake

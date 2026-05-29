@@ -32,7 +32,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class GarbageCollectAction extends AbstractCatalogAction
 {
-    public const REQUEST_KEY = 'garbage_collect';
+    public const string REQUEST_KEY = 'garbage_collect';
 
     private ConfigContainerInterface $configContainer;
 

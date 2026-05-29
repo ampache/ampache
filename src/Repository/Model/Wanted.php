@@ -43,7 +43,7 @@ use MusicBrainz\MusicBrainz;
 
 class Wanted extends database_object
 {
-    protected const DB_TABLENAME = 'wanted';
+    protected const string DB_TABLENAME = 'wanted';
 
     public int $id = 0;
 

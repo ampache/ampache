@@ -47,7 +47,7 @@ use Teapot\StatusCode;
 
 final class ExternalShareAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'external_share';
+    public const string REQUEST_KEY = 'external_share';
 
     private RequestParserInterface $requestParser;
 

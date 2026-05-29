@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class SmartlistSongs6Method
 {
-    public const ACTION = 'smartlist_songs';
+    public const string ACTION = 'smartlist_songs';
 
     /**
      * smartlist_songs

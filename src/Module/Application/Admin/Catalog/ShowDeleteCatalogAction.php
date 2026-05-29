@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowDeleteCatalogAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_delete_catalog';
+    public const string REQUEST_KEY = 'show_delete_catalog';
 
     private UiInterface $ui;
 

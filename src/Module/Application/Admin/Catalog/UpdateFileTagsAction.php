@@ -32,7 +32,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UpdateFileTagsAction extends AbstractCatalogAction
 {
-    public const REQUEST_KEY = 'update_file_tags';
+    public const string REQUEST_KEY = 'update_file_tags';
 
     private ConfigContainerInterface $configContainer;
 

@@ -34,7 +34,7 @@ use Ampache\Module\System\Dba;
  */
 class Bookmark extends database_object
 {
-    protected const DB_TABLENAME = 'bookmark';
+    protected const string DB_TABLENAME = 'bookmark';
 
     // Public variables
     public int $id = 0;

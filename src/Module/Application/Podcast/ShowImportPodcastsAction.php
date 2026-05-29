@@ -41,7 +41,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class ShowImportPodcastsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_import_podcasts';
+    public const string REQUEST_KEY = 'show_import_podcasts';
 
     private ConfigContainerInterface $configContainer;
 

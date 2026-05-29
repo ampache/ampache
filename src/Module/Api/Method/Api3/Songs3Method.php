@@ -34,7 +34,7 @@ use Ampache\Repository\Model\User;
  */
 final class Songs3Method
 {
-    public const ACTION = 'songs';
+    public const string ACTION = 'songs';
 
     /**
      * songs

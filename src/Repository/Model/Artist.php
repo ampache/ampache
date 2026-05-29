@@ -40,7 +40,7 @@ use Ampache\Repository\UserActivityRepositoryInterface;
 
 class Artist extends database_object implements library_item, CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'artist';
+    protected const string DB_TABLENAME = 'artist';
 
     public int $id = 0;
 

@@ -37,7 +37,7 @@ use Ampache\Repository\PodcastRepositoryInterface;
  */
 final class Podcast4Method
 {
-    public const ACTION = 'podcast';
+    public const string ACTION = 'podcast';
 
     /**
      * podcast

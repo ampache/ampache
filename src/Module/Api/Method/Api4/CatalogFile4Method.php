@@ -44,7 +44,7 @@ use Ampache\Repository\Model\Video;
  */
 final class CatalogFile4Method
 {
-    public const ACTION = 'catalog_file';
+    public const string ACTION = 'catalog_file';
 
     /**
      * catalog_file

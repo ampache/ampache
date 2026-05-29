@@ -38,7 +38,7 @@ use Ampache\Repository\Model\Userflag;
  */
 final class Stats3Method
 {
-    public const ACTION = 'stats';
+    public const string ACTION = 'stats';
 
     /**
      * This get library stats.

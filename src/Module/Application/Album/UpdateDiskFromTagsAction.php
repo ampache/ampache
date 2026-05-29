@@ -39,7 +39,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UpdateDiskFromTagsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_disk_from_tags';
+    public const string REQUEST_KEY = 'update_disk_from_tags';
 
     private ModelFactoryInterface $modelFactory;
 

@@ -39,7 +39,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class ExportPodcastsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'export_podcasts';
+    public const string REQUEST_KEY = 'export_podcasts';
 
     private ConfigContainerInterface $configContainer;
 

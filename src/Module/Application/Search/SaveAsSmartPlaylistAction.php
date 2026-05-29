@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'save_as_smartplaylist';
+    public const string REQUEST_KEY = 'save_as_smartplaylist';
 
     private UiInterface $ui;
 

@@ -42,7 +42,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class ExportAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'export';
+    public const string REQUEST_KEY = 'export';
 
     private CatalogExportFactoryInterface $catalogExportFactory;
 

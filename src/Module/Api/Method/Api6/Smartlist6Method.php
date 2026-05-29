@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class Smartlist6Method
 {
-    public const ACTION = 'smartlist';
+    public const string ACTION = 'smartlist';
 
     /**
      * smartlist

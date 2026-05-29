@@ -35,7 +35,7 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 class AlbumDisk extends database_object implements library_item, CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'album_disk';
+    protected const string DB_TABLENAME = 'album_disk';
 
     public int $id = 0;
 

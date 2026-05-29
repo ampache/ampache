@@ -33,7 +33,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ImportToCatalogAction extends AbstractCatalogAction
 {
-    public const REQUEST_KEY = 'import_to_catalog';
+    public const string REQUEST_KEY = 'import_to_catalog';
 
     private ConfigContainerInterface $configContainer;
 

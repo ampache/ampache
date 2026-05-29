@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ResetDbCharsetAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'reset_db_charset';
+    public const string REQUEST_KEY = 'reset_db_charset';
 
     private ConfigContainerInterface $configContainer;
 

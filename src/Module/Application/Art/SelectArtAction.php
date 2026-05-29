@@ -37,7 +37,7 @@ use Teapot\StatusCode;
 
 final class SelectArtAction extends AbstractArtAction
 {
-    public const REQUEST_KEY = 'select_art';
+    public const string REQUEST_KEY = 'select_art';
 
     private ModelFactoryInterface $modelFactory;
 

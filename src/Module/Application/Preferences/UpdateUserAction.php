@@ -42,7 +42,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UpdateUserAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_user';
+    public const string REQUEST_KEY = 'update_user';
 
     private UiInterface $ui;
 

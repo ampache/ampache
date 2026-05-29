@@ -47,7 +47,7 @@ use Psr\Log\LoggerInterface;
 
 final class AddHostAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'add_host';
+    public const string REQUEST_KEY = 'add_host';
 
     private UiInterface $ui;
 

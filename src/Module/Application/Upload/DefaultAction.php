@@ -40,7 +40,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class DefaultAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
+    public const string REQUEST_KEY = 'show';
 
     private ConfigContainerInterface $configContainer;
 

@@ -42,7 +42,7 @@ use Ampache\Repository\Model\Video;
  */
 final class Player6Method
 {
-    public const ACTION = 'player';
+    public const string ACTION = 'player';
 
     /**
      * player

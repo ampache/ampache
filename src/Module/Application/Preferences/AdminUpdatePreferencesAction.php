@@ -41,7 +41,7 @@ use Teapot\StatusCode;
 
 final class AdminUpdatePreferencesAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'admin_update_preferences';
+    public const string REQUEST_KEY = 'admin_update_preferences';
 
     private PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater;
 

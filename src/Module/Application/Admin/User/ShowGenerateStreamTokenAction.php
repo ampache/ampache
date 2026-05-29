@@ -37,7 +37,7 @@ final class ShowGenerateStreamTokenAction extends AbstractUserAction
 {
     use UserAdminApplicationTrait;
 
-    public const REQUEST_KEY = 'show_generate_streamtoken';
+    public const string REQUEST_KEY = 'show_generate_streamtoken';
 
     private UiInterface $ui;
 

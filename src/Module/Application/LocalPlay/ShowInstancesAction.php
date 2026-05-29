@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowInstancesAction extends AbstractLocalPlayAction
 {
-    public const REQUEST_KEY = 'show_instances';
+    public const string REQUEST_KEY = 'show_instances';
 
     private ConfigContainerInterface $configContainer;
 

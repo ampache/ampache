@@ -32,7 +32,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class GatherMediaArtAction extends AbstractCatalogAction
 {
-    public const REQUEST_KEY = 'gather_media_art';
+    public const string REQUEST_KEY = 'gather_media_art';
 
     private ConfigContainerInterface $configContainer;
 

@@ -35,7 +35,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ClearArtAction extends AbstractArtAction
 {
-    public const REQUEST_KEY = 'clear_art';
+    public const string REQUEST_KEY = 'clear_art';
 
     private ModelFactoryInterface $modelFactory;
 

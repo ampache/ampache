@@ -41,7 +41,7 @@ use Ampache\Repository\Model\Video;
  */
 final class BookmarkDelete5Method
 {
-    public const ACTION = 'bookmark_delete';
+    public const string ACTION = 'bookmark_delete';
 
     /**
      * bookmark_delete

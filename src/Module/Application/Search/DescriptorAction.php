@@ -33,7 +33,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class DescriptorAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'descriptor';
+    public const string REQUEST_KEY = 'descriptor';
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

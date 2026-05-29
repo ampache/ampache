@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Query;
 
 final class PvmsgQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'alpha_match',
         'not_starts_with',
         'regex_match',

@@ -39,7 +39,7 @@ use Ampache\Repository\Model\Userflag;
  */
 final class Flag8Method
 {
-    public const ACTION = 'flag';
+    public const string ACTION = 'flag';
 
     /**
      * flag

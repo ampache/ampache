@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class PreferenceDelete5Method
 {
-    public const ACTION = 'preference_delete';
+    public const string ACTION = 'preference_delete';
 
     /**
      * preference_delete

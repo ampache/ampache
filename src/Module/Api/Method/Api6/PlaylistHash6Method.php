@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistHash6Method
 {
-    public const ACTION = 'playlist_hash';
+    public const string ACTION = 'playlist_hash';
 
     /**
      * playlist_hash

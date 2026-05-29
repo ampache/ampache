@@ -33,7 +33,7 @@ use Ampache\Repository\Model\User;
  */
 final class UserEdit5Method
 {
-    public const ACTION = 'user_edit';
+    public const string ACTION = 'user_edit';
 
     /**
      * user_edit

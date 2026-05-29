@@ -33,7 +33,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowAddFilterAction extends AbstractFilterAction
 {
-    public const REQUEST_KEY = 'show_add_filter';
+    public const string REQUEST_KEY = 'show_add_filter';
 
     private UiInterface $ui;
 

@@ -36,7 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class AddSongAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'add_song';
+    public const string REQUEST_KEY = 'add_song';
 
     private RequestParserInterface $requestParser;
 

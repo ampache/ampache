@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ConfirmInstallLocalplayAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_install_localplay';
+    public const string REQUEST_KEY = 'confirm_install_localplay';
 
     private UiInterface $ui;
 

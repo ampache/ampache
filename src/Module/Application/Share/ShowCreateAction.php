@@ -47,7 +47,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowCreateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_create';
+    public const string REQUEST_KEY = 'show_create';
 
     public function __construct(
         private readonly RequestParserInterface $requestParser,

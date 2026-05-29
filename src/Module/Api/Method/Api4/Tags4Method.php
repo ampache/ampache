@@ -32,7 +32,7 @@ use Ampache\Repository\Model\User;
  */
 final class Tags4Method
 {
-    public const ACTION = 'tags';
+    public const string ACTION = 'tags';
 
     /**
      * tags

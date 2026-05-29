@@ -50,12 +50,12 @@ use Psr\Http\Message\UploadedFileInterface;
 final class ImportPodcastsAction implements ApplicationActionInterface
 {
     /** @var list<string> */
-    private const EXPECTED_MIME_TYPES = [
+    private const array EXPECTED_MIME_TYPES = [
         'text/x-opml+xml',
         'text/xml',
     ];
 
-    public const REQUEST_KEY = 'import_podcasts';
+    public const string REQUEST_KEY = 'import_podcasts';
 
     private ConfigContainerInterface $configContainer;
 

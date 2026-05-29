@@ -39,7 +39,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class SetIsReadAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'set_is_read';
+    public const string REQUEST_KEY = 'set_is_read';
 
     private ConfigContainerInterface $configContainer;
 

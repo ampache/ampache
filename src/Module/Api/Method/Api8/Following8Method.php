@@ -39,7 +39,7 @@ use Ampache\Repository\UserFollowerRepositoryInterface;
  */
 final class Following8Method
 {
-    public const ACTION = 'following';
+    public const string ACTION = 'following';
 
     /**
      * following

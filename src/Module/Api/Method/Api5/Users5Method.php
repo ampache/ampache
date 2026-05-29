@@ -36,7 +36,7 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class Users5Method
 {
-    public const ACTION = 'users';
+    public const string ACTION = 'users';
 
     /**
      * users
