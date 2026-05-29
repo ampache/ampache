@@ -53,7 +53,7 @@ final class BookmarkDelete8Method
      * Delete an existing bookmark. (if it exists)
      *
      * filter = (string) object_id to delete
-     * type   = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode')
+     * type   = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode') //optional default: bookmark
      * client = (string) Agent string //optional
      *
      * @param array{

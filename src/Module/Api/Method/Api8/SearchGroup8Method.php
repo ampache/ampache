@@ -69,7 +69,17 @@ final class SearchGroup8Method
      * offset          = (integer) //optional
      * limit           = (integer) //optional
      *
-     * @param array<string, mixed> $input
+     * @param array{
+     *     operator: string,
+     *     rule_1: string,
+     *     rule_1_operator: int,
+     *     rule_1_input: mixed,
+     *     type?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      */
     public static function search_group(array $input, User $user): bool
     {

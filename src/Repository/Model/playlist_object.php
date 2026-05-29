@@ -92,7 +92,7 @@ abstract class playlist_object extends database_object implements library_item
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
@@ -156,7 +156,7 @@ abstract class playlist_object extends database_object implements library_item
 
         $new_list    = (!empty($data['collaborate'])) ? $data['collaborate'] : [];
         $collaborate = (!empty($new_list)) ? implode(',', $new_list) : '';
-        if (is_array($new_list) && $collaborate != $this->collaborate) {
+        if ($collaborate != $this->collaborate) {
             $playlist_id = ($this instanceof Search)
                 ? 'smart_' . $this->id
                 : $this->id;
@@ -272,8 +272,8 @@ abstract class playlist_object extends database_object implements library_item
      * @return list<array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
-     *     track?: int,
-     *     track_id?: int
+     *     track: int,
+     *     track_id: int
      * }>
      */
     public function get_medias(?string $filter_type = null): array

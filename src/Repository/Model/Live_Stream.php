@@ -77,7 +77,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool

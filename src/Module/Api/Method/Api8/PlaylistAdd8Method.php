@@ -59,7 +59,7 @@ final class PlaylistAdd8Method
      *     filter: string,
      *     id?: string,
      *     song?: string,
-     *     type: string,
+     *     type?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
