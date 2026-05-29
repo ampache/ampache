@@ -22,7 +22,7 @@ return RectorConfig::configure()
     ->withRules([
         InlineConstructorDefaultToPropertyRector::class
     ])
-    ->withPhpSets(php82: true)
+    ->withPhpSets(php85: true)
     ->withPreparedSets(deadCode: true, codeQuality: true, codingStyle: true)
     ->withSkip([
         FlipTypeControlToUseExclusiveTypeRector::class,
