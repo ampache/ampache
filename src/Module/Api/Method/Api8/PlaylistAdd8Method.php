@@ -53,7 +53,7 @@ final class PlaylistAdd8Method
      *
      * filter = (string) UID of playlist
      * id     = (string) $object_id
-     * type   = (string) 'song', 'album', 'artist', 'playlist'
+     * type   = (string) 'song', 'album', 'artist', 'playlist' //optional, default = song
      *
      * @param array{
      *     filter: string,
@@ -67,13 +67,13 @@ final class PlaylistAdd8Method
     public static function playlist_add(array $input, User $user): bool
     {
         $input['id'] = $input['song'] ?? $input['id'] ?? null;
-        if (!Api::check_parameter($input, ['filter', 'id', 'type'], self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter', 'id'], self::ACTION)) {
             return false;
         }
         ob_end_clean();
         $playlist    = new Playlist((int)$input['filter']);
         $object_id   = $input['id'];
-        $object_type = $input['type'];
+        $object_type = $input['type'] ?? 'song';
 
         // confirm the correct data
         if (!$playlist->has_collaborate($user)) {
