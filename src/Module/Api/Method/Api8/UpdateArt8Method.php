@@ -59,7 +59,7 @@ final class UpdateArt8Method
      *     filter?: string,
      *     id?: string,
      *     type: string,
-     *     overwrite: int,
+     *     overwrite?: int,
      *     api_format: string,
      *     auth: string,
      * } $input

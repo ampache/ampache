@@ -57,7 +57,7 @@ final class UpdateArt5Method
      * @param array{
      *     id: string,
      *     type: string,
-     *     overwrite: int,
+     *     overwrite?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
