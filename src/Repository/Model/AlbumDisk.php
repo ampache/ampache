@@ -462,7 +462,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     /**
      * Get item children.
-     * @return array{song: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{song: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -471,7 +471,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -483,7 +483,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     /**
      * Get all children and sub-childrens media.
      *
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {

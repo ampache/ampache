@@ -36,7 +36,7 @@ interface SongRepositoryInterface
     /**
      * gets the songs for an album takes an optional limit
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getByAlbum(int $albumId, int $limit = 0): array;
 

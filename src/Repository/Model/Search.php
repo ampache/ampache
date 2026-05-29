@@ -1468,7 +1468,7 @@ class Search extends playlist_object
      *
      * Return an array of the items output by our search
      * (part of the playlist interface).
-     * @return list<array{
+     * @return array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track_id: int,
@@ -1655,7 +1655,7 @@ class Search extends playlist_object
     /**
      * get_total_duration
      * Get the total duration of all songs.
-     * @param int[]|list<array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $songs
+     * @param int[]|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $songs
      */
     public static function get_total_duration(array $songs): int
     {
@@ -2123,7 +2123,7 @@ class Search extends playlist_object
 
         $sql = sprintf('UPDATE `search` SET `%s` = ? WHERE `id` = ?', $field);
 
-        return (Dba::write($sql, [$value, $this->id]) !== false);
+        return (Dba::write($sql, [$value, $this->id]) !== null);
     }
 
     /**

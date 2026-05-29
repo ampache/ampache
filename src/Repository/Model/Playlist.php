@@ -224,7 +224,7 @@ class Playlist extends playlist_object
      * This returns an array of playlist medias that are in this playlist.
      * Because the same media can be on the same playlist twice they are
      * keyed by the uid from playlist_data
-     * @return list<array{
+     * @return array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track_id: int,
@@ -305,7 +305,7 @@ class Playlist extends playlist_object
     /**
      * get_random_items
      * This is the same as before but we randomize the buggers!
-     * @return list<array{object_type: LibraryItemEnum, object_id: int, track: int, track_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int, track: int, track_id: int}>
      */
     public function get_random_items(?string $limit = ''): array
     {
@@ -514,7 +514,7 @@ class Playlist extends playlist_object
 
         $sql = sprintf('UPDATE `playlist` SET `%s` = ? WHERE `id` = ?', $field);
 
-        return (Dba::write($sql, [$value, $this->id]) !== false);
+        return (Dba::write($sql, [$value, $this->id]) !== null);
     }
 
     /**

@@ -93,7 +93,7 @@ class Share extends database_object
 
     public function getId(): int
     {
-        return $this->id ?? 0;
+        return $this->id;
     }
 
     public function isNew(): bool
@@ -220,7 +220,7 @@ class Share extends database_object
             $params[] = $user->id;
         }
 
-        return (Dba::write($sql, $params) !== false);
+        return (Dba::write($sql, $params) !== null);
     }
 
     /**

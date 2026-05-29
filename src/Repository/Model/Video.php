@@ -336,7 +336,7 @@ class Video extends database_object implements
     }
 
     /**
-     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -345,7 +345,7 @@ class Video extends database_object implements
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -357,7 +357,7 @@ class Video extends database_object implements
     /**
      * Get all childrens and sub-childrens medias.
      *
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -1066,7 +1066,7 @@ class Video extends database_object implements
     /**
      * get_deleted
      * get items from the deleted_videos table
-     * @return list<array{
+     * @return array<int, array{
      *     id: int,
      *     addition_time: int,
      *     delete_time: int,

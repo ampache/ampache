@@ -3230,7 +3230,7 @@ class Subsonic_Json_Data
      *
      * Shares.Subsonic
      * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param list<int> $shares
+     * @param int[] $shares
      * @return array{'subsonic-response': array<string, mixed>}
      */
     public static function addShares(array $response, array $shares): array

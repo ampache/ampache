@@ -39,7 +39,7 @@ interface PrivateMessageRepositoryInterface
     /**
      * Get the subsonic chat messages.
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getChatMessages(int $since = 0): array;
 

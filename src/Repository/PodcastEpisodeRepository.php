@@ -54,7 +54,7 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
      *
      * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getEpisodes(Podcast $podcast, ?PodcastEpisodeStateEnum $stateFilter = null): array
     {

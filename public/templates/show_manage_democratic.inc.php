@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Playlist;
 
-/** @var list<int> $playlists */
+/** @var int[] $playlists */
 
 $web_path = AmpConfig::get_web_path();
 

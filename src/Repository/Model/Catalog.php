@@ -594,7 +594,7 @@ abstract class Catalog extends database_object
         // Remove last comma to avoid SQL error
         $sql = substr($sql, 0, -1);
 
-        return (Dba::write($sql) !== false);
+        return (Dba::write($sql) !== null);
     }
 
     /**
@@ -644,7 +644,7 @@ abstract class Catalog extends database_object
             if (Dba::write($sql, $params)) {
                 $sql = "DELETE FROM `catalog_filter_group_map` WHERE `group_id` = ?";
 
-                return (Dba::write($sql, $params) !== false);
+                return (Dba::write($sql, $params) !== null);
             }
         }
 
@@ -966,7 +966,7 @@ abstract class Catalog extends database_object
 
         $sql = sprintf('UPDATE `catalog` SET `%s` = ? WHERE `id` = ?', $field);
 
-        return (Dba::write($sql, [$value, $catalog_id]) !== false);
+        return (Dba::write($sql, [$value, $catalog_id]) !== null);
     }
 
     /**
@@ -1735,7 +1735,7 @@ abstract class Catalog extends database_object
      *
      * Get each array of [id, f_name, name, album_count, catalog_id, has_art] for artists in an array of catalog id's
      * @param int[]|string[] $catalogs
-     * @return list<array{
+     * @return array<int, array{
      *     id: int,
      *     f_name: string,
      *     name: string,
@@ -1901,7 +1901,7 @@ abstract class Catalog extends database_object
 
     /**
      * get all artists or artist children of a catalog id (Used for WebDav)
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public static function get_children(string $name, int $catalog_id = 0): array
     {
@@ -2063,7 +2063,7 @@ abstract class Catalog extends database_object
      * get_newest_podcasts_ids
      *
      * This returns an array of ids of latest podcast episodes in this catalog
-     * @return list<int>
+     * @return int[]
      */
     private function get_newest_podcasts_ids(int $count): array
     {
@@ -4320,7 +4320,7 @@ abstract class Catalog extends database_object
         $sql    = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
         $params = [$new_object_id, $object_type, $old_object_id];
 
-        return (Dba::write($sql, $params) !== false);
+        return (Dba::write($sql, $params) !== null);
     }
 
     /**

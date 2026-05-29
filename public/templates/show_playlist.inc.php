@@ -47,7 +47,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
 /** @var Playlist $playlist */
-/** @var list<int> $object_ids */
+/** @var int[] $object_ids */
 
 $web_path = AmpConfig::get_web_path();
 

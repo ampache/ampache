@@ -113,7 +113,7 @@ class Bookmark extends database_object
      *     user: int,
      *     position?: int
      * } $data
-     * @return list<int>
+     * @return int[]
      */
     public static function getBookmarks(array $data): array
     {

@@ -32,7 +32,7 @@ use Ampache\Repository\Model\Random;
 use Ampache\Repository\VideoRepositoryInterface;
 
 /** @var VideoRepositoryInterface $videoRepository */
-/** @var list<int> $object_ids */
+/** @var int[] $object_ids */
 
 $web_path = AmpConfig::get_web_path();
 

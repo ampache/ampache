@@ -37,7 +37,7 @@ interface PreferenceRepositoryInterface
      *
      * If no user is provided, all available system-wide preferences will be returned
      *
-     * @return list<array{
+     * @return array<int, array{
      *     id: int,
      *     name: string,
      *     value: string,

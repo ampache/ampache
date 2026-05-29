@@ -47,7 +47,7 @@ final readonly class WantedRepository implements WantedRepositoryInterface
     /**
      * Get wanted list.
      *
-     * @return list<int>
+     * @return int[]
      */
     public function findAll(?User $user = null): array
     {

@@ -32,7 +32,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var list<int> $object_ids */
+/** @var int[] $object_ids */
 
 $thcount            = 6;
 $show_ratings       = User::is_registered() && (AmpConfig::get('ratings'));

@@ -114,7 +114,7 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @return array{artist: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{artist: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -211,7 +211,7 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -245,7 +245,7 @@ class Label extends database_object implements library_item
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
