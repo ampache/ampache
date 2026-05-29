@@ -74,7 +74,7 @@ class BookmarkRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $bookmarkId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$bookmarkId],
             $this->subject->getByUser($user)
         );
@@ -108,7 +108,7 @@ class BookmarkRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn((string) $bookmarkId, false);
 
-        static::assertSame(
+        self::assertSame(
             [$bookmarkId],
             $this->subject->getByUserAndComment($user, $comment)
         );
@@ -136,13 +136,13 @@ class BookmarkRepositoryTest extends TestCase
             ->method('query')
             ->with(...self::withConsecutive(
                 [
-                    'DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `song` ON `song`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = \'song\' AND `song`.`id` IS NULL;',
+                    "DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `song` ON `song`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = 'song' AND `song`.`id` IS NULL;",
                 ],
                 [
-                    'DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `video` ON `video`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = \'video\' AND `video`.`id` IS NULL;',
+                    "DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `video` ON `video`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = 'video' AND `video`.`id` IS NULL;",
                 ],
                 [
-                    'DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = \'podcast_episode\' AND `podcast_episode`.`id` IS NULL;',
+                    "DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = 'podcast_episode' AND `podcast_episode`.`id` IS NULL;",
                 ]
             ));
 

@@ -34,7 +34,7 @@ class PodcastEpisodeStateEnumTest extends TestCase
     #[DataProvider(methodName: 'descriptionDataProvider')]
     public function testToDescriptionReturnsLabel(PodcastEpisodeStateEnum $state, string $label): void
     {
-        static::assertSame(
+        self::assertSame(
             $label,
             $state->toDescription()
         );

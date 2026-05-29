@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Song;
 
+use Override;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\Song\SongViewAdapterInterface;
 use Ampache\Gui\TalFactoryInterface;
@@ -59,6 +60,7 @@ class ShowSongActionTest extends MockeryTestCase
 
     private ShowSongAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->ui           = $this->mock(UiInterface::class);

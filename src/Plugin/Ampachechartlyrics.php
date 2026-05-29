@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -32,18 +33,25 @@ use WpOrg\Requests\Requests;
 
 class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterface
 {
+    #[Override]
     public string $name = 'ChartLyrics';
 
+    #[Override]
     public string $categories = 'lyrics';
 
+    #[Override]
     public string $description = 'Get lyrics from ChartLyrics';
 
+    #[Override]
     public string $url = 'http://www.chartlyrics.com';
 
+    #[Override]
     public string $version = '000001';
 
+    #[Override]
     public string $min_ampache = '360022';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     /**
@@ -104,7 +112,7 @@ class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterfa
         $uri     = $base . 'SearchLyricDirect?artist=' . urlencode($song->get_artist_fullname()) . '&song=' . urlencode((string)$song->title);
         $request = Requests::get($uri, [], Core::requests_options());
         if ($request->status_code == 200) {
-            $xml = simplexml_load_string($request->body);
+            $xml = simplexml_load_string((string) $request->body);
             if (
                 $xml &&
                 !empty($xml->Lyric)

@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
+use Deprecated;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
@@ -38,18 +40,25 @@ use Ampache\Repository\UserActivityRepositoryInterface;
 
 class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeInterface
 {
+    #[Override]
     public string $name = 'Friends Timeline';
 
+    #[Override]
     public string $categories = 'home';
 
+    #[Override]
     public string $description = 'Friends Timeline on homepage';
 
+    #[Override]
     public string $url = '';
 
+    #[Override]
     public string $version = '000002';
 
+    #[Override]
     public string $min_ampache = '370040';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -97,7 +106,7 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
     public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version == 0) {
+        if ($from_version === 0) {
             return false;
         }
 
@@ -165,9 +174,7 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
         return true;
     }
 
-    /**
-     * @deprecated
-     */
+    #[Deprecated]
     private function getUseractivityRepository(): UserActivityRepositoryInterface
     {
         global $dic;
@@ -175,9 +182,7 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
         return $dic->get(UserActivityRepositoryInterface::class);
     }
 
-    /**
-     * @deprecated
-     */
+    #[Deprecated]
     private function getUserActivityRenderer(): UserActivityRendererInterface
     {
         global $dic;

@@ -46,7 +46,7 @@ class MetadataFieldTest extends TestCase
 
     public function testIsNewReturnsTrueINew(): void
     {
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->isNew()
         );
     }
@@ -60,17 +60,17 @@ class MetadataFieldTest extends TestCase
             ->with($this->subject)
             ->willReturn($id);
 
-        static::assertSame(
+        self::assertSame(
             0,
             $this->subject->getId()
         );
 
         $this->subject->save();
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->isNew()
         );
-        static::assertSame(
+        self::assertSame(
             $id,
             $this->subject->getId()
         );
@@ -83,14 +83,14 @@ class MetadataFieldTest extends TestCase
         mixed $defaultValue,
         mixed $setValue
     ): void {
-        static::assertSame(
+        self::assertSame(
             $defaultValue,
             call_user_func_array([$this->subject, $getterMethod], [])
         );
 
         call_user_func_array([$this->subject, $setterMethod], [$setValue]);
 
-        static::assertSame(
+        self::assertSame(
             $setValue,
             call_user_func_array([$this->subject, $getterMethod], [])
         );

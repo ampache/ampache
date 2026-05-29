@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\System;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -37,6 +38,7 @@ class ConfigViewAdapterTest extends MockeryTestCase
 
     private ConfigViewAdapter $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);

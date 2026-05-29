@@ -50,7 +50,7 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
         User $user
     ): int {
         return (int) $this->connection->fetchOne(
-            'SELECT count(`id`) as `amount` FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = \'0\'',
+            "SELECT count(`id`) as `amount` FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = '0'",
             [$user->getId()]
         );
     }

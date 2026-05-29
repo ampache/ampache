@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
@@ -33,18 +34,25 @@ use WpOrg\Requests\Requests;
 
 class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
 {
+    #[Override]
     public string $name = 'Flickr';
 
+    #[Override]
     public string $categories = 'slideshow';
 
+    #[Override]
     public string $description = 'Artist photos from Flickr';
 
+    #[Override]
     public string $url = 'http://www.flickr.com';
 
+    #[Override]
     public string $version = '000001';
 
+    #[Override]
     public string $min_ampache = '360045';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -96,7 +104,7 @@ class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
         debug_event('flickr.plugin', 'Calling ' . $url, 5);
         $request = Requests::get($url, [], Core::requests_options());
         if ($request->status_code == 200) {
-            $xml = simplexml_load_string($request->body);
+            $xml = simplexml_load_string((string) $request->body);
             if ($xml && $xml->photos) {
                 foreach ($xml->photos->photo as $photo) {
                     $photos[] = [

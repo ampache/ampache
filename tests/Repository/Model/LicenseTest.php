@@ -48,7 +48,7 @@ class LicenseTest extends TestCase
 
     public function testIsNewReturnsTrueIfIdIsZero(): void
     {
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->isNew()
         );
     }
@@ -64,10 +64,10 @@ class LicenseTest extends TestCase
 
         $this->subject->save();
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->isNew()
         );
-        static::assertSame(
+        self::assertSame(
             $licenseId,
             $this->subject->getId()
         );
@@ -80,14 +80,14 @@ class LicenseTest extends TestCase
         mixed $defaultValue,
         mixed $setValue
     ): void {
-        static::assertSame(
+        self::assertSame(
             $defaultValue,
             call_user_func_array([$this->subject, $getterMethod], [])
         );
 
         call_user_func_array([$this->subject, $setterMethod], [$setValue]);
 
-        static::assertSame(
+        self::assertSame(
             $setValue,
             call_user_func_array([$this->subject, $getterMethod], [])
         );
@@ -108,7 +108,7 @@ class LicenseTest extends TestCase
         $this->subject->setName($name);
         $this->subject->setExternalLink($link);
 
-        static::assertSame(
+        self::assertSame(
             sprintf(
                 '<a href="%s">%s</a>',
                 $link,
@@ -124,7 +124,7 @@ class LicenseTest extends TestCase
 
         $this->subject->setName($name);
 
-        static::assertSame(
+        self::assertSame(
             $name,
             $this->subject->getLinkFormatted()
         );

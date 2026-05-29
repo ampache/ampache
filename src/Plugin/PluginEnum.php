@@ -30,7 +30,7 @@ namespace Ampache\Plugin;
  */
 final class PluginEnum
 {
-    public const LIST = [
+    public const array LIST = [
         '7digital' => Ampache7digital::class,
         'amazon' => AmpacheAmazon::class,
         'bitly' => AmpacheBitly::class,

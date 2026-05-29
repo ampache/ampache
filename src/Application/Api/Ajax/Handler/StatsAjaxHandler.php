@@ -67,12 +67,12 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                             $longitude = (float)$_REQUEST['longitude'];
                             // First try to get from local cache (avoid external api requests)
                             $name = Stats::get_cached_place_name($latitude, $longitude);
-                            if ($name === null || $name === '' || $name === '0') {
+                            if (in_array($name, [null, '', '0'], true)) {
                                 foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::GEO_LOCATION, $user) as $plugin) {
                                     $name = ($plugin->_plugin instanceof PluginLocationInterface)
                                         ? $plugin->_plugin->get_location_name($latitude, $longitude)
                                         : null;
-                                    if ($name !== null && $name !== '' && $name !== '0') {
+                                    if (!in_array($name, [null, '', '0'], true)) {
                                         break;
                                     }
                                 }
@@ -81,7 +81,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                             // Better to check for bugged values here and keep previous user good location
                             // Someone listing music at 0.0,0.0 location would need a waterproof music player btw
                             if (
-                                $name !== null && $name !== '' && $name !== '0' &&
+                                !in_array($name, [null, '', '0'], true) &&
                                 $latitude > 0 &&
                                 $longitude > 0
                             ) {

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\System;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -61,6 +62,7 @@ class GenerateConfigActionTest extends MockeryTestCase
 
     private ?GenerateConfigAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configContainer    = $this->mock(ConfigContainerInterface::class);

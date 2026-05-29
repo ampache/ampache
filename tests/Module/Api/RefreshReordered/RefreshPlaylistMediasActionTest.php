@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\RefreshReordered;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
@@ -44,6 +45,7 @@ class RefreshPlaylistMediasActionTest extends MockeryTestCase
 
     private ?RefreshPlaylistMediasAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->requestParser = $this->mock(RequestParserInterface::class);

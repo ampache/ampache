@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Playlist;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
@@ -49,6 +50,7 @@ class NewPlaylistDialogAdapterTest extends MockeryTestCase
 
     private ?NewPlaylistDialogAdapter $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->playlistLoader   = $this->mock(PlaylistLoaderInterface::class);

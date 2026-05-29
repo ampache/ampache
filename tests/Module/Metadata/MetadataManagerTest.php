@@ -64,7 +64,7 @@ class MetadataManagerTest extends TestCase
     {
         $item = $this->createMock(MetadataEnabledInterface::class);
 
-        static::assertSame(
+        self::assertSame(
             [],
             iterator_to_array($this->subject->getMetadata($item))
         );
@@ -96,7 +96,7 @@ class MetadataManagerTest extends TestCase
             ->with($itemId, $itemType)
             ->willReturn($result);
 
-        static::assertSame(
+        self::assertSame(
             [$metadata],
             iterator_to_array($this->subject->getMetadata($item))
         );
@@ -146,12 +146,12 @@ class MetadataManagerTest extends TestCase
             ->method('getName')
             ->willReturn($name1);
 
-        static::assertSame(
+        self::assertSame(
             [$name1, $name2, $name3],
             $this->subject->getDisabledMetadataFields()
         );
         // test caching
-        static::assertSame(
+        self::assertSame(
             [$name1, $name2, $name3],
             $this->subject->getDisabledMetadataFields()
         );

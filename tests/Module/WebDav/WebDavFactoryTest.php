@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\WebDav;
 
+use Override;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -40,6 +41,7 @@ class WebDavFactoryTest extends MockeryTestCase
 
     private WebDavFactory $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->authenticationManager = Mockery::mock(AuthenticationManagerInterface::class);
@@ -56,7 +58,7 @@ class WebDavFactoryTest extends MockeryTestCase
     #[DataProvider(methodName: 'methodDataProvider')]
     public function testFactoryMethods(string $method, string $expected_instance_name, array $params): void
     {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             $expected_instance_name,
             call_user_func_array([$this->subject, $method], $params)
         );
@@ -64,7 +66,7 @@ class WebDavFactoryTest extends MockeryTestCase
 
     public function testCreateServerReturnsInstance(): void
     {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             Server::class,
             $this->subject->createServer(
                 $this->createMock(ICollection::class)

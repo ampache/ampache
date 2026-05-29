@@ -42,14 +42,14 @@ class PodcastTest extends TestCase
 
     public function testIsNewReturnsTrueOnNewObject(): void
     {
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->isNew()
         );
     }
 
     public function testGetIdReturnsZeroOnNewObject(): void
     {
-        static::assertSame(
+        self::assertSame(
             0,
             $this->subject->getId()
         );
@@ -61,7 +61,7 @@ class PodcastTest extends TestCase
 
         $this->subject->setTitle($title);
 
-        static::assertSame(
+        self::assertSame(
             [
                 'podcast' => [
                     'important' => true,
@@ -75,21 +75,21 @@ class PodcastTest extends TestCase
 
     public function testGetParentReturnsNull(): void
     {
-        static::assertNull(
+        self::assertNull(
             $this->subject->get_parent()
         );
     }
 
     public function testGetUserOwnerReturnsNull(): void
     {
-        static::assertNull(
+        self::assertNull(
             $this->subject->get_user_owner()
         );
     }
 
     public function testGetDefaultArtKindReturnsValue(): void
     {
-        static::assertSame(
+        self::assertSame(
             'default',
             $this->subject->get_default_art_kind()
         );
@@ -115,14 +115,14 @@ class PodcastTest extends TestCase
         mixed $default,
         mixed $value,
     ): void {
-        static::assertSame(
+        self::assertSame(
             $default,
             call_user_func([$this->subject, 'get' . $methodName])
         );
 
         call_user_func([$this->subject, 'set' . $methodName], $value);
 
-        static::assertSame(
+        self::assertSame(
             $value,
             call_user_func([$this->subject, 'get' . $methodName])
         );
@@ -134,7 +134,7 @@ class PodcastTest extends TestCase
 
         $this->subject->setLanguage($value);
 
-        static::assertSame(
+        self::assertSame(
             mb_substr($value, 0, 5),
             $this->subject->getLanguage()
         );
@@ -150,14 +150,14 @@ class PodcastTest extends TestCase
             ->method('getId')
             ->willReturn($catalogId);
 
-        static::assertSame(
+        self::assertSame(
             0,
             $this->subject->getCatalogId()
         );
 
         $this->subject->setCatalog($catalog);
 
-        static::assertSame(
+        self::assertSame(
             $catalogId,
             $this->subject->getCatalogId()
         );
@@ -169,7 +169,7 @@ class PodcastTest extends TestCase
 
         $this->subject->setLastSyncDate($data);
 
-        static::assertSame(
+        self::assertSame(
             $data->getTimestamp(),
             $this->subject->getLastSyncDate()->getTimestamp()
         );
@@ -181,7 +181,7 @@ class PodcastTest extends TestCase
 
         $this->subject->setLastBuildDate($data);
 
-        static::assertSame(
+        self::assertSame(
             $data->getTimestamp(),
             $this->subject->getLastBuildDate()->getTimestamp()
         );

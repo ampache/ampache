@@ -37,7 +37,7 @@
         }
     },
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.5",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-gd": "*",
@@ -84,10 +84,10 @@
         "mikey179/vfsstream": "^1.6",
         "mockery/mockery": "^1.3",
         "phpstan/extension-installer": "^1.3",
-        "phpstan/phpstan": "^1.10",
-        "phpstan/phpstan-mockery": "^1.1",
+        "phpstan/phpstan": "^2",
+        "phpstan/phpstan-mockery": "^2",
         "phpunit/phpunit": "^11",
-        "rector/rector": "^1",
+        "rector/rector": "^2",
         "seec/phpunit-consecutive-params": "^1.1",
         "szymach/c-pchart": "3.0.17"
     },

@@ -377,32 +377,32 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Length')]        = scrub_out($this->song->get_f_time());
         $songprops[T_('Links')]         = "";
         if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_GOOGLE)) {
-            $songprops[T_('Links')] .= "<a href=\"https://www.google.com/search?q=%22" . rawurlencode($this->song->get_artist_fullname()) . "%22+%22" . rawurlencode((string)$this->song->get_fullname()) . "%22\" target=\"_blank\">" . Ui::get_icon('google', T_('Search on Google ...')) . "</a>";
+            $songprops[T_('Links')] .= '<a href="https://www.google.com/search?q=%22' . rawurlencode($this->song->get_artist_fullname()) . "%22+%22" . rawurlencode((string)$this->song->get_fullname()) . '%22" target="_blank">' . Ui::get_icon('google', T_('Search on Google ...')) . "</a>";
         }
 
         if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_DUCKDUCKGO)) {
-            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://www.duckduckgo.com/?q=" . rawurlencode($this->song->get_artist_fullname()) . "+" . rawurlencode((string)$this->song->get_fullname()) . "\" target=\"_blank\">" . Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
+            $songprops[T_('Links')] .= '&nbsp;<a href="https://www.duckduckgo.com/?q=' . rawurlencode($this->song->get_artist_fullname()) . "+" . rawurlencode((string)$this->song->get_fullname()) . '" target="_blank">' . Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
         }
 
         if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_LASTFM)) {
-            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://www.last.fm/search?q=%22" . rawurlencode($this->song->get_artist_fullname()) . "%22+%22" . rawurlencode((string)$this->song->get_fullname()) . "%22&type=track\" target=\"_blank\">" . Ui::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
+            $songprops[T_('Links')] .= '&nbsp;<a href="https://www.last.fm/search?q=%22' . rawurlencode($this->song->get_artist_fullname()) . "%22+%22" . rawurlencode((string)$this->song->get_fullname()) . '%22&type=track" target="_blank">' . Ui::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
         }
 
         if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_BANDCAMP)) {
-            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://bandcamp.com/search?q=" . rawurlencode($this->song->get_artist_fullname()) . "+" . rawurlencode((string)$this->song->get_fullname()) . "&item_type=t\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
+            $songprops[T_('Links')] .= '&nbsp;<a href="https://bandcamp.com/search?q=' . rawurlencode($this->song->get_artist_fullname()) . "+" . rawurlencode((string)$this->song->get_fullname()) . '&item_type=t" target="_blank">' . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
         }
 
         if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_MUSICBRAINZ)) {
             $songprops[T_('Links')] .= ($this->song->mbid)
-                ? "&nbsp;<a href=\"https://musicbrainz.org/recording/" . $this->song->mbid . "\" target=\"_blank\">" . Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>"
-                : "&nbsp;<a href=\"https://musicbrainz.org/taglookup?tag-lookup.artist=%22" . rawurlencode($this->song->get_artist_fullname()) . "%22&tag-lookup.track=%22" . rawurlencode((string)$this->song->get_fullname()) . "%22\" target=\"_blank\">" . Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
+                ? '&nbsp;<a href="https://musicbrainz.org/recording/' . $this->song->mbid . '" target="_blank">' . Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>"
+                : '&nbsp;<a href="https://musicbrainz.org/taglookup?tag-lookup.artist=%22' . rawurlencode($this->song->get_artist_fullname()) . "%22&tag-lookup.track=%22" . rawurlencode((string)$this->song->get_fullname()) . '%22" target="_blank">' . Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
         }
 
         $songprops[T_('Comment')] = scrub_out($this->song->comment ?? '');
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
             $label_string = '';
-            foreach (array_map('trim', explode(';', (string)$this->song->label)) as $label_name) {
-                $label_string .= "<a href=\"" . $this->configContainer->getWebPath('/client') . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a>, ";
+            foreach (array_map(trim(...), explode(';', (string)$this->song->label)) as $label_name) {
+                $label_string .= '<a href="' . $this->configContainer->getWebPath('/client') . "/labels.php?action=show&name=" . scrub_out($label_name) . '">' . scrub_out($label_name) . "</a>, ";
             }
 
             $songprops[T_('Label')] = rtrim($label_string, ', ');
@@ -438,7 +438,7 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         }
 
         if ($this->song->get_isrcs() !== []) {
-            $songprops[T_('ISRC')] = implode(', ', array_map('scrub_out', $this->song->get_isrcs()));
+            $songprops[T_('ISRC')] = implode(', ', array_map(scrub_out(...), $this->song->get_isrcs()));
         }
 
         if ($this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) && $this->song->file !== null) {
@@ -462,7 +462,7 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_LYRICS)) {
-            $songprops[T_('Lyrics')] = "<a title=\"" . scrub_out($this->song->title) . "\" href=\"" . $this->configContainer->getWebPath('/client') . "/song.php?action=show_lyrics&song_id=" . $this->song->getId() . "\">" . T_('Show Lyrics') . "</a>";
+            $songprops[T_('Lyrics')] = '<a title="' . scrub_out($this->song->title) . '" href="' . $this->configContainer->getWebPath('/client') . "/song.php?action=show_lyrics&song_id=" . $this->song->getId() . '">' . T_('Show Lyrics') . "</a>";
         }
 
         $license = $this->song->getLicense();

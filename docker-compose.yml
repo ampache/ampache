@@ -4,7 +4,7 @@ services:
   ampache:
     build:
       context: .
-      dockerfile: docker/Dockerfilephp82
+      dockerfile: docker/Dockerfilephp85
     container_name: ampache
     restart: on-failure
     ports:

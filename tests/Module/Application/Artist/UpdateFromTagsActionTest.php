@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Artist;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -49,6 +50,7 @@ class UpdateFromTagsActionTest extends MockeryTestCase
 
     private ?UpdateFromTagsAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);

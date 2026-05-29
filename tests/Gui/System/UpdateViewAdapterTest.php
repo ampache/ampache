@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\System;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -48,6 +49,7 @@ class UpdateViewAdapterTest extends MockeryTestCase
 
     private UpdateViewAdapter $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configContainer      = $this->mock(ConfigContainerInterface::class);
@@ -174,7 +176,7 @@ class UpdateViewAdapterTest extends MockeryTestCase
             ->method('hasWarning')
             ->willReturn($warning);
 
-        static::assertSame(
+        self::assertSame(
             [[
                 'title' => 'Version: ' . $version,
                 'changelog' => $changelog,

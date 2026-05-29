@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
@@ -57,6 +58,7 @@ class ApplicationRunnerTest extends MockeryTestCase
 
     private ApplicationRunner $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->dic               = $this->mock(ContainerInterface::class);

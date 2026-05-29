@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -45,6 +46,7 @@ class ShowActionTest extends MockeryTestCase
 
     private ?ShowAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->ui           = $this->mock(UiInterface::class);

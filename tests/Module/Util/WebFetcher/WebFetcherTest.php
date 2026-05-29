@@ -113,7 +113,7 @@ class WebFetcherTest extends TestCase
 
         $curl->rawResponse = $result;
 
-        static::assertSame(
+        self::assertSame(
             $result,
             $this->subject->fetch($uri)
         );

@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream;
@@ -47,18 +48,25 @@ use MusicBrainz\Objects\Tag;
 
 class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInterface
 {
+    #[Override]
     public string $name = 'MusicBrainz';
 
+    #[Override]
     public string $categories = 'metadata';
 
+    #[Override]
     public string $description = 'MusicBrainz metadata integration';
 
+    #[Override]
     public string $url = 'http://www.musicbrainz.org';
 
+    #[Override]
     public string $version = '000003';
 
+    #[Override]
     public string $min_ampache = '360003';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -98,7 +106,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
     public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version == 0) {
+        if ($from_version === 0) {
             return false;
         }
 
@@ -405,7 +413,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
             }
 
             // pull first release
-            if (isset($brainzData['releases']) && count($brainzData['releases']) == 1) {
+            if (isset($brainzData['releases']) && count($brainzData['releases']) === 1) {
                 $release = $brainzData['releases'][0];
             }
 

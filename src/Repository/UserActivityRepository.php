@@ -120,7 +120,7 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         ];
 
         if ($object_type !== null) {
-            if (in_array($object_type, $types)) {
+            if (in_array($object_type, $types, true)) {
                 $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, [$object_type, $object_id]);
             } else {

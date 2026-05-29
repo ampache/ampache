@@ -42,18 +42,25 @@ use Ampache\Repository\Model\Userflag;
 
 class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHomeInterface
 {
+    #[\Override]
     public string $name = 'Catalog Favorites';
 
+    #[\Override]
     public string $categories = 'home';
 
+    #[\Override]
     public string $description = 'Catalog favorites on homepage';
 
+    #[\Override]
     public string $url = '';
 
+    #[\Override]
     public string $version = '000004';
 
+    #[\Override]
     public string $min_ampache = '370021';
 
+    #[\Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -115,7 +122,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
     public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version == 0) {
+        if ($from_version === 0) {
             return false;
         }
 

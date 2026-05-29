@@ -25,23 +25,31 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\User;
 
 class AmpacheLibravatar extends AmpachePlugin implements PluginGetAvatarUrlInterface
 {
+    #[Override]
     public string $name = 'Libravatar';
 
+    #[Override]
     public string $categories = 'avatar';
 
-    public string $description = 'Users avatar\'s with Libravatar';
+    #[Override]
+    public string $description = "Users avatar's with Libravatar";
 
+    #[Override]
     public string $url = 'https://www.libravatar.org';
 
+    #[Override]
     public string $version = '000001';
 
+    #[Override]
     public string $min_ampache = '360040';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     /**
@@ -86,9 +94,7 @@ class AmpacheLibravatar extends AmpachePlugin implements PluginGetAvatarUrlInter
     {
         $url = "";
         if (
-            $user->email !== null &&
-            $user->email !== '' &&
-            $user->email !== '0'
+            !in_array($user->email, [null, '', '0'], true)
         ) {
             // Federated Servers are not supported here without libravatar.org. Should query DNS server first.
             if (isset($_SERVER['HTTPS']) && Core::get_server('HTTPS') !== 'off') {

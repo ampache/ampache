@@ -25,12 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Gui;
 
+use Override;
 use Ampache\MockeryTestCase;
 
 class TalTranslationServiceTest extends MockeryTestCase
 {
     private TalTranslationService $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->subject = new TalTranslationService();
