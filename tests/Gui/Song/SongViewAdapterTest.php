@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Song;
 
-use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -38,6 +37,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Mockery\MockInterface;
+use Override;
 
 class SongViewAdapterTest extends MockeryTestCase
 {

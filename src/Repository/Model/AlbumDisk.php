@@ -567,12 +567,12 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      */
     public function display_art(array $size, bool $force = false): void
     {
-        $album_id = null;
-        $type     = null;
-
         if (Art::has_db($this->album_id, 'album')) {
-            $album_id = $this->album_id;
-            $type     = 'album';
+            $title = (!empty($this->get_artist_fullname()))
+                ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
+                : $this->get_fullname();
+
+            Art::display('album', $this->album_id, $title, $size, $this->get_link());
         } elseif (
             $this->album->album_artist &&
             (
@@ -580,15 +580,11 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
                 $force
             )
         ) {
-            $album_id = $this->album->album_artist;
-            $type     = 'artist';
-        }
-
-        if ($album_id !== null && $type !== null) {
             $title = (!empty($this->get_artist_fullname()))
                 ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
                 : $this->get_fullname();
-            Art::display($type, $album_id, $title, $size, $this->get_link());
+
+            Art::display('artist', $this->album->album_artist, $title, $size, $this->get_link());
         }
     }
 

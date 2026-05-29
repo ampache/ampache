@@ -889,7 +889,7 @@ class Query
         $filtered = [];
         foreach ($results as $data) {
             // Make sure that this object passes the logic filter
-            if (array_key_exists('id', $data)) {
+            if ($data['id']) {
                 $filtered[] = $data['id'];
             }
         }

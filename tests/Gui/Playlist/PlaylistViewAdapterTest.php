@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Playlist;
 
-use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -39,6 +38,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Mockery\MockInterface;
+use Override;
 
 class PlaylistViewAdapterTest extends MockeryTestCase
 {

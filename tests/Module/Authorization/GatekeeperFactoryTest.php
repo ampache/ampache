@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authorization;
 
-use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Mockery\MockInterface;
+use Override;
 
 class GatekeeperFactoryTest extends MockeryTestCase
 {

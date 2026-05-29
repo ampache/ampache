@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\System\Dba;
@@ -37,6 +36,7 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
+use Override;
 
 class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInterface
 {

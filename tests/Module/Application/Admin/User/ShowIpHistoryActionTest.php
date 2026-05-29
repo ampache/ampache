@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
-use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -39,6 +38,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use ArrayIterator;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 

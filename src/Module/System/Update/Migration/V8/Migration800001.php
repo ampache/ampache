@@ -26,7 +26,6 @@ namespace Ampache\Module\System\Update\Migration\V8;
 
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Preference;
 
 /**
  * Enable Opensubsonic for all users with `subsonic_legacy` enabled.

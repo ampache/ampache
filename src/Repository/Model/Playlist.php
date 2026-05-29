@@ -84,7 +84,7 @@ class Playlist extends playlist_object
     /**
      * build_cache
      * This is what builds the cache from the objects
-     * @param int[]|string[] $ids
+     * @param list<int|string> $ids
      */
     public static function build_cache(array $ids): bool
     {
@@ -792,15 +792,15 @@ class Playlist extends playlist_object
      */
     public function has_item(?int $object = null, ?int $track = null): bool
     {
-        if ($object === null && $track === null) {
+        if (!$object && !$track) {
             return false;
         }
 
-        if ($object === null && $track !== null) {
+        if (!$object && $track > 0) {
             // searching by track
             $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? AND `playlist_data`.`object_type` = 'song' LIMIT 1";
             $db_results = Dba::read($sql, [$this->id, $track]);
-        } elseif ($track !== null) {
+        } elseif ($track > 0) {
             $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' AND `track` <= ? LIMIT 1";
             $db_results = Dba::read($sql, [$this->id, $object, $track]);
         } else {

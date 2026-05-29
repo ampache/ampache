@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Override;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream;
@@ -45,6 +44,7 @@ use MusicBrainz\Entities\ReleaseGroup;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\Objects\LifeSpan;
 use MusicBrainz\Objects\Tag;
+use Override;
 
 class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInterface
 {

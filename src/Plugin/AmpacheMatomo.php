@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Override;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Override;
 
 class AmpacheMatomo extends AmpachePlugin implements PluginDisplayOnFooterInterface
 {

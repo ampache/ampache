@@ -30,7 +30,7 @@ use Ampache\Repository\LicenseRepositoryInterface;
 global $dic;
 $licenseRepository = $dic->get(LicenseRepositoryInterface::class);
 
-/** @var int[] $object_ids */
+/** @var list<int> $object_ids */
 
 $admin_path = AmpConfig::get_web_path('/admin');
 $t_edit     = T_('Edit');

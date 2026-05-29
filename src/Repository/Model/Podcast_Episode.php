@@ -416,19 +416,10 @@ class Podcast_Episode extends database_object implements
      */
     public function display_art(array $size, bool $force = false): void
     {
-        $episode_id = null;
-        $type       = null;
-
         if (Art::has_db($this->id, 'podcast_episode')) {
-            $episode_id = $this->id;
-            $type       = 'podcast_episode';
+            Art::display('podcast_episode', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
         } elseif (Art::has_db($this->podcast, 'podcast') || $force) {
-            $episode_id = $this->podcast;
-            $type       = 'podcast';
-        }
-
-        if ($episode_id !== null && $type !== null) {
-            Art::display($type, $episode_id, (string)$this->get_fullname(), $size, $this->get_link());
+            Art::display('podcast', $this->podcast, (string)$this->get_fullname(), $size, $this->get_link());
         }
     }
 

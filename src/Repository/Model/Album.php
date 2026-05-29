@@ -188,7 +188,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * build_cache
      * This takes an array of object ids and caches all of their information
      * with a single query
-     * @param int[] $ids
+     * @param list<int|string> $ids
      */
     public static function build_cache(array $ids): bool
     {
@@ -833,22 +833,18 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      */
     public function display_art(array $size, bool $force = false): void
     {
-        $album_id = null;
-        $type     = null;
-
         if (Art::has_db($this->id, 'album')) {
-            $album_id = $this->id;
-            $type     = 'album';
-        } elseif ($this->album_artist && (Art::has_db($this->album_artist, 'artist') || $force)) {
-            $album_id = $this->album_artist;
-            $type     = 'artist';
-        }
-
-        if ($album_id !== null && $type !== null) {
             $title = ($this->get_artist_fullname() != "")
                 ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
                 : $this->get_fullname();
-            Art::display($type, $album_id, $title, $size, $this->get_link());
+
+            Art::display('album', $this->id, $title, $size, $this->get_link());
+        } elseif ($this->album_artist && (Art::has_db($this->album_artist, 'artist') || $force)) {
+            $title = ($this->get_artist_fullname() != "")
+                ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
+                : $this->get_fullname();
+
+            Art::display('artist', $this->album_artist, $title, $size, $this->get_link());
         }
     }
 
@@ -948,7 +944,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             // AlbumDisk update
             if ($this->disk_count === 1) {
                 $disk = $this->getAlbumDiskRepository()->getByAlbum($this);
-                if ($disk[0] instanceof AlbumDisk) {
+                if (!empty($disk)) {
                     $disk_id    = $disk[0]->getId();
                     $disk_check = AlbumDisk::check(
                         $album_id,
@@ -1014,7 +1010,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $this->catalog_number = $catalog_number;
         $this->version        = $version;
 
-        if ($updated && is_array($songs)) {
+        if ($updated && !empty($songs)) {
             $time       = time();
             $write_tags = AmpConfig::get('write_tags', false);
             foreach ($songs as $song_id) {

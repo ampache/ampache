@@ -94,7 +94,7 @@ class Browse extends Query
 
     public function getId(): int
     {
-        return $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -147,8 +147,8 @@ class Browse extends Query
                 // Check for a range, if no range default to gt
                 if (strpos((string)$value, '/')) {
                     $elements = explode('/', (string)$value);
-                    $this->set_filter('add_lt', strtotime((string)$elements['1']));
-                    $this->set_filter('add_gt', strtotime((string)$elements['0']));
+                    $this->set_filter('add_lt', strtotime((string)$elements[1]));
+                    $this->set_filter('add_gt', strtotime((string)$elements[0]));
                 } else {
                     $this->set_filter('add_gt', strtotime((string)$value));
                 }
@@ -157,8 +157,8 @@ class Browse extends Query
                 // Check for a range, if no range default to gt
                 if (strpos((string)$value, '/')) {
                     $elements = explode('/', (string)$value);
-                    $this->set_filter('update_lt', strtotime((string)$elements['1']));
-                    $this->set_filter('update_gt', strtotime((string)$elements['0']));
+                    $this->set_filter('update_lt', strtotime((string)$elements[1]));
+                    $this->set_filter('update_gt', strtotime((string)$elements[0]));
                 } else {
                     $this->set_filter('update_gt', strtotime((string)$value));
                 }

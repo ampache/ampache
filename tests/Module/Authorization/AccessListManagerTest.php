@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authorization;
 
-use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\Exception\AclItemDuplicationException;
 use Ampache\Module\Authorization\Exception\InvalidEndIpException;
@@ -33,6 +32,7 @@ use Ampache\Module\Authorization\Exception\InvalidIpRangeException;
 use Ampache\Module\Authorization\Exception\InvalidStartIpException;
 use Ampache\Repository\AccessRepositoryInterface;
 use Mockery\MockInterface;
+use Override;
 
 class AccessListManagerTest extends MockeryTestCase
 {

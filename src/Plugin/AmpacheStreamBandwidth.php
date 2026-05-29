@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Override;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\Graph;
@@ -33,6 +32,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Override;
 
 class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamControlInterface
 {
