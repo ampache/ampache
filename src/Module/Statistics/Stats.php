@@ -824,7 +824,7 @@ class Stats
      * get_recently_played
      * This function returns the last X played media objects ('live_stream','podcast_episode','song','video')
      * It uses the popular threshold to figure out how many to pull it will only return unique object
-     * @return list<array{
+     * @return array<int, array{
      *     object_id: int,
      *     catalog_id: int,
      *     user: int,

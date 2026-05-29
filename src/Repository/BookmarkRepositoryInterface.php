@@ -31,12 +31,12 @@ use DateTimeInterface;
 interface BookmarkRepositoryInterface
 {
     /**
-     * @return list<int>
+     * @return int[]
      */
     public function getByUser(User $user): array;
 
     /**
-     * @return list<int>
+     * @return int[]
      */
     public function getByUserAndComment(User $user, string $comment): array;
 

@@ -36,7 +36,7 @@ global $dic;
 $labelRepository = $dic->get(LabelRepositoryInterface::class);
 
 /** @var Browse $browse */
-/** @var list<int> $object_ids */
+/** @var int[] $object_ids */
 $thcount  = 7;
 $is_table = !$browse->is_grid_view();
 //mashup and grid view need different css

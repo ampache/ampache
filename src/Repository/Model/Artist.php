@@ -191,7 +191,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      *
      * Get each id from the artist table with the minimum detail required for subsonic
      * @param int[] $catalogs
-     * @return list<array{
+     * @return array<int, array{
      *     id: int,
      *     f_name: string,
      *     name: string,
@@ -538,7 +538,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Get item childrens.
-     * @return array{album: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{album: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -553,7 +553,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -573,7 +573,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /**
      * Get all childrens and sub-childrens medias.
      *
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {

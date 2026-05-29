@@ -157,7 +157,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * This attempts to reduce queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point.
-     * @param list<int> $song_ids
+     * @param int[] $song_ids
      */
     public static function build_cache(array $song_ids): bool
     {
@@ -313,7 +313,7 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -322,7 +322,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -332,7 +332,7 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {

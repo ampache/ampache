@@ -54,7 +54,7 @@ interface ShareRepositoryInterface
     /**
      * Returns the ids of all items the user has access to
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getIdsByUser(User $user): array;
 

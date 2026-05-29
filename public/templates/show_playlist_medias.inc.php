@@ -36,7 +36,7 @@ $libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
 
 /** @var Browse $browse */
 /** @var Playlist $playlist */
-/** @var list<array{object_type: LibraryItemEnum|string, object_id: int, track_id: int, track: int}> $object_ids */
+/** @var array<int, array{object_type: LibraryItemEnum|string, object_id: int, track_id: int, track: int}> $object_ids */
 /** @var bool $argument */
 
 $web_path = AmpConfig::get_web_path();

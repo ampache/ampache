@@ -41,7 +41,7 @@ final readonly class UserFollowerRepository implements UserFollowerRepositoryInt
     /**
      * Get users following the user
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getFollowers(User $user): array
     {
@@ -61,7 +61,7 @@ final readonly class UserFollowerRepository implements UserFollowerRepositoryInt
     /**
      * Get users followed by this user
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getFollowing(User $user): array
     {

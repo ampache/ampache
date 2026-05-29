@@ -46,7 +46,7 @@ final readonly class SongRepository implements SongRepositoryInterface
     /**
      * gets the songs for an album takes an optional limit
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getByAlbum(
         int $albumId,

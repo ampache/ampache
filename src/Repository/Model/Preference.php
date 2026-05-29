@@ -657,7 +657,7 @@ class Preference extends database_object
     /**
      * get
      * This returns a nice flat array of all of the possible preferences for the specified user
-     * @return list<array{
+     * @return array<int, array{
      *     id: int,
      *     name: string,
      *     level: int,

@@ -582,7 +582,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * get_object_tags
      * Display all tags that apply to matching target type of the specified id
-     * @return list<array{id: int, name: string, is_hidden: int, user: int}>
+     * @return array<int, array{id: int, name: string, is_hidden: int, user: int}>
      */
     public static function get_object_tags(string $type, ?int $object_id = null): array
     {
@@ -1026,7 +1026,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -1035,7 +1035,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -1045,7 +1045,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {

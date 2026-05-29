@@ -100,7 +100,7 @@ interface AlbumRepositoryInterface
      * gets the album ids that this artist is a part of
      * Return Album or AlbumDisk based on album_group preference
      *
-     * @return list<int>|array<string, list<int>>
+     * @return int[]|array<string, int[]>
      */
     public function getByArtist(
         int $artistId,
@@ -112,7 +112,7 @@ interface AlbumRepositoryInterface
      * gets the album ids that this artist is a part of
      * Return Album only
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getAlbumByArtist(
         int $artistId,
@@ -121,7 +121,7 @@ interface AlbumRepositoryInterface
     /**
      * gets the album id has the same artist and title
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getByName(
         string $name,
@@ -131,7 +131,7 @@ interface AlbumRepositoryInterface
     /**
      * gets the album id that is part of this mbid_group
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getByMbidGroup(
         string $musicBrainzId
@@ -140,7 +140,7 @@ interface AlbumRepositoryInterface
     /**
      * This returns the ids of artists that have songs/albums mapped
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getArtistMap(Album $album, string $objectType): array;
 

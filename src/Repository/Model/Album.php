@@ -188,7 +188,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * build_cache
      * This takes an array of object ids and caches all of their information
      * with a single query
-     * @param list<int> $ids
+     * @param int[] $ids
      */
     public static function build_cache(array $ids): bool
     {
@@ -717,7 +717,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Get item children.
-     * @return array{song: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{song: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -726,7 +726,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -746,7 +746,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /**
      * Get all children and sub-childrens media.
      *
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -798,7 +798,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * get_songs
      *
      * Get each song id for the album
-     * @return list<int>
+     * @return int[]
      */
     public function get_songs(): array
     {

@@ -38,7 +38,7 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
     }
 
     /**
-     * @return list<int>
+     * @return int[]
      */
     public function getByUser(User $user): array
     {
@@ -57,7 +57,7 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
     }
 
     /**
-     * @return list<int>
+     * @return int[]
      */
     public function getByUserAndComment(User $user, string $comment): array
     {

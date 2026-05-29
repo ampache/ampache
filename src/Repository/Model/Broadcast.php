@@ -126,7 +126,7 @@ class Broadcast extends database_object implements library_item
     {
         $sql = "DELETE FROM `broadcast` WHERE `id` = ?";
 
-        return (Dba::write($sql, [$this->id]) !== false);
+        return (Dba::write($sql, [$this->id]) !== null);
     }
 
     /**
@@ -258,7 +258,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get item childrens.
-     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -267,7 +267,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -279,7 +279,7 @@ class Broadcast extends database_object implements library_item
     /**
      * Get all childrens and sub-childrens medias.
      *
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string  $filter_type = null): array
     {

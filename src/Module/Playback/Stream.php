@@ -632,7 +632,7 @@ class Stream
      * get_now_playing
      *
      * This returns the Now Playing information
-     * @return list<array{
+     * @return array<int, array{
      *     media: library_item,
      *     client: User,
      *     agent: string,

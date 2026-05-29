@@ -27,7 +27,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Catalog;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var list<int> $object_ids */
+/** @var int[] $object_ids */
 
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');

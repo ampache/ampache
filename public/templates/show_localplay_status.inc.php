@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
 
 /** @var Localplay $localplay */
-/** @var list<int> $objects */
+/** @var int[] $objects */
 
 Ajax::start_container('localplay_status');
 Ui::show_box_top(T_('Localplay Control') . ' - ' . strtoupper($localplay->type), 'box box_localplay_status');

@@ -49,7 +49,7 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
      *
      * If a user is provided, the result will be limited to catalogs the user has access to
      *
-     * @return list<int>
+     * @return int[]
      */
     public function findAll(
         ?User $user = null

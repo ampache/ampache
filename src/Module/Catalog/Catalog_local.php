@@ -972,7 +972,7 @@ class Catalog_local extends Catalog
     /**
      * _clean_chunk
      * This is the clean function and is broken into chunks to try to save a little memory
-     * @return list<int>
+     * @return int[]
      */
     private function _clean_chunk(string $media_type, int $chunk, int $chunk_size, ?Interactor $interactor = null): array
     {
@@ -1110,7 +1110,7 @@ class Catalog_local extends Catalog
         // Update the catalog
         $sql = "UPDATE `song` SET `file` = ?, catalog = ? WHERE `id` = ?;";
 
-        return (Dba::write($sql, [$new_file, $newCatalogId, $media->id]) !== false);
+        return (Dba::write($sql, [$new_file, $newCatalogId, $media->id]) !== null);
     }
 
     /**
@@ -1159,7 +1159,7 @@ class Catalog_local extends Catalog
                         // update mapping for new catalogs
                         $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
 
-                        if (Dba::write($sql, [$newCatalogId, $media_type, $object->getId()]) !== false) {
+                        if (Dba::write($sql, [$newCatalogId, $media_type, $object->getId()]) !== null) {
                             if ($object instanceof Song) {
                                 $sql        = "SELECT `id` FROM `song` WHERE `album` = ? AND `catalog` = ?;";
                                 $db_results = Dba::read($sql);
@@ -1169,7 +1169,7 @@ class Catalog_local extends Catalog
                                 }
                                 $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
 
-                                return (Dba::write($sql, [$newCatalogId, $media_type, $object->album]) !== false);
+                                return (Dba::write($sql, [$newCatalogId, $media_type, $object->album]) !== null);
                             }
 
                             if ($object instanceof Podcast_Episode) {
@@ -1181,7 +1181,7 @@ class Catalog_local extends Catalog
                                 }
                                 $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
 
-                                return (Dba::write($sql, [$newCatalogId, $media_type, $object->getPodcastId()]) !== false);
+                                return (Dba::write($sql, [$newCatalogId, $media_type, $object->getPodcastId()]) !== null);
                             }
 
                             return true;
@@ -1219,12 +1219,12 @@ class Catalog_local extends Catalog
                     // update mapping for new catalogs
                     $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
 
-                    return (Dba::write($sql, [$newCatalogId, $media_type, $object->getId()]) !== false);
+                    return (Dba::write($sql, [$newCatalogId, $media_type, $object->getId()]) !== null);
                 }
 
                 $sql = "UPDATE `$media_type` SET `file` = ?, `catalog` = ? WHERE `id` = ?;";
 
-                return (Dba::write($sql, [$new_file, $newCatalogId, $object->getId()]) !== false);
+                return (Dba::write($sql, [$new_file, $newCatalogId, $object->getId()]) !== null);
             default:
                 return false;
         }

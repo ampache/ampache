@@ -198,7 +198,7 @@ class Stream_Playlist
     /**
      * media_to_urlarray
      * Formats the URL and media information and adds it to the object
-     * @param list<array{
+     * @param array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     client?: string,
@@ -550,7 +550,7 @@ class Stream_Playlist
     /**
      * add
      * Adds an array of media
-     * @param list<array{
+     * @param array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     client?: string,

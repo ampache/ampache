@@ -1474,7 +1474,7 @@ class Song extends database_object implements
     {
         if (empty($new_data)) {
             $sql = "DELETE FROM `song_map` WHERE `song_id` = ? AND `object_type` = ?;";
-            Dba::write($sql, [$song_id, $type]) !== false;
+            Dba::write($sql, [$song_id, $type]) !== null;
 
             return;
         }
@@ -1490,7 +1490,7 @@ class Song extends database_object implements
         }
         $sql = rtrim($sql, ',') . ');';
 
-        Dba::write($sql, [$song_id, $type]) !== false;
+        Dba::write($sql, [$song_id, $type]) !== null;
     }
 
     /**
@@ -1591,7 +1591,7 @@ class Song extends database_object implements
 
         $sql = sprintf('UPDATE `song` SET `%s` = ? WHERE `id` = ?', $field);
 
-        return (Dba::write($sql, [$value, $song_id]) !== false);
+        return (Dba::write($sql, [$value, $song_id]) !== null);
     }
 
     /**
@@ -1610,7 +1610,7 @@ class Song extends database_object implements
 
         if (Access::check(AccessTypeEnum::INTERFACE, $level)) {
             $sql = sprintf('UPDATE `song_data` SET `%s` = ? WHERE `song_id` = ?', $field);
-            Dba::write($sql, [$value, $song_id]) !== false;
+            Dba::write($sql, [$value, $song_id]) !== null;
         }
     }
 
@@ -1925,7 +1925,7 @@ class Song extends database_object implements
     }
 
     /**
-     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -1934,7 +1934,7 @@ class Song extends database_object implements
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -1946,7 +1946,7 @@ class Song extends database_object implements
     /**
      * Get all childrens and sub-childrens medias.
      *
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -2288,7 +2288,7 @@ class Song extends database_object implements
     /**
      * get_deleted
      * get items from the deleted_songs table
-     * @return list<array{
+     * @return array<int, array{
      *     id: int,
      *     addition_time: int,
      *     delete_time: int,

@@ -88,7 +88,7 @@ class Recommendation
      * @return null|array{
      *     id: int,
      *     last_update: string,
-     *     items?: list<array{id: ?int, name: string, rel: ?string, mbid: ?string}>
+     *     items?: array<int, array{id: ?int, name: string, rel: ?string, mbid: ?string}>
      * }
      */
     protected static function get_recommendation_cache(string $type, int $object_id, bool $get_items = false): ?array
@@ -172,7 +172,7 @@ class Recommendation
     /**
      * get_songs_like
      * Returns a list of similar songs
-     * @return list<array{
+     * @return array<int, array{
      *     id: ?int,
      *     name: string,
      *     rel: ?string,
@@ -294,7 +294,7 @@ class Recommendation
     /**
      * get_artists_like
      * Returns a list of similar artists
-     * @return list<array{
+     * @return array<int, array{
      *     id: ?int,
      *     name: string,
      *     rel?: ?string,

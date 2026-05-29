@@ -73,7 +73,7 @@ abstract class playlist_object extends database_object implements library_item
     private ?bool $has_art = null;
 
     /**
-     * @return list<array{
+     * @return array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track: int,
@@ -269,7 +269,7 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return list<array{
+     * @return array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track: int,
@@ -404,7 +404,7 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * @return array{
-     *     playlist: list<array{object_type: LibraryItemEnum, object_id: int, track: int, track_id: int}>
+     *     playlist: array<int, array{object_type: LibraryItemEnum, object_id: int, track: int, track_id: int}>
      * }
      */
     public function get_childrens(): array
@@ -414,7 +414,7 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {

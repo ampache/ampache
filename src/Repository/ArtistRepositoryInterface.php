@@ -38,7 +38,7 @@ interface ArtistRepositoryInterface
     /**
      * This returns a number of random artists.
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getRandom(
         int $userId,

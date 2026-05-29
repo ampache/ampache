@@ -58,7 +58,7 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
     /**
      * Get the subsonic chat messages.
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getChatMessages(int $since = 0): array
     {

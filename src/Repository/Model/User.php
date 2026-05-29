@@ -543,7 +543,7 @@ class User extends database_object
     public function update_validation(string $new_validation): bool
     {
         $sql              = "UPDATE `user` SET `validation` = ?, `disabled`='1' WHERE `id` = ?";
-        $db_results       = (Dba::write($sql, [$new_validation, $this->id]) !== false);
+        $db_results       = (Dba::write($sql, [$new_validation, $this->id]) !== null);
         $this->validation = $new_validation;
 
         return $db_results;

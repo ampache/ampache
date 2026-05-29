@@ -189,7 +189,7 @@ class Democratic extends Tmp_Playlist
      * Sorting is highest to lowest vote count, then by oldest to newest
      * vote activity.
      *
-     * @return list<array{
+     * @return array<int, array{
      *   object_type: LibraryItemEnum,
      *   object_id: int,
      *   track_id: int,

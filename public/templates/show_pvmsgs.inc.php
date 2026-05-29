@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\PrivateMsg;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var list<int> $object_ids */
+/** @var int[] $object_ids */
 
 $thcount  = 5;
 $web_path = AmpConfig::get_web_path(); ?>

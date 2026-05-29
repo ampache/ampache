@@ -137,7 +137,7 @@ class Art extends database_object
      * This attempts to reduce # of queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point
-     * @param list<int> $object_ids
+     * @param int[] $object_ids
      */
     public static function build_cache(array $object_ids, ?string $type = null): bool
     {
@@ -1346,7 +1346,7 @@ class Art extends database_object
     /**
      * Gather metadata from plugin.
      * @param array<string, mixed> $options
-     * @return list<array{
+     * @return array<int, array{
      *     url: string,
      *     mime: string,
      *     title: string
