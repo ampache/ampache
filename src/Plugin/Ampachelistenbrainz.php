@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -35,18 +36,25 @@ use Ampache\Repository\Model\User;
 
 class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
+    #[Override]
     public string $name = 'ListenBrainz';
 
+    #[Override]
     public string $categories = 'scrobbling';
 
+    #[Override]
     public string $description = 'Records your played songs to your ListenBrainz Account';
 
+    #[Override]
     public string $url = '';
 
+    #[Override]
     public string $version = '000002';
 
+    #[Override]
     public string $min_ampache = '380004';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -96,7 +104,7 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
     public function upgrade(): bool
     {
         $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version == 0) {
+        if ($from_version === 0) {
             return false;
         }
 

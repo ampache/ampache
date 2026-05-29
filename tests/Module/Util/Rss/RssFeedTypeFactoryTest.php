@@ -73,7 +73,7 @@ class RssFeedTypeFactoryTest extends TestCase
                 $this->createMock(LibraryItemLoaderInterface::class),
             );
 
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             LibraryItemFeed::class,
             $this->subject->createLibraryItemFeed(
                 $this->createMock(User::class),
@@ -84,7 +84,7 @@ class RssFeedTypeFactoryTest extends TestCase
 
     public function testCreateRecentlyPlayedFeedReturnsItem(): void
     {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             RecentlyPlayedFeed::class,
             $this->subject->createRecentlyPlayedFeed(
                 $this->createMock(User::class)
@@ -94,7 +94,7 @@ class RssFeedTypeFactoryTest extends TestCase
 
     public function testCreateNowPlayingFeedReturnsInstance(): void
     {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             NowPlayingFeed::class,
             $this->subject->createNowPlayingFeed()
         );
@@ -102,7 +102,7 @@ class RssFeedTypeFactoryTest extends TestCase
 
     public function testCreateLatestAlbumFeedReturnsInstance(): void
     {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             LatestAlbumFeed::class,
             $this->subject->createLatestAlbumFeed(
                 $this->createMock(User::class),
@@ -113,7 +113,7 @@ class RssFeedTypeFactoryTest extends TestCase
 
     public function testCreateLatestArtistsFeedReturnsInstance(): void
     {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             LatestArtistFeed::class,
             $this->subject->createLatestArtistFeed(
                 $this->createMock(User::class),
@@ -134,7 +134,7 @@ class RssFeedTypeFactoryTest extends TestCase
                 $this->createMock(ShoutRepositoryInterface::class),
                 $this->createMock(ShoutObjectLoaderInterface::class),
             );
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             LatestShoutFeed::class,
             $this->subject->createLatestShoutFeed()
         );

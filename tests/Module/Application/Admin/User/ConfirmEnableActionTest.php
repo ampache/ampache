@@ -100,7 +100,7 @@ class ConfirmEnableActionTest extends TestCase
             ->method('isNew')
             ->willReturn(true);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }
@@ -161,7 +161,7 @@ class ConfirmEnableActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }

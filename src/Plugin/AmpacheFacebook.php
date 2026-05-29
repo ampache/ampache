@@ -25,22 +25,30 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Repository\Model\User;
 
 class AmpacheFacebook extends AmpachePlugin implements PluginExternalShareInterface
 {
+    #[Override]
     public string $name = 'Facebook';
 
+    #[Override]
     public string $categories = 'share';
 
+    #[Override]
     public string $description = 'Facebook share';
 
+    #[Override]
     public string $url = 'https://facebook.com';
 
+    #[Override]
     public string $version = '000001';
 
+    #[Override]
     public string $min_ampache = '370027';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     /**

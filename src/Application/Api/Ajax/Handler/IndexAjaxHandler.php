@@ -96,7 +96,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                     if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
                         $catalogs = Catalog::get_all_catalogs();
-                        if (count($catalogs) == 0) {
+                        if ($catalogs === []) {
                             /* HINT: %1 and %2 surround "add a Catalog" to make it into a link */
                             $results['random_selection'] = sprintf(
                                 T_('No Catalog configured yet. To start streaming your media, you now need to %1$s add a Catalog %2$s'),
@@ -122,7 +122,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                     if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
                         $catalogs = Catalog::get_all_catalogs();
-                        if (count($catalogs) == 0) {
+                        if ($catalogs === []) {
                             /* HINT: %1 and %2 surround "add a Catalog" to make it into a link */
                             $results['random_selection'] = sprintf(
                                 T_('No Catalog configured yet. To start streaming your media, you now need to %1$s add a Catalog %2$s'),
@@ -243,9 +243,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     if (array_key_exists('artist', $_REQUEST)) {
                         $artist = new Artist((int)$this->requestParser->getFromRequest('artist'));
                         if (
-                            $artist->mbid !== null &&
-                            $artist->mbid !== '' &&
-                            $artist->mbid !== '0'
+                            !in_array($artist->mbid, [null, '', '0'], true)
                         ) {
                             $walbums = Wanted::get_missing_albums($artist);
                         } else {

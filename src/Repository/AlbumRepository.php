@@ -223,10 +223,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     public function collectGarbage(): void
     {
         $queries = [
-            'DELETE FROM `album_map` WHERE `object_type` = \'album\' AND `album_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL)',
+            "DELETE FROM `album_map` WHERE `object_type` = 'album' AND `album_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL)",
             'DELETE FROM `album_map` WHERE `object_id` NOT IN (SELECT `id` FROM `artist`)',
             'DELETE FROM `album_map` WHERE `album_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`)',
-            'DELETE FROM `album_map` WHERE `album_map`.`album_id` IN (SELECT `album_id` FROM (SELECT DISTINCT `album_map`.`album_id` FROM `album_map` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = `album_map`.`object_type` AND `artist_map`.`artist_id` = `album_map`.`object_id` AND `artist_map`.`object_id` = `album_map`.`album_id` WHERE `artist_map`.`artist_id` IS NULL AND `album_map`.`object_type` = \'album\') AS `null_album`)',
+            "DELETE FROM `album_map` WHERE `album_map`.`album_id` IN (SELECT `album_id` FROM (SELECT DISTINCT `album_map`.`album_id` FROM `album_map` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = `album_map`.`object_type` AND `artist_map`.`artist_id` = `album_map`.`object_id` AND `artist_map`.`object_id` = `album_map`.`album_id` WHERE `artist_map`.`artist_id` IS NULL AND `album_map`.`object_type` = 'album') AS `null_album`)",
             'DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`) AND `album`.`id` NOT IN (SELECT DISTINCT `album_id` FROM `album_map`)',
             'DELETE FROM `album_disk` WHERE `album_id` NOT IN (SELECT `id` FROM `album`)'
         ];
@@ -241,7 +241,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
 
         try {
             // left over garbage
-            $result = $this->connection->query('SELECT `id` FROM `album_disk` WHERE CONCAT(`album_id`, \'_\', `disk`) NOT IN (SELECT CONCAT(`album`, \'_\', `disk`) AS `id` FROM `song`);');
+            $result = $this->connection->query("SELECT `id` FROM `album_disk` WHERE CONCAT(`album_id`, '_', `disk`) NOT IN (SELECT CONCAT(`album`, '_', `disk`) AS `id` FROM `song`);");
             while ($albumDiskId = $result->fetchColumn()) {
                 $this->connection->query('DELETE FROM `album_disk` WHERE `id` = ?;', [$albumDiskId], true);
             }
@@ -361,7 +361,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         int $artistId
     ): array {
         $result = $this->connection->query(
-            'SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, \'\'), \' \', `album`.`name`)) = ?) AND `album`.`album_artist` = ?',
+            "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`album_artist` = ?",
             [$name, $name, $artistId]
         );
 
@@ -440,7 +440,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     {
         /** @var false|array{prefix: string, basename: string, name: string} $result */
         $result = $this->connection->fetchRow(
-            'SELECT `album`.`prefix`, `album`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, \'\'), \' \', `album`.`name`)) AS `name` FROM `album` WHERE `id` = ?',
+            "SELECT `album`.`prefix`, `album`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `name` FROM `album` WHERE `id` = ?",
             [$albumId]
         );
 

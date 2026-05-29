@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Preference;
@@ -34,18 +35,25 @@ use Exception;
 
 class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface, PluginGetMetadataInterface
 {
+    #[Override]
     public string $name = 'Discogs';
 
+    #[Override]
     public string $categories = 'metadata';
 
+    #[Override]
     public string $description = 'Discogs metadata integration';
 
+    #[Override]
     public string $url = 'http://www.discogs.com';
 
+    #[Override]
     public string $version = '000001';
 
+    #[Override]
     public string $min_ampache = '370021';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out

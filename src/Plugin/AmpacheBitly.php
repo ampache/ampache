@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Override;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
@@ -34,18 +35,25 @@ use WpOrg\Requests\Requests;
 
 class AmpacheBitly extends AmpachePlugin implements PluginShortenerInterface
 {
+    #[Override]
     public string $name = 'Bit.ly';
 
+    #[Override]
     public string $categories = 'shortener';
 
+    #[Override]
     public string $description = 'URL shorteners on shared links with Bit.ly';
 
+    #[Override]
     public string $url = 'http://bitly.com';
 
+    #[Override]
     public string $version = '000003';
 
+    #[Override]
     public string $min_ampache = '360037';
 
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -128,7 +136,7 @@ class AmpacheBitly extends AmpachePlugin implements PluginShortenerInterface
             debug_event('bitly.plugin', 'Bit.ly api call made', 4);
             $request = Requests::post($apiurl, $headers, json_encode($data), Core::requests_options());
 
-            $result = json_decode($request->body);
+            $result = json_decode((string) $request->body);
 
             if ($result->errors) {
                 if ($result->message === "INVALID_ARG_LONG_URL") {

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Export;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -45,6 +46,7 @@ class ShowActionTest extends MockeryTestCase
 
     private ShowAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->ui            = $this->mock(UiInterface::class);
@@ -112,7 +114,7 @@ class ShowActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run(
                 $request,
                 $gatekeeper

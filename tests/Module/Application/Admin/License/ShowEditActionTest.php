@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\License;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -49,6 +50,7 @@ class ShowEditActionTest extends MockeryTestCase
 
     private ShowEditAction $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->ui                = $this->mock(UiInterface::class);

@@ -67,7 +67,7 @@ class PlayableItemRssItemAdapterTest extends TestCase
             ->method('get_fullname')
             ->willReturn($title);
 
-        static::assertSame(
+        self::assertSame(
             $title,
             $this->subject->getTitle()
         );
@@ -79,7 +79,7 @@ class PlayableItemRssItemAdapterTest extends TestCase
             ->method('has_art')
             ->willReturn(false);
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->hasImage()
         );
     }
@@ -90,7 +90,7 @@ class PlayableItemRssItemAdapterTest extends TestCase
             ->method('has_art')
             ->willReturn(true);
 
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->hasImage()
         );
     }
@@ -101,7 +101,7 @@ class PlayableItemRssItemAdapterTest extends TestCase
             ->method('get_description')
             ->willReturn('snafu');
 
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->hasSummary()
         );
     }
@@ -112,7 +112,7 @@ class PlayableItemRssItemAdapterTest extends TestCase
             ->method('get_description')
             ->willReturn('');
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->hasSummary()
         );
     }
@@ -125,7 +125,7 @@ class PlayableItemRssItemAdapterTest extends TestCase
             ->method('get_description')
             ->willReturn($value);
 
-        static::assertSame(
+        self::assertSame(
             $value,
             $this->subject->getSummary()
         );
@@ -137,7 +137,7 @@ class PlayableItemRssItemAdapterTest extends TestCase
             ->method('get_user_owner')
             ->willReturn(666);
 
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->hasOwner()
         );
     }
@@ -148,7 +148,7 @@ class PlayableItemRssItemAdapterTest extends TestCase
             ->method('get_user_owner')
             ->willReturn(null);
 
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->hasOwner()
         );
     }
@@ -173,7 +173,7 @@ class PlayableItemRssItemAdapterTest extends TestCase
             ->method('get_fullname')
             ->willReturn($name);
 
-        static::assertSame(
+        self::assertSame(
             $name,
             $this->subject->getOwnerName()
         );

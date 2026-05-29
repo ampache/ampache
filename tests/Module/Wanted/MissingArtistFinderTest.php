@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Wanted;
 
+use Override;
 use Ampache\MockeryTestCase;
 use Mockery;
 use Mockery\MockInterface;
@@ -38,6 +39,7 @@ class MissingArtistFinderTest extends MockeryTestCase
 
     private ?MissingArtistFinder $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->musicBrainz = $this->mock(MusicBrainz::class);

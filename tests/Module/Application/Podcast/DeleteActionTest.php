@@ -72,7 +72,7 @@ class DeleteActionTest extends TestCase
             ->with(ConfigurationKeyEnum::PODCAST)
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }
@@ -154,7 +154,7 @@ class DeleteActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }

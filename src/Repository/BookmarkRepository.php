@@ -100,7 +100,7 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
             try {
                 $this->connection->query(
                     sprintf(
-                        'DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `%s` ON `%s`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = \'%s\' AND `%s`.`id` IS NULL;',
+                        "DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `%s` ON `%s`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = '%s' AND `%s`.`id` IS NULL;",
                         $type,
                         $type,
                         $type,

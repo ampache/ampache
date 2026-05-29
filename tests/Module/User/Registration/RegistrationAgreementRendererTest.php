@@ -49,7 +49,7 @@ class RegistrationAgreementRendererTest extends TestCase
     {
         @unlink($this->vfsStream->url());
 
-        static::assertSame(
+        self::assertSame(
             '',
             $this->subject->render()
         );
@@ -59,7 +59,7 @@ class RegistrationAgreementRendererTest extends TestCase
     {
         chmod($this->vfsStream->url(), 0000);
 
-        static::assertSame(
+        self::assertSame(
             '',
             $this->subject->render()
         );
@@ -71,7 +71,7 @@ class RegistrationAgreementRendererTest extends TestCase
 
         file_put_contents($this->vfsStream->url(), $content);
 
-        static::assertSame(
+        self::assertSame(
             $content,
             $this->subject->render()
         );

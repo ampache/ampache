@@ -50,7 +50,7 @@ use Psr\Container\ContainerInterface;
 final readonly class AjaxApplication implements ApplicationInterface
 {
     /** @var array<string, class-string> */
-    private const HANDLER_LIST = [
+    private const array HANDLER_LIST = [
         'browse' => BrowseAjaxHandler::class,
         'catalog' => CatalogAjaxHandler::class,
         'democratic' => DemocraticPlaybackAjaxHandler::class,

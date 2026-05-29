@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Config\Init;
 
+use Override;
 use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Util\EnvironmentInterface;
@@ -37,6 +38,7 @@ class InitializationHandlerEnvironmentTest extends MockeryTestCase
 
     private InitializationHandlerEnvironment $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->environment = $this->mock(EnvironmentInterface::class);

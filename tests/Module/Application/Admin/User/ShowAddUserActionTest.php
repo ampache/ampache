@@ -73,7 +73,7 @@ class ShowAddUserActionTest extends TestCase
             ->with(ConfigurationKeyEnum::DEMO_MODE)
             ->willReturn(true);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }
@@ -100,7 +100,7 @@ class ShowAddUserActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showFooter');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }

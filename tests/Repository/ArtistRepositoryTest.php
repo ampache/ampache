@@ -92,12 +92,12 @@ class ArtistRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('fetchOne')
             ->with(
-                'SELECT `id` FROM `artist` WHERE `name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, \'\'), \' \', `artist`.`name`)) = ? ',
+                "SELECT `id` FROM `artist` WHERE `name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ? ",
                 [$value, $value]
             )
             ->willReturn(false);
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->findByName($value)
         );
     }

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Song;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -54,6 +55,7 @@ class SongViewAdapterTest extends MockeryTestCase
 
     private SongViewAdapter $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
+use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Repository\UserRepositoryInterface;
@@ -42,6 +43,7 @@ class UtilityFactoryTest extends MockeryTestCase
 
     private UtilityFactory $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->userRepository  = $this->mock(UserRepositoryInterface::class);
@@ -65,7 +67,7 @@ class UtilityFactoryTest extends MockeryTestCase
 
     public function testCreateCurlReturnsNewInstance(): void
     {
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             Curl::class,
             $this->subject->createCurl()
         );
