@@ -131,6 +131,8 @@ class Api
         Method\Api8\PlaylistGenerate8Method::ACTION => Method\Api8\PlaylistGenerate8Method::class,
         Method\Api8\PlaylistHash8Method::ACTION => Method\Api8\PlaylistHash8Method::class,
         Method\Api8\Playlist8Method::ACTION => Method\Api8\Playlist8Method::class,
+        Method\Api8\PlaylistRemove8Method::ACTION => Method\Api8\PlaylistRemove8Method::class,
+        Method\Api8\PlaylistRemove8Method::REST_ACTION => Method\Api8\PlaylistRemove8Method::class,
         Method\Api8\PlaylistRemoveSong8Method::ACTION => Method\Api8\PlaylistRemoveSong8Method::class,
         Method\Api8\PlaylistRemoveSong8Method::REST_ACTION => Method\Api8\PlaylistRemoveSong8Method::class,
         Method\Api8\Playlists8Method::ACTION => Method\Api8\Playlists8Method::class,
