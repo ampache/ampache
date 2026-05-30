@@ -33,14 +33,10 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Repository\Model\Preference;
 use DateTimeZone;
 
-final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdaterInterface
+final readonly class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdaterInterface
 {
-    private PrivilegeCheckerInterface $privilegeChecker;
-
-    public function __construct(
-        PrivilegeCheckerInterface $privilegeChecker,
-    ) {
-        $this->privilegeChecker = $privilegeChecker;
+    public function __construct(private PrivilegeCheckerInterface $privilegeChecker)
+    {
     }
 
     /**
@@ -91,9 +87,10 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                 case 'custom_login_logo':
                 case 'custom_logo':
                     $value = urldecode($value);
-                    if (!empty($value) && !str_starts_with($value, 'http')) {
+                    if ($value !== '' && $value !== '0' && !str_starts_with($value, 'http')) {
                         $value = AmpConfig::get_web_path() . '/' . ltrim($value, '/');
                     }
+
                     $value = filter_var(urldecode($value), FILTER_VALIDATE_URL) ?: null;
                     break;
                 case 'transcode_bitrate':
@@ -104,6 +101,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                     if (!in_array($value, $listIdentifiers)) {
                         $value = '';
                     }
+
                     break;
             }
 
@@ -116,7 +114,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             }
 
             // Run the update for this preference only if it's set
-            if (array_key_exists($name, $_REQUEST) || in_array($name, $null_allowed)) {
+            if (array_key_exists($name, $_REQUEST) || in_array($name, $null_allowed, true)) {
                 $applyToAll = $_REQUEST[$apply_to_all] ?? null;
                 Preference::update($pref_id, $user_id, $value, $applyToAll);
             }

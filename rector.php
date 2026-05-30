@@ -10,12 +10,13 @@ use Rector\Config\RectorConfig;
 
 return RectorConfig::configure()
     ->withPaths([
-        __DIR__ . '/tests',
         __DIR__ . '/src/Application',
         __DIR__ . '/src/Config/Init',
         __DIR__ . '/src/Gui',
+        __DIR__ . '/src/Module',
         __DIR__ . '/src/Plugin',
         __DIR__ . '/src/Repository',
+        __DIR__ . '/tests',
     ])
     ->withCache(__DIR__ . '/build/rector', FileCacheStorage::class)
     ->withImportNames()
@@ -23,5 +24,9 @@ return RectorConfig::configure()
     ->withPreparedSets(deadCode: true, codeQuality: true, codingStyle: true)
     ->withSkip([
         FlipTypeControlToUseExclusiveTypeRector::class,
+        __DIR__ . '/src/Module/Api',
+        __DIR__ . '/src/Module/Application',
+        __DIR__ . '/src/Module/Util/Captcha',
+        __DIR__ . '/src/Module/System/Update/Migration',
         __DIR__ . '/src/Repository/Model',
     ]);

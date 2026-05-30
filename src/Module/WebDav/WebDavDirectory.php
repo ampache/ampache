@@ -29,20 +29,18 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Media;
-use Sabre\DAV;
+use Override;
+use Sabre\DAV\Collection;
 use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\Node;
 
 /**
  * This class wrap Ampache albums and artist to WebDAV directories.
  */
-class WebDavDirectory extends DAV\Collection
+class WebDavDirectory extends Collection
 {
-    private library_item $libitem;
-
-    public function __construct(library_item $libitem)
+    public function __construct(private readonly library_item $libitem)
     {
-        $this->libitem = $libitem;
     }
 
     /**
@@ -67,13 +65,14 @@ class WebDavDirectory extends DAV\Collection
      * @param string $name
      * @throws NotFound
      */
+    #[Override]
     public function getChild($name): Node
     {
         //debug_event(self::class, 'Directory getChild: ' . unhtmlentities($name), 5);
         $matches = $this->libitem->get_children(unhtmlentities($name));
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now
-        if (!empty($matches)) {
+        if ($matches !== []) {
             return WebDavDirectory::getChildFromArray($matches[0]);
         }
 
@@ -103,11 +102,12 @@ class WebDavDirectory extends DAV\Collection
     /**
      * @param string $name
      */
+    #[Override]
     public function childExists($name): bool
     {
         $matches = $this->libitem->get_children($name);
 
-        return !empty($matches);
+        return $matches !== [];
     }
 
     public function getName(): string

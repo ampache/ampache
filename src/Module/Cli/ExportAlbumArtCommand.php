@@ -31,20 +31,16 @@ use Ampache\Module\Album\Export\Exception\AlbumArtExportException;
 use Ampache\Module\Album\Export\Writer\MetadataWriterTypeEnum;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Catalog;
+use Override;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 final class ExportAlbumArtCommand extends Command
 {
-    private LoggerInterface $logger;
-
-    private AlbumArtExporterInterface $albumArtExporter;
-
-    private ContainerInterface $dic;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -52,15 +48,11 @@ final class ExportAlbumArtCommand extends Command
     }
 
     public function __construct(
-        LoggerInterface $logger,
-        AlbumArtExporterInterface $albumArtExporter,
-        ContainerInterface $dic,
+        private readonly LoggerInterface $logger,
+        private readonly AlbumArtExporterInterface $albumArtExporter,
+        private readonly ContainerInterface $dic,
     ) {
         parent::__construct('export:albumArt', T_('Export album art'));
-
-        $this->logger           = $logger;
-        $this->albumArtExporter = $albumArtExporter;
-        $this->dic              = $dic;
 
         $this
             ->argument('[type]', T_('Metadata write mode (`linux` or `windows`)'), 'linux')

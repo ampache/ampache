@@ -98,27 +98,16 @@ final class WantedQuery implements QueryInterface
      */
     public function get_sql_sort($query, $field, $order): string
     {
-        switch ($field) {
-            case 'name':
-            case 'title':
-                $sql = "`wanted`.`name`";
-                break;
-            case 'accepted':
-            case 'artist':
-            case 'id':
-            case 'user':
-            case 'username':
-            case 'year':
-                $sql = "`wanted`.`$field`";
-                break;
-            default:
-                $sql = '';
-        }
+        $sql = match ($field) {
+            'name', 'title' => "`wanted`.`name`",
+            'accepted', 'artist', 'id', 'user', 'username', 'year' => sprintf('`wanted`.`%s`', $field),
+            default => '',
+        };
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

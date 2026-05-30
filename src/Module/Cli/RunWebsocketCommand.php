@@ -28,18 +28,16 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Broadcast\WebSocketFactoryInterface;
+use Override;
 
 final class RunWebsocketCommand extends Command
 {
     private const int DEFAULT_PORT = 8100;
 
-    private ConfigContainerInterface $configContainer;
-
-    private WebSocketFactoryInterface $webSocketFactory;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -47,16 +45,13 @@ final class RunWebsocketCommand extends Command
     }
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        WebSocketFactoryInterface $webSocketFactory,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly WebSocketFactoryInterface $webSocketFactory,
     ) {
         parent::__construct('run:websocket', T_('Run a Websocket'));
 
-        $this->configContainer  = $configContainer;
-        $this->webSocketFactory = $webSocketFactory;
-
         $this
-            ->option('-p|--port', T_('Listening port, default 8100'), 'intval', static::DEFAULT_PORT)
+            ->option('-p|--port', T_('Listening port, default 8100'), 'intval', self::DEFAULT_PORT)
             ->usage('<bold>  run:websocket</end> <comment>-p 8888</end> ## ' . T_('Run the websocket on port 8888') . '<eol/>');
     }
 
@@ -79,6 +74,7 @@ final class RunWebsocketCommand extends Command
         $app               = $this->webSocketFactory->createApp($host, $port, '0.0.0.0');
         $brserver          = $this->webSocketFactory->createBroadcastServer();
         $brserver->verbose = $verbose;
+
         $app->route('/broadcast', $brserver);
         $app->route('/echo', $this->webSocketFactory->createEchoServer(), ['*']);
         $app->run();

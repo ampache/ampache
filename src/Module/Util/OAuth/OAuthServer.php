@@ -34,18 +34,18 @@ use Ampache\Module\Util\OAuth\Exception\OAuthException;
  */
 class OAuthServer
 {
-    protected $timestamp_threshold = 300; // in seconds, five minutes
-    protected $version             = '1.0';
-    protected $signature_methods   = [];
+    protected $timestamp_threshold = 300;
 
-    protected $data_store;
+    // in seconds, five minutes
+    protected $version             = '1.0';
+
+    protected $signature_methods   = [];
 
     /**
      * OAuthServer constructor.
      */
-    public function __construct($data_store)
+    public function __construct(protected $data_store)
     {
-        $this->data_store = $data_store;
     }
 
     public function add_signature_method($signature_method)
@@ -131,8 +131,9 @@ class OAuthServer
             // Chapter 7.0 ("Accessing Protected Resources")
             $version = '1.0';
         }
+
         if ($version !== $this->version) {
-            throw new OAuthException("OAuth version '$version' not supported");
+            throw new OAuthException(sprintf("OAuth version '%s' not supported", $version));
         }
 
         return $version;
@@ -153,7 +154,7 @@ class OAuthServer
         }
 
         if (!in_array($signature_method, array_keys($this->signature_methods))) {
-            throw new OAuthException("Signature method '$signature_method' not supported " . "try one of the following: " . implode(", ", array_keys($this->signature_methods)));
+            throw new OAuthException(sprintf("Signature method '%s' not supported ", $signature_method) . "try one of the following: " . implode(", ", array_keys($this->signature_methods)));
         }
 
         return $this->signature_methods[$signature_method];
@@ -189,7 +190,7 @@ class OAuthServer
         $token_field = ($request instanceof OAuthRequest) ? $request->get_parameter('oauth_token') : null;
         $token       = $this->data_store->lookup_token($consumer, $token_type, $token_field);
         if (!$token) {
-            throw new OAuthException("Invalid $token_type token: $token_field");
+            throw new OAuthException(sprintf('Invalid %s token: %s', $token_type, $token_field));
         }
 
         return $token;
@@ -232,7 +233,7 @@ class OAuthServer
         // verify that timestamp is recent
         $now = time();
         if (abs($now - $timestamp) > $this->timestamp_threshold) {
-            throw new OAuthException("Expired timestamp, yours $timestamp, ours $now");
+            throw new OAuthException(sprintf('Expired timestamp, yours %s, ours %d', $timestamp, $now));
         }
     }
 
@@ -249,7 +250,7 @@ class OAuthServer
         // verify that the nonce is unique
         $found = $this->data_store->lookup_nonce($consumer, $token, $nonce, $timestamp);
         if ($found) {
-            throw new OAuthException("Nonce already used: $nonce");
+            throw new OAuthException('Nonce already used: ' . $nonce);
         }
     }
 }

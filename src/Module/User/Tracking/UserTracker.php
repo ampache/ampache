@@ -34,22 +34,13 @@ use Ampache\Repository\Model\User;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 
-final class UserTracker implements UserTrackerInterface
+final readonly class UserTracker implements UserTrackerInterface
 {
-    private IpHistoryRepositoryInterface $ipHistoryRepository;
-
-    private LoggerInterface $logger;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        IpHistoryRepositoryInterface $ipHistoryRepository,
-        LoggerInterface $logger,
+        private ConfigContainerInterface $configContainer,
+        private IpHistoryRepositoryInterface $ipHistoryRepository,
+        private LoggerInterface $logger,
     ) {
-        $this->configContainer     = $configContainer;
-        $this->ipHistoryRepository = $ipHistoryRepository;
-        $this->logger              = $logger;
     }
 
     /**
@@ -78,6 +69,7 @@ final class UserTracker implements UserTrackerInterface
             } else {
                 $sipar = parse_url('http://' . $ip);
             }
+
             $ip = $sipar['host'] ?? '';
         }
 
@@ -90,7 +82,7 @@ final class UserTracker implements UserTrackerInterface
         );
 
         /* Clean up old records... sometimes  */
-        if (rand(1, 100) > 60) {
+        if (random_int(1, 100) > 60) {
             $this->ipHistoryRepository->collectGarbage();
         }
     }

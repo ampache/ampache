@@ -103,11 +103,13 @@ final class PvmsgQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `user_pvmsg`.`subject` REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
                     $filter_sql = " `user_pvmsg`.`subject` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'starts_with':
                 $filter_sql = " `user_pvmsg`.`subject` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -136,22 +138,15 @@ final class PvmsgQuery implements QueryInterface
      */
     public function get_sql_sort($query, $field, $order): string
     {
-        switch ($field) {
-            case 'creation_date':
-            case 'id':
-            case 'is_read':
-            case 'subject':
-            case 'to_user':
-                $sql = "`user_pvmsg`.`$field`";
-                break;
-            default:
-                $sql = '';
-        }
+        $sql = match ($field) {
+            'creation_date', 'id', 'is_read', 'subject', 'to_user' => sprintf('`user_pvmsg`.`%s`', $field),
+            default => '',
+        };
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

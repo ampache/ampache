@@ -32,14 +32,10 @@ use Ampache\Repository\Model\User;
 /**
  * Routes access checks and other authorization related calls to its static versions
  */
-final class GuiGatekeeper implements GuiGatekeeperInterface
+final readonly class GuiGatekeeper implements GuiGatekeeperInterface
 {
-    private PrivilegeCheckerInterface $privilegeChecker;
-
-    public function __construct(
-        PrivilegeCheckerInterface $privilegeChecker,
-    ) {
-        $this->privilegeChecker = $privilegeChecker;
+    public function __construct(private PrivilegeCheckerInterface $privilegeChecker)
+    {
     }
 
     public function mayAccess(
@@ -53,7 +49,7 @@ final class GuiGatekeeper implements GuiGatekeeperInterface
     {
         $user = $this->getUser();
 
-        return ($user)
+        return ($user instanceof User)
             ? $user->getId()
             : 0;
     }
@@ -62,7 +58,7 @@ final class GuiGatekeeper implements GuiGatekeeperInterface
     {
         $globalUser = Core::get_global('user');
 
-        return (!empty($globalUser))
+        return ($globalUser instanceof User)
             ? $globalUser
             : null;
     }

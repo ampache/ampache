@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -22,6 +24,8 @@
  */
 
 namespace Ampache\Module\Util;
+
+use Exception;
 
 /**
  * This class handles the retrieval of media tags
@@ -49,7 +53,7 @@ interface VaInfoInterface
     /**
      * write_id3
      * This function runs the various steps to gathering the metadata
-     * @throws \Exception
+     * @throws Exception
      */
     public function write_id3(array $tagData): void;
 

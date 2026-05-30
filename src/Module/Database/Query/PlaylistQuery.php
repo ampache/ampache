@@ -28,6 +28,7 @@ namespace Ampache\Module\Database\Query;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Query;
+use Ampache\Repository\Model\User;
 
 final class PlaylistQuery implements QueryInterface
 {
@@ -116,6 +117,7 @@ final class PlaylistQuery implements QueryInterface
                 foreach ($value as $uid) {
                     $filter_sql .= (int)$uid . ',';
                 }
+
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
                 break;
             case 'equal':
@@ -133,11 +135,13 @@ final class PlaylistQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `playlist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
                     $filter_sql = " `playlist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'starts_with':
                 $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -153,15 +157,16 @@ final class PlaylistQuery implements QueryInterface
                 $filter_sql = " `playlist`.`user` = " . (int)$value . " AND ";
                 break;
             case 'playlist_type':
-                $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
+                $user_id = (Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
                     ? Core::get_global('user')->id
                     : -1;
                 if ($value == 0) {
-                    $filter_sql = " (`playlist`.`user`='$user_id') AND ";
+                    $filter_sql = sprintf(" (`playlist`.`user`='%s') AND ", $user_id);
                 } else {
                     $query->set_join_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`id`', "`user_playlist_map`.`user_id`", (string)$user_id, 100);
                     $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . $user_id . " OR FIND_IN_SET(" . $user_id . ", `playlist`.`collaborate`) > 0 OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
                 }
+
                 break;
             case 'user_flag':
                 $filter_sql = ((int)$value === 0)
@@ -200,10 +205,10 @@ final class PlaylistQuery implements QueryInterface
             case 'type':
             case 'user':
             case 'username':
-                $sql = "`playlist`.`$field`";
+                $sql = sprintf('`playlist`.`%s`', $field);
                 break;
             case 'rating':
-                $sql = "`rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`id`", "`rating`.`object_type`", "'playlist'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
@@ -212,7 +217,7 @@ final class PlaylistQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`playlist`.`id`", "`user_flag`.`object_type`", "'playlist'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag_rating':
-                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`playlist`.`id`", "`user_flag`.`object_type`", "'playlist'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`id`", "`rating`.`object_type`", "'playlist'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
@@ -220,10 +225,10 @@ final class PlaylistQuery implements QueryInterface
                 $sql = '';
         }
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

@@ -32,15 +32,23 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
 use DateTime;
 use Exception;
+use Override;
 
 /**
  * This class handles all actual work in regards to local Beets catalogs.
  */
 class Catalog_beets extends Catalog
 {
+    #[Override]
     protected string $version     = '000001';
+
+    #[Override]
     protected string $type        = 'beets';
+
+    #[Override]
     protected string $description = 'Beets Catalog';
+
+    #[Override]
     protected string $listCommand = 'ls';
 
     protected string $beetsdb = '';
@@ -78,7 +86,7 @@ class Catalog_beets extends Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
-        $sql = "CREATE TABLE `catalog_beets` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `beetsdb` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = sprintf('CREATE TABLE `catalog_beets` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `beetsdb` VARCHAR(255) COLLATE %s NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $engine, $charset, $collation);
         Dba::query($sql);
 
         return true;
@@ -92,11 +100,7 @@ class Catalog_beets extends Catalog
      */
     public function catalog_fields(): array
     {
-        $fields = [];
-
-        $fields['beetsdb'] = ['description' => T_('Beets Database File'), 'type' => 'text'];
-
-        return $fields;
+        return ['beetsdb' => ['description' => T_('Beets Database File'), 'type' => 'text']];
     }
 
     /**
@@ -124,7 +128,7 @@ class Catalog_beets extends Catalog
         $selectSql  = 'SELECT `id` FROM `catalog_beets` WHERE `beetsdb` = ?';
         $db_results = Dba::read($selectSql, [$beetsdb]);
 
-        if (Dba::num_rows($db_results)) {
+        if (Dba::num_rows($db_results) !== 0) {
             debug_event(self::class, 'Cannot add catalog with duplicate uri ' . $beetsdb, 1);
             AmpError::add('general', sprintf(T_('This path belongs to an existing Beets Catalog: %s'), $beetsdb));
 

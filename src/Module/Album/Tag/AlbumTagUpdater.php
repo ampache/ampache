@@ -29,14 +29,10 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\SongRepositoryInterface;
 
-final class AlbumTagUpdater implements AlbumTagUpdaterInterface
+final readonly class AlbumTagUpdater implements AlbumTagUpdaterInterface
 {
-    private SongRepositoryInterface $songRepository;
-
-    public function __construct(
-        SongRepositoryInterface $songRepository,
-    ) {
-        $this->songRepository = $songRepository;
+    public function __construct(private SongRepositoryInterface $songRepository)
+    {
     }
 
     /**

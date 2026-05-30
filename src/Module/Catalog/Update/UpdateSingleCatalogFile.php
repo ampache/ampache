@@ -57,7 +57,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         ob_end_clean();
         ob_start();
 
-        if (!Dba::num_rows($db_results)) {
+        if (Dba::num_rows($db_results) === 0) {
             $interactor->error(
                 sprintf(T_('Catalog `%s` not found'), $catname),
                 true
@@ -68,7 +68,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
-            if (isset($catalog->path) && !Core::is_readable($catalog->path)) {
+            if (property_exists($catalog, 'path') && $catalog->path !== null && !Core::is_readable($catalog->path)) {
                 $interactor->error(
                     T_('Catalog root unreadable, stopping check'),
                     true
@@ -76,6 +76,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
 
                 return;
             }
+
             ob_flush();
             // Identify the catalog and file (if it exists in the DB)
             /** @var Catalog_local $catalog */
@@ -191,6 +192,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
 
                 return;
             }
+
             // existing files
             if ($file_test && Core::is_readable($filePath)) {
                 $interactor->info(
@@ -201,6 +203,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     // Verify Existing files
                     Catalog::update_media_from_tags($media);
                 }
+
                 // new files don't have an ID
                 if (!$file_id && $addMode == 1) {
                     // Look for new files
@@ -212,10 +215,11 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     Album::update_table_counts();
                     Artist::update_table_counts();
                 }
+
                 if ($searchArtMode == 1 && $file_id) {
                     // Look for media art after adding new files
                     $gather_song_art = (AmpConfig::get('gather_song_art', false));
-                    if ($type == 'song') {
+                    if ($type === 'song') {
                         $media    = new Song($file_id);
                         $art      = ($gather_song_art) ? new Art($file_id, $type) : new Art($media->album, $type);
                         $art_id   = ($gather_song_art) ? $file_id : $media->album;
@@ -224,11 +228,13 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                         if (!$art->has_db_info()) {
                             Catalog::gather_art_item($art_type, $art_id, true);
                         }
+
                         if ($media->artist && !$artist->has_db_info()) {
                             Catalog::gather_art_item('artist', $media->artist, true);
                         }
                     }
-                    if ($type == 'video') {
+
+                    if ($type === 'video') {
                         $art = new Art($file_id, $type);
                         if (!$art->has_db_info()) {
                             Catalog::gather_art_item($type, $file_id, true);

@@ -133,10 +133,10 @@ abstract class localplay_controller
         }
 
         /** @var Media $class */
-        $class = get_class($object);
+        $class = $object::class;
 
         /** @var library_item $object */
-        return call_user_func([$class, 'play_url'], $object->getId());
+        return $class->play_url($object->getId());
     }
 
     /**
@@ -168,6 +168,7 @@ abstract class localplay_controller
                     'oid' => $match[1]
                 ];
             }
+
             preg_match('/demo_id.(.*)/', $url, $match);
             if (array_key_exists(1, $match) && $match[1]) {
                 return [
@@ -175,6 +176,7 @@ abstract class localplay_controller
                     'oid' => $match[1]
                 ];
             }
+
             preg_match_all('#\b(random_id|random_type)=([^&]*)#', $url, $match);
             if (array_key_exists(1, $match) && $match[1] && array_key_exists(2, $match) && $match[2]) {
                 $result = array_combine($match[1], $match[2]);
@@ -185,6 +187,7 @@ abstract class localplay_controller
                 ];
             }
         }
+
         $variables = parse_url($url, PHP_URL_QUERY);
         if ($variables) {
             parse_str($variables, $data);

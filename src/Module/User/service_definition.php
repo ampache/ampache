@@ -25,8 +25,24 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User;
 
+use Ampache\Module\User\Activity\TypeHandler\ActivityTypeHandlerMapper;
+use Ampache\Module\User\Activity\TypeHandler\ActivityTypeHandlerMapperInterface;
+use Ampache\Module\User\Activity\UserActivityPoster;
+use Ampache\Module\User\Activity\UserActivityPosterInterface;
+use Ampache\Module\User\Activity\UserActivityRenderer;
+use Ampache\Module\User\Activity\UserActivityRendererInterface;
+use Ampache\Module\User\Authorization\UserKeyGenerator;
+use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
+use Ampache\Module\User\Following\UserFollowStateRenderer;
+use Ampache\Module\User\Following\UserFollowStateRendererInterface;
+use Ampache\Module\User\Following\UserFollowToggler;
+use Ampache\Module\User\Following\UserFollowTogglerInterface;
+use Ampache\Module\User\PrivateMessage\PrivateMessageCreator;
+use Ampache\Module\User\PrivateMessage\PrivateMessageCreatorInterface;
 use Ampache\Module\User\Registration\RegistrationAgreementRenderer;
 use Ampache\Module\User\Registration\RegistrationAgreementRendererInterface;
+use Ampache\Module\User\Tracking\UserTracker;
+use Ampache\Module\User\Tracking\UserTrackerInterface;
 
 use function DI\autowire;
 
@@ -34,13 +50,13 @@ return [
     PasswordGeneratorInterface::class => autowire(PasswordGenerator::class),
     NewPasswordSenderInterface::class => autowire(NewPasswordSender::class),
     UserStateTogglerInterface::class => autowire(UserStateToggler::class),
-    Activity\UserActivityRendererInterface::class => autowire(Activity\UserActivityRenderer::class),
-    Activity\UserActivityPosterInterface::class => autowire(Activity\UserActivityPoster::class),
-    Activity\TypeHandler\ActivityTypeHandlerMapperInterface::class => autowire(Activity\TypeHandler\ActivityTypeHandlerMapper::class),
-    Following\UserFollowTogglerInterface::class => autowire(Following\UserFollowToggler::class),
-    Following\UserFollowStateRendererInterface::class => autowire(Following\UserFollowStateRenderer::class),
-    Authorization\UserKeyGeneratorInterface::class => autowire(Authorization\UserKeyGenerator::class),
-    PrivateMessage\PrivateMessageCreatorInterface::class => autowire(PrivateMessage\PrivateMessageCreator::class),
-    Tracking\UserTrackerInterface::class => autowire(Tracking\UserTracker::class),
+    UserActivityRendererInterface::class => autowire(UserActivityRenderer::class),
+    UserActivityPosterInterface::class => autowire(UserActivityPoster::class),
+    ActivityTypeHandlerMapperInterface::class => autowire(ActivityTypeHandlerMapper::class),
+    UserFollowTogglerInterface::class => autowire(UserFollowToggler::class),
+    UserFollowStateRendererInterface::class => autowire(UserFollowStateRenderer::class),
+    UserKeyGeneratorInterface::class => autowire(UserKeyGenerator::class),
+    PrivateMessageCreatorInterface::class => autowire(PrivateMessageCreator::class),
+    UserTrackerInterface::class => autowire(UserTracker::class),
     RegistrationAgreementRendererInterface::class => autowire(RegistrationAgreementRenderer::class),
 ];

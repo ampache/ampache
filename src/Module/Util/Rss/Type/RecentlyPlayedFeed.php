@@ -65,7 +65,7 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
             $row_id = ($item['user'] > 0) ? (int) $item['user'] : -1;
 
             $has_allowed_recent = (bool) $item['user_recent'];
-            $is_allowed_recent  = ($userId > 0 && $userId == $row_id) || $has_allowed_recent;
+            $is_allowed_recent  = ($userId > 0 && $userId === $row_id) || $has_allowed_recent;
             if ($song->enabled && $is_allowed_recent) {
                 yield [
                     'title' => sprintf(
@@ -90,10 +90,10 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
                     ),
                     'comments' => $client->get_link(),
                     'pubDate' => date("r", (int)$item['date']),
-                    'guid' => (isset($song->mbid))
+                    'guid' => ($song->mbid !== null)
                         ? 'https://musicbrainz.org/recording/' . $song->mbid
                         : $item['date'] . '-' . $client->getId() . '-' . $song->getId(),
-                    'isPermaLink' => (isset($song->mbid))
+                    'isPermaLink' => ($song->mbid !== null)
                         ? 'true'
                         : 'false',
                 ];

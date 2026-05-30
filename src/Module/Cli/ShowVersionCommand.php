@@ -27,14 +27,14 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
+use Override;
 
 final class ShowVersionCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -42,11 +42,9 @@ final class ShowVersionCommand extends Command
     }
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct('show:version', T_('Version'));
-
-        $this->configContainer = $configContainer;
 
         $this
             ->usage('<bold>  show:version</end> <comment> ## ' . T_('Version') . '<eol/>');

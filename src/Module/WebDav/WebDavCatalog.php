@@ -27,21 +27,20 @@ namespace Ampache\Module\WebDav;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
-use Sabre\DAV;
+use Override;
+use Sabre\DAV\Collection;
 use Sabre\DAV\Exception\NotFound;
+use Sabre\DAV\Node;
 
 /**
  * WebDAV Catalog Directory Class
  *
  * This class wrap Ampache catalogs to WebDAV directories.
  */
-class WebDavCatalog extends DAV\Collection
+class WebDavCatalog extends Collection
 {
-    private int $catalog_id;
-
-    public function __construct(int $catalog_id)
+    public function __construct(private readonly int $catalog_id)
     {
-        $this->catalog_id = $catalog_id;
     }
 
     /**
@@ -55,6 +54,7 @@ class WebDavCatalog extends DAV\Collection
             $catalogs   = [];
             $catalogs[] = $this->catalog_id;
         }
+
         $artists = Catalog::get_artists($catalogs);
         foreach ($artists as $artist) {
             $children[] = new WebDavDirectory($artist);
@@ -67,28 +67,30 @@ class WebDavCatalog extends DAV\Collection
      * @param string $name
      * @throws NotFound
      */
-    public function getChild($name): DAV\Node
+    #[Override]
+    public function getChild($name): Node
     {
         $matches = Catalog::get_children($name, $this->catalog_id);
         //debug_event(self::class, 'Catalog getChild for `' . $name . '`', 5);
         //debug_event(self::class, 'Found ' . count($matches) . ' childs.', 5);
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now TODO support folders instead of objects
-        if (!empty($matches)) {
+        if ($matches !== []) {
             return WebDavDirectory::getChildFromArray($matches[0]);
         }
 
-        throw new DAV\Exception\NotFound('The artist with name: ' . $name . ' could not be found');
+        throw new NotFound('The artist with name: ' . $name . ' could not be found');
     }
 
     /**
      * @param string $name
      */
+    #[Override]
     public function childExists($name): bool
     {
         $matches = Catalog::get_children($name, $this->catalog_id);
 
-        return !empty($matches);
+        return $matches !== [];
     }
 
     public function getName(): string

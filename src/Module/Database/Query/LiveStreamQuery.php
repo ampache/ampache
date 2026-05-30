@@ -115,6 +115,7 @@ final class LiveStreamQuery implements QueryInterface
                 foreach ($value as $uid) {
                     $filter_sql .= (int)$uid . ',';
                 }
+
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
                 break;
             case 'equal':
@@ -132,11 +133,13 @@ final class LiveStreamQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `live_stream`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
                     $filter_sql = " `live_stream`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'starts_with':
                 $filter_sql = " `live_stream`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -148,6 +151,7 @@ final class LiveStreamQuery implements QueryInterface
                 if ($value != 0) {
                     $filter_sql = " (`live_stream`.`catalog` = '" . Dba::escape($value) . "') AND ";
                 }
+
                 break;
             case 'user_catalog':
                 $filter_sql = " `live_stream`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
@@ -192,10 +196,10 @@ final class LiveStreamQuery implements QueryInterface
             case 'id':
             case 'site_url':
             case 'url':
-                $sql = "`live_stream`.`$field`";
+                $sql = sprintf('`live_stream`.`%s`', $field);
                 break;
             case 'rating':
-                $sql = "`rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`live_stream`.`id`", "`rating`.`object_type`", "'live_stream'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
@@ -204,7 +208,7 @@ final class LiveStreamQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`live_stream`.`id`", "`user_flag`.`object_type`", "'live_stream'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag_rating':
-                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`live_stream`.`id`", "`user_flag`.`object_type`", "'live_stream'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`live_stream`.`id`", "`rating`.`object_type`", "'live_stream'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
@@ -212,10 +216,10 @@ final class LiveStreamQuery implements QueryInterface
                 $sql = '';
         }
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

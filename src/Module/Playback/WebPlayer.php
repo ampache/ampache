@@ -50,7 +50,7 @@ class WebPlayer
             }
         }
 
-        return (count($playlist->urls) == 1 && count($radios) > 0 && AmpConfig::get('webplayer_flash'));
+        return (count($playlist->urls) === 1 && $radios !== [] && AmpConfig::get('webplayer_flash'));
     }
 
     /**
@@ -58,7 +58,7 @@ class WebPlayer
      */
     public static function is_playlist_video(Stream_Playlist $playlist): bool
     {
-        return (count($playlist->urls) > 0 && $playlist->urls[0]->type == "video");
+        return ($playlist->urls !== [] && $playlist->urls[0]->type == "video");
     }
 
     /**
@@ -66,7 +66,7 @@ class WebPlayer
      */
     public static function is_playlist_random(Stream_Playlist $playlist): bool
     {
-        return (count($playlist->urls) > 0 && $playlist->urls[0]->title == "Random");
+        return ($playlist->urls !== [] && $playlist->urls[0]->title == "Random");
     }
 
     /**
@@ -74,7 +74,7 @@ class WebPlayer
      */
     public static function is_playlist_democratic(Stream_Playlist $playlist): bool
     {
-        return (count($playlist->urls) > 0 && $playlist->urls[0]->title == "Democratic");
+        return ($playlist->urls !== [] && $playlist->urls[0]->title == "Democratic");
     }
 
     /**
@@ -96,9 +96,9 @@ class WebPlayer
         if ($item->codec && array_key_exists('type', $urlinfo)) {
             $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $item->codec, $transcode);
-        } elseif ($media = self::get_media_object($urlinfo)) {
+        } elseif (($media = self::get_media_object($urlinfo)) instanceof Media) {
             /** @var Video|Podcast_Episode|Song|Song_Preview $media */
-            $transcode = self::can_transcode(strtolower(get_class($media)), $media->type, $types, $urlinfo, $transcode_cfg, $force_type);
+            $transcode = self::can_transcode(strtolower($media::class), $media->type, $types, $urlinfo, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $media->type, $transcode);
         } elseif ($item->type == 'live_stream') {
             $types['real'] = $item->codec;
@@ -132,6 +132,7 @@ class WebPlayer
 
             return $media;
         }
+
         if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
             return new Song_Preview((int)$urlinfo['id']);
         }
@@ -164,6 +165,7 @@ class WebPlayer
                 $types['player'] = "m4a";
             }
         }
+
         if ($urlinfo['type'] == 'video') {
             if ($types['real'] == "ogg") {
                 $types['player'] = "ogv";
@@ -197,37 +199,22 @@ class WebPlayer
 
         // Check transcode is required
         $valid_types = Stream::get_stream_types_for_type($file_type);
-        if (
-            $transcode_cfg == 'always' ||
-            !empty($force_type) ||
-            !in_array('native', $valid_types) ||
-            (
-                $types['real'] != $file_type &&
-                (
-                    !AmpConfig::get('webplayer_flash') ||
-                    $urlinfo['type'] != 'song'
-                )
-            )
-        ) {
-            if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
-                // Transcode forced from client side
-                if (!empty($force_type) && AmpConfig::get('transcode_player_customize')) {
-                    debug_event(self::class, "Forcing type to {{$force_type}}", 5);
-                    // Transcode only if excepted type available
-                    $transcode_settings = Stream::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
-                    if (!empty($transcode_settings)) {
-                        $transcode = true;
-                    }
+        if (($transcode_cfg === 'always' || $force_type !== '' && $force_type !== '0' || !in_array('native', $valid_types) || $types['real'] != $file_type && (!AmpConfig::get('webplayer_flash') || $urlinfo['type'] != 'song')) && ($transcode_cfg === 'always' || $transcode_cfg !== 'never' && in_array('transcode', $valid_types))) {
+            // Transcode forced from client side
+            if ($force_type !== '' && $force_type !== '0' && AmpConfig::get('transcode_player_customize')) {
+                debug_event(self::class, sprintf('Forcing type to {%s}', $force_type), 5);
+                // Transcode only if excepted type available
+                $transcode_settings = Stream::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
+                if ($transcode_settings !== []) {
+                    $transcode = true;
                 }
+            }
 
-                // Transcode is not forced, transcode only if required
-                if (!$transcode) {
-                    if ($transcode_cfg == 'always' || !in_array('native', $valid_types)) {
-                        $transcode_settings = Stream::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
-                        if (!empty($transcode_settings)) {
-                            $transcode = true;
-                        }
-                    }
+            // Transcode is not forced, transcode only if required
+            if (!$transcode && ($transcode_cfg === 'always' || !in_array('native', $valid_types))) {
+                $transcode_settings = Stream::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
+                if ($transcode_settings !== []) {
+                    $transcode = true;
                 }
             }
         }
@@ -247,6 +234,7 @@ class WebPlayer
                 $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
                 break;
             }
+
             $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
         }
 
@@ -266,6 +254,7 @@ class WebPlayer
                 $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
                 break;
             }
+
             $addjs .= $callback_container . "playNext(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
         }
 
@@ -282,11 +271,7 @@ class WebPlayer
     ): string {
         $json = [];
         foreach (['title', 'author'] as $member) {
-            if ($member == "author") {
-                $kmember = "artist";
-            } else {
-                $kmember = $member;
-            }
+            $kmember = $member === "author" ? "artist" : $member;
 
             $json[$kmember] = $item->$member;
         }
@@ -310,6 +295,7 @@ class WebPlayer
                 } else {
                     $json['albumdisk_id'] = $media->album_disk;
                 }
+
                 $json['album_name'] = $media->get_album_disk_fullname();
                 // get replaygain from the song_data table
                 $media->fill_ext_info('replaygain_track_gain, replaygain_track_peak, replaygain_album_gain, replaygain_album_peak, r128_track_gain, r128_album_gain');
@@ -321,35 +307,39 @@ class WebPlayer
                 $json['r128_album_gain']       = $media->r128_album_gain;
                 $json['duration']              = $media->time;
             }
+
             $json['media_id']   = $media->id;
             $json['media_type'] = $url_data['type'];
         } else {
             // items like live streams need to keep an id for us as well
             switch ($item->type) {
                 case 'live_stream':
-                    $regex           = "/radio=([0-9]*)/";
+                    $regex           = "/radio=(\\d*)/";
                     $types['player'] = $item->codec;
                     break;
                 case 'democratic':
-                    $regex           = "/demo_id=([0-9]*)/";
+                    $regex           = "/demo_id=(\\d*)/";
                     $types['player'] = 'mp3';
                     break;
                 case 'random':
-                    $regex           = "/random_id=([0-9]*)/";
+                    $regex           = "/random_id=(\\d*)/";
                     $types['player'] = 'mp3';
                     break;
                 default:
                     $regex = "/" . $item->type . "=([0-9]*)/";
                     break;
             }
+
             if (!empty($item->info_url)) {
                 preg_match($regex, $item->info_url, $matches);
                 $json['media_id'] = $matches[1] ?? null;
             }
+
             if (!empty($url)) {
                 preg_match($regex, $item->url, $matches);
                 $json['media_id'] = $matches[1] ?? null;
             }
+
             $json['media_type'] = $item->type;
         }
 
@@ -358,6 +348,7 @@ class WebPlayer
         if ($item->image_url) {
             $json['poster'] = $item->image_url;
         }
+
         //debug_event(self::class, "get_media_js_param: " . print_r($json, true), 3);
 
         return json_encode($json) ?: '';

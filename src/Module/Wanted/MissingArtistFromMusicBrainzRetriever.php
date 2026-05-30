@@ -40,22 +40,13 @@ use Psr\SimpleCache\CacheInterface;
  *  link: string
  * }
  */
-final class MissingArtistFromMusicBrainzRetriever implements MissingArtistRetrieverInterface
+final readonly class MissingArtistFromMusicBrainzRetriever implements MissingArtistRetrieverInterface
 {
-    private MusicBrainz $musicBrainz;
-
-    private CacheInterface $cache;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        MusicBrainz $musicBrainz,
-        CacheInterface $cache,
-        LoggerInterface $logger,
+        private MusicBrainz $musicBrainz,
+        private CacheInterface $cache,
+        private LoggerInterface $logger,
     ) {
-        $this->musicBrainz = $musicBrainz;
-        $this->cache       = $cache;
-        $this->logger      = $logger;
     }
 
     /**
@@ -92,12 +83,12 @@ final class MissingArtistFromMusicBrainzRetriever implements MissingArtistRetrie
         try {
             /** @var object{name: string, error?: string} $result */
             $result = $this->musicBrainz->lookup('artist', $musicBrainzId);
-        } catch (Exception $error) {
+        } catch (Exception $exception) {
             $this->logger->debug(
                 sprintf(
                     'Error retrieving MusicBrainz info for artist `%s`: %s',
                     $musicBrainzId,
-                    $error->getMessage()
+                    $exception->getMessage()
                 ),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );

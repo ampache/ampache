@@ -30,15 +30,23 @@ use Ampache\Module\Beets\Catalog;
 use Ampache\Module\Beets\JsonHandler;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
+use Override;
 
 /**
  * This class handles all actual work in regards to remote Beets catalogs.
  */
 class Catalog_beetsremote extends Catalog
 {
+    #[Override]
     protected string $version     = '000001';
+
+    #[Override]
     protected string $type        = 'beetsremote';
+
+    #[Override]
     protected string $description = 'Beets Remote Catalog';
+
+    #[Override]
     protected string $listCommand = 'item/query';
 
     protected string $uri = '';
@@ -76,7 +84,7 @@ class Catalog_beetsremote extends Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
-        $sql = "CREATE TABLE `catalog_beetsremote` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = sprintf('CREATE TABLE `catalog_beetsremote` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE %s NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $engine, $charset, $collation);
         Dba::query($sql);
 
         return true;
@@ -90,11 +98,7 @@ class Catalog_beetsremote extends Catalog
      */
     public function catalog_fields(): array
     {
-        $fields = [];
-
-        $fields['uri'] = ['description' => T_('Beets Server URI'), 'type' => 'url'];
-
-        return $fields;
+        return ['uri' => ['description' => T_('Beets Server URI'), 'type' => 'url']];
     }
 
     /**
@@ -112,7 +116,7 @@ class Catalog_beetsremote extends Catalog
         // TODO: This Method should be required / provided by parent
         $uri = $data['uri'] ?? '';
 
-        if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
+        if (!str_starts_with($uri, 'http://') && !str_starts_with($uri, 'https://')) {
             AmpError::add('general', T_('Remote Catalog type was selected, but the path is not a URL'));
 
             return false;
@@ -122,7 +126,7 @@ class Catalog_beetsremote extends Catalog
         $selectSql  = 'SELECT `id` FROM `catalog_beets` WHERE `uri` = ?';
         $db_results = Dba::read($selectSql, [$uri]);
 
-        if (Dba::num_rows($db_results)) {
+        if (Dba::num_rows($db_results) !== 0) {
             debug_event('beetsremote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             AmpError::add('general', sprintf(T_('This path belongs to an existing Beets Catalog: %s'), $uri));
 

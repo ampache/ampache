@@ -28,14 +28,14 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Playlist\PlaylistExporter;
 use Ampache\Module\Playlist\PlaylistExporterInterface;
+use Override;
 
 final class ExportPlaylistCommand extends Command
 {
-    private PlaylistExporterInterface $playlistExporter;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -43,11 +43,9 @@ final class ExportPlaylistCommand extends Command
     }
 
     public function __construct(
-        PlaylistExporterInterface $playlistExporter,
+        private readonly PlaylistExporterInterface $playlistExporter,
     ) {
         parent::__construct('export:playlist', T_('Export Playlists'));
-
-        $this->playlistExporter = $playlistExporter;
 
         $this
             ->option('-u|--user', T_('User ID'), 'intval', -1)
@@ -65,7 +63,7 @@ final class ExportPlaylistCommand extends Command
         string $extension,
         string $playlistId,
     ): void {
-        if (!in_array($extension, PlaylistExporter::VALID_FILE_EXTENSIONS)) {
+        if (!in_array($extension, PlaylistExporter::VALID_FILE_EXTENSIONS, true)) {
             $extension = current(PlaylistExporter::VALID_FILE_EXTENSIONS);
         }
 

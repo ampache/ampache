@@ -28,23 +28,21 @@ namespace Ampache\Module\WebDav;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
-use Sabre\DAV;
+use Override;
+use Sabre\DAV\File;
 
 /**
  * This class wrap Ampache songs to WebDAV files.
  */
-class WebDavFile extends DAV\File
+class WebDavFile extends File
 {
-    private Media $libitem;
-
-    public function __construct(Media $libitem)
+    public function __construct(private readonly Media $libitem)
     {
-        $this->libitem = $libitem;
     }
 
     public function getName(): string
     {
-        if (isset($this->libitem->file)) {
+        if (property_exists($this->libitem, 'file') && $this->libitem->file !== null) {
             $nameinfo = pathinfo($this->libitem->file);
 
             return htmlentities($nameinfo['filename'] . '.' . ($nameinfo['extension'] ?? ''));
@@ -60,12 +58,12 @@ class WebDavFile extends DAV\File
     {
         //debug_event(self::class, 'File get ' . $this->libitem->file, 5);
         // Only media associated to a local catalog is supported
-        if (isset($this->libitem->catalog)) {
+        if (property_exists($this->libitem, 'catalog') && $this->libitem->catalog !== null) {
             $catalog = Catalog::create_from_id($this->libitem->catalog);
             if (
                 $catalog !== null &&
                 $catalog->get_type() === 'local' &&
-                isset($this->libitem->file)
+                (property_exists($this->libitem, 'file') && $this->libitem->file !== null)
             ) {
                 $filepointer = fopen(Core::conv_lc_file($this->libitem->file), 'r');
 
@@ -86,6 +84,7 @@ class WebDavFile extends DAV\File
         return null;
     }
 
+    #[Override]
     public function getSize(): int
     {
         return $this->libitem->size ?? 0;

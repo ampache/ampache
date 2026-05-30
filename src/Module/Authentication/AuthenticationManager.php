@@ -32,17 +32,11 @@ use Ampache\Module\System\Session;
 
 final class AuthenticationManager implements AuthenticationManagerInterface
 {
-    /** @var AuthenticatorInterface[] $authenticatorList */
-    private array $authenticatorList;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        array $authenticatorList,
+        private readonly ConfigContainerInterface $configContainer,
+        /** @var AuthenticatorInterface[] $authenticatorList */
+        private array $authenticatorList,
     ) {
-        $this->configContainer   = $configContainer;
-        $this->authenticatorList = $authenticatorList;
     }
 
     /**
@@ -107,7 +101,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         string $salt,
     ): array {
         // subsonic token auth with apikey
-        if (strlen((string)$token) && strlen((string)$salt) && strlen((string)$username)) {
+        if (strlen($token) && strlen($salt) && strlen($username)) {
             $sql        = 'SELECT `apikey`, `username` FROM `user` WHERE `username` = ?';
             $db_results = Dba::read($sql, [$username]);
             $row        = Dba::fetch_assoc($db_results);
@@ -134,7 +128,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
     public function logout(string $key = '', bool $relogin = true): void
     {
         // If no key is passed try to find the session id
-        $key = (empty($key))
+        $key = ($key === '' || $key === '0')
             ? session_id()
             : $key;
 

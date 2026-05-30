@@ -177,6 +177,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
             if ($media->addition_time > 0) {
                 $data['pubDate'] = date("r", $media->addition_time);
             }
+
             if ($media->mime) {
                 $data['type'] = $media->mime;
                 $data['size'] = (string) $media->size;

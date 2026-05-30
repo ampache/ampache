@@ -34,22 +34,13 @@ use Ampache\Repository\UserRepositoryInterface;
 /**
  * Disables/Enables users
  */
-final class UserStateToggler implements UserStateTogglerInterface
+final readonly class UserStateToggler implements UserStateTogglerInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private UtilityFactoryInterface $utilityFactory;
-
-    private UserRepositoryInterface $userRepository;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UtilityFactoryInterface $utilityFactory,
-        UserRepositoryInterface $userRepository,
+        private ConfigContainerInterface $configContainer,
+        private UtilityFactoryInterface $utilityFactory,
+        private UserRepositoryInterface $userRepository,
     ) {
-        $this->configContainer = $configContainer;
-        $this->utilityFactory  = $utilityFactory;
-        $this->userRepository  = $userRepository;
     }
 
     public function enable(User $user): bool

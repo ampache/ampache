@@ -33,18 +33,12 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-final class Slideshow implements SlideshowInterface
+final readonly class Slideshow implements SlideshowInterface
 {
-    private ModelFactoryInterface $modelFactory;
-
-    private PluginRetrieverInterface $pluginRetriever;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        PluginRetrieverInterface $pluginRetriever,
+        private ModelFactoryInterface $modelFactory,
+        private PluginRetrieverInterface $pluginRetriever,
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->pluginRetriever = $pluginRetriever;
     }
 
     public function getCurrentSlideshow(User $user): array

@@ -28,6 +28,8 @@ namespace Ampache\Module\User\Activity\TypeHandler;
 abstract class ActivityTypeEnum
 {
     public const string TYPE_SONG   = 'song';
+
     public const string TYPE_ALBUM  = 'album';
+
     public const string TYPE_ARTIST = 'artist';
 }

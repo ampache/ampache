@@ -89,7 +89,7 @@ class AmpError
      */
     public static function occurred(): bool
     {
-        return (bool)(self::$state == '1');
+        return self::$state == '1';
     }
 
     /**

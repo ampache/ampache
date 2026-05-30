@@ -97,7 +97,7 @@ final class Mailer implements MailerInterface
      */
     public static function is_mail_enabled(): bool
     {
-        return (bool)(AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode'));
+        return AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode');
     }
 
     /**
@@ -214,6 +214,7 @@ final class Mailer implements MailerInterface
         if (function_exists('mb_eregi_replace')) {
             $this->message = (string) mb_eregi_replace("\r\n", "\n", (string) $this->message);
         }
+
         $mail->Body = (string) $this->message;
 
         $sendmail = AmpConfig::get('sendmail_path', '/usr/sbin/sendmail');
@@ -233,9 +234,11 @@ final class Mailer implements MailerInterface
                     $mail->Username = $mailuser;
                     $mail->Password = $mailpass;
                 }
+
                 if ($mailsecure = AmpConfig::get('mail_secure_smtp')) {
                     $mail->SMTPSecure = ($mailsecure == 'ssl') ? 'ssl' : 'tls';
                 }
+
                 break;
             case 'sendmail':
                 $mail->isSendmail();
@@ -251,6 +254,7 @@ final class Mailer implements MailerInterface
         if ($retval === true) {
             return true;
         }
+
         debug_event(self::class, 'Did not send mail. ErrorInfo: ' . $mail->ErrorInfo, 5);
 
         return false;

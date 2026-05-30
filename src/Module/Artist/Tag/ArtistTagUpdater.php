@@ -31,22 +31,13 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Tag;
 
-final class ArtistTagUpdater implements ArtistTagUpdaterInterface
+final readonly class ArtistTagUpdater implements ArtistTagUpdaterInterface
 {
-    private AlbumRepositoryInterface $albumRepository;
-
-    private AlbumTagUpdaterInterface $albumTagUpdater;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        AlbumRepositoryInterface $albumRepository,
-        AlbumTagUpdaterInterface $albumTagUpdater,
-        ModelFactoryInterface $modelFactory,
+        private AlbumRepositoryInterface $albumRepository,
+        private AlbumTagUpdaterInterface $albumTagUpdater,
+        private ModelFactoryInterface $modelFactory,
     ) {
-        $this->albumRepository = $albumRepository;
-        $this->albumTagUpdater = $albumTagUpdater;
-        $this->modelFactory    = $modelFactory;
     }
 
     /**

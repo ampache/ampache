@@ -43,7 +43,9 @@ use Exception;
 class Catalog_subsonic extends Catalog
 {
     private string $version     = '000002';
+
     private string $type        = 'subsonic';
+
     private string $description = 'Subsonic Remote Catalog';
 
     private int $catalog_id;
@@ -51,7 +53,9 @@ class Catalog_subsonic extends Catalog
     private ?SubsonicClient $subsonic = null;
 
     public string $uri = '';
+
     public string $username;
+
     public string $password;
 
     /**
@@ -121,7 +125,7 @@ class Catalog_subsonic extends Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
-        $sql = "CREATE TABLE `catalog_subsonic` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE $collation NOT NULL, `username` VARCHAR(255) COLLATE $collation NOT NULL, `password` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = sprintf('CREATE TABLE `catalog_subsonic` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE %s NOT NULL, `username` VARCHAR(255) COLLATE %s NOT NULL, `password` VARCHAR(255) COLLATE %s NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $collation, $collation, $engine, $charset, $collation);
         Dba::query($sql);
 
         return true;
@@ -135,13 +139,7 @@ class Catalog_subsonic extends Catalog
      */
     public function catalog_fields(): array
     {
-        $fields = [];
-
-        $fields['uri']      = ['description' => T_('URI'), 'type' => 'url'];
-        $fields['username'] = ['description' => T_('Username'), 'type' => 'text'];
-        $fields['password'] = ['description' => T_('Password'), 'type' => 'password'];
-
-        return $fields;
+        return ['uri' => ['description' => T_('URI'), 'type' => 'url'], 'username' => ['description' => T_('Username'), 'type' => 'text'], 'password' => ['description' => T_('Password'), 'type' => 'password']];
     }
 
     /**
@@ -156,6 +154,7 @@ class Catalog_subsonic extends Catalog
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
+
             $this->catalog_id = (int)$catalog_id;
         }
     }
@@ -178,7 +177,7 @@ class Catalog_subsonic extends Catalog
         $username = $data['username'] ?? '';
         $password = $data['password'] ?? '';
 
-        if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
+        if (!str_starts_with($uri, 'http://') && !str_starts_with($uri, 'https://')) {
             AmpError::add('general', T_('Remote Catalog type was selected, but the path is not a URL'));
 
             return false;
@@ -194,7 +193,7 @@ class Catalog_subsonic extends Catalog
         $sql        = 'SELECT `id` FROM `catalog_subsonic` WHERE `uri` = ?';
         $db_results = Dba::read($sql, [$uri]);
 
-        if (Dba::num_rows($db_results)) {
+        if (Dba::num_rows($db_results) !== 0) {
             debug_event('subsonic.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             /* HINT: subsonic catalog URI */
             AmpError::add('general', sprintf(T_('This path belongs to an existing Subsonic Catalog: %s'), $uri));
@@ -220,6 +219,7 @@ class Catalog_subsonic extends Catalog
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Subsonic Remote Update'));
         }
+
         $songsadded = $this->_update_remote_catalog();
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
@@ -233,7 +233,7 @@ class Catalog_subsonic extends Catalog
      */
     private function _createClient(): void
     {
-        $this->subsonic = $this->subsonic ?? (new SubsonicClient($this->username, $this->password, $this->uri));
+        $this->subsonic ??= new SubsonicClient($this->username, $this->password, $this->uri);
     }
 
     /**
@@ -280,11 +280,12 @@ class Catalog_subsonic extends Catalog
         $data = VaInfo::get_default_info();
         // album_artist isn't included in the song response
         if (is_array($albumartist) && $albumartist['success']) {
-            $data['albumartist'] = html_entity_decode($albumartist['data']['artist']['name']);
+            $data['albumartist'] = html_entity_decode((string) $albumartist['data']['artist']['name']);
         }
-        $data['artist'] = html_entity_decode($song['artist']);
-        $data['album']  = html_entity_decode($song['album']);
-        $data['title']  = html_entity_decode($song['title']);
+
+        $data['artist'] = html_entity_decode((string) $song['artist']);
+        $data['album']  = html_entity_decode((string) $song['album']);
+        $data['title']  = html_entity_decode((string) $song['title']);
 
         $data['year']     = $song['year'];
         $data['bitrate']  = $song['bitRate'] * 1000;
@@ -297,11 +298,12 @@ class Catalog_subsonic extends Catalog
         if (isset($song['genres'])) {
             $data['genre'] = [];
             foreach ($song['genres'] as $genre) {
-                $data['genre'][] = html_entity_decode($genre);
+                $data['genre'][] = html_entity_decode((string) $genre);
             }
         } elseif (isset($song['genre'])) {
-            $data['genre'] = explode(',', html_entity_decode($song['genre']));
+            $data['genre'] = explode(',', html_entity_decode((string) $song['genre']));
         }
+
         $data['file']         = $song['path'];
         $data['catalog']      = $this->catalog_id;
 
@@ -338,9 +340,10 @@ class Catalog_subsonic extends Catalog
 
             $offset += 500;
             if ($albumList['success']) {
-                if (count($albumList['data']['albumList']) == 0) {
+                if (count($albumList['data']['albumList']) === 0) {
                     break;
                 }
+
                 foreach ($albumList['data']['albumList']['album'] as $anAlbum) {
                     $album = $this->subsonic?->querySubsonic('getMusicDirectory', ['id' => $anAlbum['id']]);
                     if (is_array($album) && $album['success']) {
@@ -366,6 +369,7 @@ class Catalog_subsonic extends Catalog
                                 if ($song_id_check) {
                                     $existing_song = true;
                                 }
+
                                 if (
                                     $action === 'add' &&
                                     $existing_song
@@ -386,7 +390,7 @@ class Catalog_subsonic extends Catalog
                                 }
 
                                 $data = $this->_gather_tags($song);
-                                if (!($data)) {
+                                if ($data === []) {
                                     debug_event('subsonic.catalog', 'Unable to gather song data ' . $child['id'], 5);
                                     continue;
                                 }
@@ -404,6 +408,7 @@ class Catalog_subsonic extends Catalog
                                     if ($data['coverArt']) {
                                         $this->insertArt($data, $song_id);
                                     }
+
                                     $songsadded++;
                                 } elseif ($action === 'verify' && $existing_song) {
                                     // If we already have the song, update it
@@ -412,7 +417,7 @@ class Catalog_subsonic extends Catalog
                                         $current_song = new Song($song_id);
                                         $current_song->fill_ext_info();
 
-                                        $info = ($current_song->id) ? self::update_song_from_tags($data, $current_song) : [];
+                                        $info = ($current_song->id !== 0) ? self::update_song_from_tags($data, $current_song) : [];
                                         if ($info['change']) {
                                             debug_event('subsonic.catalog', 'Updated existing song ' . $song_id, 5);
                                             $songsadded++;
@@ -420,11 +425,9 @@ class Catalog_subsonic extends Catalog
                                     }
                                 }
 
-                                if ($song_id) {
-                                    // Update the remote id for streaming / lookup
-                                    if (Song::get_song_map_object_id($song_id, 'subsonic_' . $this->catalog_id) !== $remote_id) {
-                                        Song::update_song_map([$remote_id], 'subsonic_' . $this->catalog_id, $song_id);
-                                    }
+                                // Update the remote id for streaming / lookup
+                                if ($song_id !== 0 && Song::get_song_map_object_id($song_id, 'subsonic_' . $this->catalog_id) !== $remote_id) {
+                                    Song::update_song_map([$remote_id], 'subsonic_' . $this->catalog_id, $song_id);
                                 }
                             }
                         }
@@ -464,6 +467,7 @@ class Catalog_subsonic extends Catalog
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Remote Update'));
         }
+
         $songsupdated = $this->_update_remote_catalog('verify');
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
@@ -578,13 +582,13 @@ class Catalog_subsonic extends Catalog
             $file_target = ($row['id'] && $cache_target === $row['extension'])
                 ? Catalog::get_cache_path($row['id'], $this->catalog_id, $cache_path, $cache_target)
                 : null;
-            if (empty($file_target)) {
+            if (in_array($file_target, [null, '', '0'], true)) {
                 debug_event('subsonic.catalog', 'Cache error: no target for ' . $row['id'], 5);
                 continue;
             }
 
             $file_exists = is_file($file_target);
-            if (!$file_exists || (int)Core::get_filesize($file_target) == 0) {
+            if (!$file_exists || Core::get_filesize($file_target) === 0) {
                 $old_target_file = rtrim(trim($cache_path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $cache_target;
                 $old_file_exists = is_file($old_target_file);
                 if ($old_file_exists) {
@@ -599,6 +603,7 @@ class Catalog_subsonic extends Catalog
                     if ($user_bit_rate > $max_bitrate) {
                         $max_bitrate = $user_bit_rate;
                     }
+
                     $options = [
                         'format' => $cache_target,
                         'maxBitRate' => $max_bitrate,
@@ -629,7 +634,7 @@ class Catalog_subsonic extends Catalog
     public function check_remote_song(string $db_file, string $remote_id): ?int
     {
         // Check by urls first
-        if (!empty($remote_id)) {
+        if ($remote_id !== '' && $remote_id !== '0') {
             $sql        = 'SELECT `id` FROM `song` WHERE `file` LIKE ?;';
             $db_results = Dba::read($sql, [$this->uri . '/rest/stream.view?id=' . $remote_id . '&filename=' . urlencode($db_file)]);
             if ($results = Dba::fetch_assoc($db_results)) {
@@ -663,8 +668,8 @@ class Catalog_subsonic extends Catalog
     public function url_to_songid(string $url): int
     {
         $song_id = 0;
-        preg_match('/\?id=([0-9]*)&/', $url, $matches);
-        if (count($matches)) {
+        preg_match('/\?id=(\d*)&/', $url, $matches);
+        if ($matches !== []) {
             $song_id = $matches[1];
         }
 
@@ -704,7 +709,7 @@ class Catalog_subsonic extends Catalog
         }
 
         $remote_id = Song::get_song_map_object_id($media->id, 'subsonic_' . $this->catalog_id);
-        if (!empty($remote_id) && $media->file !== null) {
+        if (!in_array($remote_id, [null, '', '0'], true) && $media->file !== null) {
             $action = ($action === 'download')
                 ? 'download'
                 : 'stream';

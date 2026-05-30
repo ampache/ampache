@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ampache\Module\System;
 
 use SessionHandlerInterface;

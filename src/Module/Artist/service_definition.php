@@ -25,9 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Artist;
 
+use Ampache\Module\Artist\Deletion\ArtistDeleter;
+use Ampache\Module\Artist\Deletion\ArtistDeleterInterface;
+use Ampache\Module\Artist\Tag\ArtistTagUpdater;
+use Ampache\Module\Artist\Tag\ArtistTagUpdaterInterface;
+
 use function DI\autowire;
 
 return [
-    Deletion\ArtistDeleterInterface::class => autowire(Deletion\ArtistDeleter::class),
-    Tag\ArtistTagUpdaterInterface::class => autowire(Tag\ArtistTagUpdater::class),
+    ArtistDeleterInterface::class => autowire(ArtistDeleter::class),
+    ArtistTagUpdaterInterface::class => autowire(ArtistTagUpdater::class),
 ];

@@ -26,20 +26,17 @@ declare(strict_types=0);
 namespace Ampache\Module\LastFm;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\LastFm\Exception\LastFmQueryFailedException;
 use Ampache\Module\System\Core;
 use SimpleXMLElement;
 use WpOrg\Requests\Requests;
 
-final class LastFmQuery implements LastFmQueryInterface
+final readonly class LastFmQuery implements LastFmQueryInterface
 {
     private const string API_URL = 'http://ws.audioscrobbler.com/2.0/?method=';
 
-    private ConfigContainerInterface $configContainer;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer,
-    ) {
-        $this->configContainer = $configContainer;
+    public function __construct(private ConfigContainerInterface $configContainer)
+    {
     }
 
     /**
@@ -67,7 +64,7 @@ final class LastFmQuery implements LastFmQueryInterface
         $result = simplexml_load_string((string)$request->body);
 
         if ($result === false) {
-            throw new Exception\LastFmQueryFailedException();
+            throw new LastFmQueryFailedException();
         }
 
         return $result;

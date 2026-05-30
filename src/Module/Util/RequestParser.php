@@ -31,14 +31,10 @@ use Psr\Log\LoggerInterface;
 /**
  * Provides utility methods related to frontend request parsing
  */
-final class RequestParser implements RequestParserInterface
+final readonly class RequestParser implements RequestParserInterface
 {
-    private LoggerInterface $logger;
-
-    public function __construct(
-        LoggerInterface $logger,
-    ) {
-        $this->logger = $logger;
+    public function __construct(private LoggerInterface $logger)
+    {
     }
 
     /**

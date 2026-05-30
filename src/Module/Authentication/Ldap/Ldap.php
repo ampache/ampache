@@ -106,10 +106,8 @@ class Ldap
             throw new LdapException('Could not set option PROTOCOL_VERSION to ' . $protocol_version);
         }
 
-        if (AmpConfig::get('ldap_start_tls', "false") != "false") {
-            if (!ldap_start_tls($link)) {
-                throw new LdapException('Could not use StartTLS');
-            }
+        if (AmpConfig::get('ldap_start_tls', "false") != "false" && !ldap_start_tls($link)) {
+            throw new LdapException('Could not use StartTLS');
         }
 
         return $link;
@@ -127,10 +125,11 @@ class Ldap
             $username = AmpConfig::get('ldap_username', '');
             $password = AmpConfig::get('ldap_password', '');
         }
-        debug_event(self::class, "binding with username `$username`", 5);
+
+        debug_event(self::class, sprintf('binding with username `%s`', $username), 5);
 
         if (!ldap_bind($link, $username, $password)) {
-            throw new LdapException("Could not bind to server using username `$username`");
+            throw new LdapException(sprintf('Could not bind to server using username `%s`', $username));
         }
     }
 
@@ -152,14 +151,14 @@ class Ldap
     private static function read($link, $base_dn, $attrs = [], $filter = 'objectClass=*')
     {
         $attrs_json = json_encode($attrs);
-        debug_event(self::class, "reading attributes $attrs_json in `$base_dn`", 5);
+        debug_event(self::class, sprintf('reading attributes %s in `%s`', $attrs_json, $base_dn), 5);
 
         if (!$result = ldap_read($link, $base_dn, $filter, $attrs)) {
-            throw new LdapException("Could not read attributes `$attrs_json` for dn `$base_dn`");
+            throw new LdapException(sprintf('Could not read attributes `%s` for dn `%s`', $attrs_json, $base_dn));
         }
 
         if (!$infos = ldap_get_entries($link, $result)) {
-            throw new LdapException("Empty search result for dn `$base_dn`");
+            throw new LdapException(sprintf('Empty search result for dn `%s`', $base_dn));
         }
 
         return $infos[0];
@@ -173,7 +172,7 @@ class Ldap
      */
     private static function search($link, $base_dn, $filter, $only_one_result = true): array
     {
-        debug_event(self::class, "searching in `$base_dn` for `$filter`", 5);
+        debug_event(self::class, sprintf('searching in `%s` for `%s`', $base_dn, $filter), 5);
 
         if (!$result = ldap_search($link, $base_dn, $filter)) {
             throw new LdapException(ldap_errno($link));
@@ -185,11 +184,11 @@ class Ldap
 
         if ($only_one_result) {
             if (count($entries) < 1) {
-                throw new LdapException("Empty search results for filter `$filter`");
+                throw new LdapException(sprintf('Empty search results for filter `%s`', $filter));
             }
 
             if (count($entries) > 1) {
-                throw new LdapException("Too many search results for filter `$filter`");
+                throw new LdapException(sprintf('Too many search results for filter `%s`', $filter));
             }
 
             return $entries[0];
@@ -226,17 +225,17 @@ class Ldap
                 throw new LdapException('Required configuration value missing: ldap_filter');
             }
 
-            if (strpos($filter, '%v') !== false) {
+            if (str_contains((string) $filter, '%v')) {
                 $filter = str_replace('%v', $username, $filter);
             } else {
-                $filter = "($filter=$username)"; // Backward compatibility
+                $filter = sprintf('(%s=%s)', $filter, $username); // Backward compatibility
             }
 
             if (!$objectclass = AmpConfig::get('ldap_objectclass')) {
                 throw new LdapException('Required configuration value missing: ldap_objectclass');
             }
 
-            $search = "(&(objectclass=$objectclass)$filter)";
+            $search = sprintf('(&(objectclass=%s)%s)', $objectclass, $filter);
             debug_event(self::class, 'search: ' . $search, 5);
 
             if (!$base_dn = AmpConfig::get('ldap_search_dn')) {
@@ -256,8 +255,8 @@ class Ldap
                 $group_infos = self::read($link, $group_dn, [$member_attribute]);
 
                 // check username and full distinguished name for membership
-                if (!preg_grep("/^$username\$/i", $group_infos[$member_attribute]) && !preg_grep("/^$user_dn\$/i", $group_infos[$member_attribute])) {
-                    throw new LdapException("`$username` is not member of the group `$group_dn`");
+                if (!preg_grep(sprintf('/^%s$/i', $username), $group_infos[$member_attribute]) && !preg_grep(sprintf('/^%s$/i', $user_dn), $group_infos[$member_attribute])) {
+                    throw new LdapException(sprintf('`%s` is not member of the group `%s`', $username, $group_dn));
                 }
             }
 
@@ -290,8 +289,8 @@ class Ldap
                     'mime' => AmpConfig::get('ldap_avatar_mime', 'image/jpeg'),
                 ];
             }
-        } catch (LdapException $error) {
-            $message = $error->getMessage();
+        } catch (LdapException $ldapException) {
+            $message = $ldapException->getMessage();
 
             debug_event(self::class, 'Error during authentication: ' . $message, 3);
 

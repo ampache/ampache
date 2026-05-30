@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -24,6 +26,7 @@
 namespace Ampache\Module\Art\Export;
 
 use Ahc\Cli\IO\Interactor;
+use Ampache\Module\Art\Export\Writer\MetadataWriterInterface;
 
 interface ArtExporterInterface
 {
@@ -32,7 +35,7 @@ interface ArtExporterInterface
      */
     public function export(
         Interactor $interactor,
-        Writer\MetadataWriterInterface $metadataWriter,
+        MetadataWriterInterface $metadataWriter,
         bool $clearData,
     ): void;
 }

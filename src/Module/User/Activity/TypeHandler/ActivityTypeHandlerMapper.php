@@ -27,7 +27,7 @@ namespace Ampache\Module\User\Activity\TypeHandler;
 
 use Ampache\Repository\UserActivityRepositoryInterface;
 
-final class ActivityTypeHandlerMapper implements ActivityTypeHandlerMapperInterface
+final readonly class ActivityTypeHandlerMapper implements ActivityTypeHandlerMapperInterface
 {
     private const array MAP = [
         ActivityTypeEnum::TYPE_SONG => SongActivityTypeHandler::class,
@@ -35,12 +35,8 @@ final class ActivityTypeHandlerMapper implements ActivityTypeHandlerMapperInterf
         ActivityTypeEnum::TYPE_ARTIST => ArtistActivityTypeHandler::class,
     ];
 
-    private UserActivityRepositoryInterface $userActivityRepository;
-
-    public function __construct(
-        UserActivityRepositoryInterface $userActivityRepository,
-    ) {
-        $this->userActivityRepository = $userActivityRepository;
+    public function __construct(private UserActivityRepositoryInterface $userActivityRepository)
+    {
     }
 
     /**

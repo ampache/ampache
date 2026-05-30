@@ -100,13 +100,13 @@ class AmpacheMpd extends localplay_controller
         $sql = <<<SQL
             CREATE TABLE `localplay_mpd` (
                 `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                `name` VARCHAR(128) COLLATE $collation NOT NULL,
+                `name` VARCHAR(128) COLLATE {$collation} NOT NULL,
                 `owner` INT(11) NOT NULL,
-                `host` VARCHAR(255) COLLATE $collation NOT NULL,
+                `host` VARCHAR(255) COLLATE {$collation} NOT NULL,
                 `port` INT(11) UNSIGNED NOT NULL DEFAULT '6600',
-                `password` VARCHAR(255) COLLATE $collation NOT NULL,
+                `password` VARCHAR(255) COLLATE {$collation} NOT NULL,
                 `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0'
-            ) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation
+            ) ENGINE = {$engine} DEFAULT CHARSET={$charset} COLLATE={$collation}
             SQL;
         Dba::query($sql);
 
@@ -241,13 +241,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function instance_fields(): array
     {
-        $fields             = [];
-        $fields['name']     = ['description' => T_('Instance Name'), 'type' => 'text'];
-        $fields['host']     = ['description' => T_('Hostname'), 'type' => 'text'];
-        $fields['port']     = ['description' => T_('Port'), 'type' => 'number'];
-        $fields['password'] = ['description' => T_('Password'), 'type' => 'password'];
-
-        return $fields;
+        return ['name' => ['description' => T_('Instance Name'), 'type' => 'text'], 'host' => ['description' => T_('Hostname'), 'type' => 'text'], 'port' => ['description' => T_('Port'), 'type' => 'number'], 'password' => ['description' => T_('Password'), 'type' => 'password']];
     }
 
     /**
@@ -260,6 +254,7 @@ class AmpacheMpd extends localplay_controller
         if (!$user instanceof User) {
             return false;
         }
+
         Preference::update(self::ACTIVE_PREF, $user->id, $uid);
         AmpConfig::set(self::ACTIVE_PREF, $uid, true);
         debug_event(self::class, 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
@@ -357,6 +352,7 @@ class AmpacheMpd extends localplay_controller
         if (!$this->_mpd->SkipTo($track_id)) {
             return false;
         }
+
         sleep(2);
         $this->stop();
         sleep(2);
@@ -527,7 +523,7 @@ class AmpacheMpd extends localplay_controller
                             case 'live_stream':
                                 /** @var Live_Stream $media */
                                 $site_url     = ($media->site_url) ? '(' . $media->site_url . ')' : '';
-                                $data['name'] = "$media->name $site_url";
+                                $data['name'] = sprintf('%s %s', $media->name, $site_url);
                                 $data['link'] = (string)$media->site_url;
                                 break;
                         } // end switch on type
@@ -538,6 +534,7 @@ class AmpacheMpd extends localplay_controller
                         $data['name'] = $title_string;
                         $data['link'] = '';
                     }
+
                     break;
             } // end switch on primary key type
 
@@ -584,7 +581,7 @@ class AmpacheMpd extends localplay_controller
 
         debug_event(self::class, 'Status result. Current song (' . $track . ') info: ' . json_encode($playlist_item), 5);
 
-        if (count($url_data) > 0 && array_key_exists('oid', $url_data) && !empty($url_data['oid'])) {
+        if ($url_data !== [] && array_key_exists('oid', $url_data) && !empty($url_data['oid'])) {
             $song = new Song($url_data['oid']);
             if ($song->isNew()) {
                 $array['track_title']  = T_('Unknown');

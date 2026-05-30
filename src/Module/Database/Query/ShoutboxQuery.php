@@ -95,22 +95,15 @@ final class ShoutboxQuery implements QueryInterface
      */
     public function get_sql_sort($query, $field, $order): string
     {
-        switch ($field) {
-            case 'date':
-            case 'id':
-            case 'object_type':
-            case 'sticky':
-            case 'user':
-                $sql = "`user_shout`.`$field`";
-                break;
-            default:
-                $sql = '';
-        }
+        $sql = match ($field) {
+            'date', 'id', 'object_type', 'sticky', 'user' => sprintf('`user_shout`.`%s`', $field),
+            default => '',
+        };
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

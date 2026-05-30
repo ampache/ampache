@@ -33,14 +33,10 @@ use Ampache\Repository\Model\Podcast;
 /**
  * Provides functionality to build the podcasts root folder
  */
-final class PodcastFolderProvider implements PodcastFolderProviderInterface
+final readonly class PodcastFolderProvider implements PodcastFolderProviderInterface
 {
-    private CatalogLoaderInterface $catalogLoader;
-
-    public function __construct(
-        CatalogLoaderInterface $catalogLoader,
-    ) {
-        $this->catalogLoader = $catalogLoader;
+    public function __construct(private CatalogLoaderInterface $catalogLoader)
+    {
     }
 
     /**

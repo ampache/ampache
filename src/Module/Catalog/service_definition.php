@@ -25,6 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog;
 
+use Ampache\Module\Catalog\Export\CatalogExportFactory;
+use Ampache\Module\Catalog\Export\CatalogExportFactoryInterface;
+use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollector;
+use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Catalog\Update\AddCatalog;
 use Ampache\Module\Catalog\Update\AddCatalogInterface;
 use Ampache\Module\Catalog\Update\UpdateCatalog;
@@ -41,7 +45,7 @@ return [
     UpdateSingleCatalogFileInterface::class => autowire(UpdateSingleCatalogFile::class),
     UpdateSingleCatalogFolderInterface::class => autowire(UpdateSingleCatalogFolder::class),
     UpdateCatalogInterface::class => autowire(UpdateCatalog::class),
-    GarbageCollector\CatalogGarbageCollectorInterface::class => autowire(GarbageCollector\CatalogGarbageCollector::class),
-    Export\CatalogExportFactoryInterface::class => autowire(Export\CatalogExportFactory::class),
+    CatalogGarbageCollectorInterface::class => autowire(CatalogGarbageCollector::class),
+    CatalogExportFactoryInterface::class => autowire(CatalogExportFactory::class),
     CatalogLoaderInterface::class => autowire(CatalogLoader::class),
 ];

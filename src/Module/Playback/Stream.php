@@ -51,7 +51,7 @@ class Stream
      */
     public static function set_session(int|string $sid): void
     {
-        if (!empty($sid)) {
+        if ($sid !== 0 && ($sid !== '' && $sid !== '0')) {
             self::$session = (string)$sid;
         }
     }
@@ -61,7 +61,7 @@ class Stream
      */
     public static function get_session(): string
     {
-        if (!self::$session) {
+        if (self::$session === '' || self::$session === '0') {
             // Generate the session ID.  This is slightly wasteful.
             $data         = [];
             $data['type'] = 'stream';
@@ -78,9 +78,11 @@ class Stream
                 if (isset($location['latitude'])) {
                     $data['geo_latitude'] = $location['latitude'];
                 }
+
                 if (isset($location['longitude'])) {
                     $data['geo_longitude'] = $location['longitude'];
                 }
+
                 if (isset($location['name'])) {
                     $data['geo_name'] = $location['name'];
                 }
@@ -103,30 +105,35 @@ class Stream
     ): ?string {
         // check if we've done this before
         $format = self::get_output_cache($source, $target, $player, $media_type);
-        if (!empty($format)) {
+        if ($format !== '' && $format !== '0') {
             return $format;
         }
+
         $input_target = $target;
         // default target for songs
         $setting_target = 'encode_target';
         // default target for video
-        if ($media_type != 'song') {
+        if ($media_type !== 'song') {
             $setting_target = 'encode_' . $media_type . '_target';
         }
-        if (!$player && in_array($media_type, ['song', 'podcast_episode'])) {
+
+        if (!$player && in_array($media_type, ['song', 'podcast_episode'], true)) {
             $player = 'webplayer';
         }
+
         // webplayer / api transcode actions
         $has_player_target = false;
         if ($player) {
             // encode target for songs in webplayer/api
             $encode_target = 'encode_player_' . $player . '_target';
-            if ($media_type != 'song') {
+            if ($media_type !== 'song') {
                 // encode target for video in webplayer/api
                 $encode_target = 'encode_' . $media_type . '_player_' . $player . '_target';
             }
+
             $has_player_target = AmpConfig::get($encode_target);
         }
+
         $has_default_target = AmpConfig::get($setting_target);
         $has_codec_target   = AmpConfig::get('encode_target_' . $source);
 
@@ -144,10 +151,12 @@ class Stream
             $target = $has_default_target;
             debug_event(self::class, 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
         }
+
         // fall back to resampling if no default
         if (!$target) {
             $target = $source;
         }
+
         self::set_output_cache($target, $source, $input_target, $player, $media_type);
 
         return $target;
@@ -226,6 +235,7 @@ class Stream
         if ($transcode != 'required') {
             $types[] = 'native';
         }
+
         if (make_bool($transcode)) {
             $types[] = 'transcode';
         }
@@ -259,9 +269,11 @@ class Stream
         if (AmpConfig::get('encode_ss_frame') && array_key_exists('frame', $options)) {
             $args .= ' ' . AmpConfig::get('encode_ss_frame');
         }
+
         if (AmpConfig::get('encode_ss_duration') && array_key_exists('duration', $options)) {
             $args .= ' ' . AmpConfig::get('encode_ss_duration');
         }
+
         $args .= ' ' . AmpConfig::get('transcode_input');
 
         if (AmpConfig::get('encode_srt') && array_key_exists('subtitle', $options)) {
@@ -278,6 +290,7 @@ class Stream
 
             return [];
         }
+
         $args .= ' ' . $argst;
 
         debug_event(self::class, 'Command: ' . $cmd . ' Arguments:' . $args, 5);
@@ -317,6 +330,7 @@ class Stream
         if (empty($GLOBALS['transcode']) || !is_array($GLOBALS['transcode'])) {
             $GLOBALS['transcode'] = [];
         }
+
         $GLOBALS['transcode'][$source][$target ?? ''][$player ?? ''][$media_type] = $output;
     }
 
@@ -344,58 +358,58 @@ class Stream
             $out_file = $options;
             $options  = [];
         }
+
         // Bail out early if we're unutterably broken
-        if (empty($transcode_settings)) {
+        if ($transcode_settings === []) {
             debug_event(self::class, 'Transcode requested, but get_transcode_settings failed', 2);
 
             return [];
         }
+
         $song_file = self::scrub_arg($media->file);
-        $bit_rate  = (isset($options['bitrate']))
-            ? $options['bitrate']
-            : self::get_max_bitrate($media, $transcode_settings, $options);
+        $bit_rate  = $options['bitrate'] ?? self::get_max_bitrate($media, $transcode_settings, $options);
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
 
         // Finalise the command line
-        $command    = (string)$transcode_settings['command'];
+        $command    = $transcode_settings['command'];
         $string_map = [
             '%FILE%' => $song_file,
             '%SAMPLE%' => $bit_rate, // Deprecated
             '%BITRATE%' => $bit_rate
         ];
-        $string_map['%MAXBITRATE%'] = (isset($options['maxbitrate']))
-            ? $options['maxbitrate']
-            : 8000;
+        $string_map['%MAXBITRATE%'] = $options['maxbitrate'] ?? 8000;
         if ($media instanceof Video) {
-            $string_map['%RESOLUTION%'] = (isset($options['resolution']))
-                ? $options['resolution']
-                : $media->get_f_resolution() ?? '1280x720';
-            $string_map['%QUALITY%'] = (isset($options['quality']))
+            $string_map['%RESOLUTION%'] = $options['resolution'] ?? $media->get_f_resolution() ?? '1280x720';
+            $string_map['%QUALITY%']    = (isset($options['quality']))
                 ? (31 * (101 - $options['quality'])) / 100
                 : 10;
         }
+
         if (isset($options['frame'])) {
             $frame                = gmdate("H:i:s", (int)$options['frame']);
             $string_map['%TIME%'] = $frame;
         }
+
         if (isset($options['duration'])) {
             $duration                 = gmdate("H:i:s", (int)$options['duration']);
             $string_map['%DURATION%'] = $duration;
         }
+
         if (!empty($options['subtitle'])) {
             // This is too specific to ffmpeg/avconv
             $string_map['%SRTFILE%'] = str_replace(':', '\:', self::scrub_arg($options['subtitle']));
         }
 
         foreach ($string_map as $search => $replace) {
-            $command = (string)str_replace($search, (string)$replace, $command, $ret);
-            if (!$ret) {
-                debug_event(self::class, "$search not in transcode command", 5);
+            $command = str_replace($search, (string)$replace, $command, $ret);
+            if ($ret === 0) {
+                debug_event(self::class, $search . ' not in transcode command', 5);
             }
         }
+
         if ($out_file) {
             // when running cache_catalog_proc redirect to the file path instead of piping
-            $command = (string)str_replace("pipe:1", $out_file, (string)$command);
+            $command = str_replace("pipe:1", $out_file, (string)$command);
             debug_event(self::class, 'Final command is ' . $command, 4);
             $process = proc_open($command, [], $pipes);
             if (is_resource($process)) {
@@ -433,14 +447,15 @@ class Stream
         array $options,
     ): int {
         // don't ignore user bitrates
-        $bit_rate = (int)self::get_allowed_bitrate();
+        $bit_rate = self::get_allowed_bitrate();
         if (!array_key_exists('bitrate', $options)) {
             // Validate the bitrate
             $bit_rate = self::validate_bitrate($bit_rate);
-        } elseif ($bit_rate > ((int)$options['bitrate']) || $bit_rate == 0) {
+        } elseif ($bit_rate > ((int)$options['bitrate']) || $bit_rate === 0) {
             // use the file bitrate if lower than the gathered
             $bit_rate = $options['bitrate'];
         }
+
         debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
 
         // Never upsample a media
@@ -475,11 +490,12 @@ class Stream
                 '%TIME%' => $frame
             ];
             foreach ($string_map as $search => $replace) {
-                $command = (string)str_replace($search, $replace, $command, $ret);
-                if (!$ret) {
-                    debug_event(self::class, "$search not in transcode command", 5);
+                $command = str_replace($search, $replace, $command, $ret);
+                if ($ret === 0) {
+                    debug_event(self::class, $search . ' not in transcode command', 5);
                 }
             }
+
             $proc = self::start_process($command);
 
             if (is_resource($proc['handle'])) {
@@ -487,6 +503,7 @@ class Stream
                 do {
                     $image .= fread($proc['handle'], 1024);
                 } while (!feof($proc['handle']));
+
                 fclose($proc['handle']);
             }
         } else {
@@ -550,7 +567,7 @@ class Stream
             $pid = $status['pid'];
             debug_event(self::class, 'WARNING Stream is probably being killed early! pid:' . $pid, 1);
 
-            (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') ? exec("kill -9 $pid") : exec("taskkill /F /T /PID $pid");
+            (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') ? exec('kill -9 ' . $pid) : exec('taskkill /F /T /PID ' . $pid);
 
             proc_close($transcoder['process']);
         } else {
@@ -565,7 +582,7 @@ class Stream
     public static function validate_bitrate(int $bitrate): int
     {
         /* Round to standard bitrates */
-        return (int) (16 * (floor((int) $bitrate / 16)));
+        return (int) (16 * (floor($bitrate / 16)));
     }
 
     /**
@@ -597,9 +614,10 @@ class Stream
         if (!$previous) {
             $previous = time();
         }
+
         // Ensure that this client only has a single row
         $sql = "REPLACE INTO `now_playing` (`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) VALUES (?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, [$sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), $previous]);
+        Dba::write($sql, [$sid, $object_id, strtolower($type), $uid, time() + $length, $previous]);
     }
 
     /**
@@ -611,7 +629,7 @@ class Stream
     {
         // Clear the now playing entry for this item
         $sql = "DELETE FROM `now_playing` WHERE `id` = ? AND `object_id` = ? AND `object_type` = ? AND `user` = ?;";
-        Dba::write($sql, [$sid, $object_id, strtolower((string) $type), $uid]);
+        Dba::write($sql, [$sid, $object_id, strtolower($type), $uid]);
     }
 
     /**
@@ -647,16 +665,16 @@ class Stream
         if (AmpConfig::get('now_playing_per_user')) {
             $sql .= "INNER JOIN (SELECT MAX(`insertion`) AS `max_insertion`, `user` FROM `now_playing` GROUP BY `user`) `np2` ON `np`.`user` = `np2`.`user` AND `np`.`insertion` = `np2`.`max_insertion` ";
         }
+
         $sql .= "WHERE `np`.`object_type` IN ('song', 'video') ";
 
-        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
-            // We need to check only for users which have allowed view of personal info
-            if (Core::get_global('user') instanceof User) {
-                $current_user = Core::get_global('user')->getId();
-                $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`name`='allow_personal_info_now' AND `value`='1') OR `user` = ?))) ";
-                $params[] = $current_user;
-            }
+        // We need to check only for users which have allowed view of personal info
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) && Core::get_global('user') instanceof User) {
+            $current_user = Core::get_global('user')->getId();
+            $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`name`='allow_personal_info_now' AND `value`='1') OR `user` = ?))) ";
+            $params[] = $current_user;
         }
+
         $sql .= "ORDER BY `np`.`expire` DESC";
         //debug_event(self::class, 'get_now_playing ' . $sql, 5);
 
@@ -669,7 +687,8 @@ class Stream
             if ($media->isNew()) {
                 continue;
             }
-            if (($user_id === 0 || (int)$row['user'] == $user_id) && Catalog::has_access($media->getCatalogId(), (int)$row['user'])) {
+
+            if (($user_id === 0 || (int)$row['user'] === $user_id) && Catalog::has_access($media->getCatalogId(), (int)$row['user'])) {
                 $client = new User($row['user']);
                 if ($client->isNew()) {
                     continue;
@@ -697,7 +716,7 @@ class Stream
         $sql        = "SELECT `object_id` FROM `now_playing` WHERE `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, [$media_id, $type]);
 
-        if (Dba::num_rows($db_results)) {
+        if (Dba::num_rows($db_results) !== 0) {
             debug_event(self::class, 'Unable to play media currently locked by another user', 3);
 
             return false;
@@ -752,10 +771,11 @@ class Stream
         if (AmpConfig::get('use_play2')) {
             $base_url .= 'action=play2&';
         }
+
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            $session_id = (!empty($streamToken))
-                ? $streamToken
-                : self::get_session();
+            $session_id = (in_array($streamToken, [null, '', '0'], true))
+                ? self::get_session()
+                : $streamToken;
             $base_url .= 'ssid=' . $session_id . '&';
         }
 
@@ -774,7 +794,7 @@ class Stream
             ? $matches[1]
             : AmpConfig::get('http_port');
         if (!empty($http_port) && $http_port != 80 && $http_port != 443) {
-            if (preg_match("/:(\d+)/", $web_path, $matches)) {
+            if (preg_match("/:(\d+)/", (string) $web_path, $matches)) {
                 $web_path = str_replace(':' . $matches[1], ':' . $http_port, (string)$web_path);
             } else {
                 $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, (string)$web_path);

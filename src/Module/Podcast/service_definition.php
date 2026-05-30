@@ -25,6 +25,12 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast;
 
+use Ampache\Module\Podcast\Exchange\PodcastExporterInterface;
+use Ampache\Module\Podcast\Exchange\PodcastOpmlExporter;
+use Ampache\Module\Podcast\Exchange\PodcastOpmlImporter;
+use Ampache\Module\Podcast\Exchange\PodcastOpmlImporterInterface;
+use Ampache\Module\Podcast\Exchange\PodcastOpmlLoader;
+use Ampache\Module\Podcast\Exchange\PodcastOpmlLoaderInterface;
 use Ampache\Module\Podcast\Feed\FeedLoader;
 use Ampache\Module\Podcast\Feed\FeedLoaderInterface;
 
@@ -41,7 +47,7 @@ return [
     FeedLoaderInterface::class => autowire(FeedLoader::class),
     PodcastFolderProviderInterface::class => autowire(PodcastFolderProvider::class),
     PodcastDeleterInterface::class => autowire(PodcastDeleter::class),
-    Exchange\PodcastExporterInterface::class => autowire(Exchange\PodcastOpmlExporter::class),
-    Exchange\PodcastOpmlLoaderInterface::class => autowire(Exchange\PodcastOpmlLoader::class),
-    Exchange\PodcastOpmlImporterInterface::class => autowire(Exchange\PodcastOpmlImporter::class),
+    PodcastExporterInterface::class => autowire(PodcastOpmlExporter::class),
+    PodcastOpmlLoaderInterface::class => autowire(PodcastOpmlLoader::class),
+    PodcastOpmlImporterInterface::class => autowire(PodcastOpmlImporter::class),
 ];

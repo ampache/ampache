@@ -27,12 +27,14 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Repository\Model\Preference;
+use Override;
 
 final class AdminUpdatePreferenceAccessLevelCommand extends Command
 {
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -63,7 +65,7 @@ final class AdminUpdatePreferenceAccessLevelCommand extends Command
         $dryRun     = $this->values()['execute'] === false;
         $level      = $this->values()['level'];
 
-        if ($dryRun === true) {
+        if ($dryRun) {
             $interactor->info(
                 "\n" . T_('Running in Test Mode. Use -e|--execute to update'),
                 true

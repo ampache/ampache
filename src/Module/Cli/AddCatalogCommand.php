@@ -27,14 +27,14 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Catalog\Update\AddCatalogInterface;
+use Override;
 
 final class AddCatalogCommand extends Command
 {
-    private AddCatalogInterface $addCatalog;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -42,11 +42,9 @@ final class AddCatalogCommand extends Command
     }
 
     public function __construct(
-        AddCatalogInterface $addCatalog,
+        private readonly AddCatalogInterface $addCatalog,
     ) {
         parent::__construct('run:addCatalog', T_('Create a local media catalog'));
-
-        $this->addCatalog = $addCatalog;
 
         $this
             ->argument('[catalogName]', T_('Catalog name'))

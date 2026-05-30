@@ -36,6 +36,7 @@ use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Deprecated;
 
 /**
  * AmpacheHttpq Class
@@ -97,13 +98,13 @@ class AmpacheHttpq extends localplay_controller
         $sql = <<<SQL
         CREATE TABLE `localplay_httpq` (
             `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            `name` VARCHAR(128) COLLATE $collation NOT NULL,
+            `name` VARCHAR(128) COLLATE {$collation} NOT NULL,
             `owner` INT(11) NOT NULL,
-            `host` VARCHAR(255) COLLATE $collation NOT NULL,
+            `host` VARCHAR(255) COLLATE {$collation} NOT NULL,
             `port` INT(11) UNSIGNED NOT NULL,
-            `password` VARCHAR(255) COLLATE $collation NOT NULL,
+            `password` VARCHAR(255) COLLATE {$collation} NOT NULL,
             `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0'
-        ) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation
+        ) ENGINE = {$engine} DEFAULT CHARSET={$charset} COLLATE={$collation}
         SQL;
         Dba::query($sql);
 
@@ -204,13 +205,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function instance_fields(): array
     {
-        $fields             = [];
-        $fields['name']     = ['description' => T_('Instance Name'), 'type' => 'text'];
-        $fields['host']     = ['description' => T_('Hostname'), 'type' => 'text'];
-        $fields['port']     = ['description' => T_('Port'), 'type' => 'number'];
-        $fields['password'] = ['description' => T_('Password'), 'type' => 'password'];
-
-        return $fields;
+        return ['name' => ['description' => T_('Instance Name'), 'type' => 'text'], 'host' => ['description' => T_('Hostname'), 'type' => 'text'], 'port' => ['description' => T_('Port'), 'type' => 'number'], 'password' => ['description' => T_('Password'), 'type' => 'password']];
     }
 
     /**
@@ -257,6 +252,7 @@ class AmpacheHttpq extends localplay_controller
         if (!$user instanceof User) {
             return false;
         }
+
         Preference::update(self::ACTIVE_PREF, $user->id, $uid);
         AmpConfig::set(self::ACTIVE_PREF, $uid, true);
         debug_event(self::class, 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
@@ -284,7 +280,7 @@ class AmpacheHttpq extends localplay_controller
     public function add_url(Stream_Url $url): bool
     {
         if ($this->_httpq->add($url->title, $url->url) === null) {
-            debug_event(self::class, 'add_url failed to add ' . (string)$url->url, 1);
+            debug_event(self::class, 'add_url failed to add ' . $url->url, 1);
 
             return false;
         }
@@ -335,7 +331,7 @@ class AmpacheHttpq extends localplay_controller
             return true;
         }
 
-        return (! ($this->_httpq->play() === null));
+        return ($this->_httpq->play() !== null);
     }
 
     /**
@@ -345,7 +341,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function stop(): bool
     {
-        return (! ($this->_httpq->stop() === null));
+        return ($this->_httpq->stop() !== null);
     }
 
     /**
@@ -354,7 +350,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function skip(int $track_id): bool
     {
-        return (! ($this->_httpq->skip($track_id) === null));
+        return ($this->_httpq->skip($track_id) !== null);
     }
 
     /**
@@ -379,7 +375,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function next(): bool
     {
-        return (! ($this->_httpq->next() === null));
+        return ($this->_httpq->next() !== null);
     }
 
     /**
@@ -388,7 +384,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function prev(): bool
     {
-        return (! ($this->_httpq->prev() === null));
+        return ($this->_httpq->prev() !== null);
     }
 
     /**
@@ -397,7 +393,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function pause(): bool
     {
-        return (! ($this->_httpq->pause() === null));
+        return ($this->_httpq->pause() !== null);
     }
 
     /**
@@ -417,7 +413,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function repeat(bool $state): bool
     {
-        return (! ($this->_httpq->repeat($state) === null));
+        return ($this->_httpq->repeat($state) !== null);
     }
 
     /**
@@ -427,7 +423,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function random(bool $state): bool
     {
-        return (! ($this->_httpq->random($state) === null));
+        return ($this->_httpq->random($state) !== null);
     }
 
     /**
@@ -445,7 +441,7 @@ class AmpacheHttpq extends localplay_controller
             return [];
         }
 
-        $songs   = explode("::", $list);
+        $songs   = explode("::", (string) $list);
         $results = [];
 
         foreach ($songs as $key => $entry) {
@@ -469,7 +465,7 @@ class AmpacheHttpq extends localplay_controller
                     $data['link'] = '';
                     break;
                 case 'random':
-                    $data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst($url_data['type']));
+                    $data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst((string) $url_data['type']));
                     $data['link'] = '';
                     break;
                 default:
@@ -496,7 +492,7 @@ class AmpacheHttpq extends localplay_controller
                                 case 'live_stream':
                                     /** @var Live_Stream $media */
                                     $site_url     = ($media->site_url) ? '(' . $media->site_url . ')' : '';
-                                    $data['name'] = "$media->name $site_url";
+                                    $data['name'] = sprintf('%s %s', $media->name, $site_url);
                                     $data['link'] = $media->site_url;
                                     break;
                             } // end switch on type
@@ -566,12 +562,10 @@ class AmpacheHttpq extends localplay_controller
 
         $this->_httpq = new HttpQPlayer($options['host'], $options['password'], $options['port']);
 
-        return ($this->_httpq->version() !== false); // Test our connection by retrieving the version
+        return ($this->_httpq->version()); // Test our connection by retrieving the version
     }
 
-    /**
-     * @deprecated Inject dependency
-     */
+    #[Deprecated(message: 'Inject dependency')]
     private function getLibraryItemLoader(): LibraryItemLoaderInterface
     {
         global $dic;

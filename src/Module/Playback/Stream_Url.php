@@ -27,6 +27,7 @@ namespace Ampache\Module\Playback;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\MemoryObject;
+use Override;
 
 /**
  * Stream_Url Class
@@ -45,6 +46,7 @@ use Ampache\Module\Util\MemoryObject;
  */
 class Stream_Url extends MemoryObject
 {
+    #[Override]
     public $properties = [
         'url',
         'info_url',
@@ -66,9 +68,10 @@ class Stream_Url extends MemoryObject
      */
     public static function parse(string $url): array
     {
-        if (empty($url)) {
+        if ($url === '' || $url === '0') {
             return [];
         }
+
         if (AmpConfig::get('stream_beautiful_url')) {
             $posargs = strpos($url, '/play/');
             if ($posargs !== false) {
@@ -80,6 +83,7 @@ class Stream_Url extends MemoryObject
                     if ($index > 0) {
                         $url .= '&';
                     }
+
                     $url .= $args[$index] . '=' . $args[$index + 1];
                 }
             }
@@ -93,8 +97,8 @@ class Stream_Url extends MemoryObject
 
         if (is_array($elements)) {
             foreach ($elements as $element) {
-                if (strpos((string)$element, '=')) {
-                    list($key, $value) = explode('=', $element);
+                if (strpos($element, '=')) {
+                    [$key, $value] = explode('=', $element);
                     switch ($key) {
                         case 'oid':
                             $key = 'id';
@@ -103,19 +107,23 @@ class Stream_Url extends MemoryObject
                             if (make_bool($value)) {
                                 $results['type'] = 'video';
                             }
+
                             break;
                         case 'demo_id':
                             if (make_bool($value)) {
                                 $results['type'] = 'democratic';
                             }
+
                             break;
                         case 'random_id':
                             if (make_bool($value)) {
                                 $results['type'] = 'random';
                             }
+
                             break;
                     }
-                    if (!empty($value)) {
+
+                    if ($value !== '' && $value !== '0') {
                         $results[$key] = $value;
                     }
                 }
@@ -141,11 +149,12 @@ class Stream_Url extends MemoryObject
 
             if (count($curel) > 2) {
                 foreach ($newel as $urlParameter) {
-                    if (strpos((string)$urlParameter, '=')) {
+                    if (strpos($urlParameter, '=')) {
                         $element = explode('=', $urlParameter);
                         array_splice($curel, count($curel) - 2, 0, $element);
                     }
                 }
+
                 $url = implode('/', $curel);
             }
         } else {

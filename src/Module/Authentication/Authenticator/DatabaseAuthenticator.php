@@ -73,6 +73,7 @@ final class DatabaseAuthenticator implements AuthenticatorInterface
                     ];
                 }
             }
+
             // subsonic password fallback for auth with apikey
             $sub_sql = 'SELECT `apikey` FROM `user` WHERE `username` = ?';
             $results = Dba::read($sub_sql, [$username]);

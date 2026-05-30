@@ -112,6 +112,7 @@ final class TagQuery implements QueryInterface
                 foreach ($value as $uid) {
                     $filter_sql .= (int)$uid . ',';
                 }
+
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
                 break;
             case 'equal':
@@ -129,11 +130,13 @@ final class TagQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `tag`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
                     $filter_sql = " `tag`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'starts_with':
                 $filter_sql = " `tag`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -181,10 +184,10 @@ final class TagQuery implements QueryInterface
             case 'album':
             case 'song':
             case 'video':
-                $sql = "`tag`.`$field`";
+                $sql = sprintf('`tag`.`%s`', $field);
                 break;
             case 'rating':
-                $sql = "`rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`tag`.`id`", "`rating`.`object_type`", "'tag'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
@@ -193,7 +196,7 @@ final class TagQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`tag`.`id`", "`user_flag`.`object_type`", "'tag'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag_rating':
-                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`tag`.`id`", "`user_flag`.`object_type`", "'tag'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`tag`.`id`", "`rating`.`object_type`", "'tag'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
@@ -201,10 +204,10 @@ final class TagQuery implements QueryInterface
                 $sql = '';
         }
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

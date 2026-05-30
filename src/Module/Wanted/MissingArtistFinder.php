@@ -28,14 +28,10 @@ namespace Ampache\Module\Wanted;
 use MusicBrainz\Exception;
 use MusicBrainz\MusicBrainz;
 
-final class MissingArtistFinder implements MissingArtistFinderInterface
+final readonly class MissingArtistFinder implements MissingArtistFinderInterface
 {
-    private MusicBrainz $musicBrainz;
-
-    public function __construct(
-        MusicBrainz $musicBrainz,
-    ) {
-        $this->musicBrainz = $musicBrainz;
+    public function __construct(private MusicBrainz $musicBrainz)
+    {
     }
 
     /**
@@ -54,12 +50,10 @@ final class MissingArtistFinder implements MissingArtistFinderInterface
             }
 
             return array_map(
-                static function ($result): array {
-                    return [
-                        'mbid' => $result->id,
-                        'name' => $result->name,
-                    ];
-                },
+                static fn ($result): array => [
+                    'mbid' => $result->id,
+                    'name' => $result->name,
+                ],
                 (array)$this->musicBrainz->search($filter)
             );
         } catch (Exception) {

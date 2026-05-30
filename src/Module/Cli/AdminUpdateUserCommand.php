@@ -28,16 +28,14 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use Override;
 
 final class AdminUpdateUserCommand extends Command
 {
-    private UserRepositoryInterface $userRepository;
-
-    private UserKeyGeneratorInterface $userKeyGenerator;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -45,13 +43,10 @@ final class AdminUpdateUserCommand extends Command
     }
 
     public function __construct(
-        UserRepositoryInterface $userRepository,
-        UserKeyGeneratorInterface $userKeyGenerator,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly UserKeyGeneratorInterface $userKeyGenerator,
     ) {
         parent::__construct('admin:updateUser', T_('Update User'));
-
-        $this->userRepository   = $userRepository;
-        $this->userKeyGenerator = $userKeyGenerator;
 
         $this
             ->option('-a|--apikey', T_('Generate new API key'), 'boolval', false)
@@ -87,7 +82,8 @@ final class AdminUpdateUserCommand extends Command
 
             return;
         }
-        if ($user->access == 100) {
+
+        if ($user->access === 100) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             $interactor->error(
                 sprintf(T_('Bad Request: %s'), $user->getUsername()),

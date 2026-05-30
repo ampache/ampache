@@ -26,14 +26,10 @@ namespace Ampache\Module\Label;
 use Ampache\Repository\LabelRepositoryInterface;
 use DateTime;
 
-final class LabelListUpdater implements LabelListUpdaterInterface
+final readonly class LabelListUpdater implements LabelListUpdaterInterface
 {
-    private LabelRepositoryInterface $labelRepository;
-
-    public function __construct(
-        LabelRepositoryInterface $labelRepository,
-    ) {
-        $this->labelRepository = $labelRepository;
+    public function __construct(private LabelRepositoryInterface $labelRepository)
+    {
     }
 
     /**
@@ -50,7 +46,7 @@ final class LabelListUpdater implements LabelListUpdaterInterface
         $filter_list  = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labelsComma);
         $editedLabels = (is_array($filter_list)) ? array_unique($filter_list) : [];
 
-        foreach ($clabels as $clid => $clv) {
+        foreach (array_keys($clabels) as $clid) {
             if ($clid) {
                 $clabel = $this->labelRepository->findById($clid);
 
@@ -81,13 +77,14 @@ final class LabelListUpdater implements LabelListUpdaterInterface
         }
 
         // Look if we need to add some new labels
-        foreach ($editedLabels as $key => $value) {
+        foreach ($editedLabels as $value) {
             if ($value != '') {
                 debug_event(self::class, 'Adding new label {' . $value . '}', 4);
                 $label_id = $this->labelRepository->lookup($value);
                 if ($label_id === 0) {
                     debug_event(self::class, 'Creating a label directly from artist editing is not allowed.', 3);
                 }
+
                 if ($label_id > 0) {
                     $clabel = $this->labelRepository->findById($label_id);
 
