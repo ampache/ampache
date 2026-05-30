@@ -109,7 +109,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 $user_id = (isset($_REQUEST['user_id']))
                     ? (int)$this->requestParser->getFromRequest('user_id')
-                    : $user->id ?? -1;
+                    : $user->id ?: -1;
                 $user_only = isset($_REQUEST['user_only']);
                 $ajax_page = 'stats';
                 if (AmpConfig::get('home_recently_played_all')) {
@@ -138,7 +138,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 $user_id = (isset($_REQUEST['user_id']))
                     ? (int)$this->requestParser->getFromRequest('user_id')
-                    : $user->id ?? -1;
+                    : $user->id ?: -1;
                 $user_only = isset($_REQUEST['user_only']);
                 $data      = Stats::get_recently_played($user_id, 'skip', 'song', $user_only);
                 $ajax_page = 'stats';
@@ -153,7 +153,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 $user_id = (isset($_REQUEST['user_id']))
                     ? (int)$this->requestParser->getFromRequest('user_id')
-                    : $user->id ?? -1;
+                    : $user->id ?: -1;
                 $user_only = isset($_REQUEST['user_only']);
                 $data      = Stats::get_recently_played($user_id, 'skip', 'song', $user_only);
                 $ajax_page = 'stats';

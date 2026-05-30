@@ -112,7 +112,7 @@ class Waveform
                                     return null;
                                 }
 
-                                $filepointer = $transcoder['handle'];
+                                $filepointer = $transcoder['handle'] ?? null;
                                 if (!is_resource($filepointer)) {
                                     debug_event(self::class, "Failed to open " . $media->file . " for waveform.", 3);
 
