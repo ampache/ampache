@@ -169,7 +169,7 @@ final class EditObjectAction extends AbstractEditAction
 
         xoutput_headers();
 
-        echo (string) xoutput_from_array(['id' => $object_id]);
+        echo xoutput_from_array(['id' => $object_id]);
 
         return null;
     }

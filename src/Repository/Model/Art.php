@@ -192,8 +192,7 @@ class Art extends database_object
             return true;
         }
 
-        $test  = false;
-        $image = false;
+        $test = false;
         if (!empty($source)) {
             $test  = true;
             $image = imagecreatefromstring($source);

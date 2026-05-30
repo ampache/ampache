@@ -24,6 +24,7 @@
 namespace Ampache\Module\Authentication\Ldap;
 
 use Ampache\Config\AmpConfig;
+use LDAP\Connection;
 
 /**
  * This class handles all the contacts with a LDAP server
@@ -88,10 +89,9 @@ class Ldap
      * Note: This does not open a connection. It checks whether
      * the given parameters are plausible and can be used to open a
      * connection as soon as one is needed.
-     * @return resource
      * @throws LdapException
      */
-    private static function connect()
+    private static function connect(): Connection
     {
         if (!$url = AmpConfig::get('ldap_url')) {
             throw new LdapException('Required configuration value missing: ldap_url');

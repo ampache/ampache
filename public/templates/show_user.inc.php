@@ -55,7 +55,7 @@ use Ampache\Repository\Model\Useractivity;
 
 $web_path = AmpConfig::get_web_path();
 
-/** @var User $current_user */
+/** @var User|null $current_user */
 $current_user = Core::get_global('user');
 $is_user      = ($current_user instanceof User && $client->id == $current_user->id);
 $last_seen    = ($client->last_seen) ? get_datetime((int) $client->last_seen) : T_('Never');
