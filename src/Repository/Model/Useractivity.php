@@ -67,7 +67,7 @@ class Useractivity extends database_object
 
     /**
      * this attempts to build a cache of the data from the passed activities all in one query
-     * @param list<int|string> $ids
+     * @param array<int|string> $ids
      */
     public static function build_cache(array $ids): bool
     {

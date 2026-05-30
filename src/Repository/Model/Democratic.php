@@ -56,10 +56,10 @@ class Democratic extends Tmp_Playlist
 
     public ?int $tmp_playlist = null;
 
-    /** @var list<int|string> $object_ids */
+    /** @var array<int|string> $object_ids */
     public array $object_ids = [];
 
-    /** @var list<int|string> $vote_ids */
+    /** @var array<int|string> $vote_ids */
     public array $vote_ids = [];
 
     public function __construct(?int $democratic_id = 0)
@@ -89,7 +89,7 @@ class Democratic extends Tmp_Playlist
     /**
      * build_vote_cache
      * This builds a vote cache of the objects we've got in the playlist
-     * @param list<int|string> $ids
+     * @param array<int|string> $ids
      */
     public static function build_vote_cache(array $ids): bool
     {

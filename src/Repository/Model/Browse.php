@@ -248,7 +248,7 @@ class Browse extends Query
      * This takes an array of objects
      * and requires the correct template based on the
      * type that we are currently browsing
-     * @param list<int|string>|null $object_ids
+     * @param array<int|string>|null $object_ids
      */
     public function show_objects(?array $object_ids = [], bool|array|string $argument = false, ?bool $skip_cookies = false): void
     {
