@@ -838,7 +838,7 @@ class Query
     /**
      * get_saved
      * This looks in the session for the saved stuff and returns what it finds.
-     * @return int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>
+     * @return list<int|string>|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>
      */
     public function get_saved(): array
     {

@@ -180,7 +180,7 @@ class Song_Preview extends database_object implements Media, playable_item
         while ($row = Dba::fetch_assoc($db_results)) {
             parent::add_to_cache('song_preview', $row['id'], $row);
             if ($row['artist']) {
-                $artists[$row['artist']] = $row['artist'];
+                $artists[] = (int)$row['artist'];
             }
         }
 
