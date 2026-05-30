@@ -35,7 +35,7 @@ use Ampache\Repository\Model\User;
 final class XmlOutput implements ApiOutputInterface
 {
     /**
-     * @param list<int|string> $result
+     * @param array<int|string> $result
      */
     public function podcastEpisodes(array $result, User $user, string $auth): string
     {
@@ -129,7 +129,7 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param list<int|string> $albums
+     * @param array<int|string> $albums
      * @param string[] $include
      *
      */

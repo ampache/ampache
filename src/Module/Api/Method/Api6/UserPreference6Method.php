@@ -67,19 +67,34 @@ final class UserPreference6Method
             return false;
         }
 
-        $results[0]['has_access'] = (((int)$results[0]['level']) <= $user->access);
-        if ($results[0]['type'] == 'special') {
-            $values = Preference::get_special_values($results[0]['name'], $user);
+        $preference = [
+            "id" => $results[0]['id'],
+            "name" => $results[0]['name'],
+            "level" => $results[0]['level'],
+            "description" => $results[0]['description'],
+            "value" => $results[0]['value'],
+            "type" => $results[0]['type'],
+            "category" => $results[0]['category'],
+            "subcategory" => $results[0]['subcategory'],
+            "has_access" => (((int)$results[0]['level']) <= $user->access),
+            "values" => [],
+        ];
+
+        if ($preference['type'] == 'special') {
+            $values = Preference::get_special_values($preference['name'], $user);
             if ($values) {
-                $results[0]['values'] = $values;
+                $preference['values'] = $values;
             }
+        } else {
+            unset($preference['values']);
         }
+
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($results[0], JSON_PRETTY_PRINT);
+                echo json_encode($preference, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::object_array($results, 'preference');
+                echo Xml6_Data::object_array($preference, 'preference');
         }
 
         return true;

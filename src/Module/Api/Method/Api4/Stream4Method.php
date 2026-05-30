@@ -57,7 +57,7 @@ final class Stream4Method
      *     id: string,
      *     type: string,
      *     bitrate?: int,
-     *     format?: int,
+     *     format?: string,
      *     offset?: int,
      *     length?: int,
      *     stats?: string,
