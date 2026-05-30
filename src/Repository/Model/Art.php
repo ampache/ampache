@@ -1060,6 +1060,7 @@ class Art extends database_object
 
         if ($dst_width < 1 || $dst_height < 1) {
             debug_event(self::class, 'Invalid thumbnail size: ' . $dst_width . 'x' . $dst_height, 1);
+
             return [];
         }
 

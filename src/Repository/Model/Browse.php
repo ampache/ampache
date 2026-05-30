@@ -876,4 +876,3 @@ class Browse extends Query
         return $dic->get(PodcastRepositoryInterface::class);
     }
 }
-
