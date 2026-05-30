@@ -45,7 +45,7 @@ final class CacheProcessCommand extends Command
     }
 
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         parent::__construct('run:cacheProcess', T_('Run the cache process'));
 

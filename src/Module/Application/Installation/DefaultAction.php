@@ -50,7 +50,7 @@ final class DefaultAction implements ApplicationActionInterface
 
     public function __construct(
         InstallationHelperInterface $installationHelper,
-        EnvironmentInterface $environment
+        EnvironmentInterface $environment,
     ) {
         $this->installationHelper = $installationHelper;
         $this->environment        = $environment;

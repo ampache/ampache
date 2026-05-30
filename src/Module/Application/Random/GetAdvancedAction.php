@@ -46,7 +46,7 @@ final class GetAdvancedAction implements ApplicationActionInterface
 
     public function __construct(
         UiInterface $ui,
-        VideoRepositoryInterface $videoRepository
+        VideoRepositoryInterface $videoRepository,
     ) {
         $this->ui              = $ui;
         $this->videoRepository = $videoRepository;

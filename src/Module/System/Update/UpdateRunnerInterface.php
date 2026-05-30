@@ -68,6 +68,6 @@ interface UpdateRunnerInterface
     public function runTableCheck(
         Traversable $updates,
         bool $migrate = false,
-        int $build = 0
+        int $build = 0,
     ): Iterator;
 }

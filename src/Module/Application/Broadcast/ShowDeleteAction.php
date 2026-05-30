@@ -48,7 +48,7 @@ final class ShowDeleteAction implements ApplicationActionInterface
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;

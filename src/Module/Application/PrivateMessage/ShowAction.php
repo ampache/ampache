@@ -50,7 +50,7 @@ final class ShowAction implements ApplicationActionInterface
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        PrivateMessageRepositoryInterface $pmRepository
+        PrivateMessageRepositoryInterface $pmRepository,
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;

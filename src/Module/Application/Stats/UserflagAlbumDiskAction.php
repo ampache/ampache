@@ -42,7 +42,7 @@ final readonly class UserflagAlbumDiskAction implements ApplicationActionInterfa
     public function __construct(
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
-        private ConfigContainerInterface $configContainer
+        private ConfigContainerInterface $configContainer,
     ) {
     }
 

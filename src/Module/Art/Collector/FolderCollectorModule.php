@@ -48,7 +48,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
     ) {
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
@@ -74,7 +74,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
     public function collectArt(
         Art $art,
         int $limit = 5,
-        array $data = []
+        array $data = [],
     ): array {
         if (!$limit) {
             $limit = 5;

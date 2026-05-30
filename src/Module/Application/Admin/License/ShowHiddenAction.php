@@ -48,7 +48,7 @@ final class ShowHiddenAction implements ApplicationActionInterface
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        LicenseRepositoryInterface $licenseRepository
+        LicenseRepositoryInterface $licenseRepository,
     ) {
         $this->ui                = $ui;
         $this->modelFactory      = $modelFactory;

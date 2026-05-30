@@ -58,7 +58,7 @@ class Ui implements UiInterface
     private static array $_image_cache = [];
 
     public function __construct(
-        private readonly ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
     }
 
@@ -71,7 +71,7 @@ class Ui implements UiInterface
         RssFeedTypeEnum $type,
         ?User $user = null,
         string $title = '',
-        ?array $params = null
+        ?array $params = null,
     ): string {
         $strparams = "";
         if (is_array($params)) {
@@ -721,7 +721,7 @@ class Ui implements UiInterface
         string $next_url,
         ?int $cancel = 0,
         ?string $form_name = 'confirmation',
-        ?bool $visible = true
+        ?bool $visible = true,
     ): void {
         $webPath = $this->configContainer->getWebPath();
 
@@ -748,7 +748,7 @@ class Ui implements UiInterface
     public function showContinue(
         string $title,
         string $text,
-        string $next_url
+        string $next_url,
     ): void {
         $webPath = $this->configContainer->getWebPath();
 
@@ -787,7 +787,7 @@ class Ui implements UiInterface
      */
     public function createPreferenceInput(
         string $name,
-        $value
+        $value,
     ): void {
         if (!Preference::has_access($name)) {
             if ($value == '1') {

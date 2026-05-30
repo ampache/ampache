@@ -56,7 +56,7 @@ final class ShowAction implements ApplicationActionInterface
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         LoggerInterface $logger,
-        AlbumRepositoryInterface $albumRepository
+        AlbumRepositoryInterface $albumRepository,
     ) {
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;

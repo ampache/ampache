@@ -191,7 +191,7 @@ class ConfigContainerTest extends MockeryTestCase
     #[DataProvider(methodName: 'featureEnabledDataProvider')]
     public function testIsFeatureEnabledReturnsExpectedState(
         $value,
-        bool $state
+        bool $state,
     ): void {
         $key = 'some-key';
 

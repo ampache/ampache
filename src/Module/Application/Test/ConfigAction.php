@@ -45,7 +45,7 @@ final class ConfigAction implements ApplicationActionInterface
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ResponseFactoryInterface $responseFactory
+        ResponseFactoryInterface $responseFactory,
     ) {
         $this->configContainer = $configContainer;
         $this->responseFactory = $responseFactory;

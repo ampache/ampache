@@ -19,7 +19,7 @@ trait UserAdminApplicationTrait
      */
     public function showGenericUserConfirmation(
         ServerRequestInterface $request,
-        callable $dialogCallback
+        callable $dialogCallback,
     ): ?ResponseInterface {
         $this->ui->showHeader();
 

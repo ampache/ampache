@@ -49,7 +49,7 @@ class CatalogExportFactoryTest extends TestCase
     #[DataProvider(methodName: 'exportTypeDataProvider')]
     public function testCreateFromExportTypeReturnsInstance(
         CatalogExportTypeEnum $exportType,
-        string $exporterClass
+        string $exporterClass,
     ): void {
         self::assertInstanceOf(
             $exporterClass,

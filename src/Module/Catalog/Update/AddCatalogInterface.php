@@ -34,6 +34,6 @@ interface AddCatalogInterface
         string $catalogType,
         string $mediaType,
         string $filePattern,
-        string $folderPattern
+        string $folderPattern,
     ): void;
 }

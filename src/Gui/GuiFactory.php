@@ -75,13 +75,13 @@ final readonly class GuiFactory implements GuiFactoryInterface
         private VideoRepositoryInterface $videoRepository,
         private UpdateInfoRepositoryInterface $updateInfoRepository,
         private UpdateHelperInterface $updateHelper,
-        private UpdaterInterface $updater
+        private UpdaterInterface $updater,
     ) {
     }
 
     public function createSongViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
-        Song $song
+        Song $song,
     ): SongViewAdapterInterface {
         return new SongViewAdapter(
             $this->configContainer,
@@ -94,7 +94,7 @@ final readonly class GuiFactory implements GuiFactoryInterface
     public function createAlbumViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
         Browse $browse,
-        Album $album
+        Album $album,
     ): AlbumViewAdapterInterface {
         return new AlbumViewAdapter(
             $this->configContainer,
@@ -110,7 +110,7 @@ final readonly class GuiFactory implements GuiFactoryInterface
     public function createAlbumDiskViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
         Browse $browse,
-        AlbumDisk $albumDisk
+        AlbumDisk $albumDisk,
     ): AlbumDiskViewAdapterInterface {
         return new AlbumDiskViewAdapter(
             $this->configContainer,
@@ -125,7 +125,7 @@ final readonly class GuiFactory implements GuiFactoryInterface
 
     public function createPlaylistViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
-        Playlist $playlist
+        Playlist $playlist,
     ): PlaylistViewAdapterInterface {
         return new PlaylistViewAdapter(
             $this->configContainer,
@@ -154,7 +154,7 @@ final readonly class GuiFactory implements GuiFactoryInterface
     }
 
     public function createCatalogDetails(
-        Catalog $catalog
+        Catalog $catalog,
     ): CatalogDetailsInterface {
         return new CatalogDetails(
             $this,
@@ -183,7 +183,7 @@ final readonly class GuiFactory implements GuiFactoryInterface
     public function createNewPlaylistDialogAdapter(
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        string $object_id
+        string $object_id,
     ): NewPlaylistDialogAdapterInterface {
         return new NewPlaylistDialogAdapter(
             $this->playlistLoader,

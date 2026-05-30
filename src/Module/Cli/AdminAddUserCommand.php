@@ -44,7 +44,7 @@ final class AdminAddUserCommand extends Command
     }
 
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         parent::__construct('admin:addUser', T_('Add a User'));
 
@@ -66,7 +66,7 @@ final class AdminAddUserCommand extends Command
     }
 
     public function execute(
-        string $username
+        string $username,
     ): void {
         $values     = $this->values();
         $interactor = $this->io();

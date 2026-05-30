@@ -46,7 +46,7 @@ final class LastFmCollectorModule implements CollectorModuleInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         LastFmQueryInterface $lastFmQuery,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->configContainer = $configContainer;
         $this->lastFmQuery     = $lastFmQuery;
@@ -71,7 +71,7 @@ final class LastFmCollectorModule implements CollectorModuleInterface
     public function collectArt(
         Art $art,
         int $limit = 5,
-        array $data = []
+        array $data = [],
     ): array {
         $images = [];
 

@@ -53,7 +53,7 @@ final class TagAction implements ApplicationActionInterface
         ConfigContainerInterface $configContainer,
         RequestParserInterface $requestParser,
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->configContainer = $configContainer;
         $this->requestParser   = $requestParser;

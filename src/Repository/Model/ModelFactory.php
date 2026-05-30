@@ -33,14 +33,14 @@ use Ampache\Module\Authorization\Access;
 final class ModelFactory implements ModelFactoryInterface
 {
     public function createPlaylist(
-        int $id
+        int $id,
     ): Playlist {
         return new Playlist($id);
     }
 
     public function createBrowse(
         ?int $browse_id = null,
-        bool $cached = true
+        bool $cached = true,
     ): Browse {
         return new Browse(
             (int) $browse_id,
@@ -49,7 +49,7 @@ final class ModelFactory implements ModelFactoryInterface
     }
 
     public function createSong(
-        ?int $songId = null
+        ?int $songId = null,
     ): Song {
         return new Song(
             (int) $songId
@@ -58,7 +58,7 @@ final class ModelFactory implements ModelFactoryInterface
 
     public function createRating(
         int $objectId,
-        string $typeId
+        string $typeId,
     ): Rating {
         return new Rating(
             $objectId,
@@ -67,31 +67,31 @@ final class ModelFactory implements ModelFactoryInterface
     }
 
     public function createUser(
-        ?int $userId = null
+        ?int $userId = null,
     ): User {
         return new User((int) $userId);
     }
 
     public function createAlbum(
-        ?int $albumId = null
+        ?int $albumId = null,
     ): Album {
         return new Album((int) $albumId);
     }
 
     public function createAlbumDisk(
-        ?int $albumDiskId = null
+        ?int $albumDiskId = null,
     ): AlbumDisk {
         return new AlbumDisk((int) $albumDiskId);
     }
 
     public function createArtist(
-        ?int $artistId = null
+        ?int $artistId = null,
     ): Artist {
         return new Artist((int) $artistId);
     }
 
     public function createWanted(
-        ?int $wantedId = null
+        ?int $wantedId = null,
     ): Wanted {
         return new Wanted((int) $wantedId);
     }
@@ -99,49 +99,49 @@ final class ModelFactory implements ModelFactoryInterface
     public function createArt(
         ?int $artId = null,
         string $type = 'album',
-        string $kind = 'default'
+        string $kind = 'default',
     ): Art {
         return new Art((int) $artId, $type, $kind);
     }
 
     public function createBroadcast(
-        int $broadcastId
+        int $broadcastId,
     ): Broadcast {
         return new Broadcast($broadcastId);
     }
 
     public function createLiveStream(
-        int $liveStreamId
+        int $liveStreamId,
     ): Live_Stream {
         return new Live_Stream($liveStreamId);
     }
 
     public function createPodcast(
-        int $podcastId
+        int $podcastId,
     ): Podcast {
         return new Podcast($podcastId);
     }
 
     public function createPodcastEpisode(
-        int $podcastEpisodeId
+        int $podcastEpisodeId,
     ): Podcast_Episode {
         return new Podcast_Episode($podcastEpisodeId);
     }
 
     public function createPrivateMsg(
-        int $privateMessageId
+        int $privateMessageId,
     ): PrivateMessageInterface {
         return new PrivateMsg($privateMessageId);
     }
 
     public function createDemocratic(
-        int $democraticId
+        int $democraticId,
     ): Democratic {
         return new Democratic($democraticId);
     }
 
     public function createTmpPlaylist(
-        int $tmpPlaylistId
+        int $tmpPlaylistId,
     ): Tmp_Playlist {
         return new Tmp_Playlist($tmpPlaylistId);
     }
@@ -149,19 +149,19 @@ final class ModelFactory implements ModelFactoryInterface
     public function createSearch(
         ?int $searchId = 0,
         string $searchType = 'song',
-        ?User $user = null
+        ?User $user = null,
     ): Search {
         return new Search((int) $searchId, $searchType, $user);
     }
 
     public function createAccess(
-        int $accessId
+        int $accessId,
     ): Access {
         return new Access($accessId);
     }
 
     public function createVideo(
-        int $videoId
+        int $videoId,
     ): Video {
         return new Video($videoId);
     }

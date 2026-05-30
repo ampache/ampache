@@ -38,7 +38,7 @@ final class ShowAction implements ApplicationActionInterface
     private UiInterface $ui;
 
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->ui = $ui;
     }

@@ -53,7 +53,7 @@ class Metadata
 
     public function __construct(
         private readonly MetadataRepositoryInterface $metadataRepository,
-        private readonly MetadataFieldRepositoryInterface $metadataFieldRepository
+        private readonly MetadataFieldRepositoryInterface $metadataFieldRepository,
     ) {
     }
 

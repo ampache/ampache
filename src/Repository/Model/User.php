@@ -810,7 +810,7 @@ class User extends database_object
         ?string $state = '',
         ?string $city = '',
         ?bool $disabled = false,
-        ?bool $encrypted = false
+        ?bool $encrypted = false,
     ): int {
         // don't try to overwrite users that already exist
         if (
@@ -1127,7 +1127,7 @@ class User extends database_object
         int $count,
         int $offset = 0,
         bool $newest = true,
-        string $count_type = 'stream'
+        string $count_type = 'stream',
     ): array {
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
         $limit    = ($offset < 1) ? $count : $offset . "," . $count;

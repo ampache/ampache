@@ -39,7 +39,7 @@ interface IpHistoryRepositoryInterface
      */
     public function getHistory(
         User $user,
-        ?bool $limited = true
+        ?bool $limited = true,
     ): Traversable;
 
     /**
@@ -60,6 +60,6 @@ interface IpHistoryRepositoryInterface
         string $ipAddress,
         string $userAgent,
         DateTimeInterface $date,
-        string $action
+        string $action,
     ): void;
 }

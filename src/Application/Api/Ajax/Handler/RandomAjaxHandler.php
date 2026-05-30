@@ -42,7 +42,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         private RequestParserInterface $requestParser,
         private AlbumRepositoryInterface $albumRepository,
-        private SongRepositoryInterface $songRepository
+        private SongRepositoryInterface $songRepository,
     ) {
     }
 

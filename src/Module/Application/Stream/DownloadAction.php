@@ -38,7 +38,7 @@ final class DownloadAction extends AbstractStreamAction
 
     public function __construct(
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($logger, $configContainer);
     }

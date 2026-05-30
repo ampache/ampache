@@ -114,7 +114,7 @@ class Playlist extends playlist_object
         ?bool $like = true,
         ?bool $includePublic = true,
         ?bool $includeHidden = true,
-        ?bool $userOnly = false
+        ?bool $userOnly = false,
     ): array {
         if (!$user_id) {
             $user    = Core::get_global('user');

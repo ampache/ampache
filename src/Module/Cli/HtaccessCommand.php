@@ -47,7 +47,7 @@ final class HtaccessCommand extends Command
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        InstallationHelperInterface $installationHelper
+        InstallationHelperInterface $installationHelper,
     ) {
         parent::__construct('htaccess', T_('Create .htaccess files'));
 

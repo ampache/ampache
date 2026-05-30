@@ -52,7 +52,7 @@ final class CreatePlaylistAction implements ApplicationActionInterface
     public function __construct(
         RequestParserInterface $requestParser,
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->requestParser   = $requestParser;
         $this->ui              = $ui;

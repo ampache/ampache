@@ -35,7 +35,7 @@ final readonly class LatestShoutFeed extends AbstractGenericRssFeed
 {
     public function __construct(
         private ShoutRepositoryInterface $shoutRepository,
-        private ShoutObjectLoaderInterface $shoutObjectLoader
+        private ShoutObjectLoaderInterface $shoutObjectLoader,
     ) {
     }
 

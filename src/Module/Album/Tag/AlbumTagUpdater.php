@@ -34,7 +34,7 @@ final class AlbumTagUpdater implements AlbumTagUpdaterInterface
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
     ) {
         $this->songRepository = $songRepository;
     }
@@ -47,7 +47,7 @@ final class AlbumTagUpdater implements AlbumTagUpdaterInterface
         string $tagsComma,
         bool $overrideChilds,
         bool $addToChilds,
-        bool $forceUpdate = false
+        bool $forceUpdate = false,
     ): void {
         // When current_id not empty we force to overwrite current object
         Tag::update_tag_list($tagsComma, 'album', $album->id, ($forceUpdate) ? true : $overrideChilds);

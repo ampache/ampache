@@ -30,7 +30,7 @@ final class LinuxMetadataWriter implements MetadataWriterInterface
     public function write(
         string $fileName,
         string $dirName,
-        string $iconFileName
+        string $iconFileName,
     ): void {
         $meta_file = $dirName . '/.directory';
         $string    = sprintf(

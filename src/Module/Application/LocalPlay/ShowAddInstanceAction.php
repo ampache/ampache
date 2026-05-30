@@ -46,7 +46,7 @@ final class ShowAddInstanceAction extends AbstractLocalPlayAction
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         parent::__construct($configContainer);
         $this->ui              = $ui;
@@ -55,7 +55,7 @@ final class ShowAddInstanceAction extends AbstractLocalPlayAction
 
     protected function handle(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
         // This requires 50 or better
         if ($gatekeeper->mayAccess(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::MANAGER) === false) {

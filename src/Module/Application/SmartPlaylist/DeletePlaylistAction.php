@@ -48,7 +48,7 @@ final class DeletePlaylistAction implements ApplicationActionInterface
     public function __construct(
         ResponseFactoryInterface $responseFactory,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->responseFactory = $responseFactory;
         $this->configContainer = $configContainer;

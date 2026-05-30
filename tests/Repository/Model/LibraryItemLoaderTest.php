@@ -54,7 +54,7 @@ class LibraryItemLoaderTest extends TestCase
     public function testLoadLoads(
         LibraryItemEnum $itemType,
         string $repoClassName,
-        string $itemClassName
+        string $itemClassName,
     ): void {
         $objectId = 666;
 

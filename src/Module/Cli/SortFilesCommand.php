@@ -42,7 +42,7 @@ final class SortFilesCommand extends Command
     }
 
     public function __construct(
-        SongSorterInterface $songSorter
+        SongSorterInterface $songSorter,
     ) {
         parent::__construct('cleanup:sortSongs', T_('Sort songs files'));
 
@@ -60,7 +60,7 @@ final class SortFilesCommand extends Command
     }
 
     public function execute(
-        ?string $catalogName
+        ?string $catalogName,
     ): void {
         if ($this->app() === null) {
             return;

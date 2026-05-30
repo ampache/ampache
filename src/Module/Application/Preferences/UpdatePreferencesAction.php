@@ -51,7 +51,7 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
     public function __construct(
         PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater,
         UiInterface $ui,
-        RequestParserInterface $requestParser
+        RequestParserInterface $requestParser,
     ) {
         $this->preferencesFromRequestUpdater = $preferencesFromRequestUpdater;
         $this->ui                            = $ui;

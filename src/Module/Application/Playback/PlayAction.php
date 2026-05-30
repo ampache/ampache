@@ -82,7 +82,7 @@ final class PlayAction implements ApplicationActionInterface
         AuthenticationManagerInterface $authenticationManager,
         NetworkCheckerInterface $networkChecker,
         UserRepositoryInterface $userRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->requestParser         = $requestParser;
         $this->browser               = $browser;

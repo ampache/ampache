@@ -58,7 +58,7 @@ final class ShowAction implements ApplicationActionInterface
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         LoggerInterface $logger,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;

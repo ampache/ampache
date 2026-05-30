@@ -43,7 +43,7 @@ final readonly class SongAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         private RequestParserInterface $requestParser,
         private ShoutRepositoryInterface $shoutRepository,
-        private ShoutRendererInterface $shoutRenderer
+        private ShoutRendererInterface $shoutRenderer,
     ) {
     }
 

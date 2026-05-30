@@ -46,7 +46,7 @@ final class CreatePlaylistAction implements ApplicationActionInterface
 
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->ui           = $ui;
         $this->modelFactory = $modelFactory;

@@ -63,7 +63,7 @@ final class AddUserAction implements ApplicationActionInterface
         ModelFactoryInterface $modelFactory,
         UserRepositoryInterface $userRepository,
         Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->configContainer               = $configContainer;
         $this->modelFactory                  = $modelFactory;

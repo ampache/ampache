@@ -38,7 +38,7 @@ final class ActivityTypeHandlerMapper implements ActivityTypeHandlerMapperInterf
     private UserActivityRepositoryInterface $userActivityRepository;
 
     public function __construct(
-        UserActivityRepositoryInterface $userActivityRepository
+        UserActivityRepositoryInterface $userActivityRepository,
     ) {
         $this->userActivityRepository = $userActivityRepository;
     }

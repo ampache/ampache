@@ -38,7 +38,7 @@ final class ConfigContainer implements ConfigContainerInterface
      * @param array<string, mixed> $configuration
      */
     public function __construct(
-        array $configuration
+        array $configuration,
     ) {
         $this->configuration = $configuration;
     }

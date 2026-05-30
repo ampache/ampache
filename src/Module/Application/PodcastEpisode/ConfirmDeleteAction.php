@@ -62,7 +62,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         PodcastDeleterInterface $podcastDeleter,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;

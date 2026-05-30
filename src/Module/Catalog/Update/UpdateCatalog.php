@@ -39,7 +39,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
     private CatalogGarbageCollectorInterface $catalogGarbageCollector;
 
     public function __construct(
-        CatalogGarbageCollectorInterface $catalogGarbageCollector
+        CatalogGarbageCollectorInterface $catalogGarbageCollector,
     ) {
         $this->catalogGarbageCollector = $catalogGarbageCollector;
     }
@@ -58,7 +58,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         bool $collectGarbage,
         string $catalogType,
         ?string $catalogName,
-        ?int $limit
+        ?int $limit,
     ): void {
         $start_time = time();
         if ($deactivateMemoryLimit === true) {
@@ -360,7 +360,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         Interactor $interactor,
         string $catalogType,
         ?string $catalogName,
-        ?string $newPath
+        ?string $newPath,
     ): void {
         // argument may be incorrect when not setting a type
         if (is_dir($catalogType) && !$newPath) {
@@ -431,7 +431,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
 
     private function lookupCatalogs(
         string $catalogType,
-        ?string $catalogName
+        ?string $catalogName,
     ): PDOStatement|null {
         $where = sprintf(
             'catalog_type = \'%s\'',

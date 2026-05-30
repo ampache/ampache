@@ -52,7 +52,7 @@ final class HighestVideoAction implements ApplicationActionInterface
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
-        VideoRepositoryInterface $videoRepository
+        VideoRepositoryInterface $videoRepository,
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;

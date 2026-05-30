@@ -49,7 +49,7 @@ final class ShowEditAction extends AbstractUserAction
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;

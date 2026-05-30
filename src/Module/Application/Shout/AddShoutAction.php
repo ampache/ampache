@@ -62,7 +62,7 @@ final class AddShoutAction implements ApplicationActionInterface
         ConfigContainerInterface $configContainer,
         ShoutCreatorInterface $shoutCreator,
         RequestParserInterface $requestParser,
-        ShoutObjectLoaderInterface $shoutObjectLoader
+        ShoutObjectLoaderInterface $shoutObjectLoader,
     ) {
         $this->responseFactory   = $responseFactory;
         $this->configContainer   = $configContainer;

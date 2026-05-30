@@ -50,7 +50,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
         private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
         private MissingArtistFinderInterface $missingArtistFinder,
-        private LabelRepositoryInterface $labelRepository
+        private LabelRepositoryInterface $labelRepository,
     ) {
     }
 

@@ -58,7 +58,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
         private SongRepositoryInterface $songRepository,
         private WantedRepositoryInterface $wantedRepository,
         private VideoRepositoryInterface $videoRepository,
-        private WantedManagerInterface $wantedManager
+        private WantedManagerInterface $wantedManager,
     ) {
     }
 

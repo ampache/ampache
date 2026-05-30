@@ -59,7 +59,7 @@ final class PodcastCreator implements PodcastCreatorInterface
         PodcastRepositoryInterface $podcastRepository,
         PodcastSyncerInterface $podcastSyncer,
         PodcastFolderProviderInterface $podcastFolderProvider,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->feedLoader            = $feedLoader;
         $this->podcastRepository     = $podcastRepository;
@@ -77,7 +77,7 @@ final class PodcastCreator implements PodcastCreatorInterface
      */
     public function create(
         string $feedUrl,
-        Catalog $catalog
+        Catalog $catalog,
     ): Podcast {
         // Feed must be http/https
         if (

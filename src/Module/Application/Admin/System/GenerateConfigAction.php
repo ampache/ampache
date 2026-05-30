@@ -58,7 +58,7 @@ final class GenerateConfigAction implements ApplicationActionInterface
         Horde_Browser $browser,
         InstallationHelperInterface $installationHelper,
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
     ) {
         $this->configContainer    = $configContainer;
         $this->browser            = $browser;

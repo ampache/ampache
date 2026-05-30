@@ -41,7 +41,7 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
 {
     public function __construct(
         private DatabaseConnectionInterface $connection,
-        private MetadataFieldRepositoryInterface $metadataFieldRepository
+        private MetadataFieldRepositoryInterface $metadataFieldRepository,
     ) {
     }
 
@@ -99,7 +99,7 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
     public function findByObjectIdAndFieldAndType(
         int $objectId,
         MetadataField $field,
-        string $objectType
+        string $objectType,
     ): ?Metadata {
         $result = $this->connection->query(
             'SELECT * FROM `metadata` WHERE `object_id` = ? AND `type` = ? AND `field` = ? LIMIT 1',
@@ -128,7 +128,7 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
      */
     public function findByObjectIdAndType(
         int $objectId,
-        string $objectType
+        string $objectType,
     ): Generator {
         $result = $this->connection->query(
             'SELECT * FROM `metadata` WHERE `object_id` = ? AND `type` = ?',

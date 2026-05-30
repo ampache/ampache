@@ -49,7 +49,7 @@ final class ResetDbCharsetAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        DatabaseCharsetUpdaterInterface $databaseCharsetUpdater
+        DatabaseCharsetUpdaterInterface $databaseCharsetUpdater,
     ) {
         $this->configContainer        = $configContainer;
         $this->ui                     = $ui;

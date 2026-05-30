@@ -67,7 +67,7 @@ class Userflag extends database_object
      */
     public function __construct(
         ?int $object_id,
-        string $type
+        string $type,
     ) {
         $this->id   = (int)($object_id);
         $this->type = $type;
@@ -302,7 +302,7 @@ class Userflag extends database_object
         ?User $user = null,
         int $since = 0,
         int $before = 0,
-        bool $by_user = false
+        bool $by_user = false,
     ): string {
         $type = Stats::validate_type($input_type);
         $sql  = "SELECT DISTINCT(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag`";

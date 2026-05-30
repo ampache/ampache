@@ -81,7 +81,7 @@ class Browse extends Query
 
     public function __construct(
         ?int $browse_id = 0,
-        ?bool $cached = true
+        ?bool $cached = true,
     ) {
         parent::__construct($browse_id, $cached);
 

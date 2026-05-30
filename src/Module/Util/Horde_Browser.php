@@ -714,7 +714,7 @@ class Horde_Browser
         $filename = 'unknown',
         $cType = null,
         $inline = false,
-        $cLength = null
+        $cLength = null,
     ): array {
         /* Remove linebreaks (and ',', ';') from file names. */
         $filename = str_replace(["\r\n", "\r", "\n"], ' ', $filename);

@@ -32,7 +32,7 @@ final class RegistrationAgreementRenderer implements RegistrationAgreementRender
     private string $filePath;
 
     public function __construct(
-        string $filePath = __DIR__ . '/../../../../config/registration_agreement.php'
+        string $filePath = __DIR__ . '/../../../../config/registration_agreement.php',
     ) {
         $this->filePath = $filePath;
     }

@@ -41,7 +41,7 @@ interface UpdateCatalogInterface
         bool $collectGarbage,
         string $catalogType,
         ?string $catalogName,
-        ?int $limit
+        ?int $limit,
     ): void;
 
     /**
@@ -51,6 +51,6 @@ interface UpdateCatalogInterface
         Interactor $interactor,
         string $catalogType,
         ?string $catalogName,
-        ?string $newPath
+        ?string $newPath,
     ): void;
 }

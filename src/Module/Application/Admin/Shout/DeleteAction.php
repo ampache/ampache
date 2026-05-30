@@ -44,7 +44,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
     public function __construct(
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-        private ShoutRepositoryInterface $shoutRepository
+        private ShoutRepositoryInterface $shoutRepository,
     ) {
     }
 

@@ -33,7 +33,7 @@ final class WebSocketFactory implements WebSocketFactoryInterface
     public function createApp(
         string $httpHost,
         int $port,
-        string $address
+        string $address,
     ): App {
         return new App(
             $httpHost,

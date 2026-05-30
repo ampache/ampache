@@ -65,7 +65,7 @@ class HttpQPlayer
     public function __construct(
         ?string $host = "localhost",
         ?string $password = '',
-        ?int $port = 4800
+        ?int $port = 4800,
     ) {
         $this->host     = $host;
         $this->port     = $port;

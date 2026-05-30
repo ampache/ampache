@@ -42,7 +42,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
         private RequestParserInterface $requestParser,
         private ModelFactoryInterface $modelFactory,
         private LiveStreamRepositoryInterface $liveStreamRepository,
-        private ShareUiLinkRendererInterface $shareUiLinkRenderer
+        private ShareUiLinkRendererInterface $shareUiLinkRenderer,
     ) {
     }
 

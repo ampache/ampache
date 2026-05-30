@@ -34,8 +34,11 @@ use Ampache\Repository\VideoRepositoryInterface;
 
 final readonly class StatsViewAdapter implements StatsViewAdapterInterface
 {
-    public function __construct(private ConfigContainerInterface $configContainer, private GuiFactoryInterface $guiFactory, private VideoRepositoryInterface $videoRepository)
-    {
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private GuiFactoryInterface $guiFactory,
+        private VideoRepositoryInterface $videoRepository,
+    ) {
     }
 
     public function displayVideo(): bool

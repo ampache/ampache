@@ -36,8 +36,11 @@ final class TalView implements TalViewInterface
 {
     private ?PhpTalInterface $engine = null;
 
-    public function __construct(private readonly TalFactoryInterface $talFactory, private readonly ConfigContainerInterface $configContainer, private readonly GuiFactoryInterface $guiFactory)
-    {
+    public function __construct(
+        private readonly TalFactoryInterface $talFactory,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly GuiFactoryInterface $guiFactory,
+    ) {
     }
 
     public function render(): string

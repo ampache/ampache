@@ -380,7 +380,7 @@ final readonly class UserRepository implements UserRepositoryInterface
      * updates the last seen data for the user
      */
     public function updateLastSeen(
-        int $userId
+        int $userId,
     ): void {
         Dba::write(
             'UPDATE user SET last_seen = ? WHERE `id` = ?',

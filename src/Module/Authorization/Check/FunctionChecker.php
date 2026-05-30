@@ -42,7 +42,7 @@ final class FunctionChecker implements FunctionCheckerInterface
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->configContainer = $configContainer;
         $this->logger          = $logger;

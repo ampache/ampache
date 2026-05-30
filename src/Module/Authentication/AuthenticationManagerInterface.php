@@ -30,7 +30,7 @@ interface AuthenticationManagerInterface
     public function login(
         string $username,
         string $password,
-        bool $allow_ui = false
+        bool $allow_ui = false,
     ): array;
 
     public function postAuth(string $method): ?array;
@@ -45,7 +45,7 @@ interface AuthenticationManagerInterface
     public function tokenLogin(
         string $username,
         string $token,
-        string $salt
+        string $salt,
     ): array;
 
     /**

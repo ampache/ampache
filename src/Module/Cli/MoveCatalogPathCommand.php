@@ -42,7 +42,7 @@ final class MoveCatalogPathCommand extends Command
     }
 
     public function __construct(
-        UpdateCatalogInterface $updateCatalog
+        UpdateCatalogInterface $updateCatalog,
     ) {
         parent::__construct('run:moveCatalogPath', T_('Change a Catalog path'));
 
@@ -58,7 +58,7 @@ final class MoveCatalogPathCommand extends Command
     public function execute(
         ?string $catalogName,
         string $catalogType,
-        ?string $path
+        ?string $path,
     ): void {
         $this->updateCatalog->updatePath(
             $this->io(),

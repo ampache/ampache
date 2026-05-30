@@ -42,7 +42,7 @@ final class UpdateCatalogFolderCommand extends Command
     }
 
     public function __construct(
-        UpdateSingleCatalogFolderInterface $updateSingleCatalogFolder
+        UpdateSingleCatalogFolderInterface $updateSingleCatalogFolder,
     ) {
         parent::__construct('run:updateCatalogFolder', T_('Perform catalog actions for a single folder'));
 
@@ -62,7 +62,7 @@ final class UpdateCatalogFolderCommand extends Command
 
     public function execute(
         string $catalogName,
-        string $folderPath
+        string $folderPath,
     ): void {
         $values = $this->values();
 

@@ -41,7 +41,7 @@ final class Slideshow implements SlideshowInterface
 
     public function __construct(
         ModelFactoryInterface $modelFactory,
-        PluginRetrieverInterface $pluginRetriever
+        PluginRetrieverInterface $pluginRetriever,
     ) {
         $this->modelFactory    = $modelFactory;
         $this->pluginRetriever = $pluginRetriever;

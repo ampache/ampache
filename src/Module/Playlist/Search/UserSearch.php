@@ -44,7 +44,7 @@ final class UserSearch implements SearchInterface
      * }
      */
     public function getSql(
-        Search $search
+        Search $search,
     ): array {
         $sql_logic_operator = strtoupper($search->logic_operator ?? 'and');
 

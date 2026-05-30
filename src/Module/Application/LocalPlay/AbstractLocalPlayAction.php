@@ -40,7 +40,7 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
     private ConfigContainerInterface $configContainer;
 
     protected function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->configContainer = $configContainer;
     }
@@ -71,6 +71,6 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
      */
     abstract protected function handle(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface;
 }

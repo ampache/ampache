@@ -50,7 +50,7 @@ final class WebFetcher implements WebFetcherInterface
     public function __construct(
         ConfigContainerInterface $config,
         UtilityFactoryInterface $utilityFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->config         = $config;
         $this->utilityFactory = $utilityFactory;
@@ -90,7 +90,7 @@ final class WebFetcher implements WebFetcherInterface
      */
     public function fetchToFile(
         string $uri,
-        string $destinationFilePath
+        string $destinationFilePath,
     ): void {
         $curl = $this->setupCurl();
         $curl->setReferer($uri);

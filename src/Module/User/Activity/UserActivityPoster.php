@@ -37,7 +37,7 @@ final class UserActivityPoster implements UserActivityPosterInterface
 
     public function __construct(
         ActivityTypeHandlerMapperInterface $activityTypeHandlerMapper,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->activityTypeHandlerMapper = $activityTypeHandlerMapper;
         $this->logger                    = $logger;
@@ -51,7 +51,7 @@ final class UserActivityPoster implements UserActivityPosterInterface
         string $action,
         string $objectType,
         int $objectId,
-        int $date
+        int $date,
     ): void {
         $this->logger->debug(
             sprintf('post_activity: %s %s by user: %d: {%d}', $action, $objectType, $userId, $objectId),

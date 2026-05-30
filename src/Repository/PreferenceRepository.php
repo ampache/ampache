@@ -70,7 +70,7 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
      */
     public function getAll(
         ?User $user = null,
-        ?bool $api = false
+        ?bool $api = false,
     ): array {
         if ($user !== null) {
             $userLimit   = "AND `preference`.`category` != 'system'";

@@ -41,7 +41,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
 
     public function __construct(
         MusicBrainz $musicBrainz,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->musicBrainz = $musicBrainz;
         $this->logger      = $logger;
@@ -65,7 +65,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
     public function collectArt(
         Art $art,
         int $limit = 5,
-        array $data = []
+        array $data = [],
     ): array {
         $images    = [];
         $num_found = 0;

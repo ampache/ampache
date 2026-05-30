@@ -32,6 +32,6 @@ interface UserFollowStateRendererInterface
      */
     public function render(
         User $user,
-        User $foreignUser
+        User $foreignUser,
     ): string;
 }

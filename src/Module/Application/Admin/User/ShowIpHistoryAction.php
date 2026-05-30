@@ -53,7 +53,7 @@ final class ShowIpHistoryAction extends AbstractUserAction
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         IpHistoryRepositoryInterface $ipHistoryRepository,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->ui                  = $ui;
         $this->modelFactory        = $modelFactory;

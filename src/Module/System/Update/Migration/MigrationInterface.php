@@ -62,6 +62,6 @@ interface MigrationInterface
         string $collation,
         string $charset,
         string $engine,
-        int $build
+        int $build,
     ): Traversable;
 }

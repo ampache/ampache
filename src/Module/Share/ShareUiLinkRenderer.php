@@ -42,13 +42,13 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
     public function __construct(
         private FunctionCheckerInterface $functionChecker,
         private ZipHandlerInterface $zipHandler,
-        private ConfigContainerInterface $configContainer
+        private ConfigContainerInterface $configContainer,
     ) {
     }
 
     public function render(
         LibraryItemEnum $object_type,
-        int $object_id
+        int $object_id,
     ): string {
         $webPath = $this->configContainer->getWebPath();
 

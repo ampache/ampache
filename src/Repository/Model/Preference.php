@@ -365,7 +365,7 @@ class Preference extends database_object
         int $user_id,
         array|int|float|string|bool|null $value,
         ?bool $applytoall = false,
-        ?bool $applytodefault = false
+        ?bool $applytodefault = false,
     ): bool {
         if ($user_id === 0) {
             return false;
@@ -706,7 +706,7 @@ class Preference extends database_object
         string $type,
         string $category,
         ?string $subcategory = null,
-        bool $replace = false
+        bool $replace = false,
     ): bool {
         if ($replace) {
             self::delete($name);

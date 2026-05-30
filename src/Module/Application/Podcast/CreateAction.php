@@ -59,7 +59,7 @@ final class CreateAction implements ApplicationActionInterface
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         PodcastCreatorInterface $podcastCreator,
-        RequestParserInterface $requestParser
+        RequestParserInterface $requestParser,
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;

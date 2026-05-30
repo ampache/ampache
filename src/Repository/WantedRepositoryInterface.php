@@ -60,7 +60,7 @@ interface WantedRepositoryInterface
      */
     public function deleteByMusicbrainzId(
         string $musicbrainzId,
-        ?User $user = null
+        ?User $user = null,
     ): void;
 
     /**

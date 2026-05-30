@@ -44,7 +44,7 @@ final readonly class UserflagVideoAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
         private ConfigContainerInterface $configContainer,
-        private VideoRepositoryInterface $videoRepository
+        private VideoRepositoryInterface $videoRepository,
     ) {
     }
 

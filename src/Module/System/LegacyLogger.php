@@ -51,7 +51,7 @@ final class LegacyLogger implements LoggerInterface
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->configContainer = $configContainer;
     }

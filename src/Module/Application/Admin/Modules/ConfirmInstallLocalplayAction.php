@@ -45,7 +45,7 @@ final class ConfirmInstallLocalplayAction implements ApplicationActionInterface
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;

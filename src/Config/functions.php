@@ -1107,7 +1107,7 @@ function pGraph_Yformat_bytes($value): string
  */
 function canEditArtist(
     Artist $artist,
-    int $userId
+    int $userId,
 ): bool {
     if (
         AmpConfig::get('upload_allow_edit') &&

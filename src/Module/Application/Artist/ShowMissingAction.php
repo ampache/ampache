@@ -43,7 +43,7 @@ final class ShowMissingAction implements ApplicationActionInterface
 
     public function __construct(
         UiInterface $ui,
-        MissingArtistRetrieverInterface $missingArtistRetriever
+        MissingArtistRetrieverInterface $missingArtistRetriever,
     ) {
         $this->ui                     = $ui;
         $this->missingArtistRetriever = $missingArtistRetriever;

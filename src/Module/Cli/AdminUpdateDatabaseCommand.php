@@ -53,7 +53,7 @@ final class AdminUpdateDatabaseCommand extends Command
     public function __construct(
         UpdateInfoRepositoryInterface $updateInfoRepository,
         Update\UpdateHelperInterface $updateHelper,
-        Update\UpdaterInterface $updater
+        Update\UpdaterInterface $updater,
     ) {
         parent::__construct('admin:updateDatabase', T_('Update the database to the latest version'));
 

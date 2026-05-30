@@ -44,7 +44,7 @@ final readonly class UserActivityRenderer implements UserActivityRendererInterfa
      * Show the activity entry.
      */
     public function show(
-        Useractivity $useractivity
+        Useractivity $useractivity,
     ): string {
         // If user flags aren't enabled don't do anything
         if (!$this->configContainer->get('ratings') || !$useractivity->id) {

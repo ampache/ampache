@@ -52,7 +52,7 @@ final class DeleteAction implements ApplicationActionInterface
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;

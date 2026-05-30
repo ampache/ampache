@@ -40,7 +40,7 @@ abstract class ScrobblerAsync extends Thread
      */
     public function __construct(
         User $user,
-        Song $song
+        Song $song,
     ) {
         $this->user = $user;
         $this->song = $song;

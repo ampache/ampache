@@ -29,6 +29,6 @@ interface ShareUiLinkRendererInterface
 {
     public function render(
         LibraryItemEnum $object_type,
-        int $object_id
+        int $object_id,
     ): string;
 }

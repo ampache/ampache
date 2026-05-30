@@ -35,7 +35,7 @@ final class WebDavApplication
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        WebDavFactoryInterface $webDavFactory
+        WebDavFactoryInterface $webDavFactory,
     ) {
         $this->configContainer = $configContainer;
         $this->webDavFactory   = $webDavFactory;

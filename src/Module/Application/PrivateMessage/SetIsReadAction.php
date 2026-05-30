@@ -50,7 +50,7 @@ final class SetIsReadAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        PrivateMessageRepositoryInterface $pmRepository
+        PrivateMessageRepositoryInterface $pmRepository,
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;

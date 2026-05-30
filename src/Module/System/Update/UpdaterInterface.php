@@ -60,7 +60,7 @@ interface UpdaterInterface
      * @throws UpdateFailedException
      */
     public function rollback(
-        ?Interactor $interactor = null
+        ?Interactor $interactor = null,
     ): void;
 
     /**
@@ -69,7 +69,7 @@ interface UpdaterInterface
      * @throws UpdateException
      */
     public function update(
-        ?Interactor $interactor = null
+        ?Interactor $interactor = null,
     ): void;
 
     /**

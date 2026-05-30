@@ -38,7 +38,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
     private PrivilegeCheckerInterface $privilegeChecker;
 
     public function __construct(
-        PrivilegeCheckerInterface $privilegeChecker
+        PrivilegeCheckerInterface $privilegeChecker,
     ) {
         $this->privilegeChecker = $privilegeChecker;
     }

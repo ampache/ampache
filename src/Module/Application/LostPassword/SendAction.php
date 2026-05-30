@@ -50,7 +50,7 @@ final class SendAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         NewPasswordSenderInterface $newPasswordSender,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->configContainer   = $configContainer;
         $this->newPasswordSender = $newPasswordSender;

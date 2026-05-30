@@ -50,7 +50,7 @@ final class ShowAction implements ApplicationActionInterface
         TalFactoryInterface $talFactory,
         GuiFactoryInterface $guiFactory,
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
     ) {
         $this->talFactory      = $talFactory;
         $this->guiFactory      = $guiFactory;

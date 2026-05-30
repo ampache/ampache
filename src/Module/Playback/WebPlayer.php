@@ -89,7 +89,7 @@ class WebPlayer
         Stream_Url $item,
         array $urlinfo,
         string $transcode_cfg,
-        string $force_type = ''
+        string $force_type = '',
     ): array {
         $types = ['real' => 'mp3', 'player' => ''];
 
@@ -191,7 +191,7 @@ class WebPlayer
         array  $types,
         array  $urlinfo,
         string $transcode_cfg,
-        string $force_type = ''
+        string $force_type = '',
     ): bool {
         $transcode = false;
 
@@ -278,7 +278,7 @@ class WebPlayer
     public static function get_media_js_param(
         Stream_Url $item,
         string $transcode_cfg,
-        string $force_type = ''
+        string $force_type = '',
     ): string {
         $json = [];
         foreach (['title', 'author'] as $member) {

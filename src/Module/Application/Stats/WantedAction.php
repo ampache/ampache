@@ -47,7 +47,7 @@ final class WantedAction implements ApplicationActionInterface
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        WantedRepositoryInterface $wantedRepository
+        WantedRepositoryInterface $wantedRepository,
     ) {
         $this->ui               = $ui;
         $this->modelFactory     = $modelFactory;

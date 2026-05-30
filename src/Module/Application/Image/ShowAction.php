@@ -54,7 +54,7 @@ final readonly class ShowAction extends AbstractShowAction
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         parent::__construct(
             $requestParser,

@@ -60,7 +60,7 @@ final class ShowAction implements ApplicationActionInterface
         UiInterface $ui,
         LoggerInterface $logger,
         PrivilegeCheckerInterface $privilegeChecker,
-        LabelRepositoryInterface $labelRepository
+        LabelRepositoryInterface $labelRepository,
     ) {
         $this->configContainer  = $configContainer;
         $this->ui               = $ui;
@@ -141,7 +141,7 @@ final class ShowAction implements ApplicationActionInterface
 
     private function isEditable(
         int $userId,
-        Label $label
+        Label $label,
     ): bool {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) === true) {
             if ($label->user !== null && $userId == $label->user) {

@@ -42,6 +42,6 @@ interface SearchInterface
      * }
      */
     public function getSql(
-        Search $search
+        Search $search,
     ): array;
 }

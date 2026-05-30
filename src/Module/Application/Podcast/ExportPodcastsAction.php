@@ -50,7 +50,7 @@ final class ExportPodcastsAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         PodcastExporterInterface $podcastExporter,
-        ResponseFactoryInterface $responseFactory
+        ResponseFactoryInterface $responseFactory,
     ) {
         $this->configContainer = $configContainer;
         $this->podcastExporter = $podcastExporter;

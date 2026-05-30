@@ -56,7 +56,7 @@ final class DeleteRecordAction implements ApplicationActionInterface
         UiInterface $ui,
         AccessRepositoryInterface $accessRepository,
         ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser
+        RequestParserInterface $requestParser,
     ) {
         $this->ui               = $ui;
         $this->accessRepository = $accessRepository;

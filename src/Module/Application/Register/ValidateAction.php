@@ -49,7 +49,7 @@ final class ValidateAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;

@@ -47,7 +47,7 @@ final class AddSongAction implements ApplicationActionInterface
     public function __construct(
         RequestParserInterface $requestParser,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->requestParser = $requestParser;
         $this->ui            = $ui;

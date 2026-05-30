@@ -438,7 +438,7 @@ class AutoUpdate
      */
     public static function update_dependencies(
         ConfigContainerInterface $config,
-        bool $api = false
+        bool $api = false,
     ): void {
         $cmdComposer = sprintf(
             '%s install %s',

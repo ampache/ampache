@@ -30,6 +30,6 @@ interface ActivityTypeHandlerInterface
         string $objectType,
         string $action,
         int $userId,
-        int $date
+        int $date,
     ): void;
 }

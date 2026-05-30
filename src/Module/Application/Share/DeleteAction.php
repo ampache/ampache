@@ -55,7 +55,7 @@ final class DeleteAction implements ApplicationActionInterface
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ShareRepositoryInterface $shareRepository
+        ShareRepositoryInterface $shareRepository,
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;

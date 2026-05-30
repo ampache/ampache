@@ -370,7 +370,7 @@ class ShowActionTest extends MockeryTestCase
         Album&MockInterface $album,
         GuiGatekeeperInterface&MockInterface $gatekeeper,
         bool $isEditAble,
-        string $templateName
+        string $templateName,
     ): void {
         $request = $this->mock(ServerRequestInterface::class);
         $user    = $this->mock(User::class);

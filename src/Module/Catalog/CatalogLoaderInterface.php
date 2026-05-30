@@ -44,6 +44,6 @@ interface CatalogLoaderInterface
      */
     public function getCatalogs(
         ?string $filterType = null,
-        ?User $user = null
+        ?User $user = null,
     ): array;
 }

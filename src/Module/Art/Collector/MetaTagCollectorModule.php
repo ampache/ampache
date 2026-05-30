@@ -61,7 +61,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     public function __construct(
         LoggerInterface $logger,
         getID3 $getID3,
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
     ) {
         $this->logger         = $logger;
         $this->getID3         = $getID3;
@@ -85,7 +85,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     public function collectArt(
         Art $art,
         int $limit = 5,
-        array $data = []
+        array $data = [],
     ): array {
         if (!$limit) {
             $limit = 5;

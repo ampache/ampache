@@ -45,7 +45,7 @@ final class UserStateToggler implements UserStateTogglerInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         UtilityFactoryInterface $utilityFactory,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
     ) {
         $this->configContainer = $configContainer;
         $this->utilityFactory  = $utilityFactory;

@@ -35,6 +35,6 @@ interface ArtistTagUpdaterInterface
         string $tags_comma,
         bool $override_childs,
         bool $add_to_childs = false,
-        bool $force_update = false
+        bool $force_update = false,
     ): void;
 }

@@ -54,7 +54,7 @@ interface SongRepositoryInterface
      * @return int[]
      */
     public function getByLabel(
-        string $labelName
+        string $labelName,
     ): array;
 
     /**
@@ -63,7 +63,7 @@ interface SongRepositoryInterface
      * @return int[]
      */
     public function getRandomByArtist(
-        Artist $artist
+        Artist $artist,
     ): array;
 
     /**
@@ -72,7 +72,7 @@ interface SongRepositoryInterface
      * @return int[]
      */
     public function getRandomByGenre(
-        Tag $genre
+        Tag $genre,
     ): array;
 
     /**
@@ -82,7 +82,7 @@ interface SongRepositoryInterface
      */
     public function getTopSongsByArtist(
         Artist $artist,
-        int $count = 50
+        int $count = 50,
     ): array;
 
     /**
@@ -91,7 +91,7 @@ interface SongRepositoryInterface
      * @return int[]
      */
     public function getByArtist(
-        int $artistId
+        int $artistId,
     ): array;
 
     /**
@@ -100,7 +100,7 @@ interface SongRepositoryInterface
      * @return int[]
      */
     public function getAllByArtist(
-        int $artistId
+        int $artistId,
     ): array;
 
     /**

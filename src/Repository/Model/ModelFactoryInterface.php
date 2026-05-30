@@ -33,83 +33,83 @@ interface ModelFactoryInterface
 
     public function createBrowse(
         ?int $browse_id = null,
-        bool $cached = true
+        bool $cached = true,
     ): Browse;
 
     public function createSong(
-        ?int $songId = null
+        ?int $songId = null,
     ): Song;
 
     public function createRating(
         int $objectId,
-        string $typeId
+        string $typeId,
     ): Rating;
 
     public function createUser(
-        ?int $userId = null
+        ?int $userId = null,
     ): User;
 
     public function createAlbum(
-        ?int $albumId = null
+        ?int $albumId = null,
     ): Album;
 
     public function createAlbumDisk(
-        ?int $albumDiskId = null
+        ?int $albumDiskId = null,
     ): AlbumDisk;
 
     public function createArtist(
-        ?int $artistId = null
+        ?int $artistId = null,
     ): Artist;
 
     public function createWanted(
-        ?int $wantedId = null
+        ?int $wantedId = null,
     ): Wanted;
 
     public function createArt(
         ?int $artId = null,
         string $type = 'album',
-        string $kind = 'default'
+        string $kind = 'default',
     ): Art;
 
     public function createBroadcast(
-        int $broadcastId
+        int $broadcastId,
     ): Broadcast;
 
     public function createLiveStream(
-        int $liveStreamId
+        int $liveStreamId,
     ): Live_Stream;
 
     public function createPodcast(
-        int $podcastId
+        int $podcastId,
     ): Podcast;
 
     public function createPodcastEpisode(
-        int $podcastEpisodeId
+        int $podcastEpisodeId,
     ): Podcast_Episode;
 
     public function createPrivateMsg(
-        int $privateMessageId
+        int $privateMessageId,
     ): PrivateMessageInterface;
 
     public function createDemocratic(
-        int $democraticId
+        int $democraticId,
     ): Democratic;
 
     public function createTmpPlaylist(
-        int $tmpPlaylistId
+        int $tmpPlaylistId,
     ): Tmp_Playlist;
 
     public function createSearch(
         ?int $searchId = 0,
         string $searchType = 'song',
-        ?User $user = null
+        ?User $user = null,
     ): Search;
 
     public function createAccess(
-        int $accessId
+        int $accessId,
     ): Access;
 
     public function createVideo(
-        int $videoId
+        int $videoId,
     ): Video;
 }

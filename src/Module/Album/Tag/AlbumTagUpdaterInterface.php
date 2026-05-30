@@ -35,6 +35,6 @@ interface AlbumTagUpdaterInterface
         string $tagsComma,
         bool $overrideChilds,
         bool $addToChilds,
-        bool $forceUpdate = false
+        bool $forceUpdate = false,
     ): void;
 }

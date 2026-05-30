@@ -32,7 +32,7 @@ final class GatekeeperFactory implements GatekeeperFactoryInterface
     private PrivilegeCheckerInterface $privilegeChecker;
 
     public function __construct(
-        PrivilegeCheckerInterface $privilegeChecker
+        PrivilegeCheckerInterface $privilegeChecker,
     ) {
         $this->privilegeChecker = $privilegeChecker;
     }

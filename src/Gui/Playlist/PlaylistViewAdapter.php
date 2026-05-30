@@ -50,7 +50,7 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         private ZipHandlerInterface $zipHandler,
         private FunctionCheckerInterface $functionChecker,
         private GuiGatekeeperInterface $gatekeeper,
-        private Playlist $playlist
+        private Playlist $playlist,
     ) {
     }
 

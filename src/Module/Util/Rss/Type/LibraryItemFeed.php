@@ -40,7 +40,7 @@ final readonly class LibraryItemFeed implements FeedTypeInterface
         private ModelFactoryInterface $modelFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
         private ?User $user,
-        private playable_item $libraryItem
+        private playable_item $libraryItem,
     ) {
     }
 

@@ -50,7 +50,7 @@ final class ExportAction implements ApplicationActionInterface
 
     public function __construct(
         CatalogExportFactoryInterface $catalogExportFactory,
-        CatalogLoaderInterface $catalogLoader
+        CatalogLoaderInterface $catalogLoader,
     ) {
         $this->catalogExportFactory = $catalogExportFactory;
         $this->catalogLoader        = $catalogLoader;

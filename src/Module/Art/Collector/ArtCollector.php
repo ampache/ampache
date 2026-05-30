@@ -54,7 +54,7 @@ final class ArtCollector implements ArtCollectorInterface
     public function __construct(
         ContainerInterface $dic,
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->dic             = $dic;
         $this->logger          = $logger;
@@ -84,7 +84,7 @@ final class ArtCollector implements ArtCollectorInterface
     public function collect(
         Art $art,
         array $options = [],
-        int $limit = 0
+        int $limit = 0,
     ): array {
         // Define vars
         $results = [];

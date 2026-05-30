@@ -37,7 +37,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         private RequestParserInterface $requestParser,
         private AjaxUriRetrieverInterface $ajaxUriRetriever,
-        private UiInterface $ui
+        private UiInterface $ui,
     ) {
     }
 

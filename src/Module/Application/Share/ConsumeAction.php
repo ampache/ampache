@@ -66,7 +66,7 @@ final class ConsumeAction implements ApplicationActionInterface
         NetworkCheckerInterface $networkChecker,
         ContainerInterface $dic,
         UiInterface $ui,
-        ShareRepositoryInterface $shareRepository
+        ShareRepositoryInterface $shareRepository,
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;

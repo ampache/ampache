@@ -58,7 +58,7 @@ final class ConfirmEnableAction extends AbstractUserAction
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
-        UserStateTogglerInterface $userStateToggler
+        UserStateTogglerInterface $userStateToggler,
     ) {
         $this->requestParser    = $requestParser;
         $this->ui               = $ui;

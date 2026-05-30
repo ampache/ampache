@@ -37,7 +37,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
     private LoggerInterface $logger;
 
     public function __construct(
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->logger = $logger;
     }
@@ -60,7 +60,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
     public function collectArt(
         Art $art,
         int $limit = 5,
-        array $data = []
+        array $data = [],
     ): array {
         if (!$limit) {
             $limit = 5;

@@ -32,6 +32,6 @@ interface UserFollowTogglerInterface
      */
     public function toggle(
         User $user,
-        User $followingUser
+        User $followingUser,
     ): void;
 }

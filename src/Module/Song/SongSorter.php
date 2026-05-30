@@ -62,7 +62,7 @@ final class SongSorter implements SongSorterInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
@@ -77,7 +77,7 @@ final class SongSorter implements SongSorterInterface
         bool $windowsCompat = false,
         ?string $various_artist_override = null,
         ?string $customPath = null,
-        ?string $catalogName = null
+        ?string $catalogName = null,
     ): void {
         $this->dryRun         = $dryRun;
         $this->filesOnly      = $filesOnly;
@@ -146,7 +146,7 @@ final class SongSorter implements SongSorterInterface
 
     private function processMedia(
         Song $media,
-        Interactor $interactor
+        Interactor $interactor,
     ): void {
         if ($this->catalog === null) {
             return;
@@ -241,7 +241,7 @@ final class SongSorter implements SongSorterInterface
 
     private function processPath(
         string $path,
-        Interactor $interactor
+        Interactor $interactor,
     ): void {
         if ($this->catalog === null) {
             return;
@@ -304,7 +304,7 @@ final class SongSorter implements SongSorterInterface
         Interactor $interactor,
         string $fullname,
         bool $test_mode,
-        ?bool $windowsCompat = false
+        ?bool $windowsCompat = false,
     ): bool {
         $old_dir   = dirname((string)$media->file);
         $info      = pathinfo($fullname);

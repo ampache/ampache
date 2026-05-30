@@ -48,7 +48,7 @@ final class SelectArtAction extends AbstractArtAction
     public function __construct(
         ModelFactoryInterface $modelFactory,
         ResponseFactoryInterface $responseFactory,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->modelFactory    = $modelFactory;
         $this->responseFactory = $responseFactory;

@@ -57,7 +57,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        SongDeleterInterface $songDeleter
+        SongDeleterInterface $songDeleter,
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
@@ -68,7 +68,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     public function run(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return null;

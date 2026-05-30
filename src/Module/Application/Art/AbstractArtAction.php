@@ -35,7 +35,7 @@ use Ampache\Repository\Model\library_item;
 abstract class AbstractArtAction implements ApplicationActionInterface
 {
     protected function getItem(
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?library_item {
         $object_type = (string)filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
         $object_id   = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);

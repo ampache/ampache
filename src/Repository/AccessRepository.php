@@ -42,7 +42,7 @@ final readonly class AccessRepository implements AccessRepositoryInterface
 {
     public function __construct(
         private DatabaseConnectionInterface $connection,
-        private ModelFactoryInterface $modelFactory
+        private ModelFactoryInterface $modelFactory,
     ) {
     }
 
@@ -67,7 +67,7 @@ final readonly class AccessRepository implements AccessRepositoryInterface
         string $userIp,
         AccessLevelEnum $level,
         AccessTypeEnum $type,
-        ?int $userId
+        ?int $userId,
     ): bool {
         $sql = 'SELECT COUNT(`id`) FROM `access_list` WHERE `start` <= ? AND `end` >= ? AND `level` >= ? AND `type` = ?';
 
@@ -110,7 +110,7 @@ final readonly class AccessRepository implements AccessRepositoryInterface
         string $inAddrStart,
         string $inAddrEnd,
         AccessTypeEnum $type,
-        int $userId
+        int $userId,
     ): bool {
         $result = (int) $this->connection->fetchOne(
             'SELECT COUNT(`id`) FROM `access_list` WHERE `start` = ? AND `end` = ? AND `type` = ? AND `user` = ?',
@@ -134,7 +134,7 @@ final readonly class AccessRepository implements AccessRepositoryInterface
         string $name,
         int $userId,
         AccessLevelEnum $level,
-        AccessTypeEnum $type
+        AccessTypeEnum $type,
     ): void {
         $this->connection->query(
             'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, `user`, `type`) VALUES (?, ?, ?, ?, ?, ?)',
@@ -158,7 +158,7 @@ final readonly class AccessRepository implements AccessRepositoryInterface
         string $name,
         int $userId,
         AccessLevelEnum $level,
-        AccessTypeEnum $type
+        AccessTypeEnum $type,
     ): void {
         $this->connection->query(
             'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, `user` = ?, `name` = ?, `type` = ? WHERE `id` = ?',

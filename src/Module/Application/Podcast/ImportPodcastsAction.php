@@ -72,7 +72,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
         UiInterface $ui,
         RequestParserInterface $requestParser,
         CatalogLoaderInterface $catalogLoader,
-        PodcastOpmlImporterInterface $podcastOpmlImporter
+        PodcastOpmlImporterInterface $podcastOpmlImporter,
     ) {
         $this->configContainer     = $configContainer;
         $this->ui                  = $ui;
@@ -136,7 +136,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
      */
     private function importPodcasts(
         ServerRequestInterface $request,
-        Catalog $catalog
+        Catalog $catalog,
     ): int {
         /** @var null|UploadedFileInterface $file */
         $file = $request->getUploadedFiles()['import_file'] ?? null;

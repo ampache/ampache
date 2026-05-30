@@ -47,7 +47,7 @@ final readonly class ImageRepository implements ImageRepositoryInterface
         int $objectId,
         string $objectType,
         string $size,
-        string $mimeType
+        string $mimeType,
     ): ?string {
         $result = $this->connection->fetchOne(
             'SELECT `image` FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `mime` = ?',

@@ -47,7 +47,7 @@ final class UpdateInstanceAction extends AbstractLocalPlayAction
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ResponseFactoryInterface $responseFactory
+        ResponseFactoryInterface $responseFactory,
     ) {
         parent::__construct($configContainer);
         $this->configContainer = $configContainer;
@@ -56,7 +56,7 @@ final class UpdateInstanceAction extends AbstractLocalPlayAction
 
     protected function handle(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
         // This requires 75 or better!
         if ($gatekeeper->mayAccess(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::MANAGER) === false) {

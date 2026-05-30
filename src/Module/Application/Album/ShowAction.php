@@ -60,7 +60,7 @@ final class ShowAction implements ApplicationActionInterface
         UiInterface $ui,
         LoggerInterface $logger,
         PrivilegeCheckerInterface $privilegeChecker,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->modelFactory     = $modelFactory;
         $this->ui               = $ui;
@@ -121,7 +121,7 @@ final class ShowAction implements ApplicationActionInterface
 
     private function isEditable(
         GuiGatekeeperInterface $gatekeeper,
-        Album $album
+        Album $album,
     ): bool {
         if (
             $this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)

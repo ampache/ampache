@@ -67,7 +67,7 @@ class Rating extends database_object
      */
     public function __construct(
         ?int $rating_id,
-        string $type
+        string $type,
     ) {
         $this->id   = (int)$rating_id;
         $this->type = $type;
@@ -400,7 +400,7 @@ class Rating extends database_object
         string $input_type,
         ?User $user = null,
         int $since = 0,
-        int $before = 0
+        int $before = 0,
     ): string {
         $type = Stats::validate_type($input_type);
         $sql  = "SELECT DISTINCT(`rating`.`object_id`) AS `id`, `rating`.`rating`, `rating`.`object_type` AS `type`, MAX(`rating`.`user`) AS `user`, MAX(`rating`.`date`) AS `date` FROM `rating`";
@@ -450,7 +450,7 @@ class Rating extends database_object
         int $count = 0,
         int $offset = 0,
         int $since = 0,
-        int $before = 0
+        int $before = 0,
     ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);

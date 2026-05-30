@@ -42,7 +42,7 @@ final class SongCleanupCommand extends Command
     }
 
     public function __construct(
-        SongFilesystemCleanupInterface $songFilesystemCleanup
+        SongFilesystemCleanupInterface $songFilesystemCleanup,
     ) {
         parent::__construct('cleanup:songs', T_('Delete disabled songs'));
 

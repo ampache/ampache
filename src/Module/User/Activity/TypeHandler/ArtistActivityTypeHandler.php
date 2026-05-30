@@ -32,7 +32,7 @@ final class ArtistActivityTypeHandler extends GenericActivityTypeHandler
     private UserActivityRepositoryInterface $userActivityRepository;
 
     public function __construct(
-        UserActivityRepositoryInterface $userActivityRepository
+        UserActivityRepositoryInterface $userActivityRepository,
     ) {
         parent::__construct($userActivityRepository);
 
@@ -44,7 +44,7 @@ final class ArtistActivityTypeHandler extends GenericActivityTypeHandler
         string $objectType,
         string $action,
         int $userId,
-        int $date
+        int $date,
     ): void {
         $this->userActivityRepository->registerGenericEntry(
             $userId,

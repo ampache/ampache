@@ -46,7 +46,7 @@ final class ShowAddLabelAction implements ApplicationActionInterface
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;

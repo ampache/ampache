@@ -41,7 +41,7 @@ interface ShoutRepositoryInterface extends BaseRepositoryInterface
      */
     public function getBy(
         LibraryItemEnum $objectType,
-        int $objectId
+        int $objectId,
     ): Traversable;
 
     /**

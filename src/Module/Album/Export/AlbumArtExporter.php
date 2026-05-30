@@ -49,7 +49,7 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
     ) {
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
@@ -59,7 +59,7 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
     public function export(
         Interactor $interactor,
         Catalog $catalog,
-        Writer\MetadataWriterInterface $metadataWriter
+        Writer\MetadataWriterInterface $metadataWriter,
     ): void {
         // Get all of the albums in this catalog
         $albums = $catalog->get_album_ids();

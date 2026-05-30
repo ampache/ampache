@@ -67,7 +67,7 @@ final class ExternalShareAction implements ApplicationActionInterface
         PasswordGeneratorInterface $passwordGenerator,
         ResponseFactoryInterface $responseFactory,
         FunctionCheckerInterface $functionChecker,
-        ShareCreatorInterface $shareCreator
+        ShareCreatorInterface $shareCreator,
     ) {
         $this->requestParser     = $requestParser;
         $this->configContainer   = $configContainer;

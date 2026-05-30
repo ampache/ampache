@@ -54,7 +54,7 @@ class Scrobbler
         ?string $scheme = 'https',
         ?string $host = '',
         ?string $challenge = '',
-        ?string $secret = ''
+        ?string $secret = '',
     ) {
         $this->error_msg     = '';
         $this->challenge     = $challenge;
@@ -205,7 +205,7 @@ class Scrobbler
         string $title,
         int    $timestamp,
         int    $length,
-        int    $track
+        int    $track,
     ): bool {
         if ($length < 30) {
             debug_event(self::class, "Not queuing track, too short", 3);

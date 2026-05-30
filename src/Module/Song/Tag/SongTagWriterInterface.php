@@ -33,7 +33,7 @@ interface SongTagWriterInterface
      * Write the current song id3 metadata to the file
      */
     public function write(
-        Song $song
+        Song $song,
     ): void;
 
     /**
@@ -42,6 +42,6 @@ interface SongTagWriterInterface
     public function writeRating(
         Song $song,
         User $user,
-        Rating $rating
+        Rating $rating,
     ): void;
 }

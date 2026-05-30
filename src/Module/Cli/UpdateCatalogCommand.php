@@ -42,7 +42,7 @@ final class UpdateCatalogCommand extends Command
     }
 
     public function __construct(
-        UpdateCatalogInterface $updateCatalog
+        UpdateCatalogInterface $updateCatalog,
     ) {
         parent::__construct('run:updateCatalog', T_('Perform catalog actions for all files of a catalog. If no options are given, the defaults actions -ceagt are assumed'));
 
@@ -67,7 +67,7 @@ final class UpdateCatalogCommand extends Command
 
     public function execute(
         ?string $catalogName,
-        string $catalogType
+        string $catalogType,
     ): void {
         $values = $this->values();
         // do a default list of actions if you don't have anything set

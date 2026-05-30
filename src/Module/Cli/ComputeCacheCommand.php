@@ -42,7 +42,7 @@ final class ComputeCacheCommand extends Command
     }
 
     public function __construct(
-        ObjectCacheInterface $objectCache
+        ObjectCacheInterface $objectCache,
     ) {
         parent::__construct('run:computeCache', T_('Update the object cache tables'));
 

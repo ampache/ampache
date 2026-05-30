@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
 final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
-        private RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser,
     ) {
     }
 

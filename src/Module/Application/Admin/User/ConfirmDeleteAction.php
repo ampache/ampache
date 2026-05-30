@@ -54,7 +54,7 @@ final class ConfirmDeleteAction extends AbstractUserAction
         RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->requestParser   = $requestParser;
         $this->ui              = $ui;

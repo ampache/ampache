@@ -57,7 +57,7 @@ interface DatabaseConnectionInterface
      */
     public function fetchOne(
         string $sql,
-        array $params = []
+        array $params = [],
     );
 
     /**
@@ -70,7 +70,7 @@ interface DatabaseConnectionInterface
      */
     public function fetchRow(
         string $sql,
-        array $params = []
+        array $params = [],
     );
 
     /**

@@ -47,7 +47,7 @@ final readonly class EditShoutAction implements ApplicationActionInterface
     public function __construct(
         private UiInterface $ui,
         private ShoutRepositoryInterface $shoutRepository,
-        private ConfigContainerInterface $configContainer
+        private ConfigContainerInterface $configContainer,
     ) {
     }
 

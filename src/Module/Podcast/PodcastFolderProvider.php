@@ -38,7 +38,7 @@ final class PodcastFolderProvider implements PodcastFolderProviderInterface
     private CatalogLoaderInterface $catalogLoader;
 
     public function __construct(
-        CatalogLoaderInterface $catalogLoader
+        CatalogLoaderInterface $catalogLoader,
     ) {
         $this->catalogLoader = $catalogLoader;
     }

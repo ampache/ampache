@@ -46,7 +46,7 @@ final readonly class ShowAction extends AbstractGraphRendererAction
         private ConfigContainerInterface $configContainer,
         private GuiFactoryInterface $guiFactory,
         private TalFactoryInterface $talFactory,
-        LibraryItemLoaderInterface $libraryItemLoader
+        LibraryItemLoaderInterface $libraryItemLoader,
     ) {
         parent::__construct(
             $libraryItemLoader,

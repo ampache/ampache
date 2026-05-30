@@ -52,7 +52,7 @@ final class ShareAction implements ApplicationActionInterface
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
-        ShareRepositoryInterface $shareRepository
+        ShareRepositoryInterface $shareRepository,
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;

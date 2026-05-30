@@ -31,8 +31,10 @@ use Ampache\Repository\Model\Catalog;
 
 final readonly class CatalogDetails implements CatalogDetailsInterface
 {
-    public function __construct(private GuiFactoryInterface $guiFactory, private Catalog $catalog)
-    {
+    public function __construct(
+        private GuiFactoryInterface $guiFactory,
+        private Catalog $catalog,
+    ) {
     }
 
     public function getName(): string

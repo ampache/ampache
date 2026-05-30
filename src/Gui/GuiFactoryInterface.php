@@ -47,24 +47,24 @@ interface GuiFactoryInterface
 {
     public function createSongViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
-        Song $song
+        Song $song,
     ): SongViewAdapterInterface;
 
     public function createAlbumViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
         Browse $browse,
-        Album $album
+        Album $album,
     ): AlbumViewAdapterInterface;
 
     public function createAlbumDiskViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
         Browse $browse,
-        AlbumDisk $albumDisk
+        AlbumDisk $albumDisk,
     ): AlbumDiskViewAdapterInterface;
 
     public function createPlaylistViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
-        Playlist $playlist
+        Playlist $playlist,
     ): PlaylistViewAdapterInterface;
 
     public function createConfigViewAdapter(): ConfigViewAdapterInterface;
@@ -72,7 +72,7 @@ interface GuiFactoryInterface
     public function createStatsViewAdapter(): StatsViewAdapterInterface;
 
     public function createCatalogDetails(
-        Catalog $catalog
+        Catalog $catalog,
     ): CatalogDetailsInterface;
 
     /**
@@ -85,6 +85,6 @@ interface GuiFactoryInterface
     public function createNewPlaylistDialogAdapter(
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        string $object_id
+        string $object_id,
     ): NewPlaylistDialogAdapterInterface;
 }

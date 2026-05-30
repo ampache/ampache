@@ -51,7 +51,7 @@ final class ApplicationRunner
         ContainerInterface $dic,
         LoggerInterface $logger,
         GatekeeperFactoryInterface $gatekeeperFactory,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->dic               = $dic;
         $this->logger            = $logger;
@@ -66,7 +66,7 @@ final class ApplicationRunner
     public function run(
         ServerRequestInterface $request,
         array $action_list,
-        string $default_action
+        string $default_action,
     ): void {
         $body        = (array)$request->getParsedBody();
         $action_name = htmlspecialchars($body['action'] ?? $request->getQueryParams()['action'] ?? '');

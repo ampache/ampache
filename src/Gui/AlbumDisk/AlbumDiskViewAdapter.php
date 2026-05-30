@@ -55,7 +55,7 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
         private FunctionCheckerInterface $functionChecker,
         private GuiGatekeeperInterface $gatekeeper,
         private Browse $browse,
-        private AlbumDisk $albumDisk
+        private AlbumDisk $albumDisk,
     ) {
     }
 

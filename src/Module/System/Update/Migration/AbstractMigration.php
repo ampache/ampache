@@ -46,7 +46,7 @@ abstract class AbstractMigration implements MigrationInterface
     protected bool $warning = false;
 
     public function __construct(
-        DatabaseConnectionInterface $connection
+        DatabaseConnectionInterface $connection,
     ) {
         $this->connection = $connection;
     }
@@ -102,7 +102,7 @@ abstract class AbstractMigration implements MigrationInterface
         int              $level,
         string           $type,
         string           $category,
-        ?string          $subcategory = null
+        ?string          $subcategory = null,
     ): void {
         Preference::insert($name, $description, $default, $level, $type, $category, $subcategory, true);
 
@@ -122,7 +122,7 @@ abstract class AbstractMigration implements MigrationInterface
         string $collation,
         string $charset,
         string $engine,
-        int $build
+        int $build,
     ): Traversable {
         return new ArrayIterator();
     }

@@ -49,7 +49,7 @@ final class ShowAction implements ApplicationActionInterface
 
     public function __construct(
         UiInterface $ui,
-        CatalogLoaderInterface $catalogLoader
+        CatalogLoaderInterface $catalogLoader,
     ) {
         $this->ui            = $ui;
         $this->catalogLoader = $catalogLoader;

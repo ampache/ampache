@@ -31,7 +31,7 @@ final class LabelListUpdater implements LabelListUpdaterInterface
     private LabelRepositoryInterface $labelRepository;
 
     public function __construct(
-        LabelRepositoryInterface $labelRepository
+        LabelRepositoryInterface $labelRepository,
     ) {
         $this->labelRepository = $labelRepository;
     }
@@ -42,7 +42,7 @@ final class LabelListUpdater implements LabelListUpdaterInterface
     public function update(
         string $labelsComma,
         int $artistId,
-        bool $overwrite
+        bool $overwrite,
     ): bool {
         debug_event(self::class, 'Updating labels for values {' . $labelsComma . '} artist {' . $artistId . '}', 5);
 

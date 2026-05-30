@@ -65,7 +65,7 @@ final readonly class ShoutCreator implements ShoutCreatorInterface
         LibraryItemEnum $objectType,
         string $text,
         bool $isSticky,
-        int $offset
+        int $offset,
     ): void {
         $date     = new DateTime();
         $objectId = $libItem->getId();

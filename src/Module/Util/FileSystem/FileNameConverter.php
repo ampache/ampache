@@ -36,7 +36,7 @@ final class FileNameConverter implements FileNameConverterInterface
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->configContainer = $configContainer;
     }
@@ -44,7 +44,7 @@ final class FileNameConverter implements FileNameConverterInterface
     public function convert(
         Interactor $interactor,
         string $source_encoding,
-        bool $force = false
+        bool $force = false,
     ): void {
         $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
         $db_results = Dba::read($sql);
@@ -76,7 +76,7 @@ final class FileNameConverter implements FileNameConverterInterface
     private function charset_directory_correct(
         Interactor $interactor,
         string $path,
-        bool $force
+        bool $force,
     ): bool {
         /** @var string $source_encoding */
         $source_encoding = iconv_get_encoding('output_encoding') ?: 'UTF-8';
@@ -201,7 +201,7 @@ final class FileNameConverter implements FileNameConverterInterface
     private function charset_rename_file(
         Interactor $interactor,
         string $full_file,
-        string $translated_filename
+        string $translated_filename,
     ): bool {
         // First break out the base directory name and make sure it exists
         // in case our crap char is in the directory

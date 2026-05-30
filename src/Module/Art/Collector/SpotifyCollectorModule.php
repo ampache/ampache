@@ -44,7 +44,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         SpotifyWebAPI $spotifyWebAPI,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->configContainer = $configContainer;
         $this->spotifyWebAPI   = $spotifyWebAPI;
@@ -68,7 +68,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
     public function collectArt(
         Art $art,
         int $limit = 5,
-        array $data = []
+        array $data = [],
     ): array {
         static $accessToken = null;
 

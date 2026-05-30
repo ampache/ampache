@@ -45,7 +45,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
 {
     public function __construct(
-        private ContainerInterface $dic
+        private ContainerInterface $dic,
     ) {
     }
 
@@ -54,7 +54,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      */
     public function createLibraryItemFeed(
         ?User $user,
-        playable_item $libraryItem
+        playable_item $libraryItem,
     ): FeedTypeInterface {
         return new LibraryItemFeed(
             $this->dic->get(ModelFactoryInterface::class),
@@ -68,7 +68,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      * Creates a feed for recently played items
      */
     public function createRecentlyPlayedFeed(
-        ?User $user
+        ?User $user,
     ): FeedTypeInterface {
         return new RecentlyPlayedFeed(
             $user
@@ -88,7 +88,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      */
     public function createLatestAlbumFeed(
         ?User $user,
-        ServerRequestInterface $request
+        ServerRequestInterface $request,
     ): FeedTypeInterface {
         return new LatestAlbumFeed(
             $user,
@@ -101,7 +101,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      */
     public function createLatestArtistFeed(
         ?User $user,
-        ServerRequestInterface $request
+        ServerRequestInterface $request,
     ): FeedTypeInterface {
         return new LatestArtistFeed(
             $user,
@@ -125,7 +125,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      */
     public function createLatestSongFeed(
         ?User $user,
-        ServerRequestInterface $request
+        ServerRequestInterface $request,
     ): FeedTypeInterface {
         return new LatestSongFeed(
             $user,

@@ -50,7 +50,7 @@ final class ShowAction implements ApplicationActionInterface
     public function __construct(
         RequestParserInterface $requestParser,
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
     ) {
         $this->requestParser   = $requestParser;
         $this->responseFactory = $responseFactory;

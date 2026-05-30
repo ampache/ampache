@@ -49,7 +49,7 @@ final class ShowCreateAction implements ApplicationActionInterface
     public function __construct(
         UiInterface $ui,
         LicenseRepositoryInterface $licenseRepository,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->ui                = $ui;
         $this->licenseRepository = $licenseRepository;

@@ -47,7 +47,7 @@ final class ShowAction implements ApplicationActionInterface
     public function __construct(
         UiInterface $ui,
         LoggerInterface $logger,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->ui           = $ui;
         $this->logger       = $logger;

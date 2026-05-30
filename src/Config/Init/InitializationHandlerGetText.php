@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Config\Init;
 
-use Gettext\Translations;
 use Ampache\Config\Init\Exception\GetTextNotAvailableException;
+use Gettext\Translations;
 
 final class InitializationHandlerGetText implements InitializationHandlerInterface
 {

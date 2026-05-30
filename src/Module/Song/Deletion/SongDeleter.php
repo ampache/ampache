@@ -50,7 +50,7 @@ final class SongDeleter implements SongDeleterInterface
         ShoutRepositoryInterface $shoutRepository,
         SongRepositoryInterface $songRepository,
         UserActivityRepositoryInterface $useractivityRepository,
-        ArtCleanupInterface $artCleanup
+        ArtCleanupInterface $artCleanup,
     ) {
         $this->logger                 = $logger;
         $this->shoutRepository        = $shoutRepository;

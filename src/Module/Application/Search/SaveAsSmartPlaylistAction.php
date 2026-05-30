@@ -49,7 +49,7 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;

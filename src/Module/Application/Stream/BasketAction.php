@@ -40,7 +40,7 @@ final class BasketAction extends AbstractStreamAction
 
     public function __construct(
         LoggerInterface $logger,
-        private readonly ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($logger, $configContainer);
     }

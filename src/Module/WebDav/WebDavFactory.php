@@ -38,7 +38,7 @@ final class WebDavFactory implements WebDavFactoryInterface
     private AuthenticationManagerInterface $authenticationManager;
 
     public function __construct(
-        AuthenticationManagerInterface $authenticationManager
+        AuthenticationManagerInterface $authenticationManager,
     ) {
         $this->authenticationManager = $authenticationManager;
     }

@@ -39,7 +39,7 @@ final class AccessListManager implements AccessListManagerInterface
     private AccessRepositoryInterface $accessRepository;
 
     public function __construct(
-        AccessRepositoryInterface $accessRepository
+        AccessRepositoryInterface $accessRepository,
     ) {
         $this->accessRepository = $accessRepository;
     }
@@ -58,7 +58,7 @@ final class AccessListManager implements AccessListManagerInterface
         string $name,
         int $userId,
         AccessLevelEnum $level,
-        AccessTypeEnum $type
+        AccessTypeEnum $type,
     ): void {
         $startIp = (string)@inet_pton($startIp);
         $endIp   = (string)@inet_pton($endIp);
@@ -92,7 +92,7 @@ final class AccessListManager implements AccessListManagerInterface
         int $userId,
         AccessLevelEnum $level,
         AccessTypeEnum $type,
-        AccessTypeEnum $additionalType
+        AccessTypeEnum $additionalType,
     ): void {
         $startIp = (string)@inet_pton($startIp);
         $endIp   = (string)@inet_pton($endIp);

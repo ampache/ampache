@@ -50,7 +50,7 @@ final class PodcastOpmlImporter implements PodcastOpmlImporterInterface
     public function __construct(
         PodcastOpmlLoaderInterface $podcastOpmlLoader,
         PodcastCreatorInterface $podcastCreator,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->podcastOpmlLoader = $podcastOpmlLoader;
         $this->podcastCreator    = $podcastCreator;

@@ -48,7 +48,7 @@ final class DemocraticAction extends AbstractStreamAction
         RequestParserInterface $requestParser,
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;

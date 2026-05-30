@@ -58,7 +58,7 @@ final class PodcastDeleter implements PodcastDeleterInterface
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $config,
         PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->podcastRepository        = $podcastRepository;
         $this->modelFactory             = $modelFactory;
@@ -71,7 +71,7 @@ final class PodcastDeleter implements PodcastDeleterInterface
      * Deletes a podcast including its episodes
      */
     public function delete(
-        Podcast $podcast
+        Podcast $podcast,
     ): void {
         $this->logger->debug(
             sprintf('Removing podcast %s', $podcast->getId()),

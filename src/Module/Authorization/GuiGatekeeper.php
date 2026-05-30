@@ -37,14 +37,14 @@ final class GuiGatekeeper implements GuiGatekeeperInterface
     private PrivilegeCheckerInterface $privilegeChecker;
 
     public function __construct(
-        PrivilegeCheckerInterface $privilegeChecker
+        PrivilegeCheckerInterface $privilegeChecker,
     ) {
         $this->privilegeChecker = $privilegeChecker;
     }
 
     public function mayAccess(
         AccessTypeEnum $type,
-        AccessLevelEnum $level
+        AccessLevelEnum $level,
     ): bool {
         return $this->privilegeChecker->check($type, $level);
     }

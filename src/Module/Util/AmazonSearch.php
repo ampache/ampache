@@ -72,7 +72,7 @@ class AmazonSearch
         $public_key,
         $private_key,
         $associate_tag,
-        $base_url_param = ''
+        $base_url_param = '',
     ) {
         // If we have a base url then use it
         if ($base_url_param != '') {

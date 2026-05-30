@@ -32,7 +32,7 @@ interface GuiGatekeeperInterface
      */
     public function mayAccess(
         AccessTypeEnum $type,
-        AccessLevelEnum $level
+        AccessLevelEnum $level,
     ): bool;
 
     /**

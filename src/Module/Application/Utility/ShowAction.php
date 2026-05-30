@@ -44,7 +44,7 @@ final class ShowAction implements ApplicationActionInterface
     private ResponseFactoryInterface $responseFactory;
 
     public function __construct(
-        ResponseFactoryInterface $responseFactory
+        ResponseFactoryInterface $responseFactory,
     ) {
         $this->responseFactory = $responseFactory;
     }

@@ -47,7 +47,7 @@ final class UpdateDbCommand extends Command
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        DatabaseCharsetUpdaterInterface $databaseCharsetUpdater
+        DatabaseCharsetUpdaterInterface $databaseCharsetUpdater,
     ) {
         parent::__construct('run:updateDb', T_('Update the database collation and charset'));
 

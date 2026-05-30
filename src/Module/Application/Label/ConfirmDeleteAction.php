@@ -53,7 +53,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         LabelDeleterInterface $labelDeleter,
-        LabelRepositoryInterface $labelRepository
+        LabelRepositoryInterface $labelRepository,
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;

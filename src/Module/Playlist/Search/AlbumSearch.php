@@ -45,7 +45,7 @@ final class AlbumSearch implements SearchInterface
      * }
      */
     public function getSql(
-        Search $search
+        Search $search,
     ): array {
         $search_user_id     = $search->search_user->getId();
         $sql_logic_operator = strtoupper($search->logic_operator ?? 'and');

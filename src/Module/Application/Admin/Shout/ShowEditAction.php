@@ -47,7 +47,7 @@ final readonly class ShowEditAction implements ApplicationActionInterface
     public function __construct(
         private UiInterface $ui,
         private ShoutObjectLoaderInterface $shoutObjectLoader,
-        private ShoutRepositoryInterface $shoutRepository
+        private ShoutRepositoryInterface $shoutRepository,
     ) {
     }
 

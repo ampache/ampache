@@ -77,8 +77,10 @@ class Song_Preview extends database_object implements Media, playable_item
      *
      * Song Preview class
      */
-    public function __construct(?int $object_id = 0, ?string $album_name = null)
-    {
+    public function __construct(
+        ?int $object_id = 0,
+        ?string $album_name = null,
+    ) {
         if (!$object_id) {
             return;
         }

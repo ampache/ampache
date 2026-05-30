@@ -46,7 +46,7 @@ final class ShowSongsAction implements ApplicationActionInterface
     public function __construct(
         ModelFactoryInterface $modelFactory,
         UiInterface $ui,
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
     ) {
         $this->modelFactory   = $modelFactory;
         $this->ui             = $ui;

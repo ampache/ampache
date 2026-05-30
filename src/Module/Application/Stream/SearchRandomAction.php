@@ -42,7 +42,7 @@ final class SearchRandomAction extends AbstractStreamAction
     public function __construct(
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($logger, $configContainer);
         $this->modelFactory    = $modelFactory;

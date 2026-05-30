@@ -54,7 +54,7 @@ final class ShowAddMessageAction implements ApplicationActionInterface
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        PrivateMessageRepositoryInterface $pmRepository
+        PrivateMessageRepositoryInterface $pmRepository,
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;

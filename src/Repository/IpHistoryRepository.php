@@ -43,7 +43,7 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
 {
     public function __construct(
         private DatabaseConnectionInterface $connection,
-        private ConfigContainerInterface $configContainer
+        private ConfigContainerInterface $configContainer,
     ) {
     }
 
@@ -54,7 +54,7 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
      */
     public function getHistory(
         User $user,
-        ?bool $limited = true
+        ?bool $limited = true,
     ): Generator {
         $where_sql = '';
         $params    = [$user->getId()];
@@ -121,7 +121,7 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
         string $ipAddress,
         string $userAgent,
         DateTimeInterface $date,
-        string $action
+        string $action,
     ): void {
         if ($ipAddress !== '') {
             $ipAddress = inet_pton($ipAddress);

@@ -30,6 +30,6 @@ interface MetadataWriterInterface
     public function write(
         Art $art,
         string $dirName,
-        string $fileName
+        string $fileName,
     ): void;
 }

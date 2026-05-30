@@ -212,7 +212,7 @@ class Stats
         string $agent = '',
         array $location = [],
         string $count_type = 'stream',
-        ?int $date = null
+        ?int $date = null,
     ): bool {
         if (AmpConfig::get('use_auth') && $user_id < 0) {
             debug_event(self::class, 'Invalid user given ' . $user_id, 3);
@@ -270,7 +270,7 @@ class Stats
         int $user,
         string $agent,
         int $time,
-        bool $exact = false
+        bool $exact = false,
     ): bool {
         $sql = ($exact)
             ? "SELECT `object_id`, `date`, `count_type` FROM `object_count` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`count_type` = 'stream' AND `object_count`.`date` = $time "
@@ -580,7 +580,7 @@ class Stats
         int $since = 0,
         int $before = 0,
         bool $addAdditionalColumns = false,
-        bool $by_user = false
+        bool $by_user = false,
     ): string {
         $type           = self::validate_type($input_type);
         $date           = $since ?: time() - (86400 * (int)$threshold);
@@ -705,7 +705,7 @@ class Stats
         bool $random = false,
         int $since = 0,
         int $before = 0,
-        bool $by_user = false
+        bool $by_user = false,
     ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -792,7 +792,7 @@ class Stats
         int $count = 0,
         int $offset = 0,
         ?User $user = null,
-        bool $newest = true
+        bool $newest = true,
     ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -919,7 +919,7 @@ class Stats
     public static function get_newest_sql(
         string $input_type,
         ?int   $catalog_id = 0,
-        ?User  $user = null
+        ?User  $user = null,
     ): string {
         $type = self::validate_type($input_type);
         // all objects could be filtered
@@ -1008,7 +1008,7 @@ class Stats
         int $count = 0,
         int $offset = 0,
         int $catalog_id = 0,
-        ?User $user = null
+        ?User $user = null,
     ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);

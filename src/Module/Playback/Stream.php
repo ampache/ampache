@@ -99,7 +99,7 @@ class Stream
         string $source,
         ?string $target = null,
         ?string $player = null,
-        string $media_type = 'song'
+        string $media_type = 'song',
     ): ?string {
         // check if we've done this before
         $format = self::get_output_cache($source, $target, $player, $media_type);
@@ -245,7 +245,7 @@ class Stream
         ?string $target = null,
         ?string $player = null,
         string $media_type = 'song',
-        array $options = []
+        array $options = [],
     ): array {
         $target = self::get_transcode_format($source, $target, $player, $media_type);
         $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?? AmpConfig::get('transcode_cmd');
@@ -295,7 +295,7 @@ class Stream
         string $source,
         ?string $target = null,
         ?string $player = null,
-        string $media_type = 'song'
+        string $media_type = 'song',
     ): string {
         if (!empty($GLOBALS['transcode'])) {
             return $GLOBALS['transcode'][$source][$target ?? ''][$player ?? ''][$media_type] ?? '';
@@ -312,7 +312,7 @@ class Stream
         string $source,
         ?string $target = null,
         ?string $player = null,
-        string $media_type = 'song'
+        string $media_type = 'song',
     ): void {
         if (empty($GLOBALS['transcode']) || !is_array($GLOBALS['transcode'])) {
             $GLOBALS['transcode'] = [];
@@ -337,7 +337,7 @@ class Stream
     public static function start_transcode(
         Podcast_Episode|Video|Song $media,
         array $transcode_settings,
-        array|string $options = []
+        array|string $options = [],
     ): array {
         $out_file = false;
         if (is_string($options)) {
@@ -592,7 +592,7 @@ class Stream
         int $length,
         string $sid,
         string $type,
-        ?int $previous = null
+        ?int $previous = null,
     ): void {
         if (!$previous) {
             $previous = time();

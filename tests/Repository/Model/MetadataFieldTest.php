@@ -81,7 +81,7 @@ class MetadataFieldTest extends TestCase
         string $getterMethod,
         string $setterMethod,
         mixed $defaultValue,
-        mixed $setValue
+        mixed $setValue,
     ): void {
         self::assertSame(
             $defaultValue,

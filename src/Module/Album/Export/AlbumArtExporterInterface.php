@@ -34,6 +34,6 @@ interface AlbumArtExporterInterface
     public function export(
         Interactor $interactor,
         Catalog $catalog,
-        Writer\MetadataWriterInterface $metadataWriter
+        Writer\MetadataWriterInterface $metadataWriter,
     ): void;
 }

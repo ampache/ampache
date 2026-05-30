@@ -46,7 +46,7 @@ final class ShowPlaylistAction extends AbstractLocalPlayAction
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         parent::__construct($configContainer);
         $this->configContainer = $configContainer;
@@ -55,7 +55,7 @@ final class ShowPlaylistAction extends AbstractLocalPlayAction
 
     protected function handle(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
         if ($gatekeeper->mayAccess(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST) === false) {
             throw new AccessDeniedException();

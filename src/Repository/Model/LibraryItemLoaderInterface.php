@@ -42,6 +42,6 @@ interface LibraryItemLoaderInterface
     public function load(
         LibraryItemEnum $objectType,
         int $objectId,
-        array $allowedItems = [TITemType::class]
+        array $allowedItems = [TITemType::class],
     ): ?TITemType;
 }

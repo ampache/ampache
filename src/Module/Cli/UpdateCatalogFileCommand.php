@@ -42,7 +42,7 @@ final class UpdateCatalogFileCommand extends Command
     }
 
     public function __construct(
-        UpdateSingleCatalogFileInterface $updateSingleCatalogFile
+        UpdateSingleCatalogFileInterface $updateSingleCatalogFile,
     ) {
         parent::__construct('run:updateCatalogFile', T_('Perform catalog actions for a single file'));
 
@@ -66,7 +66,7 @@ final class UpdateCatalogFileCommand extends Command
 
     public function execute(
         string $catalogName,
-        string $filePath
+        string $filePath,
     ): void {
         $values = $this->values();
 

@@ -40,7 +40,7 @@ final class NetworkChecker implements NetworkCheckerInterface
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        AccessRepositoryInterface $accessRepository
+        AccessRepositoryInterface $accessRepository,
     ) {
         $this->configContainer  = $configContainer;
         $this->accessRepository = $accessRepository;
@@ -53,7 +53,7 @@ final class NetworkChecker implements NetworkCheckerInterface
     public function check(
         AccessTypeEnum $type,
         ?int $userId = null,
-        AccessLevelEnum $level = AccessLevelEnum::USER
+        AccessLevelEnum $level = AccessLevelEnum::USER,
     ): bool {
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ACCESS_CONTROL)) {
             return match ($type) {

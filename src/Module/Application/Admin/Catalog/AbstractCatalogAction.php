@@ -38,7 +38,7 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
     private UiInterface $ui;
 
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->ui = $ui;
     }
@@ -65,7 +65,7 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
 
     abstract protected function handle(
         ServerRequestInterface $request,
-        array $catalogIds
+        array $catalogIds,
     ): ?ResponseInterface;
 
     protected function getCatalogIds(): ?array

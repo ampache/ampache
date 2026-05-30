@@ -39,7 +39,7 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
 {
     public function __construct(
         private ModelFactoryInterface $modelFactory,
-        private DatabaseConnectionInterface $connection
+        private DatabaseConnectionInterface $connection,
     ) {
     }
 
@@ -63,7 +63,7 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
      * Searches for an existing podcast object by the feed url
      */
     public function findByFeedUrl(
-        string $feedUrl
+        string $feedUrl,
     ): ?Podcast {
         $podcastId = $this->connection->fetchOne(
             'SELECT `id` FROM `podcast` WHERE `feed` = ?',

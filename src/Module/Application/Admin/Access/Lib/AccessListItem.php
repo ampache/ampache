@@ -36,7 +36,7 @@ final class AccessListItem implements AccessListItemInterface
 
     public function __construct(
         ModelFactoryInterface $modelFactory,
-        Access $access
+        Access $access,
     ) {
         $this->modelFactory = $modelFactory;
         $this->access       = $access;

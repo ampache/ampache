@@ -50,7 +50,7 @@ final class ShareCreator implements ShareCreatorInterface
 
     public function __construct(
         PluginRetrieverInterface $pluginRetriever,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->pluginRetriever = $pluginRetriever;
         $this->logger          = $logger;
@@ -65,7 +65,7 @@ final class ShareCreator implements ShareCreatorInterface
         int $expire_days = 0,
         string $secret = '',
         int $max_counter = 0,
-        ?string $description = ''
+        ?string $description = '',
     ): ?int {
         if (!in_array($object_type, Share::VALID_TYPES, true)) {
             $this->logger->error(

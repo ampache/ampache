@@ -50,7 +50,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         private PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader,
         private PodcastDeleterInterface $podcastDeleter,
         private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
-        private ConfigContainerInterface $configContainer
+        private ConfigContainerInterface $configContainer,
     ) {
     }
 
@@ -59,7 +59,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
      */
     public function sync(
         Podcast $podcast,
-        bool $gather = false
+        bool $gather = false,
     ): bool {
         $feed = $podcast->getFeedUrl();
         if ($feed === '') {
@@ -106,7 +106,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
      * @return int Amount of new episodes
      */
     public function syncForCatalogs(
-        iterable $catalogs
+        iterable $catalogs,
     ): int {
         $newEpisodeCount = 0;
         $downloadLimit   = (int)$this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
@@ -153,7 +153,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         Podcast $podcast,
         SimpleXMLElement $episodes,
         ?DateTimeInterface $lastSync = null,
-        bool $gather = false
+        bool $gather = false,
     ): void {
         foreach ($episodes as $episode) {
             if ($episode) {
@@ -211,7 +211,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
     private function add_episode(
         Podcast $podcast,
         SimpleXMLElement $episode,
-        ?DateTimeInterface $lastSync
+        ?DateTimeInterface $lastSync,
     ): void {
         $title       = html_entity_decode((string)$episode->title);
         $website     = (string)$episode->link;

@@ -53,7 +53,7 @@ final class ShowAction implements ApplicationActionInterface
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
