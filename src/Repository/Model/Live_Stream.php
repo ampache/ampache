@@ -38,7 +38,7 @@ use Ampache\Module\System\Dba;
  */
 class Live_Stream extends database_object implements Media, library_item, CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'live_stream';
+    protected const string DB_TABLENAME = 'live_stream';
 
     /* DB based variables */
     public int $id = 0;
@@ -77,7 +77,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
@@ -172,7 +172,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     }
 
     /**
-     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -181,7 +181,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -191,7 +191,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     }
 
     /**
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {

@@ -22,6 +22,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\User;
@@ -31,14 +32,14 @@ interface UserFollowerRepositoryInterface
     /**
      * Get users following the user
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getFollowers(User $user): array;
 
     /**
      * Get users followed by this user
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getFollowing(User $user): array;
 
@@ -55,7 +56,7 @@ interface UserFollowerRepositoryInterface
      */
     public function add(
         User $user,
-        User $followingUser
+        User $followingUser,
     ): void;
 
     /**
@@ -63,6 +64,6 @@ interface UserFollowerRepositoryInterface
      */
     public function delete(
         User $user,
-        User $followingUser
+        User $followingUser,
     ): void;
 }

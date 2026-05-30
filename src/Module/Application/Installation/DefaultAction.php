@@ -34,6 +34,7 @@ use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Preference;
 use Exception;
+use Gettext\Translations;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -42,23 +43,17 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class DefaultAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'default';
-
-    public InstallationHelperInterface $installationHelper;
-
-    private EnvironmentInterface $environment;
+    public const string REQUEST_KEY = 'default';
 
     public function __construct(
-        InstallationHelperInterface $installationHelper,
-        EnvironmentInterface $environment
+        public InstallationHelperInterface $installationHelper,
+        private readonly EnvironmentInterface $environment,
     ) {
-        $this->installationHelper = $installationHelper;
-        $this->environment        = $environment;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        set_error_handler('ampache_error_handler');
+        set_error_handler(ampache_error_handler(...));
 
         $configfile = __DIR__ . '/../../../../config/ampache.cfg.php';
 
@@ -125,27 +120,25 @@ final class DefaultAction implements ApplicationActionInterface
         // Charset and gettext setup
         $charset  = $_REQUEST['charset'] ?? 'UTF-8';
         $htmllang = $_REQUEST['htmllang'] ?? null;
-
         if (!$htmllang) {
-            if ($_ENV['LANG']) {
-                $lang = $_ENV['LANG'];
-            } else {
-                $lang = 'en_US';
-            }
-            if (strpos($lang, '.')) {
-                $langtmp  = explode('.', $lang);
+            $lang = $_ENV['LANG'] ?: 'en_US';
+
+            if (strpos((string) $lang, '.')) {
+                $langtmp  = explode('.', (string) $lang);
                 $htmllang = $langtmp[0];
                 $charset  = $langtmp[1];
             } else {
                 $htmllang = $lang;
             }
         }
+
         AmpConfig::set('lang', $htmllang, true);
         AmpConfig::set('site_charset', $charset, true);
-        if (!class_exists('Gettext\Translations')) {
+        if (!class_exists(Translations::class)) {
             require_once __DIR__ . '/../../../../public/client/templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
         }
+
         load_gettext();
 
         header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset', 'UTF-8'));
@@ -171,7 +164,7 @@ final class DefaultAction implements ApplicationActionInterface
                 /** @noinspection PhpMissingBreakStatementInspection */
                 $new_user = '';
                 $new_pass = '';
-                if (Core::get_post('db_user') == 'create_db_user') {
+                if (Core::get_post('db_user') === 'create_db_user') {
                     $new_user = Core::get_post('db_username');
                     $new_pass = Core::get_post('db_password');
 
@@ -182,11 +175,9 @@ final class DefaultAction implements ApplicationActionInterface
                     }
                 }
 
-                if (!$skip_admin) {
-                    if (!$this->installationHelper->install_insert_db($new_user, $new_pass, array_key_exists('create_db', $_REQUEST), array_key_exists('overwrite_db', $_REQUEST), array_key_exists('create_tables', $_REQUEST))) {
-                        require_once __DIR__ . '/../../../../public/client/templates/show_install.inc.php';
-                        break;
-                    }
+                if (!$skip_admin && !$this->installationHelper->install_insert_db($new_user, $new_pass, array_key_exists('create_db', $_REQUEST), array_key_exists('overwrite_db', $_REQUEST), array_key_exists('create_tables', $_REQUEST))) {
+                    require_once __DIR__ . '/../../../../public/client/templates/show_install.inc.php';
+                    break;
                 }
 
                 // Now that it's inserted save the lang preference
@@ -211,9 +202,11 @@ final class DefaultAction implements ApplicationActionInterface
                     if ($write_htaccess_rest || $download_htaccess_rest || $all) {
                         $created_config = $this->installationHelper->install_rewrite_rules($htaccess_rest_file, Core::get_post('web_path'), $download_htaccess_rest);
                     }
+
                     if ($write_htaccess_play || $download_htaccess_play || $all) {
                         $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_play_file, Core::get_post('web_path'), $download_htaccess_play);
                     }
+
                     if ($write || $download || $all) {
                         $created_config = $created_config && $this->installationHelper->install_create_config($download);
                         if ($download && !$created_config) {
@@ -245,6 +238,7 @@ final class DefaultAction implements ApplicationActionInterface
                 } else {
                     header("Location: " . $web_path . '/login.php');
                 }
+
                 break;
             case 'create_account':
                 $results = parse_ini_file($configfile) ?: [];

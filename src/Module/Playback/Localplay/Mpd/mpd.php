@@ -51,114 +51,182 @@ class mpd
 {
     // Command names
     // Status queries
-    public const COMMAND_CLEARERROR  = 'clearerror';
-    public const COMMAND_CURRENTSONG = 'currentsong';
-    public const COMMAND_IDLE        = 'idle';
-    public const COMMAND_STATUS      = 'status';
-    public const COMMAND_STATISTICS  = 'stats';
+    public const string COMMAND_CLEARERROR  = 'clearerror';
+
+    public const string COMMAND_CURRENTSONG = 'currentsong';
+
+    public const string COMMAND_IDLE        = 'idle';
+
+    public const string COMMAND_STATUS      = 'status';
+
+    public const string COMMAND_STATISTICS  = 'stats';
 
     // Playback options
-    public const COMMAND_CONSUME            = 'consume';
-    public const COMMAND_CROSSFADE          = 'crossfade';
-    public const COMMAND_RANDOM             = 'random';
-    public const COMMAND_REPEAT             = 'repeat';
-    public const COMMAND_SETVOL             = 'setvol';
-    public const COMMAND_SINGLE             = 'single';
-    public const COMMAND_REPLAY_GAIN_MODE   = 'replay_gain_mode';
-    public const COMMAND_REPLAY_GAIN_STATUS = 'replay_gain_status';
+    public const string COMMAND_CONSUME            = 'consume';
+
+    public const string COMMAND_CROSSFADE          = 'crossfade';
+
+    public const string COMMAND_RANDOM             = 'random';
+
+    public const string COMMAND_REPEAT             = 'repeat';
+
+    public const string COMMAND_SETVOL             = 'setvol';
+
+    public const string COMMAND_SINGLE             = 'single';
+
+    public const string COMMAND_REPLAY_GAIN_MODE   = 'replay_gain_mode';
+
+    public const string COMMAND_REPLAY_GAIN_STATUS = 'replay_gain_status';
 
     // Playback control
-    public const COMMAND_NEXT     = 'next';
-    public const COMMAND_PAUSE    = 'pause';
-    public const COMMAND_PLAY     = 'play';
-    public const COMMAND_PLAYID   = 'playid';
-    public const COMMAND_PREVIOUS = 'previous';
-    public const COMMAND_SEEK     = 'seek';
-    public const COMMAND_SEEKID   = 'seekid';
-    public const COMMAND_STOP     = 'stop';
+    public const string COMMAND_NEXT     = 'next';
+
+    public const string COMMAND_PAUSE    = 'pause';
+
+    public const string COMMAND_PLAY     = 'play';
+
+    public const string COMMAND_PLAYID   = 'playid';
+
+    public const string COMMAND_PREVIOUS = 'previous';
+
+    public const string COMMAND_SEEK     = 'seek';
+
+    public const string COMMAND_SEEKID   = 'seekid';
+
+    public const string COMMAND_STOP     = 'stop';
 
     // Current playlist control
-    public const COMMAND_ADD            = 'add';
-    public const COMMAND_ADDID          = 'addid';
-    public const COMMAND_CLEAR          = 'clear';
-    public const COMMAND_DELETE         = 'delete';
-    public const COMMAND_DELETEID       = 'deleteid';
-    public const COMMAND_MOVETRACK      = 'move';
-    public const COMMAND_MOVEID         = 'moveid';
-    public const COMMAND_PLFIND         = 'playlistfind';
-    public const COMMAND_PLID           = 'playlistid';
-    public const COMMAND_PLINFO         = 'playlistinfo';
-    public const COMMAND_PLSEARCH       = 'playlistsearch';
-    public const COMMAND_PLCHANGES      = 'plchanges';
-    public const COMMAND_PLCHANGESPOSID = 'plchangesposid';
-    public const COMMAND_PLSHUFFLE      = 'shuffle';
-    public const COMMAND_PLSWAPTRACK    = 'swap';
-    public const COMMAND_PLSWAPID       = 'swapid';
+    public const string COMMAND_ADD            = 'add';
+
+    public const string COMMAND_ADDID          = 'addid';
+
+    public const string COMMAND_CLEAR          = 'clear';
+
+    public const string COMMAND_DELETE         = 'delete';
+
+    public const string COMMAND_DELETEID       = 'deleteid';
+
+    public const string COMMAND_MOVETRACK      = 'move';
+
+    public const string COMMAND_MOVEID         = 'moveid';
+
+    public const string COMMAND_PLFIND         = 'playlistfind';
+
+    public const string COMMAND_PLID           = 'playlistid';
+
+    public const string COMMAND_PLINFO         = 'playlistinfo';
+
+    public const string COMMAND_PLSEARCH       = 'playlistsearch';
+
+    public const string COMMAND_PLCHANGES      = 'plchanges';
+
+    public const string COMMAND_PLCHANGESPOSID = 'plchangesposid';
+
+    public const string COMMAND_PLSHUFFLE      = 'shuffle';
+
+    public const string COMMAND_PLSWAPTRACK    = 'swap';
+
+    public const string COMMAND_PLSWAPID       = 'swapid';
 
     // Stored playlists
-    public const COMMAND_LISTPL        = 'listplaylist';
-    public const COMMAND_LISTPLINFO    = 'listplaylistinfo';
-    public const COMMAND_LISTPLAYLISTS = 'listplaylists';
-    public const COMMAND_PLLOAD        = 'load';
-    public const COMMAND_PLADD         = 'playlistadd';
-    public const COMMAND_PLCLEAR       = 'playlistclear';
-    public const COMMAND_PLDELETE      = 'playlistdelete';
-    public const COMMAND_PLMOVE        = 'playlistmove';
-    public const COMMAND_RENAME        = 'rename';
-    public const COMMAND_RM            = 'rm';
-    public const COMMAND_PLSAVE        = 'save';
+    public const string COMMAND_LISTPL        = 'listplaylist';
+
+    public const string COMMAND_LISTPLINFO    = 'listplaylistinfo';
+
+    public const string COMMAND_LISTPLAYLISTS = 'listplaylists';
+
+    public const string COMMAND_PLLOAD        = 'load';
+
+    public const string COMMAND_PLADD         = 'playlistadd';
+
+    public const string COMMAND_PLCLEAR       = 'playlistclear';
+
+    public const string COMMAND_PLDELETE      = 'playlistdelete';
+
+    public const string COMMAND_PLMOVE        = 'playlistmove';
+
+    public const string COMMAND_RENAME        = 'rename';
+
+    public const string COMMAND_RM            = 'rm';
+
+    public const string COMMAND_PLSAVE        = 'save';
 
     // Music database
-    public const COMMAND_COUNT       = 'count';
-    public const COMMAND_FIND        = 'find';
-    public const COMMAND_FINDADD     = 'findadd';
-    public const COMMAND_TABLE       = 'list';
-    public const COMMAND_LISTALL     = 'listall';
-    public const COMMAND_LISTALLINFO = 'listallinfo';
-    public const COMMAND_LSDIR       = 'lsinfo';
-    public const COMMAND_SEARCH      = 'search';
-    public const COMMAND_REFRESH     = 'update';
-    public const COMMAND_RESCAN      = 'rescan';
+    public const string COMMAND_COUNT       = 'count';
+
+    public const string COMMAND_FIND        = 'find';
+
+    public const string COMMAND_FINDADD     = 'findadd';
+
+    public const string COMMAND_TABLE       = 'list';
+
+    public const string COMMAND_LISTALL     = 'listall';
+
+    public const string COMMAND_LISTALLINFO = 'listallinfo';
+
+    public const string COMMAND_LSDIR       = 'lsinfo';
+
+    public const string COMMAND_SEARCH      = 'search';
+
+    public const string COMMAND_REFRESH     = 'update';
+
+    public const string COMMAND_RESCAN      = 'rescan';
 
     // Stickers
-    public const COMMAND_STICKER = 'sticker';
-    public const STICKER_GET     = 'get';
-    public const STICKER_SET     = 'set';
-    public const STICKER_DELETE  = 'delete';
-    public const STICKER_LIST    = 'list';
-    public const STICKER_FIND    = 'find';
+    public const string COMMAND_STICKER = 'sticker';
+
+    public const string STICKER_GET     = 'get';
+
+    public const string STICKER_SET     = 'set';
+
+    public const string STICKER_DELETE  = 'delete';
+
+    public const string STICKER_LIST    = 'list';
+
+    public const string STICKER_FIND    = 'find';
 
     // Connection
-    public const COMMAND_CLOSE    = 'close';
-    public const COMMAND_KILL     = 'kill';
-    public const COMMAND_PASSWORD = 'password';
-    public const COMMAND_PING     = 'ping';
-    public const COMMAND_SHUTDOWN = 'shutdown';
+    public const string COMMAND_CLOSE    = 'close';
+
+    public const string COMMAND_KILL     = 'kill';
+
+    public const string COMMAND_PASSWORD = 'password';
+
+    public const string COMMAND_PING     = 'ping';
+
+    public const string COMMAND_SHUTDOWN = 'shutdown';
 
     // Deprecated commands
-    public const COMMAND_VOLUME = 'volume';
+    public const string COMMAND_VOLUME = 'volume';
 
     // Bulk commands
-    public const COMMAND_START_BULK = 'command_list_begin';
-    public const COMMAND_END_BULK   = 'command_list_end';
+    public const string COMMAND_START_BULK = 'command_list_begin';
+
+    public const string COMMAND_END_BULK   = 'command_list_end';
 
     // Predefined MPD Response messages
-    public const RESPONSE_ERR = 'ACK';
-    public const RESPONSE_OK  = 'OK';
+    public const string RESPONSE_ERR = 'ACK';
+
+    public const string RESPONSE_OK  = 'OK';
 
     // MPD State Constants
-    public const STATE_PLAYING = 'play';
-    public const STATE_STOPPED = 'stop';
-    public const STATE_PAUSED  = 'pause';
+    public const string STATE_PLAYING = 'play';
+
+    public const string STATE_STOPPED = 'stop';
+
+    public const string STATE_PAUSED  = 'pause';
 
     // MPD Searching Constants
-    public const SEARCH_ARTIST = 'artist';
-    public const SEARCH_TITLE  = 'title';
-    public const SEARCH_ALBUM  = 'album';
+    public const string SEARCH_ARTIST = 'artist';
+
+    public const string SEARCH_TITLE  = 'title';
+
+    public const string SEARCH_ALBUM  = 'album';
 
     // MPD Cache Tables
-    public const TABLE_ARTIST = 'artist';
-    public const TABLE_ALBUM  = 'album';
+    public const string TABLE_ARTIST = 'artist';
+
+    public const string TABLE_ALBUM  = 'album';
 
     // Table holding version compatibility information
     private static array $_COMPATIBILITY_TABLE = [
@@ -180,16 +248,19 @@ class mpd
      */
 
     private $host;
-    private $port;
-    private $password;
 
-    private $_mpd_sock     = null;
+    private $port;
+
+    private $_mpd_sock;
+
     public bool $connected = false;
 
     public $mpd_version = "(unknown)"; // MPD Status variables
 
     public $stats;
+
     public $status;
+
     public $playlist;
 
     public $mpd_class_version = '1.3'; // Misc Other Vars
@@ -199,7 +270,7 @@ class mpd
     private $_command_queue; // The list of commands for bulk command sending
 
     /** @property callable|null $_debug_callback */
-    private $_debug_callback = null; // Optional callback to be run on debug
+    private $_debug_callback; // Optional callback to be run on debug
 
     public bool $debugging = false;
 
@@ -218,12 +289,11 @@ class mpd
     public function __construct(
         $server,
         $port,
-        $password = null,
-        $debug_callback = null
+        private $password = null,
+        $debug_callback = null,
     ) {
         $this->host     = trim($server);
         $this->port     = (int)$port;
-        $this->password = $password;
 
         if (is_callable($debug_callback)) {
             $this->_debug_callback = $debug_callback;
@@ -247,8 +317,8 @@ class mpd
         $version           = sscanf($response, self::RESPONSE_OK . " MPD %s\n");
         $this->mpd_version = $version[0] ?? "(unknown)";
 
-        if ($password) {
-            if (!$this->SendCommand(self::COMMAND_PASSWORD, $password, false)) {
+        if ($this->password) {
+            if (!$this->SendCommand(self::COMMAND_PASSWORD, $this->password, false)) {
                 // bad password or command
                 $this->connected = false;
                 $this->_error('construct', 'Password supplied is incorrect or Invalid Command');
@@ -274,10 +344,11 @@ class mpd
         $this->_mpd_sock = fsockopen($this->host, (int) $this->port, $err, $err_str, 6);
 
         if (!$this->_mpd_sock) {
-            $this->_error('Connect', "Socket Error: $err_str ($err)");
+            $this->_error('Connect', sprintf('Socket Error: %s (%d)', $err_str, $err));
 
             return null;
         }
+
         // Set the timeout on the connection */
         stream_set_timeout($this->_mpd_sock, 6);
 
@@ -289,13 +360,15 @@ class mpd
             if (function_exists('socket_get_status')) {
                 $status = socket_get_status($this->_mpd_sock);
             }
-            if (strncmp(self::RESPONSE_OK, (string)$response, strlen(self::RESPONSE_OK)) == 0) {
+
+            if (strncmp(self::RESPONSE_OK, (string)$response, strlen(self::RESPONSE_OK)) === 0) {
                 $this->connected = true;
 
                 return $response ?: null;
             }
-            if (strncmp(self::RESPONSE_ERR, (string)$response, strlen(self::RESPONSE_ERR)) == 0) {
-                $this->_error('Connect', "Server responded with: " . (string)$response);
+
+            if (strncmp(self::RESPONSE_ERR, (string)$response, strlen(self::RESPONSE_ERR)) === 0) {
+                $this->_error('Connect', "Server responded with: " . $response);
 
                 return null;
             }
@@ -317,7 +390,7 @@ class mpd
      */
     public function SendCommand(string $command, $arguments = null, $refresh_info = true)
     {
-        $this->_debug('SendCommand', "cmd: $command, args: " . json_encode($arguments), 5);
+        $this->_debug('SendCommand', sprintf('cmd: %s, args: ', $command) . json_encode($arguments), 5);
         if (
             !$this->connected ||
             !is_resource($this->_mpd_sock)
@@ -326,6 +399,7 @@ class mpd
 
             return false;
         }
+
         $response_string = '';
 
         // Check the command compatibility:
@@ -343,18 +417,18 @@ class mpd
             }
         }
 
-        fputs($this->_mpd_sock, "$command\n");
+        fwrite($this->_mpd_sock, $command . PHP_EOL);
         while (!feof($this->_mpd_sock)) {
             $response = fgets($this->_mpd_sock, 1024);
 
             // An OK signals the end of transmission
-            if (strncmp(self::RESPONSE_OK, (string)$response, strlen(self::RESPONSE_OK)) == 0) {
+            if (strncmp(self::RESPONSE_OK, (string)$response, strlen(self::RESPONSE_OK)) === 0) {
                 break;
             }
 
             // An ERR signals an error!
-            if (strncmp(self::RESPONSE_ERR, (string)$response, strlen(self::RESPONSE_ERR)) == 0) {
-                $this->_error('SendCommand', "MPD Error: $response");
+            if (strncmp(self::RESPONSE_ERR, (string)$response, strlen(self::RESPONSE_ERR)) === 0) {
+                $this->_error('SendCommand', 'MPD Error: ' . $response);
 
                 return false;
             }
@@ -362,7 +436,8 @@ class mpd
             // Build the response string
             $response_string .= $response;
         }
-        $this->_debug('SendCommand', "response: $response_string", 5);
+
+        $this->_debug('SendCommand', 'response: ' . $response_string, 5);
 
         if ($refresh_info) {
             $this->RefreshInfo();
@@ -383,7 +458,7 @@ class mpd
      */
     public function QueueCommand($command, $arguments = null): bool
     {
-        $this->_debug('QueueCommand', "start; cmd: $command args: " . json_encode($arguments), 5);
+        $this->_debug('QueueCommand', sprintf('start; cmd: %s args: ', $command) . json_encode($arguments), 5);
         if (!$this->connected) {
             $this->_error('QueueCommand', 'Not connected');
 
@@ -433,7 +508,7 @@ class mpd
             $this->_command_queue = null;
         }
 
-        $this->_debug('SendCommandQueue', "response: $response", 5);
+        $this->_debug('SendCommandQueue', 'response: ' . $response, 5);
 
         return $response;
     }
@@ -453,15 +528,15 @@ class mpd
             return false;
         }
 
-        $stats  = self::_parseResponse($stats);
-        $status = self::_parseResponse($status);
+        $stats  = $this->_parseResponse($stats);
+        $status = $this->_parseResponse($status);
 
         $this->stats  = $stats;
         $this->status = $status;
 
         // Get the Playlist
         $playlist       = $this->SendCommand(self::COMMAND_PLINFO, null, false);
-        $this->playlist = self::_parseFileListResponse($playlist);
+        $this->playlist = $this->_parseFileListResponse($playlist);
 
         return true;
     }
@@ -478,7 +553,7 @@ class mpd
     {
         $this->_debug('AdjustVolume', 'start', 5);
         if (!is_numeric($value)) {
-            $this->_error('AdjustVolume', "argument must be numeric: $value");
+            $this->_error('AdjustVolume', 'argument must be numeric: ' . $value);
 
             return false;
         }
@@ -487,7 +562,7 @@ class mpd
         $value    = $this->status['volume'] + $value;
         $response = $this->SetVolume($value);
 
-        $this->_debug('AdjustVolume', "return $response", 5);
+        $this->_debug('AdjustVolume', 'return ' . $response, 5);
 
         return $response;
     }
@@ -503,7 +578,7 @@ class mpd
     {
         $this->_debug('SetVolume', 'start', 5);
         if (!is_numeric($value)) {
-            $this->_error('SetVolume', "argument must be numeric: $value");
+            $this->_error('SetVolume', 'argument must be numeric: ' . $value);
 
             return false;
         }
@@ -525,13 +600,14 @@ class mpd
             if ($this->status['volume'] === null) {
                 return false;
             }
+
             $command = self::COMMAND_VOLUME;
-            $value   = $value - $this->status['volume'];
+            $value -= $this->status['volume'];
         }
 
         $response = $this->SendCommand($command, $value);
 
-        $this->_debug('SetVolume', "return: $response", 5);
+        $this->_debug('SetVolume', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -549,7 +625,7 @@ class mpd
     {
         $this->_debug('GetDir', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_LSDIR, $dir, false);
-        $dirlist  = self::_parseFileListResponse($response);
+        $dirlist  = $this->_parseFileListResponse($response);
         $this->_debug('GetDir', 'return: ' . json_encode($dirlist), 5);
 
         return $dirlist;
@@ -570,8 +646,9 @@ class mpd
         for ($count = 0; $count < $num_files; $count++) {
             $this->QueueCommand(self::COMMAND_ADD, $trackArray[$count]);
         }
+
         $response = $this->SendCommandQueue();
-        $this->_debug('PLAddBulk', "return: $response", 5);
+        $this->_debug('PLAddBulk', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -588,7 +665,7 @@ class mpd
     {
         $this->_debug('PLAdd', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_ADD, $filename);
-        $this->_debug('PLAdd', "return: $response", 5);
+        $this->_debug('PLAdd', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -603,15 +680,17 @@ class mpd
     {
         $this->_debug('PLMoveTrack', 'start', 5);
         if (!is_numeric($current_position)) {
-            $this->_error('PLMoveTrack', "current_position must be numeric: $current_position");
+            $this->_error('PLMoveTrack', 'current_position must be numeric: ' . $current_position);
 
             return false;
         }
+
         if ($current_position < 0 || $current_position > count($this->playlist)) {
             $this->_error('PLMoveTrack', "current_position out of range");
 
             return false;
         }
+
         $new_position = ($new_position > 0)
             ? $new_position
             : 0;
@@ -619,7 +698,7 @@ class mpd
 
         $response = $this->SendCommand(self::COMMAND_MOVETRACK, [$current_position, $new_position]);
 
-        $this->_debug('PLMoveTrack', "return: $response", 5);
+        $this->_debug('PLMoveTrack', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -634,7 +713,7 @@ class mpd
     {
         $this->_debug('PLShuffle', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PLSHUFFLE);
-        $this->_debug('PLShuffle', "return: $response", 5);
+        $this->_debug('PLShuffle', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -650,7 +729,7 @@ class mpd
     {
         $this->_debug('PLLoad', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PLLOAD, $file);
-        $this->_debug('PLLoad', "return: $response", 5);
+        $this->_debug('PLLoad', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -666,7 +745,7 @@ class mpd
     {
         $this->_debug('PLSave', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PLSAVE, $file, false);
-        $this->_debug('PLSave', "return: $response", 5);
+        $this->_debug('PLSave', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -681,7 +760,7 @@ class mpd
     {
         $this->_debug('PLClear', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_CLEAR);
-        $this->_debug('PLClear', "return: $response", 5);
+        $this->_debug('PLClear', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -696,12 +775,13 @@ class mpd
     public function PLRemove($id)
     {
         if (!is_numeric($id)) {
-            $this->_error('PLRemove', "id must be numeric: $id");
+            $this->_error('PLRemove', 'id must be numeric: ' . $id);
 
             return false;
         }
+
         $response = $this->SendCommand(self::COMMAND_DELETE, $id);
-        $this->_debug('PLRemove', "return: $response", 5);
+        $this->_debug('PLRemove', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -718,7 +798,7 @@ class mpd
         $this->_debug('SetRepeat', 'start', 5);
         $value    = ($value) ? 1 : 0;
         $response = $this->SendCommand(self::COMMAND_REPEAT, $value);
-        $this->_debug('SetRepeat', "return: $response", 5);
+        $this->_debug('SetRepeat', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -735,7 +815,7 @@ class mpd
         $this->_debug('SetRandom', 'start', 5);
         $value    = ($value) ? 1 : 0;
         $response = $this->SendCommand(self::COMMAND_RANDOM, $value);
-        $this->_debug('SetRandom', "return: $response", 5);
+        $this->_debug('SetRandom', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -758,7 +838,7 @@ class mpd
         unset($this->err_str);
         unset($this->_mpd_sock);
 
-        $this->_debug('Shutdown', "return: $response", 5);
+        $this->_debug('Shutdown', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -775,7 +855,7 @@ class mpd
     {
         $this->_debug('DBRefresh', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_REFRESH);
-        $this->_debug('DBRefresh', "return: $response", 5);
+        $this->_debug('DBRefresh', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -790,7 +870,7 @@ class mpd
     {
         $this->_debug('Play', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PLAY);
-        $this->_debug('Play', "return: $response", 5);
+        $this->_debug('Play', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -805,7 +885,7 @@ class mpd
     {
         $this->_debug('Stop', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_STOP);
-        $this->_debug('Stop', "return: $response", 5);
+        $this->_debug('Stop', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -820,7 +900,7 @@ class mpd
     {
         $this->_debug('Pause', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PAUSE);
-        $this->_debug('Pause', "return: $response", 5);
+        $this->_debug('Pause', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -835,12 +915,13 @@ class mpd
     {
         $this->_debug('SkipTo', 'start', 5);
         if (!is_numeric($idx)) {
-            $this->_error('SkipTo', "argument must be numeric: $idx");
+            $this->_error('SkipTo', 'argument must be numeric: ' . $idx);
 
             return false;
         }
-        $response = $this->SendCommand(self::COMMAND_PLAY, $idx);
-        $this->_debug('SkipTo', "return: $idx", 5);
+
+        $this->SendCommand(self::COMMAND_PLAY, $idx);
+        $this->_debug('SkipTo', 'return: ' . $idx, 5);
 
         return $idx;
     }
@@ -860,21 +941,23 @@ class mpd
     {
         $this->_debug('SeekTo', 'start', 5);
         if (!is_numeric($pos)) {
-            $this->_error('SeekTo', "pos must be numeric: $pos");
+            $this->_error('SeekTo', 'pos must be numeric: ' . $pos);
 
             return false;
         }
+
         if (!is_numeric($track)) {
-            $this->_error('SeekTo', "track must be numeric: $track");
+            $this->_error('SeekTo', 'track must be numeric: ' . $track);
 
             return false;
         }
+
         if ($track == -1) {
             $track = $this->current_track_id;
         }
 
-        $response = $this->SendCommand(self::COMMAND_SEEK, [$track, $pos]);
-        $this->_debug('SeekTo', "return: $pos", 5);
+        $this->SendCommand(self::COMMAND_SEEK, [$track, $pos]);
+        $this->_debug('SeekTo', 'return: ' . $pos, 5);
 
         return $pos;
     }
@@ -890,7 +973,7 @@ class mpd
     {
         $this->_debug('Next', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_NEXT);
-        $this->_debug('Next', "return: $response", 5);
+        $this->_debug('Next', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -906,7 +989,7 @@ class mpd
     {
         $this->_debug('Previous', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PREVIOUS);
-        $this->_debug('Previous', "return: $response", 5);
+        $this->_debug('Previous', 'return: ' . $response, 5);
 
         return $response;
     }
@@ -927,7 +1010,7 @@ class mpd
     {
         $this->_debug('Search', 'start', 5);
 
-        if ($type != self::SEARCH_ARTIST && $type != self::SEARCH_ALBUM && $type != self::SEARCH_TITLE) {
+        if (!in_array($type, [self::SEARCH_ARTIST, self::SEARCH_ALBUM, self::SEARCH_TITLE])) {
             $this->_error('Search', 'invalid search type');
 
             return false;
@@ -938,8 +1021,9 @@ class mpd
         $results = false;
 
         if ($response) {
-            $results = self::_parseFileListResponse($response);
+            $results = $this->_parseFileListResponse($response);
         }
+
         $this->_debug('Search', 'return: ' . json_encode($results), 5);
 
         return $results;
@@ -960,7 +1044,7 @@ class mpd
     public function Find($type, $string)
     {
         $this->_debug('Find', 'start', 5);
-        if ($type != self::SEARCH_ARTIST && $type != self::SEARCH_ALBUM && $type != self::SEARCH_TITLE) {
+        if (!in_array($type, [self::SEARCH_ARTIST, self::SEARCH_ALBUM, self::SEARCH_TITLE])) {
             $this->_error('Find', 'invalid find type');
 
             return false;
@@ -971,7 +1055,7 @@ class mpd
         $results = false;
 
         if ($response) {
-            $results = self::_parseFileListResponse($response);
+            $results = $this->_parseFileListResponse($response);
         }
 
         $this->_debug('Find', 'return: ' . json_encode($results), 5);
@@ -1009,9 +1093,10 @@ class mpd
         if (!$response = $this->SendCommand(self::COMMAND_TABLE, self::TABLE_ARTIST, false)) {
             return false;
         }
+
         $results = [];
 
-        $parsed = self::_parseResponse($response);
+        $parsed = $this->_parseResponse($response);
         if (!is_array($parsed)) {
             return false;
         }
@@ -1049,7 +1134,7 @@ class mpd
         }
 
         $results = [];
-        $parsed  = self::_parseResponse($response);
+        $parsed  = $this->_parseResponse($response);
         if (!is_array($parsed)) {
             return false;
         }
@@ -1073,7 +1158,7 @@ class mpd
      * @param string $string
      * @return float|int
      */
-    private static function _computeVersionValue($string)
+    private function _computeVersionValue($string)
     {
         $parts = explode('.', $string);
 
@@ -1087,18 +1172,18 @@ class mpd
      */
     private function _checkCompatibility(string $cmd, string $mpd_version): bool
     {
-        $mpd = self::_computeVersionValue($mpd_version);
+        $mpd = $this->_computeVersionValue($mpd_version);
 
         if (isset(self::$_COMPATIBILITY_TABLE[$cmd])) {
             $min_version = self::$_COMPATIBILITY_TABLE[$cmd]['min'];
             $max_version = self::$_COMPATIBILITY_TABLE[$cmd]['max'];
 
             if ($min_version) {
-                $min = self::_computeVersionValue($min_version);
+                $min = $this->_computeVersionValue($min_version);
                 if ($mpd < $min) {
                     $this->_error(
                         'compatibility',
-                        "Command '$cmd' is not compatible with this version of MPD, version $min_version required"
+                        sprintf("Command '%s' is not compatible with this version of MPD, version %s required", $cmd, $min_version)
                     );
 
                     return false;
@@ -1106,12 +1191,12 @@ class mpd
             }
 
             if ($max_version) {
-                $max = self::_computeVersionValue($max_version);
+                $max = $this->_computeVersionValue($max_version);
 
                 if ($mpd >= $max) {
                     $this->_error(
                         'compatibility',
-                        "Command '$cmd' has been deprecated in this version of MPD.  Last compatible version: $max_version"
+                        sprintf("Command '%s' has been deprecated in this version of MPD.  Last compatible version: %s", $cmd, $max_version)
                     );
 
                     return false;
@@ -1129,7 +1214,7 @@ class mpd
      * @param bool|string $response
      * @return array|bool
      */
-    private static function _parseFileListResponse($response)
+    private function _parseFileListResponse($response)
     {
         if (is_bool($response)) {
             return false;
@@ -1143,6 +1228,7 @@ class mpd
                 if ($matches[1] == 'file') {
                     $counter++;
                 }
+
                 $results[$counter][$matches[1]] = $matches[2];
             }
         }
@@ -1155,14 +1241,14 @@ class mpd
      * Turns a response into an array
      * @return array|bool
      */
-    private static function _parseResponse($response)
+    private function _parseResponse($response)
     {
         if (!$response) {
             return false;
         }
 
         $results = [];
-        $lines   = explode("\n", $response);
+        $lines   = explode("\n", (string) $response);
         foreach ($lines as $line) {
             if (preg_match('/(\w+): (.+)/', $line, $matches)) {
                 $results[$matches[1]] = $matches[2];
@@ -1182,7 +1268,7 @@ class mpd
      */
     private function _error($source, $message, $level = 1): void
     {
-        $this->err_str = "$source: $message";
+        $this->err_str = sprintf('%s: %s', $source, $message);
         $this->_debug($source, $message, $level);
     }
 
@@ -1197,11 +1283,11 @@ class mpd
     private function _debug($source, $message, $level): void
     {
         if ($this->debugging) {
-            echo "$source / $message\n";
+            echo sprintf('%s / %s%s', $source, $message, PHP_EOL);
         }
 
         if ($this->_debug_callback !== null) {
-            call_user_func($this->_debug_callback, 'MPD', "$source / $message", $level);
+            call_user_func($this->_debug_callback, 'MPD', sprintf('%s / %s', $source, $message), $level);
         }
     }
 }

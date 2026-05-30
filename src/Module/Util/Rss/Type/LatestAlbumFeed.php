@@ -34,13 +34,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
 {
-    private ServerRequestInterface $request;
-
     public function __construct(
         private ?User $user,
-        ServerRequestInterface $request,
+        private ServerRequestInterface $request,
     ) {
-        $this->request = $request;
     }
 
     protected function getTitle(): string
@@ -64,8 +61,8 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
                 'description' => $album->get_artist_fullname() . ' - ' . $album->get_fullname(true),
                 'comments' => '',
                 'pubDate' => date(DATE_RFC2822, $album->addition_time),
-                'guid' => (isset($album->mbid)) ? 'https://musicbrainz.org/release/' . $album->mbid : (isset($album->mbid_group) ? 'https://musicbrainz.org/release-group/' . $album->mbid_group : 'album-' . $album->id),
-                'isPermaLink' => (isset($album->mbid) || isset($album->mbid_group))
+                'guid' => ($album->mbid !== null) ? 'https://musicbrainz.org/release/' . $album->mbid : ($album->mbid_group !== null ? 'https://musicbrainz.org/release-group/' . $album->mbid_group : 'album-' . $album->id),
+                'isPermaLink' => ($album->mbid !== null || $album->mbid_group !== null)
                     ? 'true'
                     : 'false',
                 'image' => (string)Art::url($album->id, 'album', null, 2),

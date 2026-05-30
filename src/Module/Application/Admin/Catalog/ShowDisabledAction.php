@@ -42,7 +42,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final readonly class ShowDisabledAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_disabled';
+    public const string REQUEST_KEY = 'show_disabled';
 
     public function __construct(
         private UiInterface $ui,
@@ -59,7 +59,7 @@ final readonly class ShowDisabledAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 

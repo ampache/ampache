@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -35,6 +37,6 @@ interface NetworkCheckerInterface
     public function check(
         AccessTypeEnum $type,
         ?int $userId = null,
-        AccessLevelEnum $level = AccessLevelEnum::USER
+        AccessLevelEnum $level = AccessLevelEnum::USER,
     ): bool;
 }

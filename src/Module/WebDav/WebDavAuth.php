@@ -26,21 +26,19 @@ declare(strict_types=0);
 namespace Ampache\Module\WebDav;
 
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
-use Sabre\DAV;
+use Override;
+use Sabre\DAV\Auth\Backend\AbstractBasic;
 
 /**
  * This class wrap Ampache albums and artist to WebDAV directories.
  */
-final class WebDavAuth extends DAV\Auth\Backend\AbstractBasic
+final class WebDavAuth extends AbstractBasic
 {
+    #[Override]
     protected $realm = 'Ampache';
 
-    private AuthenticationManagerInterface $authenticationManager;
-
-    public function __construct(
-        AuthenticationManagerInterface $authenticationManager
-    ) {
-        $this->authenticationManager = $authenticationManager;
+    public function __construct(private readonly AuthenticationManagerInterface $authenticationManager)
+    {
     }
 
     /**

@@ -49,7 +49,7 @@ class Api
      *
      * @var array<string, class-string<object>>
      */
-    public const METHOD_LIST = [
+    public const array METHOD_LIST = [
         Method\Api8\AdvancedSearch8Method::ACTION => Method\Api8\AdvancedSearch8Method::class,
         Method\Api8\Album8Method::ACTION => Method\Api8\Album8Method::class,
         Method\Api8\Albums8Method::ACTION => Method\Api8\Albums8Method::class,
@@ -94,7 +94,6 @@ class Api
         Method\Api8\GenreSongs8Method::ACTION => Method\Api8\GenreSongs8Method::class,
         Method\Api8\GetArt8Method::ACTION => Method\Api8\GetArt8Method::class,
         Method\Api8\GetBookmark8Method::ACTION => Method\Api8\GetBookmark8Method::class,
-        Method\Api8\GetIndexes8Method::ACTION => Method\Api8\GetIndexes8Method::class,
         Method\Api8\GetExternalMetadata8Method::ACTION => Method\Api8\GetExternalMetadata8Method::class,
         Method\Api8\GetLyrics8Method::ACTION => Method\Api8\GetLyrics8Method::class,
         Method\Api8\GetSimilar8Method::ACTION => Method\Api8\GetSimilar8Method::class,
@@ -123,8 +122,6 @@ class Api
         Method\Api8\Ping8Method::ACTION => Method\Api8\Ping8Method::class,
         Method\Api8\PlaylistAdd8Method::ACTION => Method\Api8\PlaylistAdd8Method::class,
         Method\Api8\PlaylistAdd8Method::REST_ACTION => Method\Api8\PlaylistAdd8Method::class,
-        Method\Api8\PlaylistAddSong8Method::ACTION => Method\Api8\PlaylistAddSong8Method::class,
-        Method\Api8\PlaylistAddSong8Method::REST_ACTION => Method\Api8\PlaylistAddSong8Method::class,
         Method\Api8\PlaylistCreate8Method::ACTION => Method\Api8\PlaylistCreate8Method::class,
         Method\Api8\PlaylistCreate8Method::REST_ACTION => Method\Api8\PlaylistCreate8Method::class,
         Method\Api8\PlaylistDelete8Method::ACTION => Method\Api8\PlaylistDelete8Method::class,
@@ -134,6 +131,8 @@ class Api
         Method\Api8\PlaylistGenerate8Method::ACTION => Method\Api8\PlaylistGenerate8Method::class,
         Method\Api8\PlaylistHash8Method::ACTION => Method\Api8\PlaylistHash8Method::class,
         Method\Api8\Playlist8Method::ACTION => Method\Api8\Playlist8Method::class,
+        Method\Api8\PlaylistRemove8Method::ACTION => Method\Api8\PlaylistRemove8Method::class,
+        Method\Api8\PlaylistRemove8Method::REST_ACTION => Method\Api8\PlaylistRemove8Method::class,
         Method\Api8\PlaylistRemoveSong8Method::ACTION => Method\Api8\PlaylistRemoveSong8Method::class,
         Method\Api8\PlaylistRemoveSong8Method::REST_ACTION => Method\Api8\PlaylistRemoveSong8Method::class,
         Method\Api8\Playlists8Method::ACTION => Method\Api8\Playlists8Method::class,
@@ -209,12 +208,11 @@ class Api
         Method\Api8\UserPreferences8Method::ACTION => Method\Api8\UserPreferences8Method::class,
         Method\Api8\UserSmartlists8Method::ACTION => Method\Api8\UserSmartlists8Method::class,
         Method\Api8\Users8Method::ACTION => Method\Api8\Users8Method::class,
-        Method\Api8\UserUpdate8Method::ACTION => Method\Api8\UserUpdate8Method::class,
         Method\Api8\Video8Method::ACTION => Method\Api8\Video8Method::class,
         Method\Api8\Videos8Method::ACTION => Method\Api8\Videos8Method::class,
     ];
 
-    public const API_VERSIONS = [
+    public const array API_VERSIONS = [
         3,
         4,
         5,
@@ -222,7 +220,7 @@ class Api
         8
     ];
 
-    public const DEFAULT_VERSION = 8; // AMPACHE_VERSION
+    public const int DEFAULT_VERSION = 8; // AMPACHE_VERSION
 
     public static string $version = '8.0.0'; // AMPACHE_VERSION
 

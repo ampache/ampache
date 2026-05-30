@@ -40,9 +40,9 @@ use Ampache\Repository\Model\User;
  */
 final class PodcastEpisodeDelete6Method
 {
-    public const ACTION = 'podcast_episode_delete';
+    public const string ACTION = 'podcast_episode_delete';
 
-    public const REST_ACTION = 'podcast_episodes_delete';
+    public const string REST_ACTION = 'podcast_episodes_delete';
 
     /**
      * podcast_episode_delete

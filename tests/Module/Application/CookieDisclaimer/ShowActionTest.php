@@ -25,11 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\CookieDisclaimer;
 
-use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase

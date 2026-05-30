@@ -45,7 +45,7 @@ final class VideoSearch implements SearchInterface
      * }
      */
     public function getSql(
-        Search $search
+        Search $search,
     ): array {
         $search_user_id     = $search->search_user->getId();
         $sql_logic_operator = strtoupper($search->logic_operator ?? 'and');
@@ -65,12 +65,14 @@ final class VideoSearch implements SearchInterface
             if ($type === null) {
                 continue;
             }
+
             foreach ($search->basetypes[$type] as $baseOperator) {
                 if ($baseOperator['name'] == $rule[1]) {
                     $operator = $baseOperator;
                     break;
                 }
             }
+
             $input        = $search->filter_data((string)$rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
@@ -79,12 +81,13 @@ final class VideoSearch implements SearchInterface
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
                         $where[] = "NOT (`video`.`file` SOUNDS LIKE ?)";
                     } else {
-                        $where[] = "`video`.`file` $operator_sql ?";
+                        $where[] = sprintf('`video`.`file` %s ?', $operator_sql);
                     }
+
                     $parameters[] = $input;
                     break;
                 case 'id':
-                    $where[]      = "`video`.`id` $operator_sql ?";
+                    $where[]      = sprintf('`video`.`id` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
                 default:
@@ -96,19 +99,20 @@ final class VideoSearch implements SearchInterface
         $join['catalog_map'] = $catalog_filter;
         $join['catalog']     = $catalog_disable || $catalog_filter;
 
-        $where_sql = implode(" $sql_logic_operator ", $where);
+        $where_sql = implode(sprintf(' %s ', $sql_logic_operator), $where);
 
         if ($join['catalog']) {
             $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `video`.`catalog`";
-            if (!empty($where_sql)) {
+            if ($where_sql !== '' && $where_sql !== '0') {
                 $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
             } else {
                 $where_sql = "`catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
             }
         }
+
         if ($join['catalog_map']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_video` ON `catalog_map_video`.`object_id` = `video`.`id` AND `catalog_map_video`.`object_type` = 'video' AND `catalog_map_video`.`catalog_id` = `catalog_se`.`id`";
-            if (!empty($where_sql)) {
+            if ($where_sql !== '' && $where_sql !== '0') {
                 $where_sql = ($search_user_id > 0)
                     ? "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
                     : "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
@@ -118,10 +122,11 @@ final class VideoSearch implements SearchInterface
                     : "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
+
         ksort($table);
         $table_sql  = implode(' ', $table);
         $group_sql  = implode(',', $group);
-        $having_sql = implode(" $sql_logic_operator ", $having);
+        $having_sql = implode(sprintf(' %s ', $sql_logic_operator), $having);
 
         return [
             'base' => 'SELECT DISTINCT(`video`.`id`), `video`.`file` FROM `video`',

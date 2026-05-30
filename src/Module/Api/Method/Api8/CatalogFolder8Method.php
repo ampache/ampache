@@ -45,7 +45,7 @@ use Ampache\Repository\Model\Video;
  */
 final class CatalogFolder8Method
 {
-    public const ACTION = 'catalog_folder';
+    public const string ACTION = 'catalog_folder';
 
     /**
      * catalog_folder
@@ -74,8 +74,8 @@ final class CatalogFolder8Method
             return false;
         }
 
-        $input['catalog'] = $input['filter'] ?? $input['catalog'] ?? null;
-        if (!Api::check_parameter($input, ['catalog', 'folder', 'task'], self::ACTION)) {
+        $input['filter'] = $input['catalog'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['filter', 'folder', 'task'], self::ACTION)) {
             return false;
         }
         $folder = html_entity_decode($input['folder']);
@@ -107,7 +107,7 @@ final class CatalogFolder8Method
             $output_task .= $item . ', ';
         }
         $output_task = rtrim($output_task, ', ');
-        $catalog_id  = (int) $input['catalog'];
+        $catalog_id  = (int) $input['filter'];
         $catalog     = Catalog::create_from_id($catalog_id);
         if ($catalog === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

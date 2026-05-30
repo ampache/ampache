@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class Labels5Method
 {
-    public const ACTION = 'labels';
+    public const string ACTION = 'labels';
 
     /**
      * labels

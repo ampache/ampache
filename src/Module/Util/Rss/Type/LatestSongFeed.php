@@ -34,13 +34,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class LatestSongFeed extends AbstractGenericRssFeed
 {
-    private ServerRequestInterface $request;
-
     public function __construct(
         private ?User $user,
-        ServerRequestInterface $request,
+        private ServerRequestInterface $request,
     ) {
-        $this->request = $request;
     }
 
     protected function getTitle(): string
@@ -64,10 +61,10 @@ final readonly class LatestSongFeed extends AbstractGenericRssFeed
                 'description' => $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_artist_fullname(),
                 'comments' => '',
                 'pubDate' => '',
-                'guid' => (isset($song->mbid))
+                'guid' => ($song->mbid !== null)
                     ? 'https://musicbrainz.org/recording/' . $song->mbid
                     : 'song-' . $song->id,
-                'isPermaLink' => (isset($song->mbid))
+                'isPermaLink' => ($song->mbid !== null)
                     ? 'true'
                     : 'false',
                 'image' => (string)Art::url($song->id, 'song', null, 2),

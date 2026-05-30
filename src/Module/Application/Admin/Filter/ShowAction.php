@@ -37,16 +37,12 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Renders the catalog-filters list
  */
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
+    public const string REQUEST_KEY = 'show';
 
-    private UiInterface $ui;
-
-    public function __construct(
-        UiInterface $ui
-    ) {
-        $this->ui = $ui;
+    public function __construct(private UiInterface $ui)
+    {
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

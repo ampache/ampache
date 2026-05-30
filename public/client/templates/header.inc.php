@@ -35,7 +35,6 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Tmp_Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 
@@ -55,13 +54,14 @@ $htmllang          = str_replace("_", "-", $site_lang);
 $ui_fixed          = AmpConfig::get('ui_fixed');
 $_SESSION['login'] = false;
 $current_user      = Core::get_global('user');
-$logo_url          = ($current_user instanceof User && Preference::get_by_user($current_user->getId(), 'custom_logo_user'))
+$current_user_id   = $current_user?->getId();
+$logo_url          = ($current_user instanceof User && $current_user_id && Preference::get_by_user($current_user_id, 'custom_logo_user'))
     ? $current_user->get_avatar()['url_medium'] ?? Ui::get_logo_url()
     : Ui::get_logo_url();
-$is_session   = (User::is_registered() && !empty($current_user) && ($current_user->id ?? 0) > 0);
+$is_session   = (User::is_registered() && ($current_user_id ?? 0) > 0);
 $allow_upload = $access25 && Upload::can_upload($current_user);
 
-$count_temp_playlist = (!empty($current_user->playlist) && $current_user->playlist instanceof Tmp_Playlist)
+$count_temp_playlist = ($current_user instanceof User && !empty($current_user->playlist))
     ? count($current_user->playlist->get_items())
     : 0;
 // strings for the main page and templates
@@ -129,7 +129,7 @@ require_once Ui::find_template('show_search_bar.inc.php');
 if ($is_session) {
     require_once Ui::find_template('show_playtype_switch.inc.php'); ?>
                         <span id="loginInfo">
-                            <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $current_user?->getId(); ?>"><?php echo $current_user?->fullname; ?></a>
+                            <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $current_user_id; ?>"><?php echo $current_user?->fullname; ?></a>
                         <?php if ($site_social) { ?>
                             <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php
                                 echo $dic->get(PrivateMessageRepositoryInterface::class)->getUnreadCount($current_user); ?>)</a>

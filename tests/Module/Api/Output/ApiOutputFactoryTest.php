@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
-use Override;
 use Ampache\MockeryTestCase;
+use Override;
 
 class ApiOutputFactoryTest extends MockeryTestCase
 {

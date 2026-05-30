@@ -35,7 +35,7 @@ use Ampache\Repository\ShareRepositoryInterface;
  */
 final class ShareDelete4Method
 {
-    public const ACTION = 'share_delete';
+    public const string ACTION = 'share_delete';
 
     /**
      * share_delete

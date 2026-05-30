@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistSongs5Method
 {
-    public const ACTION = 'playlist_songs';
+    public const string ACTION = 'playlist_songs';
 
     /**
      * playlist_songs

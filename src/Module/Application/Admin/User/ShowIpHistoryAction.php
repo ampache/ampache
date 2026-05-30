@@ -38,27 +38,14 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class ShowIpHistoryAction extends AbstractUserAction
 {
-    /** @var string */
-    public const REQUEST_KEY = 'show_ip_history';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private IpHistoryRepositoryInterface $ipHistoryRepository;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'show_ip_history';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        IpHistoryRepositoryInterface $ipHistoryRepository,
-        ConfigContainerInterface $configContainer
+        private readonly UiInterface $ui,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly IpHistoryRepositoryInterface $ipHistoryRepository,
+        private readonly ConfigContainerInterface $configContainer,
     ) {
-        $this->ui                  = $ui;
-        $this->modelFactory        = $modelFactory;
-        $this->ipHistoryRepository = $ipHistoryRepository;
-        $this->configContainer     = $configContainer;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -72,7 +59,7 @@ final class ShowIpHistoryAction extends AbstractUserAction
             throw new ObjectNotFoundException($userId);
         }
 
-        if ($showAll === true) {
+        if ($showAll) {
             $history = $this->ipHistoryRepository->getHistory(
                 $user,
                 false,

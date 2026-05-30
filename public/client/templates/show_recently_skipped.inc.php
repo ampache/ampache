@@ -33,13 +33,13 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-/** @var list<array{user: int, object_type: string, object_id: int, agent: string, user_recent: int, user_time: int, date?: null|int, activity_id: int}> $data */
+/** @var array<int, array{user: int, object_type: string, object_id: int, agent: string, user_recent: int, user_time: int, date?: null|int, activity_id: int}> $data */
 /** @var User $user */
 
 $web_path = AmpConfig::get_web_path('/client');
 
 $ajax_page = $ajax_page ?? 'stats';
-$user_id   = $user_id ?? $user->id ?? -1;
+$user_id   = $user_id ?? $user->id ?: -1;
 $user_only = (isset($user_only) && $user_only);
 $show_user = (!$user_only && $user_id > 0);
 $user_str  = ($user_only)

@@ -45,27 +45,21 @@ use Psr\Http\Message\ServerRequestInterface;
  * Those caches exist just for the lifetime of a request (or a cli process).
  * It makes no sense to explicitly clear them within a gui request
  */
-final class ClearCacheAction implements ApplicationActionInterface
+final readonly class ClearCacheAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'clear_cache';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'clear_cache';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             throw new AccessDeniedException();
         }

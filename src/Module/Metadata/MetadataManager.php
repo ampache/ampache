@@ -45,20 +45,11 @@ final class MetadataManager implements MetadataManagerInterface
      */
     private ?array $disabledMetadataFields = null;
 
-    private MetadataRepositoryInterface $metadataRepository;
-
-    private MetadataFieldRepositoryInterface $metadataFieldRepository;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        MetadataRepositoryInterface $metadataRepository,
-        MetadataFieldRepositoryInterface $metadataFieldRepository,
-        ConfigContainerInterface $configContainer
+        private readonly MetadataRepositoryInterface $metadataRepository,
+        private readonly MetadataFieldRepositoryInterface $metadataFieldRepository,
+        private readonly ConfigContainerInterface $configContainer,
     ) {
-        $this->metadataRepository      = $metadataRepository;
-        $this->metadataFieldRepository = $metadataFieldRepository;
-        $this->configContainer         = $configContainer;
     }
 
     /**
@@ -69,7 +60,7 @@ final class MetadataManager implements MetadataManagerInterface
      * @return Traversable<Metadata>
      */
     public function getMetadata(
-        MetadataEnabledInterface $item
+        MetadataEnabledInterface $item,
     ): Traversable {
         if (!$this->isCustomMetadataEnabled()) {
             return new ArrayIterator();
@@ -121,7 +112,7 @@ final class MetadataManager implements MetadataManagerInterface
     public function addMetadata(
         MetadataEnabledInterface $item,
         string $name,
-        string $data
+        string $data,
     ): void {
         $metadata = $this->metadataRepository->prototype()
             ->setField($this->getOrCreateField($name))
@@ -138,7 +129,7 @@ final class MetadataManager implements MetadataManagerInterface
     public function updateOrAddMetadata(
         MetadataEnabledInterface $item,
         string $name,
-        string $data
+        string $data,
     ): void {
         $field = $this->getOrCreateField($name);
 

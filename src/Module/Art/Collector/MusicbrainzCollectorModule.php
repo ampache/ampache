@@ -33,18 +33,12 @@ use MusicBrainz\MusicBrainz;
 use Psr\Log\LoggerInterface;
 use WpOrg\Requests\Requests;
 
-final class MusicbrainzCollectorModule implements CollectorModuleInterface
+final readonly class MusicbrainzCollectorModule implements CollectorModuleInterface
 {
-    private MusicBrainz $musicBrainz;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        MusicBrainz $musicBrainz,
-        LoggerInterface $logger
+        private MusicBrainz $musicBrainz,
+        private LoggerInterface $logger,
     ) {
-        $this->musicBrainz = $musicBrainz;
-        $this->logger      = $logger;
     }
 
     /**
@@ -65,18 +59,19 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
     public function collectArt(
         Art $art,
         int $limit = 5,
-        array $data = []
+        array $data = [],
     ): array {
         $images    = [];
         $num_found = 0;
 
-        if ($art->object_type != 'album') {
+        if ($art->object_type !== 'album') {
             return $images;
         }
 
         if (!array_key_exists('mb_albumid', $data) || empty($data['mb_albumid'])) {
             return $images;
         }
+
         $this->logger->debug(
             "gather_musicbrainz Album MBID: " . $data['mb_albumid'],
             [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -85,9 +80,9 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
         $includes = ['url-rels'];
         try {
             $release = $this->musicBrainz->lookup('release', $data['mb_albumid'], $includes);
-        } catch (Exception $error) {
+        } catch (Exception $exception) {
             $this->logger->warning(
-                "gather_musicbrainz exception: " . $error,
+                "gather_musicbrainz exception: " . $exception,
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
@@ -146,6 +141,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
                 }
             }
         }
+
         // The next bit is based directly on the MusicBrainz server code
         // that displays cover art.
         // I'm leaving in the releaseuri info for the moment, though
@@ -216,13 +212,13 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
             );
 
             foreach ($coverartsites as $casite) {
-                if (strpos($arurl, $casite['domain']) !== false) {
+                if (str_contains((string) $arurl, $casite['domain'])) {
                     $this->logger->debug(
                         "gather_musicbrainz Matched coverart site: " . $casite['name'],
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
 
-                    if (preg_match($casite['regexp'], $arurl)) {
+                    if (preg_match($casite['regexp'], (string) $arurl)) {
                         $num_found++;
                         $url = $casite['imguri'];
 

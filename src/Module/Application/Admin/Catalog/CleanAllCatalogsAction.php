@@ -32,18 +32,15 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class CleanAllCatalogsAction extends AbstractCatalogAction
 {
-    public const REQUEST_KEY = 'clean_all_catalogs';
+    public const string REQUEST_KEY = 'clean_all_catalogs';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    private readonly UiInterface $ui;
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
-        $this->configContainer = $configContainer;
         $this->ui              = $ui;
     }
 
@@ -52,7 +49,7 @@ final class CleanAllCatalogsAction extends AbstractCatalogAction
      */
     protected function handle(
         ServerRequestInterface $request,
-        array $catalogIds
+        array $catalogIds,
     ): ?ResponseInterface {
         catalog_worker('clean_all_catalogs');
 

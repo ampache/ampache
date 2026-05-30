@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Query;
 
 final class ArtistQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'add_gt',
         'add_lt',
         'album_artist',
@@ -128,6 +128,7 @@ final class ArtistQuery implements QueryInterface
                 foreach ($value as $uid) {
                     $filter_sql .= (int)$uid . ',';
                 }
+
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
                 break;
             case 'no_genre':
@@ -142,7 +143,8 @@ final class ArtistQuery implements QueryInterface
                 foreach ($value as $tag_id) {
                     $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
                 }
-                $filter_sql = rtrim((string) $filter_sql, 'AND ') . ') AND ';
+
+                $filter_sql = rtrim($filter_sql, 'AND ') . ') AND ';
                 break;
             case 'equal':
             case 'exact_match':
@@ -159,25 +161,29 @@ final class ArtistQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `artist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
                     $filter_sql = " `artist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'starts_with':
                 $query->set_join('LEFT', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
                 $filter_sql = " `artist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                if ($query->catalog != 0) {
+                if ($query->catalog !== 0) {
                     $filter_sql .= "`song`.`catalog` = '" . $query->catalog . "' AND ";
                 }
+
                 break;
             case 'not_starts_with':
                 $query->set_join('LEFT', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
                 $filter_sql = " `artist`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
-                if ($query->catalog != 0) {
+                if ($query->catalog !== 0) {
                     $filter_sql .= "`song`.`catalog` = '" . $query->catalog . "' AND ";
                 }
+
                 break;
             case 'add_lt':
                 $query->set_join('LEFT', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
@@ -200,30 +206,36 @@ final class ArtistQuery implements QueryInterface
                 $filter_sql = " `label_asso`.`label` = '" . Dba::escape($value) . "' AND ";
                 break;
             case 'catalog':
-                $type = '\'artist\'';
+                $type = "'artist'";
                 if ($query->get_filter('album_artist')) {
-                    $type = '\'album_artist\'';
+                    $type = "'album_artist'";
                 }
+
                 if ($query->get_filter('song_artist')) {
-                    $type = '\'song_artist\'';
+                    $type = "'song_artist'";
                 }
+
                 if ($value != 0) {
                     $query->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 100);
                     $filter_sql = " (`catalog_map`.`catalog_id` = '" . Dba::escape($value) . "') AND ";
                 }
+
                 break;
             case 'user_catalog':
-                $type = '\'artist\'';
+                $type = "'artist'";
                 if ($query->get_filter('album_artist')) {
-                    $type = '\'album_artist\'';
+                    $type = "'album_artist'";
                 }
+
                 if ($query->get_filter('song_artist')) {
-                    $type = '\'song_artist\'';
+                    $type = "'song_artist'";
                 }
+
                 if ($value != 0) {
                     $query->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 100);
                     $filter_sql = " (`catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ")) AND ";
                 }
+
                 break;
             case 'user_flag':
                 $filter_sql = ((int)$value === 0)
@@ -236,13 +248,15 @@ final class ArtistQuery implements QueryInterface
                     : " `artist`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'artist' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
             case 'catalog_enabled':
-                $type = '\'artist\'';
+                $type = "'artist'";
                 if ($query->get_filter('album_artist')) {
-                    $type = '\'album_artist\'';
+                    $type = "'album_artist'";
                 }
+
                 if ($query->get_filter('song_artist')) {
-                    $type = '\'song_artist\'';
+                    $type = "'song_artist'";
                 }
+
                 $query->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 50);
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`catalog_map`.`catalog_id`', 100);
                 $filter_sql = " `catalog`.`enabled` = '1' AND ";
@@ -258,9 +272,10 @@ final class ArtistQuery implements QueryInterface
                     : " `artist`.`id` IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'song') AND ";
                 break;
             case 'unplayed':
-                if ((int)$value == 1) {
+                if ((int)$value === 1) {
                     $filter_sql = " `artist`.`total_count`='0' AND ";
                 }
+
                 break;
         }
 
@@ -289,10 +304,10 @@ final class ArtistQuery implements QueryInterface
             case 'time':
             case 'total_count':
             case 'yearformed':
-                $sql = "`artist`.`$field`";
+                $sql = sprintf('`artist`.`%s`', $field);
                 break;
             case 'rating':
-                $sql = "`rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`artist`.`id`", "`rating`.`object_type`", "'artist'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
@@ -301,7 +316,7 @@ final class ArtistQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`artist`.`id`", "`user_flag`.`object_type`", "'artist'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag_rating':
-                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`artist`.`id`", "`user_flag`.`object_type`", "'artist'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`artist`.`id`", "`rating`.`object_type`", "'artist'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
@@ -309,10 +324,10 @@ final class ArtistQuery implements QueryInterface
                 $sql = '';
         }
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

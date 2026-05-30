@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -29,25 +31,19 @@ use Ampache\Repository\UserRepositoryInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 
-final class UserKeyGenerator implements UserKeyGeneratorInterface
+final readonly class UserKeyGenerator implements UserKeyGeneratorInterface
 {
-    private UserRepositoryInterface $userRepository;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        UserRepositoryInterface $userRepository,
-        LoggerInterface $logger
+        private UserRepositoryInterface $userRepository,
+        private LoggerInterface $logger,
     ) {
-        $this->userRepository = $userRepository;
-        $this->logger         = $logger;
     }
 
     /**
      * Generates and saves a new API key for the given user
      */
     public function generateApikey(
-        User $user
+        User $user,
     ): void {
         $userId = $user->getId();
         $apikey = hash(
@@ -67,7 +63,7 @@ final class UserKeyGenerator implements UserKeyGeneratorInterface
      * Generates and saves a new RSS token for the given user
      */
     public function generateRssToken(
-        User $user
+        User $user,
     ): void {
         try {
             $rsstoken = bin2hex(random_bytes(32));
@@ -84,9 +80,9 @@ final class UserKeyGenerator implements UserKeyGeneratorInterface
                 sprintf('Updating rsstoken for %d', $userId),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
-        } catch (Exception $error) {
+        } catch (Exception $exception) {
             $this->logger->error(
-                sprintf('Could not generate random_bytes: %s', $error->getMessage()),
+                sprintf('Could not generate random_bytes: %s', $exception->getMessage()),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
@@ -96,7 +92,7 @@ final class UserKeyGenerator implements UserKeyGeneratorInterface
      * Generates and saves a new Stream token for the given user
      */
     public function generateStreamToken(
-        User $user
+        User $user,
     ): void {
         try {
             $streamtoken = bin2hex(random_bytes(20));
@@ -113,9 +109,9 @@ final class UserKeyGenerator implements UserKeyGeneratorInterface
                 sprintf('Updating streamtoken for %d', $userId),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
-        } catch (Exception $error) {
+        } catch (Exception $exception) {
             $this->logger->error(
-                sprintf('Could not generate random_bytes: %s', $error->getMessage()),
+                sprintf('Could not generate random_bytes: %s', $exception->getMessage()),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }

@@ -35,49 +35,33 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\AutoUpdate;
-use Ampache\Module\System\Update;
+use Ampache\Module\System\Update\Exception\UpdateFailedException;
+use Ampache\Module\System\Update\Exception\VersionNotUpdatableException;
+use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Repository\Model\Preference;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class UpdateAction implements ApplicationActionInterface
+final readonly class UpdateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update';
-
-    private TalFactoryInterface $talFactory;
-
-    private GuiFactoryInterface $guiFactory;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private StreamFactoryInterface $streamFactory;
-
-    private Update\UpdaterInterface $updater;
+    public const string REQUEST_KEY = 'update';
 
     public function __construct(
-        TalFactoryInterface $talFactory,
-        GuiFactoryInterface $guiFactory,
-        ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer,
-        StreamFactoryInterface $streamFactory,
-        Update\UpdaterInterface $updater
+        private TalFactoryInterface $talFactory,
+        private GuiFactoryInterface $guiFactory,
+        private ResponseFactoryInterface $responseFactory,
+        private ConfigContainerInterface $configContainer,
+        private StreamFactoryInterface $streamFactory,
+        private UpdaterInterface $updater,
     ) {
-        $this->talFactory      = $talFactory;
-        $this->guiFactory      = $guiFactory;
-        $this->responseFactory = $responseFactory;
-        $this->configContainer = $configContainer;
-        $this->streamFactory   = $streamFactory;
-        $this->updater         = $updater;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) == 'sources') {
+        if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) === 'sources') {
             if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
                 throw new AccessDeniedException();
             }
@@ -88,7 +72,7 @@ final class UpdateAction implements ApplicationActionInterface
             Preference::translate_db();
 
             return $this->responseFactory
-                ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+                ->createResponse(RFC7231::FOUND)
                 ->withHeader(
                     'Location',
                     $this->configContainer->getWebPath('/client')
@@ -96,9 +80,9 @@ final class UpdateAction implements ApplicationActionInterface
         } elseif ($this->updater->hasPendingUpdates()) {
             try {
                 $this->updater->update();
-            } catch (Update\Exception\UpdateFailedException) {
+            } catch (UpdateFailedException) {
                 AmpError::add('general', T_('Update failed. Please check the logs for further information.'));
-            } catch (Update\Exception\VersionNotUpdatableException) {
+            } catch (VersionNotUpdatableException) {
                 echo '<p class="database-update">Database version too old, please upgrade to <a href="https://github.com/ampache/ampache/releases/download/3.8.2/ampache-3.8.2_all.zip">Ampache-3.8.2</a> first</p>';
             }
         }

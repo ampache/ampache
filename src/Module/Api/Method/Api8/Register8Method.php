@@ -40,7 +40,7 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class Register8Method
 {
-    public const ACTION = 'register';
+    public const string ACTION = 'register';
 
     /**
      * register

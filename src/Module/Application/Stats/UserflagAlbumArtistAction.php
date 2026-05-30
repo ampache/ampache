@@ -37,18 +37,18 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class UserflagAlbumArtistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'userflag_album_artist';
+    public const string REQUEST_KEY = 'userflag_album_artist';
 
     public function __construct(
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
-        private ConfigContainerInterface $configContainer
+        private ConfigContainerInterface $configContainer,
     ) {
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
 
         $by_user = ((int)filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
 

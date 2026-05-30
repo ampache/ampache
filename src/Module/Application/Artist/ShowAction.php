@@ -37,32 +37,17 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private LoggerInterface $logger;
-
-    private AlbumRepositoryInterface $albumRepository;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        LoggerInterface $logger,
-        AlbumRepositoryInterface $albumRepository
+        private ModelFactoryInterface $modelFactory,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private LoggerInterface $logger,
+        private AlbumRepositoryInterface $albumRepository,
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->logger          = $logger;
-        $this->albumRepository = $albumRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -86,12 +71,13 @@ final class ShowAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true) {
+            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP)) {
                 $objectType = 'album';
             } else {
                 $objectType = 'album_disk';
             }
-            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_RELEASE_TYPE) === true) {
+
+            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_RELEASE_TYPE)) {
                 $multi_object_ids = $this->albumRepository->getByArtist(
                     $artistId,
                     $catalogId,
@@ -117,6 +103,7 @@ final class ShowAction implements ApplicationActionInterface
                 ]
             );
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

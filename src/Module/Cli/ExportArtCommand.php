@@ -30,20 +30,16 @@ use Ampache\Module\Art\Export\ArtExporterInterface;
 use Ampache\Module\Art\Export\Exception\ArtExportException;
 use Ampache\Module\Art\Export\Writer\MetadataWriter;
 use Ampache\Module\System\LegacyLogger;
+use Override;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 final class ExportArtCommand extends Command
 {
-    private LoggerInterface $logger;
-
-    private ArtExporterInterface $artExporter;
-
-    private ContainerInterface $dic;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -51,15 +47,11 @@ final class ExportArtCommand extends Command
     }
 
     public function __construct(
-        LoggerInterface $logger,
-        ArtExporterInterface $artExporter,
-        ContainerInterface $dic
+        private readonly LoggerInterface $logger,
+        private readonly ArtExporterInterface $artExporter,
+        private readonly ContainerInterface $dic,
     ) {
         parent::__construct('export:databaseArt', T_('Export all database art to local_metadata_dir'));
-
-        $this->logger      = $logger;
-        $this->artExporter = $artExporter;
-        $this->dic         = $dic;
 
         $this
             ->option('-c|--clear', T_('Clear the database image when the local file exists'), 'boolval', false)
@@ -85,14 +77,14 @@ final class ExportArtCommand extends Command
                 $this->dic->get(MetadataWriter::class),
                 $clearData
             );
-        } catch (ArtExportException $error) {
+        } catch (ArtExportException $artExportException) {
             $this->logger->error(
-                $error->getMessage(),
+                $artExportException->getMessage(),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $interactor->error(
-                $error->getMessage(),
+                $artExportException->getMessage(),
                 true
             );
         }

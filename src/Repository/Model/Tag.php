@@ -38,7 +38,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
  */
 class Tag extends database_object implements library_item, GarbageCollectibleInterface
 {
-    protected const DB_TABLENAME = 'tag';
+    protected const string DB_TABLENAME = 'tag';
 
     public int $id = 0;
 
@@ -76,7 +76,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
@@ -178,10 +178,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     public static function add(string $type, int $object_id, string $value): int
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return 0;
-        }
-
-        if (!is_numeric($object_id)) {
             return 0;
         }
 
@@ -569,10 +565,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = [
-                'id' => $row['id'],
+                'id' => (int)$row['id'],
                 'name' => $row['name'],
                 'is_hidden' => $row['is_hidden'],
-                'count' => $row['count']
+                'count' => (int)$row['count']
             ];
         }
 
@@ -582,7 +578,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * get_object_tags
      * Display all tags that apply to matching target type of the specified id
-     * @return list<array{id: int, name: string, is_hidden: int, user: int}>
+     * @return array<int, array{id: int, name: string, is_hidden: int, user: int}>
      */
     public static function get_object_tags(string $type, ?int $object_id = null): array
     {
@@ -813,7 +809,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $current_tags = self::get_top_tags($object_type, $object_id, 0);
         foreach ($current_tags as $ctv) {
             $found = false;
-            if ($ctv['id'] != '') {
+            if ($ctv['id'] > 0) {
                 $ctag = new Tag($ctv['id']);
                 if ($ctag->isNew()) {
                     continue;
@@ -1026,7 +1022,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -1035,7 +1031,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -1045,7 +1041,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {

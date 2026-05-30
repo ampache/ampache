@@ -22,6 +22,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\PrivateMessageInterface;
@@ -33,13 +34,13 @@ interface PrivateMessageRepositoryInterface
      * Get the user received private messages.
      */
     public function getUnreadCount(
-        User $user
+        User $user,
     ): int;
 
     /**
      * Get the subsonic chat messages.
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getChatMessages(int $since = 0): array;
 
@@ -59,10 +60,10 @@ interface PrivateMessageRepositoryInterface
         ?User $recipient,
         User $sender,
         string $subject,
-        string $message
+        string $message,
     ): int;
 
     public function findById(
-        int $privateMessageId
+        int $privateMessageId,
     ): ?PrivateMessageInterface;
 }

@@ -53,23 +53,16 @@ namespace Ampache\Module\Playback\Localplay\HttpQ;
  */
 class HttpQPlayer
 {
-    public ?string $host;
-    public ?string $password;
-    public ?int $port;
-
     /**
      * HttpQPlayer
      * This is the constructor, it defaults to localhost
      * with port 4800
      */
     public function __construct(
-        ?string $host = "localhost",
-        ?string $password = '',
-        ?int $port = 4800
+        public ?string $host = "localhost",
+        public ?string $password = '',
+        public ?int $port = 4800,
     ) {
-        $this->host     = $host;
-        $this->port     = $port;
-        $this->password = $password;
     }
 
     /**
@@ -89,10 +82,7 @@ class HttpQPlayer
 
         $results = $this->sendCommand('playurl', $args);
 
-        return ! (
-            !$results ||
-            $results == '0'
-        );
+        return $results && $results != '0';
     }
 
     /**
@@ -117,10 +107,7 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand("delete", $args);
 
-        return ! (
-            !$results ||
-            $results == '0'
-        );
+        return $results && $results != '0';
     }
 
     /**
@@ -132,10 +119,7 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand("next", $args);
 
-        return ! (
-            !$results ||
-            $results == '0'
-        ) ;
+        return $results && $results != '0' ;
     }
 
     /**
@@ -147,10 +131,7 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand("prev", $args);
 
-        return ! (
-            !$results ||
-            $results == '0'
-        ) ;
+        return $results && $results != '0' ;
     }
 
     /**
@@ -185,10 +166,7 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand("play", $args);
 
-        return ! (
-            !$results ||
-            $results == '0'
-        );
+        return $results && $results != '0';
     }
 
     /**
@@ -200,10 +178,7 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand("pause", $args);
 
-        return ! (
-            !$results ||
-            $results == '0'
-        );
+        return $results && $results != '0';
     }
 
     /**
@@ -215,10 +190,7 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand('stop', $args);
 
-        return ! (
-            !$results ||
-            $results == '0'
-        );
+        return $results && $results != '0';
     }
 
     /**
@@ -230,10 +202,7 @@ class HttpQPlayer
         $args    = ['enable' => $state];
         $results = $this->sendCommand('repeat', $args);
 
-        return ! (
-            !$results ||
-            $results == '0'
-        );
+        return $results && $results != '0';
     }
 
     /**
@@ -245,10 +214,7 @@ class HttpQPlayer
         $args    = ['enable' => $state];
         $results = $this->sendCommand('shuffle', $args);
 
-        return ! (
-            !$results ||
-            $results == '0'
-        );
+        return $results && $results != '0';
     }
 
     /**
@@ -260,10 +226,7 @@ class HttpQPlayer
         $args    = ['index' => $track];
         $results = $this->sendCommand('deletepos', $args);
 
-        return ! (
-            !$results ||
-            $results == '0'
-        ) ;
+        return $results && $results != '0' ;
     }
 
     /**
@@ -279,12 +242,14 @@ class HttpQPlayer
         if ($results == '1') {
             $state = 'play';
         }
+
         if (
             !$results ||
             $results == '0'
         ) {
             $state = 'stop';
         }
+
         if ($results == '3') {
             $state = 'pause';
         }
@@ -320,10 +285,7 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand('volumeup', $args);
 
-        return ! (
-            !$results ||
-            $results == '0'
-        ) ;
+        return $results && $results != '0' ;
     }
 
     /**
@@ -335,10 +297,7 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand('volumedown', $args);
 
-        return ! (
-            !$results ||
-            $results == '0'
-        ) ;
+        return $results && $results != '0' ;
     }
 
     /**
@@ -353,10 +312,7 @@ class HttpQPlayer
         $args    = ['level' => $volume];
         $results = $this->sendCommand('setvolume', $args);
 
-        return ! (
-            !$results ||
-            $results == '0'
-        );
+        return $results && $results != '0';
     }
 
     /**
@@ -368,10 +324,7 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand('flushplaylist', $args);
 
-        return ! (
-            !$results ||
-            $results == '0'
-        );
+        return $results && $results != '0';
     }
 
     /**
@@ -423,7 +376,7 @@ class HttpQPlayer
         if (
             !$results ||
             !is_string($results) ||
-            $results == '0'
+            $results === '0'
         ) {
             return null;
         }
@@ -442,26 +395,27 @@ class HttpQPlayer
         $fsock = fsockopen(($this->host ?? 'localhost'), ($this->port ?? 4800), $errno, $errstr);
 
         if (!$fsock) {
-            debug_event(self::class, "HttpQPlayer: $errstr ($errno)", 1);
+            debug_event(self::class, sprintf('HttpQPlayer: %s (%d)', $errstr, $errno), 1);
 
             return false;
         }
 
         // Define the base message
-        $msg = "GET /$cmd?p=$this->password";
+        $msg = sprintf('GET /%s?p=%s', $cmd, $this->password);
 
         // Foreach our arguments
         foreach ($args as $key => $val) {
-            $msg = $msg . "&$key=$val";
+            $msg .= sprintf('&%s=%s', $key, $val);
         }
 
-        $msg = $msg . " HTTP/1.0\r\n\r\n";
-        fputs($fsock, $msg);
+        $msg .= " HTTP/1.0\r\n\r\n";
+        fwrite($fsock, $msg);
         $data = '';
 
         while (!feof($fsock)) {
             $data .= fgets($fsock);
         }
+
         fclose($fsock);
 
         // Explode the results by line break and take 4th line (results)

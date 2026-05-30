@@ -34,10 +34,10 @@ use Ampache\Module\Util\Ui;
 
 class Share extends database_object
 {
-    protected const DB_TABLENAME = 'share';
+    protected const string DB_TABLENAME = 'share';
 
     /** @var list<LibraryItemEnum> */
-    public const VALID_TYPES = [
+    public const array VALID_TYPES = [
         LibraryItemEnum::ALBUM,
         LibraryItemEnum::ALBUM_DISK,
         LibraryItemEnum::ARTIST,
@@ -93,7 +93,7 @@ class Share extends database_object
 
     public function getId(): int
     {
-        return $this->id ?? 0;
+        return $this->id;
     }
 
     public function isNew(): bool
@@ -220,7 +220,7 @@ class Share extends database_object
             $params[] = $user->id;
         }
 
-        return (Dba::write($sql, $params) !== false);
+        return (Dba::write($sql, $params) !== null);
     }
 
     /**

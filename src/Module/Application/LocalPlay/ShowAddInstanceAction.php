@@ -38,24 +38,21 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowAddInstanceAction extends AbstractLocalPlayAction
 {
-    public const REQUEST_KEY = 'show_add_instance';
+    public const string REQUEST_KEY = 'show_add_instance';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    private readonly ConfigContainerInterface $configContainer;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        private readonly UiInterface $ui,
     ) {
         parent::__construct($configContainer);
-        $this->ui              = $ui;
         $this->configContainer = $configContainer;
     }
 
     protected function handle(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
         // This requires 50 or better
         if ($gatekeeper->mayAccess(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::MANAGER) === false) {

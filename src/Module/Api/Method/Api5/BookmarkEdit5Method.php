@@ -42,7 +42,7 @@ use Ampache\Repository\Model\Video;
  */
 final class BookmarkEdit5Method
 {
-    public const ACTION = 'bookmark_edit';
+    public const string ACTION = 'bookmark_edit';
 
     /**
      * bookmark_edit

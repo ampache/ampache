@@ -22,6 +22,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
 namespace Ampache\Repository;
 
 interface VideoRepositoryInterface
@@ -33,7 +34,7 @@ interface VideoRepositoryInterface
      */
     public function getRandom(
         int $userId,
-        ?int $count = 1
+        ?int $count = 1,
     ): array;
 
     /**

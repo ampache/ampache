@@ -39,7 +39,7 @@ use Psr\Log\LoggerInterface;
 
 final class PlayItemAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'play_item';
+    public const string REQUEST_KEY = 'play_item';
 
     public function __construct(
         LoggerInterface $logger,
@@ -54,23 +54,25 @@ final class PlayItemAction extends AbstractStreamAction
         if ($this->preCheck($gatekeeper) === false) {
             return null;
         }
+
         $object_type = $_REQUEST['object_type'] ?? '';
         if ($object_type === 'browse') {
             $browse     = new Browse((int)Core::get_get('object_id'));
             $objectIds  = [];
             $objectType = null;
             $saved      = $browse->get_saved();
-            if (!empty($saved) && is_array($saved[0])) {
+            if ($saved !== [] && is_array($saved[0])) {
                 // search data is stored in arrays
                 foreach ($saved as $item) {
                     if (isset($item['object_id'])) {
-                        $objectIds[] = (int)$item['object_id'];
+                        $objectIds[] = $item['object_id'];
                     }
+
                     if (
                         !$objectType &&
                         isset($item['object_type']) && (
                             ($item['object_type'] instanceof LibraryItemEnum && in_array($item['object_type']->value, ['album', 'artist', 'song'])) ||
-                            (is_string($item['object_type']) && in_array($item['object_type'], ['album', 'artist', 'song']))
+                            (is_string($item['object_type']) && in_array($item['object_type'], ['album', 'artist', 'song'], true))
                         )
                     ) {
                         $objectType = ($item['object_type'] instanceof LibraryItemEnum)
@@ -109,6 +111,7 @@ final class PlayItemAction extends AbstractStreamAction
                         }
                     }
                 }
+
                 $user = $gatekeeper->getUser();
                 // record this as a 'play' to help show usage and history for playlists and streams
                 if (

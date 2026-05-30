@@ -34,19 +34,19 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
-use CpChart;
 use CpChart\Data;
+use CpChart\Image;
+use Deprecated;
 
 class Graph
 {
     public function __construct()
     {
         if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
-            return true;
+            return;
         }
-        debug_event(self::class, 'Access denied, statistical graph disabled.', 1);
 
-        return false;
+        debug_event(self::class, 'Access denied, statistical graph disabled.', 1);
     }
 
     /**
@@ -77,14 +77,15 @@ class Graph
         $object_type = null,
         $object_id = 0,
         $start_date = null,
-        $end_date = null
+        $end_date = null,
     ): string {
         $start_date = (int)($start_date);
         $end_date   = (int)($end_date);
-        if ($end_date == 0) {
+        if ($end_date === 0) {
             $end_date = time();
         }
-        if ($start_date == 0) {
+
+        if ($start_date === 0) {
             $start_date = $end_date - 864000;
         }
 
@@ -115,14 +116,15 @@ class Graph
         $object_id = 0,
         $catalog_id = 0,
         $start_date = null,
-        $end_date = null
+        $end_date = null,
     ): string {
         $start_date = (int)($start_date);
         $end_date   = (int)($end_date);
-        if ($end_date == 0) {
+        if ($end_date === 0) {
             $end_date = time();
         }
-        if ($start_date == 0) {
+
+        if ($start_date === 0) {
             $start_date = $end_date - 864000;
         }
 
@@ -155,7 +157,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): array {
         $type = $object_type;
         if ($object_type === null) {
@@ -170,12 +172,13 @@ class Graph
 
         $values = $song_values;
         foreach ($video_values as $date => $value) {
-            if (array_key_exists($date, $values)) {
+            if (array_key_exists((string) $date, $values)) {
                 $values[$date] += $value;
             } else {
                 $values[$date] = $value;
             }
         }
+
         ksort($values, SORT_NUMERIC);
 
         return $values;
@@ -200,13 +203,14 @@ class Graph
         $start_date = null,
         $end_date = null,
         $zoom = 'day',
-        $show_total = true
+        $show_total = true,
     ): array {
         $values = $this->get_all_type_pts($fct, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
         foreach ($values as $date => $value) {
             if ($show_total) {
                 $MyData->addPoints($value, "Total");
             }
+
             $MyData->addPoints($date, "TimeStamp");
         }
 
@@ -231,7 +235,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): void {
         $userRepository = $this->getUserRepository();
 
@@ -251,11 +255,8 @@ class Graph
                     $zoom
                 );
                 foreach ($values as $date => $value) {
-                    if (array_key_exists($date, $user_values)) {
-                        $value = $user_values[$date];
-                    } else {
-                        $value = 0;
-                    }
+                    $value = array_key_exists($date, $user_values) ? $user_values[$date] : 0;
+
                     $MyData->addPoints($value, $userName);
                 }
             }
@@ -279,7 +280,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): void {
         $values = $this->get_all_pts($fct, $MyData, $catalog_id, $object_type, $object_id, $start_date, $end_date, $zoom, false);
 
@@ -291,13 +292,11 @@ class Graph
                 if ($catalog === null) {
                     break;
                 }
+
                 $catalog_values = $this->get_all_type_pts($fct, $catalog_id, $object_type, $object_id, $start_date, $end_date, $zoom);
                 foreach ($values as $date => $value) {
-                    if (array_key_exists($date, $catalog_values)) {
-                        $value = $catalog_values[$date];
-                    } else {
-                        $value = 0;
-                    }
+                    $value = array_key_exists($date, $catalog_values) ? $catalog_values[$date] : 0;
+
                     $MyData->addPoints($value, (string)$catalog->name);
                 }
             }
@@ -318,7 +317,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): array {
         $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
         $where      = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
@@ -349,7 +348,7 @@ class Graph
         $start_date = null,
         $end_date = null,
         $zoom = 'day',
-        $column = 'size'
+        $column = 'size',
     ): array {
         $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
         $where      = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
@@ -378,7 +377,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): array {
         return $this->get_user_object_count_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
     }
@@ -397,7 +396,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): array {
         return $this->get_user_object_count_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, 'time');
     }
@@ -416,9 +415,9 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): array {
-        $start_date = $start_date ?? (($end_date ?? time()) - 864000);
+        $start_date ??= ($end_date ?? time()) - 864000;
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
         $sql        = "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT COUNT(`t2`.`id`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + COUNT(`" . $object_type . "`.`id`)) AS `files` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat;
@@ -446,9 +445,9 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): array {
-        $start_date = $start_date ?? (($end_date ?? time()) - 864000);
+        $start_date ??= ($end_date ?? time()) - 864000;
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
         $sql        = ($object_type == 'album')
@@ -478,7 +477,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): array {
         $pts = [];
 
@@ -486,7 +485,8 @@ class Graph
         if ($object_type === '') {
             $where .= " AND `object_type` IN ('song', 'video')";
         }
-        $sql        = "SELECT `geo_latitude`, `geo_longitude`, `geo_name`, MAX(`date`) AS `last_date`, COUNT(`id`) AS `hits` FROM `object_count` $where AND `geo_latitude` IS NOT NULL AND `geo_longitude` IS NOT NULL GROUP BY `geo_latitude`, `geo_longitude`, `geo_name` ORDER BY `last_date`, `geo_name` DESC";
+
+        $sql        = sprintf('SELECT `geo_latitude`, `geo_longitude`, `geo_name`, MAX(`date`) AS `last_date`, COUNT(`id`) AS `hits` FROM `object_count` %s AND `geo_latitude` IS NOT NULL AND `geo_longitude` IS NOT NULL GROUP BY `geo_latitude`, `geo_longitude`, `geo_name` ORDER BY `last_date`, `geo_name` DESC', $where);
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
             $pts[] = [
@@ -514,6 +514,7 @@ class Graph
         if ($width <= 50 || $width > 4096) {
             $width = 700;
         }
+
         $height = (int)$height;
         if ($height <= 60 || $height > 4096) {
             $height = 260;
@@ -537,7 +538,7 @@ class Graph
         }
 
         /* Create the pChart object */
-        $myPicture = new CpChart\Image($width, $height, $MyData);
+        $myPicture = new Image($width, $height, $MyData);
 
         /* Turn of Antialiasing */
         $myPicture->Antialias = false;
@@ -601,7 +602,7 @@ class Graph
         /* Write the chart legend */
         $myPicture->drawLegend(280, 20, ["Style" => LEGEND_NOBORDER, "Mode" => LEGEND_HORIZONTAL]);
 
-        header("Content-Disposition: filename=\"ampache-graph.png\"");
+        header('Content-Disposition: filename="ampache-graph.png"');
         /* Render the picture (choose the best way) */
         $myPicture->autoOutput();
     }
@@ -624,7 +625,7 @@ class Graph
         $end_date = null,
         $zoom = 'day',
         $width = 0,
-        $height = 0
+        $height = 0,
     ): void {
         $MyData = new Data();
         $this->get_user_all_pts(
@@ -662,7 +663,7 @@ class Graph
         $end_date = null,
         $zoom = 'day',
         $width = 0,
-        $height = 0
+        $height = 0,
     ): void {
         $MyData = new Data();
         $this->get_user_all_pts('get_user_bandwidth_pts', $MyData, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
@@ -682,7 +683,7 @@ class Graph
     {
         $total  = 0;
         $values = $this->get_all_type_pts('get_user_bandwidth_pts', $user_id, null, 0, $start_date, $end_date, 'month');
-        foreach ($values as $date => $value) {
+        foreach ($values as $value) {
             $total += $value;
         }
 
@@ -698,7 +699,7 @@ class Graph
     {
         $total  = 0;
         $values = $this->get_all_type_pts('get_user_time_pts', $user_id, null, 0, $start_date, $end_date, 'month');
-        foreach ($values as $date => $value) {
+        foreach ($values as $value) {
             $total += $value;
         }
 
@@ -714,7 +715,7 @@ class Graph
     {
         $total  = 0;
         $values = $this->get_all_type_pts('get_user_hits_pts', $user_id, null, 0, $start_date, $end_date, 'month');
-        foreach ($values as $date => $value) {
+        foreach ($values as $value) {
             $total += $value;
         }
 
@@ -739,7 +740,7 @@ class Graph
         $end_date = null,
         $zoom = 'day',
         $width = 0,
-        $height = 0
+        $height = 0,
     ): void {
         $MyData = new Data();
         $this->get_catalog_all_pts(
@@ -777,7 +778,7 @@ class Graph
         $end_date = null,
         $zoom = 'day',
         $width = 0,
-        $height = 0
+        $height = 0,
     ): void {
         $MyData = new Data();
         $this->get_catalog_all_pts(
@@ -819,21 +820,18 @@ class Graph
         if (!$user instanceof User) {
             return false;
         }
+
         foreach (Plugin::get_plugins(PluginTypeEnum::GEO_MAP) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin instanceof PluginLocationInterface && $plugin->load($user)) {
-                if ($plugin->_plugin->display_map($pts)) {
-                    return true;
-                }
+            if ($plugin->_plugin instanceof PluginLocationInterface && $plugin->load($user) && $plugin->_plugin->display_map($pts)) {
+                return true;
             }
         }
 
         return false;
     }
 
-    /**
-     * @deprecated
-     */
+    #[Deprecated]
     private function getUserRepository(): UserRepositoryInterface
     {
         global $dic;

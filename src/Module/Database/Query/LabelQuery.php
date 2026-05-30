@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Query;
 
 final class LabelQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'alpha_match',
         'equal',
         'exact_match',
@@ -109,6 +109,7 @@ final class LabelQuery implements QueryInterface
                 foreach ($value as $uid) {
                     $filter_sql .= (int)$uid . ',';
                 }
+
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
                 break;
             case 'equal':
@@ -126,11 +127,13 @@ final class LabelQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `label`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
                     $filter_sql = " `label`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'starts_with':
                 $filter_sql = " `label`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -165,10 +168,10 @@ final class LabelQuery implements QueryInterface
             case 'id':
             case 'mbid':
             case 'user':
-                $sql = "`label`.`$field`";
+                $sql = sprintf('`label`.`%s`', $field);
                 break;
             case 'rating':
-                $sql = "`rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`label`.`id`", "`rating`.`object_type`", "'label'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
@@ -177,7 +180,7 @@ final class LabelQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`label`.`id`", "`user_flag`.`object_type`", "'label'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag_rating':
-                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`label`.`id`", "`user_flag`.`object_type`", "'label'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`label`.`id`", "`rating`.`object_type`", "'label'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
@@ -185,10 +188,10 @@ final class LabelQuery implements QueryInterface
                 $sql = '';
         }
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

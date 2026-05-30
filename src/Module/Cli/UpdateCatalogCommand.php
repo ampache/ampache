@@ -27,14 +27,14 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Catalog\Update\UpdateCatalogInterface;
+use Override;
 
 final class UpdateCatalogCommand extends Command
 {
-    private UpdateCatalogInterface $updateCatalog;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -42,11 +42,9 @@ final class UpdateCatalogCommand extends Command
     }
 
     public function __construct(
-        UpdateCatalogInterface $updateCatalog
+        private readonly UpdateCatalogInterface $updateCatalog,
     ) {
         parent::__construct('run:updateCatalog', T_('Perform catalog actions for all files of a catalog. If no options are given, the defaults actions -ceagt are assumed'));
-
-        $this->updateCatalog = $updateCatalog;
 
         $this
             ->option('-c|--cleanup', T_('Removes missing files from the database'), 'boolval', false)
@@ -67,7 +65,7 @@ final class UpdateCatalogCommand extends Command
 
     public function execute(
         ?string $catalogName,
-        string $catalogType
+        string $catalogType,
     ): void {
         $values = $this->values();
         // do a default list of actions if you don't have anything set

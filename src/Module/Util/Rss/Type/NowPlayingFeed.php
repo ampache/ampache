@@ -96,10 +96,10 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
                 $text = match ($replace) {
                     'title' => (string)$media->get_fullname(),
                     'artist' => ($media instanceof Song)
-                        ? (string)$media->get_artist_fullname()
+                        ? $media->get_artist_fullname()
                         : '',
                     'album' => ($media instanceof Song)
-                        ? (string)$media->get_album_fullname($media->album, true)
+                        ? $media->get_album_fullname($media->album, true)
                         : '',
                 };
                 $title       = str_replace($search, $text, $title);

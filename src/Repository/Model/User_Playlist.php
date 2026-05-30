@@ -35,7 +35,7 @@ use Ampache\Module\System\Dba;
  */
 class User_Playlist extends database_object
 {
-    protected const DB_TABLENAME = 'user_playlist';
+    protected const string DB_TABLENAME = 'user_playlist';
 
     public int $user;
 
@@ -49,7 +49,7 @@ class User_Playlist extends database_object
      */
     public function __construct(
         ?int $user_id = 0,
-        ?string $client = null
+        ?string $client = null,
     ) {
         if (!$user_id) {
             return;
@@ -205,7 +205,7 @@ class User_Playlist extends database_object
     /**
      * get_items
      * Returns an array of all object_ids currently in this User_Playlist.
-     * @return list<array{
+     * @return array<int, array{
      *     object_type: string,
      *     object_id: int,
      *     track: int,

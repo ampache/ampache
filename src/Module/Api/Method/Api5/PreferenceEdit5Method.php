@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class PreferenceEdit5Method
 {
-    public const ACTION = 'preference_edit';
+    public const string ACTION = 'preference_edit';
 
     /**
      * preference_edit

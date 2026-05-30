@@ -38,41 +38,27 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ConfirmDeleteAction implements ApplicationActionInterface
+final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_delete';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private SongDeleterInterface $songDeleter;
+    public const string REQUEST_KEY = 'confirm_delete';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        SongDeleterInterface $songDeleter
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private SongDeleterInterface $songDeleter,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->songDeleter     = $songDeleter;
     }
 
     public function run(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
+
         $song_id = (int)$this->requestParser->getFromRequest('song_id');
         $song    = $this->modelFactory->createSong($song_id);
         if (!Catalog::can_remove($song)) {
@@ -92,7 +78,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
-                sprintf(T_('Couldn\'t delete this %s'), T_('Song')),
+                sprintf(T_("Couldn't delete this %s"), T_('Song')),
                 $this->configContainer->getWebPath('/client')
             );
         }

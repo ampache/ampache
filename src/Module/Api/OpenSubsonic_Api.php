@@ -95,13 +95,13 @@ use WpOrg\Requests\Requests;
  */
 class OpenSubsonic_Api
 {
-    public const API_VERSION = "1.16.1";
+    public const string API_VERSION = "1.16.1";
 
     /**
      * List of internal functions that should be skipped when called from SubsonicApiApplication
      * @var string[]
      */
-    public const SYSTEM_LIST = [
+    public const array SYSTEM_LIST = [
         '_addJsonResponse',
         '_addXmlResponse',
         '_albumList',
@@ -139,80 +139,80 @@ class OpenSubsonic_Api
         'getVideoSubId',
     ];
 
-    public const SSERROR_GENERIC = 0; // A generic error.
+    public const int SSERROR_GENERIC = 0; // A generic error.
 
-    public const SSERROR_MISSINGPARAM = 10; // Required parameter is missing.
+    public const int SSERROR_MISSINGPARAM = 10; // Required parameter is missing.
 
-    public const SSERROR_APIVERSION_CLIENT = 20; // Incompatible Subsonic REST protocol version. Client must upgrade.
+    public const int SSERROR_APIVERSION_CLIENT = 20; // Incompatible Subsonic REST protocol version. Client must upgrade.
 
-    public const SSERROR_APIVERSION_SERVER = 30; // Incompatible Subsonic REST protocol version. Server must upgrade.
+    public const int SSERROR_APIVERSION_SERVER = 30; // Incompatible Subsonic REST protocol version. Server must upgrade.
 
-    public const SSERROR_BADAUTH = 40; // Wrong username or password.
+    public const int SSERROR_BADAUTH = 40; // Wrong username or password.
 
-    public const SSERROR_TOKENAUTHNOTSUPPORTED = 41; // Token authentication not supported for LDAP users.
+    public const int SSERROR_TOKENAUTHNOTSUPPORTED = 41; // Token authentication not supported for LDAP users.
 
-    public const SSERROR_AUTHMETHODNOTSUPPORTED = 42; // [OPENSUBSONIC] Provided authentication mechanism not supported.
+    public const int SSERROR_AUTHMETHODNOTSUPPORTED = 42; // [OPENSUBSONIC] Provided authentication mechanism not supported.
 
-    public const SSERROR_AUTHMETHODCONFLICT = 43; // [OPENSUBSONIC] Multiple conflicting authentication mechanisms provided.
+    public const int SSERROR_AUTHMETHODCONFLICT = 43; // [OPENSUBSONIC] Multiple conflicting authentication mechanisms provided.
 
-    public const SSERROR_BADAPIKEY = 44; // [OPENSUBSONIC] Invalid API key.
+    public const int SSERROR_BADAPIKEY = 44; // [OPENSUBSONIC] Invalid API key.
 
-    public const SSERROR_UNAUTHORIZED = 50; // User is not authorized for the given operation.
+    public const int SSERROR_UNAUTHORIZED = 50; // User is not authorized for the given operation.
 
-    public const SSERROR_TRIAL = 60; // The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details.
+    public const int SSERROR_TRIAL = 60; // The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details.
 
-    public const SSERROR_DATA_NOTFOUND = 70; // The requested data was not found.
+    public const int SSERROR_DATA_NOTFOUND = 70; // The requested data was not found.
 
     /**
      * Ampache doesn't have a global unique id but items are unique per category. We use id prefixes to identify item category.
      * TODO remove old subsonic ids in Ampache 8.0
      */
 
-    public const OLD_SUBID_ALBUM = 200000000;
+    public const int OLD_SUBID_ALBUM = 200000000;
 
-    public const OLD_SUBID_ARTIST = 100000000;
+    public const int OLD_SUBID_ARTIST = 100000000;
 
-    public const OLD_SUBID_PLAYLIST = 800000000;
+    public const int OLD_SUBID_PLAYLIST = 800000000;
 
-    public const OLD_SUBID_PODCAST = 600000000;
+    public const int OLD_SUBID_PODCAST = 600000000;
 
-    public const OLD_SUBID_PODCASTEP = 700000000;
+    public const int OLD_SUBID_PODCASTEP = 700000000;
 
-    public const OLD_SUBID_SMARTPL = 400000000;
+    public const int OLD_SUBID_SMARTPL = 400000000;
 
-    public const OLD_SUBID_SONG = 300000000;
+    public const int OLD_SUBID_SONG = 300000000;
 
-    public const OLD_SUBID_VIDEO = 500000000;
+    public const int OLD_SUBID_VIDEO = 500000000;
 
-    public const SUBID_ALBUM = 'al-';
+    public const string SUBID_ALBUM = 'al-';
 
-    public const SUBID_ARTIST = 'ar-';
+    public const string SUBID_ARTIST = 'ar-';
 
-    public const SUBID_BOOKMARK = 'bo-';
+    public const string SUBID_BOOKMARK = 'bo-';
 
-    public const SUBID_CATALOG = 'mf-';
+    public const string SUBID_CATALOG = 'mf-';
 
-    public const SUBID_CHAT = 'pm-';
+    public const string SUBID_CHAT = 'pm-';
 
-    public const SUBID_GENRE = 'ta-';
+    public const string SUBID_GENRE = 'ta-';
 
-    public const SUBID_LIVESTREAM = 'li-';
+    public const string SUBID_LIVESTREAM = 'li-';
 
-    public const SUBID_PLAYLIST = 'pl-';
+    public const string SUBID_PLAYLIST = 'pl-';
 
-    public const SUBID_PODCAST = 'po-';
+    public const string SUBID_PODCAST = 'po-';
 
-    public const SUBID_PODCASTEP = 'pe-';
+    public const string SUBID_PODCASTEP = 'pe-';
 
-    public const SUBID_SHARE = 'sh-';
+    public const string SUBID_SHARE = 'sh-';
 
-    public const SUBID_SMARTPL = 'sp-';
+    public const string SUBID_SMARTPL = 'sp-';
 
-    public const SUBID_SONG = 'so-';
+    public const string SUBID_SONG = 'so-';
 
-    public const SUBID_USER = 'us-';
+    public const string SUBID_USER = 'us-';
 
-    public const SUBID_VIDEO = 'vi-';
+    public const string SUBID_VIDEO = 'vi-';
 
     public static function getAlbumSubId(int $ampache_id): string
     {
@@ -897,7 +897,7 @@ class OpenSubsonic_Api
         array $songsIdToAdd = [],
         array $songIndexToRemove = [],
         bool $public = true,
-        bool $clearFirst = false
+        bool $clearFirst = false,
     ): void {
         $playlist                 = new Playlist((int)$playlist_id);
         $songsIdToAdd_count       = count($songsIdToAdd);

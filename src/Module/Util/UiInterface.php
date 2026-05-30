@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -70,7 +72,7 @@ interface UiInterface
         string $next_url,
         ?int $cancel = 0,
         ?string $form_name = 'confirmation',
-        ?bool $visible = true
+        ?bool $visible = true,
     ): void;
 
     /**
@@ -79,7 +81,7 @@ interface UiInterface
     public function showContinue(
         string $title,
         string $text,
-        string $next_url
+        string $next_url,
     ): void;
 
     public function scrubOut(?string $string): string;
@@ -89,7 +91,7 @@ interface UiInterface
      */
     public function createPreferenceInput(
         string $name,
-        $value
+        $value,
     ): void;
 
     /**

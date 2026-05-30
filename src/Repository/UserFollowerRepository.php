@@ -41,7 +41,7 @@ final readonly class UserFollowerRepository implements UserFollowerRepositoryInt
     /**
      * Get users following the user
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getFollowers(User $user): array
     {
@@ -61,7 +61,7 @@ final readonly class UserFollowerRepository implements UserFollowerRepositoryInt
     /**
      * Get users followed by this user
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getFollowing(User $user): array
     {
@@ -112,7 +112,7 @@ final readonly class UserFollowerRepository implements UserFollowerRepositoryInt
      */
     public function delete(
         User $user,
-        User $followingUser
+        User $followingUser,
     ): void {
         $this->connection->query(
             'DELETE FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?',

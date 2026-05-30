@@ -42,7 +42,7 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
      * Deletes the artist entry
      */
     public function delete(
-        Artist $artist
+        Artist $artist,
     ): void {
         $this->connection->query(
             'DELETE FROM `artist` WHERE `id` = ?',
@@ -53,11 +53,11 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
     /**
      * This returns a number of random artists.
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getRandom(
         int $userId,
-        ?int $count = 1
+        ?int $count = 1,
     ): array {
         $results = [];
         $sql     = "SELECT DISTINCT `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ";

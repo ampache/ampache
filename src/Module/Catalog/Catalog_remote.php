@@ -46,28 +46,30 @@ use SimpleXMLElement;
  */
 class Catalog_remote extends Catalog
 {
-    private const CMD_ALBUM = 'album';
+    private const string CMD_ALBUM = 'album';
 
-    private const CMD_ARTIST = 'artist';
+    private const string CMD_ARTIST = 'artist';
 
-    private const CMD_ARTISTS = 'artists';
+    private const string CMD_ARTISTS = 'artists';
 
-    private const CMD_DOWNLOAD = 'download';
+    private const string CMD_DOWNLOAD = 'download';
 
-    private const CMD_PING = 'ping';
+    private const string CMD_PING = 'ping';
 
-    private const CMD_SONGS = 'songs';
+    private const string CMD_SONGS = 'songs';
 
-    private const CMD_SONG = 'song';
+    private const string CMD_SONG = 'song';
 
-    private const CMD_SONG_TAGS = 'song_tags';
+    private const string CMD_SONG_TAGS = 'song_tags';
 
-    private const CMD_STREAM = 'stream';
+    private const string CMD_STREAM = 'stream';
 
-    private const CMD_URL_TO_SONG = 'url_to_song';
+    private const string CMD_URL_TO_SONG = 'url_to_song';
 
     private string $version     = '000001';
+
     private string $type        = 'remote';
+
     private string $description = 'Ampache Remote Catalog';
 
     private int $catalog_id;
@@ -78,7 +80,9 @@ class Catalog_remote extends Catalog
     private ?AmpacheApi $remote_handle = null;
 
     public string $uri = '';
+
     public string $username;
+
     public string $password;
 
     /**
@@ -148,7 +152,7 @@ class Catalog_remote extends Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
-        $sql = "CREATE TABLE `catalog_remote` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE $collation NOT NULL, `username` VARCHAR(255) COLLATE $collation NOT NULL, `password` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = sprintf('CREATE TABLE `catalog_remote` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE %s NOT NULL, `username` VARCHAR(255) COLLATE %s NOT NULL, `password` VARCHAR(255) COLLATE %s NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $collation, $collation, $engine, $charset, $collation);
         Dba::query($sql);
 
         return true;
@@ -162,13 +166,7 @@ class Catalog_remote extends Catalog
      */
     public function catalog_fields(): array
     {
-        $fields = [];
-
-        $fields['uri']      = ['description' => T_('URI'), 'type' => 'url'];
-        $fields['username'] = ['description' => T_('Username'), 'type' => 'text'];
-        $fields['password'] = ['description' => T_('Password'), 'type' => 'password'];
-
-        return $fields;
+        return ['uri' => ['description' => T_('URI'), 'type' => 'url'], 'username' => ['description' => T_('Username'), 'type' => 'text'], 'password' => ['description' => T_('Password'), 'type' => 'password']];
     }
 
     /**
@@ -183,6 +181,7 @@ class Catalog_remote extends Catalog
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
+
             $this->catalog_id = (int)$catalog_id;
         }
     }
@@ -205,7 +204,7 @@ class Catalog_remote extends Catalog
         $username = $data['username'] ?? '';
         $password = $data['password'] ?? '';
 
-        if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
+        if (!str_starts_with($uri, 'http://') && !str_starts_with($uri, 'https://')) {
             AmpError::add('general', T_('Remote Catalog type was selected, but the path is not a URL'));
 
             return false;
@@ -216,13 +215,14 @@ class Catalog_remote extends Catalog
 
             return false;
         }
+
         $password = hash('sha256', $password);
 
         // Make sure this uri isn't already in use by an existing catalog
         $sql        = 'SELECT `id` FROM `catalog_remote` WHERE `uri` = ?';
         $db_results = Dba::read($sql, [$uri]);
 
-        if (Dba::num_rows($db_results)) {
+        if (Dba::num_rows($db_results) !== 0) {
             debug_event('remote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             /* HINT: remote URI */
             AmpError::add('general', sprintf(T_('This path belongs to an existing remote Catalog: %s'), $uri));
@@ -246,6 +246,7 @@ class Catalog_remote extends Catalog
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Remote Update'));
         }
+
         $songsadded = $this->_update_remote_catalog();
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
@@ -275,19 +276,19 @@ class Catalog_remote extends Catalog
                     'server' => $this->uri,
                     'debug' => false,
                     'debug_callback' => 'debug_event',
-                    'api_secure' => (substr($this->uri, 0, 8) == 'https://'),
+                    'api_secure' => (str_starts_with($this->uri, 'https://')),
                     'api_format' => 'xml',
                     'server_version' => Api::DEFAULT_VERSION
                 ]
             );
-        } catch (Exception $error) {
-            debug_event('remote.catalog', 'Connection error: ' . $error->getMessage(), 1);
+        } catch (Exception $exception) {
+            debug_event('remote.catalog', 'Connection error: ' . $exception->getMessage(), 1);
             if (defined('CLI')) {
                 echo T_('Failed to connect to the remote server') . "\n";
             }
 
             if (defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
-                AmpError::add('general', $error->getMessage());
+                AmpError::add('general', $exception->getMessage());
                 echo AmpError::display('general');
                 flush();
             }
@@ -297,7 +298,7 @@ class Catalog_remote extends Catalog
 
         if (
             $this->remote_handle &&
-            $this->remote_handle->state() != 'CONNECTED'
+            $this->remote_handle->state() !== 'CONNECTED'
         ) {
             debug_event('remote.catalog', 'API client failed to connect', 1);
             if (defined('CLI')) {
@@ -320,7 +321,7 @@ class Catalog_remote extends Catalog
     public function get_remote_tags(Podcast_Episode|Video|Song $media): ?array
     {
         $this->_connect();
-        if (!$this->remote_handle) {
+        if (!$this->remote_handle instanceof AmpacheApi) {
             debug_event('remote.catalog', 'connection error', 1);
 
             return null;
@@ -356,7 +357,7 @@ class Catalog_remote extends Catalog
     private function _gather_tags(SimpleXMLElement $song): ?array
     {
         $this->_connect();
-        if (!$this->remote_handle) {
+        if (!$this->remote_handle instanceof AmpacheApi) {
             debug_event('remote.catalog', 'connection error', 1);
 
             return null;
@@ -371,7 +372,7 @@ class Catalog_remote extends Catalog
         // Iterate over the songs we retrieved and insert them
         if (
             $tags instanceof SimpleXMLElement &&
-            isset($tags->song_tag)
+            (property_exists($tags, 'song_tag') && $tags->song_tag !== null)
         ) {
             $song_tags = $tags->song_tag;
             $data      = [];
@@ -383,14 +384,14 @@ class Catalog_remote extends Catalog
                         $data[$key] = [];
                     }
 
-                    if (!empty((string)$value)) {
+                    if ((string)$value !== '' && (string)$value !== '0') {
                         $data[$key][] = (string)$value;
                     }
                 } else {
                     // single value
-                    $data[$key] = (!empty((string)$value))
-                        ? (string)$value
-                        : null;
+                    $data[$key] = ((string)$value === '' || (string)$value === '0')
+                        ? null
+                        : (string)$value;
                 }
             }
 
@@ -398,24 +399,27 @@ class Catalog_remote extends Catalog
             $data['file']    = (string)$song->filename;
 
             if (is_string($data['artists'])) {
-                $data['artists'] = (!empty($data['artists']))
-                    ? [$data['artists']]
-                    : null;
+                $data['artists'] = (empty($data['artists']))
+                    ? null
+                    : [$data['artists']];
             }
+
             if (is_string($data['genre'])) {
-                $data['genre'] = (!empty($data['genre']))
-                    ? [$data['genre']]
-                    : null;
+                $data['genre'] = (empty($data['genre']))
+                    ? null
+                    : [$data['genre']];
             }
+
             if (is_string($data['mb_albumartistid_array'])) {
-                $data['mb_albumartistid_array'] = (!empty($data['mb_albumartistid_array']))
-                    ? [$data['mb_albumartistid_array']]
-                    : null;
+                $data['mb_albumartistid_array'] = (empty($data['mb_albumartistid_array']))
+                    ? null
+                    : [$data['mb_albumartistid_array']];
             }
+
             if (is_string($data['mb_artistid_array'])) {
-                $data['mb_artistid_array'] = (!empty($data['mb_artistid_array']))
-                    ? [$data['mb_artistid_array']]
-                    : null;
+                $data['mb_artistid_array'] = (empty($data['mb_artistid_array']))
+                    ? null
+                    : [$data['mb_artistid_array']];
             }
         } else {
             // Older servers do not have access to song_tags function
@@ -440,7 +444,7 @@ class Catalog_remote extends Catalog
                 $artists[]   = (string)$artist->name;
             }
 
-            $albumid = (isset($song->album)) ? (int)$song->album->attributes()->id : null;
+            $albumid = (property_exists($song, 'album') && $song->album !== null) ? (int)$song->album->attributes()->id : null;
             $album   = ($albumid) ? $this->remote_handle->send_command(self::CMD_ALBUM, ['filter' => $albumid]) : null;
 
             $album_data = (object)[];
@@ -494,22 +498,22 @@ class Catalog_remote extends Catalog
 
             /** @see VaInfo::DEFAULT_INFO */
             $data = [
-                'albumartist' => (!empty($albumartists)) ? $albumartists[0] : null,
-                'album' => (isset($song->album)) ? (string)$song->album->name : null,
-                'artist' => (!empty($artists)) ? $artists[0] : null,
+                'albumartist' => ($albumartists === []) ? null : $albumartists[0],
+                'album' => (property_exists($song, 'album') && $song->album !== null) ? (string)$song->album->name : null,
+                'artist' => ($artists === []) ? null : $artists[0],
                 'artists' => $artists,
                 'art' => null,
                 'audio_codec' => null,
                 'barcode' => null,
-                'bitrate' => (isset($song->bitrate)) ? (string)$song->bitrate : null,
+                'bitrate' => (property_exists($song, 'bitrate') && $song->bitrate !== null) ? (string)$song->bitrate : null,
                 'catalog_number' => null,
                 'catalog' => $this->catalog_id,
-                'channels' => (isset($song->channels)) ? (string)$song->channels : null,
-                'comment' => (isset($song->comment)) ? (string)$song->comment : null,
-                'composer' => (isset($song->composer)) ? (string)$song->composer : null,
+                'channels' => (property_exists($song, 'channels') && $song->channels !== null) ? (string)$song->channels : null,
+                'comment' => (property_exists($song, 'comment') && $song->comment !== null) ? (string)$song->comment : null,
+                'composer' => (property_exists($song, 'composer') && $song->composer !== null) ? (string)$song->composer : null,
                 'description' => null,
-                'disk' => (isset($song->disk)) ? (string)$song->disk : null,
-                'disksubtitle' => (isset($song->disksubtitle)) ? (string)$song->disksubtitle : null,
+                'disk' => (property_exists($song, 'disk') && $song->disk !== null) ? (string)$song->disk : null,
+                'disksubtitle' => (property_exists($song, 'disksubtitle') && $song->disksubtitle !== null) ? (string)$song->disksubtitle : null,
                 'display_x' => null,
                 'display_y' => null,
                 'encoding' => null,
@@ -520,50 +524,50 @@ class Catalog_remote extends Catalog
                 'language' => null,
                 'lyrics' => null,
                 'mb_albumartistid' => $mb_albumartistid,
-                'mb_albumartistid_array' => (!empty($mb_albumartistid_array)) ? $mb_albumartistid_array : null,
+                'mb_albumartistid_array' => (empty($mb_albumartistid_array)) ? null : $mb_albumartistid_array,
                 'mb_albumid_group' => (isset($album_data->mbid_group)) ? (string)$album_data->mbid_group : null,
                 'mb_albumid' => (isset($album_data->mbid)) ? (string)$album_data->mbid : null,
                 'mb_artistid' => $mb_artistid,
-                'mb_artistid_array' => (!empty($mb_artistid_array)) ? $mb_artistid_array : null,
-                'mb_trackid' => (isset($song->mbid)) ? (string)$song->mbid : null,
-                'mime' => (isset($song->mime)) ? (string)$song->mime : null,
-                'mode' => (isset($song->mode)) ? (string)$song->mode : null,
+                'mb_artistid_array' => (empty($mb_artistid_array)) ? null : $mb_artistid_array,
+                'mb_trackid' => (property_exists($song, 'mbid') && $song->mbid !== null) ? (string)$song->mbid : null,
+                'mime' => (property_exists($song, 'mime') && $song->mime !== null) ? (string)$song->mime : null,
+                'mode' => (property_exists($song, 'mode') && $song->mode !== null) ? (string)$song->mode : null,
                 'original_name' => null,
                 'original_year' => null,
-                'publisher' => (isset($song->publisher)) ? (string)$song->publisher : null,
-                'r128_album_gain' => (isset($song->r128_album_gain)) ? (string)$song->r128_album_gain : null,
-                'r128_track_gain' => (isset($song->r128_track_gain)) ? (string)$song->r128_track_gain : null,
-                'rate' => (isset($song->rate)) ? (string)$song->rate : null,
+                'publisher' => (property_exists($song, 'publisher') && $song->publisher !== null) ? (string)$song->publisher : null,
+                'r128_album_gain' => (property_exists($song, 'r128_album_gain') && $song->r128_album_gain !== null) ? (string)$song->r128_album_gain : null,
+                'r128_track_gain' => (property_exists($song, 'r128_track_gain') && $song->r128_track_gain !== null) ? (string)$song->r128_track_gain : null,
+                'rate' => (property_exists($song, 'rate') && $song->rate !== null) ? (string)$song->rate : null,
                 'rating' => null,
                 'release_date' => null,
                 'release_status' => null,
                 'release_type' => null,
-                'replaygain_album_gain' => (isset($song->replaygain_album_gain)) ? (string)$song->replaygain_album_gain : null,
-                'replaygain_album_peak' => (isset($song->replaygain_album_peak)) ? (string)$song->replaygain_album_peak : null,
-                'replaygain_track_gain' => (isset($song->replaygain_track_gain)) ? (string)$song->replaygain_track_gain : null,
-                'replaygain_track_peak' => (isset($song->replaygain_track_peak)) ? (string)$song->replaygain_track_peak : null,
+                'replaygain_album_gain' => (property_exists($song, 'replaygain_album_gain') && $song->replaygain_album_gain !== null) ? (string)$song->replaygain_album_gain : null,
+                'replaygain_album_peak' => (property_exists($song, 'replaygain_album_peak') && $song->replaygain_album_peak !== null) ? (string)$song->replaygain_album_peak : null,
+                'replaygain_track_gain' => (property_exists($song, 'replaygain_track_gain') && $song->replaygain_track_gain !== null) ? (string)$song->replaygain_track_gain : null,
+                'replaygain_track_peak' => (property_exists($song, 'replaygain_track_peak') && $song->replaygain_track_peak !== null) ? (string)$song->replaygain_track_peak : null,
                 'resolution_x' => null,
                 'resolution_y' => null,
-                'size' => (isset($song->size)) ? (string)$song->size : null,
+                'size' => (property_exists($song, 'size') && $song->size !== null) ? (string)$song->size : null,
                 'version' => null,
                 'summary' => null,
-                'time' => (isset($song->time)) ? (string)$song->time : null,
-                'title' => (isset($song->title)) ? (string)$song->title : null,
+                'time' => (property_exists($song, 'time') && $song->time !== null) ? (string)$song->time : null,
+                'title' => (property_exists($song, 'title') && $song->title !== null) ? (string)$song->title : null,
                 'totaldisks' => null,
                 'totaltracks' => null,
-                'track' => (isset($song->track)) ? (string)$song->track : null,
+                'track' => (property_exists($song, 'track') && $song->track !== null) ? (string)$song->track : null,
                 'video_bitrate' => null,
                 'video_codec' => null,
-                'year' => (isset($song->year)) ? (string)$song->year : null,
+                'year' => (property_exists($song, 'year') && $song->year !== null) ? (string)$song->year : null,
             ];
 
             // If we don't have an album artist, use the artist
-            if (empty($data['albumartist']) && !empty($data['artist'])) {
+            if (empty($data['albumartist']) && (isset($data['artist']) && ($data['artist'] !== '' && $data['artist'] !== '0'))) {
                 $data['albumartist'] = $data['artist'];
             }
 
             // different name for the mbid
-            if (empty($data['mb_trackid']) && isset($song->mbid) && !empty($song->mbid)) {
+            if (empty($data['mb_trackid']) && (property_exists($song, 'mbid') && $song->mbid !== null) && !empty($song->mbid)) {
                 $data['mb_trackid'] = $song->mbid;
             }
         }
@@ -581,7 +585,7 @@ class Catalog_remote extends Catalog
         set_time_limit(0);
 
         $this->_connect();
-        if (!$this->remote_handle) {
+        if (!$this->remote_handle instanceof AmpacheApi) {
             debug_event('remote.catalog', 'connection error', 1);
 
             return 0;
@@ -608,7 +612,7 @@ class Catalog_remote extends Catalog
         $cache_target = (string)AmpConfig::get('cache_target', '');
         $web_path     = AmpConfig::get_web_path();
 
-        if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
+        if (($web_path === '' || $web_path === '0') && !empty(AmpConfig::get('fallback_url'))) {
             $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
         }
 
@@ -649,7 +653,7 @@ class Catalog_remote extends Catalog
                         $db_url   = (string)preg_replace('/ssid=[0-9a-z]*&/', 'client=' . urlencode($web_path) . '&', $song->url);
                         $db_file  = (string)$song->filename;
 
-                        if (empty($db_file)) {
+                        if ($db_file === '' || $db_file === '0') {
                             continue;
                         }
 
@@ -671,6 +675,7 @@ class Catalog_remote extends Catalog
 
                             continue;
                         }
+
                         if (
                             $action === 'verify' &&
                             !$existing_song
@@ -678,7 +683,7 @@ class Catalog_remote extends Catalog
                             continue;
                         }
 
-                        $file_target  = ($song_id_check && !empty($cache_target) && $cache_target === (string)$song->stream_format)
+                        $file_target  = ($song_id_check && ($cache_target !== '' && $cache_target !== '0') && $cache_target === (string)$song->stream_format)
                             ? Catalog::get_cache_path($song_id_check, $this->catalog_id, $cache_path, $cache_target)
                             : null;
 
@@ -721,11 +726,11 @@ class Catalog_remote extends Catalog
                         } elseif ($action === 'verify' && $existing_song) {
                             // If we already have the song, update it
                             $song_id = Catalog::get_id_from_file($db_file, 'song');
-                            if ($song_id) {
+                            if ($song_id !== 0) {
                                 $current_song = new Song($song_id);
                                 $current_song->fill_ext_info();
 
-                                $info = ($current_song->id) ? self::update_song_from_tags($data, $current_song) : [];
+                                $info = ($current_song->id !== 0) ? self::update_song_from_tags($data, $current_song) : [];
                                 if ($info['change']) {
                                     debug_event('remote.catalog', 'Updated existing song ' . $song_id, 5);
                                     $songsadded++;
@@ -834,6 +839,7 @@ class Catalog_remote extends Catalog
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Remote Update'));
         }
+
         $songsupdated = $this->_update_remote_catalog('verify');
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
@@ -850,7 +856,7 @@ class Catalog_remote extends Catalog
     public function clean_catalog_proc(?Interactor $interactor = null): int
     {
         $this->_connect();
-        if (!$this->remote_handle) {
+        if (!$this->remote_handle instanceof AmpacheApi) {
             debug_event('remote.catalog', 'Remote login failed', 1);
 
             return 0;
@@ -923,7 +929,7 @@ class Catalog_remote extends Catalog
         $this->_connect();
 
         // If we don't get anything back we failed and should bail now
-        if (!$this->remote_handle) {
+        if (!$this->remote_handle instanceof AmpacheApi) {
             debug_event('remote.catalog', 'Connection to remote server failed', 1);
 
             return false;
@@ -963,12 +969,12 @@ class Catalog_remote extends Catalog
             $file_target = ($row['id'] && $cache_target === $row['extension'])
                 ? Catalog::get_cache_path($row['id'], $this->catalog_id, $cache_path, $cache_target)
                 : null;
-            if (empty($file_target)) {
+            if (in_array($file_target, [null, '', '0'], true)) {
                 debug_event('remote.catalog', 'Cache error: no target for ' . $row['id'], 5);
                 continue;
             }
 
-            if (!is_file($file_target) || Core::get_filesize($file_target) == 0) {
+            if (!is_file($file_target) || Core::get_filesize($file_target) === 0) {
                 $old_target_file = rtrim(trim($cache_path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $row['extension'];
                 $old_file_exists = is_file($old_target_file);
                 if ($old_file_exists) {
@@ -979,7 +985,7 @@ class Catalog_remote extends Catalog
                     $song       = new Song($row['id']);
                     $remote_url = $this->getRemoteStreamingUrl($song, self::CMD_DOWNLOAD);
                     if (
-                        !empty($remote_url) &&
+                        !in_array($remote_url, [null, '', '0'], true) &&
                         Catalog::cache_remote_file($file_target, $remote_url)
                     ) {
                         debug_event('remote.catalog', 'Saved: ' . $row['id'] . ' to: {' . $file_target . '}', 5);
@@ -1011,12 +1017,12 @@ class Catalog_remote extends Catalog
      */
     public function check_remote_song(array $song_urls, string $db_file, string $remote_id): ?int
     {
-        if (empty($song_urls) || $db_file == '') {
+        if ($song_urls === [] || $db_file === '') {
             return null;
         }
 
         // Check by remote id urls first
-        if (!empty($remote_id)) {
+        if ($remote_id !== '' && $remote_id !== '0') {
             $sql        = 'SELECT `id` FROM `song` WHERE `file` LIKE ?;';
             $db_results = Dba::read($sql, [$this->uri . '/play/index.php?%&type=song%&oid=' . $remote_id . '&%']);
             if ($results = Dba::fetch_assoc($db_results)) {
@@ -1089,7 +1095,7 @@ class Catalog_remote extends Catalog
         $this->_connect();
 
         // If we don't get anything back we failed and should bail now
-        if (!$this->remote_handle) {
+        if (!$this->remote_handle instanceof AmpacheApi) {
             debug_event('remote.catalog', 'Connection to remote server failed', 1);
 
             return null;

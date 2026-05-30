@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -25,16 +27,22 @@ namespace Ampache\Module\Art\Collector;
 
 final class ArtCollectorTypeEnum
 {
-    public const GOOGLE      = 'google';
-    public const MUSICBRAINZ = 'musicbrainz';
-    public const LASTFM      = 'lastfm';
-    public const SPOTIFY     = 'spotify';
-    public const DB          = 'db';
-    public const FOLDER      = 'folder';
-    public const META_TAGS   = 'tags';
+    public const string GOOGLE      = 'google';
+
+    public const string MUSICBRAINZ = 'musicbrainz';
+
+    public const string LASTFM      = 'lastfm';
+
+    public const string SPOTIFY     = 'spotify';
+
+    public const string DB          = 'db';
+
+    public const string FOLDER      = 'folder';
+
+    public const string META_TAGS   = 'tags';
 
     /** @var array<string, class-string<CollectorModuleInterface>> */
-    public const TYPE_CLASS_MAP = [
+    public const array TYPE_CLASS_MAP = [
         self::GOOGLE => GoogleCollectorModule::class,
         self::MUSICBRAINZ => MusicbrainzCollectorModule::class,
         self::LASTFM => LastFmCollectorModule::class,

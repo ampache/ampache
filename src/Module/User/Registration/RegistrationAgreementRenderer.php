@@ -27,14 +27,10 @@ namespace Ampache\Module\User\Registration;
 /**
  * Default registration agreement renderer (renders static file))
  */
-final class RegistrationAgreementRenderer implements RegistrationAgreementRendererInterface
+final readonly class RegistrationAgreementRenderer implements RegistrationAgreementRendererInterface
 {
-    private string $filePath;
-
-    public function __construct(
-        string $filePath = __DIR__ . '/../../../../config/registration_agreement.php'
-    ) {
-        $this->filePath = $filePath;
+    public function __construct(private string $filePath = __DIR__ . '/../../../../config/registration_agreement.php')
+    {
     }
 
     /**

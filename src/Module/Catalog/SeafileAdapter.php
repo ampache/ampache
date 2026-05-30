@@ -62,32 +62,21 @@ class SeafileAdapter
         return $token->token;
     }
 
-    // instance
-
-    private $server;
-    private $api_key;
-    private $library_name;
-    private $call_delay;
-
     private $client;
+
     private $library;
 
-    private $directory_cache;
+    private $directory_cache = [];
 
     /**
      * SeafileAdapter constructor.
      */
     public function __construct(
-        $server_uri,
-        $library_name,
-        $call_delay,
-        $api_key
+        private $server,
+        private $library_name,
+        private $call_delay,
+        private $api_key,
     ) {
-        $this->server          = $server_uri;
-        $this->library_name    = $library_name;
-        $this->api_key         = $api_key;
-        $this->call_delay      = $call_delay;
-        $this->directory_cache = [];
     }
 
     // do we have all the info we need?
@@ -139,15 +128,11 @@ class SeafileAdapter
         ];
 
         // Get Library
-        $libraries = $this->throttle_check(function () {
-            return $this->client['Libraries']->getAll();
-        });
+        $libraries = $this->throttle_check(fn () => $this->client['Libraries']->getAll());
 
-        $matches = array_values(array_filter($libraries, function ($library) {
-            return $library->name == $this->library_name;
-        }));
+        $matches = array_values(array_filter($libraries, fn ($library) => $library->name == $this->library_name));
 
-        if (count($matches) == 0) {
+        if ($matches === []) {
             AmpError::add(
                 'general',
                 sprintf(
@@ -180,13 +165,9 @@ class SeafileAdapter
 
                 $error = json_decode($resp)->detail;
 
-                preg_match('/(\d+) sec/', $error, $matches);
+                preg_match('/(\d+) sec/', (string) $error, $matches);
 
-                if (isset($matches[1])) {
-                    $secs = (int)$matches[1];
-                } else {
-                    $secs = 0;
-                }
+                $secs = isset($matches[1]) ? (int)$matches[1] : 0;
 
                 debug_event('SeafileAdapter', sprintf('Throttled by Seafile, waiting %d seconds.', $secs), 5);
                 sleep($secs + 1);
@@ -224,7 +205,7 @@ class SeafileAdapter
      */
     private function get_cached_directory($path)
     {
-        if (array_key_exists($path, $this->directory_cache)) {
+        if (array_key_exists((string) $path, $this->directory_cache)) {
             $directory = $this->directory_cache[$path];
 
             if ($directory) {
@@ -233,21 +214,20 @@ class SeafileAdapter
 
             return null;
         }
+
         try {
-            $directory = $this->throttle_check(function () use ($path) {
-                return $this->client['Directories']->getAll($this->library, $path);
-            });
+            $directory                    = $this->throttle_check(fn () => $this->client['Directories']->getAll($this->library, $path));
             $this->directory_cache[$path] = $directory;
 
             return $directory;
-        } catch (ClientException $error) {
-            if ($error->getResponse()->getStatusCode() == 404) {
+        } catch (ClientException $clientException) {
+            if ($clientException->getResponse()->getStatusCode() == 404) {
                 $this->directory_cache[$path] = false;
 
                 return null;
             }
 
-            throw $error;
+            throw $clientException;
         }
     }
 
@@ -307,26 +287,18 @@ class SeafileAdapter
      */
     public function download($file, $partial = false): string
     {
-        $url = $this->throttle_check(function () use ($file) {
-            return $this->client['Files']->getDownloadUrl($this->library, $file, $file->dir);
-        });
+        $url  = $this->throttle_check(fn () => $this->client['Files']->getDownloadUrl($this->library, $file, $file->dir));
+        $opts = $partial ? ['curl' => [CURLOPT_RANGE => '0-2097152']] : ['delay' => 0];
 
-        if ($partial) {
-            $opts = ['curl' => [CURLOPT_RANGE => '0-2097152']];
-        } else {
-            $opts = ['delay' => 0];
-        }
         // grab a full 2 meg in case meta has image in it or something
-        $response = $this->throttle_check(function () use ($url, $opts) {
-            return $this->client['Client']->request('GET', $url, $opts);
-        });
+        $response = $this->throttle_check(fn () => $this->client['Client']->request('GET', $url, $opts));
 
         $tempfilename = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $file->name;
 
         $tempfile = fopen($tempfilename, 'wb');
 
         if ($tempfile) {
-            fwrite($tempfile, $response->getBody());
+            fwrite($tempfile, (string) $response->getBody());
             fclose($tempfile);
         }
 

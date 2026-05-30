@@ -73,7 +73,7 @@ abstract class playlist_object extends database_object implements library_item
     private ?bool $has_art = null;
 
     /**
-     * @return list<array{
+     * @return array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track: int,
@@ -92,7 +92,7 @@ abstract class playlist_object extends database_object implements library_item
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
@@ -156,7 +156,7 @@ abstract class playlist_object extends database_object implements library_item
 
         $new_list    = (!empty($data['collaborate'])) ? $data['collaborate'] : [];
         $collaborate = (!empty($new_list)) ? implode(',', $new_list) : '';
-        if (is_array($new_list) && $collaborate != $this->collaborate) {
+        if ($collaborate != $this->collaborate) {
             $playlist_id = ($this instanceof Search)
                 ? 'smart_' . $this->id
                 : $this->id;
@@ -181,9 +181,13 @@ abstract class playlist_object extends database_object implements library_item
      */
     private function _update_collaborate(array $new_list, int|string $playlist_id): void
     {
-        $collaborate = implode(',', $new_list);
+        /** @var int[] $ids */
+        $ids = array_filter(
+            array_map('intval', $new_list)
+        );
+
+        $collaborate = implode(',', $ids);
         if ($this->update_item('collaborate', $collaborate)) {
-            $this->collaborate = $collaborate;
 
             $sql = (empty($collaborate))
                 ? "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;"
@@ -229,7 +233,7 @@ abstract class playlist_object extends database_object implements library_item
         return (bool)(
             $user instanceof User &&
             !empty($this->collaborate) &&
-            in_array($user->getId(), explode(',', (string)$this->collaborate))
+            in_array($user->getId(), array_map('intval', explode(',', (string)$this->collaborate)))
         );
     }
 
@@ -265,11 +269,11 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return list<array{
+     * @return array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
-     *     track?: int,
-     *     track_id?: int
+     *     track: int,
+     *     track_id: int
      * }>
      */
     public function get_medias(?string $filter_type = null): array
@@ -400,7 +404,7 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * @return array{
-     *     playlist: list<array{object_type: LibraryItemEnum, object_id: int, track: int, track_id: int}>
+     *     playlist: array<int, array{object_type: LibraryItemEnum, object_id: int, track: int, track_id: int}>
      * }
      */
     public function get_childrens(): array
@@ -410,7 +414,7 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {

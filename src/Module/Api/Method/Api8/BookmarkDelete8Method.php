@@ -42,9 +42,9 @@ use Ampache\Repository\Model\Video;
  */
 final class BookmarkDelete8Method
 {
-    public const ACTION = 'bookmark_delete';
+    public const string ACTION = 'bookmark_delete';
 
-    public const REST_ACTION = 'bookmarks_delete';
+    public const string REST_ACTION = 'bookmarks_delete';
 
     /**
      * bookmark_delete
@@ -53,7 +53,7 @@ final class BookmarkDelete8Method
      * Delete an existing bookmark. (if it exists)
      *
      * filter = (string) object_id to delete
-     * type   = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode')
+     * type   = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode') //optional default: bookmark
      * client = (string) Agent string //optional
      *
      * @param array{

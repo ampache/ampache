@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -33,7 +35,7 @@ interface SongTagWriterInterface
      * Write the current song id3 metadata to the file
      */
     public function write(
-        Song $song
+        Song $song,
     ): void;
 
     /**
@@ -42,6 +44,6 @@ interface SongTagWriterInterface
     public function writeRating(
         Song $song,
         User $user,
-        Rating $rating
+        Rating $rating,
     ): void;
 }

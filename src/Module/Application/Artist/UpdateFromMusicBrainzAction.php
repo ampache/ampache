@@ -38,26 +38,20 @@ use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UpdateFromMusicBrainzAction implements ApplicationActionInterface
+final readonly class UpdateFromMusicBrainzAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_from_musicbrainz';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'update_from_musicbrainz';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $artistId = (int) ($request->getQueryParams()['artist'] ?? 0);
-        $user     = (!empty(Core::get_global('user')))
+        $user     = (Core::get_global('user') instanceof User)
             ? Core::get_global('user')
             : new User(-1);
 
@@ -69,9 +63,11 @@ final class UpdateFromMusicBrainzAction implements ApplicationActionInterface
             if (!$plugin->load($user)) {
                 throw new AccessDeniedException('Unable to load musicbrainz plugin');
             }
+
             if (!$plugin->_plugin->overwrite_name) {
                 throw new AccessDeniedException(T_('Enable') . ': ' . T_('Overwrite Artist names that match an mbid'));
             }
+
             $artist = new Artist($artistId);
             $plugin->_plugin->get_external_metadata($artist, 'artist');
 
@@ -81,6 +77,7 @@ final class UpdateFromMusicBrainzAction implements ApplicationActionInterface
                 $this->configContainer->getWebPath('/client') . "/artists.php?action=show&artist=" . $artistId
             );
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

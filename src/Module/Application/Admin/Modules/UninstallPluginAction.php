@@ -40,28 +40,16 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class UninstallPluginAction implements ApplicationActionInterface
+final readonly class UninstallPluginAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'uninstall_plugin';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private LoggerInterface $logger;
+    public const string REQUEST_KEY = 'uninstall_plugin';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private LoggerInterface $logger,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -90,6 +78,7 @@ final class UninstallPluginAction implements ApplicationActionInterface
 
             return null;
         }
+
         $plugin = new Plugin($plugin_name);
         $plugin->uninstall();
 

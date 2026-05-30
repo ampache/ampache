@@ -46,6 +46,7 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Deprecated;
 use Exception;
 
 /**
@@ -138,7 +139,7 @@ class Catalog_local extends Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
-        $sql = "CREATE TABLE `catalog_local` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `path` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = sprintf('CREATE TABLE `catalog_local` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `path` VARCHAR(255) COLLATE %s NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $engine, $charset, $collation);
         Dba::query($sql);
 
         return true;
@@ -152,11 +153,7 @@ class Catalog_local extends Catalog
      */
     public function catalog_fields(): array
     {
-        $fields = [];
-
-        $fields['path'] = ['description' => T_('Path'), 'type' => 'text'];
-
-        return $fields;
+        return ['path' => ['description' => T_('Path'), 'type' => 'text']];
     }
 
     /**
@@ -171,6 +168,7 @@ class Catalog_local extends Catalog
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
+
             $this->catalog_id = (int)$catalog_id;
         }
     }
@@ -207,7 +205,7 @@ class Catalog_local extends Catalog
             $component_path = ($parent_path === false)
                 ? $component_path
                 : $parent_path;
-        } while (strcmp($component_path, $old_path) != 0);
+        } while (strcmp($component_path, $old_path) !== 0);
 
         return null;
     }
@@ -237,7 +235,7 @@ class Catalog_local extends Catalog
         $sql        = 'SELECT `id` FROM `catalog_local` WHERE `path` = ?';
         $db_results = Dba::read($sql, [$path]);
 
-        if (Dba::num_rows($db_results)) {
+        if (Dba::num_rows($db_results) !== 0) {
             debug_event('local.catalog', 'Cannot add catalog with duplicate path ' . $path, 1);
             /* HINT: directory (file path) */
             AmpError::add('general', sprintf(T_('This path belongs to an existing local Catalog: %s'), $path));
@@ -266,26 +264,23 @@ class Catalog_local extends Catalog
             $path = $options['subdirectory'];
             unset($options['subdirectory']);
         }
+
         // Make sure the path doesn't end in a / or \
-        $path = rtrim($path, '/');
+        $path = rtrim((string) $path, '/');
         $path = rtrim($path, '\\');
 
         // Correctly detect the slash we need to use here
-        if (strpos($path, '/') !== false) {
-            $slash_type = '/';
-        } else {
-            $slash_type = '\\';
-        }
+        $slash_type = str_contains($path, '/') ? '/' : '\\';
 
         /* Open up the directory */
         $handle = opendir($path);
 
         if (!is_resource($handle)) {
             $interactor?->info(
-                "Unable to open $path",
+                'Unable to open ' . $path,
                 true
             );
-            debug_event('local.catalog', "Unable to open $path", 3);
+            debug_event('local.catalog', 'Unable to open ' . $path, 3);
             /* HINT: directory (file path) */
             AmpError::add('catalog_add', sprintf(T_('Unable to open: %s'), $path));
 
@@ -295,10 +290,10 @@ class Catalog_local extends Catalog
         /* Change the dir so is_dir works correctly */
         if (!chdir($path)) {
             $interactor?->info(
-                "Unable to chdir to $path",
+                'Unable to chdir to ' . $path,
                 true
             );
-            debug_event('local.catalog', "Unable to chdir to $path", 2);
+            debug_event('local.catalog', 'Unable to chdir to ' . $path, 2);
             /* HINT: directory (file path) */
             AmpError::add('catalog_add', sprintf(T_('Unable to change to directory: %s'), $path));
 
@@ -311,15 +306,17 @@ class Catalog_local extends Catalog
             if ('.' === $file || '..' === $file) {
                 continue;
             }
+
             // reduce the crazy log info
-            if ($counter % 1000 == 0) {
+            if ($counter % 1000 === 0) {
                 $interactor?->info(
-                    "Reading $file inside $path",
+                    sprintf('Reading %s inside %s', $file, $path),
                     true
                 );
-                debug_event('local.catalog', "Reading $file inside $path", 5);
-                debug_event('local.catalog', "Memory usage: " . (string) Ui::format_bytes(memory_get_usage(true)), 5);
+                debug_event('local.catalog', sprintf('Reading %s inside %s', $file, $path), 5);
+                debug_event('local.catalog', "Memory usage: " . Ui::format_bytes(memory_get_usage(true)), 5);
             }
+
             $counter++;
 
             /* Create the new path */
@@ -338,13 +335,13 @@ class Catalog_local extends Catalog
         } // end while reading directory
 
         $interactor?->info(
-            "Finished reading $path, closing handle",
+            sprintf('Finished reading %s, closing handle', $path),
             true
         );
-        debug_event('local.catalog', "Finished reading $path, closing handle", 5);
+        debug_event('local.catalog', sprintf('Finished reading %s, closing handle', $path), 5);
 
         // This should only happen on the last run
-        if ($path == $this->path) {
+        if ($path === $this->path) {
             Ui::update_text('add_count_' . $this->catalog_id, $this->count);
         }
 
@@ -370,20 +367,20 @@ class Catalog_local extends Catalog
             return false;
         }
 
-        if (AmpConfig::get('no_symlinks')) {
-            if (is_link($full_file)) {
-                $interactor?->info(
-                    "Skipping symbolic link $full_file",
-                    true
-                );
-                debug_event('local.catalog', "Skipping symbolic link $full_file", 5);
+        if (AmpConfig::get('no_symlinks') && is_link($full_file)) {
+            $interactor?->info(
+                'Skipping symbolic link ' . $full_file,
+                true
+            );
+            debug_event('local.catalog', 'Skipping symbolic link ' . $full_file, 5);
 
-                return false;
-            }
+            return false;
         }
+
         if (!array_key_exists('gather_art', $options)) {
             $options['gather_art'] = false;
         }
+
         if (!array_key_exists('parse_playlist', $options)) {
             $options['parse_playlist'] = false;
         }
@@ -395,10 +392,10 @@ class Catalog_local extends Catalog
             /* Change the dir so is_dir works correctly */
             if (!chdir($full_file)) {
                 $interactor?->info(
-                    "Unable to chdir to $full_file",
+                    'Unable to chdir to ' . $full_file,
                     true
                 );
-                debug_event('local.catalog', "Unable to chdir to $full_file", 2);
+                debug_event('local.catalog', 'Unable to chdir to ' . $full_file, 2);
                 /* HINT: directory (file path) */
                 AmpError::add('catalog_add', sprintf(T_('Unable to change to directory: %s'), $full_file));
             }
@@ -412,6 +409,7 @@ class Catalog_local extends Catalog
         if (AmpConfig::get('catalog_video_pattern')) {
             $is_video_file = Catalog::is_video_file($full_file);
         }
+
         $is_playlist = false;
         if ($options['parse_playlist'] && AmpConfig::get('catalog_playlist_pattern')) {
             $is_playlist = Catalog::is_playlist_file($full_file);
@@ -424,10 +422,10 @@ class Catalog_local extends Catalog
 
             if ($file_size === 0) {
                 $interactor?->info(
-                    "Unable to get filesize for $full_file",
+                    'Unable to get filesize for ' . $full_file,
                     true
                 );
-                debug_event('local.catalog', "Unable to get filesize for $full_file", 2);
+                debug_event('local.catalog', 'Unable to get filesize for ' . $full_file, 2);
                 /* HINT: FullFile */
                 AmpError::add('catalog_add', sprintf(T_('Unable to get the filesize for "%s"'), $full_file));
 
@@ -437,10 +435,10 @@ class Catalog_local extends Catalog
             // not readable, warn user
             if (!Core::is_readable($full_file)) {
                 $interactor?->info(
-                    "$full_file is not readable by Ampache",
+                    $full_file . ' is not readable by Ampache',
                     true
                 );
-                debug_event('local.catalog', "$full_file is not readable by Ampache", 2);
+                debug_event('local.catalog', $full_file . ' is not readable by Ampache', 2);
                 /* HINT: filename (file path) */
                 AmpError::add('catalog_add', sprintf(T_("The file couldn't be read. Does it exist? %s"), $full_file));
 
@@ -455,13 +453,14 @@ class Catalog_local extends Catalog
                     $lc_charset = AmpConfig::get('lc_charset');
                 }
 
-                $enc_full_file = iconv($lc_charset, $site_charset, $full_file);
+                $enc_full_file = iconv((string) $lc_charset, (string) $site_charset, $full_file);
                 if ($enc_full_file !== false) {
                     if ($lc_charset != $site_charset) {
-                        $convok = (iconv($site_charset, $lc_charset, $enc_full_file) && strcmp($full_file, iconv($site_charset, $lc_charset, $enc_full_file)) == 0);
+                        $convok = (iconv((string) $site_charset, (string) $lc_charset, $enc_full_file) && strcmp($full_file, iconv((string) $site_charset, (string) $lc_charset, $enc_full_file)) === 0);
                     } else {
-                        $convok = (strcmp($enc_full_file, $full_file) == 0);
+                        $convok = (strcmp($enc_full_file, $full_file) === 0);
                     }
+
                     if (!$convok) {
                         $interactor?->info(
                             $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file,
@@ -473,6 +472,7 @@ class Catalog_local extends Catalog
 
                         return false;
                     }
+
                     $full_file = $enc_full_file;
 
                     // Check again with good encoding
@@ -491,7 +491,7 @@ class Catalog_local extends Catalog
                 debug_event('local.catalog', 'Found playlist file to import: ' . $full_file, 5);
                 $this->_playlists[] = $full_file;
             } else {
-                if (count($this->get_gather_types('music')) > 0) {
+                if ($this->get_gather_types('music') !== []) {
                     if ($is_audio_file && $this->_insert_local_song($full_file, $options)) {
                         $interactor?->info(
                             T_('Added') . ' ' . $full_file,
@@ -507,7 +507,7 @@ class Catalog_local extends Catalog
 
                         return false;
                     }
-                } elseif (count($this->get_gather_types('video')) > 0) {
+                } elseif ($this->get_gather_types('video') !== []) {
                     if ($is_video_file && $this->_insert_local_video($full_file, $options)) {
                         $interactor?->info(
                             T_('Added') . ' ' . $full_file,
@@ -526,7 +526,7 @@ class Catalog_local extends Catalog
                 }
 
                 $this->count++;
-                $file = str_replace(['(', ')', '\''], '', $full_file);
+                $file = str_replace(['(', ')', "'"], '', $full_file);
                 if (Ui::check_ticker()) {
                     Ui::update_text('add_count_' . $this->catalog_id, $this->count);
                     Ui::update_text('add_dir_' . $this->catalog_id, scrub_out($file));
@@ -535,9 +535,10 @@ class Catalog_local extends Catalog
 
             return true;
         }
+
         // if it matches the pattern
-        if ($counter % 1000 == 0) {
-            debug_event('local.catalog', "$full_file ignored, non-audio file or 0 bytes", 5);
+        if ($counter % 1000 === 0) {
+            debug_event('local.catalog', $full_file . ' ignored, non-audio file or 0 bytes', 5);
         }
 
         return false;
@@ -550,16 +551,18 @@ class Catalog_local extends Catalog
      */
     public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int
     {
-        if (empty($options)) {
+        if ($options === null || $options === []) {
             $options = [
                 'gather_art' => true,
                 'parse_playlist' => false
             ];
         }
+
         // make double sure that options are set
         if (!array_key_exists('gather_art', $options)) {
             $options['gather_art'] = true;
         }
+
         if (!array_key_exists('parse_playlist', $options)) {
             $options['parse_playlist'] = false;
         }
@@ -600,7 +603,7 @@ class Catalog_local extends Catalog
                     $result = PlaylistImporter::import_playlist($full_file, -1, 'public');
                     if ($result !== null) {
                         $file = basename($full_file);
-                        echo "\n$full_file\n";
+                        echo PHP_EOL . $full_file . PHP_EOL;
                         if (!empty($result['results'])) {
                             foreach ($result['results'] as $file) {
                                 if ($file['found']) {
@@ -608,13 +611,17 @@ class Catalog_local extends Catalog
                                 } else {
                                     echo "-: " . T_('Failure') . ":\t" . scrub_out($file['file']) . "\n";
                                 }
+
                                 flush();
-                            } // foreach songs
+                            }
+
+                            // foreach songs
                             echo "\n";
                         }
                     } // end if import worked
                 } // end foreach playlist files
             }
+
             // only gather art if you've added new stuff
             if (($this->count) > 0 && $options['gather_art']) {
                 $interactor?->info(
@@ -627,9 +634,11 @@ class Catalog_local extends Catalog
                     require Ui::find_template('show_gather_art.inc.php');
                     flush();
                 }
+
                 $this->gather_art($this->songs_to_gather, $this->videos_to_gather);
             }
         }
+
         if ($this->count > 0) {
             // update the counts too
             if ($this->gather_types == 'music') {
@@ -724,6 +733,7 @@ class Catalog_local extends Catalog
         if ($total > $chunk_size) {
             $chunks = (int)ceil($total / $chunk_size);
         }
+
         // one loop
         if ($total < $chunk_size) {
             $chunk = 1;
@@ -743,10 +753,10 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', sprintf(T_('File count: %d'), $total) . ' (last_update: ' . $this->last_update . ')', 5);
         while ($count <= $chunks) {
             $interactor?->info(
-                "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks",
+                "catalog " . $this->name . " starting verify " . $media_type . sprintf(' on chunk %d/%d', $count, $chunks),
                 true
             );
-            debug_event('local.catalog', "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks", 5);
+            debug_event('local.catalog', "catalog " . $this->name . " starting verify " . $media_type . sprintf(' on chunk %d/%d', $count, $chunks), 5);
             $this->count += $this->_verify_chunk($media_type, ($chunks - $chunk), $chunk_size, $verify_by_time, $last_update);
             $chunk++;
             $count++;
@@ -756,10 +766,10 @@ class Catalog_local extends Catalog
         }
 
         $interactor?->info(
-            "Verify finished, $this->count updated in " . $this->name,
+            sprintf('Verify finished, %d updated in ', $this->count) . $this->name,
             true
         );
-        debug_event('local.catalog', "Verify finished, $this->count updated in " . $this->name, 5);
+        debug_event('local.catalog', sprintf('Verify finished, %d updated in ', $this->count) . $this->name, 5);
         if ($interactor == null && $gather_type == 'music') {
             Album::update_table_counts();
             Artist::update_table_counts();
@@ -792,11 +802,11 @@ class Catalog_local extends Catalog
         $count = $chunk * $chunk_size;
         $sql   = match ($tableName) {
             'album' => ($last_update)
-                ? "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? AND `song`.`update_time` < " . $this->last_update . " GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT $chunk_size"
-                : "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT $chunk_size",
+                ? "SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? AND `song`.`update_time` < " . $this->last_update . (' GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT ' . $chunk_size)
+                : 'SELECT `album`.`id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`catalog` = ? GROUP BY `album`.`id` ORDER BY MIN(`song`.`file`) DESC LIMIT ' . $chunk_size,
             default => ($last_update)
-                ? "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `$tableName`.`file` DESC LIMIT $chunk_size"
-                : "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? ORDER BY `$tableName`.`file` DESC LIMIT $chunk_size",
+                ? sprintf('SELECT `%s`.`id`, `%s`.`file`, `%s`.`update_time` AS `min_update_time` FROM `%s` LEFT JOIN `catalog` ON `%s`.`catalog` = `catalog`.`id` WHERE `%s`.`catalog` = ? AND `%s`.`update_time` < `catalog`.`last_update` ORDER BY `%s`.`file` DESC LIMIT %d', $tableName, $tableName, $tableName, $tableName, $tableName, $tableName, $tableName, $tableName, $chunk_size)
+                : sprintf('SELECT `%s`.`id`, `%s`.`file`, `%s`.`update_time` AS `min_update_time` FROM `%s` LEFT JOIN `catalog` ON `%s`.`catalog` = `catalog`.`id` WHERE `%s`.`catalog` = ? ORDER BY `%s`.`file` DESC LIMIT %d', $tableName, $tableName, $tableName, $tableName, $tableName, $tableName, $tableName, $chunk_size),
         };
 
         //debug_event(self::class, '_verify_chunk (' . $chunk . ') ' . $sql. ' ' . print_r($params, true), 5);
@@ -807,6 +817,7 @@ class Catalog_local extends Catalog
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $media_ids[] = $row['id'];
             }
+
             /** @var Song|Album|Video $className */
             $className::build_cache($media_ids);
         }
@@ -816,7 +827,7 @@ class Catalog_local extends Catalog
         while ($row = Dba::fetch_assoc($db_results)) {
             $count++;
             if (Ui::check_ticker()) {
-                $file = str_replace(['(', ')', '\''], '', $row['file']);
+                $file = str_replace(['(', ')', "'"], '', $row['file']);
                 Ui::update_text('verify_count_' . $this->catalog_id, $count);
                 Ui::update_text('verify_dir_' . $this->catalog_id, scrub_out($file));
             }
@@ -837,6 +848,7 @@ class Catalog_local extends Catalog
                             Podcast_Episode::update_utime($row['id']);
                             break;
                     }
+
                     continue;
                 }
 
@@ -855,8 +867,10 @@ class Catalog_local extends Catalog
                                 Podcast_Episode::update_utime($row['id']);
                                 break;
                         }
+
                         continue;
                     }
+
                     // check the modification time on the file to see if it's worth checking the tags.
                     if ((int)($row['min_update_time'] ?? 0) > $file_time) {
                         //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
@@ -871,6 +885,7 @@ class Catalog_local extends Catalog
                                 Podcast_Episode::update_utime($row['id']);
                                 break;
                         }
+
                         continue;
                     }
                 }
@@ -917,10 +932,12 @@ class Catalog_local extends Catalog
         } elseif ($gather_type == 'video') {
             $media_type = 'video';
         }
+
         $total = self::count_table($media_type, $this->catalog_id);
-        if ($total == 0) {
+        if ($total === 0) {
             return $this->count;
         }
+
         $dead   = [];
         $count  = 1;
         $chunks = 1;
@@ -928,39 +945,40 @@ class Catalog_local extends Catalog
         if ($total > 10000) {
             $chunks = (int)ceil($total / 10000);
         }
+
         while ($chunk < $chunks) {
             $interactor?->info(
-                "catalog " . $this->name . " Starting clean " . $media_type . " on chunk $count/$chunks",
+                "catalog " . $this->name . " Starting clean " . $media_type . sprintf(' on chunk %d/%d', $count, $chunks),
                 true
             );
-            debug_event('local.catalog', "catalog " . $this->name . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
+            debug_event('local.catalog', "catalog " . $this->name . " Starting clean " . $media_type . sprintf(' on chunk %d/%d', $count, $chunks), 5);
             $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000, $interactor));
             $chunk++;
             $count++;
         }
+
         $interactor?->info(
-            "Clean finished, $total files checked in " . $this->name,
+            sprintf('Clean finished, %s files checked in ', $total) . $this->name,
             true
         );
-        debug_event('local.catalog', "Clean finished, $total files checked in " . $this->name, 5);
+        debug_event('local.catalog', sprintf('Clean finished, %s files checked in ', $total) . $this->name, 5);
 
         $dead_count = count($dead);
         // Check for unmounted path
-        if (!file_exists($this->path)) {
-            if ($dead_count >= $total) {
-                $interactor?->info(
-                    'All files would be removed. Doing nothing.',
-                    true
-                );
-                debug_event('local.catalog', 'All files would be removed. Doing nothing.', 1);
-                AmpError::add('general', T_('All files would be removed. Doing nothing'));
+        if (!file_exists($this->path) && $dead_count >= $total) {
+            $interactor?->info(
+                'All files would be removed. Doing nothing.',
+                true
+            );
+            debug_event('local.catalog', 'All files would be removed. Doing nothing.', 1);
+            AmpError::add('general', T_('All files would be removed. Doing nothing'));
 
-                return $this->count;
-            }
+            return $this->count;
         }
-        if ($dead_count) {
+
+        if ($dead_count !== 0) {
             $this->count += $dead_count;
-            $sql = "DELETE FROM `$media_type` WHERE `id` IN (" . implode(',', $dead) . ")";
+            $sql = sprintf('DELETE FROM `%s` WHERE `id` IN (', $media_type) . implode(',', $dead) . ")";
             Dba::write($sql);
         }
 
@@ -972,23 +990,24 @@ class Catalog_local extends Catalog
     /**
      * _clean_chunk
      * This is the clean function and is broken into chunks to try to save a little memory
-     * @return list<int>
+     * @return int[]
      */
     private function _clean_chunk(string $media_type, int $chunk, int $chunk_size, ?Interactor $interactor = null): array
     {
         $dead  = [];
         $count = $chunk * $chunk_size;
 
-        $sql        = "SELECT `id`, `file` FROM `$media_type` WHERE `catalog` = ? AND `file` IS NOT NULL LIMIT $count, $chunk_size;";
+        $sql        = sprintf('SELECT `id`, `file` FROM `%s` WHERE `catalog` = ? AND `file` IS NOT NULL LIMIT %d, %d;', $media_type, $count, $chunk_size);
         $db_results = Dba::read($sql, [$this->catalog_id]);
         while ($results = Dba::fetch_assoc($db_results)) {
             //debug_event('local.catalog', 'Cleaning check on ' . $results['file'] . ' (' . $results['id'] . ')', 5);
             $count++;
             if (Ui::check_ticker()) {
-                $file = str_replace(['(', ')', '\''], '', $results['file']);
+                $file = str_replace(['(', ')', "'"], '', $results['file']);
                 Ui::update_text('clean_count_' . $this->catalog_id, $count);
                 Ui::update_text('clean_dir_' . $this->catalog_id, scrub_out($file));
             }
+
             if ($this->clean_file($results['file'], $media_type)) {
                 $interactor?->info(
                     'File removed: ' . $results['file'],
@@ -1011,7 +1030,7 @@ class Catalog_local extends Catalog
         $missing = [];
         $count   = $chunk * $chunk_size;
 
-        $sql        = "SELECT `id`, `file` FROM `$media_type` WHERE `catalog` = ? LIMIT $count, $chunk_size;";
+        $sql        = sprintf('SELECT `id`, `file` FROM `%s` WHERE `catalog` = ? LIMIT %d, %d;', $media_type, $count, $chunk_size);
         $db_results = Dba::read($sql, [$this->catalog_id]);
 
         while ($results = Dba::fetch_assoc($db_results)) {
@@ -1046,6 +1065,7 @@ class Catalog_local extends Catalog
 
             return false;
         }
+
         // HINT: %1$s: file, %2$s: directory
         $interactor?->info(
             sprintf(T_('Copying "%1$s" to "%2$s"'), $media->file, $new_file),
@@ -1067,10 +1087,11 @@ class Catalog_local extends Catalog
             }
         }
 
-        if (empty($media->file) || !copy($media->file, $new_file)) {
+        if (in_array($media->file, [null, '', '0'], true) || !copy($media->file, $new_file)) {
             if (is_file($new_file)) {
                 unlink($new_file);
             }
+
             /* HINT: filename (File path) */
             $interactor?->info(
                 sprintf(T_('There was an error trying to copy file to "%s"'), $new_file),
@@ -1086,10 +1107,11 @@ class Catalog_local extends Catalog
         $new_sum = Core::get_filesize($new_file);
         $old_sum = Core::get_filesize($media->file);
 
-        if ($new_sum != $old_sum || $new_sum == 0) {
+        if ($new_sum !== $old_sum || $new_sum === 0) {
             if (is_file($new_file)) {
                 unlink($new_file);
             }
+
             /* HINT: filename (File path) */
             $interactor?->info(
                 sprintf(T_('Size comparison failed. Not deleting "%s"'), $media->file),
@@ -1110,7 +1132,7 @@ class Catalog_local extends Catalog
         // Update the catalog
         $sql = "UPDATE `song` SET `file` = ?, catalog = ? WHERE `id` = ?;";
 
-        return (Dba::write($sql, [$new_file, $newCatalogId, $media->id]) !== false);
+        return (Dba::write($sql, [$new_file, $newCatalogId, $media->id]) !== null);
     }
 
     /**
@@ -1118,9 +1140,9 @@ class Catalog_local extends Catalog
      *
      * Get catalog id from the file path.
      */
-    private static function _get_catalog_id_from_file(string $file_path): int
+    private function _get_catalog_id_from_file(string $file_path): int
     {
-        $sql        = 'SELECT `catalog_id` FROM `catalog_local` WHERE ? LIKE CONCAT(`path`, \'%\')';
+        $sql        = "SELECT `catalog_id` FROM `catalog_local` WHERE ? LIKE CONCAT(`path`, '%')";
         $db_results = Dba::read($sql, [$file_path]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -1146,10 +1168,10 @@ class Catalog_local extends Catalog
             case 'song':
             case 'video':
             case 'podcast_episode':
-                $newCatalogId = self::_get_catalog_id_from_file($new_file);
+                $newCatalogId = $this->_get_catalog_id_from_file($new_file);
                 $newCatalog   = self::create_from_id($newCatalogId);
                 if ($newCatalog?->get_type() !== 'local') {
-                    debug_event('local.catalog', "move_file: $new_file is not part of a local catalog", 1);
+                    debug_event('local.catalog', sprintf('move_file: %s is not part of a local catalog', $new_file), 1);
 
                     return false;
                 }
@@ -1159,7 +1181,7 @@ class Catalog_local extends Catalog
                         // update mapping for new catalogs
                         $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
 
-                        if (Dba::write($sql, [$newCatalogId, $media_type, $object->getId()]) !== false) {
+                        if (Dba::write($sql, [$newCatalogId, $media_type, $object->getId()]) !== null) {
                             if ($object instanceof Song) {
                                 $sql        = "SELECT `id` FROM `song` WHERE `album` = ? AND `catalog` = ?;";
                                 $db_results = Dba::read($sql);
@@ -1167,9 +1189,10 @@ class Catalog_local extends Catalog
                                 if (Dba::num_rows($db_results) === 0) {
                                     Dba::write("UPDATE `album` SET `catalog` = ? WHERE `id` = ?;", [$newCatalogId, $object->album]);
                                 }
+
                                 $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
 
-                                return (Dba::write($sql, [$newCatalogId, $media_type, $object->album]) !== false);
+                                return (Dba::write($sql, [$newCatalogId, $media_type, $object->album]) !== null);
                             }
 
                             if ($object instanceof Podcast_Episode) {
@@ -1179,9 +1202,10 @@ class Catalog_local extends Catalog
                                 if (Dba::num_rows($db_results) === 0) {
                                     Dba::write("UPDATE `album` SET `catalog` = ? WHERE `id` = ?;", [$newCatalogId, $object->podcast]);
                                 }
+
                                 $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
 
-                                return (Dba::write($sql, [$newCatalogId, $media_type, $object->getPodcastId()]) !== false);
+                                return (Dba::write($sql, [$newCatalogId, $media_type, $object->getPodcastId()]) !== null);
                             }
 
                             return true;
@@ -1219,12 +1243,12 @@ class Catalog_local extends Catalog
                     // update mapping for new catalogs
                     $sql = "UPDATE `catalog_map` SET `catalog_id` = ? WHERE `object_type` = ? AND `object_id` = ?;";
 
-                    return (Dba::write($sql, [$newCatalogId, $media_type, $object->getId()]) !== false);
+                    return (Dba::write($sql, [$newCatalogId, $media_type, $object->getId()]) !== null);
                 }
 
-                $sql = "UPDATE `$media_type` SET `file` = ?, `catalog` = ? WHERE `id` = ?;";
+                $sql = sprintf('UPDATE `%s` SET `file` = ?, `catalog` = ? WHERE `id` = ?;', $media_type);
 
-                return (Dba::write($sql, [$new_file, $newCatalogId, $object->getId()]) !== false);
+                return (Dba::write($sql, [$new_file, $newCatalogId, $object->getId()]) !== null);
             default:
                 return false;
         }
@@ -1262,7 +1286,8 @@ class Catalog_local extends Catalog
                     Dba::write($sql, $params);
                     break;
             }
-            $sql = "DELETE FROM `$media_type` WHERE `id` = ?";
+
+            $sql = sprintf('DELETE FROM `%s` WHERE `id` = ?', $media_type);
             Dba::write($sql, $params);
 
             return true;
@@ -1331,12 +1356,10 @@ class Catalog_local extends Catalog
         }
 
         $is_duplicate = false;
-        if (count($this->get_gather_types('music')) > 0) {
-            if (AmpConfig::get('catalog_check_duplicate')) {
-                if (Song::find($results)) {
-                    debug_event('local.catalog', 'disable_duplicate ' . $file, 5);
-                    $is_duplicate = true;
-                }
+        if ($this->get_gather_types('music') !== []) {
+            if (AmpConfig::get('catalog_check_duplicate') && Song::find($results)) {
+                debug_event('local.catalog', 'disable_duplicate ' . $file, 5);
+                $is_duplicate = true;
             }
 
             if (array_key_exists('move_match_pattern', $options)) {
@@ -1351,6 +1374,7 @@ class Catalog_local extends Catalog
                         mkdir($root, 0775);
                     }
                 }
+
                 // sort_find_home will replace the % with the correct values.
                 $directory = $this->sort_find_home($song, (string) $this->sort_pattern, $root);
                 $filename  = $this->sort_find_home($song, (string) $this->rename_pattern);
@@ -1361,7 +1385,7 @@ class Catalog_local extends Catalog
                 }
 
                 // don't move over existing files
-                if (!empty($song->file) && !is_file($fullpath) && $song->file != $fullpath && strlen($fullpath)) {
+                if (!in_array($song->file, [null, '', '0'], true) && !is_file($fullpath) && $song->file != $fullpath && strlen($fullpath)) {
                     debug_event(self::class, 'Destin: ' . $fullpath, 5);
                     $info      = pathinfo($fullpath);
                     $directory = ($info['dirname'] ?? '');
@@ -1383,7 +1407,7 @@ class Catalog_local extends Catalog
                     $new_sum = Core::get_filesize($fullpath);
                     $old_sum = Core::get_filesize($song->file);
 
-                    if ($new_sum != $old_sum || $new_sum == 0) {
+                    if ($new_sum !== $old_sum || $new_sum === 0) {
                         unlink($fullpath); // delete the copied file on failure
                     } else {
                         debug_event(self::class, 'song path updated: ' . $fullpath, 5);
@@ -1394,15 +1418,17 @@ class Catalog_local extends Catalog
                     }
                 }
             }
+
             // If song rating tag exists and is well formed (array user=>rating), add it
             if (array_key_exists('rating', $results) && is_array($results['rating'])) {
                 // For each user's ratings, call the function
                 foreach ($results['rating'] as $user => $rating) {
-                    debug_event('local.catalog', "Setting rating for Song $song_id to $rating for user $user", 5);
+                    debug_event('local.catalog', sprintf('Setting rating for Song %s to %s for user %s', $song_id, $rating, $user), 5);
                     $o_rating = new Rating($song_id, 'song');
                     $o_rating->set_rating((int)$rating, $user, false);
                 }
             }
+
             // Extended metadata loading is not deferred, retrieve it now
             if (!AmpConfig::get('deferred_ext_metadata')) {
                 $song = new Song($song_id);
@@ -1415,10 +1441,12 @@ class Catalog_local extends Catalog
                 $song = new Song($song_id);
                 $this->addMetadata($song, $results);
             }
+
             // disable dupes if catalog_check_duplicate is enabled
             if ($is_duplicate) {
                 Song::update_enabled(false, $song_id);
             }
+
             $this->songs_to_gather[] = $song_id;
 
             $this->_filecache[strtolower($file)] = $song_id;
@@ -1516,7 +1544,7 @@ class Catalog_local extends Catalog
      */
     public static function check_path($path): bool
     {
-        if (!strlen($path)) {
+        if ((string) $path === '') {
             debug_event('local.catalog', 'Path was not specified', 1);
             AmpError::add('general', T_('Path was not specified'));
 
@@ -1533,7 +1561,7 @@ class Catalog_local extends Catalog
 
         // Make sure the path is readable/exists
         if (!Core::is_readable($path)) {
-            debug_event('local.catalog', 'The folder couldn\'t be read. Does it exist? ' . $path, 1);
+            debug_event('local.catalog', "The folder couldn't be read. Does it exist? " . $path, 1);
             /* HINT: directory (file path) */
             AmpError::add('general', sprintf(T_("The folder couldn't be read. Does it exist? %s"), scrub_out($path)));
 
@@ -1557,6 +1585,7 @@ class Catalog_local extends Catalog
 
             return [];
         }
+
         $missing     = [];
         $this->count = 0;
 
@@ -1567,13 +1596,15 @@ class Catalog_local extends Catalog
         } elseif ($gather_type == 'video') {
             $media_type = 'video';
         }
+
         $total = self::count_table($media_type, $this->catalog_id);
-        if ($total == 0) {
+        if ($total === 0) {
             return $missing;
         }
+
         $chunks = (int)ceil($total / 10000);
         foreach (range(1, $chunks) as $chunk) {
-            debug_event('local.catalog', "catalog " . $this->name . " Starting check " . $media_type . " on chunk $chunk/$chunks", 5);
+            debug_event('local.catalog', "catalog " . $this->name . " Starting check " . $media_type . sprintf(' on chunk %d/%d', $chunk, $chunks), 5);
             $missing = array_merge($missing, $this->_check_chunk($media_type, (int)$chunk, 10000, $interactor));
         }
 
@@ -1589,11 +1620,13 @@ class Catalog_local extends Catalog
         if (!self::check_path($new_path)) {
             return false;
         }
-        if ($this->path == $new_path) {
+
+        if ($this->path === $new_path) {
             debug_event('local.catalog', 'The new path equals the old path: ' . $new_path, 5);
 
             return false;
         }
+
         $sql    = "UPDATE `catalog_local` SET `path` = ? WHERE `catalog_id` = ?";
         $params = [$new_path, $this->catalog_id];
         Dba::write($sql, $params);
@@ -1634,11 +1667,12 @@ class Catalog_local extends Catalog
         $cache_path   = (string)AmpConfig::get('cache_path', '');
         $cache_target = (string)AmpConfig::get('cache_target', '');
         // need a destination and target filetype
-        if (!is_dir($cache_path) || empty($cache_target)) {
+        if (!is_dir($cache_path) || ($cache_target === '' || $cache_target === '0')) {
             debug_event('local.catalog', 'Check your cache_path and cache_target settings', 5);
 
             return false;
         }
+
         // need at least one type to transcode
         if (
             !$m4a &&
@@ -1659,68 +1693,84 @@ class Catalog_local extends Catalog
 
             return false;
         }
+
         $sql    = "SELECT `id` FROM `song` WHERE `catalog` = ? ";
         $params = [$this->catalog_id];
         $join   = 'AND (';
         if ($m4a) {
-            $sql .= "$join `file` LIKE '%.m4a' ";
+            $sql .= $join . " `file` LIKE '%.m4a' ";
             $join = 'OR';
         }
+
         if ($flac) {
-            $sql .= "$join `file` LIKE '%.flac' ";
+            $sql .= $join . " `file` LIKE '%.flac' ";
             $join = 'OR';
         }
+
         if ($mpc) {
-            $sql .= "$join `file` LIKE '%.mpc' ";
+            $sql .= $join . " `file` LIKE '%.mpc' ";
             $join = 'OR';
         }
+
         if ($ogg) {
-            $sql .= "$join `file` LIKE '%.ogg' ";
+            $sql .= $join . " `file` LIKE '%.ogg' ";
             $join = 'OR';
         }
+
         if ($oga) {
-            $sql .= "$join `file` LIKE '%.oga' ";
+            $sql .= $join . " `file` LIKE '%.oga' ";
             $join = 'OR';
         }
+
         if ($opus) {
-            $sql .= "$join `file` LIKE '%.opus' ";
+            $sql .= $join . " `file` LIKE '%.opus' ";
             $join = 'OR';
         }
+
         if ($wav) {
-            $sql .= "$join `file` LIKE '%.wav' ";
+            $sql .= $join . " `file` LIKE '%.wav' ";
             $join = 'OR';
         }
+
         if ($wma) {
-            $sql .= "$join `file` LIKE '%.wma' ";
+            $sql .= $join . " `file` LIKE '%.wma' ";
             $join = 'OR';
         }
+
         if ($aif) {
-            $sql .= "$join `file` LIKE '%.aif' ";
+            $sql .= $join . " `file` LIKE '%.aif' ";
             $join = 'OR';
         }
+
         if ($aiff) {
-            $sql .= "$join `file` LIKE '%.aiff' ";
+            $sql .= $join . " `file` LIKE '%.aiff' ";
             $join = 'OR';
         }
+
         if ($ape) {
-            $sql .= "$join `file` LIKE '%.ape' ";
+            $sql .= $join . " `file` LIKE '%.ape' ";
             $join = 'OR';
         }
+
         if ($shn) {
-            $sql .= "$join `file` LIKE '%.shn' ";
+            $sql .= $join . " `file` LIKE '%.shn' ";
         }
+
         if ($mp3) {
-            $sql .= "$join `file` LIKE '%.mp3' ";
+            $sql .= $join . " `file` LIKE '%.mp3' ";
         }
-        if ($sql == "SELECT `id` FROM `song` WHERE `catalog` = ? ") {
+
+        if ($sql === "SELECT `id` FROM `song` WHERE `catalog` = ? ") {
             return false;
         }
+
         $sql .= ');';
         $db_results = Dba::read($sql, $params);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
+
         foreach ($results as $song_id) {
             $target_file     = Catalog::get_cache_path($song_id, $this->catalog_id, $cache_path, $cache_target);
             $old_target_file = rtrim(trim($cache_path), '/') . '/' . $this->catalog_id . '/' . $song_id . '.' . $cache_target;
@@ -1729,6 +1779,7 @@ class Catalog_local extends Catalog
                 rename($old_target_file, $target_file);
                 debug_event('local.catalog', 'Moved: ' . $song_id . ' from: {' . $old_target_file . '}' . ' to: {' . $target_file . '}', 5);
             }
+
             $file_exists = ($target_file !== null && is_file($target_file));
             $media       = new Song($song_id);
 
@@ -1771,9 +1822,7 @@ class Catalog_local extends Catalog
         return true;
     }
 
-    /**
-     * @deprecated Inject by constructor
-     */
+    #[Deprecated(message: 'Inject by constructor')]
     private function getUtilityFactory(): UtilityFactoryInterface
     {
         global $dic;
@@ -1781,9 +1830,7 @@ class Catalog_local extends Catalog
         return $dic->get(UtilityFactoryInterface::class);
     }
 
-    /**
-     * @deprecated Inject by constructor
-     */
+    #[Deprecated(message: 'Inject by constructor')]
     private function getPodcastSyncer(): PodcastSyncerInterface
     {
         global $dic;
@@ -1791,9 +1838,7 @@ class Catalog_local extends Catalog
         return $dic->get(PodcastSyncerInterface::class);
     }
 
-    /**
-     * @deprecated inject dependency
-     */
+    #[Deprecated(message: 'inject dependency')]
     private function getMetadataManager(): MetadataManagerInterface
     {
         global $dic;
@@ -1801,9 +1846,7 @@ class Catalog_local extends Catalog
         return $dic->get(MetadataManagerInterface::class);
     }
 
-    /**
-     * @deprecated inject dependency
-     */
+    #[Deprecated(message: 'inject dependency')]
     private function getArtistRepository(): ArtistRepositoryInterface
     {
         global $dic;

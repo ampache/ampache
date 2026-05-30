@@ -66,7 +66,7 @@ use Ampache\Module\System\Dba;
  */
 class Query
 {
-    private const SORT_ORDER = [
+    private const array SORT_ORDER = [
         'active' => 'ASC',
         'last_count' => 'ASC',
         'last_update' => 'ASC',
@@ -133,7 +133,7 @@ class Query
      */
     public function __construct(
         ?int $query_id = 0,
-        ?bool $cached = true
+        ?bool $cached = true,
     ) {
         $sid = session_id();
 
@@ -727,7 +727,7 @@ class Query
         string $dest1,
         string $source2,
         string $dest2,
-        int $priority
+        int $priority,
     ): void {
         $this->_state['join'][$priority][$table] = strtoupper((string)$type) . sprintf(' JOIN %s ON %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2);
     }
@@ -745,7 +745,7 @@ class Query
         string $dest2,
         string $source3,
         string $dest3,
-        int $priority
+        int $priority,
     ): void {
         $this->_state['join'][$priority][$table] = strtoupper((string)$type) . sprintf(' JOIN %s ON %s = %s AND %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2, $source3, $dest3);
     }
@@ -889,7 +889,7 @@ class Query
         $filtered = [];
         foreach ($results as $data) {
             // Make sure that this object passes the logic filter
-            if (array_key_exists('id', $data)) {
+            if ($data['id']) {
                 $filtered[] = $data['id'];
             }
         }

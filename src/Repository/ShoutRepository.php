@@ -80,7 +80,7 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
      */
     public function getBy(
         LibraryItemEnum $objectType,
-        int $objectId
+        int $objectId,
     ): Generator {
         $result = $this->connection->query(
             'SELECT * FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC',
@@ -98,7 +98,7 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
      */
     public function collectGarbage(
         ?string $objectType = null,
-        ?int $objectId = null
+        ?int $objectId = null,
     ): void {
         $types = [
             'album',

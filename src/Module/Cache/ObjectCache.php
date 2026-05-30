@@ -44,6 +44,7 @@ final class ObjectCache implements ObjectCacheInterface
             // get individual user thresholds if not the default
             $thresholds[] = (int)$row['value'];
         }
+
         $object_types = [
             'album',
             'album_disk',

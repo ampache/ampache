@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
+use Ampache\Module\Application\Admin\Access\Lib\AccessListItem;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -36,24 +37,15 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
-
-    private UiInterface $ui;
-
-    private AccessRepositoryInterface $accessRepository;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        UiInterface $ui,
-        AccessRepositoryInterface $accessRepository,
-        ModelFactoryInterface $modelFactory
+        private UiInterface $ui,
+        private AccessRepositoryInterface $accessRepository,
+        private ModelFactoryInterface $modelFactory,
     ) {
-        $this->ui               = $ui;
-        $this->accessRepository = $accessRepository;
-        $this->modelFactory     = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -66,7 +58,7 @@ final class ShowAction implements ApplicationActionInterface
         $accessItems = $this->accessRepository->getAccessLists();
 
         foreach ($accessItems as $accessItem) {
-            $items[] = new Lib\AccessListItem(
+            $items[] = new AccessListItem(
                 $this->modelFactory,
                 $accessItem
             );

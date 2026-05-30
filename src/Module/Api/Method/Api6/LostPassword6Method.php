@@ -40,7 +40,7 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class LostPassword6Method
 {
-    public const ACTION = 'lost_password';
+    public const string ACTION = 'lost_password';
 
     /**
      * lost_password

@@ -37,7 +37,7 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class UserCreate4Method
 {
-    public const ACTION = 'user_create';
+    public const string ACTION = 'user_create';
 
     /**
      * user_create

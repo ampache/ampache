@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -49,7 +51,7 @@ interface PodcastSyncerInterface
      * @return int Amount of new episodes
      */
     public function syncForCatalogs(
-        iterable $catalogs
+        iterable $catalogs,
     ): int;
 
     /**
@@ -59,6 +61,6 @@ interface PodcastSyncerInterface
         Podcast $podcast,
         SimpleXMLElement $episodes,
         ?DateTimeInterface $lastSync = null,
-        bool $gather = false
+        bool $gather = false,
     ): void;
 }

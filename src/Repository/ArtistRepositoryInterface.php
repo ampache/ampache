@@ -22,6 +22,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Artist;
@@ -32,17 +33,17 @@ interface ArtistRepositoryInterface
      * Deletes the artist entry
      */
     public function delete(
-        Artist $artist
+        Artist $artist,
     ): void;
 
     /**
      * This returns a number of random artists.
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getRandom(
         int $userId,
-        ?int $count = 1
+        ?int $count = 1,
     ): array;
 
     /**

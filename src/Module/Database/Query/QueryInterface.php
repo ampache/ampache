@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -49,7 +51,7 @@ interface QueryInterface
     public function get_sql_filter(
         Query $query,
         string $filter,
-        mixed $value
+        mixed $value,
     ): string;
 
     /**
@@ -71,6 +73,6 @@ interface QueryInterface
     public function get_sql_sort(
         $query,
         $field,
-        $order
+        $order,
     ): string;
 }

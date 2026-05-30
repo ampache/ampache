@@ -37,7 +37,7 @@ use Ampache\Module\System\Dba;
  */
 class Playlist extends playlist_object
 {
-    protected const DB_TABLENAME = 'playlist';
+    protected const string DB_TABLENAME = 'playlist';
 
     /**
      * @var array<int, array{
@@ -84,7 +84,7 @@ class Playlist extends playlist_object
     /**
      * build_cache
      * This is what builds the cache from the objects
-     * @param int[]|string[] $ids
+     * @param list<int|string> $ids
      */
     public static function build_cache(array $ids): bool
     {
@@ -114,11 +114,11 @@ class Playlist extends playlist_object
         ?bool $like = true,
         ?bool $includePublic = true,
         ?bool $includeHidden = true,
-        ?bool $userOnly = false
+        ?bool $userOnly = false,
     ): array {
         if (!$user_id) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
         }
 
         $key = ($includePublic)
@@ -188,7 +188,7 @@ class Playlist extends playlist_object
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
         }
 
         $key = 'playlistarray';
@@ -224,7 +224,7 @@ class Playlist extends playlist_object
      * This returns an array of playlist medias that are in this playlist.
      * Because the same media can be on the same playlist twice they are
      * keyed by the uid from playlist_data
-     * @return list<array{
+     * @return array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track_id: int,
@@ -239,7 +239,7 @@ class Playlist extends playlist_object
 
         $results = [];
         $user    = Core::get_global('user');
-        $user_id = $user?->id ?? -1;
+        $user_id = $user->id ?? -1;
 
         // Iterate over the object types
         $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data`';
@@ -305,13 +305,13 @@ class Playlist extends playlist_object
     /**
      * get_random_items
      * This is the same as before but we randomize the buggers!
-     * @return list<array{object_type: LibraryItemEnum, object_id: int, track: int, track_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int, track: int, track_id: int}>
      */
     public function get_random_items(?string $limit = ''): array
     {
         $results = [];
         $user    = Core::get_global('user');
-        $user_id = $user?->id ?? -1;
+        $user_id = $user->id ?? -1;
 
         // Iterate over the object types
         $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data`';
@@ -374,7 +374,7 @@ class Playlist extends playlist_object
     {
         $results = [];
         $user    = Core::get_global('user');
-        $user_id = $user?->id ?? -1;
+        $user_id = $user->id ?? -1;
         $params  = [$this->id];
 
         $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track` FROM `playlist_data` INNER JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type`="song" AND `object_id` IS NOT NULL ';
@@ -408,7 +408,7 @@ class Playlist extends playlist_object
     public function get_media_count(string $type = ''): int
     {
         $user      = Core::get_global('user');
-        $user_id   = $user?->id ?? -1;
+        $user_id   = $user->id ?? -1;
         $params    = [$this->id];
         $all_media = empty($type) || !in_array($type, ['broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video']);
 
@@ -514,7 +514,7 @@ class Playlist extends playlist_object
 
         $sql = sprintf('UPDATE `playlist` SET `%s` = ? WHERE `id` = ?', $field);
 
-        return (Dba::write($sql, [$value, $this->id]) !== false);
+        return (Dba::write($sql, [$value, $this->id]) !== null);
     }
 
     /**
@@ -625,7 +625,7 @@ class Playlist extends playlist_object
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? -1;
+            $user_id = $user->id ?? -1;
         }
 
         $results    = [];
@@ -652,7 +652,7 @@ class Playlist extends playlist_object
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? -1;
+            $user_id = $user->id ?? -1;
         }
 
         // check for duplicates
@@ -792,15 +792,15 @@ class Playlist extends playlist_object
      */
     public function has_item(?int $object = null, ?int $track = null): bool
     {
-        if ($object === null && $track === null) {
+        if (!$object && !$track) {
             return false;
         }
 
-        if ($object === null && $track !== null) {
+        if (!$object && $track > 0) {
             // searching by track
             $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? AND `playlist_data`.`object_type` = 'song' LIMIT 1";
             $db_results = Dba::read($sql, [$this->id, $track]);
-        } elseif ($track !== null) {
+        } elseif ($track > 0) {
             $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' AND `track` <= ? LIMIT 1";
             $db_results = Dba::read($sql, [$this->id, $object, $track]);
         } else {

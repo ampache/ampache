@@ -34,7 +34,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class RefreshPlaylistMediasAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'refresh_playlist_medias';
+    public const string REQUEST_KEY = 'refresh_playlist_medias';
 
     private RequestParserInterface $requestParser;
 
@@ -42,7 +42,7 @@ final class RefreshPlaylistMediasAction implements ApplicationActionInterface
 
     public function __construct(
         RequestParserInterface $requestParser,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->requestParser = $requestParser;
         $this->modelFactory  = $modelFactory;

@@ -44,7 +44,7 @@ final readonly class ShareRepository implements ShareRepositoryInterface
 {
     public function __construct(
         private DatabaseConnectionInterface $connection,
-        private ConfigContainerInterface $configContainer
+        private ConfigContainerInterface $configContainer,
     ) {
     }
 
@@ -89,7 +89,7 @@ final readonly class ShareRepository implements ShareRepositoryInterface
     /**
      * Returns the ids of all items the user has access to
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getIdsByUser(User $user): array
     {

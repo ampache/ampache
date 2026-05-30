@@ -44,7 +44,7 @@ class Video extends database_object implements
     GarbageCollectibleInterface,
     CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'video';
+    protected const string DB_TABLENAME = 'video';
 
     public int $id = 0;
 
@@ -138,7 +138,7 @@ class Video extends database_object implements
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
@@ -149,7 +149,7 @@ class Video extends database_object implements
     /**
      * build_cache
      * Build a cache based on the array of ids passed, saves lots of little queries
-     * @param int[] $ids
+     * @param list<int|string> $ids
      */
     public static function build_cache(array $ids): bool
     {
@@ -336,7 +336,7 @@ class Video extends database_object implements
     }
 
     /**
-     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -345,7 +345,7 @@ class Video extends database_object implements
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -357,7 +357,7 @@ class Video extends database_object implements
     /**
      * Get all childrens and sub-childrens medias.
      *
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -1066,7 +1066,7 @@ class Video extends database_object implements
     /**
      * get_deleted
      * get items from the deleted_videos table
-     * @return list<array{
+     * @return array<int, array{
      *     id: int,
      *     addition_time: int,
      *     delete_time: int,

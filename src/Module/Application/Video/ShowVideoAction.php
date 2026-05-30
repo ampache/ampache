@@ -32,16 +32,12 @@ use Ampache\Repository\Model\Video;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowVideoAction implements ApplicationActionInterface
+final readonly class ShowVideoAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_video';
+    public const string REQUEST_KEY = 'show_video';
 
-    private UiInterface $ui;
-
-    public function __construct(
-        UiInterface $ui
-    ) {
-        $this->ui = $ui;
+    public function __construct(private UiInterface $ui)
+    {
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

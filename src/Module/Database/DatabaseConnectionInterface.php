@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -57,7 +59,7 @@ interface DatabaseConnectionInterface
      */
     public function fetchOne(
         string $sql,
-        array $params = []
+        array $params = [],
     );
 
     /**
@@ -70,7 +72,7 @@ interface DatabaseConnectionInterface
      */
     public function fetchRow(
         string $sql,
-        array $params = []
+        array $params = [],
     );
 
     /**

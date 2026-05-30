@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Gui;
 
-use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Mockery\MockInterface;
+use Override;
 use PhpTal\PHPTAL;
 
 class TalFactoryTest extends MockeryTestCase

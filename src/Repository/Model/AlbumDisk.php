@@ -35,7 +35,7 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 class AlbumDisk extends database_object implements library_item, CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'album_disk';
+    protected const string DB_TABLENAME = 'album_disk';
 
     public int $id = 0;
 
@@ -168,7 +168,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
@@ -462,7 +462,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     /**
      * Get item children.
-     * @return array{song: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{song: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -471,7 +471,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -483,7 +483,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     /**
      * Get all children and sub-childrens media.
      *
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -567,12 +567,12 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      */
     public function display_art(array $size, bool $force = false): void
     {
-        $album_id = null;
-        $type     = null;
-
         if (Art::has_db($this->album_id, 'album')) {
-            $album_id = $this->album_id;
-            $type     = 'album';
+            $title = (!empty($this->get_artist_fullname()))
+                ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
+                : $this->get_fullname();
+
+            Art::display('album', $this->album_id, $title, $size, $this->get_link());
         } elseif (
             $this->album->album_artist &&
             (
@@ -580,15 +580,11 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
                 $force
             )
         ) {
-            $album_id = $this->album->album_artist;
-            $type     = 'artist';
-        }
-
-        if ($album_id !== null && $type !== null) {
             $title = (!empty($this->get_artist_fullname()))
                 ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
                 : $this->get_fullname();
-            Art::display($type, $album_id, $title, $size, $this->get_link());
+
+            Art::display('artist', $this->album->album_artist, $title, $size, $this->get_link());
         }
     }
 

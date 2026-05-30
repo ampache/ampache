@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
-use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -39,6 +38,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use ArrayIterator;
 use Mockery;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase

@@ -45,17 +45,17 @@ use Ampache\Repository\Model\Video;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowCreateAction implements ApplicationActionInterface
+final readonly class ShowCreateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_create';
+    public const string REQUEST_KEY = 'show_create';
 
     public function __construct(
-        private readonly RequestParserInterface $requestParser,
-        private readonly ConfigContainerInterface $configContainer,
-        private readonly UiInterface $ui,
-        private readonly PasswordGeneratorInterface $passwordGenerator,
-        private readonly ZipHandlerInterface $zipHandler,
-        private readonly LibraryItemLoaderInterface $libraryItemLoader,
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private PasswordGeneratorInterface $passwordGenerator,
+        private ZipHandlerInterface $zipHandler,
+        private LibraryItemLoaderInterface $libraryItemLoader,
     ) {
     }
 
@@ -72,7 +72,7 @@ final class ShowCreateAction implements ApplicationActionInterface
 
         if (
             in_array($object_type, Share::VALID_TYPES, true)
-            && !empty($object_id)
+            && $object_id !== 0
         ) {
             $object = $this->libraryItemLoader->load(
                 $object_type,
@@ -94,6 +94,7 @@ final class ShowCreateAction implements ApplicationActionInterface
                 );
             }
         }
+
         $this->ui->showFooter();
 
         return null;

@@ -37,7 +37,7 @@ use Ampache\Repository\PreferenceRepositoryInterface;
  */
 final class SystemPreferences5Method
 {
-    public const ACTION = 'system_preferences';
+    public const string ACTION = 'system_preferences';
 
     /**
      * system_preferences

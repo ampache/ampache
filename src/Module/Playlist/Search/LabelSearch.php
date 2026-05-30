@@ -45,7 +45,7 @@ final class LabelSearch implements SearchInterface
      * }
      */
     public function getSql(
-        Search $search
+        Search $search,
     ): array {
         $search_user_id     = $search->search_user->getId();
         $sql_logic_operator = strtoupper($search->logic_operator ?? 'and');
@@ -63,12 +63,14 @@ final class LabelSearch implements SearchInterface
             if ($type === null) {
                 continue;
             }
+
             foreach ($search->basetypes[$type] as $baseOperator) {
                 if ($baseOperator['name'] == $rule[1]) {
                     $operator = $baseOperator;
                     break;
                 }
             }
+
             $input        = $search->filter_data((string)$rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
@@ -77,20 +79,22 @@ final class LabelSearch implements SearchInterface
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
                         $where[] = "NOT (`label`.`name` SOUNDS LIKE ?)";
                     } else {
-                        $where[] = "`label`.`name` $operator_sql ?";
+                        $where[] = sprintf('`label`.`name` %s ?', $operator_sql);
                     }
+
                     $parameters[] = $input;
                     break;
                 case 'category':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
                         $where[] = "NOT (`label`.`category` SOUNDS LIKE ?)";
                     } else {
-                        $where[] = "`label`.`category` $operator_sql ?";
+                        $where[] = sprintf('`label`.`category` %s ?', $operator_sql);
                     }
+
                     $parameters[] = $input;
                     break;
                 case 'id':
-                    $where[]      = "`label`.`$rule[0]` $operator_sql ?";
+                    $where[]      = sprintf('`label`.`%s` %s ?', $rule[0], $operator_sql);
                     $parameters[] = $input;
                     break;
                 default:
@@ -102,7 +106,7 @@ final class LabelSearch implements SearchInterface
         $join['catalog_map'] = $catalog_filter;
         $join['catalog']     = $catalog_disable || $catalog_filter;
 
-        $where_sql = implode(" $sql_logic_operator ", $where);
+        $where_sql = implode(sprintf(' %s ', $sql_logic_operator), $where);
 
         if ($catalog_disable || $catalog_filter) {
             $table['0_label_asso']  = "LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id`";
@@ -111,22 +115,24 @@ final class LabelSearch implements SearchInterface
         }
 
         if ($join['catalog_map']) {
-            if (!empty($where_sql)) {
+            if ($where_sql !== '' && $where_sql !== '0') {
                 $where_sql = "(" . $where_sql . ") AND `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
                 $where_sql = "`catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
+
         if ($join['catalog']) {
             $table['3_catalog'] = "LEFT JOIN `catalog`AS `catalog_se` ON `catalog_map_artist`.`catalog_id` = `catalog_se`.`id`";
             if ($catalog_disable) {
-                if (!empty($where_sql)) {
+                if ($where_sql !== '' && $where_sql !== '0') {
                     $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
                 } else {
                     $where_sql = "`catalog_se`.`enabled` = '1'";
                 }
             }
         }
+
         $table_sql = implode(' ', $table);
 
         return [

@@ -47,7 +47,7 @@ final class Migration600005 extends AbstractMigration
 
     public function __construct(
         LoggerInterface $logger,
-        DatabaseConnectionInterface $connection
+        DatabaseConnectionInterface $connection,
     ) {
         parent::__construct(
             $connection

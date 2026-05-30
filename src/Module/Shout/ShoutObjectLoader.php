@@ -42,7 +42,7 @@ use Ampache\Repository\Model\Video;
 final readonly class ShoutObjectLoader implements ShoutObjectLoaderInterface
 {
     public function __construct(
-        private LibraryItemLoaderInterface $libraryItemLoader
+        private LibraryItemLoaderInterface $libraryItemLoader,
     ) {
     }
 
@@ -56,10 +56,8 @@ final readonly class ShoutObjectLoader implements ShoutObjectLoaderInterface
             $object_id
         );
 
-        if ($object instanceof Song || $object instanceof Podcast_Episode || $object instanceof Video) {
-            if (!$object->enabled) {
-                $object = null;
-            }
+        if (($object instanceof Song || $object instanceof Podcast_Episode || $object instanceof Video) && !$object->enabled) {
+            $object = null;
         }
 
         return $object;

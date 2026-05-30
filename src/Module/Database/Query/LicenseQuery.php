@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Query;
 
 final class LicenseQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'alpha_match',
         'equal',
         'exact_match',
@@ -102,6 +102,7 @@ final class LicenseQuery implements QueryInterface
                 foreach ($value as $uid) {
                     $filter_sql .= (int)$uid . ',';
                 }
+
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
                 break;
             case 'equal':
@@ -119,11 +120,13 @@ final class LicenseQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `license`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
                     $filter_sql = " `license`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'starts_with':
                 $filter_sql = " `license`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -151,24 +154,16 @@ final class LicenseQuery implements QueryInterface
      */
     public function get_sql_sort($query, $field, $order): string
     {
-        switch ($field) {
-            case 'name':
-            case 'title':
-                $sql = "`license`.`name`";
-                break;
-            case 'id':
-            case 'external_link':
-            case 'order':
-                $sql = "`license`.`$field`";
-                break;
-            default:
-                $sql = '';
-        }
+        $sql = match ($field) {
+            'name', 'title' => "`license`.`name`",
+            'id', 'external_link', 'order' => sprintf('`license`.`%s`', $field),
+            default => '',
+        };
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

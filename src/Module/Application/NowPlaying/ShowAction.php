@@ -37,28 +37,16 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private LoggerInterface $logger;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        LoggerInterface $logger,
-        UiInterface $ui
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private LoggerInterface $logger,
+        private UiInterface $ui,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
-        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -66,7 +54,7 @@ final class ShowAction implements ApplicationActionInterface
         /* Check Perms */
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_NOW_PLAYING_EMBEDDED) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             $this->logger->warning(
                 'Enable use_now_playing_embedded and disable demo mode for this feature',

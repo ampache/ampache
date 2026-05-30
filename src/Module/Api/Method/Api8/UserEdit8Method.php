@@ -43,9 +43,9 @@ use Ampache\Repository\Model\User;
  */
 final class UserEdit8Method
 {
-    public const ACTION = 'user_edit';
+    public const string ACTION = 'user_edit';
 
-    public const REST_ACTION = 'users_edit';
+    public const string REST_ACTION = 'users_edit';
 
     /**
      * user_edit
@@ -96,13 +96,13 @@ final class UserEdit8Method
             return false;
         }
 
-        $input['username'] = $input['filter'] ?? $input['username'] ?? null;
-        if (!Api::check_parameter($input, ['username'], self::ACTION)) {
+        $input['filter'] = $input['username'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
 
         // identify the user to modify
-        $username    = $input['username'];
+        $username    = $input['filter'];
         $update_user = (is_numeric($username))
             ? User::get_from_id((int)$username)
             : User::get_from_username((string)$username);

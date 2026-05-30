@@ -42,7 +42,7 @@ use Ampache\Repository\Model\Video;
  */
 final class Player8Method
 {
-    public const ACTION = 'player';
+    public const string ACTION = 'player';
 
     /**
      * player

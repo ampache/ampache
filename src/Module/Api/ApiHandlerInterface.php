@@ -32,16 +32,16 @@ interface ApiHandlerInterface
     public function handle(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        ApiOutputInterface $output
+        ApiOutputInterface $output,
     ): ?ResponseInterface;
 
     public function normalizeAction(
         string $action,
         ?string $type,
-        bool $hasFilter
+        bool $hasFilter,
     ): string;
 
     public function normalizeType(
-        string $type
+        string $type,
     ): string;
 }

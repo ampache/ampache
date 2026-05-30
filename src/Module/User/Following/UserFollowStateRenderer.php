@@ -30,7 +30,7 @@ use Ampache\Repository\UserFollowerRepositoryInterface;
 final readonly class UserFollowStateRenderer implements UserFollowStateRendererInterface
 {
     public function __construct(
-        private UserFollowerRepositoryInterface $userFollowerRepository
+        private UserFollowerRepositoryInterface $userFollowerRepository,
     ) {
     }
 
@@ -39,7 +39,7 @@ final readonly class UserFollowStateRenderer implements UserFollowStateRendererI
      */
     public function render(
         User $user,
-        User $foreignUser
+        User $foreignUser,
     ): string {
         $userId = $user->getId();
 
@@ -50,14 +50,13 @@ final readonly class UserFollowStateRenderer implements UserFollowStateRendererI
         $followed       = $this->userFollowerRepository->isFollowedBy($user, $foreignUser);
         $followersCount = count($this->userFollowerRepository->getFollowers($user));
 
-        $html = sprintf('<span id=\'button_follow_%s\' class=\'followbtn\'>', $userId);
+        $html = sprintf("<span id='button_follow_%s' class='followbtn'>", $userId);
         $html .= Ajax::text(
             '?page=user&action=flip_follow&user_id=' . $userId,
             (($followed) ? T_('Unfollow') : T_('Follow')) . ' (' . $followersCount . ')',
             'flip_follow_' . $userId
         );
-        $html .= "</span>";
 
-        return $html;
+        return $html . "</span>";
     }
 }

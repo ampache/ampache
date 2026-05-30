@@ -37,12 +37,12 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class PopularPodcastEpisodeAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'popular_podcast_episode';
+    public const string REQUEST_KEY = 'popular_podcast_episode';
 
     public function __construct(
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
-        private ConfigContainerInterface $configContainer
+        private ConfigContainerInterface $configContainer,
     ) {
     }
 

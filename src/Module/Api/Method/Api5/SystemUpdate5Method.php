@@ -41,7 +41,7 @@ use Ampache\Repository\Model\User;
  */
 final class SystemUpdate5Method
 {
-    public const ACTION = 'system_update';
+    public const string ACTION = 'system_update';
 
     /**
      * system_update

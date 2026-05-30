@@ -31,19 +31,16 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UserAction implements ApplicationActionInterface
+final readonly class UserAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'user';
+    public const string REQUEST_KEY = 'user';
 
-    private UiInterface $ui;
-
-    public function __construct(
-        UiInterface $ui
-    ) {
-        $this->ui = $ui;
+    public function __construct(private UiInterface $ui)
+    {
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -55,7 +52,7 @@ final class UserAction implements ApplicationActionInterface
         $user = $gatekeeper->getUser();
 
         $this->ui->showHeader();
-        if ($user) {
+        if ($user instanceof User) {
             $this->ui->show(
                 'show_preferences.inc.php',
                 [
@@ -65,6 +62,7 @@ final class UserAction implements ApplicationActionInterface
                 ]
             );
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

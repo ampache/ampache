@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class ToggleFollow8Method
 {
-    public const ACTION = 'toggle_follow';
+    public const string ACTION = 'toggle_follow';
 
     /**
      * toggle_follow
@@ -63,14 +63,14 @@ final class ToggleFollow8Method
             return false;
         }
 
-        $input['username'] = $input['filter'] ?? $input['username'] ?? null;
-        if (!Api::check_parameter($input, ['username'], self::ACTION)) {
+        $input['filter'] = $input['username'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
 
-        $username = $input['username'];
-        if (!empty($username)) {
-            Api::error(sprintf('Bad Request: %s', 'username'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
+        $username = $input['filter'];
+        if (empty($username)) {
+            Api::error(sprintf('Bad Request: %s', 'filter'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
 
             return false;
         }

@@ -38,24 +38,21 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class EditInstanceAction extends AbstractLocalPlayAction
 {
-    public const REQUEST_KEY = 'edit_instance';
+    public const string REQUEST_KEY = 'edit_instance';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    private readonly ConfigContainerInterface $configContainer;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        private readonly UiInterface $ui,
     ) {
         parent::__construct($configContainer);
         $this->configContainer = $configContainer;
-        $this->ui              = $ui;
     }
 
     protected function handle(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
         // Check to make sure they've got the access
         if ($gatekeeper->mayAccess(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::MANAGER) === false) {

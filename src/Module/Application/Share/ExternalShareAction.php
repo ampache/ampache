@@ -43,38 +43,20 @@ use Ampache\Repository\Model\Share;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class ExternalShareAction implements ApplicationActionInterface
+final readonly class ExternalShareAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'external_share';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private PasswordGeneratorInterface $passwordGenerator;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private FunctionCheckerInterface $functionChecker;
-
-    private ShareCreatorInterface $shareCreator;
+    public const string REQUEST_KEY = 'external_share';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        PasswordGeneratorInterface $passwordGenerator,
-        ResponseFactoryInterface $responseFactory,
-        FunctionCheckerInterface $functionChecker,
-        ShareCreatorInterface $shareCreator
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private PasswordGeneratorInterface $passwordGenerator,
+        private ResponseFactoryInterface $responseFactory,
+        private FunctionCheckerInterface $functionChecker,
+        private ShareCreatorInterface $shareCreator,
     ) {
-        $this->requestParser     = $requestParser;
-        $this->configContainer   = $configContainer;
-        $this->passwordGenerator = $passwordGenerator;
-        $this->responseFactory   = $responseFactory;
-        $this->functionChecker   = $functionChecker;
-        $this->shareCreator      = $shareCreator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -96,6 +78,7 @@ final class ExternalShareAction implements ApplicationActionInterface
         if (!$plugin->_plugin instanceof PluginExternalShareInterface) {
             throw new AccessDeniedException('Access Denied - Unknown external share plugin');
         }
+
         $plugin->load($user);
 
         $type           = LibraryItemEnum::from($this->requestParser->getFromRequest('type'));
@@ -120,7 +103,7 @@ final class ExternalShareAction implements ApplicationActionInterface
         }
 
         return $this->responseFactory
-            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 $plugin->_plugin->external_share($share->public_url, $share->getObjectName())

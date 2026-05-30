@@ -40,9 +40,9 @@ use Exception;
  */
 class Userflag extends database_object
 {
-    protected const DB_TABLENAME = 'user_flag';
+    protected const string DB_TABLENAME = 'user_flag';
 
-    private const FLAG_TYPES = [
+    private const array FLAG_TYPES = [
         'album_disk',
         'album',
         'artist',
@@ -67,7 +67,7 @@ class Userflag extends database_object
      */
     public function __construct(
         ?int $object_id,
-        string $type
+        string $type,
     ) {
         $this->id   = (int)($object_id);
         $this->type = $type;
@@ -75,7 +75,7 @@ class Userflag extends database_object
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public static function is_valid(string $type): bool
@@ -87,6 +87,7 @@ class Userflag extends database_object
      * build_cache
      * This attempts to get everything we'll need for this page load in a
      * single query, saving on connection overhead
+     * @param list<int|string> $ids
      */
     public static function build_cache(string $type, array $ids, ?int $user_id = null): bool
     {
@@ -96,7 +97,7 @@ class Userflag extends database_object
 
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
         }
 
         if ($user_id === 0) {
@@ -173,7 +174,7 @@ class Userflag extends database_object
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
         }
 
         if ($user_id === 0) {
@@ -225,7 +226,7 @@ class Userflag extends database_object
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
         }
 
         if ($user_id === 0) {
@@ -301,7 +302,7 @@ class Userflag extends database_object
         ?User $user = null,
         int $since = 0,
         int $before = 0,
-        bool $by_user = false
+        bool $by_user = false,
     ): string {
         $type = Stats::validate_type($input_type);
         $sql  = "SELECT DISTINCT(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag`";

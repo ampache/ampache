@@ -41,37 +41,22 @@ use Psr\Log\LoggerInterface;
 /**
  * Provides functionality to delete podcasts and -episodes
  */
-final class PodcastDeleter implements PodcastDeleterInterface
+final readonly class PodcastDeleter implements PodcastDeleterInterface
 {
-    private PodcastRepositoryInterface $podcastRepository;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private LoggerInterface $logger;
-
-    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
-
-    private ConfigContainerInterface $config;
-
     public function __construct(
-        PodcastRepositoryInterface $podcastRepository,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $config,
-        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
-        LoggerInterface $logger
+        private PodcastRepositoryInterface $podcastRepository,
+        private ModelFactoryInterface $modelFactory,
+        private ConfigContainerInterface $config,
+        private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        private LoggerInterface $logger,
     ) {
-        $this->podcastRepository        = $podcastRepository;
-        $this->modelFactory             = $modelFactory;
-        $this->config                   = $config;
-        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
-        $this->logger                   = $logger;
     }
 
     /**
      * Deletes a podcast including its episodes
      */
     public function delete(
-        Podcast $podcast
+        Podcast $podcast,
     ): void {
         $this->logger->debug(
             sprintf('Removing podcast %s', $podcast->getId()),

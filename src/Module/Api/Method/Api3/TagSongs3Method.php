@@ -34,7 +34,7 @@ use Ampache\Repository\Model\User;
  */
 final class TagSongs3Method
 {
-    public const ACTION = 'tag_songs';
+    public const string ACTION = 'tag_songs';
 
     /**
      * tag_songs

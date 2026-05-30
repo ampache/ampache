@@ -70,7 +70,7 @@ class Upnp_Api
      * object.item.textItem
      * object.container
      */
-    public const SSDP_DEBUG = false;
+    public const false SSDP_DEBUG = false;
 
     /**
      * get_uuidStr
@@ -525,7 +525,7 @@ class Upnp_Api
         $prmNumRet,
         $prmTotMatches,
         $prmResponseType = 'u:BrowseResponse',
-        $prmUpdateID = '0'
+        $prmUpdateID = '0',
     ): DOMDocument {
         /**
         * $prmDIDL is DIDL XML string

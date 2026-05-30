@@ -47,7 +47,7 @@ class Api5
      *
      * @var array<string, class-string<object>>
      */
-    public const METHOD_LIST = [
+    public const array METHOD_LIST = [
         Method\Api5\Handshake5Method::ACTION => Method\Api5\Handshake5Method::class,
         Method\Api5\Ping5Method::ACTION => Method\Api5\Ping5Method::class,
         Method\Api5\Goodbye5Method::ACTION => Method\Api5\Goodbye5Method::class,

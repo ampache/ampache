@@ -37,22 +37,13 @@ use Ampache\Repository\Model\Video;
 use Ampache\Repository\SongRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
-final class FolderCollectorModule implements CollectorModuleInterface
+final readonly class FolderCollectorModule implements CollectorModuleInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private LoggerInterface $logger;
-
-    private SongRepositoryInterface $songRepository;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        LoggerInterface $logger,
-        SongRepositoryInterface $songRepository
+        private ConfigContainerInterface $configContainer,
+        private LoggerInterface $logger,
+        private SongRepositoryInterface $songRepository,
     ) {
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
-        $this->songRepository  = $songRepository;
     }
 
     /**
@@ -74,9 +65,9 @@ final class FolderCollectorModule implements CollectorModuleInterface
     public function collectArt(
         Art $art,
         int $limit = 5,
-        array $data = []
+        array $data = [],
     ): array {
-        if (!$limit) {
+        if ($limit === 0) {
             $limit = 5;
         }
 
@@ -91,24 +82,25 @@ final class FolderCollectorModule implements CollectorModuleInterface
         $artist_art_folder  = $this->configContainer->get('artist_art_folder');
 
         $dirs = [];
-        if ($art->object_type == 'album') {
+        if ($art->object_type === 'album') {
             $media = new Album($art->object_id);
-            $songs = $this->songRepository->getByAlbum((int) $media->id);
+            $songs = $this->songRepository->getByAlbum($media->id);
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
                 $dirs[] = Core::conv_lc_file(dirname((string)$song->file));
             }
-        } elseif ($art->object_type == 'video') {
+        } elseif ($art->object_type === 'video') {
             $media  = new Video($art->object_id);
             $dirs[] = Core::conv_lc_file(dirname($media->file));
-        } elseif ($art->object_type == 'artist') {
+        } elseif ($art->object_type === 'artist') {
             $media              = new Artist($art->object_id);
             $preferred_filename = str_replace(['<', '>', '\\', '/'], '_', (string)$media->get_fullname());
             if ($artist_art_folder) {
                 $dirs[] = Core::conv_lc_file($artist_art_folder);
             }
+
             // get the folders from songs as well
-            $songs = $this->songRepository->getByArtist((int) $media->id);
+            $songs = $this->songRepository->getByArtist($media->id);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 // look in the directory name of the files (e.g. /mnt/Music/%artistName%/%album%)
@@ -127,7 +119,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
                 $processed[$dir] = true;
 
                 $this->logger->debug(
-                    "gather_folder: Skipping URL path $dir",
+                    'gather_folder: Skipping URL path ' . $dir,
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
@@ -135,7 +127,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
             }
 
             $this->logger->notice(
-                "gather_folder: Opening $dir and checking for " . $art->object_type . " Art",
+                sprintf('gather_folder: Opening %s and checking for ', $dir) . $art->object_type . " Art",
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
@@ -146,7 +138,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
                 AmpError::add('general', T_('Unable to open') . ' ' . $dir);
 
                 $this->logger->warning(
-                    "gather_folder: Opening $dir and checking for " . $art->object_type . " Art",
+                    sprintf('gather_folder: Opening %s and checking for ', $dir) . $art->object_type . " Art",
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
                 continue;
@@ -167,16 +159,16 @@ final class FolderCollectorModule implements CollectorModuleInterface
                 $full_filename = $dir . '/' . $file;
 
                 // Make sure it's got something in it
-                if (!Core::get_filesize($full_filename)) {
+                if (Core::get_filesize($full_filename) === 0) {
                     $this->logger->debug(
-                        "gather_folder: Opening $dir and checking for " . $art->object_type . " Art",
+                        sprintf('gather_folder: Opening %s and checking for ', $dir) . $art->object_type . " Art",
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     continue;
                 }
 
                 // Regularize for mime type
-                if ($extension == 'jpg') {
+                if ($extension === 'jpg') {
                     $extension = 'jpeg';
                 }
 
@@ -195,7 +187,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
                 ) {
                     // We found the preferred filename and so we're done.
                     $this->logger->debug(
-                        "gather_folder: Found preferred image file: $file",
+                        'gather_folder: Found preferred image file: ' . $file,
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     $preferred[$index] = [
@@ -205,9 +197,10 @@ final class FolderCollectorModule implements CollectorModuleInterface
                     ];
                     break;
                 }
+
                 if ($art->object_type !== 'artist') {
                     $this->logger->debug(
-                        "gather_folder: Found image file: $file",
+                        'gather_folder: Found image file: ' . $file,
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     $results[$index] = [
@@ -216,11 +209,13 @@ final class FolderCollectorModule implements CollectorModuleInterface
                         'title' => 'Folder'
                     ];
                 }
-            } // end while reading dir
+            }
+
+            // end while reading dir
             closedir($handle);
         } // end foreach dirs
 
-        if (!empty($preferred)) {
+        if ($preferred !== []) {
             // We found our favorite filename somewhere, so we need
             // to dump the other, less sexy ones.
             $results = $preferred;

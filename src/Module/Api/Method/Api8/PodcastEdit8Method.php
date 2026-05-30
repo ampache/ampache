@@ -39,9 +39,9 @@ use Ampache\Repository\PodcastRepositoryInterface;
  */
 final class PodcastEdit8Method
 {
-    public const ACTION = 'podcast_edit';
+    public const string ACTION = 'podcast_edit';
 
-    public const REST_ACTION = 'podcasts_edit';
+    public const string REST_ACTION = 'podcasts_edit';
 
     /**
      * podcast_edit

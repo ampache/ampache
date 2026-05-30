@@ -36,9 +36,9 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistRemoveSong8Method
 {
-    public const ACTION = 'playlist_remove_song';
+    public const string ACTION = 'playlist_remove_song';
 
-    public const REST_ACTION = 'playlist_remove_song_edit';
+    public const string REST_ACTION = 'playlist_remove_song_edit';
 
     /**
      * playlist_remove_song
@@ -49,6 +49,8 @@ final class PlaylistRemoveSong8Method
      * This removes a song from a playlist using track number in the list or song ID.
      * Pre-400001 the api required 'track' instead of 'song'.
      * 420000+: added clear to allow you to clear a playlist without getting all the tracks.
+     *
+     * This method is deprecated and will be removed in **API9** (Use playlist_add)
      *
      * filter = (string) UID of playlist
      * song   = (string) UID of song to remove from the playlist //optional

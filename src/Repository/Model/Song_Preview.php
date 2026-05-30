@@ -36,7 +36,7 @@ use Ampache\Plugin\PluginSongPreviewInterface;
 
 class Song_Preview extends database_object implements Media, playable_item
 {
-    protected const DB_TABLENAME = 'song_preview';
+    protected const string DB_TABLENAME = 'song_preview';
 
     public int $id = 0;
 
@@ -77,8 +77,10 @@ class Song_Preview extends database_object implements Media, playable_item
      *
      * Song Preview class
      */
-    public function __construct(?int $object_id = 0, ?string $album_name = null)
-    {
+    public function __construct(
+        ?int $object_id = 0,
+        ?string $album_name = null,
+    ) {
         if (!$object_id) {
             return;
         }
@@ -108,7 +110,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
@@ -157,7 +159,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * This attempts to reduce queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point.
-     * @param list<int> $song_ids
+     * @param list<int|string> $song_ids
      */
     public static function build_cache(array $song_ids): bool
     {
@@ -313,7 +315,7 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -322,7 +324,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -332,7 +334,7 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {

@@ -38,13 +38,13 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class PopularVideoAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'popular_video';
+    public const string REQUEST_KEY = 'popular_video';
 
     public function __construct(
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
         private ConfigContainerInterface $configContainer,
-        private VideoRepositoryInterface $videoRepository
+        private VideoRepositoryInterface $videoRepository,
     ) {
     }
 

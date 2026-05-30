@@ -39,16 +39,15 @@ class OAuthUtil
     {
         if (is_array($input)) {
             return array_map(
-                static function ($value) {
-                    return OAuthUtil::urlencode_rfc3986($value);
-                },
+                OAuthUtil::urlencode_rfc3986(...),
                 $input
             );
         } elseif (is_scalar($input)) {
             return str_replace('+', ' ', str_replace('%7E', '~', rawurlencode($input)));
-        } else {
-            return '';
         }
+
+        return '';
+
     }
 
     // This decode function isn't taking into consideration the above
@@ -82,6 +81,7 @@ class OAuthUtil
                         : $matches[3][$key]
                 );
             }
+
             if (isset($params['realm'])) {
                 unset($params['realm']);
             }
@@ -118,16 +118,17 @@ class OAuthUtil
             if (isset($_SERVER['CONTENT_TYPE'])) {
                 $out['Content-Type'] = Core::get_server('CONTENT_TYPE');
             }
+
             if (isset($_ENV['CONTENT_TYPE'])) {
                 $out['Content-Type'] = $_ENV['CONTENT_TYPE'];
             }
 
             foreach ($_SERVER as $key => $value) {
-                if (substr($key, 0, 5) == "HTTP_") {
+                if (str_starts_with((string) $key, "HTTP_")) {
                     // this is chaos, basically it is just there to capitalize the first
                     // letter of every word that is not an initial HTTP and strip HTTP
                     // code from przemek
-                    $key       = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr($key, 5)))));
+                    $key       = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr((string) $key, 5)))));
                     $out[$key] = $value;
                 }
             }
@@ -148,11 +149,11 @@ class OAuthUtil
             return [];
         }
 
-        $pairs = explode('&', $input);
+        $pairs = explode('&', (string) $input);
 
         $parsed_parameters = [];
         foreach ($pairs as $pair) {
-            if (strpos((string)$pair, '=')) {
+            if (strpos($pair, '=')) {
                 $split     = explode('=', $pair, 2);
                 $parameter = OAuthUtil::urldecode_rfc3986($split[0]);
                 $value     = (isset($split[1])) ? OAuthUtil::urldecode_rfc3986($split[1]) : '';
@@ -190,7 +191,7 @@ class OAuthUtil
 
         // Parameters are sorted by name, using lexicographical byte value ordering.
         // Ref: Spec: 9.1.1 (1)
-        uksort($params, 'strcmp');
+        uksort($params, strcmp(...));
 
         $pairs = [];
         foreach ($params as $parameter => $value) {

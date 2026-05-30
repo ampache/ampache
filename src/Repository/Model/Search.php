@@ -53,9 +53,9 @@ use JsonException;
  */
 class Search extends playlist_object
 {
-    protected const DB_TABLENAME = 'search';
+    protected const string DB_TABLENAME = 'search';
 
-    public const VALID_TYPES = [
+    public const array VALID_TYPES = [
         'album_artist',
         'album_disk',
         'album',
@@ -108,7 +108,7 @@ class Search extends playlist_object
     public function __construct(
         int $search_id = 0,
         string $object_type = 'song',
-        ?User $user = null
+        ?User $user = null,
     ) {
         $this->search_user = ($user instanceof User)
             ? $user
@@ -117,7 +117,7 @@ class Search extends playlist_object
         $this->objectType = (in_array(strtolower($object_type), self::VALID_TYPES))
             ? strtolower($object_type)
             : 'song';
-        $this->user = $this->search_user->id ?? -1; // define a user for live searches (overwriten if saved before)
+        $this->user = $this->search_user->id ?: -1; // define a user for live searches (overwriten if saved before)
         if ($search_id > 0) {
             $info = $this->get_info($search_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
@@ -1468,7 +1468,7 @@ class Search extends playlist_object
      *
      * Return an array of the items output by our search
      * (part of the playlist interface).
-     * @return list<array{
+     * @return array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track_id: int,
@@ -1655,7 +1655,7 @@ class Search extends playlist_object
     /**
      * get_total_duration
      * Get the total duration of all songs.
-     * @param int[]|list<array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $songs
+     * @param int[]|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $songs
      */
     public static function get_total_duration(array $songs): int
     {
@@ -2079,11 +2079,9 @@ class Search extends playlist_object
     public function to_js(): string
     {
         $javascript = "";
-        if (is_array($this->rules)) {
-            foreach ($this->rules as $rule) {
-                // @see search.js SearchRow.add(ruleType, operator, input, subtype)
-                $javascript .= '<script>SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out($rule[1]) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3] ?? '') . '"); </script>';
-            }
+        foreach ($this->rules as $rule) {
+            // @see search.js SearchRow.add(ruleType, operator, input, subtype)
+            $javascript .= '<script>SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out($rule[1]) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3] ?? '') . '"); </script>';
         }
 
         return $javascript;
@@ -2123,7 +2121,7 @@ class Search extends playlist_object
 
         $sql = sprintf('UPDATE `search` SET `%s` = ? WHERE `id` = ?', $field);
 
-        return (Dba::write($sql, [$value, $this->id]) !== false);
+        return (Dba::write($sql, [$value, $this->id]) !== null);
     }
 
     /**

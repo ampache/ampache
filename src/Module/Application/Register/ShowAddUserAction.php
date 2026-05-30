@@ -36,24 +36,15 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAddUserAction implements ApplicationActionInterface
+final readonly class ShowAddUserAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_add_user';
-
-    private ConfigContainerInterface $configContainer;
-
-    private RegistrationAgreementRendererInterface $registrationAgreementRenderer;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'show_add_user';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        RegistrationAgreementRendererInterface $registrationAgreementRenderer,
-        UiInterface $ui
+        private ConfigContainerInterface $configContainer,
+        private RegistrationAgreementRendererInterface $registrationAgreementRenderer,
+        private UiInterface $ui,
     ) {
-        $this->configContainer               = $configContainer;
-        $this->registrationAgreementRenderer = $registrationAgreementRenderer;
-        $this->ui                            = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -64,9 +55,10 @@ final class ShowAddUserAction implements ApplicationActionInterface
         ) {
             throw new AccessDeniedException('Error `allow_public_registration` disabled');
         }
+
         // Check for confirmation email requirements when mail is disabled
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === true &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false &&
             !Mailer::is_mail_enabled()
         ) {
@@ -74,7 +66,7 @@ final class ShowAddUserAction implements ApplicationActionInterface
         }
 
         /* Don't even include it if we aren't going to use it */
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG)) {
             define('CAPTCHA_INVERSE', 1);
             /**
              * @todo broken, the path does not exist any longer

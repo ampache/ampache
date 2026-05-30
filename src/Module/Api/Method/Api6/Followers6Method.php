@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class Followers6Method
 {
-    public const ACTION = 'followers';
+    public const string ACTION = 'followers';
 
     /**
      * followers

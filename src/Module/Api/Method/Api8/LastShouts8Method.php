@@ -39,7 +39,7 @@ use Ampache\Repository\ShoutRepositoryInterface;
  */
 final class LastShouts8Method
 {
-    public const ACTION = 'last_shouts';
+    public const string ACTION = 'last_shouts';
 
     /**
      * last_shouts
@@ -67,18 +67,19 @@ final class LastShouts8Method
             return false;
         }
 
-        $input['username'] = $input['filter'] ?? $input['username'] ?? null;
-        if (!Api::check_parameter($input, ['username'], self::ACTION)) {
+        $input['filter'] = $input['username'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
+
         unset($user);
         $limit = (int)($input['limit'] ?? 0);
         if ($limit < 1) {
             $limit = AmpConfig::get('popular_threshold', 10);
         }
 
-        $username = (!empty($input['username']))
-            ? $input['username']
+        $username = (!empty($input['filter']))
+            ? $input['filter']
             : null;
 
         if (is_numeric($username)) {

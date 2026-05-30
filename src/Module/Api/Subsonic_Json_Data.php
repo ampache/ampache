@@ -630,11 +630,11 @@ class Subsonic_Json_Data
      *     'starred'?: string,
      *     'year'?: int,
      *     'genre'?: string,
+     *     'genres'?: array{'name': string},
      *     'played'?: string,
      *     'userRating'?: int,
      *     'recordLabels'?: array{'name': string},
      *     'musicBrainzId'?: string,
-     *     'genres'?: array{'name': string},
      *     'artists'?: array<int, array{
      *         'id': string,
      *         'name': string,
@@ -3230,7 +3230,7 @@ class Subsonic_Json_Data
      *
      * Shares.Subsonic
      * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param list<int> $shares
+     * @param int[] $shares
      * @return array{'subsonic-response': array<string, mixed>}
      */
     public static function addShares(array $response, array $shares): array

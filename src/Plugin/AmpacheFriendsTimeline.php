@@ -25,8 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Override;
-use Deprecated;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
@@ -37,6 +35,8 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Deprecated;
+use Override;
 
 class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeInterface
 {
@@ -125,7 +125,7 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
     {
         if (AmpConfig::get('sociable')) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
             if ($user_id !== 0) {
                 $divString = ($this->order > 0)
                     ? '<div class="ftl" style="order: ' . $this->order . '">'

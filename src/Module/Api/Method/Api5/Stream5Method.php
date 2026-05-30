@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class Stream5Method
 {
-    public const ACTION = 'stream';
+    public const string ACTION = 'stream';
 
     /**
      * stream

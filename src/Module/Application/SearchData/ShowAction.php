@@ -30,33 +30,22 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Deprecated;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
-
-    private RequestParserInterface $requestParser;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private StreamFactoryInterface $streamFactory;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
-        ModelFactoryInterface $modelFactory
+        private RequestParserInterface $requestParser,
+        private ResponseFactoryInterface $responseFactory,
+        private StreamFactoryInterface $streamFactory,
+        private ModelFactoryInterface $modelFactory,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory   = $streamFactory;
-        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -86,14 +75,13 @@ final class ShowAction implements ApplicationActionInterface
             );
     }
 
-    /**
-     * @deprecated json_encode should do the trick here
-     */
+    #[Deprecated(message: 'json_encode should do the trick here')]
     private function arrayToJSON($array): string
     {
         if (function_exists('json_encode') && is_string(json_encode($array))) {
             return json_encode($array) ?: '';
         }
+
         $json = '{ ';
         foreach ($array as $key => $value) {
             $json .= '"' . $key . '" : ';
@@ -104,9 +92,11 @@ final class ShowAction implements ApplicationActionInterface
                 // entities in our output
                 $json .= '"' . scrub_out(str_replace(['"', '\\'], '', $value)) . '"';
             }
+
             $json .= ' , ';
         }
-        $json = rtrim((string) $json, ', ');
+
+        $json = rtrim($json, ', ');
 
         return $json . ' }';
     }

@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Song;
 
-use Override;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\Song\SongViewAdapterInterface;
 use Ampache\Gui\TalFactoryInterface;
@@ -38,6 +37,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 

@@ -58,7 +58,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
         private SongRepositoryInterface $songRepository,
         private WantedRepositoryInterface $wantedRepository,
         private VideoRepositoryInterface $videoRepository,
-        private WantedManagerInterface $wantedManager
+        private WantedManagerInterface $wantedManager,
     ) {
     }
 
@@ -84,7 +84,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'random_albums':
                 $albums = $this->albumRepository->getRandom(
-                    $user->id ?? -1,
+                    $user->id ?: -1,
                     $moment
                 );
                 if ($albums !== []) {
@@ -110,7 +110,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'random_album_disks':
                 $albumDisks = $this->albumRepository->getRandomAlbumDisk(
-                    $user->id ?? -1,
+                    $user->id ?: -1,
                     $moment
                 );
                 if ($albumDisks !== []) {
@@ -136,7 +136,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'random_videos':
                 $videos = $this->videoRepository->getRandom(
-                    $user->id ?? -1,
+                    $user->id ?: -1,
                     $moment
                 );
                 if ($videos !== []) {
@@ -339,7 +339,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 }
 
                 ob_start();
-                $user_id   = $user->id ?? -1;
+                $user_id   = $user->id ?: -1;
                 $ajax_page = 'index';
                 if (AmpConfig::get('home_recently_played_all')) {
                     $data = Stats::get_recently_played($user_id);
@@ -364,7 +364,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 $user_id = (isset($_REQUEST['user_id']))
                     ? (int)$this->requestParser->getFromRequest('user_id')
-                    : $user->id ?? -1;
+                    : $user->id ?: -1;
                 $user_only = isset($_REQUEST['user_only']);
                 $ajax_page = 'index';
                 if (AmpConfig::get('home_recently_played_all')) {

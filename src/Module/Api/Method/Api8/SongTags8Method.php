@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class SongTags8Method
 {
-    public const ACTION = 'song_tags';
+    public const string ACTION = 'song_tags';
 
     /**
      * song_tags

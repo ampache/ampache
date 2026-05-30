@@ -56,7 +56,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         LoggerInterface $logger,
         NetworkCheckerInterface $networkChecker,
         ServerRequestCreatorInterface $serverRequestCreator,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
     ) {
         $this->authenticationManager = $authenticationManager;
         $this->logger                = $logger;

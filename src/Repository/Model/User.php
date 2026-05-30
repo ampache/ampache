@@ -50,9 +50,9 @@ use Exception;
 class User extends database_object
 {
     /** @var int Defines the internal system user-id */
-    public const INTERNAL_SYSTEM_USER_ID = -1;
+    public const int INTERNAL_SYSTEM_USER_ID = -1;
 
-    protected const DB_TABLENAME = 'user';
+    protected const string DB_TABLENAME = 'user';
 
     // Basic Components
     public int $id = 0;
@@ -543,7 +543,7 @@ class User extends database_object
     public function update_validation(string $new_validation): bool
     {
         $sql              = "UPDATE `user` SET `validation` = ?, `disabled`='1' WHERE `id` = ?";
-        $db_results       = (Dba::write($sql, [$new_validation, $this->id]) !== false);
+        $db_results       = (Dba::write($sql, [$new_validation, $this->id]) !== null);
         $this->validation = $new_validation;
 
         return $db_results;
@@ -810,7 +810,7 @@ class User extends database_object
         ?string $state = '',
         ?string $city = '',
         ?bool $disabled = false,
-        ?bool $encrypted = false
+        ?bool $encrypted = false,
     ): int {
         // don't try to overwrite users that already exist
         if (
@@ -1127,7 +1127,7 @@ class User extends database_object
         int $count,
         int $offset = 0,
         bool $newest = true,
-        string $count_type = 'stream'
+        string $count_type = 'stream',
     ): array {
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
         $limit    = ($offset < 1) ? $count : $offset . "," . $count;

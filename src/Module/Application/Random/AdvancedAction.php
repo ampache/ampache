@@ -32,20 +32,14 @@ use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class AdvancedAction implements ApplicationActionInterface
+final readonly class AdvancedAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'advanced';
-
-    private UiInterface $ui;
-
-    private VideoRepositoryInterface $videoRepository;
+    public const string REQUEST_KEY = 'advanced';
 
     public function __construct(
-        UiInterface $ui,
-        VideoRepositoryInterface $videoRepository
+        private UiInterface $ui,
+        private VideoRepositoryInterface $videoRepository,
     ) {
-        $this->ui              = $ui;
-        $this->videoRepository = $videoRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

@@ -37,11 +37,9 @@ use Ampache\Repository\Model\library_item;
 /**
  * Provides methods for the cleanup/deletion of art-items
  */
-final class ArtCleanup implements ArtCleanupInterface
+final readonly class ArtCleanup implements ArtCleanupInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private const TYPES = [
+    private const array TYPES = [
         'album_disk',
         'album',
         'artist',
@@ -57,10 +55,8 @@ final class ArtCleanup implements ArtCleanupInterface
         'video',
     ];
 
-    public function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->configContainer = $configContainer;
+    public function __construct(private ConfigContainerInterface $configContainer)
+    {
     }
 
     /**
@@ -78,16 +74,19 @@ final class ArtCleanup implements ArtCleanupInterface
             $sql = 'DELETE FROM `image` WHERE `width` < ? AND `width` > 0';
             Dba::write($sql, [$minw]);
         }
+
         // max width is set and current width is too high
         if ($maxw) {
             $sql = 'DELETE FROM `image` WHERE `width` > ? AND `width` > 0';
             Dba::write($sql, [$maxw]);
         }
+
         // min height is set and current width is too low
         if ($minh) {
             $sql = 'DELETE FROM `image` WHERE `height` < ? AND `height` > 0';
             Dba::write($sql, [$minh]);
         }
+
         // max height is set and current height is too high
         if ($maxh) {
             $sql = 'DELETE FROM `image` WHERE `height` > ? AND `height` > 0';
@@ -166,8 +165,10 @@ final class ArtCleanup implements ArtCleanupInterface
                                         true
                                     );
                                 }
+
                                 continue;
                             }
+
                             $size = $matches[1];
                             if (!Art::has_db((int)$object_id, $type, 'default', $size)) {
                                 if ($delete) {
@@ -193,6 +194,7 @@ final class ArtCleanup implements ArtCleanupInterface
                                 }
                             }
                         }
+
                         if (preg_match('/^art-(original)\./', $file, $matches)) {
                             if (!$exists) {
                                 if ($delete) {
@@ -205,8 +207,10 @@ final class ArtCleanup implements ArtCleanupInterface
                                         true
                                     );
                                 }
+
                                 continue;
                             }
+
                             $size = $matches[1];
                             if (!Art::has_db((int)$object_id, $type, 'default', $size)) {
                                 if ($delete) {
@@ -309,10 +313,11 @@ final class ArtCleanup implements ArtCleanupInterface
         $types = self::TYPES;
 
         $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
-        if (in_array($object_type, $types)) {
+        if (in_array($object_type, $types, true)) {
             if ($album_art_store_disk) {
                 Art::delete_from_dir($object_type, $object_id);
             }
+
             $sql = "DELETE FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
             Dba::write($sql, [$object_type, $object_id], true);
         } else {
@@ -337,6 +342,7 @@ final class ArtCleanup implements ArtCleanupInterface
                     Art::delete_from_dir($row[1], (int)$row[0]);
                 }
             }
+
             $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
             Dba::write($sql, [], true);
         }
@@ -350,6 +356,7 @@ final class ArtCleanup implements ArtCleanupInterface
         if ($this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK)) {
             Art::delete_from_dir($art->object_type, $art->object_id, $art->kind);
         }
+
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ?";
         Dba::write($sql, [$art->object_id, $art->object_type, $art->kind]);
     }
@@ -384,6 +391,7 @@ final class ArtCleanup implements ArtCleanupInterface
                 if ($album_art_store_disk) {
                     Art::delete_from_dir($thumbnail['object_type'], $thumbnail['object_id'], $thumbnail['kind'], $thumbnail['size'], $thumbnail['mime']);
                 }
+
                 $sql = "DELETE FROM `image` WHERE `id` = ? AND `size` != 'original'";
                 Dba::write($sql, [$thumbnail['id']]);
             }

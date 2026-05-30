@@ -41,19 +41,19 @@ final class InterfaceImplementationChecker
      */
     private static function is_class_typeof(string $instance, string $interface_name): bool
     {
-        if (empty($instance)) {
+        if ($instance === '' || $instance === '0') {
             return false;
         }
+
         $instance = ObjectTypeToClassNameMapper::map($instance);
         if (class_exists($instance)) {
             return in_array(
                 $interface_name,
                 array_map(
-                    static function (string $name): string {
-                        return $name;
-                    },
+                    static fn (string $name): string => $name,
                     class_implements($instance)
-                )
+                ),
+                true
             );
         }
 

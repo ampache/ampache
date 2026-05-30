@@ -32,7 +32,7 @@ final class MetadataWriter implements MetadataWriterInterface
     public function write(
         Art $art,
         string $dirName,
-        string $fileName
+        string $fileName,
     ): void {
         $meta_file = $dirName;
         $string    = $art->raw;

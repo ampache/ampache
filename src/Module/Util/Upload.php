@@ -62,20 +62,24 @@ class Upload
             if ($rootdir === null) {
                 return self::rerror();
             }
+
             // check the catalog path is valid
             $targetdir = self::check_target_dir($rootdir);
             if (!$targetdir) {
                 return self::rerror();
             }
+
             // check the file is valid and doesn't already exist
             $targetfile = self::check_target_path($targetdir . DIRECTORY_SEPARATOR . $_FILES['upl']['name']);
             if (!$targetfile) {
                 return self::rerror();
             }
+
             // check that the minimum level of permission is there
             if (!$can_upload) {
                 return self::rerror($targetfile);
             }
+
             if (move_uploaded_file($_FILES['upl']['tmp_name'], $targetfile)) {
                 debug_event(self::class, 'File uploaded to `' . $targetfile . '`.', 5);
                 //debug_event(self::class, 'post ' . print_r($_POST, true), 5);
@@ -97,6 +101,7 @@ class Upload
                 if (Core::get_request('artist_id') !== '') {
                     $options['artist_id'] = (int)Core::get_request('artist_id');
                 }
+
                 // Try to create a new artist
                 if (Core::get_request('artist_name') !== '') {
                     $artist_id = self::check_artist(Core::get_request('artist_name'), (int)(Core::get_global('user')?->getId()));
@@ -105,6 +110,7 @@ class Upload
 
                         return self::rerror($targetfile);
                     }
+
                     $artist = new Artist($artist_id);
                     if (
                         $artist->get_user_owner() &&
@@ -114,12 +120,14 @@ class Upload
 
                         return self::rerror($targetfile);
                     }
+
                     $options['artist_id'] = $artist_id;
                 }
 
                 if (Core::get_request('album_id') !== '') {
                     $options['album_id'] = (int)Core::get_request('album_id');
                 }
+
                 // Try to create a new album
                 if (Core::get_request('album_name') !== '') {
                     $album_id = self::check_album(Core::get_request('album_name'), ($options['artist_id'] ?? null));
@@ -128,6 +136,7 @@ class Upload
 
                         return self::rerror($targetfile);
                     }
+
                     $album = new Album($album_id);
                     if (
                         $album->get_user_owner() &&
@@ -137,6 +146,7 @@ class Upload
 
                         return self::rerror($targetfile);
                     }
+
                     $options['album_id'] = $album_id;
                 }
 
@@ -177,19 +187,22 @@ class Upload
         if ($catalog_id === 0) {
             return null;
         }
-        $allowed   = explode('|', AmpConfig::get('catalog_file_pattern'));
-        $extension = strtolower((string) pathinfo($_FILES['upl']['name'], PATHINFO_EXTENSION));
+
+        $allowed   = explode('|', (string) AmpConfig::get('catalog_file_pattern'));
+        $extension = strtolower(pathinfo((string) $_FILES['upl']['name'], PATHINFO_EXTENSION));
 
         if (!in_array($extension, $allowed)) {
             debug_event(self::class, 'File extension `' . $extension . '` not allowed.', 2);
 
             return null;
         }
+
         if (array_key_exists('upl', $_FILES) && $_FILES['upl']['error'] == 0) {
             $catalog = Catalog::create_from_id($catalog_id);
             if ($catalog === null) {
                 return null;
             }
+
             if ($catalog->catalog_type == "local") {
                 return $catalog;
             }
@@ -210,6 +223,7 @@ class Upload
         if (empty($user)) {
             $user = Core::get_global('user');
         }
+
         $user_access = $user->access ?? -1;
 
         return AmpConfig::get('allow_upload') &&
@@ -222,11 +236,10 @@ class Upload
      */
     public static function rerror(?string $file = null): bool
     {
-        if ($file !== null) {
-            if (unlink($file) === false) {
-                throw new RuntimeException('The file handle ' . $file . ' could not be unlinked');
-            }
+        if ($file !== null && unlink($file) === false) {
+            throw new RuntimeException('The file handle ' . $file . ' could not be unlinked');
         }
+
         header(Core::get_server('SERVER_PROTOCOL') . ' 500 File Upload Error', true, 500);
         ob_get_contents();
         ob_end_clean();
@@ -260,12 +273,14 @@ class Upload
 
                 return null;
             }
+
             $artist_id = (int)Artist::check($artist_name);
             if ($artist_id === 0) {
                 debug_event(self::class, 'Artist information required, uploaded song skipped.', 3);
 
                 return null;
             }
+
             $artist = new Artist($artist_id);
             $artist->update_artist_user($user_id); // take ownership of the new artist
 
@@ -286,6 +301,7 @@ class Upload
             if ($upload_catalog === 0) {
                 return null;
             }
+
             $album_id = Album::check($upload_catalog, $album_name, 0, null, null, $artist_id);
             if ($album_id === 0) {
                 debug_event(self::class, 'Album information required, uploaded song skipped.', 3);
@@ -325,15 +341,15 @@ class Upload
     public static function check_target_dir(string $catalog_dir): ?string
     {
         $targetdir = $catalog_dir;
-        $folder    = (Core::get_post('folder') == '..') ? '' : Core::get_post('folder');
+        $folder    = (Core::get_post('folder') === '..') ? '' : Core::get_post('folder');
 
-        if (!empty($folder)) {
+        if ($folder !== '' && $folder !== '0') {
             $targetdir .= DIRECTORY_SEPARATOR . $folder;
         }
 
         $targetdir = realpath($targetdir);
         debug_event(self::class, 'Target Directory `' . $targetdir, 4);
-        if ($targetdir === false || strpos($targetdir, $catalog_dir) === false) {
+        if ($targetdir === false || !str_contains($targetdir, $catalog_dir)) {
             debug_event(self::class, 'Something wrong with final upload path.', 1);
 
             return null;
@@ -355,11 +371,11 @@ class Upload
         $pathname = realpath($catalog->get_path());
         if (
             is_string($pathname) &&
-            !empty($pathname)
+            ($pathname !== '' && $pathname !== '0')
         ) {
             $rootdir = $pathname;
             if (AmpConfig::get('upload_subdir')) {
-                if (empty($username)) {
+                if (in_array($username, [null, '', '0'], true)) {
                     return null;
                 }
 

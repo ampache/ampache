@@ -42,13 +42,13 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
     public function __construct(
         private FunctionCheckerInterface $functionChecker,
         private ZipHandlerInterface $zipHandler,
-        private ConfigContainerInterface $configContainer
+        private ConfigContainerInterface $configContainer,
     ) {
     }
 
     public function render(
         LibraryItemEnum $object_type,
-        int $object_id
+        int $object_id,
     ): string {
         $webPath = $this->configContainer->getWebPath('/client');
 
@@ -85,7 +85,7 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
                 );
             }
 
-            if (!empty($dllink)) {
+            if ($dllink !== '' && $dllink !== '0') {
                 if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::REQUIRE_SESSION)) {
                     // Add session information to the link to avoid authentication
                     $dllink .= sprintf(
@@ -93,8 +93,9 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
                         Stream::get_session()
                     );
                 }
+
                 $link .= sprintf(
-                    "<li><a class=\"nohtml\" href=\"%s\">%s &nbsp;%s</a></li>",
+                    '<li><a class="nohtml" href="%s">%s &nbsp;%s</a></li>',
                     $dllink,
                     Ui::get_material_symbol(
                         'download',
@@ -104,7 +105,8 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
                 );
             }
         }
-        $link .= '<li style=\'padding-top: 8px; text-align: right;\'>';
+
+        $link .= "<li style='padding-top: 8px; text-align: right;'>";
 
         $plugins = Plugin::get_plugins(PluginTypeEnum::EXTERNAL_SHARE);
         foreach ($plugins as $plugin_name) {
@@ -125,8 +127,7 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
         }
 
         $link .= '</li>';
-        $link .= '</ul>';
 
-        return $link;
+        return $link . '</ul>';
     }
 }

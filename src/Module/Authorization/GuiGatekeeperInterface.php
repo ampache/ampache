@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -32,7 +34,7 @@ interface GuiGatekeeperInterface
      */
     public function mayAccess(
         AccessTypeEnum $type,
-        AccessLevelEnum $level
+        AccessLevelEnum $level,
     ): bool;
 
     /**

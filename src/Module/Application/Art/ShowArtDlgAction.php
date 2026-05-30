@@ -34,14 +34,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowArtDlgAction extends AbstractArtAction
 {
-    public const REQUEST_KEY = 'show_art_dlg';
+    public const string REQUEST_KEY = 'show_art_dlg';
 
-    private UiInterface $ui;
-
-    public function __construct(
-        UiInterface $ui
-    ) {
-        $this->ui = $ui;
+    public function __construct(private readonly UiInterface $ui)
+    {
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

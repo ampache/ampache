@@ -38,12 +38,12 @@ use Ampache\Module\System\Dba;
  */
 class Preference extends database_object
 {
-    protected const DB_TABLENAME = 'preference';
+    protected const string DB_TABLENAME = 'preference';
 
     /**
      * This array contains System preferences that can (should) not be edited or deleted from the api
      */
-    public const SYSTEM_LIST = [
+    public const array SYSTEM_LIST = [
         'ajax_load',
         'album_group',
         'album_release_type_sort',
@@ -63,6 +63,7 @@ class Preference extends database_object
         'api_enable_4',
         'api_enable_5',
         'api_enable_6',
+        'api_enable_8',
         'api_force_version',
         'api_hidden_playlists',
         'api_hide_dupe_searches',
@@ -212,7 +213,7 @@ class Preference extends database_object
     /**
      * plugin and module preferences might not be there but they need to be kept if you're using them
      */
-    public const PLUGIN_LIST = [
+    public const array PLUGIN_LIST = [
         '7digital_api_key',
         '7digital_secret_api_key',
         'amazon_base_url',
@@ -364,7 +365,7 @@ class Preference extends database_object
         int $user_id,
         array|int|float|string|bool|null $value,
         ?bool $applytoall = false,
-        ?bool $applytodefault = false
+        ?bool $applytodefault = false,
     ): bool {
         if ($user_id === 0) {
             return false;
@@ -431,7 +432,7 @@ class Preference extends database_object
 
             return true;
         }
-        debug_event(self::class, (Core::get_global('user')?->username ?? T_('Unknown')) . ' attempted to update ' . $name . ' but does not have sufficient permissions', 3);
+        debug_event(self::class, (Core::get_global('user')->username ?? T_('Unknown')) . ' attempted to update ' . $name . ' but does not have sufficient permissions', 3);
 
         return false;
     }
@@ -656,7 +657,7 @@ class Preference extends database_object
     /**
      * get
      * This returns a nice flat array of all of the possible preferences for the specified user
-     * @return list<array{
+     * @return array<int, array{
      *     id: int,
      *     name: string,
      *     level: int,
@@ -705,7 +706,7 @@ class Preference extends database_object
         string $type,
         string $category,
         ?string $subcategory = null,
-        bool $replace = false
+        bool $replace = false,
     ): bool {
         if ($replace) {
             self::delete($name);
@@ -1358,7 +1359,16 @@ class Preference extends database_object
                     Dba::write($pref_sql, [230, 'show_playlist_media_parent', '0', 'Show Artist column on playlist media rows', AccessLevelEnum::USER->value, 'boolean', 'playlist', null]);
                     break;
                 case 'subsonic_legacy':
-                    Dba::write($pref_sql, [231, 'subsonic_legacy', '1', 'Enable legacy Subsonic API responses for compatibility issues', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
+                    Dba::write($pref_sql, [231, 'subsonic_legacy', '0', 'Enable legacy Subsonic API responses for compatibility issues', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
+                    break;
+                case 'subsonic_force_album_artist':
+                    Dba::write($pref_sql, [232, 'subsonic_force_album_artist', '0', 'Force Album Artist for Subsonic API responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
+                    break;
+                case 'subsonic_single_user_data':
+                    Dba::write($pref_sql, [233, 'subsonic_single_user_data', '1', 'Use single user data for Subsonic API responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
+                    break;
+                case 'api_enable_8':
+                    Dba::write($pref_sql, [234, 'api_enable_8', '1', 'Allow Ampache API8 responses', AccessLevelEnum::USER->value, 'boolean', 'options', null]);
                     break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
@@ -1403,6 +1413,7 @@ class Preference extends database_object
             'api_enable_4' => 'Allow Ampache API4 responses',
             'api_enable_5' => 'Allow Ampache API5 responses',
             'api_enable_6' => 'Allow Ampache API6 responses',
+            'api_enable_8' => 'Allow Ampache API8 responses',
             'api_force_version' => 'Force a specific API response no matter what version you send',
             'api_hidden_playlists' => 'Hide playlists in Subsonic and API clients that start with this string',
             'api_hide_dupe_searches' => 'Hide smartlists that match playlist names in Subsonic and API clients',
@@ -1574,6 +1585,8 @@ class Preference extends database_object
             'stream_control_time_max' => 'Stream control maximal time (minutes)',
             'subsonic_always_download' => 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)',
             'subsonic_backend' => 'Use Subsonic backend',
+            'subsonic_force_album_artist' => 'Force Album Artist for Subsonic API responses',
+            'subsonic_single_user_data' => 'Use single user data for Subsonic API responses',
             'tadb_api_key' => 'TheAudioDb API key',
             'tadb_overwrite_name' => 'Overwrite Artist names that match an mbid',
             'theme_color' => 'Theme color',
@@ -1669,7 +1682,7 @@ class Preference extends database_object
                         "'ajax_load', 'album_group', 'album_release_type', 'album_release_type_sort', 'album_sort'," .
                         " 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent'" .
                         " 'allow_personal_info_time', 'api_always_download', 'api_enable_3', 'api_enable_4'" .
-                        " 'api_enable_5', 'api_enable_6', 'api_force_version', 'api_hidden_playlists'" .
+                        " 'api_enable_5', 'api_enable_6', 'api_enable_8', 'api_force_version', 'api_hidden_playlists'" .
                         " 'api_hide_dupe_searches', 'autoupdate_lastcheck', 'autoupdate_lastversion_new'" .
                         " 'autoupdate_lastversion', 'bookmark_latest', 'broadcast_by_default', 'browse_filter'" .
                         " 'browser_notify_timeout', 'browser_notify', 'custom_datetime', 'custom_logo_user'" .
@@ -1687,7 +1700,7 @@ class Preference extends database_object
                         " 'song_page_title', 'subsonic_always_download', 'topmenu', 'transcode_bitrate', 'transcode'" .
                         " 'ui_fixed', 'unique_playlist', 'use_original_year', 'use_play2', 'webplayer_aurora'" .
                         " 'webplayer_confirmclose', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs'" .
-                        " 'webplayer_removeplayed'" .
+                        " 'webplayer_removeplayed', 'subsonic_force_album_artist', 'subsonic_single_user_data'" .
                         ");",
                         [AccessLevelEnum::USER->value]
                     ) !== null &&
@@ -2190,7 +2203,7 @@ class Preference extends database_object
     public static function init(): bool
     {
         $user    = Core::get_global('user');
-        $user_id = $user?->id ?? -1;
+        $user_id = $user->id ?? -1;
 
         // First go ahead and try to load it from the preferences
         if (self::load_from_session($user_id)) {
@@ -2238,7 +2251,7 @@ class Preference extends database_object
             $results['theme_color'] = 'dark';
         }
 
-        if (array_key_exists('theme_color', $results) && strlen((string)$results['theme_color']) > 0) {
+        if (strlen((string)$results['theme_color']) > 0) {
             // In case the color was removed
             if (!Core::is_readable(__DIR__ . '/../../../public/client/themes/' . $results['theme_name'] . '/templates/' . $results['theme_color'] . '.css')) {
                 unset($results['theme_color']);

@@ -40,7 +40,7 @@ use Ampache\Repository\UserActivityRepositoryInterface;
 
 class Artist extends database_object implements library_item, CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'artist';
+    protected const string DB_TABLENAME = 'artist';
 
     public int $id = 0;
 
@@ -97,7 +97,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * Takes the ID of the artist and pulls the info from the db
      */
     public function __construct(
-        ?int $artist_id = 0
+        ?int $artist_id = 0,
     ) {
         if (!$artist_id) {
             return;
@@ -117,7 +117,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
@@ -149,7 +149,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * this attempts to build a cache of the data from the passed albums all in one query
-     * @param int[] $ids
+     * @param list<int|string> $ids
      */
     public static function build_cache(array $ids, bool $extra = false, string $limit_threshold = ''): bool
     {
@@ -191,7 +191,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      *
      * Get each id from the artist table with the minimum detail required for subsonic
      * @param int[] $catalogs
-     * @return list<array{
+     * @return array<int, array{
      *     id: int,
      *     f_name: string,
      *     name: string,
@@ -538,7 +538,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Get item childrens.
-     * @return array{album: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{album: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -553,7 +553,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -573,7 +573,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /**
      * Get all childrens and sub-childrens medias.
      *
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -626,16 +626,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      */
     public function display_art(array $size, bool $force = false): void
     {
-        $artist_id = null;
-        $type      = null;
-
         if (Art::has_db($this->id, 'artist') || $force) {
-            $artist_id = $this->id;
-            $type      = 'artist';
-        }
-
-        if ($artist_id !== null && $type !== null) {
-            Art::display($type, $artist_id, (string)$this->get_fullname(), $size, $this->get_link());
+            Art::display('artist', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
         }
     }
 

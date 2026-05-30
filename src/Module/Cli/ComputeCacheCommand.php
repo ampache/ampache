@@ -27,14 +27,14 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Cache\ObjectCacheInterface;
+use Override;
 
 final class ComputeCacheCommand extends Command
 {
-    private ObjectCacheInterface $objectCache;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -42,11 +42,9 @@ final class ComputeCacheCommand extends Command
     }
 
     public function __construct(
-        ObjectCacheInterface $objectCache
+        private readonly ObjectCacheInterface $objectCache,
     ) {
         parent::__construct('run:computeCache', T_('Update the object cache tables'));
-
-        $this->objectCache = $objectCache;
     }
 
     public function execute(): void

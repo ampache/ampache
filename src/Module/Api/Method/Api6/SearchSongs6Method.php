@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class SearchSongs6Method
 {
-    public const ACTION = 'search_songs';
+    public const string ACTION = 'search_songs';
 
     /**
      * search_songs
@@ -68,7 +68,7 @@ final class SearchSongs6Method
         $data                    = [];
         $data['type']            = 'song';
         $data['rule_1']          = 'anywhere';
-        $data['rule_1_input']    = $input['filter'];
+        $data['rule_1_input']    = $input['rule_1_input'] ?? $input['filter'];
         $data['rule_1_operator'] = 0;
 
         $search_sql = Search::prepare($data, $user);

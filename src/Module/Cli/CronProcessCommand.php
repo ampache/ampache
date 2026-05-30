@@ -38,28 +38,14 @@ use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use Override;
 
 final class CronProcessCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
-    private ObjectCacheInterface $objectCache;
-
-    private CatalogGarbageCollectorInterface $catalogGarbageCollector;
-
-    private BookmarkRepositoryInterface $bookmarkRepository;
-
-    private UserRepositoryInterface $userRepository;
-
-    private UpdateInfoRepositoryInterface $updateInfoRepository;
-
-    private ShareRepositoryInterface $shareRepository;
-
-    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -67,25 +53,16 @@ final class CronProcessCommand extends Command
     }
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        ObjectCacheInterface $objectCache,
-        CatalogGarbageCollectorInterface $catalogGarbageCollector,
-        BookmarkRepositoryInterface $bookmarkRepository,
-        UserRepositoryInterface $userRepository,
-        UpdateInfoRepositoryInterface $updateInfoRepository,
-        ShareRepositoryInterface $shareRepository,
-        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly ObjectCacheInterface $objectCache,
+        private readonly CatalogGarbageCollectorInterface $catalogGarbageCollector,
+        private readonly BookmarkRepositoryInterface $bookmarkRepository,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly UpdateInfoRepositoryInterface $updateInfoRepository,
+        private readonly ShareRepositoryInterface $shareRepository,
+        private readonly PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
     ) {
         parent::__construct('run:cronProcess', T_('Run the cron process'));
-
-        $this->configContainer          = $configContainer;
-        $this->objectCache              = $objectCache;
-        $this->catalogGarbageCollector  = $catalogGarbageCollector;
-        $this->bookmarkRepository       = $bookmarkRepository;
-        $this->userRepository           = $userRepository;
-        $this->updateInfoRepository     = $updateInfoRepository;
-        $this->shareRepository          = $shareRepository;
-        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
     }
 
     public function execute(): void
@@ -97,7 +74,7 @@ final class CronProcessCommand extends Command
         $interactor = $this->io();
 
         if (!$this->configContainer->get('cron_cache')) {
-            debug_event(self::class, 'ENABLE \'Cache computed SQL data (eg. media hits stats) using a cron\' * In Admin -> Server Config -> System -> Catalog', 5);
+            debug_event(self::class, "ENABLE 'Cache computed SQL data (eg. media hits stats) using a cron' * In Admin -> Server Config -> System -> Catalog", 5);
 
             $interactor->error(
                 T_('Cron cache not enabled'),

@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class Rate8Method
 {
-    public const ACTION = 'rate';
+    public const string ACTION = 'rate';
 
     /**
      * rate
@@ -68,13 +68,13 @@ final class Rate8Method
             return false;
         }
 
-        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
-        if (!Api::check_parameter($input, ['type', 'id', 'rating'], self::ACTION)) {
+        $input['filter'] = $input['id'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['type', 'filter', 'rating'], self::ACTION)) {
             return false;
         }
         ob_end_clean();
         $type      = (string) $input['type'];
-        $object_id = (int)$input['id'];
+        $object_id = (int)$input['filter'];
         $rating    = (string) $input['rating'];
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'])) {

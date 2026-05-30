@@ -39,28 +39,16 @@ use Ampache\Repository\Model\Playlist;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class SaveAsPlaylistAction implements ApplicationActionInterface
+final readonly class SaveAsPlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'save_as_playlist';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'save_as_playlist';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -82,7 +70,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
             ? $this->requestParser->getFromPost('playlist_type')
             : 'public';
 
-        if (!empty($objects)) {
+        if ($objects !== []) {
             // create the playlist
             $playlist_id = (int)Playlist::create($playlist_name, $playlist_type);
             $playlist    = $this->modelFactory->createPlaylist($playlist_id);
@@ -119,6 +107,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
                 )
             );
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

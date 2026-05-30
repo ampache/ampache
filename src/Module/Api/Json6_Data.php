@@ -1657,7 +1657,7 @@ class Json6_Data
             $play_url     = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $song_album   = self::getAlbumRepository()->getNames($song->album);
             $song_artist  = Artist::get_name_array_by_id($song->artist);
-            /** @var list<array{id: string, name: string, prefix: string, basename: string}> $song_artists */
+            /** @var array<int, array{id: string, name: string, prefix: string, basename: string}> $song_artists */
             $song_artists = [];
             foreach ($song->get_artists() as $artist_id) {
                 $artist = Artist::get_name_array_by_id($artist_id);
@@ -1993,7 +1993,7 @@ class Json6_Data
      * This handles creating an JSON document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param list<array{
+     * @param array<int, array{
      *    object_type: LibraryItemEnum,
      *    object_id: int,
      *    track_id: int,
@@ -2169,7 +2169,7 @@ class Json6_Data
      *
      * This handles creating an JSON document for a now_playing list
      *
-     * @param list<array{
+     * @param array<int, array{
      *     media: library_item,
      *     client: User,
      *     agent: string,
@@ -2272,7 +2272,7 @@ class Json6_Data
      * This handles creating a JSON document for deleted items
      *
      * @param string $object_type ('song', 'podcast_episode', 'video')
-     * @param list<array{
+     * @param array<int, array{
      *     id: int,
      *     addition_time: int,
      *     delete_time: int,

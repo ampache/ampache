@@ -37,20 +37,14 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowCreateAction implements ApplicationActionInterface
+final readonly class ShowCreateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_create';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'show_create';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

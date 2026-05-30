@@ -28,7 +28,8 @@ namespace Ampache\Module\Album\Export;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Album\Export;
+use Ampache\Module\Album\Export\Exception\AlbumArtExportException;
+use Ampache\Module\Album\Export\Writer\MetadataWriterInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -38,28 +39,19 @@ use Ampache\Repository\SongRepositoryInterface;
  * This runs through all of the albums and tries to dump the
  * art for them into the 'folder.jpg' file in the appropriate dir.
  */
-final class AlbumArtExporter implements AlbumArtExporterInterface
+final readonly class AlbumArtExporter implements AlbumArtExporterInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private SongRepositoryInterface $songRepository;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        SongRepositoryInterface $songRepository
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+        private SongRepositoryInterface $songRepository,
     ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->songRepository  = $songRepository;
     }
 
     public function export(
         Interactor $interactor,
         Catalog $catalog,
-        Writer\MetadataWriterInterface $metadataWriter
+        MetadataWriterInterface $metadataWriter,
     ): void {
         // Get all of the albums in this catalog
         $albums = $catalog->get_album_ids();
@@ -86,7 +78,7 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
 
             // Try the preferred filename, if that fails use folder.???
             $preferred_filename = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
-            if (!$preferred_filename || strpos($preferred_filename, '%') !== false) {
+            if (!$preferred_filename || str_contains((string) $preferred_filename, '%')) {
                 $preferred_filename = sprintf('folder.%s', $extension);
             }
 
@@ -95,14 +87,15 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
             $file_handle = @fopen($file, 'w');
 
             if ($file_handle === false || !$art->raw) {
-                throw new Export\Exception\AlbumArtExportException(
+                throw new AlbumArtExportException(
                     sprintf(T_('Unable to open `%s` for writing'), $file)
                 );
             }
+
             $write_result = @fwrite($file_handle, $art->raw);
 
             if ($write_result === false) {
-                throw new Export\Exception\AlbumArtExportException(
+                throw new AlbumArtExportException(
                     sprintf(T_('Unable to write to `%s`'), $file)
                 );
             }
@@ -118,7 +111,7 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
             );
 
             $count++;
-            if (!($count % 100)) {
+            if ($count % 100 === 0) {
                 $interactor->info(
                     sprintf(T_('Art files written: %d'), $count),
                     true

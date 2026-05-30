@@ -39,32 +39,17 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ConfirmDeleteAction implements ApplicationActionInterface
+final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_delete';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ArtistDeleterInterface $artistDeleter;
+    public const string REQUEST_KEY = 'confirm_delete';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ArtistDeleterInterface $artistDeleter
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private ArtistDeleterInterface $artistDeleter,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->artistDeleter   = $artistDeleter;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -76,6 +61,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
             return null;
         }
+
         $artist_id = (int)$this->requestParser->getFromRequest('artist_id');
         $artist    = $this->modelFactory->createArtist($artist_id);
 
@@ -97,7 +83,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
-                sprintf(T_('Couldn\'t delete this %s'), T_('Artist')),
+                sprintf(T_("Couldn't delete this %s"), T_('Artist')),
                 $this->configContainer->getWebPath('/client')
             );
         }

@@ -34,14 +34,10 @@ use Ampache\Repository\AccessRepositoryInterface;
 /**
  * Manages the creation and update of acl items
  */
-final class AccessListManager implements AccessListManagerInterface
+final readonly class AccessListManager implements AccessListManagerInterface
 {
-    private AccessRepositoryInterface $accessRepository;
-
-    public function __construct(
-        AccessRepositoryInterface $accessRepository
-    ) {
-        $this->accessRepository = $accessRepository;
+    public function __construct(private AccessRepositoryInterface $accessRepository)
+    {
     }
 
     /**
@@ -58,7 +54,7 @@ final class AccessListManager implements AccessListManagerInterface
         string $name,
         int $userId,
         AccessLevelEnum $level,
-        AccessTypeEnum $type
+        AccessTypeEnum $type,
     ): void {
         $startIp = (string)@inet_pton($startIp);
         $endIp   = (string)@inet_pton($endIp);
@@ -72,7 +68,7 @@ final class AccessListManager implements AccessListManagerInterface
             $name,
             $userId,
             $level,
-            in_array($type, AccessTypeEnum::CONFIGURABLE_TYPE_LIST) ? $type : AccessTypeEnum::STREAM
+            in_array($type, AccessTypeEnum::CONFIGURABLE_TYPE_LIST, true) ? $type : AccessTypeEnum::STREAM
         );
     }
 
@@ -92,20 +88,21 @@ final class AccessListManager implements AccessListManagerInterface
         int $userId,
         AccessLevelEnum $level,
         AccessTypeEnum $type,
-        AccessTypeEnum $additionalType
+        AccessTypeEnum $additionalType,
     ): void {
         $startIp = (string)@inet_pton($startIp);
         $endIp   = (string)@inet_pton($endIp);
-        $type    = (in_array($type, AccessTypeEnum::CONFIGURABLE_TYPE_LIST))
+        $type    = (in_array($type, AccessTypeEnum::CONFIGURABLE_TYPE_LIST, true))
             ? $type
             : AccessTypeEnum::STREAM;
 
         $this->verifyRange($startIp, $endIp);
 
         // Check existing ACLs to make sure we're not duplicating values here
-        if ($this->accessRepository->exists($startIp, $endIp, $type, $userId) === true) {
+        if ($this->accessRepository->exists($startIp, $endIp, $type, $userId)) {
             throw new AclItemDuplicationException();
         }
+
         $this->accessRepository->create(
             $startIp,
             $endIp,
@@ -116,29 +113,26 @@ final class AccessListManager implements AccessListManagerInterface
         );
 
         // Create Additional stuff based on the type
-        if (in_array($additionalType, [AccessTypeEnum::STREAM, AccessTypeEnum::ALL])) {
-            if ($this->accessRepository->exists($startIp, $endIp, AccessTypeEnum::STREAM, $userId) === false) {
-                $this->accessRepository->create(
-                    $startIp,
-                    $endIp,
-                    $name,
-                    $userId,
-                    $level,
-                    AccessTypeEnum::STREAM
-                );
-            }
+        if (in_array($additionalType, [AccessTypeEnum::STREAM, AccessTypeEnum::ALL], true) && $this->accessRepository->exists($startIp, $endIp, AccessTypeEnum::STREAM, $userId) === false) {
+            $this->accessRepository->create(
+                $startIp,
+                $endIp,
+                $name,
+                $userId,
+                $level,
+                AccessTypeEnum::STREAM
+            );
         }
-        if ($additionalType === AccessTypeEnum::ALL) {
-            if ($this->accessRepository->exists($startIp, $endIp, AccessTypeEnum::INTERFACE, $userId) === false) {
-                $this->accessRepository->create(
-                    $startIp,
-                    $endIp,
-                    $name,
-                    $userId,
-                    $level,
-                    AccessTypeEnum::INTERFACE
-                );
-            }
+
+        if ($additionalType === AccessTypeEnum::ALL && $this->accessRepository->exists($startIp, $endIp, AccessTypeEnum::INTERFACE, $userId) === false) {
+            $this->accessRepository->create(
+                $startIp,
+                $endIp,
+                $name,
+                $userId,
+                $level,
+                AccessTypeEnum::INTERFACE
+            );
         }
     }
 
@@ -157,11 +151,12 @@ final class AccessListManager implements AccessListManagerInterface
         if (!$startIp && $startIp != '0.0.0.0' && $startIp != '::') {
             throw new InvalidStartIpException();
         }
+
         if (!$endIp) {
             throw new InvalidEndIpException();
         }
 
-        if (strlen(bin2hex((string)$startIp)) != strlen(bin2hex((string)$endIp))) {
+        if (strlen(bin2hex((string)$startIp)) !== strlen(bin2hex((string)$endIp))) {
             throw new InvalidIpRangeException();
         }
     }

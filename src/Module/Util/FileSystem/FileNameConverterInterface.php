@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -30,6 +32,6 @@ interface FileNameConverterInterface
     public function convert(
         Interactor $interactor,
         string $source_encoding,
-        bool $force = false
+        bool $force = false,
     ): void;
 }

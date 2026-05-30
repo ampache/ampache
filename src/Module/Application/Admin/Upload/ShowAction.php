@@ -35,22 +35,13 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowAction extends AbstractUploadAction
 {
-    public const REQUEST_KEY = 'show';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        private readonly UiInterface $ui,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly ConfigContainerInterface $configContainer,
     ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface

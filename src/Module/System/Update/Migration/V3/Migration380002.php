@@ -47,7 +47,7 @@ final class Migration380002 extends AbstractMigration
         string $collation,
         string $charset,
         string $engine,
-        int $build
+        int $build,
     ): Generator {
         if ($build > 380002) {
             yield 'bookmark' => "CREATE TABLE IF NOT EXISTS `bookmark` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `user` int(11) UNSIGNED NOT NULL, `position` int(11) UNSIGNED DEFAULT '0' NOT NULL, `comment` varchar(255) CHARACTER SET $charset NOT NULL, `object_type` varchar(64) NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `creation_date` int(11) UNSIGNED DEFAULT '0' NOT NULL, `update_date` int(11) UNSIGNED DEFAULT '0' NOT NULL) ENGINE=$engine;";

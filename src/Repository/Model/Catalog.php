@@ -85,10 +85,10 @@ use RegexIterator;
  */
 abstract class Catalog extends database_object
 {
-    protected const DB_TABLENAME = 'catalog';
+    protected const string DB_TABLENAME = 'catalog';
 
     /** @var array<string, class-string> */
-    public const CATALOG_TYPES = [
+    public const array CATALOG_TYPES = [
         'beets' => Catalog_beets::class,
         'beetsremote' => Catalog_beetsremote::class,
         'dropbox' => Catalog_dropbox::class,
@@ -121,7 +121,7 @@ abstract class Catalog extends database_object
      *     video: int
      * }
      */
-    private const SERVER_COUNTS = [
+    private const array SERVER_COUNTS = [
         'album' => 0,
         'album_disk' => 0,
         'album_group' => 0,
@@ -284,7 +284,7 @@ abstract class Catalog extends database_object
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     /**
@@ -363,6 +363,7 @@ abstract class Catalog extends database_object
             return null;
         }
 
+        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic|null $controller */
         $controller = self::CATALOG_TYPES[$type] ?? null;
         if ($controller === null) {
             /* Throw Error Here */
@@ -371,7 +372,6 @@ abstract class Catalog extends database_object
             return null;
         } // include
 
-        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $controller */
         $catalog = ($catalog_id > 0)
             ? new $controller($catalog_id)
             : new $controller();
@@ -594,7 +594,7 @@ abstract class Catalog extends database_object
         // Remove last comma to avoid SQL error
         $sql = substr($sql, 0, -1);
 
-        return (Dba::write($sql) !== false);
+        return (Dba::write($sql) !== null);
     }
 
     /**
@@ -644,7 +644,7 @@ abstract class Catalog extends database_object
             if (Dba::write($sql, $params)) {
                 $sql = "DELETE FROM `catalog_filter_group_map` WHERE `group_id` = ?";
 
-                return (Dba::write($sql, $params) !== false);
+                return (Dba::write($sql, $params) !== null);
             }
         }
 
@@ -966,7 +966,7 @@ abstract class Catalog extends database_object
 
         $sql = sprintf('UPDATE `catalog` SET `%s` = ? WHERE `id` = ?', $field);
 
-        return (Dba::write($sql, [$value, $catalog_id]) !== false);
+        return (Dba::write($sql, [$value, $catalog_id]) !== null);
     }
 
     /**
@@ -1056,7 +1056,7 @@ abstract class Catalog extends database_object
         $cache_path   = (string)AmpConfig::get('cache_path', '');
         $cache_target = (string)AmpConfig::get('cache_target', '');
         // need a destination and target filetype
-        if (is_string($cache_path) && is_dir($cache_path) && Core::is_readable($cache_path)) {
+        if (is_dir($cache_path) && Core::is_readable($cache_path)) {
             $catalogs = self::get_all_catalogs('music');
             $scandir  = scandir($cache_path) ?: [];
             foreach ($scandir as $file) {
@@ -1169,16 +1169,21 @@ abstract class Catalog extends database_object
 
                 return false;
             }
+            if ($remote_url === '' || !filter_var($remote_url, FILTER_VALIDATE_URL)) {
+                debug_event(self::class, 'Invalid URL: ' . $remote_url, 5);
+
+                return false;
+            }
 
             $curl = curl_init();
             curl_setopt_array(
                 $curl,
                 [
-                    CURLOPT_RETURNTRANSFER => 1,
+                    CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_FILE => $filehandle,
                     CURLOPT_TIMEOUT => 0,
-                    CURLOPT_PIPEWAIT => 1,
-                    CURLOPT_URL => $remote_url,
+                    CURLOPT_PIPEWAIT => true,
+                    CURLOPT_URL => (string)$remote_url,
                 ]
             );
             curl_exec($curl);
@@ -1212,7 +1217,7 @@ abstract class Catalog extends database_object
     public static function getLastUpdate(?array $catalogs = null): int
     {
         $last_update = 0;
-        if ($catalogs == null || !is_array($catalogs)) {
+        if ($catalogs === null) {
             $catalogs = self::get_all_catalogs();
         }
 
@@ -1307,6 +1312,7 @@ abstract class Catalog extends database_object
         }
 
         $insert_id = 0;
+        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic|null $classname */
         $classname = self::CATALOG_TYPES[$type] ?? null;
         if ($classname === null) {
             return $insert_id;
@@ -1332,7 +1338,6 @@ abstract class Catalog extends database_object
         self::clear_catalog_cache();
 
         try {
-            /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $classname */
             $create_type = $classname::create_type($insert_id, $data);
         } catch (DropboxClientException) {
             $create_type = false;
@@ -1735,7 +1740,7 @@ abstract class Catalog extends database_object
      *
      * Get each array of [id, f_name, name, album_count, catalog_id, has_art] for artists in an array of catalog id's
      * @param int[]|string[] $catalogs
-     * @return list<array{
+     * @return array<int, array{
      *     id: int,
      *     f_name: string,
      *     name: string,
@@ -1901,7 +1906,7 @@ abstract class Catalog extends database_object
 
     /**
      * get all artists or artist children of a catalog id (Used for WebDav)
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public static function get_children(string $name, int $catalog_id = 0): array
     {
@@ -2063,7 +2068,7 @@ abstract class Catalog extends database_object
      * get_newest_podcasts_ids
      *
      * This returns an array of ids of latest podcast episodes in this catalog
-     * @return list<int>
+     * @return int[]
      */
     private function get_newest_podcasts_ids(int $count): array
     {
@@ -2128,7 +2133,7 @@ abstract class Catalog extends database_object
                 $keyword  = '';
                 foreach ($keywords as $key => $word) {
                     $options[$key] = $word['value'];
-                    if (array_key_exists('important', $word) && !empty($word['value'])) {
+                    if ($word['important'] && !empty($word['value'])) {
                         $keyword .= ' ' . $word['value'];
                     }
                 }
@@ -2544,7 +2549,7 @@ abstract class Catalog extends database_object
             } else {
                 $info = self::update_media_from_tags($song);
 
-                $diff   = array_key_exists('element', $info) && is_array($info['element']) && $info['element'] !== [];
+                $diff   = array_key_exists('element', $info) && $info['element'] !== [];
                 $album  = ($album) || ($diff && array_key_exists('album', $info['element']));
                 $artist = ($artist) || ($diff && array_key_exists('artist', $info['element']));
                 $tags   = ($tags) || ($diff && array_key_exists('tags', $info['element']));
@@ -2558,7 +2563,7 @@ abstract class Catalog extends database_object
 
             $file = scrub_out($song->file);
             if (array_key_exists('change', $info) && $info['change']) {
-                if ($diff && isset($info['element']) && array_key_exists($type, $info['element'])) {
+                if ($diff && array_key_exists($type, $info['element'])) {
                     $element   = explode(' --> ', (string)$info['element'][$type]);
                     $return_id = (int)$element[1];
                 }
@@ -2694,15 +2699,11 @@ abstract class Catalog extends database_object
             }
         }
 
-        if ($media instanceof Song) {
-            $update = self::update_song_from_tags($results, $media);
-        } elseif ($media instanceof Video) {
-            $update = self::update_video_from_tags($results, $media);
-        } elseif ($media instanceof Podcast_Episode) {
-            $update = self::update_podcast_episode_from_tags($results, $media);
-        } else {
-            $update = [];
-        }
+        $update = match (true) {
+            $media instanceof Song => self::update_song_from_tags($results, $media),
+            $media instanceof Video => self::update_video_from_tags($results, $media),
+            $media instanceof Podcast_Episode => self::update_podcast_episode_from_tags($results, $media),
+        };
 
         return $update;
     }
@@ -2734,7 +2735,7 @@ abstract class Catalog extends database_object
             : (int)($results['time']);
         if ($results['time'] < 0) {
             // fall back to last time if you fail to scan correctly
-            $results['time'] = $song?->time ?? 0;
+            $results['time'] = $song->time ?? 0;
         }
 
         $results['track']    = self::check_track((string)$results['track']);
@@ -2805,11 +2806,12 @@ abstract class Catalog extends database_object
         if (empty($results['album'])) {
             $results['album_id'] = ($song?->album > 0)
                 ? $song->album
-                : Album::check($song?->catalog ?? 0, '', $song?->year ?? 0, null, null, $song?->get_album_artist() ?? $song?->artist ?? null);
+                : Album::check($song->catalog ?? 0, '', $song->year ?? 0, null, null, $song?->get_album_artist() ?? $song->artist ?? null);
         }
 
-        $results['albumartist'] = self::check_length($results['albumartist']);
-        $results['albumartist'] ??= null;
+        $results['albumartist'] = ($results['albumartist'])
+            ? self::check_length($results['albumartist'])
+            : null;
         $results['albumartist_mbid'] = $results['mb_albumartistid'] ?? null;
         if (empty($results['albumartist'])) {
             $results['albumartist_id'] = ($song && $song->get_album_artist() > 0 && T_(($song->get_album_artist_fullname()) ?? T_('Unknown (Orphaned)')) !== T_('Unknown (Orphaned)'))
@@ -3023,7 +3025,7 @@ abstract class Catalog extends database_object
         // Check album_disk and update if needed
         $new_song->album_disk = ($is_upload_artist || $is_upload_albumartist)
             ? $song->album_disk
-            : AlbumDisk::check($new_song->album, $new_song->disk, $new_song->catalog, $new_song->disksubtitle, $song->album_disk);
+            : AlbumDisk::check($new_song->album, $new_song->disk ?? 1, $new_song->catalog, $new_song->disksubtitle, $song->album_disk);
         if ($new_song->album_disk === 0) {
             $new_song->album_disk = $song->album_disk;
         }
@@ -3297,7 +3299,7 @@ abstract class Catalog extends database_object
         }
 
         // If song rating tag exists and is well formed (array user=>rating), update it
-        if ($song->id && is_array($results) && array_key_exists('rating', $filtered_results) && is_array($filtered_results['rating']) && !empty($filtered_results['rating'])) {
+        if ($song->id && array_key_exists('rating', $filtered_results) && is_array($filtered_results['rating']) && !empty($filtered_results['rating'])) {
             $o_rating = new Rating($song->id, 'song');
             // For each user's ratings, call the function
             foreach ($filtered_results['rating'] as $user => $rating) {
@@ -4320,7 +4322,7 @@ abstract class Catalog extends database_object
         $sql    = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
         $params = [$new_object_id, $object_type, $old_object_id];
 
-        return (Dba::write($sql, $params) !== false);
+        return (Dba::write($sql, $params) !== null);
     }
 
     /**
@@ -4365,11 +4367,11 @@ abstract class Catalog extends database_object
 
     public static function can_remove(
         Podcast_Episode|AlbumDisk|Video|Song|Album|Artist|Label $libitem,
-        ?int $user_id = 0
+        ?int $user_id = 0,
     ): bool {
         if (!$user_id) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? false;
+            $user_id = $user->id ?? false;
         }
 
         if (!$user_id) {
@@ -4565,7 +4567,6 @@ abstract class Catalog extends database_object
 
                             $changed = 0;
                             foreach ($file_ids as $file_id) {
-                                /** @var Song|Podcast_Episode|Video $className */
                                 $media = new $className($file_id);
                                 if ($media->file) {
                                     /** @var Catalog_local $catalog */
@@ -4709,7 +4710,7 @@ abstract class Catalog extends database_object
         string $sort_pattern,
         ?string $base = null,
         string $various_artist = "Various Artists",
-        bool $windowsCompat = false
+        bool $windowsCompat = false,
     ): ?string {
         $home = '';
         if ($base) {
