@@ -32,7 +32,7 @@ interface AlbumRepositoryInterface
     /**
      * This returns a number of random albums
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getRandom(
         int $userId,
@@ -42,7 +42,7 @@ interface AlbumRepositoryInterface
     /**
      * This returns a number of random album_disks
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getRandomAlbumDisk(
         int $userId,
@@ -52,7 +52,7 @@ interface AlbumRepositoryInterface
     /**
      * gets songs from this album
      *
-     * @return int[] Album ids
+     * @return list<int> Album ids
      */
     public function getSongs(
         int $albumId,
@@ -61,7 +61,7 @@ interface AlbumRepositoryInterface
     /**
      * gets songs from this album_disk id
      *
-     * @return int[] Song ids
+     * @return list<int> Song ids
      */
     public function getSongsByAlbumDisk(
         int $albumDiskId,
@@ -70,7 +70,7 @@ interface AlbumRepositoryInterface
     /**
      * gets a random order of songs from this album
      *
-     * @return int[] Song ids
+     * @return list<int> Song ids
      */
     public function getRandomSongs(
         int $albumId,
@@ -79,7 +79,7 @@ interface AlbumRepositoryInterface
     /**
      * gets a random order of songs from this album group
      *
-     * @return int[] Song ids
+     * @return list<int> Song ids
      */
     public function getRandomSongsByAlbumDisk(
         int $albumDiskId,
@@ -101,7 +101,7 @@ interface AlbumRepositoryInterface
      * gets the album ids that this artist is a part of
      * Return Album or AlbumDisk based on album_group preference
      *
-     * @return int[]|array<string, int[]>
+     * @return list<int>|array<string, list<int>>
      */
     public function getByArtist(
         int $artistId,
@@ -113,7 +113,7 @@ interface AlbumRepositoryInterface
      * gets the album ids that this artist is a part of
      * Return Album only
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getAlbumByArtist(
         int $artistId,
@@ -122,7 +122,7 @@ interface AlbumRepositoryInterface
     /**
      * gets the album id has the same artist and title
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getByName(
         string $name,
@@ -132,7 +132,7 @@ interface AlbumRepositoryInterface
     /**
      * gets the album id that is part of this mbid_group
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getByMbidGroup(
         string $musicBrainzId,
@@ -141,7 +141,7 @@ interface AlbumRepositoryInterface
     /**
      * This returns the ids of artists that have songs/albums mapped
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getArtistMap(Album $album, string $objectType): array;
 

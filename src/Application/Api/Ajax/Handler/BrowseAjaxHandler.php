@@ -94,7 +94,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
                     // Checkbox unplayed
                     if (isset($_REQUEST['value'])) {
-                        $value = (int)($_REQUEST['value'] ?? 0);
+                        $value = (int)$_REQUEST['value'];
                         if ($_REQUEST['key'] == 'unplayed' && $browse->get_filter('unplayed')) {
                             $value = 0;
                         }
@@ -300,6 +300,6 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
         $browse->store();
 
         // We always do this
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 }

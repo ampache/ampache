@@ -227,7 +227,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
         } // end switch action
 
         // Go ahead and do the echo
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 
     #[Deprecated(message: 'Inject by constructor')]

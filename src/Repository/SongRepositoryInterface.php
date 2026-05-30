@@ -37,21 +37,21 @@ interface SongRepositoryInterface
     /**
      * gets the songs for an album takes an optional limit
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getByAlbum(int $albumId, int $limit = 0): array;
 
     /**
      * gets the songs for an album for a single disk takes an optional limit
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getByAlbumDisk(int $albumDiskId, int $limit = 0): array;
 
     /**
      * gets the songs for a label, based on label name
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getByLabel(
         string $labelName,
@@ -60,7 +60,7 @@ interface SongRepositoryInterface
     /**
      * Gets the songs from the artist in a random order
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getRandomByArtist(
         Artist $artist,
@@ -69,7 +69,7 @@ interface SongRepositoryInterface
     /**
      * Gets the songs from a genre in a random order
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getRandomByGenre(
         Tag $genre,
@@ -78,7 +78,7 @@ interface SongRepositoryInterface
     /**
      * gets the songs for this artist
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getTopSongsByArtist(
         Artist $artist,
@@ -88,7 +88,7 @@ interface SongRepositoryInterface
     /**
      * gets the songs for this artist
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getByArtist(
         int $artistId,
@@ -97,7 +97,7 @@ interface SongRepositoryInterface
     /**
      * gets the songs (including songs where they are the album artist) for this artist
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getAllByArtist(
         int $artistId,
@@ -106,7 +106,7 @@ interface SongRepositoryInterface
     /**
      * Returns a list of song ID's attached to a license ID.
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getByLicense(int $licenseId): array;
 
