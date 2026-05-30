@@ -25,13 +25,19 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Playback\Localplay;
 
+use Ampache\Module\Playback\Localplay\HttpQ\AmpacheHttpq;
+use Ampache\Module\Playback\Localplay\Mpd\AmpacheMpd;
+use Ampache\Module\Playback\Localplay\Upnp\AmpacheUPnP;
+use Ampache\Module\Playback\Localplay\Vlc\AmpacheVlc;
+use Ampache\Module\Playback\Localplay\Xbmc\AmpacheXbmc;
+
 final class LocalPlayTypeEnum
 {
     public const array TYPE_MAPPING = [
-        'httpq' => HttpQ\AmpacheHttpq::class,
-        'mpd' => Mpd\AmpacheMpd::class,
-        'upnp' => Upnp\AmpacheUPnP::class,
-        'vlc' => Vlc\AmpacheVlc::class,
-        'xbmc' => Xbmc\AmpacheXbmc::class,
+        'httpq' => AmpacheHttpq::class,
+        'mpd' => AmpacheMpd::class,
+        'upnp' => AmpacheUPnP::class,
+        'vlc' => AmpacheVlc::class,
+        'xbmc' => AmpacheXbmc::class,
     ];
 }

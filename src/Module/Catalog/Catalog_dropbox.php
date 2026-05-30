@@ -36,12 +36,14 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
+use Deprecated;
 use Exception;
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxApp;
 use Kunnu\Dropbox\DropboxFile;
 use Kunnu\Dropbox\Exceptions\DropboxClientException;
 use Kunnu\Dropbox\Models\ModelInterface;
+use Override;
 use ReflectionException;
 
 /**
@@ -50,15 +52,21 @@ use ReflectionException;
 class Catalog_dropbox extends Catalog
 {
     private string $version     = '000002';
+
     private string $type        = 'dropbox';
+
     private string $description = 'Dropbox Remote Catalog';
+
     private int $count          = 0;
 
-    private int $catalog_id;
+    private readonly int $catalog_id;
+
     private string $apikey = '';
-    private string $secret;
+
+    private readonly string $secret;
+
     //private string $authcode;
-    private string $authtoken;
+    private readonly string $authtoken;
 
     public string $path;
 
@@ -134,7 +142,7 @@ class Catalog_dropbox extends Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
-        $sql = "CREATE TABLE `catalog_dropbox` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `apikey` VARCHAR(255) COLLATE $collation NOT NULL, `secret` VARCHAR(255) COLLATE $collation NOT NULL, `path` VARCHAR(255) COLLATE $collation NOT NULL, `authtoken` VARCHAR(2048) COLLATE $collation NOT NULL, `getchunk` TINYINT(1) NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = sprintf('CREATE TABLE `catalog_dropbox` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `apikey` VARCHAR(255) COLLATE %s NOT NULL, `secret` VARCHAR(255) COLLATE %s NOT NULL, `path` VARCHAR(255) COLLATE %s NOT NULL, `authtoken` VARCHAR(2048) COLLATE %s NOT NULL, `getchunk` TINYINT(1) NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $collation, $collation, $collation, $engine, $charset, $collation);
         Dba::query($sql);
 
         return true;
@@ -148,34 +156,29 @@ class Catalog_dropbox extends Catalog
      */
     public function catalog_fields(): array
     {
-        $fields = [];
-
-        $fields['apikey']    = ['description' => T_('API key'), 'type' => 'text'];
-        $fields['secret']    = ['description' => T_('Secret'), 'type' => 'password'];
-        $fields['authtoken'] = ['description' => T_('Access Token'), 'type' => 'text'];
-        $fields['path']      = ['description' => T_('Path'), 'type' => 'text', 'value' => '/'];
-        $fields['getchunk']  = [
+        return ['apikey' => ['description' => T_('API key'), 'type' => 'text'], 'secret' => ['description' => T_('Secret'), 'type' => 'password'], 'authtoken' => ['description' => T_('Access Token'), 'type' => 'text'], 'path' => ['description' => T_('Path'), 'type' => 'text', 'value' => '/'], 'getchunk' => [
             'description' => T_('Get chunked files on analyze'),
             'type' => 'checkbox',
             'value' => true,
-        ];
-
-        return $fields;
+        ]];
     }
 
     /**
      * isReady
      */
+    #[Override]
     public function isReady(): bool
     {
-        return (!empty($this->authtoken));
+        return (isset($this->authtoken) && ($this->authtoken !== '' && $this->authtoken !== '0'));
     }
 
+    #[Override]
     public function show_ready_process(): void
     {
         // $this->showAuthToken();
     }
 
+    #[Override]
     public function perform_ready(): void
     {
         // $this->authcode = $_REQUEST['authcode'];
@@ -226,19 +229,21 @@ class Catalog_dropbox extends Catalog
 
             return false;
         }
+
         try {
             $app = new DropboxApp($apikey, $secret, $authtoken);
-        } catch (DropboxClientException $error) {
-            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $error->getMessage()));
+        } catch (DropboxClientException $dropboxClientException) {
+            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $dropboxClientException->getMessage()));
 
             return false;
         }
+
         $dropbox = new Dropbox($app);
 
         try {
             $dropbox->listFolder($path);
-        } catch (DropboxClientException $error) {
-            AmpError::add('general', T_('Invalid "dropbox-path": ' . $error->getMessage()));
+        } catch (DropboxClientException $dropboxClientException) {
+            AmpError::add('general', T_('Invalid "dropbox-path": ' . $dropboxClientException->getMessage()));
 
             return false;
         }
@@ -247,7 +252,7 @@ class Catalog_dropbox extends Catalog
         $sql        = 'SELECT `id` FROM `catalog_dropbox` WHERE `apikey` = ?';
         $db_results = Dba::read($sql, [$apikey]);
 
-        if (Dba::num_rows($db_results)) {
+        if (Dba::num_rows($db_results) !== 0) {
             debug_event('dropbox.catalog', 'Cannot add catalog with duplicate key ' . $apikey, 1);
             AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $apikey));
 
@@ -276,6 +281,7 @@ class Catalog_dropbox extends Catalog
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Dropbox Remote Update') . '. . .');
         }
+
         $songsadded = $this->update_remote_catalog();
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
@@ -362,14 +368,16 @@ class Catalog_dropbox extends Catalog
             $is_video_file = Catalog::is_video_file($path);
 
             if ($is_audio_file) {
-                if (count($this->get_gather_types('music')) > 0 && $this->insert_song($dropbox, $path)) {
+                if ($this->get_gather_types('music') !== [] && $this->insert_song($dropbox, $path)) {
                     return true;
                 }
+
                 debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this catalog.", 5);
-            } elseif (count($this->get_gather_types('video')) > 0) {
+            } elseif ($this->get_gather_types('video') !== []) {
                 if ($is_video_file && $this->insert_video($dropbox, $path)) {
                     return true;
                 }
+
                 debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this video catalog.", 5);
             }
         } else {
@@ -416,13 +424,14 @@ class Catalog_dropbox extends Catalog
         $results['catalog'] = $this->id;
 
         // Set the remote path
-        if (!empty($results['artist']) && !empty($results['album'])) {
+        if (isset($results['artist']) && ($results['artist'] !== '' && $results['artist'] !== '0') && (isset($results['album']) && ($results['album'] !== '' && $results['album'] !== '0'))) {
             $this->count++;
             $results['file'] = $outfile;
             $song_id         = Song::insert($results);
             if ($song_id) {
                 parent::gather_art([$song_id]);
             }
+
             $results['file'] = $path;
             $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
             Dba::write($sql, [$results['file'], $song_id]);
@@ -491,12 +500,14 @@ class Catalog_dropbox extends Catalog
             } else {
                 $this->videos_to_gather[] = $video_id;
             }
+
             $results['file'] = $path;
             $sql             = "UPDATE `video` SET `file` = ? WHERE `id` = ?";
             Dba::write($sql, [$results['file'], $video_id]);
 
             return $video_id;
         }
+
         debug_event('dropbox.catalog', 'failed to download file', 5);
 
         return 0;
@@ -508,7 +519,7 @@ class Catalog_dropbox extends Catalog
     public function download(Dropbox $dropbox, string $path, ?int $maxlen = null, ?string $dropboxFile = null): bool
     {
         // Path cannot be null
-        if (empty($path)) {
+        if ($path === '' || $path === '0') {
             throw new DropboxClientException("Path cannot be null.");
         }
 
@@ -523,8 +534,8 @@ class Catalog_dropbox extends Catalog
             if ($response->getHttpStatusCode() == 200) {
                 return true;
             }
-        } catch (Exception $error) {
-            debug_event('dropbox.catalog', 'download error: ' . $error->getMessage(), 3);
+        } catch (Exception $exception) {
+            debug_event('dropbox.catalog', 'download error: ' . $exception->getMessage(), 3);
         }
 
         return false;
@@ -565,14 +576,14 @@ class Catalog_dropbox extends Catalog
                         (string) $this->sort_pattern,
                         (string) $this->rename_pattern
                     );
-                    $vainfo->forceSize((int)$filesize);
+                    $vainfo->forceSize($filesize);
                     $vainfo->gather_tags();
 
                     $key     = VaInfo::get_tag_type($vainfo->tags);
                     $results = VaInfo::clean_tag_info($vainfo->tags, $key, $outfile);
                     // Must compare to original path, not temporary location.
                     $results['file'] = $path;
-                    $info            = ($song->id) ? self::update_song_from_tags($results, $song) : [];
+                    $info            = ($song->id !== 0) ? self::update_song_from_tags($results, $song) : [];
                     if ($info['change']) {
                         Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
                         $updated++;
@@ -587,8 +598,8 @@ class Catalog_dropbox extends Catalog
             }
 
             $this->update_last_update($date);
-        } catch (DropboxClientException $error) {
-            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $error->getMessage()));
+        } catch (DropboxClientException $dropboxClientException) {
+            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $dropboxClientException->getMessage()));
         }
 
         return $updated;
@@ -621,6 +632,7 @@ class Catalog_dropbox extends Catalog
                 }
             }
         }
+
         $this->update_last_clean();
 
         return $dead;
@@ -660,11 +672,8 @@ class Catalog_dropbox extends Catalog
     public function check_remote_file(string $file): ?int
     {
         $is_audio_file = Catalog::is_audio_file($file);
-        if ($is_audio_file) {
-            $sql = 'SELECT `id` FROM `song` WHERE `file` = ?';
-        } else {
-            $sql = 'SELECT `id` FROM `video` WHERE `file` = ?';
-        }
+        $sql           = $is_audio_file ? 'SELECT `id` FROM `song` WHERE `file` = ?' : 'SELECT `id` FROM `video` WHERE `file` = ?';
+
         $db_results = Dba::read($sql, [$file]);
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];
@@ -750,11 +759,12 @@ class Catalog_dropbox extends Catalog
      * @param Video[]|null $videos
      * @throws DropboxClientException
      */
+    #[Override]
     public function gather_art(?array $songs = null, ?array $videos = null, ?Interactor $interactor = null): bool
     {
         // Make sure they've actually got methods
         $art_order = AmpConfig::get('art_order');
-        if (!count($art_order)) {
+        if (count($art_order) === 0) {
             $interactor?->info(
                 'art_order not set, Catalog::gather_art aborting',
                 true
@@ -763,6 +773,7 @@ class Catalog_dropbox extends Catalog
 
             return true;
         }
+
         $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
         $dropbox = new Dropbox($app);
         $songs   = $this->get_songs();
@@ -806,9 +817,7 @@ class Catalog_dropbox extends Catalog
         return true;
     }
 
-    /**
-     * @deprecated Inject by constructor
-     */
+    #[Deprecated(message: 'Inject by constructor')]
     private function getUtilityFactory(): UtilityFactoryInterface
     {
         global $dic;

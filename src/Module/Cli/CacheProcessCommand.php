@@ -28,15 +28,15 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\Catalog;
+use Override;
 
 final class CacheProcessCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
+    #[Override]
     protected function defaults(): self
     {
         $this
-            ->option('-h, --help', T_('Help'))->on([$this, 'showHelp'])
+            ->option('-h, --help', T_('Help'))->on($this->showHelp(...))
             ->option('-c|--cleanup', T_('Clean'), 'boolval', false);
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
@@ -45,11 +45,9 @@ final class CacheProcessCommand extends Command
     }
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct('run:cacheProcess', T_('Run the cache process'));
-
-        $this->configContainer = $configContainer;
     }
 
     public function execute(): void

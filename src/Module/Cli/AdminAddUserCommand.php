@@ -29,14 +29,14 @@ use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\User;
+use Override;
 
 final class AdminAddUserCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -44,11 +44,9 @@ final class AdminAddUserCommand extends Command
     }
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct('admin:addUser', T_('Add a User'));
-
-        $this->configContainer = $configContainer;
 
         $this
             ->option('-p|--password', T_('Password'), 'strval', bin2hex(random_bytes(20)))

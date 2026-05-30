@@ -29,14 +29,14 @@ use Ahc\Cli\Input\Command;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\InstallationHelperInterface;
+use Override;
 
 final class InstallerCommand extends Command
 {
-    private InstallationHelperInterface $installationHelper;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -44,7 +44,7 @@ final class InstallerCommand extends Command
     }
 
     public function __construct(
-        InstallationHelperInterface $installationHelper,
+        private readonly InstallationHelperInterface $installationHelper,
     ) {
         parent::__construct('install', T_('Install the database'));
 
@@ -59,7 +59,6 @@ final class InstallerCommand extends Command
             ->option('-w|--webpath', T_('Web Path'), 'strval')
             ->option('-f|--force', T_('Overwrite if Config Already Exists'), 'boolval', false)
             ->usage('<bold>  install</end> <comment> ## ' . T_('Displays database update information') . '</end><eol/>');
-        $this->installationHelper = $installationHelper;
     }
 
     public function execute(): void

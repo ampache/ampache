@@ -84,14 +84,11 @@ final class FollowerQuery implements QueryInterface
     public function get_sql_filter(Query $query, string $filter, mixed $value): string
     {
         $filter_sql = '';
-        switch ($filter) {
-            case 'follow_user':
-            case 'user':
-                $filter_sql = " `user_follower`.`$filter` = '" . (int)$value . "' AND ";
-                break;
-        }
 
-        return $filter_sql;
+        return match ($filter) {
+            'follow_user', 'user' => sprintf(" `user_follower`.`%s` = '", $filter) . (int)$value . "' AND ",
+            default => $filter_sql,
+        };
     }
 
     /**
@@ -104,20 +101,15 @@ final class FollowerQuery implements QueryInterface
      */
     public function get_sql_sort($query, $field, $order): string
     {
-        switch ($field) {
-            case 'user':
-            case 'follow_user':
-            case 'follow_date':
-                $sql = "`user_follower`.`$field`";
-                break;
-            default:
-                $sql = '';
-        }
+        $sql = match ($field) {
+            'user', 'follow_user', 'follow_date' => sprintf('`user_follower`.`%s`', $field),
+            default => '',
+        };
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

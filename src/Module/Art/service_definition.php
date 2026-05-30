@@ -29,6 +29,7 @@ use Ampache\Module\Art\Collector\ArtCollector;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Art\Export\ArtExporter;
 use Ampache\Module\Art\Export\ArtExporterInterface;
+use Ampache\Module\Art\Export\Writer\MetadataWriter;
 
 use function DI\autowire;
 
@@ -36,5 +37,5 @@ return [
     ArtCleanupInterface::class => autowire(ArtCleanup::class),
     ArtCollectorInterface::class => autowire(ArtCollector::class),
     ArtExporterInterface::class => autowire(ArtExporter::class),
-    Export\Writer\MetadataWriter::class => autowire(),
+    MetadataWriter::class => autowire(),
 ];

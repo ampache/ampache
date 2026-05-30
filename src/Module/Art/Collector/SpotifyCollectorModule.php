@@ -33,22 +33,13 @@ use SpotifyWebAPI\Session as SpotifySession;
 use SpotifyWebAPI\SpotifyWebAPI;
 use SpotifyWebAPI\SpotifyWebAPIException;
 
-final class SpotifyCollectorModule implements CollectorModuleInterface
+final readonly class SpotifyCollectorModule implements CollectorModuleInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private SpotifyWebAPI $spotifyWebAPI;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        SpotifyWebAPI $spotifyWebAPI,
-        LoggerInterface $logger,
+        private ConfigContainerInterface $configContainer,
+        private SpotifyWebAPI $spotifyWebAPI,
+        private LoggerInterface $logger,
     ) {
-        $this->configContainer = $configContainer;
-        $this->spotifyWebAPI   = $spotifyWebAPI;
-        $this->logger          = $logger;
     }
 
     /**
@@ -92,7 +83,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
                 $session = new SpotifySession($clientId, $clientSecret);
                 $session->requestCredentialsToken();
                 $accessToken = $session->getAccessToken();
-            } catch (SpotifyWebAPIException $error) {
+            } catch (SpotifyWebAPIException) {
                 $this->logger->debug(
                     'gather_spotify: A problem exists with the client credentials',
                     [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -101,6 +92,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
                 return $images;
             }
         }
+
         $filter = [];
         $query1 = '';
         $types  = $art->object_type . 's';
@@ -109,7 +101,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
 
         if (
             isset($data['artist']) &&
-            $art->object_type == 'artist'
+            $art->object_type === 'artist'
         ) {
             $this->logger->debug(
                 'gather_spotify artist: ' . $data['artist'],
@@ -117,7 +109,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
             );
             $query   = $data['artist'];
             $getType = 'getArtist';
-        } elseif ($art->object_type == 'album') {
+        } elseif ($art->object_type === 'album') {
             $album_str  = $data['album'] ?? '';
             $artist_str = $data['artist'] ?? '';
             $logString  = sprintf('gather_spotify album: %s, artist: %s', $album_str, $artist_str);
@@ -126,25 +118,27 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             // Check for manual search
-            if (key_exists('search_limit', $data)) {
+            if (array_key_exists('search_limit', $data)) {
                 $limit = $data['search_limit'];
-                if (key_exists('artist', $data) && !empty($artist_str)) {
+                if (array_key_exists('artist', $data) && !empty($artist_str)) {
                     $filter[] = 'artist';
                 }
-                if (key_exists('year_filter', $data)) {
+
+                if (array_key_exists('year_filter', $data)) {
                     $filter[] = $data['year_filter'];
                 }
             } elseif (
                 !is_null($this->configContainer->get('spotify_art_filter')) ||
-                !empty($this->configContainer->get('spotify_art_filter'))
+                $this->configContainer->get('spotify_art_filter') !== null
             ) {
                 $filter = explode(',', $this->configContainer->get('spotify_art_filter'));
             }
-            if (!empty($filter)) {
+
+            if ($filter !== []) {
                 foreach ($filter as $item) {
                     switch (trim($item)) {
                         case 'artist':
-                            $query1 .= " artist:\"{$artist_str}\"";
+                            $query1 .= sprintf(' artist:"%s"', $artist_str);
                             break;
                         case preg_match('/year:.*/', $item):
                             $query1 .= ' ' . $item;
@@ -152,9 +146,10 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
                         default:
                     }
                 }
-                $query = "album:" . "\"{$album_str}\"" . $query1;
+
+                $query = "album:" . sprintf('"%s"', $album_str) . $query1;
             } else {
-                $query = "\"{$album_str}\"";
+                $query = sprintf('"%s"', $album_str);
             }
         } else {
             return $images;
@@ -162,25 +157,27 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
 
         try {
             $response = $this->spotifyWebAPI->search($query, $art->object_type, ['limit' => $limit]);
-        } catch (SpotifyWebAPIException $error) {
-            if ($error->hasExpiredToken()) {
+        } catch (SpotifyWebAPIException $spotifyWebAPIException) {
+            if ($spotifyWebAPIException->hasExpiredToken()) {
                 $session = new SpotifySession($clientId, $clientSecret);
                 $session->requestCredentialsToken();
                 $accessToken = $session->getAccessToken();
-            } elseif ($error->getCode() == 429) {
+            } elseif ($spotifyWebAPIException->getCode() == 429) {
                 $lastResponse = $this->spotifyWebAPI->getRequest()->getLastResponse();
                 $retryAfter   = $lastResponse['headers']['Retry-After'];
                 // Number of seconds to wait before sending another request
                 sleep($retryAfter);
             }
+
             try {
                 $response = $this->spotifyWebAPI->search($query, $art->object_type, ['limit' => $limit]);
-            } catch (SpotifyWebAPIException $error) {
+            } catch (SpotifyWebAPIException) {
                 $response = null;
             }
         }
+
         $items = $response->{$types}->items ?? [];
-        if (count($items)) {
+        if (count($items) > 0) {
             foreach ($items as $item) {
                 $item_id = $item->id;
                 try {

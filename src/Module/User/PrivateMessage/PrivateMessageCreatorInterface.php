@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -24,6 +26,7 @@
 namespace Ampache\Module\User\PrivateMessage;
 
 use Ampache\Repository\Model\User;
+use PHPMailer\PHPMailer\Exception;
 
 interface PrivateMessageCreatorInterface
 {
@@ -31,7 +34,7 @@ interface PrivateMessageCreatorInterface
      * Sends a private message to a user
      *
      * @throws Exception\PrivateMessageCreationException
-     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     public function create(
         ?User $recipient,

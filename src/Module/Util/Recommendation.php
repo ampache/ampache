@@ -81,7 +81,7 @@ class Recommendation
         $db_results = Dba::read($sql, [$object_type, $object_id]);
         $row        = Dba::fetch_assoc($db_results);
 
-        return (!(empty($row)));
+        return ($row !== []);
     }
 
     /**
@@ -151,7 +151,7 @@ class Recommendation
      */
     protected static function update_recommendation_cache(string $type, int $object_id, array $recommendations): void
     {
-        if (count($recommendations) > 0) {
+        if ($recommendations !== []) {
             self::delete_recommendation_cache($type, $object_id);
             $sql = "INSERT INTO `recommendation` (`object_type`, `object_id`, `last_update`) VALUES (?, ?, ?)";
             Dba::write($sql, [$type, $object_id, time()]);
@@ -205,7 +205,7 @@ class Recommendation
         $fullname = (string)$artist->get_fullname();
         $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($fullname);
 
-        if (!empty($song->mbid)) {
+        if (!in_array($song->mbid, [null, '', '0'], true)) {
             $query = 'mbid=' . rawurlencode($song->mbid);
         }
 
@@ -242,10 +242,11 @@ class Recommendation
                                       (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?)
                                 SQL;
                         }
+
                         $db_result = Dba::read($sql, [$song_name, $s_name, $s_fullname]);
                         if ($result = Dba::fetch_assoc($db_result)) {
                             $local_id = (int)$result['id'];
-                            debug_event(self::class, "$song_name matched local song $local_id", 4);
+                            debug_event(self::class, sprintf('%s matched local song %d', $song_name, $local_id), 4);
                             $similars[] = [
                                 'id' => $local_id,
                                 'name' => $song_name,
@@ -260,6 +261,7 @@ class Recommendation
                             ];
                         }
                     }
+
                     self::update_recommendation_cache('song', $song_id, $similars);
                 }
             } catch (LastFmQueryFailedException) {
@@ -267,9 +269,10 @@ class Recommendation
             }
         }
 
-        if (!isset($similars) || count($similars) == 0) {
+        if (!isset($similars) || $similars === []) {
             $similars = $cache['items'] ?? [];
         }
+
         if ($similars) {
             $results = [];
             foreach ($similars as $similar) {
@@ -284,11 +287,7 @@ class Recommendation
             }
         }
 
-        if (isset($results)) {
-            return $results;
-        }
-
-        return [];
+        return $results ?? [];
     }
 
     /**
@@ -325,7 +324,7 @@ class Recommendation
                         $local_id = null;
 
                         // First we check by MBID
-                        if ($mbid) {
+                        if ($mbid !== '' && $mbid !== '0') {
                             $sql = ($catalog_disable)
                                 ? "SELECT `artist`.`id` FROM `artist` WHERE `mbid` = ? AND " . $enable_filter
                                 : "SELECT `artist`.`id` FROM `artist` WHERE `mbid` = ?";
@@ -360,14 +359,15 @@ class Recommendation
                                 'mbid' => $mbid
                             ];
                         } else {
-                            debug_event(self::class, "$name matched local artist " . $local_id, 5);
+                            debug_event(self::class, $name . ' matched local artist ' . $local_id, 5);
                             $similars[] = [
                                 'id' => $local_id,
                                 'name' => $name
                             ];
                         }
                     }
-                    if (count($similars) > 0) {
+
+                    if ($similars !== []) {
                         self::update_recommendation_cache('artist', $artist_id, $similars);
                     }
                 }
@@ -376,9 +376,10 @@ class Recommendation
             }
         }
 
-        if (!isset($similars) || count($similars) == 0) {
+        if (!isset($similars) || $similars === []) {
             $similars = $cache['items'] ?? [];
         }
+
         $results = [];
         if ($similars) {
             foreach ($similars as $similar) {
@@ -430,7 +431,7 @@ class Recommendation
         );
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
         $results['placeformed'] = (string)$xml->artist->bio->placeformed;
-        $results['yearformed']  = (isset($xml->artist->bio->yearformed))
+        $results['yearformed']  = (property_exists($xml->artist->bio, 'yearformed') && $xml->artist->bio->yearformed !== null)
             ? (int)$xml->artist->bio->yearformed
             : null;
 
@@ -460,17 +461,7 @@ class Recommendation
 
         // Data newer than 6 months, use it
         if (($artist->last_update + 15768000) > time() || $artist->manual_update) {
-            $results                = [];
-            $results['id']          = $artist_id;
-            $results['summary']     = $artist->summary;
-            $results['placeformed'] = $artist->placeformed;
-            $results['yearformed']  = (int)$artist->yearformed;
-            $results['largephoto']  = Art::url($artist->id, 'artist', null, 174);
-            $results['smallphoto']  = Art::url($artist->id, 'artist', null, 34);
-            $results['mediumphoto'] = Art::url($artist->id, 'artist', null, 64);
-            $results['megaphoto']   = Art::url($artist->id, 'artist', null, 300);
-
-            return $results;
+            return ['id' => $artist_id, 'summary' => $artist->summary, 'placeformed' => $artist->placeformed, 'yearformed' => (int)$artist->yearformed, 'largephoto' => Art::url($artist->id, 'artist', null, 174), 'smallphoto' => Art::url($artist->id, 'artist', null, 34), 'mediumphoto' => Art::url($artist->id, 'artist', null, 64), 'megaphoto' => Art::url($artist->id, 'artist', null, 300)];
         }
 
         try {
@@ -503,18 +494,19 @@ class Recommendation
             )
         );
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
-        $results['placeformed'] = (isset($xml->artist->bio->yearformed))
+        $results['placeformed'] = (property_exists($xml->artist->bio, 'yearformed') && $xml->artist->bio->yearformed !== null)
             ? (string)$xml->artist->bio->placeformed
             : null;
-        $results['yearformed'] = (isset($xml->artist->bio->yearformed))
+        $results['yearformed'] = (property_exists($xml->artist->bio, 'yearformed') && $xml->artist->bio->yearformed !== null)
             ? (int)$xml->artist->bio->yearformed
             : null;
 
         if ($artist->isNew() === false) {
             $results['id'] = $artist->id;
-            if (!empty($results['summary'])) {
+            if (isset($results['summary']) && ($results['summary'] !== '' && $results['summary'] !== '0')) {
                 $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
             }
+
             $results['largephoto']  = Art::url($artist->id, 'artist', null, 174);
             $results['smallphoto']  = Art::url($artist->id, 'artist', null, 34);
             $results['mediumphoto'] = Art::url($artist->id, 'artist', null, 64);
@@ -541,7 +533,7 @@ class Recommendation
         $album = new Album($album_id);
         $query = ($album->mbid)
             ? 'mbid=' . rawurlencode($album->mbid)
-            : 'artist=' . rawurlencode((string)$album->get_artist_fullname()) . '&album=' . rawurlencode((string)$album->get_fullname());
+            : 'artist=' . rawurlencode((string)$album->get_artist_fullname()) . '&album=' . rawurlencode($album->get_fullname());
 
         $results = [
             'id' => $album_id,

@@ -39,45 +39,19 @@ use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
-final class ArtistDeleter implements ArtistDeleterInterface
+final readonly class ArtistDeleter implements ArtistDeleterInterface
 {
-    private AlbumDeleterInterface $albumDeleter;
-
-    private ArtistRepositoryInterface $artistRepository;
-
-    private AlbumRepositoryInterface $albumRepository;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private LoggerInterface $logger;
-
-    private ShoutRepositoryInterface $shoutRepository;
-
-    private UserActivityRepositoryInterface $useractivityRepository;
-
-    private LabelRepositoryInterface $labelRepository;
-    private ArtCleanupInterface $artCleanup;
-
     public function __construct(
-        AlbumDeleterInterface $albumDeleter,
-        ArtistRepositoryInterface $artistRepository,
-        AlbumRepositoryInterface $albumRepository,
-        ModelFactoryInterface $modelFactory,
-        LoggerInterface $logger,
-        ShoutRepositoryInterface $shoutRepository,
-        UserActivityRepositoryInterface $useractivityRepository,
-        LabelRepositoryInterface $labelRepository,
-        ArtCleanupInterface $artCleanup,
+        private AlbumDeleterInterface $albumDeleter,
+        private ArtistRepositoryInterface $artistRepository,
+        private AlbumRepositoryInterface $albumRepository,
+        private ModelFactoryInterface $modelFactory,
+        private LoggerInterface $logger,
+        private ShoutRepositoryInterface $shoutRepository,
+        private UserActivityRepositoryInterface $useractivityRepository,
+        private LabelRepositoryInterface $labelRepository,
+        private ArtCleanupInterface $artCleanup,
     ) {
-        $this->albumDeleter           = $albumDeleter;
-        $this->artistRepository       = $artistRepository;
-        $this->albumRepository        = $albumRepository;
-        $this->modelFactory           = $modelFactory;
-        $this->logger                 = $logger;
-        $this->shoutRepository        = $shoutRepository;
-        $this->useractivityRepository = $useractivityRepository;
-        $this->labelRepository        = $labelRepository;
-        $this->artCleanup             = $artCleanup;
     }
 
     /**

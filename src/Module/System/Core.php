@@ -27,6 +27,7 @@ namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\User;
+use Deprecated;
 use Exception;
 
 /**
@@ -49,8 +50,8 @@ class Core
     /**
      * get_request
      * Return a $REQUEST variable instead of calling directly
-     * @deprecated Use RequestParser
      */
+    #[Deprecated(message: 'Use RequestParser')]
     public static function get_request(string $variable): string
     {
         if (!array_key_exists($variable, $_REQUEST)) {
@@ -76,8 +77,8 @@ class Core
     /**
      * get_cookie
      * Return a $COOKIE variable instead of calling directly
-     * @deprecated Not in use
      */
+    #[Deprecated(message: 'Not in use')]
     public static function get_cookie(string $variable): string
     {
         if (!array_key_exists($variable, $_COOKIE)) {
@@ -139,7 +140,7 @@ class Core
     public static function form_register(string $name, string $type = 'post'): string
     {
         // Make ourselves a nice little sid
-        $sid    = md5(uniqid((string)rand(), true));
+        $sid    = md5(uniqid((string)random_int(0, mt_getrandmax()), true));
         $window = AmpConfig::get('session_length', 3600);
         $expire = time() + $window;
 
@@ -149,9 +150,9 @@ class Core
             'expire' => $expire
         ];
         if (!isset($_SESSION['forms'][$sid])) {
-            debug_event(self::class, "Form $sid not found in session, failed to register!", 2);
+            debug_event(self::class, sprintf('Form %s not found in session, failed to register!', $sid), 2);
         } else {
-            debug_event(self::class, "Registered $type form $name with SID $sid and expiration $expire ($window seconds from now)", 5);
+            debug_event(self::class, sprintf('Registered %s form %s with SID %s and expiration %s (%s seconds from now)', $type, $name, $sid, $expire, $window), 5);
         }
 
         // end switch on type
@@ -205,7 +206,7 @@ class Core
             return $empty;
         }
 
-        if (empty($image_data)) {
+        if ($image_data === '' || $image_data === '0') {
             debug_event(self::class, "Cannot create image from empty data", 2);
 
             return $empty;
@@ -239,18 +240,21 @@ class Core
      */
     public static function is_readable(string $path): bool
     {
-        if (!$path) {
+        if ($path === '' || $path === '0') {
             return false;
         }
+
         if (filter_var($path, FILTER_VALIDATE_URL)) {
             return true;
         }
+
         if (file_exists($path)) {
             if (is_dir($path)) {
                 $handle = opendir($path);
                 if ($handle === false) {
                     return false;
                 }
+
                 closedir($handle);
 
                 return true;
@@ -260,6 +264,7 @@ class Core
             if ($handle === false) {
                 return false;
             }
+
             fclose($handle);
 
             return true;
@@ -277,17 +282,20 @@ class Core
         if (!$filename || !file_exists($filename)) {
             return 0;
         }
+
         $size = filesize($filename);
         if ($size === false) {
             $filepointer = fopen($filename, 'rb');
             if (!$filepointer) {
                 return 0;
             }
+
             $offset = PHP_INT_MAX - 1;
             $size   = (float)$offset;
-            if (!fseek($filepointer, $offset)) {
+            if (fseek($filepointer, $offset) === 0) {
                 return 0;
             }
+
             $chunksize = 8192;
             while (!feof($filepointer)) {
                 $size += strlen((string)fread($filepointer, $chunksize));
@@ -310,10 +318,8 @@ class Core
         $lc_filename  = $filename;
         $site_charset = AmpConfig::get('site_charset', 'UTF-8');
         $lc_charset   = AmpConfig::get('lc_charset');
-        if ($lc_charset && $lc_charset != $site_charset) {
-            if (function_exists('iconv')) {
-                $lc_filename = iconv($site_charset, $lc_charset, $filename);
-            }
+        if ($lc_charset && $lc_charset != $site_charset && function_exists('iconv')) {
+            $lc_filename = iconv((string) $site_charset, (string) $lc_charset, $filename);
         }
 
         return $lc_filename ?: $filename;
@@ -326,12 +332,12 @@ class Core
      */
     public static function is_session_started(): bool
     {
-        if (php_sapi_name() !== 'cli') {
+        if (PHP_SAPI !== 'cli') {
             if (version_compare(phpversion(), '5.4.0', '>=')) {
                 return session_status() === PHP_SESSION_ACTIVE;
             }
 
-            return !(session_id() === '');
+            return session_id() !== '';
         }
 
         return false;
@@ -356,17 +362,15 @@ class Core
      */
     public static function requests_options(array $options = []): array
     {
-        if (!isset($options['proxy'])) {
-            if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
-                $proxy   = [];
-                $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
-                if (AmpConfig::get('proxy_user')) {
-                    $proxy[] = AmpConfig::get('proxy_user');
-                    $proxy[] = AmpConfig::get('proxy_pass');
-                }
-
-                $options['proxy'] = $proxy;
+        if (!isset($options['proxy']) && (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port'))) {
+            $proxy   = [];
+            $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
+            if (AmpConfig::get('proxy_user')) {
+                $proxy[] = AmpConfig::get('proxy_user');
+                $proxy[] = AmpConfig::get('proxy_pass');
             }
+
+            $options['proxy'] = $proxy;
         }
 
         return $options;
@@ -380,9 +384,10 @@ class Core
         if (AmpConfig::get('tmp_dir_path')) {
             return rtrim((string)AmpConfig::get('tmp_dir_path'), DIRECTORY_SEPARATOR);
         }
+
         if (function_exists('sys_get_temp_dir')) {
             $tmp_dir = sys_get_temp_dir();
-        } elseif (strpos(PHP_OS, 'WIN') === 0) {
+        } elseif (str_starts_with(PHP_OS, 'WIN')) {
             $tmp_dir = $_ENV['TMP'];
             if (!isset($tmp_dir)) {
                 $tmp_dir = 'C:\Windows\Temp';

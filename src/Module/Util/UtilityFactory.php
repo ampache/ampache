@@ -33,22 +33,13 @@ use Psr\Log\LoggerInterface;
 /**
  * Factory to create utility classes like Mailer
  */
-final class UtilityFactory implements UtilityFactoryInterface
+final readonly class UtilityFactory implements UtilityFactoryInterface
 {
-    private UserRepositoryInterface $userRepository;
-
-    private ConfigContainerInterface $configContainer;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        UserRepositoryInterface $userRepository,
-        ConfigContainerInterface $configContainer,
-        LoggerInterface $logger,
+        private UserRepositoryInterface $userRepository,
+        private ConfigContainerInterface $configContainer,
+        private LoggerInterface $logger,
     ) {
-        $this->userRepository  = $userRepository;
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
     }
 
     public function createMailer(): MailerInterface

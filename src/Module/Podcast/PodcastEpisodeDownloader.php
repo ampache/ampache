@@ -39,26 +39,14 @@ use Psr\Log\LoggerInterface;
 /**
  * Downloads podcast episode-files and update media information
  */
-final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterface
+final readonly class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterface
 {
-    private PodcastFolderProviderInterface $podcastFolderProvider;
-
-    private WebFetcherInterface $webFetcher;
-
-    private PodcastRepositoryInterface $podcastRepository;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        PodcastFolderProviderInterface $podcastFolderProvider,
-        WebFetcherInterface $webFetcher,
-        PodcastRepositoryInterface $podcastRepository,
-        LoggerInterface $logger,
+        private PodcastFolderProviderInterface $podcastFolderProvider,
+        private WebFetcherInterface $webFetcher,
+        private PodcastRepositoryInterface $podcastRepository,
+        private LoggerInterface $logger,
     ) {
-        $this->podcastFolderProvider = $podcastFolderProvider;
-        $this->webFetcher            = $webFetcher;
-        $this->podcastRepository     = $podcastRepository;
-        $this->logger                = $logger;
     }
 
     /**
@@ -147,13 +135,14 @@ final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterfac
             );
 
             // file is null until it's downloaded
-            if (empty($episode->file)) {
+            if (in_array($episode->file, [null, '', '0'], true)) {
                 $episode->file    = $destinationFilePath;
                 $episode->type    = $extension ?? '';
                 $episode->mime    = Song::type_to_mime($episode->type);
                 $episode->enabled = true;
                 Podcast_Episode::update_file($destinationFilePath, $episodeId);
             }
+
             Catalog::update_media_from_tags($episode);
 
             return;

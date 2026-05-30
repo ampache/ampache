@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog;
 
+use Ampache\Module\Catalog\Exception\CatalogLoadingException;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 
@@ -39,7 +40,7 @@ final class CatalogLoader implements CatalogLoaderInterface
     {
         $catalog = Catalog::create_from_id($catalogId);
         if ($catalog === null) {
-            throw new Exception\CatalogLoadingException();
+            throw new CatalogLoadingException();
         }
 
         return $catalog;

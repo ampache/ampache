@@ -37,16 +37,14 @@ use function DI\factory;
 use Psr\Container\ContainerInterface;
 
 return [
-    AuthenticationManagerInterface::class => factory(static function (ContainerInterface $dic): AuthenticationManagerInterface {
-        return new AuthenticationManager(
-            $dic->get(ConfigContainerInterface::class),
-            [
-                'mysql' => $dic->get(DatabaseAuthenticator::class),
-                'pam' => $dic->get(PamAuthenticator::class),
-                'external' => $dic->get(ExternalAuthenticator::class),
-                'http' => $dic->get(HttpAuthenticator::class),
-                'ldap' => $dic->get(LdapAuthenticator::class),
-            ]
-        );
-    }),
+    AuthenticationManagerInterface::class => factory(static fn (ContainerInterface $dic): AuthenticationManagerInterface => new AuthenticationManager(
+        $dic->get(ConfigContainerInterface::class),
+        [
+            'mysql' => $dic->get(DatabaseAuthenticator::class),
+            'pam' => $dic->get(PamAuthenticator::class),
+            'external' => $dic->get(ExternalAuthenticator::class),
+            'http' => $dic->get(HttpAuthenticator::class),
+            'ldap' => $dic->get(LdapAuthenticator::class),
+        ]
+    )),
 ];

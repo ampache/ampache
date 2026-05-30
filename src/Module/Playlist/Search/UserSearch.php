@@ -59,12 +59,14 @@ final class UserSearch implements SearchInterface
             if ($type === null) {
                 continue;
             }
+
             foreach ($search->basetypes[$type] as $baseOperator) {
                 if ($baseOperator['name'] == $rule[1]) {
                     $operator = $baseOperator;
                     break;
                 }
             }
+
             $input        = $search->filter_data((string)$rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
@@ -73,8 +75,9 @@ final class UserSearch implements SearchInterface
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
                         $where[] = "NOT (`user`.`username` SOUNDS LIKE ?)";
                     } else {
-                        $where[] = "`user`.`username` $operator_sql ?";
+                        $where[] = sprintf('`user`.`username` %s ?', $operator_sql);
                     }
+
                     $parameters[] = $input;
                     break;
                 default:
@@ -83,7 +86,7 @@ final class UserSearch implements SearchInterface
             } // switch on ruletype
         } // foreach rule
 
-        $where_sql = implode(" $sql_logic_operator ", $where);
+        $where_sql = implode(sprintf(' %s ', $sql_logic_operator), $where);
         ksort($table);
 
         return [

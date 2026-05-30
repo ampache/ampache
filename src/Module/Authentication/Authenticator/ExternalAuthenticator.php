@@ -61,6 +61,7 @@ final class ExternalAuthenticator implements AuthenticatorInterface
             if ($stderr = fread($pipes[2], 8192)) {
                 debug_event(self::class, "external_auth fread error: " . $stderr, 3);
             }
+
             fclose($pipes[2]);
         } else {
             return [
@@ -69,7 +70,7 @@ final class ExternalAuthenticator implements AuthenticatorInterface
             ];
         }
 
-        if (proc_close($proc) == 0) {
+        if (proc_close($proc) === 0) {
             return [
                 'success' => true,
                 'type' => 'external',

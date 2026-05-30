@@ -30,8 +30,6 @@ use Ampache\Module\System\Session;
 
 class UPnPPlaylist
 {
-    private string $_deviceGUID;
-
     /** @var array<int, array{name: string, link: string}> $_songs */
     private array $_songs = [];
 
@@ -41,9 +39,8 @@ class UPnPPlaylist
      * UPnPPlaylist constructor.
      * Playlist is its own for each UPnP device
      */
-    public function __construct(string $deviceGUID)
+    public function __construct(private readonly string $_deviceGUID)
     {
-        $this->_deviceGUID = $deviceGUID;
         $this->PlayListRead();
         if (!is_array($this->_songs)) {
             $this->Clear();

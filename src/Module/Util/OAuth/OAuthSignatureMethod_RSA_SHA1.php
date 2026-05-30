@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util\OAuth;
 
+use Override;
+
 /**
  * The RSA-SHA1 signature method uses the RSASSA-PKCS1-v1_5 signature algorithm as defined in
  * [RFC3447] section 8.2 (more simply known as PKCS#1), using SHA-1 as the hash function for
@@ -79,12 +81,12 @@ abstract class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod
         }
 
         // Sign using the key
-        $okay = openssl_sign($base_string, $signature, $privatekeyid);
+        openssl_sign($base_string, $signature, $privatekeyid);
 
         // Release the key resource
         openssl_free_key($privatekeyid);
 
-        return base64_encode($signature);
+        return base64_encode((string) $signature);
     }
 
     /**
@@ -93,6 +95,7 @@ abstract class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod
      * @param OAuthToken $token
      * @param string $signature
      */
+    #[Override]
     public function check_signature($request, $consumer, $token, $signature): bool
     {
         $decoded_sig = base64_decode($signature);

@@ -28,6 +28,7 @@ namespace Ampache\Module\Album\Export\Writer;
 final class MetadataWriterTypeEnum
 {
     public const string EXPORT_DRIVER_WINDOWS = 'windows';
+
     public const string EXPORT_DRIVER_LINUX   = 'linux';
 
     public const array MAP = [

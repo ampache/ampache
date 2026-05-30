@@ -27,14 +27,14 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Song\SongFilesystemCleanupInterface;
+use Override;
 
 final class SongCleanupCommand extends Command
 {
-    private SongFilesystemCleanupInterface $songFilesystemCleanup;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -42,11 +42,9 @@ final class SongCleanupCommand extends Command
     }
 
     public function __construct(
-        SongFilesystemCleanupInterface $songFilesystemCleanup,
+        private readonly SongFilesystemCleanupInterface $songFilesystemCleanup,
     ) {
         parent::__construct('cleanup:songs', T_('Delete disabled songs'));
-
-        $this->songFilesystemCleanup = $songFilesystemCleanup;
 
         $this
             ->option('-d|--delete', T_('Disables dry-run'), 'boolval', false)
@@ -74,6 +72,7 @@ final class SongCleanupCommand extends Command
                 true
             );
         }
+
         foreach ($result as $file_name) {
             $interactor->white(
                 $file_name,

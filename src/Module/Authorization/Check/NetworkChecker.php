@@ -32,18 +32,12 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\AccessRepositoryInterface;
 
-final class NetworkChecker implements NetworkCheckerInterface
+final readonly class NetworkChecker implements NetworkCheckerInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private AccessRepositoryInterface $accessRepository;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        AccessRepositoryInterface $accessRepository,
+        private ConfigContainerInterface $configContainer,
+        private AccessRepositoryInterface $accessRepository,
     ) {
-        $this->configContainer  = $configContainer;
-        $this->accessRepository = $accessRepository;
     }
 
     /**

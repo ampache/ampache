@@ -36,12 +36,8 @@ use PDOStatement;
 
 final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalogInterface
 {
-    private CatalogGarbageCollectorInterface $catalogGarbageCollector;
-
-    public function __construct(
-        CatalogGarbageCollectorInterface $catalogGarbageCollector,
-    ) {
-        $this->catalogGarbageCollector = $catalogGarbageCollector;
+    public function __construct(private readonly CatalogGarbageCollectorInterface $catalogGarbageCollector)
+    {
     }
 
     public function update(
@@ -61,7 +57,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         ?int $limit,
     ): void {
         $start_time = time();
-        if ($deactivateMemoryLimit === true) {
+        if ($deactivateMemoryLimit) {
             // Temporarily deactivate PHP memory limit
             echo "\033[31m- " . T_("Deactivated PHP memory limit") . " -\033[0m\n";
             ini_set('memory_limit', '-1');
@@ -85,6 +81,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             $catalogType = '';
             $catalogName = '';
         }
+
         $db_results   = $this->lookupCatalogs($catalogType, $catalogName);
         $external     = false;
         $changed      = 0;
@@ -96,20 +93,22 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             if ($catalog === null) {
                 break;
             }
+
             /* HINT: Catalog Name */
             $interactor->info(
                 sprintf(T_('Reading Catalog: "%s"'), $catalog->name),
                 true
             );
-            if (isset($catalog->path) && !Core::is_readable($catalog->path)) {
+            if (property_exists($catalog, 'path') && $catalog->path !== null && !Core::is_readable($catalog->path)) {
                 $interactor->error(
                     T_('Catalog root unreadable, stopping check'),
                     true
                 );
                 break;
             }
+
             $interactor->eol();
-            if ($missing === true) {
+            if ($missing) {
                 ob_start();
 
                 $interactor->info(
@@ -138,7 +137,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
             } else {
-                if ($cleanup === true) {
+                if ($cleanup) {
                     ob_start();
                     // Clean out dead files
                     $interactor->info(
@@ -160,7 +159,8 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         true
                     );
                 }
-                if ($addNew === true || $importPlaylists === true) {
+
+                if ($addNew || $importPlaylists) {
                     ob_start();
 
                     // Look for new files
@@ -183,7 +183,8 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         true
                     );
                 }
-                if ($verification === true) {
+
+                if ($verification) {
                     ob_start();
 
                     // Verify Existing
@@ -207,7 +208,8 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     );
                 }
             }
-            if ($addArt === true) {
+
+            if ($addArt) {
                 ob_start();
 
                 // Look for media art
@@ -230,7 +232,8 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
             }
-            if ($updateInfo === true && !$external) {
+
+            if ($updateInfo && !$external) {
                 ob_start();
 
                 // only update from external metadata once.
@@ -276,16 +279,19 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         true
                     );
                 }
+
                 $interactor->info(
                     '------------------',
                     true
                 );
             }
-            if (!in_array($catalog->gather_types, $gather_types)) {
+
+            if (!in_array($catalog->gather_types, $gather_types, true)) {
                 $gather_types[] = $catalog->gather_types;
             }
         }
-        if ($collectGarbage === true || (($cleanup === true || $verification === true) && $changed > 0)) {
+
+        if ($collectGarbage || (($cleanup || $verification) && $changed > 0)) {
             $interactor->info(
                 T_('Garbage Collection'),
                 true
@@ -299,7 +305,8 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 true
             );
         }
-        if ($changed > 0 || ($collectGarbage === true && $missing !== true)) {
+
+        if ($changed > 0 || ($collectGarbage && !$missing)) {
             $interactor->info(
                 T_('Update table mapping, counts and delete garbage data'),
                 true
@@ -319,13 +326,15 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         break;
                 }
             }
+
             Catalog::garbage_collect_filters();
             $interactor->info(
                 '------------------',
                 true
             );
         }
-        if ($optimizeDatabase === true) {
+
+        if ($optimizeDatabase) {
             ob_start();
 
             // Optimize Database Tables
@@ -349,6 +358,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 true
             );
         }
+
         $time_diff = time() - $start_time;
         $interactor->info(
             T_('Time') . ": " . date('i:s', $time_diff),
@@ -367,6 +377,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             $newPath     = $catalogType;
             $catalogType = 'local';
         }
+
         $result = $this->lookupCatalogs(
             $catalogType,
             $catalogName
@@ -374,7 +385,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         // trim everything
         $newPath = rtrim(trim((string)$newPath), "/");
 
-        if (!is_dir((string)$newPath)) {
+        if (!is_dir($newPath)) {
             $interactor->error(
                 T_('The new path is invalid'),
                 true
@@ -388,6 +399,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             if ($catalog === null) {
                 break;
             }
+
             /* HINT: Catalog Name */
             $interactor->info(
                 sprintf(T_('Reading Catalog: "%s"'), $catalog->name),
@@ -404,7 +416,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             $interactor->eol(2);
 
             // Migrate a catalog from the current path to a new one.
-            if (isset($catalog->path)) {
+            if (property_exists($catalog, 'path') && $catalog->path !== null) {
                 if ($catalog->move_catalog_proc($newPath)) {
                     $interactor->info(
                         sprintf('- %s -', T_('The Catalog path has changed')),
@@ -422,6 +434,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
             }
+
             $interactor->info(
                 '------------------',
                 true
@@ -434,12 +447,12 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         ?string $catalogName,
     ): PDOStatement|null {
         $where = sprintf(
-            'catalog_type = \'%s\'',
+            "catalog_type = '%s'",
             Dba::escape($catalogType)
         );
         if ($catalogName !== null) {
             $where = sprintf(
-                '%s AND `name` = \'%s\'',
+                "%s AND `name` = '%s'",
                 $where,
                 Dba::escape($catalogName)
             );

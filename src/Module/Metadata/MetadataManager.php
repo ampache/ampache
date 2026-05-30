@@ -45,20 +45,11 @@ final class MetadataManager implements MetadataManagerInterface
      */
     private ?array $disabledMetadataFields = null;
 
-    private MetadataRepositoryInterface $metadataRepository;
-
-    private MetadataFieldRepositoryInterface $metadataFieldRepository;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        MetadataRepositoryInterface $metadataRepository,
-        MetadataFieldRepositoryInterface $metadataFieldRepository,
-        ConfigContainerInterface $configContainer,
+        private readonly MetadataRepositoryInterface $metadataRepository,
+        private readonly MetadataFieldRepositoryInterface $metadataFieldRepository,
+        private readonly ConfigContainerInterface $configContainer,
     ) {
-        $this->metadataRepository      = $metadataRepository;
-        $this->metadataFieldRepository = $metadataFieldRepository;
-        $this->configContainer         = $configContainer;
     }
 
     /**

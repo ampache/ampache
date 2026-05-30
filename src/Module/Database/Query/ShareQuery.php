@@ -101,30 +101,16 @@ final class ShareQuery implements QueryInterface
      */
     public function get_sql_sort($query, $field, $order): string
     {
-        switch ($field) {
-            case 'object':
-                $sql = "`share`.`object_type`, `share`.`object.id`";
-                break;
-            case 'allow_download':
-            case 'allow_stream':
-            case 'counter':
-            case 'creation_date':
-            case 'expire':
-            case 'id':
-            case 'lastvisit_date':
-            case 'max_counter':
-            case 'object_type':
-            case 'user':
-                $sql = "`share`.`$field`";
-                break;
-            default:
-                $sql = '';
-        }
+        $sql = match ($field) {
+            'object' => "`share`.`object_type`, `share`.`object.id`",
+            'allow_download', 'allow_stream', 'counter', 'creation_date', 'expire', 'id', 'lastvisit_date', 'max_counter', 'object_type', 'user' => sprintf('`share`.`%s`', $field),
+            default => '',
+        };
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

@@ -29,14 +29,10 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\SongRepositoryInterface;
 
-final class ItunesExporter implements CatalogExporterInterface
+final readonly class ItunesExporter implements CatalogExporterInterface
 {
-    private SongRepositoryInterface $songRepository;
-
-    public function __construct(
-        SongRepositoryInterface $songRepository,
-    ) {
-        $this->songRepository = $songRepository;
+    public function __construct(private SongRepositoryInterface $songRepository)
+    {
     }
 
     /**
@@ -88,6 +84,7 @@ final class ItunesExporter implements CatalogExporterInterface
 
             echo xoutput_from_array($xml, true, 'itunes');
         }
+
         echo "      </dict>\n" .
             "</dict>\n" .
             "</plist>\n";

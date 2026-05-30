@@ -33,18 +33,12 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 
-final class PrivilegeChecker implements PrivilegeCheckerInterface
+final readonly class PrivilegeChecker implements PrivilegeCheckerInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
     ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
     }
 
     /**
@@ -58,7 +52,7 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
         AccessLevelEnum $level,
         ?int $userId = null,
     ): bool {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return true;
         }
 

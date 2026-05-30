@@ -25,25 +25,21 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util\OAuth;
 
+use Stringable;
+
 /**
  * Class OAuthToken
  */
-class OAuthToken
+class OAuthToken implements Stringable
 {
-    // access tokens and request tokens
-    public $key;
-    public $secret;
-
     /**
      * key = the token
      * secret = the token secret
      */
     public function __construct(
-        $key,
-        $secret,
+        public $key,
+        public $secret,
     ) {
-        $this->key    = $key;
-        $this->secret = $secret;
     }
 
     /**

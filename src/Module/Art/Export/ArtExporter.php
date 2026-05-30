@@ -28,6 +28,8 @@ namespace Ampache\Module\Art\Export;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Art\Export;
+use Ampache\Module\Art\Export\Exception\ArtExportException;
+use Ampache\Module\Art\Export\Writer\MetadataWriterInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\ImageRepositoryInterface;
 use Ampache\Repository\Model\Art;
@@ -37,27 +39,18 @@ use Psr\Log\LoggerInterface;
  * This runs through all of the images and tries to
  * export all database art to local_metadata_dir
  */
-final class ArtExporter implements ArtExporterInterface
+final readonly class ArtExporter implements ArtExporterInterface
 {
-    private LoggerInterface $logger;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ImageRepositoryInterface $imageRepository;
-
     public function __construct(
-        LoggerInterface $logger,
-        ConfigContainerInterface $configContainer,
-        ImageRepositoryInterface $imageRepository,
+        private LoggerInterface $logger,
+        private ConfigContainerInterface $configContainer,
+        private ImageRepositoryInterface $imageRepository,
     ) {
-        $this->logger          = $logger;
-        $this->configContainer = $configContainer;
-        $this->imageRepository = $imageRepository;
     }
 
     public function export(
         Interactor $interactor,
-        Writer\MetadataWriterInterface $metadataWriter,
+        MetadataWriterInterface $metadataWriter,
         bool $clearData,
     ): void {
         if ($clearData && !$this->configContainer->get('album_art_store_disk')) {
@@ -71,6 +64,7 @@ final class ArtExporter implements ArtExporterInterface
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
+
         // Get all of the art items with an image
         $images = $this->imageRepository->findAllImage();
         $count  = 0;
@@ -89,19 +83,21 @@ final class ArtExporter implements ArtExporterInterface
             $filename  = 'art-' . $artSize . '.' . $extension;
             $folder    = Art::get_dir_on_disk($artType, $artId, $artSize, $artKind, true);
             if (!$folder) {
-                throw new Export\Exception\ArtExportException(
+                throw new ArtExportException(
                     T_('local_metadata_dir setting is required to store art on disk')
                 );
             }
+
             $target_file = $folder . $filename;
             $file_handle = fopen($target_file, 'w');
             $is_file     = is_file($target_file);
             if (!$is_file) {
                 if ($file_handle === false) {
-                    throw new Export\Exception\ArtExportException(
+                    throw new ArtExportException(
                         sprintf(T_('Unable to open `%s` for writing'), $target_file)
                     );
                 }
+
                 $write_result = fwrite(
                     $file_handle,
                     (string) $this->imageRepository->getRawImage($artId, $artType, $artSize, $artMime)
@@ -109,19 +105,20 @@ final class ArtExporter implements ArtExporterInterface
                 fclose($file_handle);
 
                 if ($write_result === false) {
-                    throw new Export\Exception\ArtExportException(
+                    throw new ArtExportException(
                         sprintf(T_('Unable to write to `%s`'), $target_file)
                     );
                 }
 
                 $count++;
-                if (!($count % 100)) {
+                if ($count % 100 === 0) {
                     $interactor->info(
                         sprintf(T_('Art files written: %d'), $count),
                         true
                     );
                 }
             }
+
             // require a really good reason to clear this art
             if ($clearData && $is_file) {
                 //The file is out so clear the table as well

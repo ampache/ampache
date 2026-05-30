@@ -27,14 +27,14 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Catalog\Update\UpdateCatalogInterface;
+use Override;
 
 final class MoveCatalogPathCommand extends Command
 {
-    private UpdateCatalogInterface $updateCatalog;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -42,11 +42,9 @@ final class MoveCatalogPathCommand extends Command
     }
 
     public function __construct(
-        UpdateCatalogInterface $updateCatalog,
+        private readonly UpdateCatalogInterface $updateCatalog,
     ) {
         parent::__construct('run:moveCatalogPath', T_('Change a Catalog path'));
-
-        $this->updateCatalog = $updateCatalog;
 
         $this
             ->argument('[catalogName]', T_('The name of the catalog to update'))

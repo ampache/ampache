@@ -29,16 +29,14 @@ use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Database\DatabaseCharsetUpdaterInterface;
 use Ampache\Module\System\Dba;
+use Override;
 
 final class UpdateDbCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
-    private DatabaseCharsetUpdaterInterface $databaseCharsetUpdater;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -46,13 +44,10 @@ final class UpdateDbCommand extends Command
     }
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        DatabaseCharsetUpdaterInterface $databaseCharsetUpdater,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly DatabaseCharsetUpdaterInterface $databaseCharsetUpdater,
     ) {
         parent::__construct('run:updateDb', T_('Update the database collation and charset'));
-
-        $this->configContainer        = $configContainer;
-        $this->databaseCharsetUpdater = $databaseCharsetUpdater;
 
         $this
             ->option('-x|--execute', T_('Disables dry-run'), 'boolval', false)
@@ -90,7 +85,7 @@ final class UpdateDbCommand extends Command
             true
         );
 
-        if ($dryRun === true) {
+        if ($dryRun) {
             $interactor->info(
                 T_('Running in Test Mode. Use -x to execute'),
                 true

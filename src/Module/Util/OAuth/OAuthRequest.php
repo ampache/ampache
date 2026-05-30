@@ -26,35 +26,40 @@ declare(strict_types=0);
 namespace Ampache\Module\Util\OAuth;
 
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\OAuth\Exception\OAuthException;
+use Stringable;
 
 /**
  * Class OAuthRequest
  */
-class OAuthRequest
+class OAuthRequest implements Stringable
 {
     protected $parameters;
-    protected $http_method;
+
     protected $http_url;
+
     // for debug purposes
     public $base_string;
+
     public static $version    = '1.0';
+
     public static $POST_INPUT = 'php://input';
 
     /**
      * OAuthRequest constructor.
      */
     public function __construct(
-        $http_method,
+        protected $http_method,
         $http_url,
         $parameters = null,
     ) {
         $parameters = $parameters ?: [];
         $parameters = array_merge(OAuthUtil::parse_parameters(parse_url(
-            $http_url,
+            (string) $http_url,
             PHP_URL_QUERY
         )), $parameters);
         $this->parameters  = $parameters;
-        $this->http_method = $http_method;
+
         $this->http_url    = $http_url;
     }
 
@@ -68,7 +73,7 @@ class OAuthRequest
      */
     public static function from_request($http_method = null, $http_url = null, $parameters = null)
     {
-        $scheme      = (!isset($_SERVER['HTTPS']) || Core::get_server('HTTPS') != "on") ? 'http' : 'https';
+        $scheme      = (!isset($_SERVER['HTTPS']) || Core::get_server('HTTPS') !== "on") ? 'http' : 'https';
         $http_url    = $http_url ?: $scheme . '://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
         $http_method = $http_method ?: $_SERVER['REQUEST_METHOD'];
 
@@ -92,7 +97,7 @@ class OAuthRequest
 
             // We have a Authorization-header with OAuth data. Parse the header
             // and add those overriding any duplicates from GET or POST
-            if (isset($request_headers['Authorization']) && substr($request_headers['Authorization'], 0, 6) == 'OAuth ') {
+            if (isset($request_headers['Authorization']) && str_starts_with($request_headers['Authorization'], 'OAuth ')) {
                 $header_parameters = OAuthUtil::split_header($request_headers['Authorization']);
                 $parameters        = array_merge($parameters, $header_parameters);
             }
@@ -215,7 +220,7 @@ class OAuthRequest
      */
     public function get_normalized_http_method(): string
     {
-        return strtoupper($this->http_method);
+        return strtoupper((string) $this->http_method);
     }
 
     /**
@@ -224,18 +229,18 @@ class OAuthRequest
      */
     public function get_normalized_http_url(): string
     {
-        $parts = parse_url($this->http_url);
+        $parts = parse_url((string) $this->http_url);
 
-        $scheme = (isset($parts['scheme'])) ? $parts['scheme'] : 'http';
-        $port   = (isset($parts['port'])) ? $parts['port'] : (($scheme == 'https') ? '443' : '80');
+        $scheme = $parts['scheme'] ?? 'http';
+        $port   = $parts['port'] ?? (($scheme == 'https') ? '443' : '80');
         $host   = (isset($parts['host'])) ? strtolower($parts['host']) : '';
-        $path   = (isset($parts['path'])) ? $parts['path'] : '';
+        $path   = $parts['path'] ?? '';
 
         if (($scheme == 'https' && $port != '443') || ($scheme == 'http' && $port != '80')) {
-            $host = "$host:$port";
+            $host = sprintf('%s:%s', $host, $port);
         }
 
-        return "$scheme://$host$path";
+        return sprintf('%s://%s%s', $scheme, $host, $path);
     }
 
     /**
@@ -245,7 +250,7 @@ class OAuthRequest
     {
         $post_data = $this->to_postdata();
         $out       = $this->get_normalized_http_url();
-        if ($post_data) {
+        if ($post_data !== '' && $post_data !== '0') {
             $out .= '?' . $post_data;
         }
 
@@ -275,12 +280,14 @@ class OAuthRequest
         }
 
         foreach ($this->parameters as $key => $value) {
-            if (substr($key, 0, 5) != "oauth") {
+            if (!str_starts_with((string) $key, "oauth")) {
                 continue;
             }
+
             if (is_array($value)) {
-                throw new Exception\OAuthException('Arrays not supported in headers');
+                throw new OAuthException('Arrays not supported in headers');
             }
+
             $out .= ($first) ? ' ' : ', ';
             $out .= OAuthUtil::urlencode_rfc3986($key) . '="' . OAuthUtil::urlencode_rfc3986($value) . '"';
             $first = false;

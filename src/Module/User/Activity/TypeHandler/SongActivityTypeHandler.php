@@ -26,10 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Module\User\Activity\TypeHandler;
 
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Override;
 
 final class SongActivityTypeHandler extends GenericActivityTypeHandler
 {
-    private UserActivityRepositoryInterface $userActivityRepository;
+    private readonly UserActivityRepositoryInterface $userActivityRepository;
 
     public function __construct(
         UserActivityRepositoryInterface $userActivityRepository,
@@ -39,6 +40,7 @@ final class SongActivityTypeHandler extends GenericActivityTypeHandler
         $this->userActivityRepository = $userActivityRepository;
     }
 
+    #[Override]
     public function registerActivity(
         int $objectId,
         string $objectType,

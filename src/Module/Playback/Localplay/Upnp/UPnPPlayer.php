@@ -151,7 +151,7 @@ class UPnPPlayer
         if ($responseXML instanceof SimpleXMLElement) {
             $xpath = $responseXML->xpath('//CurrentTransportState');
             if (is_array($xpath)) {
-                list($state) = $xpath;
+                [$state] = $xpath;
             }
         }
 
@@ -171,7 +171,8 @@ class UPnPPlayer
         if (!$forcePlay) {
             $this->ReadIndState();
         }
-        if (($forcePlay || ($this->_intState == 1)) && ($this->Playlist()->Next())) {
+
+        if (($forcePlay || ($this->_intState === 1)) && ($this->Playlist()->Next())) {
             $this->Play();
 
             return true;
@@ -217,7 +218,7 @@ class UPnPPlayer
         }
 
         $songUrl = $song['link'];
-        $songId  = (int)preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', $songUrl);
+        $songId  = (int)preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', (string) $songUrl);
 
         $song     = new Song($songId);
         $songItem = Upnp_Api::_itemSong($song, '');
@@ -270,14 +271,15 @@ class UPnPPlayer
         } else {
             $item = $this->Playlist()->CurrentItem();
         }
+
         $currentSongArgs = $this->prepareURIRequest($item, "Current") ?? [];
-        $response        = $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
+        $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
 
         $args = [
             'InstanceID' => 0,
             'Speed' => 1,
         ];
-        $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
+        $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
 
         //!! UPNP subscription work not for all renderers, and works strange
         //!! so now is not used
@@ -298,7 +300,7 @@ class UPnPPlayer
     public function Stop(): bool
     {
         $this->SetIntState(0);
-        $response = $this->Device()->instanceOnly('Stop');
+        $this->Device()->instanceOnly('Stop');
 
         //!! UPNP subscription work not for all renderers, and works strange
         //!! so now is not used
@@ -418,7 +420,7 @@ class UPnPPlayer
         if ($responseXML instanceof SimpleXMLElement) {
             $xpath = $responseXML->xpath('//CurrentVolume');
             if (is_array($xpath)) {
-                list($volume) = $xpath;
+                [$volume] = $xpath;
             }
         }
 
@@ -438,6 +440,7 @@ class UPnPPlayer
         } else {
             Session::write($sid, $data);
         }
+
         debug_event(self::class, 'SetIntState:' . $this->_intState, 5);
     }
 

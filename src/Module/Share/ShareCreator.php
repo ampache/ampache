@@ -42,18 +42,12 @@ use Psr\Log\LoggerInterface;
 /**
  * Creates new sharing items
  */
-final class ShareCreator implements ShareCreatorInterface
+final readonly class ShareCreator implements ShareCreatorInterface
 {
-    private PluginRetrieverInterface $pluginRetriever;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        PluginRetrieverInterface $pluginRetriever,
-        LoggerInterface $logger,
+        private PluginRetrieverInterface $pluginRetriever,
+        private LoggerInterface $logger,
     ) {
-        $this->pluginRetriever = $pluginRetriever;
-        $this->logger          = $logger;
     }
 
     public function create(
@@ -103,6 +97,7 @@ final class ShareCreator implements ShareCreatorInterface
                 $description = $albumdisk->get_fullname() . ' (' . $albumdisk->get_artist_fullname() . ')';
             }
         }
+
         $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = [
             $user->getId(),
@@ -126,11 +121,10 @@ final class ShareCreator implements ShareCreatorInterface
         foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::URL_SHORTENER, $user) as $plugin) {
             try {
 
-                /** @var string|null $short_url */
                 $short_url = ($plugin->_plugin instanceof PluginShortenerInterface)
                     ? $plugin->_plugin->shortener($url)
                     : null;
-                if (!empty($short_url)) {
+                if (!in_array($short_url, [null, '', '0'], true)) {
                     $url = $short_url;
                     break;
                 }

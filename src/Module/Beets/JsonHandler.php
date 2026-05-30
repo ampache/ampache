@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Beets;
 
+use Override;
+
 /**
  * Parse Json while loading and create the songs
  *
@@ -32,18 +34,18 @@ namespace Ampache\Module\Beets;
  */
 class JsonHandler extends Handler
 {
-    protected string $uri;
-
     protected Catalog $handler;
 
     /**
      * Seperator between command and arguments
      */
+    #[Override]
     protected string $commandSeperator = '/';
 
     /**
      * Defines the differences between beets and ampache fields
      */
+    #[Override]
     protected array $fieldMapping = [
         'disc' => ['disk', '%d'],
         'length' => ['time', '%d'],
@@ -54,9 +56,8 @@ class JsonHandler extends Handler
     /**
      * JsonHandler constructor.
      */
-    public function __construct(string $uri)
+    public function __construct(protected string $uri)
     {
-        $this->uri = $uri;
     }
 
     /**
@@ -173,7 +174,7 @@ class JsonHandler extends Handler
             $this->uri,
             'item',
             $song['id'],
-            'file' . '#.' . strtolower($song['format']),
+            'file#.' . strtolower((string) $song['format']),
         ];
 
         return implode('/', $parts);

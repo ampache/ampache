@@ -28,14 +28,10 @@ namespace Ampache\Module\Playlist;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 
-final class PlaylistLoader implements PlaylistLoaderInterface
+final readonly class PlaylistLoader implements PlaylistLoaderInterface
 {
-    private ModelFactoryInterface $modelFactory;
-
-    public function __construct(
-        ModelFactoryInterface $modelFactory,
-    ) {
-        $this->modelFactory = $modelFactory;
+    public function __construct(private ModelFactoryInterface $modelFactory)
+    {
     }
 
     public function loadByUserId(int $userId): array

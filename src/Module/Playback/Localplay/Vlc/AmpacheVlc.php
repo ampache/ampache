@@ -93,13 +93,13 @@ class AmpacheVlc extends localplay_controller
         $sql = <<<SQL
             CREATE TABLE `localplay_vlc` (
                 `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                `name` VARCHAR(128) COLLATE $collation NOT NULL,
+                `name` VARCHAR(128) COLLATE {$collation} NOT NULL,
                 `owner` INT(11) NOT NULL,
-                `host` VARCHAR(255) COLLATE $collation NOT NULL,
+                `host` VARCHAR(255) COLLATE {$collation} NOT NULL,
                 `port` INT(11) UNSIGNED NOT NULL,
-                `password` VARCHAR(255) COLLATE $collation NOT NULL,
+                `password` VARCHAR(255) COLLATE {$collation} NOT NULL,
                 `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0'
-            ) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation
+            ) ENGINE = {$engine} DEFAULT CHARSET={$charset} COLLATE={$collation}
             SQL;
         Dba::query($sql);
 
@@ -200,13 +200,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function instance_fields(): array
     {
-        $fields             = [];
-        $fields['name']     = ['description' => T_('Instance Name'), 'type' => 'text'];
-        $fields['host']     = ['description' => T_('Hostname'), 'type' => 'text'];
-        $fields['port']     = ['description' => T_('Port'), 'type' => 'number'];
-        $fields['password'] = ['description' => T_('Password'), 'type' => 'password'];
-
-        return $fields;
+        return ['name' => ['description' => T_('Instance Name'), 'type' => 'text'], 'host' => ['description' => T_('Hostname'), 'type' => 'text'], 'port' => ['description' => T_('Port'), 'type' => 'number'], 'password' => ['description' => T_('Password'), 'type' => 'password']];
     }
 
     /**
@@ -253,6 +247,7 @@ class AmpacheVlc extends localplay_controller
         if (!$user instanceof User) {
             return false;
         }
+
         Preference::update(self::ACTIVE_PREF, $user->id, $uid);
         AmpConfig::set(self::ACTIVE_PREF, $uid, true);
         debug_event(self::class, 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
@@ -334,7 +329,7 @@ class AmpacheVlc extends localplay_controller
             return true;
         }
 
-        return (! ($this->_vlc->play() === null));
+        return ($this->_vlc->play() !== null);
     }
 
     /**
@@ -344,7 +339,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function stop(): bool
     {
-        return (! ($this->_vlc->stop() === null));
+        return ($this->_vlc->stop() !== null);
     }
 
     /**
@@ -361,6 +356,7 @@ class AmpacheVlc extends localplay_controller
                 if ($this->_vlc->skip($track['vlid']) === null) {
                     return false;
                 }
+
                 break;
             }
         }
@@ -391,7 +387,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function next(): bool
     {
-        return (! ($this->_vlc->next() === null));
+        return ($this->_vlc->next() !== null);
     }
 
     /**
@@ -400,7 +396,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function prev(): bool
     {
-        return (! ($this->_vlc->prev() === null));
+        return ($this->_vlc->prev() !== null);
     }
 
     /**
@@ -409,7 +405,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function pause(): bool
     {
-        return (! ($this->_vlc->pause() === null));
+        return ($this->_vlc->pause() !== null);
     }
 
     /**
@@ -428,7 +424,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function repeat(bool $state): bool
     {
-        return (! ($this->_vlc->repeat($state) === null));
+        return ($this->_vlc->repeat($state) !== null);
     }
 
     /**
@@ -437,7 +433,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function random(bool $state): bool
     {
-        return (! ($this->_vlc->random($state) === null));
+        return ($this->_vlc->random($state) !== null);
     }
 
     /**
@@ -466,7 +462,7 @@ class AmpacheVlc extends localplay_controller
         if (isset($list['node']['node'][0]['leaf'][$counter]['attr']['uri'])) {
             while (array_key_exists($counter, $list['node']['node'][0]['leaf'])) {
                 $songs[] = htmlspecialchars_decode(
-                    $list['node']['node'][0]['leaf'][$counter]['attr']['uri'],
+                    (string) $list['node']['node'][0]['leaf'][$counter]['attr']['uri'],
                     ENT_NOQUOTES
                 );
                 $song_id[] = $list['node']['node'][0]['leaf'][$counter]['attr']['id'];
@@ -480,7 +476,7 @@ class AmpacheVlc extends localplay_controller
             // look for songs when media library isn't used
             while ($list['node']['node']['leaf'][$counter]) {
                 $songs[] = htmlspecialchars_decode(
-                    $list['node']['node']['leaf'][$counter]['attr']['uri'],
+                    (string) $list['node']['node']['leaf'][$counter]['attr']['uri'],
                     ENT_NOQUOTES
                 );
                 $song_id[] = $list['node']['node']['leaf'][$counter]['attr']['id'];
@@ -516,7 +512,7 @@ class AmpacheVlc extends localplay_controller
                     $data['link'] = '';
                     break;
                 case 'random':
-                    $data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst($url_data['type']));
+                    $data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst((string) $url_data['type']));
                     $data['link'] = '';
                     break;
                 default:
@@ -527,8 +523,8 @@ class AmpacheVlc extends localplay_controller
                     $db_results = Dba::read($sql, [$filename]);
                     if ($row = Dba::fetch_assoc($db_results)) {
                         // if stream is known just send name
-                        $data['name'] = htmlspecialchars(substr($row['name'], 0, 50));
-                    } elseif (strncmp($entry, 'http', 4) == 0) {
+                        $data['name'] = htmlspecialchars(substr((string) $row['name'], 0, 50));
+                    } elseif (str_starts_with($entry, 'http')) {
                         // if it's a http stream not in ampacha's database just show the url'
                         $data['name'] = htmlspecialchars("(VLC stream) " . substr($entry, 0, 50));
                     } else {
@@ -536,7 +532,9 @@ class AmpacheVlc extends localplay_controller
                         $getlast      = explode('/', $entry);
                         $lastis       = count($getlast) - 1;
                         $data['name'] = htmlspecialchars("(VLC local) " . substr($getlast[$lastis], 0, 50));
-                    } // end if loop
+                    }
+
+                    // end if loop
                     break;
             } // end switch on primary key type
 
@@ -567,10 +565,13 @@ class AmpacheVlc extends localplay_controller
 
         if ($currentstat == 'playing') {
             $state = 'play';
-        } // change to something ampache understands
+        }
+
+        // change to something ampache understands
         if ($currentstat == 'stop') {
             $state = 'stop';
         }
+
         if ($currentstat == 'paused') {
             $state = 'pause';
         }
@@ -623,8 +624,8 @@ class AmpacheVlc extends localplay_controller
             $song = new Song($oid);
             if ($song->isNew()) {
                 // if not a known format
-                $array['track_title']  = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));
-                $array['track_artist'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
+                $array['track_title']  = htmlspecialchars(substr((string) $arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));
+                $array['track_artist'] = htmlspecialchars(substr((string) $arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
             } else {
                 $array['track_title']  = $song->title;
                 $array['track_artist'] = $song->get_artist_fullname();
@@ -652,6 +653,6 @@ class AmpacheVlc extends localplay_controller
         // Test our connection by retriving the version, no version in status file, just need to see if returned
         // Not yet working all values returned are true for beta testing purpose
 
-        return ($this->_vlc->version() !== false);
+        return ($this->_vlc->version());
     }
 }

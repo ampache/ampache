@@ -32,14 +32,10 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use WpOrg\Requests\Requests;
 
-final class GoogleCollectorModule implements CollectorModuleInterface
+final readonly class GoogleCollectorModule implements CollectorModuleInterface
 {
-    private LoggerInterface $logger;
-
-    public function __construct(
-        LoggerInterface $logger,
-    ) {
-        $this->logger = $logger;
+    public function __construct(private LoggerInterface $logger)
+    {
     }
 
     /**
@@ -62,7 +58,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
         int $limit = 5,
         array $data = [],
     ): array {
-        if (!$limit) {
+        if ($limit === 0) {
             $limit = 5;
         }
 
@@ -88,11 +84,12 @@ final class GoogleCollectorModule implements CollectorModuleInterface
             $query = Requests::get($url, $headers, Core::requests_options());
             $html  = $query->body;
 
-            if (preg_match_all('/"ou":"(http.+?)"/', $html, $matches, PREG_PATTERN_ORDER)) {
+            if (preg_match_all('/"ou":"(http.+?)"/', (string) $html, $matches, PREG_PATTERN_ORDER)) {
                 foreach ($matches[1] as $match) {
                     if (preg_match('/lookaside\.fbsbx\.com/', $match)) {
                         break;
                     }
+
                     $match = rawurldecode($match);
 
                     $this->logger->debug(
@@ -105,6 +102,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
                     if ($pos > 0) {
                         $results['extension'] = substr($test, 0, $pos);
                     }
+
                     if (preg_match('~[^png|^jpg|^jpeg|^jif|^bmp]~', $test)) {
                         $results['extension'] = 'jpg';
                     }
@@ -122,9 +120,9 @@ final class GoogleCollectorModule implements CollectorModuleInterface
                     }
                 }
             }
-        } catch (Exception $error) {
+        } catch (Exception $exception) {
             $this->logger->error(
-                'Error getting google images: ' . $error->getMessage(),
+                'Error getting google images: ' . $exception->getMessage(),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }

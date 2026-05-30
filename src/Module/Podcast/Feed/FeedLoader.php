@@ -35,14 +35,10 @@ use SimpleXMLElement;
 /**
  * Loads podcast feeds
  */
-final class FeedLoader implements FeedLoaderInterface
+final readonly class FeedLoader implements FeedLoaderInterface
 {
-    private WebFetcherInterface $webFetcher;
-
-    public function __construct(
-        WebFetcherInterface $webFetcher,
-    ) {
-        $this->webFetcher = $webFetcher;
+    public function __construct(private WebFetcherInterface $webFetcher)
+    {
     }
 
     /**
@@ -70,8 +66,8 @@ final class FeedLoader implements FeedLoaderInterface
 
         try {
             $xmlstr = $this->webFetcher->fetch($feedUrl);
-        } catch (FetchFailedException $error) {
-            throw new FeedLoadingException($error->getMessage());
+        } catch (FetchFailedException $fetchFailedException) {
+            throw new FeedLoadingException($fetchFailedException->getMessage(), $fetchFailedException->getCode(), $fetchFailedException);
         }
 
         $xml = simplexml_load_string($xmlstr);
@@ -80,6 +76,7 @@ final class FeedLoader implements FeedLoaderInterface
             // I've seems some &'s in feeds that screw up
             $xml = simplexml_load_string(str_replace('&', '&amp;', $xmlstr));
         }
+
         if ($xml === false) {
             throw new FeedLoadingException();
         }

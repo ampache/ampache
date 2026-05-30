@@ -117,16 +117,18 @@ class UPnPDevice
         if (!array_key_exists('host', $this->_settings) || !array_key_exists('controlURLs', $this->_settings)) {
             return '';
         }
+
         $body = '<?xml version="1.0" encoding="utf-8"?>';
         $body .= '<s:Envelope s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body>';
         $body .= '  <u:' . $method . ' xmlns:u="urn:schemas-upnp-org:service:' . $type . ':1">';
         foreach ($arguments as $arg => $value) {
             $body .= ' <' . $arg . '>' . $value . '</' . $arg . '>';
         }
+
         $body .= '  </u:' . $method . '>';
         $body .= '</s:Body></s:Envelope>';
 
-        $controlUrl = $this->_settings['host'] . ((substr($this->_settings['controlURLs'][$type], 0, 1) != '/') ? '/' : '') . $this->_settings['controlURLs'][$type];
+        $controlUrl = $this->_settings['host'] . ((str_starts_with($this->_settings['controlURLs'][$type], '/')) ? '' : '/') . $this->_settings['controlURLs'][$type];
 
         //!! TODO - need to use scheme in header ??
         $header = [
@@ -156,13 +158,13 @@ class UPnPDevice
         $tmp     = explode("\r\n\r\n", (string)$response);
 
         foreach ($tmp as $key => $value) {
-            if (substr($value, 0, 8) == 'HTTP/1.1') {
+            if (str_starts_with($value, 'HTTP/1.1')) {
                 $headers[] = $value;
                 unset($tmp[$key]);
             }
         }
 
-        return join("\r\n", $tmp);
+        return implode("\r\n", $tmp);
     }
 
     /**

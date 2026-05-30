@@ -103,7 +103,7 @@ final class ZipHandler implements ZipHandlerInterface
 
         $arc = new ZipArchive();
         $arc->open($this->zipFile, ZipArchive::CREATE);
-        if (!empty($comment)) {
+        if ($comment !== '' && $comment !== '0') {
             $arc->setArchiveComment($comment);
         }
 
@@ -115,6 +115,7 @@ final class ZipHandler implements ZipHandlerInterface
                 if (!is_file($file)) {
                     continue;
                 }
+
                 $dirname = ($flat_path)
                     ? $archiveName
                     : dirname($file);
@@ -126,14 +127,16 @@ final class ZipHandler implements ZipHandlerInterface
                 $arc->addFile($file, $folder . DIRECTORY_SEPARATOR . basename($file));
             }
         }
+
         if (
-            $addart === true &&
-            !empty($folder) &&
+            $addart &&
+            ($folder !== '' && $folder !== '0') &&
             is_file($artpath)
         ) {
             $arc->addFile($artpath, $folder . DIRECTORY_SEPARATOR . $art_name);
         }
-        if (!empty($playlist) && !empty($folder)) {
+
+        if ($playlist !== '' && $playlist !== '0' && ($folder !== '' && $folder !== '0')) {
             $arc->addEmptyDir($folder, ZipArchive::CREATE);
             $arc->addFromString($archiveName . ".m3u", $playlist);
         }
@@ -155,8 +158,8 @@ final class ZipHandler implements ZipHandlerInterface
             try {
                 // close stream resource first (helps on Windows)
                 $body->close();
-            } catch (Exception $error) {
-                debug_event(self::class, 'zip error: ' . $error->getMessage(), 5);
+            } catch (Exception $exception) {
+                debug_event(self::class, 'zip error: ' . $exception->getMessage(), 5);
             }
 
             self::destroyZip($zipPath);
@@ -164,7 +167,7 @@ final class ZipHandler implements ZipHandlerInterface
 
         return $response
             ->withHeader('Content-Type', 'application/zip')
-            ->withHeader('Content-Disposition', sprintf('attachment; filename*=UTF-8\'\'%s', rawurlencode($normalizedArchiveName)))
+            ->withHeader('Content-Disposition', sprintf("attachment; filename*=UTF-8''%s", rawurlencode($normalizedArchiveName)))
             ->withHeader('Pragma', 'public')
             ->withHeader('Cache-Control', 'public, must-revalidate')
             ->withHeader('Content-Transfer-Encoding', 'binary')

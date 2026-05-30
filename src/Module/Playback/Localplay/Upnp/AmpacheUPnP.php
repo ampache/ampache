@@ -90,7 +90,7 @@ class AmpacheUPnP extends localplay_controller
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
-        $sql = "CREATE TABLE `localplay_upnp` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `url` VARCHAR(255) COLLATE $collation NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = sprintf('CREATE TABLE `localplay_upnp` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE %s NOT NULL, `owner` INT(11) NOT NULL, `url` VARCHAR(255) COLLATE %s NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $collation, $engine, $charset, $collation);
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
@@ -186,11 +186,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function instance_fields(): array
     {
-        $fields         = [];
-        $fields['name'] = ['description' => T_('Instance Name'), 'type' => 'text'];
-        $fields['url']  = ['description' => T_('URL'), 'type' => 'url'];
-
-        return $fields;
+        return ['name' => ['description' => T_('Instance Name'), 'type' => 'text'], 'url' => ['description' => T_('URL'), 'type' => 'url']];
     }
 
     /**
@@ -231,6 +227,7 @@ class AmpacheUPnP extends localplay_controller
         if (!$user instanceof User) {
             return false;
         }
+
         Preference::update(self::ACTIVE_PREF, $user->id, $uid);
         AmpConfig::set(self::ACTIVE_PREF, $uid, true);
         debug_event(self::class, 'set_active_instance userid: ' . $user->id, 5);
@@ -259,7 +256,7 @@ class AmpacheUPnP extends localplay_controller
     {
         debug_event(self::class, 'add_url: ' . $url->title . " | " . $url->url, 5);
 
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return false;
         }
 
@@ -274,7 +271,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function delete_track(int $object_id): bool
     {
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return false;
         }
 
@@ -289,7 +286,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function clear_playlist(): bool
     {
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return false;
         }
 
@@ -305,7 +302,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function play(): bool
     {
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return false;
         }
 
@@ -318,7 +315,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function pause(): bool
     {
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return false;
         }
 
@@ -332,7 +329,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function stop(): bool
     {
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return false;
         }
 
@@ -345,7 +342,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function skip(int $track_id): bool
     {
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return false;
         }
 
@@ -360,7 +357,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function next(): bool
     {
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return false;
         }
 
@@ -375,7 +372,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function prev(): bool
     {
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return false;
         }
 
@@ -390,7 +387,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function volume(int $volume): bool
     {
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return false;
         }
 
@@ -404,7 +401,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function volume_up(): bool
     {
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return false;
         }
 
@@ -416,7 +413,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function volume_down(): bool
     {
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return false;
         }
 
@@ -431,7 +428,7 @@ class AmpacheUPnP extends localplay_controller
     {
         debug_event(self::class, 'repeat: ' . $state, 5);
 
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return false;
         }
 
@@ -448,7 +445,7 @@ class AmpacheUPnP extends localplay_controller
     {
         debug_event(self::class, 'random: ' . $state, 5);
 
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return false;
         }
 
@@ -467,7 +464,7 @@ class AmpacheUPnP extends localplay_controller
     {
         debug_event(self::class, 'get', 5);
 
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return [];
         }
 
@@ -489,6 +486,7 @@ class AmpacheUPnP extends localplay_controller
                     $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
                 }
             }
+
             if (empty($data['name'])) {
                 $data['name'] = $item['name'];
             }
@@ -509,7 +507,7 @@ class AmpacheUPnP extends localplay_controller
     {
         debug_event(self::class, 'status', 5);
         $array = [];
-        if (!$this->_upnp) {
+        if (!$this->_upnp instanceof UPnPPlayer) {
             return $array;
         }
 

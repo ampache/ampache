@@ -39,12 +39,6 @@ use RuntimeException;
 
 final class SongSorter implements SongSorterInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private LoggerInterface $logger;
-
-    private ModelFactoryInterface $modelFactory;
-
     private ?Catalog $catalog = null;
 
     private int $move_count = 0;
@@ -60,13 +54,10 @@ final class SongSorter implements SongSorterInterface
     private bool $windowsCompat = false;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        LoggerInterface $logger,
-        ModelFactoryInterface $modelFactory,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly LoggerInterface $logger,
+        private readonly ModelFactoryInterface $modelFactory,
     ) {
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
-        $this->modelFactory    = $modelFactory;
     }
 
     public function sort(
@@ -94,7 +85,7 @@ final class SongSorter implements SongSorterInterface
             $this->various_artist = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $various_artist_override)) ?? $this->various_artist;
         }
 
-        if (!empty($catalogName)) {
+        if (!in_array($catalogName, [null, '', '0'], true)) {
             $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local' AND `name` = ?;";
             $db_results = Dba::read($sql, [$catalogName]);
         } else {
@@ -152,7 +143,7 @@ final class SongSorter implements SongSorterInterface
             return;
         }
 
-        if ($this->limit > 0 && $this->move_count == $this->limit) {
+        if ($this->limit > 0 && $this->move_count === $this->limit) {
             /* HINT: filename (File path) */
             $interactor->info(
                 sprintf(nT_('%d file updated.', '%d files updated.', $this->move_count), $this->move_count),
@@ -161,8 +152,9 @@ final class SongSorter implements SongSorterInterface
 
             return;
         }
+
         // Check for file existence
-        if (empty($media->file) || !file_exists($media->file)) {
+        if (in_array($media->file, [null, '', '0'], true) || !file_exists($media->file)) {
             $this->logger->critical(
                 sprintf('Missing: %s', $media->file),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -188,7 +180,7 @@ final class SongSorter implements SongSorterInterface
 
         // sort_find_home will replace the % with the correct values.
         $directory = ($this->filesOnly)
-            ? dirname((string)$media->file)
+            ? dirname($media->file)
             : $this->catalog->sort_find_home(
                 $media,
                 (string) $this->catalog->sort_pattern,
@@ -203,6 +195,7 @@ final class SongSorter implements SongSorterInterface
                 true
             );
         }
+
         $filename = $this->catalog->sort_find_home(
             $media,
             (string) $this->catalog->rename_pattern,
@@ -217,10 +210,11 @@ final class SongSorter implements SongSorterInterface
                 true
             );
         }
+
         if ($directory === null || $filename === null) {
-            $fullpath = (string)$media->file;
+            $fullpath = $media->file;
         } else {
-            $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo((string)$media->file, PATHINFO_EXTENSION));
+            $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo($media->file, PATHINFO_EXTENSION));
         }
 
         /* We need to actually do the moving (fake it if we are testing)
@@ -247,26 +241,18 @@ final class SongSorter implements SongSorterInterface
             return;
         }
 
-        switch ($this->catalog->gather_types) {
-            case 'podcast':
-                $file_ids = (is_dir($path))
-                    ? Catalog::get_ids_from_folder($path, 'podcast_episode')
-                    : [Catalog::get_id_from_file($path, 'podcast_episode')];
-                break;
-            case 'video':
-                $file_ids = (is_dir($path))
-                    ? Catalog::get_ids_from_folder($path, 'video')
-                    : [Catalog::get_id_from_file($path, 'video')];
-                break;
-            case 'music':
-                $file_ids = (is_dir($path))
-                    ? Catalog::get_ids_from_folder($path, 'song')
-                    : [Catalog::get_id_from_file($path, 'song')];
-                break;
-            default:
-                $file_ids = [];
-                break;
-        }
+        $file_ids = match ($this->catalog->gather_types) {
+            'podcast' => (is_dir($path))
+                ? Catalog::get_ids_from_folder($path, 'podcast_episode')
+                : [Catalog::get_id_from_file($path, 'podcast_episode')],
+            'video' => (is_dir($path))
+                ? Catalog::get_ids_from_folder($path, 'video')
+                : [Catalog::get_id_from_file($path, 'video')],
+            'music' => (is_dir($path))
+                ? Catalog::get_ids_from_folder($path, 'song')
+                : [Catalog::get_id_from_file($path, 'song')],
+            default => [],
+        };
 
         $interactor->info(
             T_(sprintf('Sort: %s', $path)),
@@ -274,16 +260,10 @@ final class SongSorter implements SongSorterInterface
         );
 
         foreach ($file_ids as $file_id) {
-            switch ($this->catalog?->gather_types) {
-                case 'music':
-                    $media = $this->modelFactory->createSong($file_id);
-                    break;
-                case 'podcast':
-                case 'video':
-                default:
-                    $media = null;
-                    break;
-            }
+            $media = match ($this->catalog?->gather_types) {
+                'music' => $this->modelFactory->createSong($file_id),
+                default => null,
+            };
             if ($media !== null) {
                 $this->processMedia($media, $interactor);
             }
@@ -368,16 +348,18 @@ final class SongSorter implements SongSorterInterface
 
                 return false;
             }
+
             // HINT: %1$s: file, %2$s: directory
             $interactor->info(
                 sprintf(T_('Copying "%1$s" to "%2$s"'), $file, $directory),
                 true
             );
 
-            if (empty($media->file) || !copy($media->file, $fullname)) {
+            if (in_array($media->file, [null, '', '0'], true) || !copy($media->file, $fullname)) {
                 if (is_file($fullname)) {
                     unlink($fullname);
                 }
+
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('There was an error trying to copy file to "%s"'), $fullname),
@@ -386,6 +368,7 @@ final class SongSorter implements SongSorterInterface
 
                 return false;
             }
+
             $this->logger->critical(
                 'Copied ' . $media->file . ' to ' . $fullname,
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -406,20 +389,23 @@ final class SongSorter implements SongSorterInterface
 
                         throw new RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
                     }
+
                     $this->logger->critical(
                         'Copied ' . $old_art . ' to ' . $folder_art,
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 }
             }
+
             // Check the filesize
             $new_sum = Core::get_filesize($fullname);
             $old_sum = Core::get_filesize($media->file);
 
-            if ($new_sum != $old_sum || $new_sum == 0) {
+            if ($new_sum !== $old_sum || $new_sum === 0) {
                 if (is_file($fullname)) {
                     unlink($fullname);
                 }
+
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('Size comparison failed. Not deleting "%s"'), $media->file),

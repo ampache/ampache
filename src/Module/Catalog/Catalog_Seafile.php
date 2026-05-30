@@ -37,7 +37,9 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
+use Deprecated;
 use Exception;
+use Override;
 use ReflectionException;
 
 /**
@@ -46,19 +48,26 @@ use ReflectionException;
 class Catalog_Seafile extends Catalog
 {
     private static string $version     = '000001';
+
     private static string $type        = 'seafile';
+
     private static string $description = 'Seafile Remote Catalog';
+
     private static string $table_name  = 'catalog_seafile';
 
     /** @var SeafileAdapter seafile */
-    private $seafile = null;
-    private int $catalog_id;
+    private $seafile;
+
+    private readonly int $catalog_id;
+
     private int $count = 0;
 
     private $api_key;
+
     private $api_call_delay;
 
     public $server_uri;
+
     public $library_name;
 
     /**
@@ -135,7 +144,7 @@ class Catalog_Seafile extends Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
-        $sql = "CREATE TABLE `" . self::$table_name . "` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `server_uri` VARCHAR(255) COLLATE $collation NOT NULL, `api_key` VARCHAR(100) COLLATE $collation NOT NULL, `library_name` VARCHAR(255) COLLATE $collation NOT NULL, `api_call_delay` INT NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `" . self::$table_name . sprintf('` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `server_uri` VARCHAR(255) COLLATE %s NOT NULL, `api_key` VARCHAR(100) COLLATE %s NOT NULL, `library_name` VARCHAR(255) COLLATE %s NOT NULL, `api_call_delay` INT NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $collation, $collation, $engine, $charset, $collation);
         Dba::query($sql);
 
         return true;
@@ -152,19 +161,11 @@ class Catalog_Seafile extends Catalog
      */
     public function catalog_fields(): array
     {
-        $fields = [];
-
-        $fields['server_uri'] = [
+        return ['server_uri' => [
             'description' => T_('Server URI'),
             'type' => 'text',
             'value' => 'https://seafile.example.org/',
-        ];
-        $fields['library_name']   = ['description' => T_('Library Name'), 'type' => 'text', 'value' => 'Music'];
-        $fields['api_call_delay'] = ['description' => T_('API Call Delay'), 'type' => 'number', 'value' => '250'];
-        $fields['username']       = ['description' => T_('Seafile Username/Email'), 'type' => 'text', 'value' => ''];
-        $fields['password']       = ['description' => T_('Seafile Password'), 'type' => 'password', 'value' => ''];
-
-        return $fields;
+        ], 'library_name' => ['description' => T_('Library Name'), 'type' => 'text', 'value' => 'Music'], 'api_call_delay' => ['description' => T_('API Call Delay'), 'type' => 'number', 'value' => '250'], 'username' => ['description' => T_('Seafile Username/Email'), 'type' => 'text', 'value' => ''], 'password' => ['description' => T_('Seafile Password'), 'type' => 'password', 'value' => '']];
     }
 
     /**
@@ -172,6 +173,7 @@ class Catalog_Seafile extends Catalog
      *
      * Returns whether the catalog is ready for use.
      */
+    #[Override]
     public function isReady(): bool
     {
         return $this->seafile->ready();
@@ -198,26 +200,30 @@ class Catalog_Seafile extends Catalog
         $username       = trim($data['username'] ?? '');
         $password       = trim($data['password'] ?? '');
 
-        if (!strlen($server_uri)) {
+        if ($server_uri === '') {
             AmpError::add('general', T_('Seafile server URL is required'));
 
             return false;
         }
-        if (!strlen($library_name)) {
+
+        if ($library_name === '') {
             AmpError::add('general', T_('Seafile server library name is required'));
 
             return false;
         }
-        if (!strlen($username)) {
+
+        if ($username === '') {
             AmpError::add('general', T_('Seafile username is required'));
 
             return false;
         }
-        if (!strlen($password)) {
+
+        if ($password === '') {
             AmpError::add('general', T_('Seafile password is required'));
 
             return false;
         }
+
         if (!is_numeric($api_call_delay)) {
             AmpError::add('general', T_('API Call Delay must have a numeric value'));
 
@@ -231,13 +237,13 @@ class Catalog_Seafile extends Catalog
             debug_event('seafile_catalog', 'Retrieved API token for user ' . $username . '.', 1);
 
             return true;
-        } catch (Exception $error) {
+        } catch (Exception $exception) {
             /* HINT: exception error message */
             AmpError::add(
                 'general',
-                sprintf(T_('There was a problem authenticating against the Seafile API: %s'), $error->getMessage())
+                sprintf(T_('There was a problem authenticating against the Seafile API: %s'), $exception->getMessage())
             );
-            debug_event('seafile_catalog', 'Exception while Authenticating: ' . $error->getMessage(), 2);
+            debug_event('seafile_catalog', 'Exception while Authenticating: ' . $exception->getMessage(), 2);
         }
 
         return false;
@@ -301,11 +307,11 @@ class Catalog_Seafile extends Catalog
                 $is_audio_file = Catalog::is_audio_file($file->name);
                 $is_video_file = Catalog::is_video_file($file->name);
 
-                if ($is_audio_file && count($this->get_gather_types('music')) > 0) {
+                if ($is_audio_file && $this->get_gather_types('music') !== []) {
                     if ($this->insert_song($file)) {
                         return 1;
                     }
-                } elseif ($is_video_file && count($this->get_gather_types('video')) > 0) {
+                } elseif ($is_video_file && $this->get_gather_types('video') !== []) {
                     // TODO $this->insert_video();
                     debug_event('seafile_catalog', 'read ' . $file->name . " ignored, video is unsupported", 5);
                 } elseif (!$is_audio_file && !$is_video_file) {
@@ -394,6 +400,7 @@ class Catalog_Seafile extends Catalog
             $sort_pattern   = $this->sort_pattern;
             $rename_pattern = $this->rename_pattern;
         }
+
         $is_cached = (is_string($file) && is_file($file));
 
         if ($is_cached) {
@@ -419,6 +426,7 @@ class Catalog_Seafile extends Catalog
         if (!$is_cached) {
             $vainfo->forceSize((int)$file->size);
         }
+
         $vainfo->gather_tags();
         $key = VaInfo::get_tag_type($vainfo->tags);
 
@@ -464,10 +472,11 @@ class Catalog_Seafile extends Catalog
                 if ($file !== null) {
                     $metadata = $this->download_metadata($file);
                 }
+
                 if ($metadata !== null) {
                     debug_event('seafile_catalog', 'Verify updating song', 5);
                     $song = new Song($row['id']);
-                    $info = ($song->id) ? self::update_song_from_tags($metadata, $song) : [];
+                    $info = ($song->id !== 0) ? self::update_song_from_tags($metadata, $song) : [];
                     if ($info['change']) {
                         Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
                         $results++;
@@ -493,14 +502,16 @@ class Catalog_Seafile extends Catalog
      * @return array<string, mixed>
      * @throws Exception
      */
+    #[Override]
     public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern, ?string $file_override = null): array
     {
         // if you have the file it's all good
         $media_file = $file_override ?? $media->file;
 
-        if (!empty($media_file) && is_file($media_file)) {
+        if (!in_array($media_file, [null, '', '0'], true) && is_file($media_file)) {
             return $this->download_metadata($media_file, $sort_pattern, $rename_pattern, $gather_types);
         }
+
         if ($this->seafile->prepare()) {
             $fileinfo = $this->seafile->from_virtual_path((string)$media_file);
 
@@ -662,7 +673,7 @@ class Catalog_Seafile extends Catalog
             $stream_name = $fileinfo['filename'];
 
             // in case this didn't get set for some reason
-            if ($size == 0) {
+            if ($size === 0) {
                 $size = Core::get_filesize($stream_path);
             }
         }
@@ -675,9 +686,7 @@ class Catalog_Seafile extends Catalog
         ];
     }
 
-    /**
-     * @deprecated Inject by constructor
-     */
+    #[Deprecated(message: 'Inject by constructor')]
     private function getUtilityFactory(): UtilityFactoryInterface
     {
         global $dic;

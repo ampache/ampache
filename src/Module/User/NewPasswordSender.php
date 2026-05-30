@@ -31,18 +31,12 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use PHPMailer\PHPMailer\Exception;
 
-final class NewPasswordSender implements NewPasswordSenderInterface
+final readonly class NewPasswordSender implements NewPasswordSenderInterface
 {
-    private PasswordGeneratorInterface $passwordGenerator;
-
-    private UserRepositoryInterface $userRepository;
-
     public function __construct(
-        PasswordGeneratorInterface $passwordGenerator,
-        UserRepositoryInterface $userRepository,
+        private PasswordGeneratorInterface $passwordGenerator,
+        private UserRepositoryInterface $userRepository,
     ) {
-        $this->passwordGenerator = $passwordGenerator;
-        $this->userRepository    = $userRepository;
     }
 
     /**
@@ -62,7 +56,7 @@ final class NewPasswordSender implements NewPasswordSenderInterface
 
         // do not allow administrator password resets
         if ($user->has_access(AccessLevelEnum::ADMIN)) {
-            debug_event(self::class, 'Administrator can\'t reset their password.', 1);
+            debug_event(self::class, "Administrator can't reset their password.", 1);
 
             return false;
         }

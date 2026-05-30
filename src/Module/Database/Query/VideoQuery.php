@@ -126,6 +126,7 @@ final class VideoQuery implements QueryInterface
                 foreach ($value as $uid) {
                     $filter_sql .= (int)$uid . ',';
                 }
+
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
                 break;
             case 'no_genre':
@@ -140,7 +141,8 @@ final class VideoQuery implements QueryInterface
                 foreach ($value as $tag_id) {
                     $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
                 }
-                $filter_sql = rtrim((string) $filter_sql, 'AND ') . ') AND ';
+
+                $filter_sql = rtrim($filter_sql, 'AND ') . ') AND ';
                 break;
             case 'equal':
             case 'exact_match':
@@ -157,11 +159,13 @@ final class VideoQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `video`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
                     $filter_sql = " `video`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'starts_with':
                 $filter_sql = " `video`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -185,6 +189,7 @@ final class VideoQuery implements QueryInterface
                 if ($value != 0) {
                     $filter_sql = " `video`.`catalog` = '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'user_catalog':
                 $filter_sql = " `video`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";

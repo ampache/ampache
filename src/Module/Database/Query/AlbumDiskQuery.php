@@ -147,6 +147,7 @@ final class AlbumDiskQuery implements QueryInterface
                 foreach ($value as $uid) {
                     $filter_sql .= (int)$uid . ',';
                 }
+
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
                 break;
             case 'no_genre':
@@ -161,7 +162,8 @@ final class AlbumDiskQuery implements QueryInterface
                 foreach ($value as $tag_id) {
                     $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
                 }
-                $filter_sql = rtrim((string) $filter_sql, 'AND ') . ") AND ";
+
+                $filter_sql = rtrim($filter_sql, 'AND ') . ") AND ";
                 break;
             case 'equal':
             case 'exact_match':
@@ -178,25 +180,29 @@ final class AlbumDiskQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `album`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
                     $filter_sql = " `album`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'starts_with':
                 $query->set_join('LEFT', '`song`', '`album`.`id`', '`song`.`album`', 100);
                 $filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                if ($query->catalog != 0) {
+                if ($query->catalog !== 0) {
                     $filter_sql .= "`song`.`catalog` = '" . $query->catalog . "' AND ";
                 }
+
                 break;
             case 'not_starts_with':
                 $query->set_join('LEFT', '`song`', '`album`.`id`', '`song`.`album`', 100);
                 $filter_sql = " `album`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
-                if ($query->catalog != 0) {
+                if ($query->catalog !== 0) {
                     $filter_sql .= "`song`.`catalog` = '" . $query->catalog . "' AND ";
                 }
+
                 break;
             case 'artist':
                 $filter_sql = " `album`.`id` IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "') AND ";
@@ -231,6 +237,7 @@ final class AlbumDiskQuery implements QueryInterface
                 if ($value != 0) {
                     $filter_sql = " (`album_disk`.`catalog` = '" . Dba::escape($value) . "') AND ";
                 }
+
                 break;
             case 'user_catalog':
                 $filter_sql = " `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
@@ -250,14 +257,14 @@ final class AlbumDiskQuery implements QueryInterface
                 $filter_sql = " `catalog`.`enabled` = '1' AND ";
                 break;
             case 'unplayed':
-                if ((int)$value == 1) {
+                if ((int)$value === 1) {
                     $filter_sql = " `album_disk`.`total_count`='0' AND ";
                 }
+
                 break;
         }
-        $filter_sql .= " `album`.`id` IS NOT NULL AND ";
 
-        return $filter_sql;
+        return $filter_sql . " `album`.`id` IS NOT NULL AND ";
     }
 
     /**
@@ -274,14 +281,14 @@ final class AlbumDiskQuery implements QueryInterface
         switch ($field) {
             case 'name':
             case 'title':
-                $sql   = "`album`.`name` $order, `album_disk`.`disk`";
+                $sql   = sprintf('`album`.`name` %s, `album_disk`.`disk`', $order);
                 $order = '';
                 break;
             case 'name_original_year':
-                $sql = "`album`.`name` $order, IFNULL(`album`.`original_year`, `album`.`year`) $order, `album_disk`.`disk`";
+                $sql = sprintf('`album`.`name` %s, IFNULL(`album`.`original_year`, `album`.`year`) %s, `album_disk`.`disk`', $order, $order);
                 break;
             case 'name_year':
-                $sql   = "`album`.`name` $order, `album`.`year` $order, `album_disk`.`disk`";
+                $sql   = sprintf('`album`.`name` %s, `album`.`year` %s, `album_disk`.`disk`', $order, $order);
                 $order = '';
                 break;
             case 'generic_artist':
@@ -296,7 +303,7 @@ final class AlbumDiskQuery implements QueryInterface
                 );
                 break;
             case 'album_artist_album_sort':
-                $sql = "`artist`.`name` $order, ";
+                $sql = sprintf('`artist`.`name` %s, ', $order);
                 // sort the albums by arist AND default sort
                 $original_year = (AmpConfig::get('use_original_year')) ? "original_year" : "year";
                 $sort_type     = AmpConfig::get('album_sort');
@@ -321,10 +328,11 @@ final class AlbumDiskQuery implements QueryInterface
                     default:
                         $sql .= '`album`.`name` ' . $order . ', `album_disk`.`disk`, `album`.`' . $original_year . '`';
                 }
+
                 $query->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
                 break;
             case 'album_artist_title':
-                $sql = "`artist`.`name` $order, `album`.`name` $order, `album_disk`.`disk`";
+                $sql = sprintf('`artist`.`name` %s, `album`.`name` %s, `album_disk`.`disk`', $order, $order);
                 $query->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
                 break;
             case 'album_artist':
@@ -337,7 +345,7 @@ final class AlbumDiskQuery implements QueryInterface
                 $query->set_join('LEFT', '`artist`', '`song`.`artist`', '`artist`.`id`', 100);
                 break;
             case 'rating':
-                $sql = "`rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
@@ -346,16 +354,16 @@ final class AlbumDiskQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album_disk`.`id`", "`user_flag`.`object_type`", "'album_disk'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag_rating':
-                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album_disk`.`id`", "`user_flag`.`object_type`", "'album_disk'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'original_year':
-                $sql   = "IFNULL(`album`.`original_year`, `album`.`year`) $order, `album`.`addition_time` $order, `album`.`name`, `album_disk`.`disk`";
+                $sql   = sprintf('IFNULL(`album`.`original_year`, `album`.`year`) %s, `album`.`addition_time` %s, `album`.`name`, `album_disk`.`disk`', $order, $order);
                 $order = '';
                 break;
             case 'year':
-                $sql   = "`album`.`year` $order, `album`.`addition_time` $order, `album`.`name`, `album_disk`.`disk`";
+                $sql   = sprintf('`album`.`year` %s, `album`.`addition_time` %s, `album`.`name`, `album_disk`.`disk`', $order, $order);
                 $order = '';
                 break;
             case 'album_id':
@@ -366,7 +374,7 @@ final class AlbumDiskQuery implements QueryInterface
             case 'song_count':
             case 'time':
             case 'total_count':
-                $sql   = "`album_disk`.`$field` $order, `album`.`name`, `album_disk`.`disk`";
+                $sql   = sprintf('`album_disk`.`%s` %s, `album`.`name`, `album_disk`.`disk`', $field, $order);
                 $order = '';
                 break;
             case 'barcode':
@@ -375,7 +383,7 @@ final class AlbumDiskQuery implements QueryInterface
             case 'release_type':
             case 'subtitle':
             case 'version':
-                $sql   = "`album`.`$field` $order, `album`.`name`, `album_disk`.`disk`";
+                $sql   = sprintf('`album`.`%s` %s, `album`.`name`, `album_disk`.`disk`', $field, $order);
                 $order = '';
                 break;
             case 'id':
@@ -386,10 +394,10 @@ final class AlbumDiskQuery implements QueryInterface
                 $sql = '';
         }
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }
