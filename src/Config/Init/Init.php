@@ -38,19 +38,14 @@ use JetBrains\PhpStorm\NoReturn;
 /**
  * This class performs the complete init process to build a working ampache application environment
  */
-final class Init
+final readonly class Init
 {
-    private EnvironmentInterface $environment;
-
-    /** @var InitializationHandlerInterface[] */
-    private array $initializationHandler;
-
     public function __construct(
-        EnvironmentInterface $environment,
-        array $initializationHandler
-    ) {
-        $this->environment           = $environment;
-        $this->initializationHandler = $initializationHandler;
+        private EnvironmentInterface $environment,
+        /** @var InitializationHandlerInterface[] */
+        private array $initializationHandler
+    )
+    {
     }
 
     public function init(): void
@@ -76,9 +71,11 @@ final class Init
             if ($error == null) {
                 return;
             }
+
             if ($this->environment->isCli()) {
                 throw $error;
             }
+
             $this->redirect((string)$redirectionUrl);
         }
     }
@@ -86,7 +83,7 @@ final class Init
     #[NoReturn]
     private function redirect(string $destination): void
     {
-        $this->environment->isSsl() ? $protocol = 'https' : $protocol = 'http';
+        $protocol = $this->environment->isSsl() ? 'https' : 'http';
 
         // Set up for redirection on important error cases
         $path = get_web_path();
