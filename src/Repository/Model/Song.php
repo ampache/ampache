@@ -519,9 +519,9 @@ class Song extends database_object implements
                     : Stats::get_object_count('song', $row['id'], $limit_threshold, 'skip');
             }
 
-            $artists[$row['artist']] = $row['artist'];
+            $artists[] = (int)$row['artist'];
 
-            $albums[] = (int) $row['album'];
+            $albums[] = (int)$row['album'];
 
             parent::add_to_cache('song', $row['id'], $row);
         }
@@ -2009,7 +2009,7 @@ class Song extends database_object implements
             Art::display('song', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
         } elseif (Art::has_db($this->album, 'album')) {
             Art::display('album', $this->album, (string)$this->get_fullname(), $size, $this->get_link());
-        } elseif (($this->artist && Art::has_db($this->artist, 'artist')) || $force) {
+        } elseif ($this->artist && (Art::has_db($this->artist, 'artist') || $force)) {
             Art::display('artist', $this->artist, (string)$this->get_fullname(), $size, $this->get_link());
         }
     }

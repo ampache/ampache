@@ -984,7 +984,7 @@ class Art extends database_object
             $results = $this->generate_thumb($this->raw, $size, $this->raw_mime);
         }
 
-        if ($results !== []) {
+        if ($results !== [] && isset($results['thumb']) && isset($results['thumb_mime'])) {
             $this->save_thumb($results['thumb'], $results['thumb_mime'], $size);
         }
 
@@ -1056,6 +1056,11 @@ class Art extends database_object
             $src_x         = 0;
             $center_offset = ($src_height - $new_height) / 2;
             $src_y         = (int)($center_offset * 0.8);
+        }
+
+        if ($dst_width < 1 || $dst_height < 1) {
+            debug_event(self::class, 'Invalid thumbnail size: ' . $dst_width . 'x' . $dst_height, 1);
+            return [];
         }
 
         $thumbnail = imagecreatetruecolor($dst_width, $dst_height);
@@ -1687,7 +1692,7 @@ class Art extends database_object
                     }
 
                     $thumb = $this->get_thumb($size);
-                    if (!empty($thumb)) {
+                    if (!empty($thumb) && isset($thumb['thumb']) && isset($thumb['thumb_mime'])) {
                         header('Content-type: ' . $thumb['thumb_mime']);
                         header('Content-Length: ' . strlen((string)$thumb['thumb']));
                         echo $thumb['thumb'];

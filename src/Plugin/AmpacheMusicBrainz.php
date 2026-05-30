@@ -485,7 +485,6 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         if ($results instanceof EntityInterface) {
             try {
                 debug_event('MusicBrainz.plugin', sprintf('Updating %s: ', $object_type) . $fullname, 3);
-                $data       = [];
                 $brainzData = $results->getData();
                 $life_span  = $brainzData['life-span'] ?? null;
                 $active     = 1;
@@ -520,36 +519,32 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
 
             switch ($object_type) {
                 case 'label':
-                    if ($object instanceof Label) {
-                        $data = [
-                            /** @var \MusicBrainz\Entities\Label $results */
-                            'name' => $results->getName(),
-                            'mbid' => $results->getId(),
-                            'category' => $results->type ?? $object->category,
-                            'summary' => $results->getData()['disambiguation'] ?? $object->summary,
-                            'address' => $object->address,
-                            'country' => $results->country ?? $object->country,
-                            'email' => $object->email,
-                            'website' => $object->website,
-                            'active' => $active
-                        ];
-                    }
+                    $data = [
+                        /** @var \MusicBrainz\Entities\Label $results */
+                        'name' => $results->getName(),
+                        'mbid' => $results->getId(),
+                        'category' => $results->type ?? $object->category,
+                        'summary' => $results->getData()['disambiguation'] ?? $object->summary,
+                        'address' => $object->address,
+                        'country' => $results->country ?? $object->country,
+                        'email' => $object->email,
+                        'website' => $object->website,
+                        'active' => $active
+                    ];
 
                     break;
                 case 'artist':
-                    if ($object instanceof Artist) {
-                        $data = [
-                            /** @var \MusicBrainz\Entities\Artist $results */
-                            'name' => $results->getName(),
-                            'mbid' => $results->getId(),
-                            'summary' => $object->summary,
-                            'placeformed' => $beginName ?? $areaName ?? null,
-                            'yearformed' => explode('-', ((string) $begin))[0] ?? $object->yearformed
-                        ];
+                    $data = [
+                        /** @var \MusicBrainz\Entities\Artist $results */
+                        'name' => $results->getName(),
+                        'mbid' => $results->getId(),
+                        'summary' => $object->summary,
+                        'placeformed' => $beginName ?? $areaName ?? null,
+                        'yearformed' => explode('-', ((string) $begin))[0] ?: $object->yearformed
+                    ];
 
-                        if (empty($data['yearformed'])) {
-                            $data['yearformed'] = null;
-                        }
+                    if (empty($data['yearformed'])) {
+                        $data['yearformed'] = null;
                     }
 
                     break;
@@ -557,9 +552,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                     return false;
             }
 
-            if (!empty($data)) {
-                $object->update($data);
-            }
+            $object->update($data);
 
             return true;
         }

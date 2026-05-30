@@ -248,13 +248,39 @@ class Browse extends Query
      * This takes an array of objects
      * and requires the correct template based on the
      * type that we are currently browsing
+     * @param list<int|string>|null $object_ids
      */
     public function show_objects(?array $object_ids = [], bool|array|string $argument = false, ?bool $skip_cookies = false): void
     {
+        $type            = $this->get_type();
+        $limit_threshold = $this->get_threshold();
+
         if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
             $object_ids = $this->get_saved();
         } else {
             $this->save_objects($object_ids);
+            // build cache for new browses
+            switch ($type) {
+                case 'song':
+                    Song::build_cache($object_ids, $limit_threshold);
+                    break;
+                case 'album':
+                    Album::build_cache($object_ids);
+                    break;
+                case 'artist':
+                    Artist::build_cache($object_ids, true, $limit_threshold);
+                    break;
+                case 'playlist':
+                    Playlist::build_cache($object_ids);
+                    break;
+                case 'tag':
+                case 'tag_hidden':
+                    Tag::build_cache($object_ids);
+                    break;
+                case 'video':
+                    Video::build_cache($object_ids);
+                    break;
+            }
         }
 
         // Limit is based on the user's preferences if this is not a
@@ -288,7 +314,6 @@ class Browse extends Query
             }
         }
 
-        $type = $this->get_type();
 
         // Update the session value only if it's allowed on the current browser
         if ($this->is_update_session()) {
@@ -339,17 +364,14 @@ class Browse extends Query
             }
         }
 
-        $box_title       = $this->get_title('');
-        $limit_threshold = $this->get_threshold();
+        $box_title = $this->get_title('');
         // Switch on the type of browsing we're doing
         switch ($type) {
             case 'song':
                 $box_title = $this->get_title(T_('Songs') . $match);
-                Song::build_cache($object_ids, $limit_threshold);
-                $box_req = Ui::find_template('show_songs.inc.php');
+                $box_req   = Ui::find_template('show_songs.inc.php');
                 break;
             case 'album':
-                Album::build_cache($object_ids);
                 $box_title     = $this->get_title(T_('Albums') . $match);
                 $group_release = false;
                 if (is_array($argument)) {
@@ -392,7 +414,6 @@ class Browse extends Query
                     $box_title = $this->get_title(T_('Artist') . $match);
                 }
 
-                Artist::build_cache($object_ids, true, $limit_threshold);
                 $box_req = Ui::find_template('show_artists.inc.php');
                 break;
             case 'live_stream':
@@ -400,7 +421,6 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_live_streams.inc.php');
                 break;
             case 'playlist':
-                Playlist::build_cache($object_ids);
                 $box_title = $this->get_title(T_('Playlists') . $match);
                 $box_req   = Ui::find_template('show_playlists.inc.php');
                 break;
@@ -429,7 +449,9 @@ class Browse extends Query
                 $box_title         = $this->get_title(T_('Shoutbox Records'));
                 $shouts            = [];
                 foreach ($object_ids as $shoutId) {
-                    $shout = $shoutRepository->findById($shoutId);
+                    $shout = (is_array($shoutId))
+                        ? $shoutRepository->findById((int)$shoutId['object_id'])
+                        : $shoutRepository->findById((int)$shoutId);
                     if ($shout !== null) {
                         // used within the template
                         $shouts[] = $shout;
@@ -439,17 +461,14 @@ class Browse extends Query
                 $box_req = Ui::find_template('show_manage_shoutbox.inc.php');
                 break;
             case 'tag':
-                Tag::build_cache($object_ids);
                 $box_title = $this->get_title(T_('Genres'));
                 $box_req   = Ui::find_template('show_tagcloud.inc.php');
                 break;
             case 'tag_hidden':
-                Tag::build_cache($object_ids);
                 $box_title = $this->get_title(T_('Genres'));
                 $box_req   = Ui::find_template('show_tagcloud_hidden.inc.php');
                 break;
             case 'video':
-                Video::build_cache($object_ids);
                 $box_title = $this->get_title(T_('Videos'));
                 $box_req   = Ui::find_template('show_videos.inc.php');
                 break;
@@ -857,3 +876,4 @@ class Browse extends Query
         return $dic->get(PodcastRepositoryInterface::class);
     }
 }
+
