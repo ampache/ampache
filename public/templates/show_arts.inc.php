@@ -67,7 +67,7 @@ while ($count <= $rows) {
                 <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$key]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" height="" width="175" /></a>
                 <br />
                 <p>
-                <?php if (is_array($dimensions) && (!(int) $dimensions['width'] == 0 || !(int) $dimensions['height'] == 0)) { ?>
+                <?php if ((!(int) $dimensions['width'] == 0 || !(int) $dimensions['height'] == 0)) { ?>
                 [<?php echo (int) ($dimensions['width']); ?>x<?php echo (int) ($dimensions['height']); ?>]
                 [<a href="<?php echo $web_path . $select_art; ?>&image=<?php echo $key; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>"><?php echo T_('Select'); ?></a>]
                 <?php

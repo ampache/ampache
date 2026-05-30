@@ -24,6 +24,13 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog_beets;
+use Ampache\Module\Catalog\Catalog_beetsremote;
+use Ampache\Module\Catalog\Catalog_dropbox;
+use Ampache\Module\Catalog\Catalog_local;
+use Ampache\Module\Catalog\Catalog_remote;
+use Ampache\Module\Catalog\Catalog_Seafile;
+use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -77,7 +84,7 @@ echo T_("In the form below enter either a local path (i.e. /data/music) or the U
 $seltypes = '<option value="none">[' . T_("Select") . ']</option>';
 
 foreach (Catalog::CATALOG_TYPES as $type => $className) {
-    /** @var Catalog $catalog */
+    /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $classname */
     $catalog = new $className();
 
     if ($catalog->is_installed()) {

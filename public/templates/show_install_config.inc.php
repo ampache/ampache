@@ -281,7 +281,7 @@ foreach ($modes as $mode) { ?>
 						<div class="row">
 							<div class="col-sm-4 form-label"><?php echo T_('config/ampache.cfg.php configured?'); ?></div>
 							<div class="col-sm-8"><?php $results = (is_readable($configfile) && parse_ini_file($configfile)) ? parse_ini_file($configfile) : [];
-echo debug_result(check_config_values($results)); ?></div>
+echo debug_result(check_config_values($results ?: [])); ?></div>
 						</div>
 						&nbsp;
 						<div class="row">

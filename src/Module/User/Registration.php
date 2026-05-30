@@ -39,8 +39,6 @@ class Registration
     /**
      * send_confirmation
      * This sends the confirmation e-mail for the specified user
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function send_confirmation(
         string $username,

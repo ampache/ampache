@@ -58,7 +58,7 @@ $current_user_id   = $current_user?->getId();
 $logo_url          = ($current_user instanceof User && $current_user_id && Preference::get_by_user($current_user_id, 'custom_logo_user'))
     ? $current_user->get_avatar()['url_medium'] ?? Ui::get_logo_url()
     : Ui::get_logo_url();
-$is_session   = (User::is_registered() && !empty($current_user) && ($current_user_id ?? 0) > 0);
+$is_session   = (User::is_registered() && ($current_user_id ?? 0) > 0);
 $allow_upload = $access25 && Upload::can_upload($current_user);
 
 $count_temp_playlist = ($current_user instanceof User && !empty($current_user->playlist))

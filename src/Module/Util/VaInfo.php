@@ -158,8 +158,6 @@ final class VaInfo implements VaInfoInterface
      * Constructor
      *
      * This function just sets up the class, it doesn't pull the information.
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param string[] $gatherTypes
      */
     public function __construct(

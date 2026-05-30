@@ -63,7 +63,7 @@ if (count($results)) {
     foreach ($results as $item) {
         /** @var Song|Video $media */
         $media = $item['media'];
-        if (!is_object($media) || !in_array($media->catalog, $catalogs)) {
+        if (!in_array($media->catalog, $catalogs)) {
             continue;
         }
 

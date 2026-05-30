@@ -40,7 +40,7 @@ use Ampache\Repository\Model\User;
 $web_path = AmpConfig::get_web_path();
 
 $ajax_page = $ajax_page ?? 'index';
-$user_id   = $user_id ?? $user->id ?? -1;
+$user_id   = $user_id ?? $user->id ?: -1;
 $user_only = (isset($user_only) && $user_only);
 $show_user = (!$user_only && $user_id > 0);
 $user_str  = ($user_only)

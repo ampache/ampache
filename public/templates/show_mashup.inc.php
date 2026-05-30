@@ -74,12 +74,12 @@ if (!empty($object_ids)) {
 }
 
 //debug_event('show_mashup.inc', "Trending: Stats::get_top", 5);
+$hold_ids = false;
 if ($user->getId() < 1) {
     // public user doesn't need to query this twice. hold it for the second page
     $hold_ids   = Stats::get_top($object_type, 100, $threshold);
     $object_ids = array_slice($hold_ids, 0, $limit);
 } else {
-    $hold_ids   = false;
     $object_ids = Stats::get_top($object_type, $limit, $threshold);
 }
 if (!empty($object_ids)) {
@@ -98,7 +98,7 @@ if (!empty($object_ids)) {
 
 //debug_event('show_mashup.inc', "Popular: Stats::get_top", 5);
 // public users just need to shuffle the hold_ids for a similar result
-$object_ids = ($user->getId() < 1 && is_array($hold_ids))
+$object_ids = ($hold_ids)
     ? $hold_ids
     : Stats::get_top($object_type, 100, $threshold, 0, $user);
 if (!empty($object_ids)) {

@@ -26,7 +26,7 @@ declare(strict_types=0);
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 
-/** @var Artist $artist */
+/** @var Artist|Wanted $artist */
 /** @var array<string, string> $biography */
 ?>
 <div class="item_info">

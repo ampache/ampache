@@ -363,6 +363,7 @@ abstract class Catalog extends database_object
             return null;
         }
 
+        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic|null $controller */
         $controller = self::CATALOG_TYPES[$type] ?? null;
         if ($controller === null) {
             /* Throw Error Here */
@@ -371,7 +372,6 @@ abstract class Catalog extends database_object
             return null;
         } // include
 
-        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $controller */
         $catalog = ($catalog_id > 0)
             ? new $controller($catalog_id)
             : new $controller();
@@ -1312,6 +1312,7 @@ abstract class Catalog extends database_object
         }
 
         $insert_id = 0;
+        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic|null $classname */
         $classname = self::CATALOG_TYPES[$type] ?? null;
         if ($classname === null) {
             return $insert_id;
@@ -1337,7 +1338,6 @@ abstract class Catalog extends database_object
         self::clear_catalog_cache();
 
         try {
-            /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $classname */
             $create_type = $classname::create_type($insert_id, $data);
         } catch (DropboxClientException) {
             $create_type = false;
@@ -4567,7 +4567,6 @@ abstract class Catalog extends database_object
 
                             $changed = 0;
                             foreach ($file_ids as $file_id) {
-                                /** @var Song|Podcast_Episode|Video $className */
                                 $media = new $className($file_id);
                                 if ($media->file) {
                                     /** @var Catalog_local $catalog */

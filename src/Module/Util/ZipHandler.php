@@ -154,9 +154,7 @@ final class ZipHandler implements ZipHandlerInterface
         register_shutdown_function(static function () use ($body, $zipPath): void {
             try {
                 // close stream resource first (helps on Windows)
-                if (method_exists($body, 'close')) {
-                    $body->close();
-                }
+                $body->close();
             } catch (Exception $error) {
                 debug_event(self::class, 'zip error: ' . $error->getMessage(), 5);
             }

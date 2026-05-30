@@ -53,7 +53,7 @@ $showAlbum = AmpConfig::get('album_group'); ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
         <label><?php echo $t_username; ?></label>
-        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id ?? -1; ?>">
+        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id ?: -1; ?>">
         <?php echo scrub_out($np_user->fullname);
 echo '<div>' . $np_user->get_f_avatar('f_avatar_medium') . '</div>'; ?>
         </a>
