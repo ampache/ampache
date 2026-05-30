@@ -263,7 +263,7 @@ class Xml3_Data
      *
      * This returns tags to the user, in a pretty xml document with the information
      *
-     * @param list<int|string> $tags
+     * @param array<int|string> $tags
      */
     public static function tags(array $tags): string
     {
@@ -291,7 +291,7 @@ class Xml3_Data
      * This takes an array of artists and then returns a pretty xml document with the information
      * we want
      *
-     * @param list<int|string> $artists
+     * @param array<int|string> $artists
      * @param string[] $include Array of other items to include
      * @param bool $full_xml whether to return a full XML document or just the node
      */
@@ -348,7 +348,7 @@ class Xml3_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param list<int|string> $albums
+     * @param array<int|string> $albums
      * @param string[] $include Array of other items to include
      * @param bool $full_xml whether to return a full XML document or just the node
      */
@@ -402,7 +402,7 @@ class Xml3_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param list<int|string> $playlists
+     * @param array<int|string> $playlists
      */
     public static function playlists(array $playlists): string
     {
@@ -502,7 +502,7 @@ class Xml3_Data
      *
      * This builds the xml document for displaying video objects
      *
-     * @param list<int|string> $videos
+     * @param array<int|string> $videos
      */
     public static function videos(array $videos): string
     {
@@ -593,7 +593,7 @@ class Xml3_Data
      *
      * This handles creating an xml document for a user list
      *
-     * @param list<int|string> $users    User identifier list
+     * @param array<int|string> $users    User identifier list
      */
     public static function users(array $users): string
     {
