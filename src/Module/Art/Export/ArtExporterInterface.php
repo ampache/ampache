@@ -33,6 +33,6 @@ interface ArtExporterInterface
     public function export(
         Interactor $interactor,
         Writer\MetadataWriterInterface $metadataWriter,
-        bool $clearData
+        bool $clearData,
     ): void;
 }

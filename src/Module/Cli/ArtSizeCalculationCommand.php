@@ -45,7 +45,7 @@ final class ArtSizeCalculationCommand extends Command
     }
 
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         parent::__construct('run:calculateArtSize', T_('Run art size calculation'));
 

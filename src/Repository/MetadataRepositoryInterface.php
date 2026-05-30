@@ -50,7 +50,7 @@ interface MetadataRepositoryInterface
     public function findByObjectIdAndFieldAndType(
         int $objectId,
         MetadataField $field,
-        string $objectType
+        string $objectType,
     ): ?Metadata;
 
     /**
@@ -60,7 +60,7 @@ interface MetadataRepositoryInterface
      */
     public function findByObjectIdAndType(
         int $objectId,
-        string $objectType
+        string $objectType,
     ): Traversable;
 
     /**

@@ -40,7 +40,7 @@ final class FeedLoader implements FeedLoaderInterface
     private WebFetcherInterface $webFetcher;
 
     public function __construct(
-        WebFetcherInterface $webFetcher
+        WebFetcherInterface $webFetcher,
     ) {
         $this->webFetcher = $webFetcher;
     }
@@ -63,7 +63,7 @@ final class FeedLoader implements FeedLoaderInterface
      * @throws FeedLoadingException
      */
     public function load(
-        string $feedUrl
+        string $feedUrl,
     ): array {
         $lastBuildDate = null;
         $artUrl        = null;

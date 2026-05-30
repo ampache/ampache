@@ -37,7 +37,7 @@ final readonly class GraphAction extends AbstractGraphRendererAction
 
     public function __construct(
         private UiInterface $ui,
-        LibraryItemLoaderInterface $libraryItemLoader
+        LibraryItemLoaderInterface $libraryItemLoader,
     ) {
         parent::__construct(
             $libraryItemLoader

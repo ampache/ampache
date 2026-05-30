@@ -108,7 +108,7 @@ class Search extends playlist_object
     public function __construct(
         int $search_id = 0,
         string $object_type = 'song',
-        ?User $user = null
+        ?User $user = null,
     ) {
         $this->search_user = ($user instanceof User)
             ? $user

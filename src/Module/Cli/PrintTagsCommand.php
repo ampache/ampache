@@ -46,7 +46,7 @@ final class PrintTagsCommand extends Command
     }
 
     public function __construct(
-        UtilityFactoryInterface $utilityFactory
+        UtilityFactoryInterface $utilityFactory,
     ) {
         parent::__construct('print:tags', T_('Print file tags'));
 
@@ -58,7 +58,7 @@ final class PrintTagsCommand extends Command
     }
 
     public function execute(
-        string $filename
+        string $filename,
     ): void {
         if ($this->app() === null) {
             return;

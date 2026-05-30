@@ -39,7 +39,7 @@ final class NewPasswordSender implements NewPasswordSenderInterface
 
     public function __construct(
         PasswordGeneratorInterface $passwordGenerator,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
     ) {
         $this->passwordGenerator = $passwordGenerator;
         $this->userRepository    = $userRepository;
@@ -50,7 +50,7 @@ final class NewPasswordSender implements NewPasswordSenderInterface
      */
     public function send(
         string $email,
-        string $current_ip
+        string $current_ip,
     ): bool {
         // get the Client and set the new password
         $user = $this->userRepository->findByEmail($email);

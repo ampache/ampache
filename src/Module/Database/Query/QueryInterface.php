@@ -49,7 +49,7 @@ interface QueryInterface
     public function get_sql_filter(
         Query $query,
         string $filter,
-        mixed $value
+        mixed $value,
     ): string;
 
     /**
@@ -71,6 +71,6 @@ interface QueryInterface
     public function get_sql_sort(
         $query,
         $field,
-        $order
+        $order,
     ): string;
 }

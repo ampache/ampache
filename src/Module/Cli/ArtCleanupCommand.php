@@ -46,7 +46,7 @@ final class ArtCleanupCommand extends Command
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ArtCleanupInterface $artCleanup
+        ArtCleanupInterface $artCleanup,
     ) {
         parent::__construct('cleanup:art', T_('Remove art which does not fit to the settings'));
 

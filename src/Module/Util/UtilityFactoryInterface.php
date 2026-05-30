@@ -41,7 +41,7 @@ interface UtilityFactoryInterface
         ?string $encodingId3v1 = null,
         string $dirPattern = '',
         string $filePattern = '',
-        bool $isLocal = true
+        bool $isLocal = true,
     ): VaInfo;
 
     /**

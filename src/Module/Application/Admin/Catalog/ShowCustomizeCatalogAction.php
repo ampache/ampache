@@ -46,7 +46,7 @@ final class ShowCustomizeCatalogAction implements ApplicationActionInterface
 
     public function __construct(
         RequestParserInterface $requestParser,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->requestParser = $requestParser;
         $this->ui            = $ui;

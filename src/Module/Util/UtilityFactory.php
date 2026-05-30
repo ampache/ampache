@@ -44,7 +44,7 @@ final class UtilityFactory implements UtilityFactoryInterface
     public function __construct(
         UserRepositoryInterface $userRepository,
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->userRepository  = $userRepository;
         $this->configContainer = $configContainer;
@@ -68,7 +68,7 @@ final class UtilityFactory implements UtilityFactoryInterface
         ?string $encodingId3v1 = null,
         string $dirPattern = '',
         string $filePattern = '',
-        bool $isLocal = true
+        bool $isLocal = true,
     ): VaInfo {
         return new VaInfo(
             $this->userRepository,

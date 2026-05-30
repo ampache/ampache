@@ -106,7 +106,7 @@ interface UserRepositoryInterface
      * updates the last seen data for this user
      */
     public function updateLastSeen(
-        int $userId
+        int $userId,
     ): void;
 
     /**

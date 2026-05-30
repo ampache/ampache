@@ -39,7 +39,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        array $authenticatorList
+        array $authenticatorList,
     ) {
         $this->configContainer   = $configContainer;
         $this->authenticatorList = $authenticatorList;
@@ -58,7 +58,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
     public function login(
         string $username,
         string $password,
-        bool $allow_ui = false
+        bool $allow_ui = false,
     ): array {
         $result = [];
 
@@ -104,7 +104,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
     public function tokenLogin(
         string $username,
         string $token,
-        string $salt
+        string $salt,
     ): array {
         // subsonic token auth with apikey
         if (strlen((string)$token) && strlen((string)$salt) && strlen((string)$username)) {

@@ -51,7 +51,7 @@ final class DefaultAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        AjaxUriRetrieverInterface $ajaxUriRetriever
+        AjaxUriRetrieverInterface $ajaxUriRetriever,
     ) {
         $this->configContainer  = $configContainer;
         $this->ui               = $ui;

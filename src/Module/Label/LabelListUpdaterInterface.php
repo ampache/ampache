@@ -31,6 +31,6 @@ interface LabelListUpdaterInterface
     public function update(
         string $labelsComma,
         int $artistId,
-        bool $overwrite
+        bool $overwrite,
     ): bool;
 }

@@ -49,7 +49,7 @@ final class ShowAddUserAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         RegistrationAgreementRendererInterface $registrationAgreementRenderer,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->configContainer               = $configContainer;
         $this->registrationAgreementRenderer = $registrationAgreementRenderer;

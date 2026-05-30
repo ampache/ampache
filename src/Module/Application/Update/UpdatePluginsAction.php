@@ -47,7 +47,7 @@ final class UpdatePluginsAction implements ApplicationActionInterface
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->responseFactory = $responseFactory;
         $this->configContainer = $configContainer;

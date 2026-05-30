@@ -49,7 +49,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
         string $ext,
         string $playlistId,
         int $userId,
-        string $urltype
+        string $urltype,
     ): void {
         // Make sure the output dir is valid and writeable
         if (!is_writeable($dirname)) {

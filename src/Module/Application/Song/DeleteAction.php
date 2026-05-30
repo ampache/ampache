@@ -43,7 +43,7 @@ final class DeleteAction implements ApplicationActionInterface
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
@@ -51,7 +51,7 @@ final class DeleteAction implements ApplicationActionInterface
 
     public function run(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return null;

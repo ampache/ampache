@@ -52,7 +52,7 @@ final class SearchAction implements ApplicationActionInterface
         RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        MissingArtistFinderInterface $missingArtistFinder
+        MissingArtistFinderInterface $missingArtistFinder,
     ) {
         $this->requestParser       = $requestParser;
         $this->ui                  = $ui;

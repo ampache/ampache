@@ -32,7 +32,7 @@ final class AjaxUriRetriever implements AjaxUriRetrieverInterface
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->configContainer = $configContainer;
     }

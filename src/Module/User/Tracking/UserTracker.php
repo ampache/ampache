@@ -45,7 +45,7 @@ final class UserTracker implements UserTrackerInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         IpHistoryRepositoryInterface $ipHistoryRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->configContainer     = $configContainer;
         $this->ipHistoryRepository = $ipHistoryRepository;
@@ -57,7 +57,7 @@ final class UserTracker implements UserTrackerInterface
      */
     public function trackIpAddress(
         User $user,
-        string $action
+        string $action,
     ): void {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::TRACK_USER_IP) === false) {
             return;

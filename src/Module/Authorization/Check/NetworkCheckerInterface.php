@@ -35,6 +35,6 @@ interface NetworkCheckerInterface
     public function check(
         AccessTypeEnum $type,
         ?int $userId = null,
-        AccessLevelEnum $level = AccessLevelEnum::USER
+        AccessLevelEnum $level = AccessLevelEnum::USER,
     ): bool;
 }

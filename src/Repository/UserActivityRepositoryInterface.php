@@ -33,7 +33,7 @@ interface UserActivityRepositoryInterface
     public function getFriendsActivities(
         int $user_id,
         int $limit = 0,
-        int $since = 0
+        int $since = 0,
     ): array;
 
     /**
@@ -42,7 +42,7 @@ interface UserActivityRepositoryInterface
     public function getActivities(
         int $user_id,
         int $limit = 0,
-        int $since = 0
+        int $since = 0,
     ): array;
 
     /**
@@ -51,7 +51,7 @@ interface UserActivityRepositoryInterface
     public function deleteByDate(
         int $date,
         string $action,
-        int $user_id = 0
+        int $user_id = 0,
     ): void;
 
     /**
@@ -59,7 +59,7 @@ interface UserActivityRepositoryInterface
      */
     public function collectGarbage(
         ?string $object_type = null,
-        ?int $object_id = null
+        ?int $object_id = null,
     ): void;
 
     /**
@@ -72,6 +72,6 @@ interface UserActivityRepositoryInterface
         string $action,
         string $object_type,
         int $objectId,
-        int $date
+        int $date,
     ): void;
 }

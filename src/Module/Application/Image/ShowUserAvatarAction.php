@@ -47,7 +47,7 @@ final readonly class ShowUserAvatarAction extends AbstractShowAction
         Horde_Browser $horde_browser,
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         parent::__construct(
             $requestParser,

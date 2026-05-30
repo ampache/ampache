@@ -37,7 +37,7 @@ final class LastFmQuery implements LastFmQueryInterface
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->configContainer = $configContainer;
     }

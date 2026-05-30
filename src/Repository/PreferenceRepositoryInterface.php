@@ -52,6 +52,6 @@ interface PreferenceRepositoryInterface
      */
     public function getAll(
         ?User $user = null,
-        ?bool $api = false
+        ?bool $api = false,
     ): array;
 }

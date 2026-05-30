@@ -90,7 +90,7 @@ final class ApiHandler implements ApiHandlerInterface
         ConfigContainerInterface $configContainer,
         NetworkCheckerInterface $networkChecker,
         UserRepositoryInterface $userRepository,
-        ContainerInterface $dic
+        ContainerInterface $dic,
     ) {
         $this->streamFactory   = $streamFactory;
         $this->logger          = $logger;
@@ -103,7 +103,7 @@ final class ApiHandler implements ApiHandlerInterface
     public function handle(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        ApiOutputInterface $output
+        ApiOutputInterface $output,
     ): ?ResponseInterface {
         $gatekeeper = new Gatekeeper(
             $this->userRepository,
@@ -626,7 +626,7 @@ final class ApiHandler implements ApiHandlerInterface
     public function normalizeAction(
         string $action,
         ?string $type,
-        bool $hasFilter
+        bool $hasFilter,
     ): string {
         $action = match ($action) {
             'add-song' => 'add_song',
@@ -778,7 +778,7 @@ final class ApiHandler implements ApiHandlerInterface
         array $input,
         ?User $user,
         ResponseInterface $response,
-        ApiOutputInterface $output
+        ApiOutputInterface $output,
     ): ?ResponseInterface {
         try {
             /**
@@ -962,7 +962,7 @@ final class ApiHandler implements ApiHandlerInterface
         array $input,
         ?User $user,
         ResponseInterface $response,
-        ApiOutputInterface $output
+        ApiOutputInterface $output,
     ): ?ResponseInterface {
         /**
          * This condition allows the `new` approach and the legacy one to co-exist.

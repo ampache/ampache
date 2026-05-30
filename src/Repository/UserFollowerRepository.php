@@ -112,7 +112,7 @@ final readonly class UserFollowerRepository implements UserFollowerRepositoryInt
      */
     public function delete(
         User $user,
-        User $followingUser
+        User $followingUser,
     ): void {
         $this->connection->query(
             'DELETE FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?',

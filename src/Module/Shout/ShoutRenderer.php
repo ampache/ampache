@@ -42,7 +42,7 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
     public function __construct(
         private PrivilegeCheckerInterface $privilegeChecker,
         private ConfigContainerInterface $configContainer,
-        private ShoutObjectLoaderInterface $shoutObjectLoader
+        private ShoutObjectLoaderInterface $shoutObjectLoader,
     ) {
     }
 

@@ -51,7 +51,7 @@ final class WriteConfigAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         InstallationHelperInterface $installationHelper,
-        ResponseFactoryInterface $responseFactory
+        ResponseFactoryInterface $responseFactory,
     ) {
         $this->configContainer    = $configContainer;
         $this->installationHelper = $installationHelper;

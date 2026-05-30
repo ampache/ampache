@@ -56,7 +56,7 @@ interface UserFollowerRepositoryInterface
      */
     public function add(
         User $user,
-        User $followingUser
+        User $followingUser,
     ): void;
 
     /**
@@ -64,6 +64,6 @@ interface UserFollowerRepositoryInterface
      */
     public function delete(
         User $user,
-        User $followingUser
+        User $followingUser,
     ): void;
 }

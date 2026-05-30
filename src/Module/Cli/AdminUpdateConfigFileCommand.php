@@ -46,7 +46,7 @@ final class AdminUpdateConfigFileCommand extends Command
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        InstallationHelperInterface $installationHelper
+        InstallationHelperInterface $installationHelper,
     ) {
         parent::__construct('admin:updateConfigFile', T_('Update the Ampache config file'));
 

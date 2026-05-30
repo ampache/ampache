@@ -48,7 +48,7 @@ class SubsonicClient
         string $password,
         string $serverUrl,
         ?string $port = null,
-        string $client = "Ampache"
+        string $client = "Ampache",
     ) {
         $this->setServer($serverUrl, $port);
 

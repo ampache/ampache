@@ -57,7 +57,7 @@ final class ShowDebugAction implements ApplicationActionInterface
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        UpdateInfoRepositoryInterface $updateInfoRepository
+        UpdateInfoRepositoryInterface $updateInfoRepository,
     ) {
         $this->requestParser        = $requestParser;
         $this->configContainer      = $configContainer;

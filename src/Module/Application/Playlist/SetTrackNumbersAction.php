@@ -47,7 +47,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
     public function __construct(
         RequestParserInterface $requestParser,
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->requestParser = $requestParser;
         $this->modelFactory  = $modelFactory;

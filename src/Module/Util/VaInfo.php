@@ -171,7 +171,7 @@ final class VaInfo implements VaInfoInterface
         // TODO: where did this go? param string $encodingId3v2
         string $dirPattern = '',
         string $filePattern = '',
-        bool $islocal = true
+        bool $islocal = true,
     ) {
         $this->islocal     = $islocal;
         $this->filename    = $file;

@@ -40,7 +40,7 @@ final class GarbageCollectAction extends AbstractCatalogAction
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
         $this->configContainer = $configContainer;
@@ -52,7 +52,7 @@ final class GarbageCollectAction extends AbstractCatalogAction
      */
     protected function handle(
         ServerRequestInterface $request,
-        array $catalogIds
+        array $catalogIds,
     ): ?ResponseInterface {
         catalog_worker('garbage_collect', $catalogIds);
 

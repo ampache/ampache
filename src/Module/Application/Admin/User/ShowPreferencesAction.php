@@ -48,7 +48,7 @@ final class ShowPreferencesAction extends AbstractUserAction
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        PreferenceRepositoryInterface $preferenceRepository
+        PreferenceRepositoryInterface $preferenceRepository,
     ) {
         $this->ui                   = $ui;
         $this->modelFactory         = $modelFactory;

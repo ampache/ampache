@@ -51,7 +51,7 @@ final class XmlRestApiApplication implements ApiApplicationInterface
         ConfigContainerInterface $configContainer,
         ResponseFactoryInterface $responseFactory,
         ResponseEmitter $sapiEmitter,
-        ServerRequestCreatorInterface $serverRequestCreator
+        ServerRequestCreatorInterface $serverRequestCreator,
     ) {
         $this->apiOutputFactory     = $apiOutputFactory;
         $this->apiHandler           = $apiHandler;

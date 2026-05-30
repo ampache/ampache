@@ -55,7 +55,7 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
         private FunctionCheckerInterface $functionChecker,
         private GuiGatekeeperInterface $gatekeeper,
         private Browse $browse,
-        private Album $album
+        private Album $album,
     ) {
     }
 

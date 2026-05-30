@@ -46,7 +46,13 @@ return (new PhpCsFixer\Config())
         'full_opening_tag' => true,
         'line_ending' => true,
         'lowercase_cast' => true,
-        'method_argument_space' => true,
+        'method_argument_space' => [
+            'on_multiline' => 'ensure_fully_multiline',
+            'keep_multiple_spaces_after_comma' => false,
+        ],
+        'trailing_comma_in_multiline' => [
+            'elements' => ['parameters'],
+        ],
         'multiline_comment_opening_closing' => true,
         'no_break_comment' => false,
         'no_trailing_whitespace' => true,

@@ -97,7 +97,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * Takes the ID of the artist and pulls the info from the db
      */
     public function __construct(
-        ?int $artist_id = 0
+        ?int $artist_id = 0,
     ) {
         if (!$artist_id) {
             return;

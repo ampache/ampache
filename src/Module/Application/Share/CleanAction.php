@@ -51,7 +51,7 @@ final class CleanAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ShareRepositoryInterface $shareRepository
+        ShareRepositoryInterface $shareRepository,
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;

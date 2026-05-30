@@ -37,6 +37,6 @@ interface ApplicationActionInterface
      */
     public function run(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface;
 }

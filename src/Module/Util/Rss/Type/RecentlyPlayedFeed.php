@@ -33,7 +33,7 @@ use Generator;
 final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
 {
     public function __construct(
-        private ?User $user
+        private ?User $user,
     ) {
     }
 

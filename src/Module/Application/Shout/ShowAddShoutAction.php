@@ -57,7 +57,7 @@ final class ShowAddShoutAction implements ApplicationActionInterface
         UiInterface $ui,
         ShoutRepositoryInterface $shoutRepository,
         ShoutRendererInterface $shoutRenderer,
-        ShoutObjectLoaderInterface $shoutObjectLoader
+        ShoutObjectLoaderInterface $shoutObjectLoader,
     ) {
         $this->requestParser     = $requestParser;
         $this->ui                = $ui;

@@ -31,8 +31,10 @@ use Ampache\Repository\Model\Preference;
 
 final readonly class InitializationHandlerAuth implements InitializationHandlerInterface
 {
-    public function __construct(private EnvironmentInterface $environment, private SessionInterface $session)
-    {
+    public function __construct(
+        private EnvironmentInterface $environment,
+        private SessionInterface $session,
+    ) {
     }
 
     public function init(): void

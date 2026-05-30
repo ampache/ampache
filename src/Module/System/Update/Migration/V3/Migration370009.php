@@ -61,7 +61,7 @@ final class Migration370009 extends AbstractMigration
         string $collation,
         string $charset,
         string $engine,
-        int $build
+        int $build,
     ): Generator {
         if (
             $build > 370009 &&

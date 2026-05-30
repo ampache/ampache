@@ -39,7 +39,7 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
 {
     public function __construct(
         private ModelFactoryInterface $modelFactory,
-        private DatabaseConnectionInterface $connection
+        private DatabaseConnectionInterface $connection,
     ) {
     }
 
@@ -47,7 +47,7 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
      * Get the user received private messages.
      */
     public function getUnreadCount(
-        User $user
+        User $user,
     ): int {
         return (int) $this->connection->fetchOne(
             "SELECT count(`id`) as `amount` FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = '0'",
@@ -111,7 +111,7 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
         ?User $recipient,
         User $sender,
         string $subject,
-        string $message
+        string $message,
     ): int {
         $toUserId = 0;
 
@@ -133,7 +133,7 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
     }
 
     public function findById(
-        int $privateMessageId
+        int $privateMessageId,
     ): ?PrivateMessageInterface {
         $item = $this->modelFactory->createPrivateMsg($privateMessageId);
         if ($item->isNew()) {

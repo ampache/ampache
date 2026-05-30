@@ -54,7 +54,7 @@ final class ShowAction implements ApplicationActionInterface
         RequestParserInterface $requestParser,
         ResponseFactoryInterface $responseFactory,
         ConfigContainerInterface $configContainer,
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
     ) {
         $this->requestParser   = $requestParser;
         $this->responseFactory = $responseFactory;

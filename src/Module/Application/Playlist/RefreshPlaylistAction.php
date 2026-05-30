@@ -47,7 +47,7 @@ final class RefreshPlaylistAction implements ApplicationActionInterface
     public function __construct(
         ModelFactoryInterface $modelFactory,
         ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->modelFactory    = $modelFactory;
         $this->responseFactory = $responseFactory;

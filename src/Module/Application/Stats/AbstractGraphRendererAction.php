@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
 abstract readonly class AbstractGraphRendererAction implements ApplicationActionInterface
 {
     protected function __construct(
-        private LibraryItemLoaderInterface $libraryItemLoader
+        private LibraryItemLoaderInterface $libraryItemLoader,
     ) {
     }
 
@@ -46,7 +46,7 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
      * @throws ApplicationException
      */
     protected function renderGraph(
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): void {
         $object_type = Core::get_request('object_type');
         $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);

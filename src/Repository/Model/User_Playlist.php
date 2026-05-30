@@ -49,7 +49,7 @@ class User_Playlist extends database_object
      */
     public function __construct(
         ?int $user_id = 0,
-        ?string $client = null
+        ?string $client = null,
     ) {
         if (!$user_id) {
             return;

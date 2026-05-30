@@ -48,7 +48,7 @@ final class SongTagWriter implements SongTagWriterInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         UtilityFactoryInterface $utilityFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->configContainer = $configContainer;
         $this->utilityFactory  = $utilityFactory;
@@ -59,7 +59,7 @@ final class SongTagWriter implements SongTagWriterInterface
      * Write the current song id3 metadata to the file
      */
     public function write(
-        Song $song
+        Song $song,
     ): void {
         if ($song->isNew()) {
             return;
@@ -286,7 +286,7 @@ final class SongTagWriter implements SongTagWriterInterface
     public function writeRating(
         Song $song,
         User $user,
-        Rating $rating
+        Rating $rating,
     ): void {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_TAGS) === false) {
             return;
@@ -470,7 +470,7 @@ final class SongTagWriter implements SongTagWriterInterface
     }
 
     private function getVorbisMetadata(
-        Song $song
+        Song $song,
     ): array {
         $meta = [];
 
@@ -539,7 +539,7 @@ final class SongTagWriter implements SongTagWriterInterface
      * Get an array of metadata for writing id3 file tags.
      */
     private function getId3Metadata(
-        Song $song
+        Song $song,
     ): array {
         $meta = [];
 

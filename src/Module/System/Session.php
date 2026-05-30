@@ -54,7 +54,7 @@ final class Session implements SessionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         AuthenticationManagerInterface $authenticationManager,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
     ) {
         $this->configContainer       = $configContainer;
         $this->authenticationManager = $authenticationManager;

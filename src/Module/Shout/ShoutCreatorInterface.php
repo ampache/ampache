@@ -43,6 +43,6 @@ interface ShoutCreatorInterface
         LibraryItemEnum $objectType,
         string $text,
         bool $isSticky,
-        int $offset
+        int $offset,
     ): void;
 }

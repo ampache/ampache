@@ -51,7 +51,7 @@ final class UninstallCatalogTypeAction implements ApplicationActionInterface
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser
+        RequestParserInterface $requestParser,
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;

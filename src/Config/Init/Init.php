@@ -42,9 +42,8 @@ final readonly class Init
     public function __construct(
         private EnvironmentInterface $environment,
         /** @var InitializationHandlerInterface[] */
-        private array $initializationHandler
-    )
-    {
+        private array $initializationHandler,
+    ) {
     }
 
     public function init(): void

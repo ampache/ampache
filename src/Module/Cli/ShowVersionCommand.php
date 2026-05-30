@@ -42,7 +42,7 @@ final class ShowVersionCommand extends Command
     }
 
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         parent::__construct('show:version', T_('Version'));
 

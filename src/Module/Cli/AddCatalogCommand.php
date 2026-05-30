@@ -42,7 +42,7 @@ final class AddCatalogCommand extends Command
     }
 
     public function __construct(
-        AddCatalogInterface $addCatalog
+        AddCatalogInterface $addCatalog,
     ) {
         parent::__construct('run:addCatalog', T_('Create a local media catalog'));
 
@@ -62,7 +62,7 @@ final class AddCatalogCommand extends Command
         string $catalogPath,
         string $mediaType,
         string $filePattern,
-        string $folderPattern
+        string $folderPattern,
     ): void {
         $this->addCatalog->add(
             $this->io(),

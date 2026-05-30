@@ -37,6 +37,6 @@ interface PrivilegeCheckerInterface
     public function check(
         AccessTypeEnum $type,
         AccessLevelEnum $level,
-        ?int $userId = null
+        ?int $userId = null,
     ): bool;
 }

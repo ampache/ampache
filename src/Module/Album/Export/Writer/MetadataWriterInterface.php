@@ -28,6 +28,6 @@ interface MetadataWriterInterface
     public function write(
         string $fileName,
         string $dirName,
-        string $iconFileName
+        string $iconFileName,
     ): void;
 }

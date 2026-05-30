@@ -38,7 +38,7 @@ interface LiveStreamRepositoryInterface
      * @return int[]
      */
     public function findAll(
-        ?User $user = null
+        ?User $user = null,
     ): array;
 
     /**

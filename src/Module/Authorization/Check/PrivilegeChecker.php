@@ -41,7 +41,7 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
@@ -56,7 +56,7 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
     public function check(
         AccessTypeEnum $type,
         AccessLevelEnum $level,
-        ?int $userId = null
+        ?int $userId = null,
     ): bool {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return true;

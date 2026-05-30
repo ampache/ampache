@@ -38,7 +38,7 @@ final class WebDavAuth extends DAV\Auth\Backend\AbstractBasic
     private AuthenticationManagerInterface $authenticationManager;
 
     public function __construct(
-        AuthenticationManagerInterface $authenticationManager
+        AuthenticationManagerInterface $authenticationManager,
     ) {
         $this->authenticationManager = $authenticationManager;
     }

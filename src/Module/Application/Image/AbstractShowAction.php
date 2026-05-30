@@ -53,7 +53,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
         private Horde_Browser $horde_browser,
         private ResponseFactoryInterface $responseFactory,
         private StreamFactoryInterface $streamFactory,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
     ) {
     }
 

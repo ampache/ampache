@@ -52,7 +52,7 @@ class UPnPPlayer
 
     public function __construct(
         string $name = "noname",
-        string $description_url = "http://localhost"
+        string $description_url = "http://localhost",
     ) {
         debug_event(self::class, 'constructor: ' . $name . ' | ' . $description_url, 5);
 

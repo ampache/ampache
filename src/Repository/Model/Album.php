@@ -225,7 +225,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         ?string $barcode = null,
         ?string $catalog_number = null,
         ?string $version = null,
-        bool $readonly = false
+        bool $readonly = false,
     ): int {
         $trimmed      = Catalog::trim_prefix(trim((string) $name));
         $name         = $trimmed['string'];

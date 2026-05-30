@@ -40,7 +40,7 @@ use Ampache\Repository\Model\User;
 final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
-        private RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser,
     ) {
     }
 

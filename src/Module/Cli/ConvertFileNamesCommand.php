@@ -42,7 +42,7 @@ final class ConvertFileNamesCommand extends Command
     }
 
     public function __construct(
-        FileNameConverterInterface $fileNameCorrector
+        FileNameConverterInterface $fileNameCorrector,
     ) {
         parent::__construct('run:convertFilenames', T_('Convert filenames using a charset'));
 

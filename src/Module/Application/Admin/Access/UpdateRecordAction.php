@@ -61,7 +61,7 @@ final class UpdateRecordAction implements ApplicationActionInterface
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
         AccessListManagerInterface $accessListManager,
-        RequestParserInterface $requestParser
+        RequestParserInterface $requestParser,
     ) {
         $this->ui                = $ui;
         $this->configContainer   = $configContainer;

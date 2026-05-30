@@ -33,6 +33,6 @@ interface UserActivityPosterInterface
         string $action,
         string $objectType,
         int $objectId,
-        int $date
+        int $date,
     ): void;
 }

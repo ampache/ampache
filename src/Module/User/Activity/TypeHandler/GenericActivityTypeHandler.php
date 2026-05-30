@@ -32,7 +32,7 @@ class GenericActivityTypeHandler implements ActivityTypeHandlerInterface
     private UserActivityRepositoryInterface $userActivityRepository;
 
     public function __construct(
-        UserActivityRepositoryInterface $userActivityRepository
+        UserActivityRepositoryInterface $userActivityRepository,
     ) {
         $this->userActivityRepository = $userActivityRepository;
     }
@@ -42,7 +42,7 @@ class GenericActivityTypeHandler implements ActivityTypeHandlerInterface
         string $objectType,
         string $action,
         int $userId,
-        int $date
+        int $date,
     ): void {
         $this->userActivityRepository->registerGenericEntry(
             $userId,

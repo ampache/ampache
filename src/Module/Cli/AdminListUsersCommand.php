@@ -42,7 +42,7 @@ final class AdminListUsersCommand extends Command
     }
 
     public function __construct(
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
     ) {
         parent::__construct('admin:listUsers', T_('Users List'));
 
@@ -56,7 +56,7 @@ final class AdminListUsersCommand extends Command
     }
 
     public function execute(
-        ?string $username
+        ?string $username,
     ): void {
         if ($this->app() === null) {
             return;

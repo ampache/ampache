@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
 final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
-        private RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser,
     ) {
     }
 

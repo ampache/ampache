@@ -42,7 +42,7 @@ final class UpdateCatalogSettingsAction extends AbstractCatalogAction
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
         $this->configContainer = $configContainer;
@@ -54,7 +54,7 @@ final class UpdateCatalogSettingsAction extends AbstractCatalogAction
      */
     protected function handle(
         ServerRequestInterface $request,
-        array $catalogIds
+        array $catalogIds,
     ): ?ResponseInterface {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return null;

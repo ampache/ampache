@@ -39,7 +39,7 @@ final class CsvExporter implements CatalogExporterInterface
     public function __construct(
         SongRepositoryInterface $songRepository,
         ModelFactoryInterface $modelFactory,
-        string $filePointer = 'php://output'
+        string $filePointer = 'php://output',
     ) {
         $this->songRepository = $songRepository;
         $this->modelFactory   = $modelFactory;

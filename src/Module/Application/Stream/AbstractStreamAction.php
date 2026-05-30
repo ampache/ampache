@@ -47,7 +47,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
 {
     protected function __construct(
         private readonly LoggerInterface $logger,
-        private readonly ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
     }
 
@@ -55,7 +55,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
      * @throws ApplicationException
      */
     protected function preCheck(
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): bool {
         if (!defined('NO_SESSION')) {
             /* If we are running a demo, quit while you still can! */
@@ -85,7 +85,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
         array $mediaIds,
         array $urls,
         string $streamType = '',
-        ?string $fileName = null
+        ?string $fileName = null,
     ): ?ResponseInterface {
         if ($streamType == 'stream') {
             $streamType = $this->configContainer->get(ConfigurationKeyEnum::PLAYLIST_TYPE);

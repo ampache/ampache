@@ -45,7 +45,7 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private DatabaseConnectionInterface $connection,
-        private ConfigContainerInterface $configContainer
+        private ConfigContainerInterface $configContainer,
     ) {
     }
 
@@ -207,7 +207,7 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
      */
     public function updateState(
         Podcast_Episode $episode,
-        PodcastEpisodeStateEnum $state
+        PodcastEpisodeStateEnum $state,
     ): void {
         $this->connection->query(
             'UPDATE `podcast_episode` SET `state` = ? WHERE `id` = ?',

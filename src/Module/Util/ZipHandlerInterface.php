@@ -49,6 +49,6 @@ interface ZipHandlerInterface
         ResponseInterface $response,
         string $name,
         array $files,
-        bool $flat_path
+        bool $flat_path,
     ): ResponseInterface;
 }

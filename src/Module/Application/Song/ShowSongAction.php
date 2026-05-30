@@ -56,7 +56,7 @@ final class ShowSongAction implements ApplicationActionInterface
         ModelFactoryInterface $modelFactory,
         GuiFactoryInterface $guiFactory,
         TalFactoryInterface $talFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->ui           = $ui;
         $this->modelFactory = $modelFactory;
@@ -67,7 +67,7 @@ final class ShowSongAction implements ApplicationActionInterface
 
     public function run(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
         $this->ui->showHeader();
 

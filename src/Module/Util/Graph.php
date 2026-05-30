@@ -77,7 +77,7 @@ class Graph
         $object_type = null,
         $object_id = 0,
         $start_date = null,
-        $end_date = null
+        $end_date = null,
     ): string {
         $start_date = (int)($start_date);
         $end_date   = (int)($end_date);
@@ -115,7 +115,7 @@ class Graph
         $object_id = 0,
         $catalog_id = 0,
         $start_date = null,
-        $end_date = null
+        $end_date = null,
     ): string {
         $start_date = (int)($start_date);
         $end_date   = (int)($end_date);
@@ -155,7 +155,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): array {
         $type = $object_type;
         if ($object_type === null) {
@@ -200,7 +200,7 @@ class Graph
         $start_date = null,
         $end_date = null,
         $zoom = 'day',
-        $show_total = true
+        $show_total = true,
     ): array {
         $values = $this->get_all_type_pts($fct, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
         foreach ($values as $date => $value) {
@@ -231,7 +231,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): void {
         $userRepository = $this->getUserRepository();
 
@@ -279,7 +279,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): void {
         $values = $this->get_all_pts($fct, $MyData, $catalog_id, $object_type, $object_id, $start_date, $end_date, $zoom, false);
 
@@ -318,7 +318,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): array {
         $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
         $where      = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
@@ -349,7 +349,7 @@ class Graph
         $start_date = null,
         $end_date = null,
         $zoom = 'day',
-        $column = 'size'
+        $column = 'size',
     ): array {
         $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
         $where      = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
@@ -378,7 +378,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): array {
         return $this->get_user_object_count_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
     }
@@ -397,7 +397,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): array {
         return $this->get_user_object_count_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, 'time');
     }
@@ -416,7 +416,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): array {
         $start_date = $start_date ?? (($end_date ?? time()) - 864000);
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
@@ -446,7 +446,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): array {
         $start_date = $start_date ?? (($end_date ?? time()) - 864000);
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
@@ -478,7 +478,7 @@ class Graph
         $object_id = 0,
         $start_date = null,
         $end_date = null,
-        $zoom = 'day'
+        $zoom = 'day',
     ): array {
         $pts = [];
 
@@ -624,7 +624,7 @@ class Graph
         $end_date = null,
         $zoom = 'day',
         $width = 0,
-        $height = 0
+        $height = 0,
     ): void {
         $MyData = new Data();
         $this->get_user_all_pts(
@@ -662,7 +662,7 @@ class Graph
         $end_date = null,
         $zoom = 'day',
         $width = 0,
-        $height = 0
+        $height = 0,
     ): void {
         $MyData = new Data();
         $this->get_user_all_pts('get_user_bandwidth_pts', $MyData, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
@@ -739,7 +739,7 @@ class Graph
         $end_date = null,
         $zoom = 'day',
         $width = 0,
-        $height = 0
+        $height = 0,
     ): void {
         $MyData = new Data();
         $this->get_catalog_all_pts(
@@ -777,7 +777,7 @@ class Graph
         $end_date = null,
         $zoom = 'day',
         $width = 0,
-        $height = 0
+        $height = 0,
     ): void {
         $MyData = new Data();
         $this->get_catalog_all_pts(

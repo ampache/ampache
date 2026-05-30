@@ -64,7 +64,7 @@ final class AddHostAction implements ApplicationActionInterface
         ConfigContainerInterface $configContainer,
         AccessListManagerInterface $accessListManager,
         RequestParserInterface $requestParser,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->ui                = $ui;
         $this->configContainer   = $configContainer;

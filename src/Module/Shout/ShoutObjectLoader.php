@@ -42,7 +42,7 @@ use Ampache\Repository\Model\Video;
 final readonly class ShoutObjectLoader implements ShoutObjectLoaderInterface
 {
     public function __construct(
-        private LibraryItemLoaderInterface $libraryItemLoader
+        private LibraryItemLoaderInterface $libraryItemLoader,
     ) {
     }
 

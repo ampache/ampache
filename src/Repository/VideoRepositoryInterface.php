@@ -34,7 +34,7 @@ interface VideoRepositoryInterface
      */
     public function getRandom(
         int $userId,
-        ?int $count = 1
+        ?int $count = 1,
     ): array;
 
     /**

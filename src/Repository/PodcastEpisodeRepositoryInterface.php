@@ -80,7 +80,7 @@ interface PodcastEpisodeRepositoryInterface
      */
     public function updateState(
         Podcast_Episode $episode,
-        PodcastEpisodeStateEnum $state
+        PodcastEpisodeStateEnum $state,
     ): void;
 
     /**

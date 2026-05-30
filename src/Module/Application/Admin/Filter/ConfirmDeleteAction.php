@@ -42,7 +42,7 @@ final class ConfirmDeleteAction extends AbstractFilterAction
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;

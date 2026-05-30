@@ -45,8 +45,12 @@ use Ampache\Repository\Model\Userflag;
 
 final readonly class SongViewAdapter implements SongViewAdapterInterface
 {
-    public function __construct(private ConfigContainerInterface $configContainer, private ModelFactoryInterface $modelFactory, private GuiGatekeeperInterface $gatekeeper, private Song $song)
-    {
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+        private GuiGatekeeperInterface $gatekeeper,
+        private Song $song,
+    ) {
     }
 
     public function getId(): int

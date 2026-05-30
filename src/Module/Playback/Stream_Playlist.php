@@ -241,7 +241,7 @@ class Stream_Playlist
         array $media,
         string $additional_params = '',
         string $urltype = 'web',
-        ?User $user = null
+        ?User $user = null,
     ): ?Stream_Url {
         // @todo use LibraryItemLoader
         $type      = $media['object_type']->value ?? null;

@@ -58,7 +58,7 @@ final class GenerateApiKeyAction extends AbstractUserAction
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
-        UserKeyGeneratorInterface $userKeyGenerator
+        UserKeyGeneratorInterface $userKeyGenerator,
     ) {
         $this->requestParser    = $requestParser;
         $this->ui               = $ui;

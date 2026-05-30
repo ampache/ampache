@@ -81,7 +81,7 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
      */
     public function fetchOne(
         string $sql,
-        array $params = []
+        array $params = [],
     ) {
         return $this->query($sql, $params)->fetchColumn();
     }
@@ -95,7 +95,7 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
      */
     public function fetchRow(
         string $sql,
-        array $params = []
+        array $params = [],
     ) {
         return $this->query($sql, $params)->fetch(PDO::FETCH_ASSOC);
     }

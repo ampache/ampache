@@ -48,7 +48,7 @@ final class Migration370033 extends AbstractMigration
         string $collation,
         string $charset,
         string $engine,
-        int $build
+        int $build,
     ): Generator {
         if ($build > 370033) {
             yield 'label' => "CREATE TABLE IF NOT EXISTS `label` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(80) COLLATE $collation DEFAULT NULL, `category` varchar(40) COLLATE $collation DEFAULT NULL, `summary` text COLLATE $collation DEFAULT NULL, `address` varchar(256) COLLATE $collation DEFAULT NULL, `email` varchar(128) COLLATE $collation DEFAULT NULL, `website` varchar(256) COLLATE $collation DEFAULT NULL, `user` int(11) UNSIGNED DEFAULT NULL, `creation_date` int(11) UNSIGNED DEFAULT NULL, `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `country` varchar(64) COLLATE $collation DEFAULT NULL, `active` tinyint(1) UNSIGNED NOT NULL DEFAULT 1, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";

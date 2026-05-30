@@ -52,7 +52,7 @@ final class ShowAction implements ApplicationActionInterface
     public function __construct(
         RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;

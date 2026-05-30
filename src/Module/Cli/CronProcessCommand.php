@@ -74,7 +74,7 @@ final class CronProcessCommand extends Command
         UserRepositoryInterface $userRepository,
         UpdateInfoRepositoryInterface $updateInfoRepository,
         ShareRepositoryInterface $shareRepository,
-        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
     ) {
         parent::__construct('run:cronProcess', T_('Run the cron process'));
 

@@ -47,7 +47,7 @@ final class LogoutAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         AuthenticationManagerInterface $authenticationManager,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->configContainer       = $configContainer;
         $this->authenticationManager = $authenticationManager;

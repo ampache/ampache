@@ -47,7 +47,7 @@ final class PodcastEpisodeAction implements ApplicationActionInterface
     public function __construct(
         ModelFactoryInterface $modelFactory,
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->modelFactory    = $modelFactory;
         $this->ui              = $ui;

@@ -4367,7 +4367,7 @@ abstract class Catalog extends database_object
 
     public static function can_remove(
         Podcast_Episode|AlbumDisk|Video|Song|Album|Artist|Label $libitem,
-        ?int $user_id = 0
+        ?int $user_id = 0,
     ): bool {
         if (!$user_id) {
             $user    = Core::get_global('user');
@@ -4710,7 +4710,7 @@ abstract class Catalog extends database_object
         string $sort_pattern,
         ?string $base = null,
         string $various_artist = "Various Artists",
-        bool $windowsCompat = false
+        bool $windowsCompat = false,
     ): ?string {
         $home = '';
         if ($base) {

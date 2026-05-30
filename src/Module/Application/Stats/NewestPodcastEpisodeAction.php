@@ -42,7 +42,7 @@ final readonly class NewestPodcastEpisodeAction implements ApplicationActionInte
     public function __construct(
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
-        private ConfigContainerInterface $configContainer
+        private ConfigContainerInterface $configContainer,
     ) {
     }
 

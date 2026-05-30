@@ -48,7 +48,7 @@ final class RunWebsocketCommand extends Command
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        WebSocketFactoryInterface $webSocketFactory
+        WebSocketFactoryInterface $webSocketFactory,
     ) {
         parent::__construct('run:websocket', T_('Run a Websocket'));
 

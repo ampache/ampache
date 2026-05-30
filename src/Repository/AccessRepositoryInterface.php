@@ -49,7 +49,7 @@ interface AccessRepositoryInterface
         string $userIp,
         AccessLevelEnum $level,
         AccessTypeEnum $type,
-        ?int $userId
+        ?int $userId,
     ): bool;
 
     /**
@@ -65,7 +65,7 @@ interface AccessRepositoryInterface
         string $inAddrStart,
         string $inAddrEnd,
         AccessTypeEnum $type,
-        int $userId
+        int $userId,
     ): bool;
 
     /**
@@ -82,7 +82,7 @@ interface AccessRepositoryInterface
         string $name,
         int $userId,
         AccessLevelEnum $level,
-        AccessTypeEnum $type
+        AccessTypeEnum $type,
     ): void;
 
     /**
@@ -101,6 +101,6 @@ interface AccessRepositoryInterface
         string $name,
         int $userId,
         AccessLevelEnum $level,
-        AccessTypeEnum $type
+        AccessTypeEnum $type,
     ): void;
 }

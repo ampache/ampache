@@ -52,7 +52,7 @@ final class CreateAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        RequestParserInterface $requestParser
+        RequestParserInterface $requestParser,
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;

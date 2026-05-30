@@ -81,7 +81,7 @@ class SeafileAdapter
         $server_uri,
         $library_name,
         $call_delay,
-        $api_key
+        $api_key,
     ) {
         $this->server          = $server_uri;
         $this->library_name    = $library_name;

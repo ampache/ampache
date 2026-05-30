@@ -48,7 +48,7 @@ final class DeleteAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;

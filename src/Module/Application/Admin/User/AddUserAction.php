@@ -60,7 +60,7 @@ final class AddUserAction extends AbstractUserAction
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
         UserRepositoryInterface $userRepository,
-        RequestParserInterface $requestParser
+        RequestParserInterface $requestParser,
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;

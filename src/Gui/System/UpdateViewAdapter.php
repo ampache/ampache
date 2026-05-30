@@ -38,8 +38,12 @@ use Generator;
 
 final readonly class UpdateViewAdapter implements UpdateViewAdapterInterface
 {
-    public function __construct(private ConfigContainerInterface $configContainer, private UpdateInfoRepositoryInterface $updateInfoRepository, private UpdateHelperInterface $updateHelper, private UpdaterInterface $updater)
-    {
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private UpdateInfoRepositoryInterface $updateInfoRepository,
+        private UpdateHelperInterface $updateHelper,
+        private UpdaterInterface $updater,
+    ) {
     }
 
     public function getHtmlLanguage(): string

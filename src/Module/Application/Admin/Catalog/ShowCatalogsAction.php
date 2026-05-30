@@ -43,7 +43,7 @@ final class ShowCatalogsAction implements ApplicationActionInterface
     private UiInterface $ui;
 
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->ui = $ui;
     }

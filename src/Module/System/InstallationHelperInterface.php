@@ -52,7 +52,7 @@ interface InstallationHelperInterface
         bool $overwrite = false,
         bool $create_tables = true,
         string $charset = 'utf8mb4',
-        string $collation = 'utf8mb4_unicode_ci'
+        string $collation = 'utf8mb4_unicode_ci',
     ): bool;
 
     /**

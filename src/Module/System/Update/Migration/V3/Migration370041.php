@@ -53,7 +53,7 @@ final class Migration370041 extends AbstractMigration
         string $collation,
         string $charset,
         string $engine,
-        int $build
+        int $build,
     ): Generator {
         if ($build > 370041) {
             yield 'metadata_field' => "CREATE TABLE IF NOT EXISTS `metadata_field` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(255) COLLATE $collation DEFAULT NULL, `public` tinyint(1) NOT NULL, PRIMARY KEY (`id`), UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";

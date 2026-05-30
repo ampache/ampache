@@ -48,7 +48,7 @@ final class Albums8Method implements MethodInterface
 
     public function __construct(
         StreamFactoryInterface $streamFactory,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->streamFactory = $streamFactory;
         $this->modelFactory  = $modelFactory;
@@ -88,7 +88,7 @@ final class Albums8Method implements MethodInterface
         ResponseInterface $response,
         ApiOutputInterface $output,
         array $input,
-        User $user
+        User $user,
     ): ResponseInterface {
         $browse = $this->modelFactory->createBrowse(null, false);
         $browse->set_user_id($user);

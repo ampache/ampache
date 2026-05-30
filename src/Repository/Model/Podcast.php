@@ -534,7 +534,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      * @return int[]
      */
     public function getEpisodeIds(
-        ?PodcastEpisodeStateEnum $stateFilter = null
+        ?PodcastEpisodeStateEnum $stateFilter = null,
     ): array {
         return $this->getPodcastEpisodeRepository()->getEpisodes($this, $stateFilter);
     }

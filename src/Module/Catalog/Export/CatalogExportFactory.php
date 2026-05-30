@@ -39,7 +39,7 @@ final class CatalogExportFactory implements CatalogExportFactoryInterface
 
     public function __construct(
         SongRepositoryInterface $songRepository,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->songRepository = $songRepository;
         $this->modelFactory   = $modelFactory;

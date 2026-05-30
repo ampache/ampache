@@ -86,7 +86,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         WantedRepositoryInterface $wantedRepository,
         LabelRepositoryInterface $labelRepository,
         ArtCleanupInterface $artCleanup,
-        ArtistRepositoryInterface $artistRepository
+        ArtistRepositoryInterface $artistRepository,
     ) {
         $this->albumRepository          = $albumRepository;
         $this->bookmarkRepository       = $bookmarkRepository;

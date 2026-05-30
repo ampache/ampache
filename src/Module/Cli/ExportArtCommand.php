@@ -53,7 +53,7 @@ final class ExportArtCommand extends Command
     public function __construct(
         LoggerInterface $logger,
         ArtExporterInterface $artExporter,
-        ContainerInterface $dic
+        ContainerInterface $dic,
     ) {
         parent::__construct('export:databaseArt', T_('Export all database art to local_metadata_dir'));
 

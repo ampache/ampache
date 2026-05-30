@@ -40,7 +40,7 @@ class OAuthToken
      */
     public function __construct(
         $key,
-        $secret
+        $secret,
     ) {
         $this->key    = $key;
         $this->secret = $secret;

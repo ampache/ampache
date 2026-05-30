@@ -41,7 +41,7 @@ final class RandomAction extends AbstractStreamAction
 
     public function __construct(
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->configContainer = $configContainer;
 

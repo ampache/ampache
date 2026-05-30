@@ -33,7 +33,7 @@ final class PlaylistLoader implements PlaylistLoaderInterface
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->modelFactory = $modelFactory;
     }

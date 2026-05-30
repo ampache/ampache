@@ -48,7 +48,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 
     public function __construct(
         UiInterface $ui,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->ui     = $ui;
         $this->logger = $logger;

@@ -30,6 +30,6 @@ interface FileNameConverterInterface
     public function convert(
         Interactor $interactor,
         string $source_encoding,
-        bool $force = false
+        bool $force = false,
     ): void;
 }

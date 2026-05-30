@@ -43,7 +43,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
-        private PluginRetrieverInterface $pluginRetriever
+        private PluginRetrieverInterface $pluginRetriever,
     ) {
     }
 

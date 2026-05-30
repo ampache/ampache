@@ -54,7 +54,7 @@ final class ShowMissingAction implements ApplicationActionInterface
         ModelFactoryInterface $modelFactory,
         UiInterface $ui,
         ArtCollectorInterface $artCollector,
-        WantedRepositoryInterface $wantedRepository
+        WantedRepositoryInterface $wantedRepository,
     ) {
         $this->requestParser    = $requestParser;
         $this->modelFactory     = $modelFactory;

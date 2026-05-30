@@ -37,7 +37,7 @@ final class UserKeyGenerator implements UserKeyGeneratorInterface
 
     public function __construct(
         UserRepositoryInterface $userRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->userRepository = $userRepository;
         $this->logger         = $logger;
@@ -47,7 +47,7 @@ final class UserKeyGenerator implements UserKeyGeneratorInterface
      * Generates and saves a new API key for the given user
      */
     public function generateApikey(
-        User $user
+        User $user,
     ): void {
         $userId = $user->getId();
         $apikey = hash(
@@ -67,7 +67,7 @@ final class UserKeyGenerator implements UserKeyGeneratorInterface
      * Generates and saves a new RSS token for the given user
      */
     public function generateRssToken(
-        User $user
+        User $user,
     ): void {
         try {
             $rsstoken = bin2hex(random_bytes(32));
@@ -96,7 +96,7 @@ final class UserKeyGenerator implements UserKeyGeneratorInterface
      * Generates and saves a new Stream token for the given user
      */
     public function generateStreamToken(
-        User $user
+        User $user,
     ): void {
         try {
             $streamtoken = bin2hex(random_bytes(20));

@@ -65,7 +65,7 @@ final class UpdateAction implements ApplicationActionInterface
         ResponseFactoryInterface $responseFactory,
         ConfigContainerInterface $configContainer,
         StreamFactoryInterface $streamFactory,
-        Update\UpdaterInterface $updater
+        Update\UpdaterInterface $updater,
     ) {
         $this->talFactory      = $talFactory;
         $this->guiFactory      = $guiFactory;

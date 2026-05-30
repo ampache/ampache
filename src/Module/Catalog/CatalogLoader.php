@@ -54,7 +54,7 @@ final class CatalogLoader implements CatalogLoaderInterface
      */
     public function getCatalogs(
         ?string $filterType = null,
-        ?User $user = null
+        ?User $user = null,
     ): array {
         $userId = $user?->getId();
 

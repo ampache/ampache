@@ -62,7 +62,7 @@ final class AddMessageAction implements ApplicationActionInterface
         UiInterface $ui,
         PrivateMessageCreatorInterface $privateMessageCreator,
         ModelFactoryInterface $modelFactory,
-        RequestParserInterface $requestParser
+        RequestParserInterface $requestParser,
     ) {
         $this->configContainer       = $configContainer;
         $this->ui                    = $ui;

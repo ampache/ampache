@@ -43,7 +43,7 @@ final class ExportPlaylistCommand extends Command
     }
 
     public function __construct(
-        PlaylistExporterInterface $playlistExporter
+        PlaylistExporterInterface $playlistExporter,
     ) {
         parent::__construct('export:playlist', T_('Export Playlists'));
 
@@ -63,7 +63,7 @@ final class ExportPlaylistCommand extends Command
         string $type,
         string $directory,
         string $extension,
-        string $playlistId
+        string $playlistId,
     ): void {
         if (!in_array($extension, PlaylistExporter::VALID_FILE_EXTENSIONS)) {
             $extension = current(PlaylistExporter::VALID_FILE_EXTENSIONS);

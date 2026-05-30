@@ -55,7 +55,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
         RequestParserInterface $requestParser,
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->requestParser   = $requestParser;
         $this->ui              = $ui;

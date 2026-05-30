@@ -896,7 +896,7 @@ class Subsonic_Api
         array $songsIdToAdd = [],
         array $songIndexToRemove = [],
         bool $public = true,
-        bool $clearFirst = false
+        bool $clearFirst = false,
     ): void {
         $playlist                 = new Playlist((int)$playlist_id);
         $songsIdToAdd_count       = count($songsIdToAdd);

@@ -594,7 +594,7 @@ class Song extends database_object implements
         string $album_name,
         string $song_mbid = '',
         string $artist_mbid = '',
-        string $album_mbid = ''
+        string $album_mbid = '',
     ): string {
         // by default require song, album, artist for any searches
         $sql    = "SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?)";

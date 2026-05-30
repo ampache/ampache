@@ -42,7 +42,7 @@ final class ZipHandler implements ZipHandlerInterface
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
         private readonly StreamFactoryInterface $streamFactory,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -79,7 +79,7 @@ final class ZipHandler implements ZipHandlerInterface
         ResponseInterface $response,
         string $name,
         array $files,
-        bool $flat_path
+        bool $flat_path,
     ): ResponseInterface {
         $art_name    = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
         $addart      = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);

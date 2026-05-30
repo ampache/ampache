@@ -100,7 +100,7 @@ class easy_captcha
      */
     public function __construct(
         $captcha_id = null,
-        $ignore_expiration = 0
+        $ignore_expiration = 0,
     ) {
         // load
         if (($this->id = $captcha_id) || ($this->id = preg_replace("/[^-,.\w]+/", "", $_REQUEST[self::CAPTCHA_PARAM_ID] ?? ''))) {

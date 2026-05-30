@@ -30,7 +30,7 @@ use Ampache\Repository\UserFollowerRepositoryInterface;
 final readonly class UserFollowStateRenderer implements UserFollowStateRendererInterface
 {
     public function __construct(
-        private UserFollowerRepositoryInterface $userFollowerRepository
+        private UserFollowerRepositoryInterface $userFollowerRepository,
     ) {
     }
 
@@ -39,7 +39,7 @@ final readonly class UserFollowStateRenderer implements UserFollowStateRendererI
      */
     public function render(
         User $user,
-        User $foreignUser
+        User $foreignUser,
     ): string {
         $userId = $user->getId();
 

@@ -47,6 +47,6 @@ interface CollectorModuleInterface
     public function collectArt(
         Art $art,
         int $limit = 5,
-        array $data = []
+        array $data = [],
     ): array;
 }

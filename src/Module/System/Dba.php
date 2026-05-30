@@ -267,7 +267,7 @@ class Dba
     public static function fetch_single_column(
         string $query,
         array $parameter = [],
-        bool $finish = true
+        bool $finish = true,
     ): ?string {
         $resource = self::query(
             $query,

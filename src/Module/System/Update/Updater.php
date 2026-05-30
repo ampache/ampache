@@ -53,7 +53,7 @@ final class Updater implements UpdaterInterface
         UpdateHelperInterface $updateHelper,
         UpdateInfoRepositoryInterface $updateInfoRepository,
         ContainerInterface $dic,
-        UpdateRunnerInterface $updateRunner
+        UpdateRunnerInterface $updateRunner,
     ) {
         $this->updateHelper         = $updateHelper;
         $this->updateInfoRepository = $updateInfoRepository;
@@ -112,7 +112,7 @@ final class Updater implements UpdaterInterface
      * @throws UpdateFailedException
      */
     public function rollback(
-        ?Interactor $interactor = null
+        ?Interactor $interactor = null,
     ): void {
         if (!$this->hasOverUpdated()) {
             return;
@@ -132,7 +132,7 @@ final class Updater implements UpdaterInterface
      * @throws UpdateException
      */
     public function update(
-        ?Interactor $interactor = null
+        ?Interactor $interactor = null,
     ): void {
         $currentVersion = (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
 

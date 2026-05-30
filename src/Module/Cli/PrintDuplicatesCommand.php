@@ -44,7 +44,7 @@ final class PrintDuplicatesCommand extends Command
     }
 
     public function __construct(
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         parent::__construct('print:duplicates', T_('Possible Duplicate'));
 

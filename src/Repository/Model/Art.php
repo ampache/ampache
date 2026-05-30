@@ -94,7 +94,7 @@ class Art extends database_object
     public function __construct(
         ?int $uid = 0,
         string $type = 'album',
-        string $kind = 'default'
+        string $kind = 'default',
     ) {
         if (!$uid || !$type || !$kind) {
             return;
@@ -688,7 +688,7 @@ class Art extends database_object
         string $type,
         int $uid,
         string $kind,
-        ?string $mime
+        ?string $mime,
     ): bool {
         $path = self::get_dir_on_disk($type, $uid, $sizetext, $kind, true);
         if (!$path) {
@@ -1355,7 +1355,7 @@ class Art extends database_object
     public static function gather_metadata_plugin(
         AmpacheMusicBrainz|AmpacheTheaudiodb|AmpacheDiscogs $plugin,
         string $type,
-        array $options
+        array $options,
     ): array {
         $gtypes     = [];
         $media_info = [];
@@ -1522,7 +1522,7 @@ class Art extends database_object
         ?string $link = null,
         bool $show_default = true,
         bool $thumb_link = true,
-        string $kind = 'default'
+        string $kind = 'default',
     ): bool {
         if (!self::is_valid_type($object_type)) {
             return false;

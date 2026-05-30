@@ -60,7 +60,7 @@ final class ShowDiskAction implements ApplicationActionInterface
         UiInterface $ui,
         LoggerInterface $logger,
         PrivilegeCheckerInterface $privilegeChecker,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->modelFactory     = $modelFactory;
         $this->ui               = $ui;
@@ -107,7 +107,7 @@ final class ShowDiskAction implements ApplicationActionInterface
 
     private function isEditable(
         GuiGatekeeperInterface $gatekeeper,
-        AlbumDisk $albumDisk
+        AlbumDisk $albumDisk,
     ): bool {
         if (
             $this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)

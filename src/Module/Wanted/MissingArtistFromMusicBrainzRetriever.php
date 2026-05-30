@@ -51,7 +51,7 @@ final class MissingArtistFromMusicBrainzRetriever implements MissingArtistRetrie
     public function __construct(
         MusicBrainz $musicBrainz,
         CacheInterface $cache,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->musicBrainz = $musicBrainz;
         $this->cache       = $cache;

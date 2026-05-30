@@ -58,7 +58,7 @@ final class ArtCleanup implements ArtCleanupInterface
     ];
 
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->configContainer = $configContainer;
     }

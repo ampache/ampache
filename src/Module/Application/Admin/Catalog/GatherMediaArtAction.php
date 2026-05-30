@@ -40,7 +40,7 @@ final class GatherMediaArtAction extends AbstractCatalogAction
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
         $this->configContainer = $configContainer;
@@ -52,7 +52,7 @@ final class GatherMediaArtAction extends AbstractCatalogAction
      */
     protected function handle(
         ServerRequestInterface $request,
-        array $catalogIds
+        array $catalogIds,
     ): ?ResponseInterface {
         $options = [
             'gather_art' => true,

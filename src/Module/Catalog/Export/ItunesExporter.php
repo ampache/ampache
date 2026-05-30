@@ -34,7 +34,7 @@ final class ItunesExporter implements CatalogExporterInterface
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
     ) {
         $this->songRepository = $songRepository;
     }

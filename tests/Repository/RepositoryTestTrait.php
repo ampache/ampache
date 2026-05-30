@@ -33,7 +33,7 @@ trait RepositoryTestTrait
     public function runFindByIdTrait(
         string $tableName,
         string $className,
-        array $parameters
+        array $parameters,
     ): void {
         $itemId = 666;
 

@@ -67,7 +67,7 @@ final class ArtistDeleter implements ArtistDeleterInterface
         ShoutRepositoryInterface $shoutRepository,
         UserActivityRepositoryInterface $useractivityRepository,
         LabelRepositoryInterface $labelRepository,
-        ArtCleanupInterface $artCleanup
+        ArtCleanupInterface $artCleanup,
     ) {
         $this->albumDeleter           = $albumDeleter;
         $this->artistRepository       = $artistRepository;
@@ -84,7 +84,7 @@ final class ArtistDeleter implements ArtistDeleterInterface
      * @throws ArtistDeletionException
      */
     public function remove(
-        Artist $artist
+        Artist $artist,
     ): void {
         $album_ids = $this->albumRepository->getAlbumByArtist($artist->id);
 

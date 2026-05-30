@@ -219,7 +219,7 @@ class mpd
         $server,
         $port,
         $password = null,
-        $debug_callback = null
+        $debug_callback = null,
     ) {
         $this->host     = trim($server);
         $this->port     = (int)$port;

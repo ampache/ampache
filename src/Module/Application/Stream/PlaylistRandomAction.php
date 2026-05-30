@@ -40,7 +40,7 @@ final class PlaylistRandomAction extends AbstractStreamAction
         private readonly RequestParserInterface $requestParser,
         private readonly ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
-        private readonly ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($logger, $configContainer);
     }

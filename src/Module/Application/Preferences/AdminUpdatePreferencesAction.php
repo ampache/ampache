@@ -55,7 +55,7 @@ final class AdminUpdatePreferencesAction implements ApplicationActionInterface
         PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater,
         ResponseFactoryInterface $responseFactory,
         ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser
+        RequestParserInterface $requestParser,
     ) {
         $this->preferencesFromRequestUpdater = $preferencesFromRequestUpdater;
         $this->responseFactory               = $responseFactory;

@@ -57,7 +57,7 @@ final class InstallPluginAction implements ApplicationActionInterface
         RequestParserInterface $requestParser,
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->requestParser   = $requestParser;
         $this->ui              = $ui;

@@ -34,7 +34,7 @@ interface PrivateMessageRepositoryInterface
      * Get the user received private messages.
      */
     public function getUnreadCount(
-        User $user
+        User $user,
     ): int;
 
     /**
@@ -60,10 +60,10 @@ interface PrivateMessageRepositoryInterface
         ?User $recipient,
         User $sender,
         string $subject,
-        string $message
+        string $message,
     ): int;
 
     public function findById(
-        int $privateMessageId
+        int $privateMessageId,
     ): ?PrivateMessageInterface;
 }

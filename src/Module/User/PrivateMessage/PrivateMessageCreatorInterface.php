@@ -37,6 +37,6 @@ interface PrivateMessageCreatorInterface
         ?User $recipient,
         User $sender,
         string $subject,
-        string $message
+        string $message,
     ): void;
 }

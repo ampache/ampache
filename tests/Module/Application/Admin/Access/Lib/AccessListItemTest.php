@@ -56,7 +56,7 @@ class AccessListItemTest extends MockeryTestCase
     #[DataProvider(methodName: 'levelNameDataProvider')]
     public function testGetLevelNameReturnsLabel(
         int $level,
-        string $label
+        string $label,
     ): void {
         $this->access->level = $level;
 
@@ -120,7 +120,7 @@ class AccessListItemTest extends MockeryTestCase
     #[DataProvider(methodName: 'typeNameDataProvider')]
     public function testGetTypeNameReturnLabel(
         string $typeId,
-        string $label
+        string $label,
     ): void {
         $this->access->type = $typeId;
 

@@ -46,7 +46,7 @@ final class ShowAction extends AbstractUploadAction
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;

@@ -43,7 +43,7 @@ final class PodcastOpmlExporter implements PodcastExporterInterface
 
     public function __construct(
         TalFactoryInterface $talFactory,
-        PodcastRepositoryInterface $podcastRepository
+        PodcastRepositoryInterface $podcastRepository,
     ) {
         $this->talFactory        = $talFactory;
         $this->podcastRepository = $podcastRepository;

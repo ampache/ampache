@@ -48,7 +48,7 @@ final class ArtExporter implements ArtExporterInterface
     public function __construct(
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
-        ImageRepositoryInterface $imageRepository
+        ImageRepositoryInterface $imageRepository,
     ) {
         $this->logger          = $logger;
         $this->configContainer = $configContainer;
@@ -58,7 +58,7 @@ final class ArtExporter implements ArtExporterInterface
     public function export(
         Interactor $interactor,
         Writer\MetadataWriterInterface $metadataWriter,
-        bool $clearData
+        bool $clearData,
     ): void {
         if ($clearData && !$this->configContainer->get('album_art_store_disk')) {
             $clearData = false;

@@ -34,6 +34,6 @@ interface PlaylistExporterInterface
         string $ext,
         string $playlistId,
         int $userId,
-        string $urltype
+        string $urltype,
     ): void;
 }

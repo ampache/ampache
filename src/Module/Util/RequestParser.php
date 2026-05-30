@@ -36,7 +36,7 @@ final class RequestParser implements RequestParserInterface
     private LoggerInterface $logger;
 
     public function __construct(
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->logger = $logger;
     }

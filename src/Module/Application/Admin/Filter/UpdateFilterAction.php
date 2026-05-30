@@ -48,7 +48,7 @@ final class UpdateFilterAction extends AbstractFilterAction
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser
+        RequestParserInterface $requestParser,
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;

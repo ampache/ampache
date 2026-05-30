@@ -47,7 +47,7 @@ final class LabelDeleter implements LabelDeleterInterface
         ShoutRepositoryInterface $shoutRepository,
         LabelRepositoryInterface $labelRepository,
         UserActivityRepositoryInterface $useractivityRepository,
-        ArtCleanupInterface $artCleanup
+        ArtCleanupInterface $artCleanup,
     ) {
         $this->shoutRepository        = $shoutRepository;
         $this->labelRepository        = $labelRepository;
@@ -56,7 +56,7 @@ final class LabelDeleter implements LabelDeleterInterface
     }
 
     public function delete(
-        Label $label
+        Label $label,
     ): void {
         $labelId = $label->getId();
 

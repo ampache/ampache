@@ -51,7 +51,7 @@ final class Migration360044 extends AbstractMigration
         string $collation,
         string $charset,
         string $engine,
-        int $build
+        int $build,
     ): Generator {
         if ($build > 360044) {
             yield 'recommendation' => "CREATE TABLE IF NOT EXISTS `recommendation` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL, `last_update` int(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";

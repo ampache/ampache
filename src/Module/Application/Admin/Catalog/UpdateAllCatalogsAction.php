@@ -40,7 +40,7 @@ final class UpdateAllCatalogsAction extends AbstractCatalogAction
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
         $this->configContainer = $configContainer;
@@ -52,7 +52,7 @@ final class UpdateAllCatalogsAction extends AbstractCatalogAction
      */
     protected function handle(
         ServerRequestInterface $request,
-        array $catalogIds
+        array $catalogIds,
     ): ?ResponseInterface {
         catalog_worker('update_all_catalogs');
         $this->ui->showConfirmation(

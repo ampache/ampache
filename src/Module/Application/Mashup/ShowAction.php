@@ -40,7 +40,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
     public function __construct(
         private RequestParserInterface $requestParser,
-        private UiInterface $ui
+        private UiInterface $ui,
     ) {
     }
 

@@ -44,7 +44,7 @@ final class InstallerCommand extends Command
     }
 
     public function __construct(
-        InstallationHelperInterface $installationHelper
+        InstallationHelperInterface $installationHelper,
     ) {
         parent::__construct('install', T_('Install the database'));
 

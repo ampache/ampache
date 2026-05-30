@@ -37,7 +37,7 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
         private AjaxUriRetrieverInterface $ajaxUriRetriever,
         private GuiGatekeeperInterface $gatekeeper,
         private string $object_type,
-        private string $object_ids
+        private string $object_ids,
     ) {
     }
 

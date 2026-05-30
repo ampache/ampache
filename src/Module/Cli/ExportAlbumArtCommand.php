@@ -54,7 +54,7 @@ final class ExportAlbumArtCommand extends Command
     public function __construct(
         LoggerInterface $logger,
         AlbumArtExporterInterface $albumArtExporter,
-        ContainerInterface $dic
+        ContainerInterface $dic,
     ) {
         parent::__construct('export:albumArt', T_('Export album art'));
 
@@ -68,7 +68,7 @@ final class ExportAlbumArtCommand extends Command
     }
 
     public function execute(
-        string $type
+        string $type,
     ): void {
         $interactor         = $this->io();
         $metadataWriterType = MetadataWriterTypeEnum::MAP[$type] ?? MetadataWriterTypeEnum::EXPORT_DRIVER_LINUX;

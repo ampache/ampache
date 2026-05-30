@@ -53,7 +53,7 @@ final class EditAction implements ApplicationActionInterface
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        LicenseRepositoryInterface $licenseRepository
+        LicenseRepositoryInterface $licenseRepository,
     ) {
         $this->ui                = $ui;
         $this->configContainer   = $configContainer;

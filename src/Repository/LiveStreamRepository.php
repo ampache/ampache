@@ -40,7 +40,7 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
 {
     public function __construct(
         private ModelFactoryInterface $modelFactory,
-        private DatabaseConnectionInterface $connection
+        private DatabaseConnectionInterface $connection,
     ) {
     }
 
@@ -52,7 +52,7 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
      * @return int[]
      */
     public function findAll(
-        ?User $user = null
+        ?User $user = null,
     ): array {
         $userId = $user?->getId();
 

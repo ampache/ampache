@@ -33,7 +33,7 @@ final class MissingArtistFinder implements MissingArtistFinderInterface
     private MusicBrainz $musicBrainz;
 
     public function __construct(
-        MusicBrainz $musicBrainz
+        MusicBrainz $musicBrainz,
     ) {
         $this->musicBrainz = $musicBrainz;
     }

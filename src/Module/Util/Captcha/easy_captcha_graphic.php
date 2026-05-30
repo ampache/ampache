@@ -46,7 +46,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
      */
     public function __construct(
         $x = null,
-        $y = null
+        $y = null,
     ) {
         if (!$y) {
             $x = strtok(easy_captcha::CAPTCHA_IMAGE_SIZE, "x,|/*;:");

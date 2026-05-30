@@ -45,7 +45,7 @@ class Registration
         string $fullname,
         string $email,
         string $website,
-        string $validation
+        string $validation,
     ): bool {
         if (!Mailer::is_mail_enabled()) {
             return false;

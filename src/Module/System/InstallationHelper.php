@@ -219,7 +219,7 @@ final class InstallationHelper implements InstallationHelperInterface
         bool $overwrite = false,
         bool $create_tables = true,
         string $charset = 'utf8mb4',
-        string $collation = 'utf8mb4_unicode_ci'
+        string $collation = 'utf8mb4_unicode_ci',
     ): bool {
         $database = (string) AmpConfig::get('database_name');
         // Make sure that the database name is valid

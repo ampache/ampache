@@ -46,7 +46,7 @@ final class AdminUpdateUserCommand extends Command
 
     public function __construct(
         UserRepositoryInterface $userRepository,
-        UserKeyGeneratorInterface $userKeyGenerator
+        UserKeyGeneratorInterface $userKeyGenerator,
     ) {
         parent::__construct('admin:updateUser', T_('Update User'));
 
@@ -63,7 +63,7 @@ final class AdminUpdateUserCommand extends Command
     }
 
     public function execute(
-        ?string $username
+        ?string $username,
     ): void {
         if ($this->app() === null) {
             return;

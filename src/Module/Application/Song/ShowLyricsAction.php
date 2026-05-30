@@ -47,7 +47,7 @@ final class ShowLyricsAction implements ApplicationActionInterface
     public function __construct(
         RequestParserInterface $requestParser,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->requestParser = $requestParser;
         $this->ui            = $ui;
@@ -56,7 +56,7 @@ final class ShowLyricsAction implements ApplicationActionInterface
 
     public function run(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
         $this->ui->showHeader();
 

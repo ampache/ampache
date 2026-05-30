@@ -46,7 +46,7 @@ final class EditInstanceAction extends AbstractLocalPlayAction
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         parent::__construct($configContainer);
         $this->configContainer = $configContainer;
@@ -55,7 +55,7 @@ final class EditInstanceAction extends AbstractLocalPlayAction
 
     protected function handle(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
         // Check to make sure they've got the access
         if ($gatekeeper->mayAccess(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::MANAGER) === false) {

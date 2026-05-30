@@ -48,7 +48,7 @@ final class FindArtAction extends AbstractArtAction
     public function __construct(
         ArtCollectorInterface $artCollector,
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->artCollector = $artCollector;
         $this->modelFactory = $modelFactory;

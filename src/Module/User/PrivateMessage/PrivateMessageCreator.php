@@ -42,7 +42,7 @@ final class PrivateMessageCreator implements PrivateMessageCreatorInterface
     public function __construct(
         PrivateMessageRepositoryInterface $pmRepository,
         UtilityFactoryInterface $utilityFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->pmRepository    = $pmRepository;
         $this->utilityFactory  = $utilityFactory;
@@ -59,7 +59,7 @@ final class PrivateMessageCreator implements PrivateMessageCreatorInterface
         ?User $recipient,
         User $sender,
         string $subject,
-        string $message
+        string $message,
     ): void {
         $messageId = $this->pmRepository->create(
             $recipient,

@@ -53,7 +53,7 @@ final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterfac
         PodcastFolderProviderInterface $podcastFolderProvider,
         WebFetcherInterface $webFetcher,
         PodcastRepositoryInterface $podcastRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->podcastFolderProvider = $podcastFolderProvider;
         $this->webFetcher            = $webFetcher;
@@ -65,7 +65,7 @@ final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterfac
      * Download the podcast-episodes files and perform media info update
      */
     public function fetch(
-        Podcast_Episode $episode
+        Podcast_Episode $episode,
     ): void {
         $source    = $episode->getSource();
         $episodeId = $episode->getId();

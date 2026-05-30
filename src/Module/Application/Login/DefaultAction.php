@@ -76,7 +76,7 @@ final class DefaultAction implements ApplicationActionInterface
         LoggerInterface $logger,
         NetworkCheckerInterface $networkChecker,
         UiInterface $ui,
-        UserTrackerInterface $userTracker
+        UserTrackerInterface $userTracker,
     ) {
         $this->requestParser         = $requestParser;
         $this->configContainer       = $configContainer;

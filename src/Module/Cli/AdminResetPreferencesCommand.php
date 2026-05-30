@@ -55,7 +55,7 @@ final class AdminResetPreferencesCommand extends Command
     }
 
     public function execute(
-        string $username
+        string $username,
     ): void {
         if ($this->app() === null) {
             return;

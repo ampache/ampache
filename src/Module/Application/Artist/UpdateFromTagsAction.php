@@ -50,7 +50,7 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
     public function __construct(
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;

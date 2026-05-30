@@ -41,7 +41,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
     public function __construct(
         private UiInterface $ui,
-        private ModelFactoryInterface $modelFactory
+        private ModelFactoryInterface $modelFactory,
     ) {
     }
 
