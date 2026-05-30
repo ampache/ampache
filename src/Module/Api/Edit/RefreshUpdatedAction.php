@@ -73,7 +73,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
         TalFactoryInterface $talFactory,
         GuiFactoryInterface $guiFactory,
         Browse $browse,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         parent::__construct($configContainer, $logger);
         $this->responseFactory = $responseFactory;
@@ -105,7 +105,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
         string $object_type,
         library_item $libitem,
         int $object_id,
-        ?Browse $browse = null
+        ?Browse $browse = null,
     ): ?ResponseInterface {
         $show_ratings = User::is_registered() && AmpConfig::get('ratings');
         /**

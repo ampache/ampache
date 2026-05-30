@@ -51,7 +51,7 @@ final class PodcastEpisodes6Method implements MethodInterface
     public function __construct(
         ModelFactoryInterface $modelFactory,
         PodcastRepositoryInterface $podcastRepository,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->modelFactory      = $modelFactory;
         $this->podcastRepository = $podcastRepository;
@@ -85,7 +85,7 @@ final class PodcastEpisodes6Method implements MethodInterface
         ResponseInterface $response,
         ApiOutputInterface $output,
         array $input,
-        User $user
+        User $user,
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::PODCAST)) {
             $response->getBody()->write(

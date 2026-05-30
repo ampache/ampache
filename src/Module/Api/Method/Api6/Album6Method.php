@@ -49,7 +49,7 @@ final class Album6Method implements MethodInterface
 
     public function __construct(
         ModelFactoryInterface $modelFactory,
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
     ) {
         $this->modelFactory  = $modelFactory;
         $this->streamFactory = $streamFactory;
@@ -79,7 +79,7 @@ final class Album6Method implements MethodInterface
         ResponseInterface $response,
         ApiOutputInterface $output,
         array $input,
-        User $user
+        User $user,
     ): ResponseInterface {
         $objectId = $input['filter'] ?? null;
 

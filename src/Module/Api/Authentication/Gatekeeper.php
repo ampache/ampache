@@ -51,7 +51,7 @@ final class Gatekeeper implements GatekeeperInterface
     public function __construct(
         UserRepositoryInterface $userRepository,
         ServerRequestInterface $request,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->userRepository = $userRepository;
         $this->logger         = $logger;

@@ -135,7 +135,7 @@ final class JsonOutput implements ApiOutputInterface
         User $user,
         string $auth,
         bool $encode = true,
-        bool $asObject = true
+        bool $asObject = true,
     ): string {
         return Json8_Data::albums($albums, $include, $user, $auth, $encode, $asObject);
     }

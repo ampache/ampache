@@ -62,7 +62,7 @@ final class PodcastDelete6Method implements MethodInterface
         PodcastDeleterInterface $podcastDeleter,
         ConfigContainerInterface $configContainer,
         PrivilegeCheckerInterface $privilegeChecker,
-        PodcastRepositoryInterface $podcastRepository
+        PodcastRepositoryInterface $podcastRepository,
     ) {
         $this->podcastDeleter    = $podcastDeleter;
         $this->configContainer   = $configContainer;
@@ -89,7 +89,7 @@ final class PodcastDelete6Method implements MethodInterface
         ResponseInterface $response,
         ApiOutputInterface $output,
         array $input,
-        User $user
+        User $user,
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::PODCAST)) {
             throw new AccessDeniedException(
