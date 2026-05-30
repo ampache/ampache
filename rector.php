@@ -22,6 +22,5 @@ return RectorConfig::configure()
     ->withPreparedSets(deadCode: true, codeQuality: true, codingStyle: true)
     ->withSkip([
         FlipTypeControlToUseExclusiveTypeRector::class,
-        StaticClosureRector::class,
         __DIR__ . '/src/Repository/Model',
     ]);

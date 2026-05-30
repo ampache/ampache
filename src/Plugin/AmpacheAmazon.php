@@ -274,14 +274,8 @@ class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
 
         /* Foreach through what we've found */
         foreach ($final_results as $result) {
-            $key = null;
-            /* Recurse through the images found */
-            foreach ($possible_keys as $pKey) {
-                if (strlen((string) $result[$pKey]) !== 0) {
-                    $key = $pKey;
-                    break;
-                }
-            } // foreach
+            $key = array_find($possible_keys, fn($pKey) => strlen((string) $result[$pKey]) !== 0);
+            // foreach
 
             if ($key) {
                 // Rudimentary image type detection, only JPG and GIF allowed.
