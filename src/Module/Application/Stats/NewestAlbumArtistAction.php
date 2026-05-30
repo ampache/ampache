@@ -48,7 +48,7 @@ final readonly class NewestAlbumArtistAction implements ApplicationActionInterfa
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
 
         $this->ui->showHeader();
         $this->ui->show('show_form_newest.inc.php');

@@ -43,33 +43,18 @@ final class GenerateStreamTokenAction extends AbstractUserAction
 {
     public const string REQUEST_KEY = 'generate_streamtoken';
 
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UserKeyGeneratorInterface $userKeyGenerator;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        UserKeyGeneratorInterface $userKeyGenerator,
+        private readonly RequestParserInterface $requestParser,
+        private readonly UiInterface $ui,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly UserKeyGeneratorInterface $userKeyGenerator,
     ) {
-        $this->requestParser    = $requestParser;
-        $this->ui               = $ui;
-        $this->modelFactory     = $modelFactory;
-        $this->configContainer  = $configContainer;
-        $this->userKeyGenerator = $userKeyGenerator;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 

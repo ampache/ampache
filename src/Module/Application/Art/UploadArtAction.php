@@ -36,16 +36,10 @@ final class UploadArtAction extends AbstractArtAction
 {
     public const string REQUEST_KEY = 'upload_art';
 
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly UiInterface $ui,
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

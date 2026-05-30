@@ -45,32 +45,17 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class AddHostAction implements ApplicationActionInterface
+final readonly class AddHostAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'add_host';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private AccessListManagerInterface $accessListManager;
-
-    private RequestParserInterface $requestParser;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        AccessListManagerInterface $accessListManager,
-        RequestParserInterface $requestParser,
-        LoggerInterface $logger,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private AccessListManagerInterface $accessListManager,
+        private RequestParserInterface $requestParser,
+        private LoggerInterface $logger,
     ) {
-        $this->ui                = $ui;
-        $this->configContainer   = $configContainer;
-        $this->accessListManager = $accessListManager;
-        $this->requestParser     = $requestParser;
-        $this->logger            = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

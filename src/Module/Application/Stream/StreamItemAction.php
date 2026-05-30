@@ -41,7 +41,7 @@ final class StreamItemAction extends AbstractStreamAction
 
     public function __construct(
         LoggerInterface $logger,
-        private readonly ConfigContainerInterface $configContainer,
+        ConfigContainerInterface $configContainer,
         private readonly LibraryItemLoaderInterface $libraryItemLoader,
     ) {
         parent::__construct($logger, $configContainer);
@@ -52,6 +52,7 @@ final class StreamItemAction extends AbstractStreamAction
         if ($this->preCheck($gatekeeper) === false) {
             return null;
         }
+
         $fileName   = $request->getQueryParams()['name'] ?? null;
         $objectType = LibraryItemEnum::tryFrom($request->getQueryParams()['object_type'] ?? '');
         if ($objectType === null) {
@@ -77,6 +78,7 @@ final class StreamItemAction extends AbstractStreamAction
                         }
                     }
                 }
+
                 $user = $gatekeeper->getUser();
                 // record this as a 'play' to help show usage and history for playlists and streams
                 if (

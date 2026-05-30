@@ -34,24 +34,15 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class SortTrackAction implements ApplicationActionInterface
+final readonly class SortTrackAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'sort_tracks';
 
-    private RequestParserInterface $requestParser;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
+        private RequestParserInterface $requestParser,
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
     ) {
-        $this->requestParser = $requestParser;
-        $this->modelFactory  = $modelFactory;
-        $this->ui            = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

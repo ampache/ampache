@@ -25,8 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Exception;
 
+use Override;
+
 final class AccessDeniedException extends ApplicationException
 {
     /** @var string */
+    #[Override]
     protected $message = 'Access denied';
 }

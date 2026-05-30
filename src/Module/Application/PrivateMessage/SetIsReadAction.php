@@ -37,24 +37,15 @@ use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class SetIsReadAction implements ApplicationActionInterface
+final readonly class SetIsReadAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'set_is_read';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private PrivateMessageRepositoryInterface $pmRepository;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        PrivateMessageRepositoryInterface $pmRepository,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private PrivateMessageRepositoryInterface $pmRepository,
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->pmRepository    = $pmRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -66,7 +57,7 @@ final class SetIsReadAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: sociable features are not enabled.');
         }
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
@@ -74,7 +65,7 @@ final class SetIsReadAction implements ApplicationActionInterface
 
         $readMode   = (int) ($queryParams['read'] ?? 0);
         $messageIds = array_map(
-            'intval',
+            intval(...),
             explode(',', $queryParams['msgs'] ?? [])
         );
 
@@ -95,7 +86,7 @@ final class SetIsReadAction implements ApplicationActionInterface
         $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
-            T_('Message\'s state has been changed'),
+            T_("Message's state has been changed"),
             sprintf(
                 '%s/browse.php?action=pvmsg',
                 $this->configContainer->getWebPath()

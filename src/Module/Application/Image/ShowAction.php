@@ -90,7 +90,7 @@ final readonly class ShowAction extends AbstractShowAction
 
         $objectId = (int)($queryParams['object_id'] ?? 0);
 
-        if (!$objectId) {
+        if ($objectId === 0) {
             return null;
         }
 

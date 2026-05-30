@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
+use Ampache\Module\Application\Admin\Access\Lib\AccessListItem;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -35,20 +36,14 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowEditRecordAction implements ApplicationActionInterface
+final readonly class ShowEditRecordAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_edit_record';
 
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -63,7 +58,7 @@ final class ShowEditRecordAction implements ApplicationActionInterface
         $this->ui->show(
             'show_edit_access.inc.php',
             [
-                'access' => new Lib\AccessListItem(
+                'access' => new AccessListItem(
                     $this->modelFactory,
                     $this->modelFactory->createAccess($accessId)
                 )

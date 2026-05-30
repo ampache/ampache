@@ -35,32 +35,17 @@ use Ampache\Repository\WantedRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowMissingAction implements ApplicationActionInterface
+final readonly class ShowMissingAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_missing';
 
-    private RequestParserInterface $requestParser;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
-    private ArtCollectorInterface $artCollector;
-
-    private WantedRepositoryInterface $wantedRepository;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        ArtCollectorInterface $artCollector,
-        WantedRepositoryInterface $wantedRepository,
+        private RequestParserInterface $requestParser,
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+        private ArtCollectorInterface $artCollector,
+        private WantedRepositoryInterface $wantedRepository,
     ) {
-        $this->requestParser    = $requestParser;
-        $this->modelFactory     = $modelFactory;
-        $this->ui               = $ui;
-        $this->artCollector     = $artCollector;
-        $this->wantedRepository = $wantedRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -83,6 +68,7 @@ final class ShowMissingAction implements ApplicationActionInterface
                 $walbum->artist_mbid = $this->requestParser->getFromRequest('artist_mbid');
             }
         }
+
         $walbum->load_all();
 
         // Title for this album
@@ -111,7 +97,7 @@ final class ShowMissingAction implements ApplicationActionInterface
 
         $imageList = '';
 
-        if (count($images) > 0 && !empty($images[0]['url'])) {
+        if ($images !== [] && !empty($images[0]['url'])) {
             $name = (isset($artist))
                 ? '[' . $artist->get_fullname() . '] ' . scrub_out($walbum->name)
                 : scrub_out($walbum->name);

@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\Registration;
+use Ampache\Module\User\Registration\RegistrationAgreementRendererInterface;
 use Ampache\Module\Util\Captcha\captcha;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
@@ -48,28 +49,13 @@ final class AddUserAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'add_user';
 
-    public UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UserRepositoryInterface $userRepository;
-
-    private Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        UserRepositoryInterface $userRepository,
-        Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer,
-        UiInterface $ui,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly RegistrationAgreementRendererInterface $registrationAgreementRenderer,
+        public UiInterface $ui,
     ) {
-        $this->configContainer               = $configContainer;
-        $this->modelFactory                  = $modelFactory;
-        $this->userRepository                = $userRepository;
-        $this->registrationAgreementRenderer = $registrationAgreementRenderer;
-        $this->ui                            = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -80,9 +66,10 @@ final class AddUserAction implements ApplicationActionInterface
         ) {
             throw new AccessDeniedException('Error `allow_public_registration` disabled');
         }
+
         // Check for confirmation email requirements when mail is disabled
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === true &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false &&
             !Mailer::is_mail_enabled()
         ) {
@@ -108,7 +95,7 @@ final class AddUserAction implements ApplicationActionInterface
         $city     = (string) scrub_in(Core::get_post('city'));
 
         /* If we're using the captcha stuff */
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG)) {
             $captcha = captcha::solved();
             if ($captcha) {
                 $msg = "SUCCESS";
@@ -117,10 +104,8 @@ final class AddUserAction implements ApplicationActionInterface
             }
         } // end if it's enabled
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_AGREEMENT) === true) {
-            if (!$_POST['accept_agreement']) {
-                AmpError::add('user_agreement', T_('You must accept the user agreement'));
-            }
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_AGREEMENT) && !$_POST['accept_agreement']) {
+            AmpError::add('user_agreement', T_('You must accept the user agreement'));
         } // if they have to agree to something
 
         if ($username === '') {
@@ -136,25 +121,28 @@ final class AddUserAction implements ApplicationActionInterface
         if (in_array('fullname', $mandatory_fields) && !$fullname) {
             AmpError::add('fullname', T_("Please fill in your full name (first name, last name)"));
         }
+
         if (in_array('website', $mandatory_fields) && !$website) {
             AmpError::add('website', T_("Please fill in your website"));
         }
+
         if (in_array('state', $mandatory_fields) && !$state) {
             AmpError::add('state', T_("Please fill in your state"));
         }
+
         if (in_array('city', $mandatory_fields) && !$city) {
             AmpError::add('city', T_("Please fill in your city"));
         }
 
-        if (!$passOne) {
+        if ($passOne === '' || $passOne === '0') {
             AmpError::add('password', T_('You must enter a password'));
         }
 
-        if ($passOne != $passTwo) {
+        if ($passOne !== $passTwo) {
             AmpError::add('password', T_('Passwords do not match'));
         }
 
-        if ($this->userRepository->idByUsername((string) $username) > 0) {
+        if ($this->userRepository->idByUsername($username) > 0) {
             AmpError::add('duplicate_user', T_('That Username already exists'));
         }
 

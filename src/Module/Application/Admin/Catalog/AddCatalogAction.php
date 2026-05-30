@@ -39,21 +39,15 @@ final class AddCatalogAction extends AbstractCatalogAction
 {
     public const string REQUEST_KEY = 'add_catalog';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private RequestParserInterface $requestParser;
+    private readonly UiInterface $ui;
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly RequestParserInterface $requestParser,
     ) {
         parent::__construct($ui);
-        $this->configContainer = $configContainer;
         $this->ui              = $ui;
-        $this->requestParser   = $requestParser;
     }
 
     /**
@@ -64,7 +58,7 @@ final class AddCatalogAction extends AbstractCatalogAction
         ServerRequestInterface $request,
         array $catalogIds,
     ): ?ResponseInterface {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
@@ -79,7 +73,7 @@ final class AddCatalogAction extends AbstractCatalogAction
             AmpError::add('general', T_('Please select a Catalog type'));
         }
 
-        if (!strlen(htmlspecialchars($body['name'] ?? '', ENT_NOQUOTES))) {
+        if (htmlspecialchars($body['name'] ?? '', ENT_NOQUOTES) === '') {
             AmpError::add('general', T_('Please enter a Catalog name'));
         }
 
@@ -102,42 +96,54 @@ final class AddCatalogAction extends AbstractCatalogAction
             if (array_key_exists('path', $_POST)) {
                 $data['path'] = $_POST['path'];
             }
+
             if (array_key_exists('uri', $_POST)) {
                 $data['uri'] = $_POST['uri'];
             }
+
             if (array_key_exists('username', $_POST)) {
                 $data['username'] = $_POST['username'];
             }
+
             if (array_key_exists('password', $_POST)) {
                 $data['password'] = $_POST['password'];
             }
+
             if (array_key_exists('library_name', $_POST)) {
                 $data['library_name'] = $_POST['library_name'];
             }
+
             if (array_key_exists('server_uri', $_POST)) {
                 $data['server_uri'] = $_POST['server_uri'];
             }
+
             if (array_key_exists('api_call_delay', $_POST)) {
                 $data['api_call_delay'] = $_POST['api_call_delay'];
             }
+
             if (array_key_exists('beetsdb', $_POST)) {
                 $data['beetsdb'] = $_POST['beetsdb'];
             }
+
             if (array_key_exists('apikey', $_POST)) {
                 $data['apikey'] = $_POST['apikey'];
             }
+
             if (array_key_exists('secret', $_POST)) {
                 $data['secret'] = $_POST['secret'];
             }
+
             if (array_key_exists('authtoken', $_POST)) {
                 $data['authtoken'] = $_POST['authtoken'];
             }
+
             if (array_key_exists('getchunk', $_POST)) {
                 $data['getchunk'] = $_POST['getchunk'];
             }
+
             $catalog_id = Catalog::create($data);
 
-            if (!$catalog_id) {
+            if ($catalog_id === 0) {
                 $this->ui->show('show_add_catalog.inc.php');
 
                 return null;

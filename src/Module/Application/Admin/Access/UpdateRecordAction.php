@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Application\Admin\Access\Lib\AccessListItem;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -42,32 +43,17 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UpdateRecordAction implements ApplicationActionInterface
+final readonly class UpdateRecordAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'update_record';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private AccessListManagerInterface $accessListManager;
-
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        AccessListManagerInterface $accessListManager,
-        RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+        private AccessListManagerInterface $accessListManager,
+        private RequestParserInterface $requestParser,
     ) {
-        $this->ui                = $ui;
-        $this->configContainer   = $configContainer;
-        $this->modelFactory      = $modelFactory;
-        $this->accessListManager = $accessListManager;
-        $this->requestParser     = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -106,7 +92,7 @@ final class UpdateRecordAction implements ApplicationActionInterface
             $this->ui->show(
                 'show_edit_access.inc.php',
                 [
-                    'access' => new Lib\AccessListItem(
+                    'access' => new AccessListItem(
                         $this->modelFactory,
                         $this->modelFactory->createAccess($accessId)
                     )

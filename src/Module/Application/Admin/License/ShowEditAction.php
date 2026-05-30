@@ -40,24 +40,15 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Shows the license edit-page
  */
-final class ShowEditAction implements ApplicationActionInterface
+final readonly class ShowEditAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_edit';
 
-    private UiInterface $ui;
-
-    private LicenseRepositoryInterface $licenseRepository;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        UiInterface $ui,
-        LicenseRepositoryInterface $licenseRepository,
-        ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private LicenseRepositoryInterface $licenseRepository,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->ui                = $ui;
-        $this->licenseRepository = $licenseRepository;
-        $this->configContainer   = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

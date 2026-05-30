@@ -37,17 +37,14 @@ final class TmpPlaylistAction extends AbstractStreamAction
 {
     public const string REQUEST_KEY = 'tmp_playlist';
 
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
+    private readonly ConfigContainerInterface $configContainer;
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
+        private readonly ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($logger, $configContainer);
-        $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
     }
 

@@ -28,6 +28,8 @@ namespace Ampache\Module\Application\Admin\Access\Lib;
 final class AccessListTypeEnum
 {
     public const string ADD_TYPE_RPC     = 'add_type_rpc';
+
     public const string ADD_TYPE_LOCAL   = 'add_type_local';
+
     public const string ADD_TYPE_CURRENT = 'add_type_current';
 }

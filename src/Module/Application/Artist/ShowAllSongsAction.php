@@ -33,24 +33,15 @@ use Ampache\Repository\SongRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAllSongsAction implements ApplicationActionInterface
+final readonly class ShowAllSongsAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_all_songs';
 
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
-    private SongRepositoryInterface $songRepository;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        SongRepositoryInterface $songRepository,
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+        private SongRepositoryInterface $songRepository,
     ) {
-        $this->modelFactory   = $modelFactory;
-        $this->ui             = $ui;
-        $this->songRepository = $songRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

@@ -36,12 +36,8 @@ final class ShowArtDlgAction extends AbstractArtAction
 {
     public const string REQUEST_KEY = 'show_art_dlg';
 
-    private UiInterface $ui;
-
-    public function __construct(
-        UiInterface $ui,
-    ) {
-        $this->ui = $ui;
+    public function __construct(private readonly UiInterface $ui)
+    {
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

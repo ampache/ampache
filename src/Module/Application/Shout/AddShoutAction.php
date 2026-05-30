@@ -39,36 +39,22 @@ use Ampache\Repository\Model\LibraryItemEnum;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
 /**
  * Creates a new shout for an item
  */
-final class AddShoutAction implements ApplicationActionInterface
+final readonly class AddShoutAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'add_shout';
 
-    private ResponseFactoryInterface $responseFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ShoutCreatorInterface $shoutCreator;
-
-    private RequestParserInterface $requestParser;
-    private ShoutObjectLoaderInterface $shoutObjectLoader;
-
     public function __construct(
-        ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer,
-        ShoutCreatorInterface $shoutCreator,
-        RequestParserInterface $requestParser,
-        ShoutObjectLoaderInterface $shoutObjectLoader,
+        private ResponseFactoryInterface $responseFactory,
+        private ConfigContainerInterface $configContainer,
+        private ShoutCreatorInterface $shoutCreator,
+        private RequestParserInterface $requestParser,
+        private ShoutObjectLoaderInterface $shoutObjectLoader,
     ) {
-        $this->responseFactory   = $responseFactory;
-        $this->configContainer   = $configContainer;
-        $this->shoutCreator      = $shoutCreator;
-        $this->requestParser     = $requestParser;
-        $this->shoutObjectLoader = $shoutObjectLoader;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -108,7 +94,7 @@ final class AddShoutAction implements ApplicationActionInterface
         );
 
         return $this->responseFactory
-            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf(

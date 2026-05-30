@@ -34,24 +34,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
-    private UiInterface $ui;
-
-    private LoggerInterface $logger;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        UiInterface $ui,
-        LoggerInterface $logger,
-        ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+        private LoggerInterface $logger,
+        private ModelFactoryInterface $modelFactory,
     ) {
-        $this->ui           = $ui;
-        $this->logger       = $logger;
-        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -61,7 +52,7 @@ final class ShowAction implements ApplicationActionInterface
         );
         $this->ui->showHeader();
 
-        if ($playlist->isNew() || (!$playlist->has_collaborate() and $playlist->type === 'private')) {
+        if ($playlist->isNew() || (!$playlist->has_collaborate() && $playlist->type === 'private')) {
             $this->logger->warning(
                 'Requested a playlist that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]

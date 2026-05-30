@@ -41,32 +41,17 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
-    private LoggerInterface $logger;
-
-    private PrivilegeCheckerInterface $privilegeChecker;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        LoggerInterface $logger,
-        PrivilegeCheckerInterface $privilegeChecker,
-        ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+        private LoggerInterface $logger,
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->modelFactory     = $modelFactory;
-        $this->ui               = $ui;
-        $this->logger           = $logger;
-        $this->privilegeChecker = $privilegeChecker;
-        $this->configContainer  = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -74,7 +59,7 @@ final class ShowAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
-        $catalogs = (isset($user->catalogs['music'])) ? $user->catalogs['music'] : User::get_user_catalogs($user->id);
+        $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
         $albumId  = (int) ($request->getQueryParams()['album'] ?? 0);
         $album    = $this->modelFactory->createAlbum($albumId);
 

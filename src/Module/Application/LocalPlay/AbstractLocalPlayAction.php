@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -37,12 +39,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 abstract class AbstractLocalPlayAction implements ApplicationActionInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    protected function __construct(
-        ConfigContainerInterface $configContainer,
-    ) {
-        $this->configContainer = $configContainer;
+    protected function __construct(private readonly ConfigContainerInterface $configContainer)
+    {
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

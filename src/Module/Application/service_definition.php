@@ -25,312 +25,533 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application;
 
+use Ampache\Module\Application\Admin\Access\AddHostAction;
+use Ampache\Module\Application\Admin\Access\DeleteRecordAction;
+use Ampache\Module\Application\Admin\Access\ShowAddAction;
+use Ampache\Module\Application\Admin\Access\ShowAddAdvancedAction;
+use Ampache\Module\Application\Admin\Access\ShowDeleteRecordAction;
+use Ampache\Module\Application\Admin\Access\ShowEditRecordAction;
+use Ampache\Module\Application\Admin\Access\UpdateRecordAction;
+use Ampache\Module\Application\Admin\Catalog\AddCatalogAction;
+use Ampache\Module\Application\Admin\Catalog\AddToAllCatalogsAction;
+use Ampache\Module\Application\Admin\Catalog\AddToCatalogAction;
+use Ampache\Module\Application\Admin\Catalog\CleanAllCatalogsAction;
+use Ampache\Module\Application\Admin\Catalog\CleanCatalogAction;
+use Ampache\Module\Application\Admin\Catalog\ClearNowPlayingAction;
+use Ampache\Module\Application\Admin\Catalog\ClearStatsAction;
+use Ampache\Module\Application\Admin\Catalog\DeleteCatalogAction;
+use Ampache\Module\Application\Admin\Catalog\EnableDisabledAction;
+use Ampache\Module\Application\Admin\Catalog\FullServiceAction;
+use Ampache\Module\Application\Admin\Catalog\GarbageCollectAction;
+use Ampache\Module\Application\Admin\Catalog\GatherMediaArtAction;
+use Ampache\Module\Application\Admin\Catalog\ImportToCatalogAction;
+use Ampache\Module\Application\Admin\Catalog\ShowAddCatalogAction;
+use Ampache\Module\Application\Admin\Catalog\ShowCatalogsAction;
+use Ampache\Module\Application\Admin\Catalog\ShowCustomizeCatalogAction;
+use Ampache\Module\Application\Admin\Catalog\ShowDeleteCatalogAction;
+use Ampache\Module\Application\Admin\Catalog\ShowDisabledAction;
+use Ampache\Module\Application\Admin\Catalog\UpdateAllCatalogsAction;
+use Ampache\Module\Application\Admin\Catalog\UpdateAllFileTagsActions;
+use Ampache\Module\Application\Admin\Catalog\UpdateCatalogAction;
+use Ampache\Module\Application\Admin\Catalog\UpdateCatalogSettingsAction;
+use Ampache\Module\Application\Admin\Catalog\UpdateFileTagsAction;
+use Ampache\Module\Application\Admin\Catalog\UpdateFromAction;
+use Ampache\Module\Application\Admin\Export\ExportAction;
+use Ampache\Module\Application\Admin\Filter\AbstractFilterAction;
+use Ampache\Module\Application\Admin\Filter\AddFilterAction;
+use Ampache\Module\Application\Admin\Filter\ShowAddFilterAction;
+use Ampache\Module\Application\Admin\Filter\ShowEditAction;
+use Ampache\Module\Application\Admin\Filter\UpdateFilterAction;
+use Ampache\Module\Application\Admin\License\EditAction;
+use Ampache\Module\Application\Admin\Mail\SendMailAction;
+use Ampache\Module\Application\Admin\Modules\ConfirmInstallCatalogType;
+use Ampache\Module\Application\Admin\Modules\ConfirmInstallLocalplayAction;
+use Ampache\Module\Application\Admin\Modules\ConfirmInstallPluginAction;
+use Ampache\Module\Application\Admin\Modules\ConfirmUninstallCatalogType;
+use Ampache\Module\Application\Admin\Modules\ConfirmUninstallLocalplayAction;
+use Ampache\Module\Application\Admin\Modules\ConfirmUninstallPluginAction;
+use Ampache\Module\Application\Admin\Modules\InstallCatalogTypeAction;
+use Ampache\Module\Application\Admin\Modules\InstallLocalplayAction;
+use Ampache\Module\Application\Admin\Modules\InstallPluginAction;
+use Ampache\Module\Application\Admin\Modules\ShowCatalogTypesAction;
+use Ampache\Module\Application\Admin\Modules\ShowLocalplayAction;
+use Ampache\Module\Application\Admin\Modules\ShowPluginsAction;
+use Ampache\Module\Application\Admin\Modules\UninstallCatalogTypeAction;
+use Ampache\Module\Application\Admin\Modules\UninstallLocalplayAction;
+use Ampache\Module\Application\Admin\Modules\UninstallPluginAction;
+use Ampache\Module\Application\Admin\Modules\UpgradePluginAction;
+use Ampache\Module\Application\Admin\Shout\EditShoutAction;
+use Ampache\Module\Application\Admin\System\ClearCacheAction;
+use Ampache\Module\Application\Admin\System\GenerateConfigAction;
+use Ampache\Module\Application\Admin\System\ResetDbCharsetAction;
+use Ampache\Module\Application\Admin\System\ShowDebugAction;
+use Ampache\Module\Application\Admin\System\WriteConfigAction;
+use Ampache\Module\Application\Admin\User\DeleteApiKeyAction;
+use Ampache\Module\Application\Admin\User\DeleteAvatarAction;
+use Ampache\Module\Application\Admin\User\DeleteRssTokenAction;
+use Ampache\Module\Application\Admin\User\DeleteStreamTokenAction;
+use Ampache\Module\Application\Admin\User\DisableAction;
+use Ampache\Module\Application\Admin\User\EnableAction;
+use Ampache\Module\Application\Admin\User\GenerateApiKeyAction;
+use Ampache\Module\Application\Admin\User\GenerateRssTokenAction;
+use Ampache\Module\Application\Admin\User\GenerateStreamTokenAction;
+use Ampache\Module\Application\Admin\User\ShowDeleteApiKeyAction;
+use Ampache\Module\Application\Admin\User\ShowDeleteAvatarAction;
+use Ampache\Module\Application\Admin\User\ShowDeleteRssTokenAction;
+use Ampache\Module\Application\Admin\User\ShowDeleteStreamTokenAction;
+use Ampache\Module\Application\Admin\User\ShowGenerateApiKeyAction;
+use Ampache\Module\Application\Admin\User\ShowGenerateRssTokenAction;
+use Ampache\Module\Application\Admin\User\ShowGenerateStreamTokenAction;
+use Ampache\Module\Application\Admin\User\ShowIpHistoryAction;
+use Ampache\Module\Application\Admin\User\ShowPreferencesAction;
+use Ampache\Module\Application\Album\SetTrackNumbersAction;
+use Ampache\Module\Application\Album\ShowAction;
+use Ampache\Module\Application\Album\ShowMissingAction;
+use Ampache\Module\Application\Album\UpdateFromTagsAction;
+use Ampache\Module\Application\Art\ClearArtAction;
+use Ampache\Module\Application\Art\FindArtAction;
+use Ampache\Module\Application\Art\SelectArtAction;
+use Ampache\Module\Application\Art\ShowArtDlgAction;
+use Ampache\Module\Application\Art\UploadArtAction;
+use Ampache\Module\Application\Artist\ShowAllSongsAction;
+use Ampache\Module\Application\Artist\ShowSongsAction;
+use Ampache\Module\Application\Artist\UpdateFromMusicBrainzAction;
+use Ampache\Module\Application\Browse\AlbumAction;
+use Ampache\Module\Application\Browse\AlbumArtistAction;
+use Ampache\Module\Application\Browse\ArtistAction;
+use Ampache\Module\Application\Browse\BroadcastAction;
+use Ampache\Module\Application\Browse\CatalogAction;
+use Ampache\Module\Application\Browse\FileAction;
+use Ampache\Module\Application\Browse\LabelAction;
+use Ampache\Module\Application\Browse\LiveStreamAction;
+use Ampache\Module\Application\Browse\PlaylistAction;
+use Ampache\Module\Application\Browse\PodcastAction;
+use Ampache\Module\Application\Browse\PodcastEpisodeAction;
+use Ampache\Module\Application\Browse\PrivateMessageAction;
+use Ampache\Module\Application\Browse\SmartPlaylistAction;
+use Ampache\Module\Application\Browse\SongAction;
+use Ampache\Module\Application\Browse\TagAction;
+use Ampache\Module\Application\Browse\VideoAction;
+use Ampache\Module\Application\DemocraticPlayback\CreateAction;
+use Ampache\Module\Application\DemocraticPlayback\ManageAction;
+use Ampache\Module\Application\DemocraticPlayback\ManagePlaylistsAction;
+use Ampache\Module\Application\DemocraticPlayback\ShowCreateAction;
+use Ampache\Module\Application\DemocraticPlayback\ShowPlaylistAction;
+use Ampache\Module\Application\Image\ShowUserAvatarAction;
+use Ampache\Module\Application\Label\AddLabelAction;
+use Ampache\Module\Application\Label\ShowAddLabelAction;
+use Ampache\Module\Application\LocalPlay\AddInstanceAction;
+use Ampache\Module\Application\LocalPlay\EditInstanceAction;
+use Ampache\Module\Application\LocalPlay\ShowAddInstanceAction;
+use Ampache\Module\Application\LocalPlay\ShowInstancesAction;
+use Ampache\Module\Application\LocalPlay\UpdateInstanceAction;
+use Ampache\Module\Application\Logout\LogoutAction;
+use Ampache\Module\Application\LostPassword\SendAction;
+use Ampache\Module\Application\Mashup\WrappedAction;
+use Ampache\Module\Application\Playback\PlayAction;
+use Ampache\Module\Application\Playlist\AddSongAction;
+use Ampache\Module\Application\Playlist\ImportPlaylistAction;
+use Ampache\Module\Application\Playlist\RemoveDuplicatesAction;
+use Ampache\Module\Application\Playlist\ShowImportPlaylistAction;
+use Ampache\Module\Application\Playlist\SortTrackAction;
+use Ampache\Module\Application\Podcast\ExportPodcastsAction;
+use Ampache\Module\Application\Preferences\AdminAction;
+use Ampache\Module\Application\Preferences\AdminUpdatePreferencesAction;
+use Ampache\Module\Application\Preferences\GrantAction;
+use Ampache\Module\Application\Preferences\UpdatePreferencesAction;
+use Ampache\Module\Application\Preferences\UpdateUserAction;
+use Ampache\Module\Application\Preferences\UserAction;
+use Ampache\Module\Application\PrivateMessage\AddMessageAction;
+use Ampache\Module\Application\PrivateMessage\SetIsReadAction;
+use Ampache\Module\Application\PrivateMessage\ShowAddMessageAction;
+use Ampache\Module\Application\Random\AdvancedAction;
+use Ampache\Module\Application\Random\GetAdvancedAction;
+use Ampache\Module\Application\Register\AddUserAction;
+use Ampache\Module\Application\Register\ShowAddUserAction;
+use Ampache\Module\Application\Register\ValidateAction;
+use Ampache\Module\Application\Search\DescriptorAction;
+use Ampache\Module\Application\Search\SaveAsPlaylistAction;
+use Ampache\Module\Application\Search\SaveAsSmartPlaylistAction;
+use Ampache\Module\Application\Search\SearchAction;
+use Ampache\Module\Application\Share\CleanAction;
+use Ampache\Module\Application\Share\ConsumeAction;
+use Ampache\Module\Application\Share\ExternalShareAction;
+use Ampache\Module\Application\Share\ShowDeleteAction;
+use Ampache\Module\Application\Shout\AddShoutAction;
+use Ampache\Module\Application\Shout\ShowAddShoutAction;
+use Ampache\Module\Application\SmartPlaylist\CreatePlaylistAction;
+use Ampache\Module\Application\SmartPlaylist\DeletePlaylistAction;
+use Ampache\Module\Application\SmartPlaylist\RefreshPlaylistAction;
+use Ampache\Module\Application\SmartPlaylist\UpdatePlaylistAction;
+use Ampache\Module\Application\Song\ConfirmDeleteAction;
+use Ampache\Module\Application\Song\DeleteAction;
+use Ampache\Module\Application\Song\ShowLyricsAction;
+use Ampache\Module\Application\Song\ShowSongAction;
+use Ampache\Module\Application\Stats\GraphAction;
+use Ampache\Module\Application\Stats\HighestAlbumAction;
+use Ampache\Module\Application\Stats\HighestAlbumArtistAction;
+use Ampache\Module\Application\Stats\HighestAlbumDiskAction;
+use Ampache\Module\Application\Stats\HighestArtistAction;
+use Ampache\Module\Application\Stats\HighestPlaylistAction;
+use Ampache\Module\Application\Stats\HighestPodcastEpisodeAction;
+use Ampache\Module\Application\Stats\HighestSongAction;
+use Ampache\Module\Application\Stats\HighestVideoAction;
+use Ampache\Module\Application\Stats\NewestAlbumAction;
+use Ampache\Module\Application\Stats\NewestAlbumArtistAction;
+use Ampache\Module\Application\Stats\NewestAlbumDiskAction;
+use Ampache\Module\Application\Stats\NewestArtistAction;
+use Ampache\Module\Application\Stats\NewestPlaylistAction;
+use Ampache\Module\Application\Stats\NewestPodcastEpisodeAction;
+use Ampache\Module\Application\Stats\NewestSongAction;
+use Ampache\Module\Application\Stats\NewestVideoAction;
+use Ampache\Module\Application\Stats\PopularAlbumAction;
+use Ampache\Module\Application\Stats\PopularAlbumArtistAction;
+use Ampache\Module\Application\Stats\PopularAlbumDiskAction;
+use Ampache\Module\Application\Stats\PopularArtistAction;
+use Ampache\Module\Application\Stats\PopularPlaylistAction;
+use Ampache\Module\Application\Stats\PopularPodcastEpisodeAction;
+use Ampache\Module\Application\Stats\PopularSongAction;
+use Ampache\Module\Application\Stats\PopularVideoAction;
+use Ampache\Module\Application\Stats\RecentAlbumArtistAction;
+use Ampache\Module\Application\Stats\RecentAlbumDiskAction;
+use Ampache\Module\Application\Stats\RecentArtistAction;
+use Ampache\Module\Application\Stats\RecentPlaylistAction;
+use Ampache\Module\Application\Stats\RecentPodcastEpisodeAction;
+use Ampache\Module\Application\Stats\RecentSongAction;
+use Ampache\Module\Application\Stats\RecentVideoAction;
+use Ampache\Module\Application\Stats\ShareAction;
+use Ampache\Module\Application\Stats\ShowUserAction;
+use Ampache\Module\Application\Stats\UploadAction;
+use Ampache\Module\Application\Stats\UserflagAlbumAction;
+use Ampache\Module\Application\Stats\UserflagAlbumArtistAction;
+use Ampache\Module\Application\Stats\UserflagAlbumDiskAction;
+use Ampache\Module\Application\Stats\UserflagArtistAction;
+use Ampache\Module\Application\Stats\UserflagPlaylistAction;
+use Ampache\Module\Application\Stats\UserflagPodcastEpisodeAction;
+use Ampache\Module\Application\Stats\UserflagSongAction;
+use Ampache\Module\Application\Stats\UserflagVideoAction;
+use Ampache\Module\Application\Stream\BasketAction;
+use Ampache\Module\Application\Stream\DemocraticAction;
+use Ampache\Module\Application\Stream\DownloadAction;
+use Ampache\Module\Application\Stream\PlayItemAction;
+use Ampache\Module\Application\Stream\PlaylistRandomAction;
+use Ampache\Module\Application\Stream\RandomAction;
+use Ampache\Module\Application\Stream\StreamItemAction;
+use Ampache\Module\Application\Stream\TmpPlaylistAction;
+use Ampache\Module\Application\Test\ConfigAction;
+use Ampache\Module\Application\Update\ClearAction;
+use Ampache\Module\Application\Update\UpdateAction;
+use Ampache\Module\Application\Update\UpdatePluginsAction;
+use Ampache\Module\Application\Upload\DefaultAction;
+use Ampache\Module\Application\Video\ShowVideoAction;
+use Ampache\Module\Application\WebPlayer\ShowEmbeddedAction;
+
 use function DI\autowire;
 
 return [
     ApplicationRunner::class => autowire(ApplicationRunner::class),
-    Song\DeleteAction::class => autowire(Song\DeleteAction::class),
-    Song\ConfirmDeleteAction::class => autowire(Song\ConfirmDeleteAction::class),
-    Song\ShowLyricsAction::class => autowire(Song\ShowLyricsAction::class),
-    Song\ShowSongAction::class => autowire(Song\ShowSongAction::class),
+    DeleteAction::class => autowire(DeleteAction::class),
+    ConfirmDeleteAction::class => autowire(ConfirmDeleteAction::class),
+    ShowLyricsAction::class => autowire(ShowLyricsAction::class),
+    ShowSongAction::class => autowire(ShowSongAction::class),
     Album\DeleteAction::class => autowire(Album\DeleteAction::class),
     Album\ConfirmDeleteAction::class => autowire(Album\ConfirmDeleteAction::class),
-    Album\UpdateFromTagsAction::class => autowire(Album\UpdateFromTagsAction::class),
-    Album\SetTrackNumbersAction::class => autowire(Album\SetTrackNumbersAction::class),
-    Album\ShowMissingAction::class => autowire(Album\ShowMissingAction::class),
-    Album\ShowAction::class => autowire(Album\ShowAction::class),
+    UpdateFromTagsAction::class => autowire(UpdateFromTagsAction::class),
+    SetTrackNumbersAction::class => autowire(SetTrackNumbersAction::class),
+    ShowMissingAction::class => autowire(ShowMissingAction::class),
+    ShowAction::class => autowire(ShowAction::class),
     Artist\DeleteAction::class => autowire(Artist\DeleteAction::class),
     Artist\ConfirmDeleteAction::class => autowire(Artist\ConfirmDeleteAction::class),
     Artist\ShowAction::class => autowire(Artist\ShowAction::class),
-    Artist\ShowAllSongsAction::class => autowire(Artist\ShowAllSongsAction::class),
-    Artist\ShowSongsAction::class => autowire(Artist\ShowSongsAction::class),
-    Artist\UpdateFromMusicBrainzAction::class => autowire(Artist\UpdateFromMusicBrainzAction::class),
+    ShowAllSongsAction::class => autowire(ShowAllSongsAction::class),
+    ShowSongsAction::class => autowire(ShowSongsAction::class),
+    UpdateFromMusicBrainzAction::class => autowire(UpdateFromMusicBrainzAction::class),
     Artist\UpdateFromTagsAction::class => autowire(Artist\UpdateFromTagsAction::class),
     Artist\ShowMissingAction::class => autowire(Artist\ShowMissingAction::class),
-    Stats\ShowUserAction::class => autowire(Stats\ShowUserAction::class),
-    Stats\NewestAlbumAction::class => autowire(Stats\NewestAlbumAction::class),
-    Stats\NewestAlbumDiskAction::class => autowire(Stats\NewestAlbumDiskAction::class),
-    Stats\NewestAlbumArtistAction::class => autowire(Stats\NewestAlbumArtistAction::class),
-    Stats\NewestArtistAction::class => autowire(Stats\NewestArtistAction::class),
-    Stats\NewestPlaylistAction::class => autowire(Stats\NewestPlaylistAction::class),
-    Stats\NewestPodcastEpisodeAction::class => autowire(Stats\NewestPodcastEpisodeAction::class),
-    Stats\NewestSongAction::class => autowire(Stats\NewestSongAction::class),
-    Stats\NewestVideoAction::class => autowire(Stats\NewestVideoAction::class),
-    Stats\PopularAlbumAction::class => autowire(Stats\PopularAlbumAction::class),
-    Stats\PopularAlbumArtistAction::class => autowire(Stats\PopularAlbumArtistAction::class),
-    Stats\PopularAlbumDiskAction::class => autowire(Stats\PopularAlbumDiskAction::class),
-    Stats\PopularArtistAction::class => autowire(Stats\PopularArtistAction::class),
-    Stats\PopularPlaylistAction::class => autowire(Stats\PopularPlaylistAction::class),
-    Stats\PopularPodcastEpisodeAction::class => autowire(Stats\PopularPodcastEpisodeAction::class),
-    Stats\PopularSongAction::class => autowire(Stats\PopularSongAction::class),
-    Stats\PopularVideoAction::class => autowire(Stats\PopularVideoAction::class),
-    Stats\HighestAlbumAction::class => autowire(Stats\HighestAlbumAction::class),
-    Stats\HighestAlbumArtistAction::class => autowire(Stats\HighestAlbumArtistAction::class),
-    Stats\HighestAlbumDiskAction::class => autowire(Stats\HighestAlbumDiskAction::class),
-    Stats\HighestArtistAction::class => autowire(Stats\HighestArtistAction::class),
-    Stats\HighestPlaylistAction::class => autowire(Stats\HighestPlaylistAction::class),
-    Stats\HighestPodcastEpisodeAction::class => autowire(Stats\HighestPodcastEpisodeAction::class),
-    Stats\HighestSongAction::class => autowire(Stats\HighestSongAction::class),
-    Stats\HighestVideoAction::class => autowire(Stats\HighestVideoAction::class),
-    Stats\UserflagAlbumAction::class => autowire(Stats\UserflagAlbumAction::class),
-    Stats\UserflagAlbumArtistAction::class => autowire(Stats\UserflagAlbumArtistAction::class),
-    Stats\UserflagAlbumDiskAction::class => autowire(Stats\UserflagAlbumDiskAction::class),
-    Stats\UserflagArtistAction::class => autowire(Stats\UserflagArtistAction::class),
-    Stats\UserflagPlaylistAction::class => autowire(Stats\UserflagPlaylistAction::class),
-    Stats\UserflagPodcastEpisodeAction::class => autowire(Stats\UserflagPodcastEpisodeAction::class),
-    Stats\UserflagSongAction::class => autowire(Stats\UserflagSongAction::class),
-    Stats\UserflagVideoAction::class => autowire(Stats\UserflagVideoAction::class),
-    Stats\RecentAlbumArtistAction::class => autowire(Stats\RecentAlbumArtistAction::class),
-    Stats\RecentAlbumDiskAction::class => autowire(Stats\RecentAlbumDiskAction::class),
-    Stats\RecentArtistAction::class => autowire(Stats\RecentArtistAction::class),
-    Stats\RecentPlaylistAction::class => autowire(Stats\RecentPlaylistAction::class),
-    Stats\RecentPodcastEpisodeAction::class => autowire(Stats\RecentPodcastEpisodeAction::class),
-    Stats\RecentSongAction::class => autowire(Stats\RecentSongAction::class),
-    Stats\RecentVideoAction::class => autowire(Stats\RecentVideoAction::class),
-    Stats\ShareAction::class => autowire(Stats\ShareAction::class),
-    Stats\UploadAction::class => autowire(Stats\UploadAction::class),
-    Stats\GraphAction::class => autowire(Stats\GraphAction::class),
+    ShowUserAction::class => autowire(ShowUserAction::class),
+    NewestAlbumAction::class => autowire(NewestAlbumAction::class),
+    NewestAlbumDiskAction::class => autowire(NewestAlbumDiskAction::class),
+    NewestAlbumArtistAction::class => autowire(NewestAlbumArtistAction::class),
+    NewestArtistAction::class => autowire(NewestArtistAction::class),
+    NewestPlaylistAction::class => autowire(NewestPlaylistAction::class),
+    NewestPodcastEpisodeAction::class => autowire(NewestPodcastEpisodeAction::class),
+    NewestSongAction::class => autowire(NewestSongAction::class),
+    NewestVideoAction::class => autowire(NewestVideoAction::class),
+    PopularAlbumAction::class => autowire(PopularAlbumAction::class),
+    PopularAlbumArtistAction::class => autowire(PopularAlbumArtistAction::class),
+    PopularAlbumDiskAction::class => autowire(PopularAlbumDiskAction::class),
+    PopularArtistAction::class => autowire(PopularArtistAction::class),
+    PopularPlaylistAction::class => autowire(PopularPlaylistAction::class),
+    PopularPodcastEpisodeAction::class => autowire(PopularPodcastEpisodeAction::class),
+    PopularSongAction::class => autowire(PopularSongAction::class),
+    PopularVideoAction::class => autowire(PopularVideoAction::class),
+    HighestAlbumAction::class => autowire(HighestAlbumAction::class),
+    HighestAlbumArtistAction::class => autowire(HighestAlbumArtistAction::class),
+    HighestAlbumDiskAction::class => autowire(HighestAlbumDiskAction::class),
+    HighestArtistAction::class => autowire(HighestArtistAction::class),
+    HighestPlaylistAction::class => autowire(HighestPlaylistAction::class),
+    HighestPodcastEpisodeAction::class => autowire(HighestPodcastEpisodeAction::class),
+    HighestSongAction::class => autowire(HighestSongAction::class),
+    HighestVideoAction::class => autowire(HighestVideoAction::class),
+    UserflagAlbumAction::class => autowire(UserflagAlbumAction::class),
+    UserflagAlbumArtistAction::class => autowire(UserflagAlbumArtistAction::class),
+    UserflagAlbumDiskAction::class => autowire(UserflagAlbumDiskAction::class),
+    UserflagArtistAction::class => autowire(UserflagArtistAction::class),
+    UserflagPlaylistAction::class => autowire(UserflagPlaylistAction::class),
+    UserflagPodcastEpisodeAction::class => autowire(UserflagPodcastEpisodeAction::class),
+    UserflagSongAction::class => autowire(UserflagSongAction::class),
+    UserflagVideoAction::class => autowire(UserflagVideoAction::class),
+    RecentAlbumArtistAction::class => autowire(RecentAlbumArtistAction::class),
+    RecentAlbumDiskAction::class => autowire(RecentAlbumDiskAction::class),
+    RecentArtistAction::class => autowire(RecentArtistAction::class),
+    RecentPlaylistAction::class => autowire(RecentPlaylistAction::class),
+    RecentPodcastEpisodeAction::class => autowire(RecentPodcastEpisodeAction::class),
+    RecentSongAction::class => autowire(RecentSongAction::class),
+    RecentVideoAction::class => autowire(RecentVideoAction::class),
+    ShareAction::class => autowire(ShareAction::class),
+    UploadAction::class => autowire(UploadAction::class),
+    GraphAction::class => autowire(GraphAction::class),
     Stats\ShowAction::class => autowire(Stats\ShowAction::class),
-    Logout\LogoutAction::class => autowire(Logout\LogoutAction::class),
+    LogoutAction::class => autowire(LogoutAction::class),
     Rss\ShowAction::class => autowire(Rss\ShowAction::class),
-    Shout\AddShoutAction::class => autowire(Shout\AddShoutAction::class),
-    Shout\ShowAddShoutAction::class => autowire(Shout\ShowAddShoutAction::class),
+    AddShoutAction::class => autowire(AddShoutAction::class),
+    ShowAddShoutAction::class => autowire(ShowAddShoutAction::class),
     Shout\ShowAction::class => autowire(Shout\ShowAction::class),
     Waveform\ShowAction::class => autowire(Waveform\ShowAction::class),
-    Search\SearchAction::class => autowire(Search\SearchAction::class),
-    Search\SaveAsSmartPlaylistAction::class => autowire(Search\SaveAsSmartPlaylistAction::class),
-    Search\SaveAsPlaylistAction::class => autowire(Search\SaveAsPlaylistAction::class),
-    Search\DescriptorAction::class => autowire(Search\DescriptorAction::class),
+    SearchAction::class => autowire(SearchAction::class),
+    SaveAsSmartPlaylistAction::class => autowire(SaveAsSmartPlaylistAction::class),
+    SaveAsPlaylistAction::class => autowire(SaveAsPlaylistAction::class),
+    DescriptorAction::class => autowire(DescriptorAction::class),
     Search\ShowAction::class => autowire(Search\ShowAction::class),
     CookieDisclaimer\ShowAction::class => autowire(CookieDisclaimer\ShowAction::class),
-    DemocraticPlayback\ManageAction::class => autowire(DemocraticPlayback\ManageAction::class),
-    DemocraticPlayback\ShowCreateAction::class => autowire(DemocraticPlayback\ShowCreateAction::class),
+    ManageAction::class => autowire(ManageAction::class),
+    ShowCreateAction::class => autowire(ShowCreateAction::class),
     DemocraticPlayback\DeleteAction::class => autowire(DemocraticPlayback\DeleteAction::class),
-    DemocraticPlayback\CreateAction::class => autowire(DemocraticPlayback\CreateAction::class),
-    DemocraticPlayback\ManagePlaylistsAction::class => autowire(DemocraticPlayback\ManagePlaylistsAction::class),
-    DemocraticPlayback\ShowPlaylistAction::class => autowire(DemocraticPlayback\ShowPlaylistAction::class),
+    CreateAction::class => autowire(CreateAction::class),
+    ManagePlaylistsAction::class => autowire(ManagePlaylistsAction::class),
+    ShowPlaylistAction::class => autowire(ShowPlaylistAction::class),
     WebPlayer\ShowAction::class => autowire(WebPlayer\ShowAction::class),
-    WebPlayer\ShowEmbeddedAction::class => autowire(WebPlayer\ShowEmbeddedAction::class),
+    ShowEmbeddedAction::class => autowire(ShowEmbeddedAction::class),
     Index\ShowAction::class => autowire(Index\ShowAction::class),
     Utility\ShowAction::class => autowire(Utility\ShowAction::class),
-    Update\ClearAction::class => autowire(Update\ClearAction::class),
+    ClearAction::class => autowire(ClearAction::class),
     Update\ShowAction::class => autowire(Update\ShowAction::class),
-    Update\UpdateAction::class => autowire(Update\UpdateAction::class),
-    Update\UpdatePluginsAction::class => autowire(Update\UpdatePluginsAction::class),
+    UpdateAction::class => autowire(UpdateAction::class),
+    UpdatePluginsAction::class => autowire(UpdatePluginsAction::class),
     Video\DeleteAction::class => autowire(Video\DeleteAction::class),
     Video\ConfirmDeleteAction::class => autowire(Video\ConfirmDeleteAction::class),
-    Video\ShowVideoAction::class => autowire(Video\ShowVideoAction::class),
+    ShowVideoAction::class => autowire(ShowVideoAction::class),
     Label\DeleteAction::class => autowire(Label\DeleteAction::class),
     Label\ConfirmDeleteAction::class => autowire(Label\ConfirmDeleteAction::class),
-    Label\AddLabelAction::class => autowire(Label\AddLabelAction::class),
-    Label\ShowAddLabelAction::class => autowire(Label\ShowAddLabelAction::class),
+    AddLabelAction::class => autowire(AddLabelAction::class),
+    ShowAddLabelAction::class => autowire(ShowAddLabelAction::class),
     Label\ShowAction::class => autowire(Label\ShowAction::class),
     Share\ShowCreateAction::class => autowire(Share\ShowCreateAction::class),
     Share\CreateAction::class => autowire(Share\CreateAction::class),
-    Share\ShowDeleteAction::class => autowire(Share\ShowDeleteAction::class),
+    ShowDeleteAction::class => autowire(ShowDeleteAction::class),
     Share\DeleteAction::class => autowire(Share\DeleteAction::class),
-    Share\CleanAction::class => autowire(Share\CleanAction::class),
-    Share\ExternalShareAction::class => autowire(Share\ExternalShareAction::class),
-    Share\ConsumeAction::class => autowire(Share\ConsumeAction::class),
+    CleanAction::class => autowire(CleanAction::class),
+    ExternalShareAction::class => autowire(ExternalShareAction::class),
+    ConsumeAction::class => autowire(ConsumeAction::class),
     Broadcast\ShowDeleteAction::class => autowire(Broadcast\ShowDeleteAction::class),
     Broadcast\DeleteAction::class => autowire(Broadcast\DeleteAction::class),
     Radio\ShowCreateAction::class => autowire(Radio\ShowCreateAction::class),
     Radio\CreateAction::class => autowire(Radio\CreateAction::class),
     Radio\ShowAction::class => autowire(Radio\ShowAction::class),
     Image\ShowAction::class => autowire(Image\ShowAction::class),
-    Image\ShowUserAvatarAction::class => autowire(),
+    ShowUserAvatarAction::class => autowire(),
     Mashup\ShowAction::class => autowire(Mashup\ShowAction::class),
-    Mashup\WrappedAction::class => autowire(Mashup\WrappedAction::class),
+    WrappedAction::class => autowire(WrappedAction::class),
     Podcast\ShowCreateAction::class => autowire(Podcast\ShowCreateAction::class),
     Podcast\CreateAction::class => autowire(Podcast\CreateAction::class),
     Podcast\DeleteAction::class => autowire(Podcast\DeleteAction::class),
     Podcast\ConfirmDeleteAction::class => autowire(Podcast\ConfirmDeleteAction::class),
     Podcast\ShowAction::class => autowire(Podcast\ShowAction::class),
-    Podcast\ExportPodcastsAction::class => autowire(),
+    ExportPodcastsAction::class => autowire(),
     PodcastEpisode\DeleteAction::class => autowire(PodcastEpisode\DeleteAction::class),
     PodcastEpisode\ConfirmDeleteAction::class => autowire(PodcastEpisode\ConfirmDeleteAction::class),
     PodcastEpisode\ShowAction::class => autowire(PodcastEpisode\ShowAction::class),
-    Upload\DefaultAction::class => autowire(Upload\DefaultAction::class),
+    DefaultAction::class => autowire(DefaultAction::class),
     NowPlaying\ShowAction::class => autowire(NowPlaying\ShowAction::class),
     LostPassword\ShowAction::class => autowire(LostPassword\ShowAction::class),
-    LostPassword\SendAction::class => autowire(LostPassword\SendAction::class),
+    SendAction::class => autowire(SendAction::class),
     PrivateMessage\ShowAction::class => autowire(PrivateMessage\ShowAction::class),
     PrivateMessage\ConfirmDeleteAction::class => autowire(PrivateMessage\ConfirmDeleteAction::class),
     PrivateMessage\DeleteAction::class => autowire(PrivateMessage\DeleteAction::class),
-    PrivateMessage\SetIsReadAction::class => autowire(PrivateMessage\SetIsReadAction::class),
-    PrivateMessage\AddMessageAction::class => autowire(PrivateMessage\AddMessageAction::class),
-    PrivateMessage\ShowAddMessageAction::class => autowire(PrivateMessage\ShowAddMessageAction::class),
+    SetIsReadAction::class => autowire(SetIsReadAction::class),
+    AddMessageAction::class => autowire(AddMessageAction::class),
+    ShowAddMessageAction::class => autowire(ShowAddMessageAction::class),
     Test\ShowAction::class => autowire(Test\ShowAction::class),
-    Test\ConfigAction::class => autowire(Test\ConfigAction::class),
-    Stream\DownloadAction::class => autowire(Stream\DownloadAction::class),
-    Stream\DemocraticAction::class => autowire(Stream\DemocraticAction::class),
-    Stream\PlaylistRandomAction::class => autowire(Stream\PlaylistRandomAction::class),
-    Stream\PlayItemAction::class => autowire(Stream\PlayItemAction::class),
-    Stream\StreamItemAction::class => autowire(Stream\StreamItemAction::class),
-    Stream\RandomAction::class => autowire(Stream\RandomAction::class),
-    Stream\TmpPlaylistAction::class => autowire(Stream\TmpPlaylistAction::class),
-    Stream\BasketAction::class => autowire(Stream\BasketAction::class),
+    ConfigAction::class => autowire(ConfigAction::class),
+    DownloadAction::class => autowire(DownloadAction::class),
+    DemocraticAction::class => autowire(DemocraticAction::class),
+    PlaylistRandomAction::class => autowire(PlaylistRandomAction::class),
+    PlayItemAction::class => autowire(PlayItemAction::class),
+    StreamItemAction::class => autowire(StreamItemAction::class),
+    RandomAction::class => autowire(RandomAction::class),
+    TmpPlaylistAction::class => autowire(TmpPlaylistAction::class),
+    BasketAction::class => autowire(BasketAction::class),
     PhpInfo\ShowAction::class => autowire(PhpInfo\ShowAction::class),
     ShowGet\ShowAction::class => autowire(ShowGet\ShowAction::class),
     SearchData\ShowAction::class => autowire(SearchData\ShowAction::class),
-    Register\ValidateAction::class => autowire(Register\ValidateAction::class),
-    Register\ShowAddUserAction::class => autowire(Register\ShowAddUserAction::class),
-    Register\AddUserAction::class => autowire(Register\AddUserAction::class),
+    ValidateAction::class => autowire(ValidateAction::class),
+    ShowAddUserAction::class => autowire(ShowAddUserAction::class),
+    AddUserAction::class => autowire(AddUserAction::class),
     StatisticGraph\ShowAction::class => autowire(StatisticGraph\ShowAction::class),
-    Random\AdvancedAction::class => autowire(Random\AdvancedAction::class),
-    Random\GetAdvancedAction::class => autowire(Random\GetAdvancedAction::class),
+    AdvancedAction::class => autowire(AdvancedAction::class),
+    GetAdvancedAction::class => autowire(GetAdvancedAction::class),
     Batch\DefaultAction::class => autowire(Batch\DefaultAction::class),
     SmartPlaylist\ShowAction::class => autowire(SmartPlaylist\ShowAction::class),
-    SmartPlaylist\RefreshPlaylistAction::class => autowire(SmartPlaylist\RefreshPlaylistAction::class),
-    SmartPlaylist\UpdatePlaylistAction::class => autowire(SmartPlaylist\UpdatePlaylistAction::class),
-    SmartPlaylist\DeletePlaylistAction::class => autowire(SmartPlaylist\DeletePlaylistAction::class),
-    SmartPlaylist\CreatePlaylistAction::class => autowire(SmartPlaylist\CreatePlaylistAction::class),
+    RefreshPlaylistAction::class => autowire(RefreshPlaylistAction::class),
+    UpdatePlaylistAction::class => autowire(UpdatePlaylistAction::class),
+    DeletePlaylistAction::class => autowire(DeletePlaylistAction::class),
+    CreatePlaylistAction::class => autowire(CreatePlaylistAction::class),
     Playlist\ShowAction::class => autowire(Playlist\ShowAction::class),
-    Playlist\SortTrackAction::class => autowire(Playlist\SortTrackAction::class),
-    Playlist\RemoveDuplicatesAction::class => autowire(Playlist\RemoveDuplicatesAction::class),
-    Playlist\AddSongAction::class => autowire(Playlist\AddSongAction::class),
+    SortTrackAction::class => autowire(SortTrackAction::class),
+    RemoveDuplicatesAction::class => autowire(RemoveDuplicatesAction::class),
+    AddSongAction::class => autowire(AddSongAction::class),
     Playlist\SetTrackNumbersAction::class => autowire(Playlist\SetTrackNumbersAction::class),
-    Playlist\ImportPlaylistAction::class => autowire(Playlist\ImportPlaylistAction::class),
-    Playlist\ShowImportPlaylistAction::class => autowire(Playlist\ShowImportPlaylistAction::class),
+    ImportPlaylistAction::class => autowire(ImportPlaylistAction::class),
+    ShowImportPlaylistAction::class => autowire(ShowImportPlaylistAction::class),
     Playlist\DeletePlaylistAction::class => autowire(Playlist\DeletePlaylistAction::class),
     Playlist\RefreshPlaylistAction::class => autowire(Playlist\RefreshPlaylistAction::class),
     Playlist\CreatePlaylistAction::class => autowire(Playlist\CreatePlaylistAction::class),
     Installation\DefaultAction::class => autowire(Installation\DefaultAction::class),
-    Preferences\UpdateUserAction::class => autowire(Preferences\UpdateUserAction::class),
-    Preferences\UserAction::class => autowire(Preferences\UserAction::class),
+    UpdateUserAction::class => autowire(UpdateUserAction::class),
+    UserAction::class => autowire(UserAction::class),
     Preferences\ShowAction::class => autowire(Preferences\ShowAction::class),
-    Preferences\AdminAction::class => autowire(Preferences\AdminAction::class),
-    Preferences\AdminUpdatePreferencesAction::class => autowire(Preferences\AdminUpdatePreferencesAction::class),
-    Preferences\UpdatePreferencesAction::class => autowire(Preferences\UpdatePreferencesAction::class),
-    Preferences\GrantAction::class => autowire(Preferences\GrantAction::class),
+    AdminAction::class => autowire(AdminAction::class),
+    AdminUpdatePreferencesAction::class => autowire(AdminUpdatePreferencesAction::class),
+    UpdatePreferencesAction::class => autowire(UpdatePreferencesAction::class),
+    GrantAction::class => autowire(GrantAction::class),
     Login\DefaultAction::class => autowire(Login\DefaultAction::class),
-    LocalPlay\ShowAddInstanceAction::class => autowire(LocalPlay\ShowAddInstanceAction::class),
+    ShowAddInstanceAction::class => autowire(ShowAddInstanceAction::class),
     LocalPlay\ShowPlaylistAction::class => autowire(LocalPlay\ShowPlaylistAction::class),
-    LocalPlay\AddInstanceAction::class => autowire(LocalPlay\AddInstanceAction::class),
-    LocalPlay\UpdateInstanceAction::class => autowire(LocalPlay\UpdateInstanceAction::class),
-    LocalPlay\EditInstanceAction::class => autowire(LocalPlay\EditInstanceAction::class),
-    LocalPlay\ShowInstancesAction::class => autowire(LocalPlay\ShowInstancesAction::class),
-    Browse\TagAction::class => autowire(Browse\TagAction::class),
-    Browse\FileAction::class => autowire(Browse\FileAction::class),
-    Browse\AlbumAction::class => autowire(Browse\AlbumAction::class),
-    Browse\AlbumArtistAction::class => autowire(Browse\AlbumArtistAction::class),
-    Browse\ArtistAction::class => autowire(Browse\ArtistAction::class),
-    Browse\SongAction::class => autowire(Browse\SongAction::class),
-    Browse\PlaylistAction::class => autowire(Browse\PlaylistAction::class),
-    Browse\SmartPlaylistAction::class => autowire(Browse\SmartPlaylistAction::class),
-    Browse\PodcastEpisodeAction::class => autowire(Browse\PodcastEpisodeAction::class),
-    Browse\CatalogAction::class => autowire(Browse\CatalogAction::class),
-    Browse\PrivateMessageAction::class => autowire(Browse\PrivateMessageAction::class),
-    Browse\LiveStreamAction::class => autowire(Browse\LiveStreamAction::class),
-    Browse\LabelAction::class => autowire(Browse\LabelAction::class),
-    Browse\BroadcastAction::class => autowire(Browse\BroadcastAction::class),
-    Browse\VideoAction::class => autowire(Browse\VideoAction::class),
-    Browse\PodcastAction::class => autowire(Browse\PodcastAction::class),
-    Art\ClearArtAction::class => autowire(Art\ClearArtAction::class),
-    Art\ShowArtDlgAction::class => autowire(Art\ShowArtDlgAction::class),
-    Art\FindArtAction::class => autowire(Art\FindArtAction::class),
-    Art\UploadArtAction::class => autowire(Art\UploadArtAction::class),
-    Art\SelectArtAction::class => autowire(Art\SelectArtAction::class),
-    Playback\PlayAction::class => autowire(Playback\PlayAction::class),
+    AddInstanceAction::class => autowire(AddInstanceAction::class),
+    UpdateInstanceAction::class => autowire(UpdateInstanceAction::class),
+    EditInstanceAction::class => autowire(EditInstanceAction::class),
+    ShowInstancesAction::class => autowire(ShowInstancesAction::class),
+    TagAction::class => autowire(TagAction::class),
+    FileAction::class => autowire(FileAction::class),
+    AlbumAction::class => autowire(AlbumAction::class),
+    AlbumArtistAction::class => autowire(AlbumArtistAction::class),
+    ArtistAction::class => autowire(ArtistAction::class),
+    SongAction::class => autowire(SongAction::class),
+    PlaylistAction::class => autowire(PlaylistAction::class),
+    SmartPlaylistAction::class => autowire(SmartPlaylistAction::class),
+    PodcastEpisodeAction::class => autowire(PodcastEpisodeAction::class),
+    CatalogAction::class => autowire(CatalogAction::class),
+    PrivateMessageAction::class => autowire(PrivateMessageAction::class),
+    LiveStreamAction::class => autowire(LiveStreamAction::class),
+    LabelAction::class => autowire(LabelAction::class),
+    BroadcastAction::class => autowire(BroadcastAction::class),
+    VideoAction::class => autowire(VideoAction::class),
+    PodcastAction::class => autowire(PodcastAction::class),
+    ClearArtAction::class => autowire(ClearArtAction::class),
+    ShowArtDlgAction::class => autowire(ShowArtDlgAction::class),
+    FindArtAction::class => autowire(FindArtAction::class),
+    UploadArtAction::class => autowire(UploadArtAction::class),
+    SelectArtAction::class => autowire(SelectArtAction::class),
+    PlayAction::class => autowire(PlayAction::class),
     Admin\Mail\ShowAction::class => autowire(Admin\Mail\ShowAction::class),
-    Admin\Mail\SendMailAction::class => autowire(Admin\Mail\SendMailAction::class),
+    SendMailAction::class => autowire(SendMailAction::class),
     Admin\Export\ShowAction::class => autowire(Admin\Export\ShowAction::class),
-    Admin\Export\ExportAction::class => autowire(Admin\Export\ExportAction::class),
+    ExportAction::class => autowire(ExportAction::class),
     Admin\Access\ShowAction::class => autowire(Admin\Access\ShowAction::class),
-    Admin\Access\ShowAddAdvancedAction::class => autowire(Admin\Access\ShowAddAdvancedAction::class),
-    Admin\Access\ShowDeleteRecordAction::class => autowire(Admin\Access\ShowDeleteRecordAction::class),
-    Admin\Access\UpdateRecordAction::class => autowire(Admin\Access\UpdateRecordAction::class),
-    Admin\Access\AddHostAction::class => autowire(Admin\Access\AddHostAction::class),
-    Admin\Access\DeleteRecordAction::class => autowire(Admin\Access\DeleteRecordAction::class),
-    Admin\Access\ShowEditRecordAction::class => autowire(Admin\Access\ShowEditRecordAction::class),
-    Admin\Access\ShowAddAction::class => autowire(Admin\Access\ShowAddAction::class),
-    Admin\Catalog\ShowAddCatalogAction::class => autowire(Admin\Catalog\ShowAddCatalogAction::class),
-    Admin\Catalog\ShowDisabledAction::class => autowire(Admin\Catalog\ShowDisabledAction::class),
-    Admin\Catalog\ShowCustomizeCatalogAction::class => autowire(Admin\Catalog\ShowCustomizeCatalogAction::class),
-    Admin\Catalog\ShowCatalogsAction::class => autowire(Admin\Catalog\ShowCatalogsAction::class),
-    Admin\Catalog\ClearStatsAction::class => autowire(Admin\Catalog\ClearStatsAction::class),
-    Admin\Catalog\ClearNowPlayingAction::class => autowire(Admin\Catalog\ClearNowPlayingAction::class),
-    Admin\Catalog\DeleteCatalogAction::class => autowire(Admin\Catalog\DeleteCatalogAction::class),
-    Admin\Catalog\ShowDeleteCatalogAction::class => autowire(Admin\Catalog\ShowDeleteCatalogAction::class),
-    Admin\Catalog\AddToAllCatalogsAction::class => autowire(Admin\Catalog\AddToAllCatalogsAction::class),
-    Admin\Catalog\UpdateCatalogAction::class => autowire(Admin\Catalog\UpdateCatalogAction::class),
-    Admin\Catalog\FullServiceAction::class => autowire(Admin\Catalog\FullServiceAction::class),
-    Admin\Catalog\AddToCatalogAction::class => autowire(Admin\Catalog\AddToCatalogAction::class),
-    Admin\Catalog\CleanAllCatalogsAction::class => autowire(Admin\Catalog\CleanAllCatalogsAction::class),
-    Admin\Catalog\CleanCatalogAction::class => autowire(Admin\Catalog\CleanCatalogAction::class),
-    Admin\Catalog\GarbageCollectAction::class => autowire(Admin\Catalog\GarbageCollectAction::class),
-    Admin\Catalog\UpdateFileTagsAction::class => autowire(Admin\Catalog\UpdateFileTagsAction::class),
-    Admin\Catalog\UpdateAllFileTagsActions::class => autowire(Admin\Catalog\UpdateAllFileTagsActions::class),
-    Admin\Catalog\GatherMediaArtAction::class => autowire(Admin\Catalog\GatherMediaArtAction::class),
-    Admin\Catalog\ImportToCatalogAction::class => autowire(Admin\Catalog\ImportToCatalogAction::class),
-    Admin\Catalog\AddCatalogAction::class => autowire(Admin\Catalog\AddCatalogAction::class),
-    Admin\Catalog\UpdateFromAction::class => autowire(Admin\Catalog\UpdateFromAction::class),
-    Admin\Catalog\UpdateAllCatalogsAction::class => autowire(Admin\Catalog\UpdateAllCatalogsAction::class),
-    Admin\Catalog\EnableDisabledAction::class => autowire(Admin\Catalog\EnableDisabledAction::class),
-    Admin\Catalog\UpdateCatalogSettingsAction::class => autowire(Admin\Catalog\UpdateCatalogSettingsAction::class),
-    Admin\Filter\AbstractFilterAction::class => autowire(Admin\Filter\AbstractFilterAction::class),
-    Admin\Filter\AddFilterAction::class => autowire(Admin\Filter\AddFilterAction::class),
+    ShowAddAdvancedAction::class => autowire(ShowAddAdvancedAction::class),
+    ShowDeleteRecordAction::class => autowire(ShowDeleteRecordAction::class),
+    UpdateRecordAction::class => autowire(UpdateRecordAction::class),
+    AddHostAction::class => autowire(AddHostAction::class),
+    DeleteRecordAction::class => autowire(DeleteRecordAction::class),
+    ShowEditRecordAction::class => autowire(ShowEditRecordAction::class),
+    ShowAddAction::class => autowire(ShowAddAction::class),
+    ShowAddCatalogAction::class => autowire(ShowAddCatalogAction::class),
+    ShowDisabledAction::class => autowire(ShowDisabledAction::class),
+    ShowCustomizeCatalogAction::class => autowire(ShowCustomizeCatalogAction::class),
+    ShowCatalogsAction::class => autowire(ShowCatalogsAction::class),
+    ClearStatsAction::class => autowire(ClearStatsAction::class),
+    ClearNowPlayingAction::class => autowire(ClearNowPlayingAction::class),
+    DeleteCatalogAction::class => autowire(DeleteCatalogAction::class),
+    ShowDeleteCatalogAction::class => autowire(ShowDeleteCatalogAction::class),
+    AddToAllCatalogsAction::class => autowire(AddToAllCatalogsAction::class),
+    UpdateCatalogAction::class => autowire(UpdateCatalogAction::class),
+    FullServiceAction::class => autowire(FullServiceAction::class),
+    AddToCatalogAction::class => autowire(AddToCatalogAction::class),
+    CleanAllCatalogsAction::class => autowire(CleanAllCatalogsAction::class),
+    CleanCatalogAction::class => autowire(CleanCatalogAction::class),
+    GarbageCollectAction::class => autowire(GarbageCollectAction::class),
+    UpdateFileTagsAction::class => autowire(UpdateFileTagsAction::class),
+    UpdateAllFileTagsActions::class => autowire(UpdateAllFileTagsActions::class),
+    GatherMediaArtAction::class => autowire(GatherMediaArtAction::class),
+    ImportToCatalogAction::class => autowire(ImportToCatalogAction::class),
+    AddCatalogAction::class => autowire(AddCatalogAction::class),
+    UpdateFromAction::class => autowire(UpdateFromAction::class),
+    UpdateAllCatalogsAction::class => autowire(UpdateAllCatalogsAction::class),
+    EnableDisabledAction::class => autowire(EnableDisabledAction::class),
+    UpdateCatalogSettingsAction::class => autowire(UpdateCatalogSettingsAction::class),
+    AbstractFilterAction::class => autowire(AbstractFilterAction::class),
+    AddFilterAction::class => autowire(AddFilterAction::class),
     Admin\Filter\ConfirmDeleteAction::class => autowire(Admin\Filter\ConfirmDeleteAction::class),
     Admin\Filter\DeleteAction::class => autowire(Admin\Filter\DeleteAction::class),
     Admin\Filter\ShowAction::class => autowire(Admin\Filter\ShowAction::class),
-    Admin\Filter\ShowAddFilterAction::class => autowire(Admin\Filter\ShowAddFilterAction::class),
-    Admin\Filter\ShowEditAction::class => autowire(Admin\Filter\ShowEditAction::class),
-    Admin\Filter\UpdateFilterAction::class => autowire(Admin\Filter\UpdateFilterAction::class),
+    ShowAddFilterAction::class => autowire(ShowAddFilterAction::class),
+    ShowEditAction::class => autowire(ShowEditAction::class),
+    UpdateFilterAction::class => autowire(UpdateFilterAction::class),
     Admin\Index\ShowAction::class => autowire(Admin\Index\ShowAction::class),
     Admin\License\ShowAction::class => autowire(Admin\License\ShowAction::class),
     Admin\License\DeleteAction::class => autowire(Admin\License\DeleteAction::class),
     Admin\License\ShowCreateAction::class => autowire(Admin\License\ShowCreateAction::class),
     Admin\License\ShowEditAction::class => autowire(Admin\License\ShowEditAction::class),
-    Admin\License\EditAction::class => autowire(Admin\License\EditAction::class),
+    EditAction::class => autowire(EditAction::class),
     Admin\Shout\ShowAction::class => autowire(Admin\Shout\ShowAction::class),
     Admin\Shout\DeleteAction::class => autowire(Admin\Shout\DeleteAction::class),
     Admin\Shout\ShowEditAction::class => autowire(Admin\Shout\ShowEditAction::class),
-    Admin\Shout\EditShoutAction::class => autowire(Admin\Shout\EditShoutAction::class),
-    Admin\Modules\InstallLocalplayAction::class => autowire(Admin\Modules\InstallLocalplayAction::class),
+    EditShoutAction::class => autowire(EditShoutAction::class),
+    InstallLocalplayAction::class => autowire(InstallLocalplayAction::class),
     Admin\Modules\ShowAction::class => autowire(Admin\Modules\ShowAction::class),
-    Admin\Modules\InstallCatalogTypeAction::class => autowire(Admin\Modules\InstallCatalogTypeAction::class),
-    Admin\Modules\ConfirmUninstallCatalogType::class => autowire(Admin\Modules\ConfirmUninstallCatalogType::class),
-    Admin\Modules\ConfirmUninstallLocalplayAction::class => autowire(Admin\Modules\ConfirmUninstallLocalplayAction::class),
-    Admin\Modules\ConfirmUninstallPluginAction::class => autowire(Admin\Modules\ConfirmUninstallPluginAction::class),
-    Admin\Modules\ConfirmInstallCatalogType::class => autowire(Admin\Modules\ConfirmInstallCatalogType::class),
-    Admin\Modules\ConfirmInstallLocalplayAction::class => autowire(Admin\Modules\ConfirmInstallLocalplayAction::class),
-    Admin\Modules\ConfirmInstallPluginAction::class => autowire(Admin\Modules\ConfirmInstallPluginAction::class),
-    Admin\Modules\UninstallLocalplayAction::class => autowire(Admin\Modules\UninstallLocalplayAction::class),
-    Admin\Modules\UninstallCatalogTypeAction::class => autowire(Admin\Modules\UninstallCatalogTypeAction::class),
-    Admin\Modules\InstallPluginAction::class => autowire(Admin\Modules\InstallPluginAction::class),
-    Admin\Modules\UninstallPluginAction::class => autowire(Admin\Modules\UninstallPluginAction::class),
-    Admin\Modules\UpgradePluginAction::class => autowire(Admin\Modules\UpgradePluginAction::class),
-    Admin\Modules\ShowPluginsAction::class => autowire(Admin\Modules\ShowPluginsAction::class),
-    Admin\Modules\ShowLocalplayAction::class => autowire(Admin\Modules\ShowLocalplayAction::class),
-    Admin\Modules\ShowCatalogTypesAction::class => autowire(Admin\Modules\ShowCatalogTypesAction::class),
-    Admin\System\GenerateConfigAction::class => autowire(Admin\System\GenerateConfigAction::class),
-    Admin\System\WriteConfigAction::class => autowire(Admin\System\WriteConfigAction::class),
-    Admin\System\ResetDbCharsetAction::class => autowire(Admin\System\ResetDbCharsetAction::class),
-    Admin\System\ShowDebugAction::class => autowire(Admin\System\ShowDebugAction::class),
-    Admin\System\ClearCacheAction::class => autowire(Admin\System\ClearCacheAction::class),
+    InstallCatalogTypeAction::class => autowire(InstallCatalogTypeAction::class),
+    ConfirmUninstallCatalogType::class => autowire(ConfirmUninstallCatalogType::class),
+    ConfirmUninstallLocalplayAction::class => autowire(ConfirmUninstallLocalplayAction::class),
+    ConfirmUninstallPluginAction::class => autowire(ConfirmUninstallPluginAction::class),
+    ConfirmInstallCatalogType::class => autowire(ConfirmInstallCatalogType::class),
+    ConfirmInstallLocalplayAction::class => autowire(ConfirmInstallLocalplayAction::class),
+    ConfirmInstallPluginAction::class => autowire(ConfirmInstallPluginAction::class),
+    UninstallLocalplayAction::class => autowire(UninstallLocalplayAction::class),
+    UninstallCatalogTypeAction::class => autowire(UninstallCatalogTypeAction::class),
+    InstallPluginAction::class => autowire(InstallPluginAction::class),
+    UninstallPluginAction::class => autowire(UninstallPluginAction::class),
+    UpgradePluginAction::class => autowire(UpgradePluginAction::class),
+    ShowPluginsAction::class => autowire(ShowPluginsAction::class),
+    ShowLocalplayAction::class => autowire(ShowLocalplayAction::class),
+    ShowCatalogTypesAction::class => autowire(ShowCatalogTypesAction::class),
+    GenerateConfigAction::class => autowire(GenerateConfigAction::class),
+    WriteConfigAction::class => autowire(WriteConfigAction::class),
+    ResetDbCharsetAction::class => autowire(ResetDbCharsetAction::class),
+    ShowDebugAction::class => autowire(ShowDebugAction::class),
+    ClearCacheAction::class => autowire(ClearCacheAction::class),
     Admin\User\ShowAction::class => autowire(Admin\User\ShowAction::class),
-    Admin\User\ShowPreferencesAction::class => autowire(Admin\User\ShowPreferencesAction::class),
+    ShowPreferencesAction::class => autowire(ShowPreferencesAction::class),
     Admin\User\ShowAddUserAction::class => autowire(Admin\User\ShowAddUserAction::class),
-    Admin\User\ShowIpHistoryAction::class => autowire(Admin\User\ShowIpHistoryAction::class),
-    Admin\User\GenerateRssTokenAction::class => autowire(Admin\User\GenerateRssTokenAction::class),
-    Admin\User\ShowGenerateRssTokenAction::class => autowire(Admin\User\ShowGenerateRssTokenAction::class),
-    Admin\User\GenerateStreamTokenAction::class => autowire(Admin\User\GenerateStreamTokenAction::class),
-    Admin\User\ShowGenerateStreamTokenAction::class => autowire(Admin\User\ShowGenerateStreamTokenAction::class),
-    Admin\User\DeleteStreamTokenAction::class => autowire(Admin\User\DeleteStreamTokenAction::class),
-    Admin\User\DeleteRssTokenAction::class => autowire(Admin\User\DeleteRssTokenAction::class),
-    Admin\User\ShowDeleteStreamTokenAction::class => autowire(Admin\User\ShowDeleteStreamTokenAction::class),
-    Admin\User\ShowDeleteRssTokenAction::class => autowire(Admin\User\ShowDeleteRssTokenAction::class),
-    Admin\User\GenerateApiKeyAction::class => autowire(Admin\User\GenerateApiKeyAction::class),
-    Admin\User\ShowGenerateApiKeyAction::class => autowire(Admin\User\ShowGenerateApiKeyAction::class),
-    Admin\User\DeleteApiKeyAction::class => autowire(Admin\User\DeleteApiKeyAction::class),
-    Admin\User\ShowDeleteApiKeyAction::class => autowire(Admin\User\ShowDeleteApiKeyAction::class),
-    Admin\User\DeleteAvatarAction::class => autowire(Admin\User\DeleteAvatarAction::class),
-    Admin\User\ShowDeleteAvatarAction::class => autowire(Admin\User\ShowDeleteAvatarAction::class),
+    ShowIpHistoryAction::class => autowire(ShowIpHistoryAction::class),
+    GenerateRssTokenAction::class => autowire(GenerateRssTokenAction::class),
+    ShowGenerateRssTokenAction::class => autowire(ShowGenerateRssTokenAction::class),
+    GenerateStreamTokenAction::class => autowire(GenerateStreamTokenAction::class),
+    ShowGenerateStreamTokenAction::class => autowire(ShowGenerateStreamTokenAction::class),
+    DeleteStreamTokenAction::class => autowire(DeleteStreamTokenAction::class),
+    DeleteRssTokenAction::class => autowire(DeleteRssTokenAction::class),
+    ShowDeleteStreamTokenAction::class => autowire(ShowDeleteStreamTokenAction::class),
+    ShowDeleteRssTokenAction::class => autowire(ShowDeleteRssTokenAction::class),
+    GenerateApiKeyAction::class => autowire(GenerateApiKeyAction::class),
+    ShowGenerateApiKeyAction::class => autowire(ShowGenerateApiKeyAction::class),
+    DeleteApiKeyAction::class => autowire(DeleteApiKeyAction::class),
+    ShowDeleteApiKeyAction::class => autowire(ShowDeleteApiKeyAction::class),
+    DeleteAvatarAction::class => autowire(DeleteAvatarAction::class),
+    ShowDeleteAvatarAction::class => autowire(ShowDeleteAvatarAction::class),
     Admin\User\ShowDeleteAction::class => autowire(Admin\User\ShowDeleteAction::class),
     Admin\User\ConfirmDeleteAction::class => autowire(Admin\User\ConfirmDeleteAction::class),
     Admin\User\ShowEditAction::class => autowire(Admin\User\ShowEditAction::class),
-    Admin\User\DisableAction::class => autowire(Admin\User\DisableAction::class),
-    Admin\User\EnableAction::class => autowire(Admin\User\EnableAction::class),
+    DisableAction::class => autowire(DisableAction::class),
+    EnableAction::class => autowire(EnableAction::class),
     Admin\User\AddUserAction::class => autowire(Admin\User\AddUserAction::class),
     Admin\User\UpdateUserAction::class => autowire(Admin\User\UpdateUserAction::class),
 ];

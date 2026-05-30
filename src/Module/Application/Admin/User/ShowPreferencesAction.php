@@ -39,20 +39,11 @@ final class ShowPreferencesAction extends AbstractUserAction
 {
     public const string REQUEST_KEY = 'show_preferences';
 
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private PreferenceRepositoryInterface $preferenceRepository;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        PreferenceRepositoryInterface $preferenceRepository,
+        private readonly UiInterface $ui,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly PreferenceRepositoryInterface $preferenceRepository,
     ) {
-        $this->ui                   = $ui;
-        $this->modelFactory         = $modelFactory;
-        $this->preferenceRepository = $preferenceRepository;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface

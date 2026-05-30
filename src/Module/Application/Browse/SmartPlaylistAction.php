@@ -32,20 +32,14 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class SmartPlaylistAction implements ApplicationActionInterface
+final readonly class SmartPlaylistAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'smartplaylist';
 
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

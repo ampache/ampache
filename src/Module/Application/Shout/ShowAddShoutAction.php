@@ -38,32 +38,17 @@ use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAddShoutAction implements ApplicationActionInterface
+final readonly class ShowAddShoutAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_add_shout';
 
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ShoutRepositoryInterface $shoutRepository;
-
-    private ShoutRendererInterface $shoutRenderer;
-
-    private ShoutObjectLoaderInterface $shoutObjectLoader;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ShoutRepositoryInterface $shoutRepository,
-        ShoutRendererInterface $shoutRenderer,
-        ShoutObjectLoaderInterface $shoutObjectLoader,
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ShoutRepositoryInterface $shoutRepository,
+        private ShoutRendererInterface $shoutRenderer,
+        private ShoutObjectLoaderInterface $shoutObjectLoader,
     ) {
-        $this->requestParser     = $requestParser;
-        $this->ui                = $ui;
-        $this->shoutRepository   = $shoutRepository;
-        $this->shoutRenderer     = $shoutRenderer;
-        $this->shoutObjectLoader = $shoutObjectLoader;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -87,7 +72,7 @@ final class ShowAddShoutAction implements ApplicationActionInterface
         }
 
         $data = '';
-        if (get_class($object) === Song::class) {
+        if ($object::class === Song::class) {
             $data = $this->requestParser->getFromRequest('offset');
         }
 

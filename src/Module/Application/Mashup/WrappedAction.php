@@ -54,6 +54,7 @@ final readonly class WrappedAction implements ApplicationActionInterface
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_WRAPPED)) {
             throw new AccessDeniedException('Access Denied');
         }
+
         session_start();
 
         $userId = (int)$this->requestParser->getFromRequest('user_id');
@@ -62,14 +63,17 @@ final readonly class WrappedAction implements ApplicationActionInterface
         if ($user === null) {
             throw new ObjectNotFoundException('user_id');
         }
+
         $year = $this->requestParser->getFromRequest('year');
         if ($year === '') {
             $year = 'Y';
         }
+
         $startTime = strtotime(date($year . '-01-01'));
         if ($startTime === false) {
             throw new ObjectNotFoundException('year');
         }
+
         $endTime = strtotime(date($year . '-12-31')) ?: time();
 
         $this->ui->showHeader();

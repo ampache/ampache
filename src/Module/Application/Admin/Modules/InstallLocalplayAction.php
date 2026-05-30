@@ -40,24 +40,15 @@ use Ampache\Repository\Model\Preference;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class InstallLocalplayAction implements ApplicationActionInterface
+final readonly class InstallLocalplayAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'install_localplay';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->requestParser   = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -78,6 +69,7 @@ final class InstallLocalplayAction implements ApplicationActionInterface
 
             return null;
         }
+
         $localplay = new LocalPlay((string)filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         if (!$localplay->player_loaded()) {
             AmpError::add('general', T_('Failed to enable the Localplay module'));
@@ -88,6 +80,7 @@ final class InstallLocalplayAction implements ApplicationActionInterface
 
             return null;
         }
+
         // Install it!
         $localplay->install();
 

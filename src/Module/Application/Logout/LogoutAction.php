@@ -34,24 +34,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class LogoutAction implements ApplicationActionInterface
+final readonly class LogoutAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'logout';
 
-    private ConfigContainerInterface $configContainer;
-
-    private AuthenticationManagerInterface $authenticationManager;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        AuthenticationManagerInterface $authenticationManager,
-        LoggerInterface $logger,
+        private ConfigContainerInterface $configContainer,
+        private AuthenticationManagerInterface $authenticationManager,
+        private LoggerInterface $logger,
     ) {
-        $this->configContainer       = $configContainer;
-        $this->authenticationManager = $authenticationManager;
-        $this->logger                = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

@@ -34,24 +34,15 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class RemoveDuplicatesAction implements ApplicationActionInterface
+final readonly class RemoveDuplicatesAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'remove_duplicates';
 
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
     ) {
-        $this->requestParser = $requestParser;
-        $this->ui            = $ui;
-        $this->modelFactory  = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -72,6 +63,7 @@ final class RemoveDuplicatesAction implements ApplicationActionInterface
             if (!array_key_exists($item['object_type']->value, $map)) {
                 $map[$item['object_type']->value] = [];
             }
+
             if (!in_array($item['object_id'], $map[$item['object_type']->value])) {
                 $map[$item['object_type']->value][] = $item['object_id'];
             } else {
@@ -82,6 +74,7 @@ final class RemoveDuplicatesAction implements ApplicationActionInterface
         foreach ($tracks_to_rm as $track_id) {
             $playlist->delete_track($track_id);
         }
+
         $object_ids = $playlist->get_items();
         $this->ui->show(
             'show_playlist.inc.php',

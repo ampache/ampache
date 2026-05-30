@@ -48,7 +48,7 @@ final readonly class UserflagPlaylistAction implements ApplicationActionInterfac
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
 
         $by_user = ((int)filter_input(INPUT_GET, 'by_user', FILTER_VALIDATE_INT)) === 1;
 

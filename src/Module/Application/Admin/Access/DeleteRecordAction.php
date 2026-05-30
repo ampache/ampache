@@ -40,28 +40,16 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Deletes an ACL item by its id
  */
-final class DeleteRecordAction implements ApplicationActionInterface
+final readonly class DeleteRecordAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'delete_record';
 
-    private UiInterface $ui;
-
-    private AccessRepositoryInterface $accessRepository;
-
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        UiInterface $ui,
-        AccessRepositoryInterface $accessRepository,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private AccessRepositoryInterface $accessRepository,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
     ) {
-        $this->ui               = $ui;
-        $this->accessRepository = $accessRepository;
-        $this->configContainer  = $configContainer;
-        $this->requestParser    = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

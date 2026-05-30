@@ -37,24 +37,15 @@ use Psr\Http\Message\StreamFactoryInterface;
  * Looks like some kind of debugging tool?
  * @deprecated maybe obsolete
  */
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
-    private RequestParserInterface $requestParser;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private StreamFactoryInterface $streamFactory;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
+        private RequestParserInterface $requestParser,
+        private ResponseFactoryInterface $responseFactory,
+        private StreamFactoryInterface $streamFactory,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory   = $streamFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

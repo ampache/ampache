@@ -25,23 +25,14 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Stream;
 
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class DownloadAction extends AbstractStreamAction
 {
     public const string REQUEST_KEY = 'download';
-
-    public function __construct(
-        LoggerInterface $logger,
-        ConfigContainerInterface $configContainer,
-    ) {
-        parent::__construct($logger, $configContainer);
-    }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -67,21 +58,22 @@ final class DownloadAction extends AbstractStreamAction
                 'object_id' => (int) $_REQUEST['podcast_episode_id']
             ];
         }
+
         // add the missing request parts
         if (array_key_exists('client', $_REQUEST)) {
             $mediaIds[0]['client'] = scrub_in((string) $_REQUEST['client']);
         }
+
         if (array_key_exists('player', $_REQUEST)) {
             $mediaIds[0]['player'] = scrub_in((string) $_REQUEST['player']);
         }
+
         if (array_key_exists('cache', $_REQUEST)) {
             $mediaIds[0]['cache'] = scrub_in((string) $_REQUEST['cache']);
         }
-        if (array_key_exists('format', $_REQUEST)) {
-            $mediaIds[0]['format'] = scrub_in((string) $_REQUEST['format']);
-        } else {
-            $mediaIds[0]['format'] = 'raw';
-        }
+
+        $mediaIds[0]['format'] = array_key_exists('format', $_REQUEST) ? scrub_in((string) $_REQUEST['format']) : 'raw';
+
         if (array_key_exists('transcode_to', $_REQUEST)) {
             $mediaIds[0]['transcode_to'] = scrub_in((string) $_REQUEST['transcode_to']);
         }

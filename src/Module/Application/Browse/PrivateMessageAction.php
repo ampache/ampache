@@ -33,20 +33,14 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class PrivateMessageAction implements ApplicationActionInterface
+final readonly class PrivateMessageAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'pvmsg';
 
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -69,6 +63,7 @@ final class PrivateMessageAction implements ApplicationActionInterface
         } else {
             $browse->set_filter('to_user', Core::get_global('user')?->getId());
         }
+
         $browse->update_browse_from_session();
         $browse->show_objects();
 

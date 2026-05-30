@@ -38,24 +38,15 @@ use Ampache\Repository\Model\Label;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class AddLabelAction implements ApplicationActionInterface
+final readonly class AddLabelAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'add_label';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->requestParser   = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -78,6 +69,7 @@ final class AddLabelAction implements ApplicationActionInterface
         if (isset($_POST['user'])) {
             unset($_POST['user']);
         }
+
         if (isset($_POST['creation_date'])) {
             unset($_POST['creation_date']);
         }

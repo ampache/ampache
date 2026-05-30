@@ -40,28 +40,16 @@ use Psr\Log\LoggerInterface;
 /**
  * Renders the podcast overview
  */
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private LoggerInterface $logger;
-
-    private PodcastRepositoryInterface $podcastRepository;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        LoggerInterface $logger,
-        PodcastRepositoryInterface $podcastRepository,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private LoggerInterface $logger,
+        private PodcastRepositoryInterface $podcastRepository,
     ) {
-        $this->configContainer   = $configContainer;
-        $this->ui                = $ui;
-        $this->logger            = $logger;
-        $this->podcastRepository = $podcastRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -73,7 +61,7 @@ final class ShowAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $user      = $gatekeeper->getUser() ?? new User(-1);
-        $catalogs  = (isset($user->catalogs['podcast'])) ? $user->catalogs['podcast'] : User::get_user_catalogs($user->id);
+        $catalogs  = $user->catalogs['podcast'] ?? User::get_user_catalogs($user->id);
         $podcastId = (int) ($request->getQueryParams()['podcast'] ?? 0);
         $podcast   = $this->podcastRepository->findById($podcastId);
         if ($podcast === null || !in_array($podcast->getCatalogId(), $catalogs)) {

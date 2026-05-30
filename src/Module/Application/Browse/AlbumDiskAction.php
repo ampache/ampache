@@ -34,24 +34,15 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class AlbumDiskAction implements ApplicationActionInterface
+final readonly class AlbumDiskAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'album_disk';
 
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -71,29 +62,21 @@ final class AlbumDiskAction implements ApplicationActionInterface
 
         $year_sort = ($this->configContainer->get('use_original_year')) ? "original_year" : "year";
         $sort_type = $this->configContainer->get('album_sort');
-        switch ($sort_type) {
-            case 'name_asc':
-                $browse->set_sort('name', 'ASC');
-                break;
-            case 'name_desc':
-                $browse->set_sort('name', 'DESC');
-                break;
-            case 'year_asc':
-                $browse->set_sort($year_sort, 'ASC');
-                break;
-            case 'year_desc':
-                $browse->set_sort($year_sort, 'DESC');
-                break;
-            case 'default':
-            default:
-                $browse->set_sort('name_' . $year_sort, 'ASC');
-        }
+        match ($sort_type) {
+            'name_asc' => $browse->set_sort('name', 'ASC'),
+            'name_desc' => $browse->set_sort('name', 'DESC'),
+            'year_asc' => $browse->set_sort($year_sort, 'ASC'),
+            'year_desc' => $browse->set_sort($year_sort, 'DESC'),
+            default => $browse->set_sort('name_' . $year_sort, 'ASC'),
+        };
         if (array_key_exists('catalog', $_SESSION)) {
             $browse->set_filter('catalog', (int)$_SESSION['catalog']);
         }
+
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
             $browse->set_filter('catalog_enabled', '1');
         }
+
         $browse->update_browse_from_session(); // Update current index depending on what is in session.
         $browse->show_objects();
 

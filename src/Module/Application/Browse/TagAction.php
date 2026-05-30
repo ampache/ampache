@@ -38,27 +38,16 @@ use Ampache\Repository\Model\Tag;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class TagAction implements ApplicationActionInterface
+final readonly class TagAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'tag';
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser,
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
     ) {
-        $this->configContainer = $configContainer;
-        $this->requestParser   = $requestParser;
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -72,11 +61,11 @@ final class TagAction implements ApplicationActionInterface
         $browse_type  = (Browse::is_valid_type($request_type))
             ? $request_type
             : ($this->configContainer->get(ConfigurationKeyEnum::ALBUM_GROUP) ? 'album' : 'album_disk');
-        if ($request_type != $browse_type) {
+        if ($request_type !== $browse_type) {
             $_REQUEST['type'] = $browse_type;
         }
 
-        $object_ids = ($browse_type == 'album_disk')
+        $object_ids = ($browse_type === 'album_disk')
             ? Tag::get_tags('album', 0, $countOrder)
             : Tag::get_tags($browse_type, 0, $countOrder);
 
@@ -87,7 +76,7 @@ final class TagAction implements ApplicationActionInterface
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type($browse_type);
-        if ($request_type == 'tag_hidden') {
+        if ($request_type === 'tag_hidden') {
             require_once Ui::find_template('show_tagcloud_hidden.inc.php');
 
             $this->ui->showBoxBottom();
