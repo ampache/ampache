@@ -37,24 +37,15 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class DeleteAction implements ApplicationActionInterface
+final readonly class DeleteAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'delete';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private RequestParserInterface $requestParser,
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->requestParser   = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -70,7 +61,7 @@ final class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 

@@ -41,32 +41,17 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private LoggerInterface $logger;
-
-    private PrivilegeCheckerInterface $privilegeChecker;
-
-    private LabelRepositoryInterface $labelRepository;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        LoggerInterface $logger,
-        PrivilegeCheckerInterface $privilegeChecker,
-        LabelRepositoryInterface $labelRepository,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private LoggerInterface $logger,
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private LabelRepositoryInterface $labelRepository,
     ) {
-        $this->configContainer  = $configContainer;
-        $this->ui               = $ui;
-        $this->logger           = $logger;
-        $this->privilegeChecker = $privilegeChecker;
-        $this->labelRepository  = $labelRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -123,8 +108,8 @@ final class ShowAction implements ApplicationActionInterface
 
         // if you didn't set a label_id or name, show the add label form
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === true &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) === true
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)
         ) {
             $this->ui->show(
                 'show_add_label.inc.php'
@@ -143,10 +128,8 @@ final class ShowAction implements ApplicationActionInterface
         int $userId,
         Label $label,
     ): bool {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) === true) {
-            if ($label->user !== null && $userId == $label->user) {
-                return true;
-            }
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) && ($label->user !== null && $userId === $label->user)) {
+            return true;
         }
 
         return $this->privilegeChecker->check(

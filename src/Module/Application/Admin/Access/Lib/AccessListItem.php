@@ -28,18 +28,12 @@ namespace Ampache\Module\Application\Admin\Access\Lib;
 use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\ModelFactoryInterface;
 
-final class AccessListItem implements AccessListItemInterface
+final readonly class AccessListItem implements AccessListItemInterface
 {
-    private Access $access;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        Access $access,
+        private ModelFactoryInterface $modelFactory,
+        private Access $access,
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->access       = $access;
     }
 
     /**
@@ -52,13 +46,16 @@ final class AccessListItem implements AccessListItemInterface
         if ($level >= 75) {
             return T_('All');
         }
-        if ($level == 5) {
+
+        if ($level === 5) {
             return T_('View');
         }
-        if ($level == 25) {
+
+        if ($level === 25) {
             return T_('Read');
         }
-        if ($level == 50) {
+
+        if ($level === 50) {
             return T_('Read/Write');
         }
 

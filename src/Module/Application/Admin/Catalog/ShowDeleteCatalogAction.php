@@ -35,20 +35,14 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowDeleteCatalogAction implements ApplicationActionInterface
+final readonly class ShowDeleteCatalogAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_delete_catalog';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -56,6 +50,7 @@ final class ShowDeleteCatalogAction implements ApplicationActionInterface
         if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();
         }
+
         $catalogs = (isset($_REQUEST['catalogs']))
             ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_NUMBER_INT)
             : [];

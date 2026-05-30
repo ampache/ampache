@@ -34,28 +34,16 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
-    private TalFactoryInterface $talFactory;
-
-    private GuiFactoryInterface $guiFactory;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private StreamFactoryInterface $streamFactory;
-
     public function __construct(
-        TalFactoryInterface $talFactory,
-        GuiFactoryInterface $guiFactory,
-        ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
+        private TalFactoryInterface $talFactory,
+        private GuiFactoryInterface $guiFactory,
+        private ResponseFactoryInterface $responseFactory,
+        private StreamFactoryInterface $streamFactory,
     ) {
-        $this->talFactory      = $talFactory;
-        $this->guiFactory      = $guiFactory;
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory   = $streamFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

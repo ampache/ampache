@@ -37,24 +37,15 @@ use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private PrivateMessageRepositoryInterface $pmRepository;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        PrivateMessageRepositoryInterface $pmRepository,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private PrivateMessageRepositoryInterface $pmRepository,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->pmRepository    = $pmRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -80,6 +71,7 @@ final class ShowAction implements ApplicationActionInterface
                 sprintf('Unknown or unauthorized private message #%d.', $msgId),
             );
         }
+
         if ($pvmsg->isRead() === false) {
             $this->pmRepository->setIsRead($pvmsg, 1);
         }

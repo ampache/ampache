@@ -59,7 +59,7 @@ final readonly class ShowDisabledAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 

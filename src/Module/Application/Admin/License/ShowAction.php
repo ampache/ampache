@@ -36,23 +36,15 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-    private LicenseRepositoryInterface $licenseRepository;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        LicenseRepositoryInterface $licenseRepository,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private LicenseRepositoryInterface $licenseRepository,
     ) {
-        $this->ui                = $ui;
-        $this->modelFactory      = $modelFactory;
-        $this->licenseRepository = $licenseRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

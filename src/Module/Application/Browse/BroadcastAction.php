@@ -32,20 +32,14 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class BroadcastAction implements ApplicationActionInterface
+final readonly class BroadcastAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'broadcast';
 
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

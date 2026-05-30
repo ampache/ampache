@@ -38,31 +38,22 @@ use Ampache\Repository\Model\Preference;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UpdatePreferencesAction implements ApplicationActionInterface
+final readonly class UpdatePreferencesAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'update_preferences';
 
-    private PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater;
-
-    private UiInterface $ui;
-
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater,
-        UiInterface $ui,
-        RequestParserInterface $requestParser,
+        private PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater,
+        private UiInterface $ui,
+        private RequestParserInterface $requestParser,
     ) {
-        $this->preferencesFromRequestUpdater = $preferencesFromRequestUpdater;
-        $this->ui                            = $ui;
-        $this->requestParser                 = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             (
-                Core::get_post('method') == 'admin' &&
+                Core::get_post('method') === 'admin' &&
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
             ) ||
             !$this->requestParser->verifyForm('update_preference')
@@ -72,7 +63,7 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
 
         $system = false;
         /* Reset the Theme */
-        if (Core::get_post('method') == 'admin') {
+        if (Core::get_post('method') === 'admin') {
             $user_id            = '-1';
             $system             = true;
             $fullname           = T_('Server');
@@ -90,7 +81,7 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
         // FIXME: do we need to do any header fiddling?
         load_gettext();
 
-        if (Core::get_post('method') == 'admin') {
+        if (Core::get_post('method') === 'admin') {
             $notification_text = T_('Server preferences updated successfully');
         } else {
             $notification_text = T_('User preferences updated successfully');
@@ -115,6 +106,7 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
                 ]
             );
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

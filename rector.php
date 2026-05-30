@@ -25,7 +25,6 @@ return RectorConfig::configure()
     ->withSkip([
         FlipTypeControlToUseExclusiveTypeRector::class,
         __DIR__ . '/src/Module/Api',
-        __DIR__ . '/src/Module/Application',
         __DIR__ . '/src/Module/Util/Captcha',
         __DIR__ . '/src/Module/System/Update/Migration',
         __DIR__ . '/src/Repository/Model',

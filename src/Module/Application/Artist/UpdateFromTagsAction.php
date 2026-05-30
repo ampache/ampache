@@ -37,24 +37,15 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UpdateFromTagsAction implements ApplicationActionInterface
+final readonly class UpdateFromTagsAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'update_from_tags';
 
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

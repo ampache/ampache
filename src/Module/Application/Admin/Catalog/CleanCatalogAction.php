@@ -34,16 +34,13 @@ final class CleanCatalogAction extends AbstractCatalogAction
 {
     public const string REQUEST_KEY = 'clean_catalog';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    private readonly UiInterface $ui;
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer,
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
-        $this->configContainer = $configContainer;
         $this->ui              = $ui;
     }
 

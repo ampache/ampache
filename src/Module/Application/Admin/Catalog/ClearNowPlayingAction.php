@@ -37,20 +37,14 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ClearNowPlayingAction implements ApplicationActionInterface
+final readonly class ClearNowPlayingAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'clear_now_playing';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -61,12 +55,13 @@ final class ClearNowPlayingAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 
             return null;
         }
+
         Stream::clear_now_playing();
 
         $this->ui->showConfirmation(

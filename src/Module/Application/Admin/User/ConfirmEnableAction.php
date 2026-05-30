@@ -43,33 +43,18 @@ final class ConfirmEnableAction extends AbstractUserAction
 {
     public const string REQUEST_KEY = 'confirm_enable';
 
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UserStateTogglerInterface $userStateToggler;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        UserStateTogglerInterface $userStateToggler,
+        private readonly RequestParserInterface $requestParser,
+        private readonly UiInterface $ui,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly UserStateTogglerInterface $userStateToggler,
     ) {
-        $this->requestParser    = $requestParser;
-        $this->ui               = $ui;
-        $this->modelFactory     = $modelFactory;
-        $this->configContainer  = $configContainer;
-        $this->userStateToggler = $userStateToggler;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 

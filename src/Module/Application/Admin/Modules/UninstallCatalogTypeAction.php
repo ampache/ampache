@@ -38,24 +38,15 @@ use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UninstallCatalogTypeAction implements ApplicationActionInterface
+final readonly class UninstallCatalogTypeAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'uninstall_catalog_type';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->requestParser   = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -81,6 +72,7 @@ final class UninstallCatalogTypeAction implements ApplicationActionInterface
 
             return null;
         }
+
         $catalog->uninstall();
 
         /* Show Confirmation */

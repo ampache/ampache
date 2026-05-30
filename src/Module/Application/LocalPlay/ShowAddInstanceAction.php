@@ -40,16 +40,13 @@ final class ShowAddInstanceAction extends AbstractLocalPlayAction
 {
     public const string REQUEST_KEY = 'show_add_instance';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    private readonly ConfigContainerInterface $configContainer;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui,
+        private readonly UiInterface $ui,
     ) {
         parent::__construct($configContainer);
-        $this->ui              = $ui;
         $this->configContainer = $configContainer;
     }
 

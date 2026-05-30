@@ -34,24 +34,15 @@ use Ampache\Repository\WantedRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class WantedAction implements ApplicationActionInterface
+final readonly class WantedAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'wanted';
 
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private WantedRepositoryInterface $wantedRepository;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        WantedRepositoryInterface $wantedRepository,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private WantedRepositoryInterface $wantedRepository,
     ) {
-        $this->ui               = $ui;
-        $this->modelFactory     = $modelFactory;
-        $this->wantedRepository = $wantedRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

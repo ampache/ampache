@@ -38,24 +38,15 @@ use Ampache\Module\Util\Upload;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class DefaultAction implements ApplicationActionInterface
+final readonly class DefaultAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private AjaxUriRetrieverInterface $ajaxUriRetriever;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        AjaxUriRetrieverInterface $ajaxUriRetriever,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private AjaxUriRetrieverInterface $ajaxUriRetriever,
     ) {
-        $this->configContainer  = $configContainer;
-        $this->ui               = $ui;
-        $this->ajaxUriRetriever = $ajaxUriRetriever;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -78,6 +69,7 @@ final class DefaultAction implements ApplicationActionInterface
         if ($post_max > 0 && ($post_max < $upload_max || $upload_max == 0)) {
             $upload_max = $post_max;
         }
+
         // Check to handle POST requests exceeding max post size.
         if (
             Core::get_server('CONTENT_LENGTH') > 0 &&
@@ -91,7 +83,7 @@ final class DefaultAction implements ApplicationActionInterface
 
         $uploadAction = $_REQUEST['upload_action'] ?? null;
         if ($uploadAction === 'upload') {
-            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
                 throw new AccessDeniedException();
             }
 
@@ -111,8 +103,9 @@ final class DefaultAction implements ApplicationActionInterface
             );
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            echo sprintf(T_('Not Found: %s'), 'upload_catalog') . '<br>' . "<a href=\"https://ampache.org/docs/help/upload-catalogs\" target=\"_blank\">" . T_('Help') . " " . Ui::get_material_symbol('open_in_new', T_('Link')) . "</a>";
+            echo sprintf(T_('Not Found: %s'), 'upload_catalog') . '<br>' . '<a href="https://ampache.org/docs/help/upload-catalogs" target="_blank">' . T_('Help') . " " . Ui::get_material_symbol('open_in_new', T_('Link')) . "</a>";
         }
+
         // Show the Footer
         $this->ui->showQueryStats();
         $this->ui->showFooter();

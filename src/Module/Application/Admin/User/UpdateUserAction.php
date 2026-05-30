@@ -44,32 +44,18 @@ final class UpdateUserAction extends AbstractUserAction
 {
     public const string REQUEST_KEY = 'update_user';
 
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UserRepositoryInterface $userRepository;
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        UserRepositoryInterface $userRepository,
-        RequestParserInterface $requestParser,
+        private readonly UiInterface $ui,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly RequestParserInterface $requestParser,
     ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
-        $this->userRepository  = $userRepository;
-        $this->requestParser   = $requestParser;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
@@ -113,7 +99,8 @@ final class UpdateUserAction extends AbstractUserAction
         } elseif ($username != $client->username && $this->userRepository->idByUsername($username) > 0) {
             AmpError::add('username', T_("That Username already exists"));
         }
-        if ($pass1 !== $pass2 && !empty($pass1)) {
+
+        if ($pass1 !== $pass2 && ($pass1 !== '' && $pass1 !== '0')) {
             AmpError::add('password', T_("Your Passwords don't match"));
         }
 
@@ -141,43 +128,54 @@ final class UpdateUserAction extends AbstractUserAction
             return null;
         }
 
-        if ($access != $client->access) {
+        if ($access !== $client->access) {
             $client->update_access($access);
         }
-        if ($catalog_filter_group != $client->catalog_filter_group) {
+
+        if ($catalog_filter_group !== $client->catalog_filter_group) {
             $client->update_catalog_filter_group($catalog_filter_group);
         }
+
         if ($email != $client->email) {
             $client->update_email($email);
         }
+
         if ($website != $client->website) {
             $client->update_website($website);
         }
+
         if ($username != $client->username) {
             $client->update_username($username);
         }
+
         if ($fullname != $client->fullname) {
             $client->update_fullname($fullname);
         }
-        if ($fullname_public != $client->fullname_public) {
+
+        if ($fullname_public !== $client->fullname_public) {
             $client->update_fullname_public($fullname_public);
         }
-        if ($pass1 == $pass2 && strlen($pass1)) {
+
+        if ($pass1 === $pass2 && strlen($pass1)) {
             $client->update_password($pass1);
         }
+
         if ($state != $client->state) {
             $client->update_state($state);
         }
+
         if ($city != $client->city) {
             $client->update_city($city);
         }
+
         // reset preferences if allowed
         if (
             $prevent_override === 0 &&
-            in_array($preset, ['system', 'default', 'minimalist', 'community'])
+            in_array($preset, ['system', 'default', 'minimalist', 'community'], true)
         ) {
             Preference::set_preset($client->getUsername(), $preset);
         }
+
         if (!$client->upload_avatar()) {
             $mindimension = sprintf(
                 '%dx%d',

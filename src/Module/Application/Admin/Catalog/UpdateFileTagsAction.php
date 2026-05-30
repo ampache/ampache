@@ -34,16 +34,13 @@ final class UpdateFileTagsAction extends AbstractCatalogAction
 {
     public const string REQUEST_KEY = 'update_file_tags';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    private readonly UiInterface $ui;
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer,
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
-        $this->configContainer = $configContainer;
         $this->ui              = $ui;
     }
 

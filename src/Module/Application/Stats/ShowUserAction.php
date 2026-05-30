@@ -87,6 +87,7 @@ final readonly class ShowUserAction implements ApplicationActionInterface
             );
             show_table_render(false, true);
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

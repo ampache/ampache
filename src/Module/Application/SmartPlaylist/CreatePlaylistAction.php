@@ -36,20 +36,14 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class CreatePlaylistAction implements ApplicationActionInterface
+final readonly class CreatePlaylistAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'create_playlist';
 
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -61,10 +55,10 @@ final class CreatePlaylistAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         foreach ($_REQUEST as $key => $value) {
-            $prefix = substr($key, 0, 4);
-            $value  = trim($value);
+            $prefix = substr((string) $key, 0, 4);
+            $value  = trim((string) $value);
 
-            if ($prefix == 'rule' && strlen($value)) {
+            if ($prefix === 'rule' && strlen($value)) {
                 $rules[$key] = Dba::escape($value);
             }
         }

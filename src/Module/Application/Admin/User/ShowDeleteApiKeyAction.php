@@ -39,16 +39,10 @@ final class ShowDeleteApiKeyAction extends AbstractUserAction
 
     public const string REQUEST_KEY = 'show_delete_apikey';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface

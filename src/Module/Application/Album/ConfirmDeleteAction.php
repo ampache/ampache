@@ -39,32 +39,17 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ConfirmDeleteAction implements ApplicationActionInterface
+final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'confirm_delete';
 
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
-    private AlbumDeleterInterface $albumDeleter;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        AlbumDeleterInterface $albumDeleter,
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+        private AlbumDeleterInterface $albumDeleter,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
-        $this->albumDeleter    = $albumDeleter;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -76,6 +61,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
             return null;
         }
+
         $album_id = (int)$this->requestParser->getFromRequest('album_id');
         $album    = $this->modelFactory->createAlbum($album_id);
         if (!Catalog::can_remove($album)) {
@@ -97,7 +83,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
-                sprintf(T_('Couldn\'t delete this %s'), T_('Album')),
+                sprintf(T_("Couldn't delete this %s"), T_('Album')),
                 $this->configContainer->getWebPath()
             );
         }

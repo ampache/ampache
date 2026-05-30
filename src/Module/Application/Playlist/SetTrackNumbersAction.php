@@ -34,24 +34,15 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class SetTrackNumbersAction implements ApplicationActionInterface
+final readonly class SetTrackNumbersAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'set_track_numbers';
 
-    private RequestParserInterface $requestParser;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
+        private RequestParserInterface $requestParser,
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
     ) {
-        $this->requestParser = $requestParser;
-        $this->modelFactory  = $modelFactory;
-        $this->ui            = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -71,18 +62,20 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
         }
 
         if (array_key_exists('order', $_GET)) {
-            $songs = explode(";", $_GET['order']);
+            $songs = explode(";", (string) $_GET['order']);
             $track = (int)($_GET['offset'] ?? 0) + 1;
             if ($track < 1) {
                 $track = 1;
             }
+
             foreach ($songs as $track_id) {
-                if ($track_id != '') {
+                if ($track_id !== '') {
                     $playlist->update_track_number((int)$track_id, $track);
                     ++$track;
                 }
             }
         }
+
         // always regenerate the entire playlist
         $playlist->regenerate_track_numbers();
 

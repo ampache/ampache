@@ -38,20 +38,14 @@ use Ampache\Repository\Model\Democratic;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ManagePlaylistsAction implements ApplicationActionInterface
+final readonly class ManagePlaylistsAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'manage_playlists';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

@@ -35,23 +35,20 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
 final class UpdateInstanceAction extends AbstractLocalPlayAction
 {
     public const string REQUEST_KEY = 'update_instance';
 
-    private ConfigContainerInterface $configContainer;
-
-    private ResponseFactoryInterface $responseFactory;
+    private readonly ConfigContainerInterface $configContainer;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ResponseFactoryInterface $responseFactory,
+        private readonly ResponseFactoryInterface $responseFactory,
     ) {
         parent::__construct($configContainer);
         $this->configContainer = $configContainer;
-        $this->responseFactory = $responseFactory;
     }
 
     protected function handle(
@@ -68,7 +65,7 @@ final class UpdateInstanceAction extends AbstractLocalPlayAction
         $localplay->update_instance((int)$_REQUEST['instance'], $_POST);
 
         return $this->responseFactory
-            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf('%s/localplay.php?action=show_instances', $this->configContainer->getWebPath())

@@ -25,23 +25,22 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Exception;
 
+use Override;
+
 /**
  * Thrown if users try to load items which don't exist
  */
 final class ObjectNotFoundException extends ApplicationException
 {
     /** @var string */
+    #[Override]
     protected $message = 'Object not found';
-
-    /** @var int|string $objectId */
-    private $objectId;
 
     /**
      * @param int|string $objectId The requested objectId
      */
-    public function __construct($objectId = 0)
+    public function __construct(private $objectId = 0)
     {
-        $this->objectId = $objectId;
     }
 
     /**

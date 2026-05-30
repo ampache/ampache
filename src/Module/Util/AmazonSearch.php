@@ -49,7 +49,8 @@ class AmazonSearch
     public $base_url;
 
     public $search;
-     // Amazon Affiliate Associate Tag
+
+    // Amazon Affiliate Associate Tag
     public $results = [];
 
     // Array of results

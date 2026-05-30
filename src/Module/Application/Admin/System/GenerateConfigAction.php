@@ -39,39 +39,24 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-final class GenerateConfigAction implements ApplicationActionInterface
+final readonly class GenerateConfigAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'generate_config';
 
-    private ConfigContainerInterface $configContainer;
-
-    private Horde_Browser $browser;
-
-    private InstallationHelperInterface $installationHelper;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private StreamFactoryInterface $streamFactory;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        Horde_Browser $browser,
-        InstallationHelperInterface $installationHelper,
-        ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
+        private ConfigContainerInterface $configContainer,
+        private Horde_Browser $browser,
+        private InstallationHelperInterface $installationHelper,
+        private ResponseFactoryInterface $responseFactory,
+        private StreamFactoryInterface $streamFactory,
     ) {
-        $this->configContainer    = $configContainer;
-        $this->browser            = $browser;
-        $this->installationHelper = $installationHelper;
-        $this->responseFactory    = $responseFactory;
-        $this->streamFactory      = $streamFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             throw new AccessDeniedException();
         }

@@ -34,24 +34,15 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowLyricsAction implements ApplicationActionInterface
+final readonly class ShowLyricsAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_lyrics';
 
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
     ) {
-        $this->requestParser = $requestParser;
-        $this->ui            = $ui;
-        $this->modelFactory  = $modelFactory;
     }
 
     public function run(

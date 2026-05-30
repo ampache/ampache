@@ -36,21 +36,15 @@ final class ConfirmDeleteAction extends AbstractFilterAction
 {
     public const string REQUEST_KEY = 'confirm_delete';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
+        private readonly UiInterface $ui,
+        private readonly ConfigContainerInterface $configContainer,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
@@ -61,7 +55,7 @@ final class ConfirmDeleteAction extends AbstractFilterAction
 
         $filter_id   = (int)($request->getQueryParams()['filter_id'] ?? 0);
         $filter_name = $request->getQueryParams()['filter_name'];
-        if (Catalog::delete_catalog_filter($filter_id) !== false) {
+        if (Catalog::delete_catalog_filter($filter_id)) {
             Catalog::reset_user_filter($filter_id);
             $this->ui->showConfirmation(
                 T_('No Problem'),
@@ -72,7 +66,7 @@ final class ConfirmDeleteAction extends AbstractFilterAction
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
-                sprintf(T_('Couldn\'t delete this %s'), T_('Catalog Filter')),
+                sprintf(T_("Couldn't delete this %s"), T_('Catalog Filter')),
                 sprintf('%s/filter.php', $this->configContainer->getWebPath('/admin'))
             );
         }

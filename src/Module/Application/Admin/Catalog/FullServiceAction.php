@@ -35,16 +35,13 @@ final class FullServiceAction extends AbstractCatalogAction
 {
     public const string REQUEST_KEY = 'full_service';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    private readonly UiInterface $ui;
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer,
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
-        $this->configContainer = $configContainer;
         $this->ui              = $ui;
     }
 
@@ -55,9 +52,10 @@ final class FullServiceAction extends AbstractCatalogAction
         ServerRequestInterface $request,
         array $catalogIds,
     ): ?ResponseInterface {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
+
         $options = [
             'gather_art' => true,
             'parse_playlist' => true,

@@ -41,28 +41,16 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class InstallPluginAction implements ApplicationActionInterface
+final readonly class InstallPluginAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'install_plugin';
 
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        LoggerInterface $logger,
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private LoggerInterface $logger,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -91,6 +79,7 @@ final class InstallPluginAction implements ApplicationActionInterface
 
             return null;
         }
+
         $plugin = new Plugin($plugin_name);
         if ($plugin->_plugin === null || !$plugin->install()) {
             $this->logger->error(

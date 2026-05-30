@@ -38,24 +38,15 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Cleans up expired share items
  */
-final class CleanAction implements ApplicationActionInterface
+final readonly class CleanAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'clean';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private ShareRepositoryInterface $shareRepository;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        ShareRepositoryInterface $shareRepository,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private ShareRepositoryInterface $shareRepository,
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->shareRepository = $shareRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

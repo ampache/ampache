@@ -31,16 +31,12 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowImportPlaylistAction implements ApplicationActionInterface
+final readonly class ShowImportPlaylistAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_import_playlist';
 
-    private UiInterface $ui;
-
-    public function __construct(
-        UiInterface $ui,
-    ) {
-        $this->ui = $ui;
+    public function __construct(private UiInterface $ui)
+    {
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

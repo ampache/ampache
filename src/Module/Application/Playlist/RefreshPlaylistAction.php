@@ -32,26 +32,17 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class RefreshPlaylistAction implements ApplicationActionInterface
+final readonly class RefreshPlaylistAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'refresh_playlist';
 
-    private ModelFactoryInterface $modelFactory;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+        private ResponseFactoryInterface $responseFactory,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->responseFactory = $responseFactory;
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -65,7 +56,7 @@ final class RefreshPlaylistAction implements ApplicationActionInterface
             $playlist = $this->modelFactory->createPlaylist((int)$playlistId);
             $search   = $this->modelFactory->createSearch((int)$searchId, 'song', $user);
             $objects  = $search->get_items();
-            if ($playlist->has_access() && !empty($objects)) {
+            if ($playlist->has_access() && $objects !== []) {
                 $playlist->delete_all();
                 debug_event(self::class, 'Refreshing playlist {' . $playlist->id . '} from search {' . $search->id . '} for user {' . $user->id . '}', 5);
                 $playlist->add_medias($objects);
@@ -74,7 +65,7 @@ final class RefreshPlaylistAction implements ApplicationActionInterface
 
         // Go elsewhere
         return $this->responseFactory
-            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf('%s/browse.php?action=playlist', $this->configContainer->getWebPath())

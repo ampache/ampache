@@ -39,28 +39,16 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Deletes a share-item
  */
-final class DeleteAction implements ApplicationActionInterface
+final readonly class DeleteAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'delete';
 
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private ShareRepositoryInterface $shareRepository;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        ShareRepositoryInterface $shareRepository,
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private ShareRepositoryInterface $shareRepository,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->shareRepository = $shareRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -68,6 +56,7 @@ final class DeleteAction implements ApplicationActionInterface
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE)) {
             throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
+
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             throw new AccessDeniedException();
         }

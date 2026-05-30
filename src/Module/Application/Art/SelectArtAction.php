@@ -33,26 +33,17 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
 final class SelectArtAction extends AbstractArtAction
 {
     public const string REQUEST_KEY = 'select_art';
 
-    private ModelFactoryInterface $modelFactory;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private UiInterface $ui;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        ResponseFactoryInterface $responseFactory,
-        UiInterface $ui,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly UiInterface $ui,
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->responseFactory = $responseFactory;
-        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -102,7 +93,7 @@ final class SelectArtAction extends AbstractArtAction
         $art->insert($image, $mime);
 
         return $this->responseFactory
-            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 $burl

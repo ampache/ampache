@@ -38,23 +38,13 @@ final class DemocraticAction extends AbstractStreamAction
 {
     public const string REQUEST_KEY = 'democratic';
 
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        RequestParserInterface $requestParser,
+        private readonly RequestParserInterface $requestParser,
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly ModelFactoryInterface $modelFactory,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-
-        parent::__construct($logger, $configContainer);
+        parent::__construct($logger, $this->configContainer);
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

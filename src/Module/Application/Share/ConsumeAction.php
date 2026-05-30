@@ -44,36 +44,18 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ConsumeAction implements ApplicationActionInterface
+final readonly class ConsumeAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'consume';
 
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private NetworkCheckerInterface $networkChecker;
-
-    private ContainerInterface $dic;
-
-    private UiInterface $ui;
-
-    private ShareRepositoryInterface $shareRepository;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        NetworkCheckerInterface $networkChecker,
-        ContainerInterface $dic,
-        UiInterface $ui,
-        ShareRepositoryInterface $shareRepository,
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private NetworkCheckerInterface $networkChecker,
+        private ContainerInterface $dic,
+        private UiInterface $ui,
+        private ShareRepositoryInterface $shareRepository,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->networkChecker  = $networkChecker;
-        $this->dic             = $dic;
-        $this->ui              = $ui;
-        $this->shareRepository = $shareRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -91,15 +73,13 @@ final class ConsumeAction implements ApplicationActionInterface
          * even want them to be able to get to the login
          * page if they aren't in the ACL
          */
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ACCESS_CONTROL)) {
-            if (!$this->networkChecker->check(AccessTypeEnum::INTERFACE, null, AccessLevelEnum::GUEST)) {
-                throw new AccessDeniedException(
-                    sprintf(
-                        'Access Denied:%s is not in the Interface Access list',
-                        filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)
-                    )
-                );
-            }
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ACCESS_CONTROL) && !$this->networkChecker->check(AccessTypeEnum::INTERFACE, null, AccessLevelEnum::GUEST)) {
+            throw new AccessDeniedException(
+                sprintf(
+                    'Access Denied:%s is not in the Interface Access list',
+                    filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)
+                )
+            );
         } // access_control is enabled
 
         $share_id = (int)$this->requestParser->getFromRequest('id');
@@ -111,7 +91,7 @@ final class ConsumeAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        if (empty($action)) {
+        if ($action === '' || $action === '0') {
             if ($share->allow_stream) {
                 $action = 'stream';
             } elseif ($share->allow_download) {
@@ -125,7 +105,7 @@ final class ConsumeAction implements ApplicationActionInterface
 
         $this->shareRepository->registerAccess($share, new DateTime());
 
-        if ($action == 'download') {
+        if ($action === 'download') {
             if ($share->object_type == 'song' || $share->object_type == 'video') {
                 $_REQUEST['action']                    = 'download';
                 $_REQUEST['type']                      = $share->object_type;
@@ -133,11 +113,12 @@ final class ConsumeAction implements ApplicationActionInterface
 
                 return $this->dic->get(DownloadAction::class)->run($request, $gatekeeper);
             }
+
             $_REQUEST['action'] = $share->object_type;
             $_REQUEST['id']     = $share->object_id;
 
             return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
-        } elseif ($action == 'stream') {
+        } elseif ($action === 'stream') {
             $this->ui->show(
                 'show_share.inc.php',
                 ['share' => $share]

@@ -36,20 +36,14 @@ use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class GetAdvancedAction implements ApplicationActionInterface
+final readonly class GetAdvancedAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'get_advanced';
 
-    private UiInterface $ui;
-
-    private VideoRepositoryInterface $videoRepository;
-
     public function __construct(
-        UiInterface $ui,
-        VideoRepositoryInterface $videoRepository,
+        private UiInterface $ui,
+        private VideoRepositoryInterface $videoRepository,
     ) {
-        $this->ui              = $ui;
-        $this->videoRepository = $videoRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -61,7 +55,7 @@ final class GetAdvancedAction implements ApplicationActionInterface
         if ($user instanceof User) {
             $user->load_playlist();
             $objectIds = Random::advanced($objectType->value, $_POST);
-            if (!empty($objectIds)) {
+            if ($objectIds !== []) {
                 // you need to add by the base child type song/video
                 $objectType = match ($objectType->value) {
                     'album', 'artist' => LibraryItemEnum::SONG,

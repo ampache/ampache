@@ -32,32 +32,21 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShareAction implements ApplicationActionInterface
+final readonly class ShareAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'share';
 
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ShareRepositoryInterface $shareRepository;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        ShareRepositoryInterface $shareRepository,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private ConfigContainerInterface $configContainer,
+        private ShareRepositoryInterface $shareRepository,
     ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
-        $this->shareRepository = $shareRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -88,10 +77,10 @@ final class ShareAction implements ApplicationActionInterface
             T_('Clean Expired Shared Objects')
         );
         $user       = Core::get_global('user');
-        $object_ids = (!empty($user))
+        $object_ids = ($user instanceof User)
             ? $this->shareRepository->getIdsByUser($user)
             : [];
-        if (!empty($object_ids)) {
+        if ($object_ids !== []) {
             $browse = $this->modelFactory->createBrowse();
             $browse->set_type('share');
             $browse->set_static_content(true);
@@ -105,6 +94,7 @@ final class ShareAction implements ApplicationActionInterface
         } else {
             echo T_('No records found');
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

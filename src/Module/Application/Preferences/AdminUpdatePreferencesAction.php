@@ -37,30 +37,18 @@ use Ampache\Module\Util\RequestParserInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class AdminUpdatePreferencesAction implements ApplicationActionInterface
+final readonly class AdminUpdatePreferencesAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'admin_update_preferences';
 
-    private PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater,
-        ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser,
+        private PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater,
+        private ResponseFactoryInterface $responseFactory,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
     ) {
-        $this->preferencesFromRequestUpdater = $preferencesFromRequestUpdater;
-        $this->responseFactory               = $responseFactory;
-        $this->configContainer               = $configContainer;
-        $this->requestParser                 = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -75,7 +63,7 @@ final class AdminUpdatePreferencesAction implements ApplicationActionInterface
         $this->preferencesFromRequestUpdater->update((int) Core::get_post('user_id'));
 
         return $this->responseFactory
-            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf(

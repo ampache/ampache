@@ -34,16 +34,10 @@ final class ShowAction extends AbstractUserAction
 {
     public const string REQUEST_KEY = 'show';
 
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
+        private readonly UiInterface $ui,
+        private readonly ModelFactoryInterface $modelFactory,
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface

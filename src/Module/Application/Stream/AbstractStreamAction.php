@@ -57,20 +57,12 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
     protected function preCheck(
         GuiGatekeeperInterface $gatekeeper,
     ): bool {
-        if (!defined('NO_SESSION')) {
-            /* If we are running a demo, quit while you still can! */
-            if (
-                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
-                (
-                    $this->configContainer->isAuthenticationEnabled() &&
-                    $gatekeeper->mayAccess(
-                        AccessTypeEnum::INTERFACE,
-                        AccessLevelEnum::fromTextual(($this->configContainer->get('webplayer_level') ?? 'user'))
-                    ) === false
-                )
-            ) {
-                throw new AccessDeniedException();
-            }
+        /* If we are running a demo, quit while you still can! */
+        if (!defined('NO_SESSION') && ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) || $this->configContainer->isAuthenticationEnabled() && $gatekeeper->mayAccess(
+            AccessTypeEnum::INTERFACE,
+            AccessLevelEnum::fromTextual(($this->configContainer->get('webplayer_level') ?? 'user'))
+        ) === false)) {
+            throw new AccessDeniedException();
         }
 
         return true;
@@ -87,7 +79,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
         string $streamType = '',
         ?string $fileName = null,
     ): ?ResponseInterface {
-        if ($streamType == 'stream') {
+        if ($streamType === 'stream') {
             $streamType = $this->configContainer->get(ConfigurationKeyEnum::PLAYLIST_TYPE);
         }
 
@@ -97,14 +89,12 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
         );
         if ($mediaIds !== [] || $urls !== []) {
             $user = Core::get_global('user');
-            if (!defined('NO_SESSION') && $streamType != 'democratic') {
-                if (!User::stream_control($mediaIds)) {
-                    $this->logger->warning(
-                        'Stream control failed for user ' . $user?->username,
-                        [LegacyLogger::CONTEXT_TYPE => self::class]
-                    );
-                    throw new AccessDeniedException();
-                }
+            if (!defined('NO_SESSION') && $streamType != 'democratic' && !User::stream_control($mediaIds)) {
+                $this->logger->warning(
+                    'Stream control failed for user ' . $user?->username,
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+                throw new AccessDeniedException();
             }
 
             if ($user instanceof User && $user->getId() > -1) {
@@ -121,7 +111,8 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
                 );
                 $playlist->add($mediaIds);
             }
-            if (!empty($urls)) {
+
+            if ($urls !== []) {
                 $this->logger->debug(
                     sprintf('Stream Type: %s Loading URL: %s', $streamType, $urls[0]),
                     [LegacyLogger::CONTEXT_TYPE => self::class]
