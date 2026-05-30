@@ -3345,7 +3345,7 @@ class OpenSubsonic_Json_Data
                         // Lyrics text
                         $lyricLine = trim($matches[4]);
                         $synced[]  = [
-                            'start' => $milliseconds,
+                            'start' => (string)$milliseconds,
                             'value' => $lyricLine,
                         ];
                     } else {
@@ -3417,7 +3417,7 @@ class OpenSubsonic_Json_Data
      * Shares.
      * https://opensubsonic.netlify.app/docs/responses/shares/
      * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param list<int> $shares
+     * @param int[] $shares
      * @return array{'subsonic-response': array<string, mixed>}
      */
     public static function addShares(array $response, array $shares): array

@@ -66,8 +66,8 @@ final class RecordPlay8Method
      */
     public static function record_play(array $input, User $user): bool
     {
-        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
-        if (!Api::check_parameter($input, ['id'], self::ACTION)) {
+        $input['filter'] = $input['id'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $play_user = $user;
@@ -89,7 +89,7 @@ final class RecordPlay8Method
             return false;
         }
         ob_end_clean();
-        $object_id = (int) $input['id'];
+        $object_id = (int) $input['filter'];
         $date      = (array_key_exists('date', $input) && is_numeric(scrub_in((string) $input['date']))) ? (int) scrub_in((string) $input['date']) : time(); //optional
 
         // validate client string or fall back to 'api'

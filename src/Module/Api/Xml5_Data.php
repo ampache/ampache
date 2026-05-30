@@ -702,7 +702,7 @@ class Xml5_Data
      *
      * This returns bookmarks to the user, in a pretty xml document with the information
      *
-     * @param list<int> $bookmarks Bookmark id's to include
+     * @param int[] $bookmarks Bookmark id's to include
      */
     public static function bookmarks(array $bookmarks): string
     {
@@ -926,7 +926,7 @@ class Xml5_Data
      * This handles creating an xml document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param list<array{
+     * @param array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track_id: int,
@@ -1057,7 +1057,7 @@ class Xml5_Data
      * we want
      *
      * @param string $object_type ('song', 'podcast_episode', 'video')
-     * @param list<array{
+     * @param array<int, array{
      *     id: int,
      *     addition_time: int,
      *     delete_time: int,

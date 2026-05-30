@@ -1447,7 +1447,7 @@ class OpenSubsonic_Xml_Data
      * addShares
      *
      * https://opensubsonic.netlify.app/docs/responses/shares/
-     * @param list<int> $shares
+     * @param int[] $shares
      */
     public static function addShares(SimpleXMLElement $xml, array $shares): SimpleXMLElement
     {
@@ -1628,7 +1628,7 @@ class OpenSubsonic_Xml_Data
                         // Lyrics text
                         $lyricLine = trim($matches[4]);
                         $synced[]  = [
-                            'start' => $milliseconds,
+                            'start' => (string)$milliseconds,
                             'value' => $lyricLine,
                         ];
                     } else {
@@ -1648,7 +1648,7 @@ class OpenSubsonic_Xml_Data
                 $xlyrics->addAttribute('synced', 'false');
                 foreach ($lines as $line) {
                     $xline = self::_addChildToResultXml($xlyrics, 'line');
-                    $xline->addAttribute('value', $line);
+                    $xline->addAttribute('value', $line['value']);
                 }
             }
         }

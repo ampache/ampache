@@ -199,7 +199,7 @@ class Xml3_Data
      * playlist_song_tracks_string
      *
      * This returns the formatted 'playlistTrack' string for an xml document
-     * @param null|list<array{
+     * @param null|array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track_id: int,
@@ -437,7 +437,7 @@ class Xml3_Data
      *
      * This returns an xml document from an array of song ids
      * @param int[]|string[] $songs
-     * @param null|list<array{
+     * @param null|array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track_id: int,
@@ -534,7 +534,7 @@ class Xml3_Data
      * This handles creating an xml document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param list<array{
+     * @param array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track_id: int,

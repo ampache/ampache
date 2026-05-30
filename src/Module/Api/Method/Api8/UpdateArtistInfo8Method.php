@@ -62,12 +62,13 @@ final class UpdateArtistInfo8Method
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
-        if (!Api::check_parameter($input, ['id'], self::ACTION)) {
+
+        $input['filter'] = $input['id'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
 
-        $object_id = (int) $input['id'];
+        $object_id = (int) $input['filter'];
         $item      = new Artist($object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
