@@ -29,18 +29,10 @@ use Ampache\Module\System\SessionInterface;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Repository\Model\Preference;
 
-final class InitializationHandlerAuth implements InitializationHandlerInterface
+final readonly class InitializationHandlerAuth implements InitializationHandlerInterface
 {
-    private EnvironmentInterface $environment;
-
-    private SessionInterface $session;
-
-    public function __construct(
-        EnvironmentInterface $environment,
-        SessionInterface $session
-    ) {
-        $this->environment = $environment;
-        $this->session     = $session;
+    public function __construct(private EnvironmentInterface $environment, private SessionInterface $session)
+    {
     }
 
     public function init(): void

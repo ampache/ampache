@@ -25,19 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Config\Init;
 
+use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Config\Init\Exception\DatabaseOutdatedException;
 use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update;
 
-final class InitializationHandlerDatabaseUpdate implements InitializationHandlerInterface
+final readonly class InitializationHandlerDatabaseUpdate implements InitializationHandlerInterface
 {
-    private Update\UpdaterInterface $updater;
-
-    public function __construct(
-        Update\UpdaterInterface $updater
-    ) {
-        $this->updater = $updater;
+    public function __construct(private UpdaterInterface $updater)
+    {
     }
 
     public function init(): void
@@ -47,6 +44,7 @@ final class InitializationHandlerDatabaseUpdate implements InitializationHandler
             if (!Dba::check_database()) {
                 throw new EnvironmentNotSuitableException();
             }
+
             if ($this->updater->hasPendingUpdates()) {
                 throw new DatabaseOutdatedException();
             }

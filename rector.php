@@ -12,6 +12,7 @@ return RectorConfig::configure()
     ->withPaths([
         __DIR__ . '/tests',
         __DIR__ . '/src/Application',
+        __DIR__ . '/src/Config/Init',
         __DIR__ . '/src/Gui',
         __DIR__ . '/src/Plugin',
         __DIR__ . '/src/Repository',
