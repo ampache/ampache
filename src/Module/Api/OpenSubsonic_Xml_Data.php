@@ -1648,7 +1648,7 @@ class OpenSubsonic_Xml_Data
                 $xlyrics->addAttribute('synced', 'false');
                 foreach ($lines as $line) {
                     $xline = self::_addChildToResultXml($xlyrics, 'line');
-                    $xline->addAttribute('value', $line);
+                    $xline->addAttribute('value', $line['value']);
                 }
             }
         }

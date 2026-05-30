@@ -73,7 +73,7 @@ final class SearchSongs8Method
      */
     public static function search_songs(array $input, User $user): bool
     {
-        $data['filter'] = $input['rule_1_input'] ?? $input['filter'];
+        $input['filter'] = $input['rule_1_input'] ?? $input['filter'] ?? null;
         if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
