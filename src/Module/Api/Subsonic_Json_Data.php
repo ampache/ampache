@@ -3160,7 +3160,7 @@ class Subsonic_Json_Data
                         // Lyrics text
                         $lyricLine = trim($matches[4]);
                         $synced[]  = [
-                            'start' => $milliseconds,
+                            'start' => (string)$milliseconds,
                             'value' => $lyricLine,
                         ];
                     } else {
