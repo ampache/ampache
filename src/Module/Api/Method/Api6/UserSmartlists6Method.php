@@ -91,14 +91,14 @@ final class UserSmartlists6Method
                 Json6_Data::set_offset((int)($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
                 Json6_Data::set_count($browse->get_total());
-                /** @var list<string> $results */
+                /** @var array<string> $results */
                 echo Json6_Data::playlists($results, $user, $input['auth'], $include);
                 break;
             default:
                 Xml6_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
                 Xml6_Data::set_count($browse->get_total());
-                /** @var list<string> $results */
+                /** @var array<string> $results */
                 echo Xml6_Data::playlists($results, $user, $input['auth'], $include);
         }
 

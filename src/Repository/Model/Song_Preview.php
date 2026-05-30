@@ -159,7 +159,7 @@ class Song_Preview extends database_object implements Media, playable_item
      * This attempts to reduce queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point.
-     * @param list<int|string> $song_ids
+     * @param array<int|string> $song_ids
      */
     public static function build_cache(array $song_ids): bool
     {
