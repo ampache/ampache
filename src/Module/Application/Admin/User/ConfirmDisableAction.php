@@ -41,35 +41,20 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class ConfirmDisableAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'confirm_disable';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UserStateTogglerInterface $userStateToggler;
+    public const string REQUEST_KEY = 'confirm_disable';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        UserStateTogglerInterface $userStateToggler
+        private readonly RequestParserInterface $requestParser,
+        private readonly UiInterface $ui,
+        private readonly ModelFactoryInterface $modelFactory,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly UserStateTogglerInterface $userStateToggler,
     ) {
-        $this->requestParser    = $requestParser;
-        $this->ui               = $ui;
-        $this->modelFactory     = $modelFactory;
-        $this->configContainer  = $configContainer;
-        $this->userStateToggler = $userStateToggler;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
@@ -85,7 +70,7 @@ final class ConfirmDisableAction extends AbstractUserAction
         }
 
         $this->ui->showHeader();
-        if ($this->userStateToggler->disable($user) === true) {
+        if ($this->userStateToggler->disable($user)) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 sprintf(T_('%s has been disabled'), scrub_out($user->getFullDisplayName())),
@@ -101,6 +86,7 @@ final class ConfirmDisableAction extends AbstractUserAction
                 )
             );
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

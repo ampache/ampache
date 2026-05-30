@@ -38,7 +38,44 @@ class SubsonicClient
     protected array $_creds;
 
     /** @var string[] $_commands */
-    protected array $_commands;
+    protected array $_commands = [
+        'addChatMessage',
+        'changePassword',
+        'createPlaylist',
+        'createShare',
+        'createUser',
+        'deletePlaylist',
+        'deleteShare',
+        'deleteUser',
+        'download',
+        'getAlbum',
+        'getAlbumList',
+        'getArtist',
+        'getArtistInfo',
+        'getChatMessages',
+        'getCoverArt',
+        'getIndexes',
+        'getLicense',
+        'getLyrics',
+        'getMusicDirectory',
+        'getMusicFolders',
+        'getNowPlaying',
+        'getOpenSubsonicExtensions',
+        'getPlaylist',
+        'getPlaylists',
+        'getPordcasts',
+        'getRandomSongs',
+        'getSong',
+        'getUser',
+        'jukeboxControl',
+        'ping',
+        'scrobble',
+        'search',
+        'search2',
+        'setRating',
+        'stream',
+        'updateShare',
+    ];
 
     /**
      * SubsonicClient constructor.
@@ -48,7 +85,7 @@ class SubsonicClient
         string $password,
         string $serverUrl,
         ?string $port = null,
-        string $client = "Ampache"
+        string $client = "Ampache",
     ) {
         $this->setServer($serverUrl, $port);
 
@@ -58,45 +95,6 @@ class SubsonicClient
             'v' => '1.8.0',
             'c' => $client,
             'f' => 'json',
-        ];
-
-        $this->_commands = [
-            'addChatMessage',
-            'changePassword',
-            'createPlaylist',
-            'createShare',
-            'createUser',
-            'deletePlaylist',
-            'deleteShare',
-            'deleteUser',
-            'download',
-            'getAlbum',
-            'getAlbumList',
-            'getArtist',
-            'getArtistInfo',
-            'getChatMessages',
-            'getCoverArt',
-            'getIndexes',
-            'getLicense',
-            'getLyrics',
-            'getMusicDirectory',
-            'getMusicFolders',
-            'getNowPlaying',
-            'getOpenSubsonicExtensions',
-            'getPlaylist',
-            'getPlaylists',
-            'getPordcasts',
-            'getRandomSongs',
-            'getSong',
-            'getUser',
-            'jukeboxControl',
-            'ping',
-            'scrobble',
-            'search',
-            'search2',
-            'setRating',
-            'stream',
-            'updateShare',
         ];
     }
 
@@ -132,7 +130,7 @@ class SubsonicClient
                     $curl,
                     [
                         CURLOPT_HEADER => 0,
-                        CURLOPT_RETURNTRANSFER => 1,
+                        CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_CONNECTTIMEOUT => 8,
                         CURLOPT_SSL_VERIFYPEER => 0,
                         CURLOPT_FOLLOWLOCATION => true,
@@ -160,26 +158,31 @@ class SubsonicClient
         if (preg_match("/^https\:\/\//", $server)) {
             $protocol = "https://";
         }
-        if (empty($protocol)) {
+
+        if ($protocol === '' || $protocol === '0') {
             if (!preg_match("/^http\:\/\//", $server)) {
                 $server = "http://" . $server;
             }
+
             $protocol = "http://";
         }
+
         preg_match("/\:\d{1,6}$/", $server, $matches);
-        if (count($matches)) {
+        if ($matches !== []) {
             // If there's a port on the url, remove it and save it for later use.
             $server = str_replace($matches[0], "", $server);
             $_port  = str_replace(":", "", $matches[0]);
         }
-        if (empty($port) && isset($_port)) {
+
+        if (in_array($port, [null, '', '0'], true) && isset($_port)) {
             // If port parameter not set but there was one on the url, use the one from the url.
             $port = $_port;
-        } elseif (empty($port)) {
+        } elseif (in_array($port, [null, '', '0'], true)) {
             $port = ($protocol === "https://") ? '443' : '80';
         } else {
             $port = '4040';
         }
+
         $this->_serverUrl  = $server;
         $this->_serverPort = $port;
     }
@@ -223,6 +226,7 @@ class SubsonicClient
                 "data" => $data
             ];
         }
+
         debug_event(self::class, 'parseResponse ERROR: ' . print_r($response, true), 1);
 
         return $this->error("Invalid response from server!");

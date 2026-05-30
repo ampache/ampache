@@ -46,7 +46,7 @@ use Exception;
  */
 final class CatalogFile8Method
 {
-    public const ACTION = 'catalog_file';
+    public const string ACTION = 'catalog_file';
 
     /**
      * catalog_file
@@ -75,8 +75,8 @@ final class CatalogFile8Method
             return false;
         }
 
-        $input['catalog'] = $input['filter'] ?? $input['catalog'] ?? null;
-        if (!Api::check_parameter($input, ['catalog', 'file', 'task'], self::ACTION)) {
+        $input['filter'] = $input['catalog'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['filter', 'file', 'task'], self::ACTION)) {
             return false;
         }
 
@@ -109,7 +109,7 @@ final class CatalogFile8Method
             $output_task .= $item . ', ';
         }
         $output_task = rtrim($output_task, ', ');
-        $catalog_id  = (int) $input['catalog'];
+        $catalog_id  = (int) $input['filter'];
         $catalog     = Catalog::create_from_id($catalog_id);
         if ($catalog === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

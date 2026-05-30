@@ -40,7 +40,7 @@ use Psr\Log\LoggerInterface;
 
 final class ShowEditObjectAction extends AbstractEditAction
 {
-    public const REQUEST_KEY = 'show_edit_object';
+    public const string REQUEST_KEY = 'show_edit_object';
 
     private ResponseFactoryInterface $responseFactory;
 
@@ -53,7 +53,7 @@ final class ShowEditObjectAction extends AbstractEditAction
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         parent::__construct($configContainer, $logger);
         $this->responseFactory = $responseFactory;
@@ -67,7 +67,7 @@ final class ShowEditObjectAction extends AbstractEditAction
         string $object_type,
         library_item|Share $libitem,
         int $object_id,
-        ?Browse $browse = null
+        ?Browse $browse = null,
     ): ?ResponseInterface {
         ob_start();
         $users     = self::getUserRepository()->getValidArray();

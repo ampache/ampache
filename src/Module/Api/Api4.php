@@ -43,7 +43,7 @@ class Api4
      *
      * @var array<string, class-string<object>>
      */
-    public const METHOD_LIST = [
+    public const array METHOD_LIST = [
         'advanced_search' => Method\Api4\AdvancedSearch4Method::class,
         'album' => Method\Api4\Album4Method::class,
         'albums' => Method\Api4\Albums4Method::class,

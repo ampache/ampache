@@ -33,7 +33,7 @@ use Ampache\Config\AmpConfig;
  */
 class PrivateMsg extends database_object implements PrivateMessageInterface
 {
-    protected const DB_TABLENAME = 'user_pvmsg';
+    protected const string DB_TABLENAME = 'user_pvmsg';
 
     private int $id = 0;
 
@@ -63,7 +63,7 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool

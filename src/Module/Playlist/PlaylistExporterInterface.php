@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -34,6 +36,6 @@ interface PlaylistExporterInterface
         string $ext,
         string $playlistId,
         int $userId,
-        string $urltype
+        string $urltype,
     ): void;
 }

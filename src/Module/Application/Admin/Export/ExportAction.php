@@ -40,20 +40,14 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Exports a catalog according to the submitted configuration
  */
-final class ExportAction implements ApplicationActionInterface
+final readonly class ExportAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'export';
-
-    private CatalogExportFactoryInterface $catalogExportFactory;
-
-    private CatalogLoaderInterface $catalogLoader;
+    public const string REQUEST_KEY = 'export';
 
     public function __construct(
-        CatalogExportFactoryInterface $catalogExportFactory,
-        CatalogLoaderInterface $catalogLoader
+        private CatalogExportFactoryInterface $catalogExportFactory,
+        private CatalogLoaderInterface $catalogLoader,
     ) {
-        $this->catalogExportFactory = $catalogExportFactory;
-        $this->catalogLoader        = $catalogLoader;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

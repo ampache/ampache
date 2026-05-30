@@ -25,11 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Config\Init;
 
-use Override;
 use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Util\EnvironmentInterface;
 use Mockery\MockInterface;
+use Override;
 
 class InitializationHandlerEnvironmentTest extends MockeryTestCase
 {

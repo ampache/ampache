@@ -706,7 +706,7 @@ class Xml6_Data
      *
      * This takes a name array of objects and return the data in XML format
      *
-     * @param list<array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @param array<int, array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
      */
     public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
     {
@@ -1070,7 +1070,7 @@ class Xml6_Data
      *
      * This returns bookmarks to the user, in a pretty xml document with the information
      *
-     * @param list<int> $bookmarks Bookmark id's to include
+     * @param int[] $bookmarks Bookmark id's to include
      * @param bool $include if true include the object in the bookmark
      */
     public static function bookmarks(array $bookmarks, string $auth, bool $include = false): string
@@ -1438,7 +1438,7 @@ class Xml6_Data
      * This handles creating an xml document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param list<array{
+     * @param array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track_id: int,
@@ -1531,7 +1531,7 @@ class Xml6_Data
      *
      * This handles creating a xml document for a now_playing list
      *
-     * @param list<array{
+     * @param array<int, array{
      *     media: library_item,
      *     client: User,
      *     agent: string,
@@ -1633,7 +1633,7 @@ class Xml6_Data
      * we want
      *
      * @param string $object_type ('song', 'podcast_episode', 'video')
-     * @param list<array{
+     * @param array<int, array{
      *     id: int,
      *     addition_time: int,
      *     delete_time: int,

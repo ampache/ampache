@@ -41,9 +41,9 @@ use Ampache\Repository\Model\User;
  */
 final class LiveStreamEdit8Method
 {
-    public const ACTION = 'live_stream_edit';
+    public const string ACTION = 'live_stream_edit';
 
-    public const REST_ACTION = 'live_streams_edit';
+    public const string REST_ACTION = 'live_streams_edit';
 
     /**
      * live_stream_edit

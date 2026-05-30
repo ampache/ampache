@@ -34,13 +34,13 @@ use Psr\Log\LoggerInterface;
 
 final class PlaylistRandomAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'playlist_random';
+    public const string REQUEST_KEY = 'playlist_random';
 
     public function __construct(
         private readonly RequestParserInterface $requestParser,
         private readonly ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
-        private readonly ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($logger, $configContainer);
     }

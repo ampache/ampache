@@ -28,6 +28,7 @@ namespace Ampache\Module\Authorization;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\Dba;
+use Deprecated;
 
 /**
  * Access Class
@@ -38,7 +39,7 @@ use Ampache\Module\System\Dba;
  */
 class Access
 {
-    protected const DB_TABLENAME = 'access_list';
+    protected const string DB_TABLENAME = 'access_list';
 
     /** @var int $id */
     public $id;
@@ -72,10 +73,12 @@ class Access
         if (!$access_id) {
             return;
         }
+
         $info = $this->has_info($access_id);
         if (!$info) {
             return;
         }
+
         $this->id = (int)$access_id;
     }
 
@@ -89,9 +92,10 @@ class Access
         $sql        = 'SELECT * FROM `access_list` WHERE `id` = ?';
         $db_results = Dba::read($sql, [$access_id]);
         $data       = Dba::fetch_assoc($db_results);
-        if (empty($data)) {
+        if ($data === []) {
             return false;
         }
+
         foreach ($data as $key => $value) {
             $this->$key = $value;
         }
@@ -103,8 +107,8 @@ class Access
      * check_function
      *
      * This checks if specific functionality is enabled.
-     * @deprecated See FunctionChecker::check
      */
+    #[Deprecated(message: 'See FunctionChecker::check')]
     public static function check_function(AccessFunctionEnum $type): bool
     {
         global $dic;
@@ -122,8 +126,8 @@ class Access
      *
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
      * always used.
-     * @deprecated See PrivilegeChecker::check
      */
+    #[Deprecated(message: 'See PrivilegeChecker::check')]
     public static function check(AccessTypeEnum $type, AccessLevelEnum $level, ?int $user_id = null): bool
     {
         global $dic;

@@ -46,7 +46,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      */
     public function getRandom(
         int $userId,
-        ?int $count = 1
+        ?int $count = 1,
     ): array {
         $results = [];
         $sql     = "SELECT DISTINCT `album`.`id` FROM `album` WHERE `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ";
@@ -80,7 +80,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      */
     public function getRandomAlbumDisk(
         int $userId,
-        ?int $count = 1
+        ?int $count = 1,
     ): array {
         $results = [];
 
@@ -118,7 +118,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      * @return int[] Album ids
      */
     public function getSongs(
-        int $albumId
+        int $albumId,
     ): array {
         $userId     = Core::get_global('user')?->getId();
         $sql        = "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
@@ -138,7 +138,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      * @return int[] Song ids
      */
     public function getSongsByAlbumDisk(
-        int $albumDiskId
+        int $albumDiskId,
     ): array {
         $user   = Core::get_global('user');
         $userId = $user?->getId() ?? -1;
@@ -163,9 +163,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      * @return int[] Album ids
      */
     public function getRandomSongs(
-        int $albumId
+        int $albumId,
     ): array {
-        $userId = Core::get_global('user')?->id ?? -1;
+        $userId = Core::get_global('user')->id ?? -1;
         $sql    = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
             ? "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") "
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
@@ -187,9 +187,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      * @return int[] Album ids
      */
     public function getRandomSongsByAlbumDisk(
-        int $albumDiskId
+        int $albumDiskId,
     ): array {
-        $userId = Core::get_global('user')?->id ?? -1;
+        $userId = Core::get_global('user')->id ?? -1;
         $sql    = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") "
             : "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? ";
@@ -209,7 +209,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      * Deletes the album entry
      */
     public function delete(
-        Album $album
+        Album $album,
     ): void {
         $this->connection->query(
             'DELETE FROM `album` WHERE `id` = ?',
@@ -254,12 +254,12 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      * gets the album ids that the artist is a part of
      * Return Album or AlbumDisk based on album_group preference
      *
-     * @return list<int>|array<string, list<int>>
+     * @return int[]|array<string, int[]>
      */
     public function getByArtist(
         int $artistId,
         ?int $catalogId = null,
-        bool $group_release_type = false
+        bool $group_release_type = false,
     ): array {
         $userId        = Core::get_global('user')?->getId();
         $catalog_where = "AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
@@ -285,10 +285,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             : sprintf('SELECT DISTINCT `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, %s FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? %s GROUP BY `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, %s ORDER BY %s, `album_disk`.`disk`', $original_year, $catalog_where, $original_year, $sql_sort);
         $db_results = Dba::read($sql, [$artistId]);
         $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            if ($group_release_type) {
+        if ($group_release_type) {
+            while ($row = Dba::fetch_assoc($db_results)) {
                 // We assume undefined release type is album
-                $rtype = $row['release_type'] ?? 'album';
+                $rtype = (string)($row['release_type'] ?? 'album');
                 if (!isset($results[$rtype])) {
                     $results[$rtype] = [];
                 }
@@ -309,7 +309,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
 
                     $results = array_merge($results_sort, $results);
                 }
-            } else {
+            }
+        } else {
+            while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = (int)$row['id'];
             }
         }
@@ -321,7 +323,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      * gets the album ids that the artist is a part of
      * Return Album only
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getAlbumByArtist(
         int $artistId,
@@ -354,11 +356,11 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     /**
      * gets the album id has the same artist and title
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getByName(
         string $name,
-        int $artistId
+        int $artistId,
     ): array {
         $result = $this->connection->query(
             "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`album_artist` = ?",
@@ -376,10 +378,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     /**
      * gets the album id that is part of this mbid_group
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getByMbidGroup(
-        string $musicBrainzId
+        string $musicBrainzId,
     ): array {
         $result = $this->connection->query(
             'SELECT `album`.`id` FROM `album` WHERE `album`.`mbid_group` = ?',
@@ -397,7 +399,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     /**
      * This returns the ids of artists that have songs/albums mapped
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getArtistMap(Album $album, string $objectType): array
     {

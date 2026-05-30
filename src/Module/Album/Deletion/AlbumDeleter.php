@@ -42,49 +42,25 @@ use Psr\Log\LoggerInterface;
 /**
  * Deletes an album including all songs
  */
-final class AlbumDeleter implements AlbumDeleterInterface
+final readonly class AlbumDeleter implements AlbumDeleterInterface
 {
-    private AlbumRepositoryInterface $albumRepository;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private LoggerInterface $logger;
-
-    private SongRepositoryInterface $songRepository;
-
-    private ShoutRepositoryInterface $shoutRepository;
-
-    private SongDeleterInterface $songDeleter;
-
-    private UserActivityRepositoryInterface $useractivityRepository;
-
-    private ArtCleanupInterface $artCleanup;
-
     public function __construct(
-        AlbumRepositoryInterface $albumRepository,
-        ModelFactoryInterface $modelFactory,
-        LoggerInterface $logger,
-        SongRepositoryInterface $songRepository,
-        ShoutRepositoryInterface $shoutRepository,
-        SongDeleterInterface $songDeleter,
-        UserActivityRepositoryInterface $useractivityRepository,
-        ArtCleanupInterface $artCleanup
+        private AlbumRepositoryInterface $albumRepository,
+        private ModelFactoryInterface $modelFactory,
+        private LoggerInterface $logger,
+        private SongRepositoryInterface $songRepository,
+        private ShoutRepositoryInterface $shoutRepository,
+        private SongDeleterInterface $songDeleter,
+        private UserActivityRepositoryInterface $useractivityRepository,
+        private ArtCleanupInterface $artCleanup,
     ) {
-        $this->albumRepository        = $albumRepository;
-        $this->modelFactory           = $modelFactory;
-        $this->logger                 = $logger;
-        $this->songRepository         = $songRepository;
-        $this->shoutRepository        = $shoutRepository;
-        $this->songDeleter            = $songDeleter;
-        $this->useractivityRepository = $useractivityRepository;
-        $this->artCleanup             = $artCleanup;
     }
 
     /**
      * @throws AlbumDeletionException
      */
     public function delete(
-        Album $album
+        Album $album,
     ): void {
         $albumId = $album->getId();
         $songIds = $this->songRepository->getByAlbum($albumId);

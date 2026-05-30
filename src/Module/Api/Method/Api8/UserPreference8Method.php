@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class UserPreference8Method
 {
-    public const ACTION = 'user_preference';
+    public const string ACTION = 'user_preference';
 
     /**
      * user_preference

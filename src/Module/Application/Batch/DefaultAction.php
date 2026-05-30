@@ -50,7 +50,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class DefaultAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'default';
+    public const string REQUEST_KEY = 'default';
 
     public function __construct(
         private RequestParserInterface $requestParser,
@@ -64,7 +64,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
     ) {
     }
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         if (
             !defined('NO_SESSION') &&
@@ -77,7 +77,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         $default_name = 'Unknown';
         $name         = $default_name;
         $action       = $this->requestParser->getFromRequest('action');
-        $flat_path    = (in_array($action, ['browse', 'playlist', 'tmp_playlist']));
+        $flat_path    = (in_array($action, ['browse', 'playlist', 'tmp_playlist'], true));
         $object_type  = ($action === 'browse')
             ? $this->requestParser->getFromRequest('type')
             : $action;
@@ -105,6 +105,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             if ($libItem instanceof Song) {
                 $libItem->fill_ext_info();
             }
+
             $name      = (string)$libItem->get_fullname();
             $media_ids = array_merge($media_ids, $libItem->get_medias());
         } else {
@@ -117,6 +118,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
                         $media_ids = $user->playlist?->get_items() ?? [];
                         $name      = $user->username . ' - Playlist';
                     }
+
                     break;
                 case 'browse':
                     $object_id        = (int)$this->requestParser->getFromRequest('browse_id');
@@ -130,24 +132,28 @@ final readonly class DefaultAction implements ApplicationActionInterface
                             /** @var int $media */
                             $media_id = $media;
                         }
+
                         switch ($object_type) {
                             case 'album':
                                 $album = $this->modelFactory->createAlbum($media_id);
                                 if ($album->isNew() === false) {
                                     $media_ids = array_merge($media_ids, $this->songRepository->getByAlbum($album->id));
                                 }
+
                                 break;
                             case 'album_disk':
                                 $albumDisk = $this->modelFactory->createAlbumDisk($media_id);
                                 if ($albumDisk->isNew() === false) {
                                     $media_ids = array_merge($media_ids, $this->songRepository->getByAlbumDisk($albumDisk->id));
                                 }
+
                                 break;
                             case 'song':
                                 $song = $this->modelFactory->createSong($media_id);
                                 if ($song->isNew() === false) {
                                     $media_ids[] = $media_id;
                                 }
+
                                 break;
                             case 'video':
                                 $video = $this->modelFactory->createVideo($media_id);
@@ -157,9 +163,12 @@ final readonly class DefaultAction implements ApplicationActionInterface
                                         'object_id' => $media_id
                                     ];
                                 }
+
                                 break;
                         } // switch on type
-                    } // foreach media_id
+                    }
+
+                    // foreach media_id
                     $name = 'Batch-' . get_datetime(time(), 'short', 'none', 'y-MM-dd');
                     break;
             }
@@ -215,7 +224,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             }
 
             if (
-                isset($media->enabled) &&
+                property_exists($media, 'enabled') && $media->enabled !== null &&
                 $media->enabled &&
                 !empty($media->file)
             ) {
@@ -228,9 +237,11 @@ final readonly class DefaultAction implements ApplicationActionInterface
                     $pobj    = new $className($parent['object_id']);
                     $dirname = (string)$pobj->get_fullname();
                 }
-                if (!empty($dirname) && !array_key_exists($dirname, $media_files)) {
+
+                if ($dirname !== '' && $dirname !== '0' && !array_key_exists($dirname, $media_files)) {
                     $media_files[$dirname] = [];
                 }
+
                 $media_files[$dirname][] = Core::conv_lc_file($media->file);
             }
         }

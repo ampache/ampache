@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class CatalogAction8Method
 {
-    public const ACTION = 'catalog_action';
+    public const string ACTION = 'catalog_action';
 
     /**
      * catalog_action
@@ -66,8 +66,8 @@ final class CatalogAction8Method
             return false;
         }
 
-        $input['catalog'] = $input['filter'] ?? $input['catalog'] ?? null;
-        if (!Api::check_parameter($input, ['catalog', 'task'], self::ACTION)) {
+        $input['filter'] = $input['catalog'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['filter', 'task'], self::ACTION)) {
             return false;
         }
 
@@ -80,7 +80,7 @@ final class CatalogAction8Method
             return false;
         }
 
-        $catalog = Catalog::create_from_id((int) $input['catalog']);
+        $catalog = Catalog::create_from_id((int) $input['filter']);
         if ($catalog !== null) {
             if (defined('SSE_OUTPUT')) {
                 unset($SSE_OUTPUT);

@@ -25,11 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\System;
 
-use Override;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Mockery\MockInterface;
+use Override;
 
 class ConfigViewAdapterTest extends MockeryTestCase
 {

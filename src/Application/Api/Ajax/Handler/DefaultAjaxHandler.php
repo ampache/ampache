@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Deprecated;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
@@ -43,13 +42,14 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\SongRepositoryInterface;
+use Deprecated;
 
 final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
         private AlbumRepositoryInterface $albumRepository,
-        private SongRepositoryInterface $songRepository
+        private SongRepositoryInterface $songRepository,
     ) {
     }
 

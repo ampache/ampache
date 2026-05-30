@@ -43,26 +43,14 @@ use Traversable;
 /**
  * Performs the actual update process
  */
-final class UpdateRunner implements UpdateRunnerInterface
+final readonly class UpdateRunner implements UpdateRunnerInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    private LoggerInterface $logger;
-
-    private UpdateInfoRepositoryInterface $updateInfoRepository;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        DatabaseConnectionInterface $connection,
-        LoggerInterface $logger,
-        UpdateInfoRepositoryInterface $updateInfoRepository,
-        ConfigContainerInterface $configContainer
+        private DatabaseConnectionInterface $connection,
+        private LoggerInterface $logger,
+        private UpdateInfoRepositoryInterface $updateInfoRepository,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->connection           = $connection;
-        $this->logger               = $logger;
-        $this->updateInfoRepository = $updateInfoRepository;
-        $this->configContainer      = $configContainer;
     }
 
     /**
@@ -72,7 +60,7 @@ final class UpdateRunner implements UpdateRunnerInterface
      */
     public function runRollback(
         int $currentVersion,
-        ?Interactor $interactor = null
+        ?Interactor $interactor = null,
     ): void {
         $this->logger->notice(
             'Downgrade starting',
@@ -126,7 +114,7 @@ final class UpdateRunner implements UpdateRunnerInterface
      */
     public function run(
         Traversable $updates,
-        ?Interactor $interactor = null
+        ?Interactor $interactor = null,
     ): void {
         $this->logger->notice(
             'Migration starting',
@@ -142,7 +130,7 @@ final class UpdateRunner implements UpdateRunnerInterface
         foreach ($updates as $update) {
             $migration = $update['migration'];
             $interactor?->info(
-                get_class($migration),
+                $migration::class,
                 true
             );
 
@@ -199,7 +187,7 @@ final class UpdateRunner implements UpdateRunnerInterface
     public function runTableCheck(
         Traversable $updates,
         bool $migrate = false,
-        int $build = 0
+        int $build = 0,
     ): Generator {
         $collation = $this->configContainer->get('database_collation') ?? 'utf8mb4_unicode_ci';
         $charset   = $this->configContainer->get('database_charset') ?? 'utf8mb4';

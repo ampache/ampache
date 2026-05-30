@@ -59,6 +59,7 @@ class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod
         ];
 
         $key_parts            = OAuthUtil::urlencode_rfc3986($key_parts);
+
         $key                  = implode('&', $key_parts);
         $request->base_string = $key;
 

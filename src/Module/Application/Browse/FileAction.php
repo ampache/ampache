@@ -32,20 +32,14 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class FileAction implements ApplicationActionInterface
+final readonly class FileAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'file';
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'file';
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

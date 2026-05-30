@@ -26,15 +26,16 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use Override;
 
 final class AdminListUsersCommand extends Command
 {
-    private UserRepositoryInterface $userRepository;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -42,11 +43,9 @@ final class AdminListUsersCommand extends Command
     }
 
     public function __construct(
-        UserRepositoryInterface $userRepository
+        private readonly UserRepositoryInterface $userRepository,
     ) {
         parent::__construct('admin:listUsers', T_('Users List'));
-
-        $this->userRepository = $userRepository;
 
         $this
             ->option('-a|--apikey', T_('API key'), 'boolval', false)
@@ -56,7 +55,7 @@ final class AdminListUsersCommand extends Command
     }
 
     public function execute(
-        ?string $username
+        ?string $username,
     ): void {
         if ($this->app() === null) {
             return;
@@ -75,7 +74,7 @@ final class AdminListUsersCommand extends Command
             $users = $this->userRepository->getValidArray();
         }
 
-        if ($user) {
+        if ($user instanceof User) {
             $outString = ($apiKey)
                 ? $user->apikey ?? ''
                 : sprintf(

@@ -32,22 +32,18 @@ use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Repository\Model\Preference;
 use DateTimeZone;
 
-final class InitializationHandlerConfig implements InitializationHandlerInterface
+final readonly class InitializationHandlerConfig implements InitializationHandlerInterface
 {
-    public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
+    public const string CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
-    private const VERSION = '8.0.0'; // AMPACHE_VERSION
+    private const string VERSION = '8.0.0'; // AMPACHE_VERSION
 
-    private const CONFIG_VERSION = '87';
+    private const string CONFIG_VERSION = '87';
 
     private const STRUCTURE = 'squashed'; // Project release is using either the public html folder or squashed structure
 
-    private EnvironmentInterface $environment;
-
-    public function __construct(
-        EnvironmentInterface $environment
-    ) {
-        $this->environment = $environment;
+    public function __construct(private EnvironmentInterface $environment)
+    {
     }
 
     public function init(): void
@@ -70,7 +66,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
         $results['structure']          = self::STRUCTURE;
         $results['phpversion']         = substr(phpversion(), 0, 3);
 
-        $protocol = (make_bool($results['force_ssl'] ?? false) || $this->environment->isSsl() === true)
+        $protocol = (make_bool($results['force_ssl'] ?? false) || $this->environment->isSsl())
             ? 'https'
             : 'http';
 
@@ -78,6 +74,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
             if (empty($results['http_host'])) {
                 $results['http_host'] = $_SERVER['SERVER_NAME'];
             }
+
             if (empty($results['local_web_path'])) {
                 $results['local_web_path'] = sprintf(
                     '%s://%s:%d%s',
@@ -87,9 +84,10 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
                     $results['web_path'] ?? ''
                 );
             }
-            $results['http_port'] = (!empty($results['http_port']))
-                ? $results['http_port']
-                : $this->environment->getHttpPort();
+
+            $results['http_port'] = (empty($results['http_port']))
+                ? $this->environment->getHttpPort()
+                : $results['http_port'];
 
             $port = ($results['http_port'] != 80 && $results['http_port'] != 443)
                 ? ':' . $results['http_port']
@@ -105,11 +103,12 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
                 $port,
                 $results['web_path'] ?? ''
             );
-            $results['site_charset'] = $results['site_charset'] ?? 'UTF-8';
+            $results['site_charset'] ??= 'UTF-8';
             if (!isset($results['max_upload_size'])) {
                 $results['max_upload_size'] = 1048576;
             }
-            $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?? '';
+
+            $_SERVER['SERVER_NAME'] ??= '';
             if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {
                 $results['user_ip_cardinality'] = 42;
             }
@@ -120,10 +119,12 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
             $results['cookie_life']   = $results['session_cookielife'];
             $results['cookie_secure'] = $results['session_cookiesecure'];
         }
+
         if (empty($results['date_timezone'])) {
             // fallback to the server timezone if not set
             $results['date_timezone'] = date_default_timezone_get();
         }
+
         if (!empty($results['date_timezone'])) {
             $listIdentifiers = DateTimeZone::listIdentifiers();
             if (!empty($listIdentifiers) && !in_array($results['date_timezone'], $listIdentifiers)) {

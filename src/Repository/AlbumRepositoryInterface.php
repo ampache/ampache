@@ -22,6 +22,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Album;
@@ -35,7 +36,7 @@ interface AlbumRepositoryInterface
      */
     public function getRandom(
         int $userId,
-        ?int $count = 1
+        ?int $count = 1,
     ): array;
 
     /**
@@ -45,7 +46,7 @@ interface AlbumRepositoryInterface
      */
     public function getRandomAlbumDisk(
         int $userId,
-        ?int $count = 1
+        ?int $count = 1,
     ): array;
 
     /**
@@ -54,7 +55,7 @@ interface AlbumRepositoryInterface
      * @return int[] Album ids
      */
     public function getSongs(
-        int $albumId
+        int $albumId,
     ): array;
 
     /**
@@ -63,7 +64,7 @@ interface AlbumRepositoryInterface
      * @return int[] Song ids
      */
     public function getSongsByAlbumDisk(
-        int $albumDiskId
+        int $albumDiskId,
     ): array;
 
     /**
@@ -72,7 +73,7 @@ interface AlbumRepositoryInterface
      * @return int[] Song ids
      */
     public function getRandomSongs(
-        int $albumId
+        int $albumId,
     ): array;
 
     /**
@@ -81,14 +82,14 @@ interface AlbumRepositoryInterface
      * @return int[] Song ids
      */
     public function getRandomSongsByAlbumDisk(
-        int $albumDiskId
+        int $albumDiskId,
     ): array;
 
     /**
      * Deletes the album entry
      */
     public function delete(
-        Album $album
+        Album $album,
     ): void;
 
     /**
@@ -100,19 +101,19 @@ interface AlbumRepositoryInterface
      * gets the album ids that this artist is a part of
      * Return Album or AlbumDisk based on album_group preference
      *
-     * @return list<int>|array<string, list<int>>
+     * @return int[]|array<string, int[]>
      */
     public function getByArtist(
         int $artistId,
         ?int $catalogId = null,
-        bool $group_release_type = false
+        bool $group_release_type = false,
     ): array;
 
     /**
      * gets the album ids that this artist is a part of
      * Return Album only
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getAlbumByArtist(
         int $artistId,
@@ -121,26 +122,26 @@ interface AlbumRepositoryInterface
     /**
      * gets the album id has the same artist and title
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getByName(
         string $name,
-        int $artistId
+        int $artistId,
     ): array;
 
     /**
      * gets the album id that is part of this mbid_group
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getByMbidGroup(
-        string $musicBrainzId
+        string $musicBrainzId,
     ): array;
 
     /**
      * This returns the ids of artists that have songs/albums mapped
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getArtistMap(Album $album, string $objectType): array;
 

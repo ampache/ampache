@@ -33,30 +33,18 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
-final class LabelDeleter implements LabelDeleterInterface
+final readonly class LabelDeleter implements LabelDeleterInterface
 {
-    private ShoutRepositoryInterface $shoutRepository;
-
-    private LabelRepositoryInterface $labelRepository;
-
-    private UserActivityRepositoryInterface $useractivityRepository;
-
-    private ArtCleanupInterface $artCleanup;
-
     public function __construct(
-        ShoutRepositoryInterface $shoutRepository,
-        LabelRepositoryInterface $labelRepository,
-        UserActivityRepositoryInterface $useractivityRepository,
-        ArtCleanupInterface $artCleanup
+        private ShoutRepositoryInterface $shoutRepository,
+        private LabelRepositoryInterface $labelRepository,
+        private UserActivityRepositoryInterface $useractivityRepository,
+        private ArtCleanupInterface $artCleanup,
     ) {
-        $this->shoutRepository        = $shoutRepository;
-        $this->labelRepository        = $labelRepository;
-        $this->useractivityRepository = $useractivityRepository;
-        $this->artCleanup             = $artCleanup;
     }
 
     public function delete(
-        Label $label
+        Label $label,
     ): void {
         $labelId = $label->getId();
 

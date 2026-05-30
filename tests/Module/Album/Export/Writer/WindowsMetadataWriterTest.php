@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Album\Export\Writer;
 
-use Override;
 use Ampache\MockeryTestCase;
 use org\bovigo\vfs\vfsStream;
+use Override;
 
 class WindowsMetadataWriterTest extends MockeryTestCase
 {

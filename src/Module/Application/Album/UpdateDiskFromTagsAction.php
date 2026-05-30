@@ -37,24 +37,15 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UpdateDiskFromTagsAction implements ApplicationActionInterface
+final readonly class UpdateDiskFromTagsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_disk_from_tags';
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'update_disk_from_tags';
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

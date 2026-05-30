@@ -29,7 +29,7 @@ use Ampache\Module\System\Dba;
 
 class Useractivity extends database_object
 {
-    protected const DB_TABLENAME = 'user_activity';
+    protected const string DB_TABLENAME = 'user_activity';
 
     public int $id = 0;
 
@@ -62,12 +62,12 @@ class Useractivity extends database_object
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     /**
      * this attempts to build a cache of the data from the passed activities all in one query
-     * @param int[] $ids
+     * @param list<int|string> $ids
      */
     public static function build_cache(array $ids): bool
     {

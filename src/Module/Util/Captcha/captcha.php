@@ -36,7 +36,7 @@ class captcha
     }
 
     public static function form(
-        string $text = ''
+        string $text = '',
     ): string {
         $c = new easy_captcha();
 

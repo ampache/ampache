@@ -40,7 +40,7 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistGenerate5Method
 {
-    public const ACTION = 'playlist_generate';
+    public const string ACTION = 'playlist_generate';
 
     /**
      * playlist_generate

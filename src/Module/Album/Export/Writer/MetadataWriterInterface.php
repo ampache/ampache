@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -28,6 +30,6 @@ interface MetadataWriterInterface
     public function write(
         string $fileName,
         string $dirName,
-        string $iconFileName
+        string $iconFileName,
     ): void;
 }

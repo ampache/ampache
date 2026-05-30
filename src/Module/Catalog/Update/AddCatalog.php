@@ -32,12 +32,8 @@ use Ampache\Repository\Model\Catalog;
 
 final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->configContainer = $configContainer;
+    public function __construct(private readonly ConfigContainerInterface $configContainer)
+    {
     }
 
     public function add(
@@ -47,9 +43,9 @@ final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInter
         string $catalogType,
         string $mediaType,
         string $filePattern,
-        string $folderPattern
+        string $folderPattern,
     ): void {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return;
         }
 
@@ -64,7 +60,7 @@ final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInter
         ];
         $catalog_id = Catalog::create($data);
 
-        if (!$catalog_id) {
+        if ($catalog_id === 0) {
             $buffer = ob_get_contents();
 
             ob_end_clean();

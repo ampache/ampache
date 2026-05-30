@@ -36,7 +36,7 @@ interface ImageRepositoryInterface
         int $objectId,
         string $objectType,
         string $size,
-        string $mimeType
+        string $mimeType,
     ): ?string;
 
     /**

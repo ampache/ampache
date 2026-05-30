@@ -46,7 +46,7 @@ use Ampache\Repository\ShoutRepositoryInterface;
  */
 class Browse extends Query
 {
-    private const BROWSE_TYPES = [
+    private const array BROWSE_TYPES = [
         'album_disk',
         'album',
         'artist',
@@ -81,7 +81,7 @@ class Browse extends Query
 
     public function __construct(
         ?int $browse_id = 0,
-        ?bool $cached = true
+        ?bool $cached = true,
     ) {
         parent::__construct($browse_id, $cached);
 
@@ -94,7 +94,7 @@ class Browse extends Query
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return (int)$this->id;
     }
 
     /**
@@ -147,8 +147,8 @@ class Browse extends Query
                 // Check for a range, if no range default to gt
                 if (strpos((string)$value, '/')) {
                     $elements = explode('/', (string)$value);
-                    $this->set_filter('add_lt', strtotime((string)$elements['1']));
-                    $this->set_filter('add_gt', strtotime((string)$elements['0']));
+                    $this->set_filter('add_lt', strtotime((string)$elements[1]));
+                    $this->set_filter('add_gt', strtotime((string)$elements[0]));
                 } else {
                     $this->set_filter('add_gt', strtotime((string)$value));
                 }
@@ -157,8 +157,8 @@ class Browse extends Query
                 // Check for a range, if no range default to gt
                 if (strpos((string)$value, '/')) {
                     $elements = explode('/', (string)$value);
-                    $this->set_filter('update_lt', strtotime((string)$elements['1']));
-                    $this->set_filter('update_gt', strtotime((string)$elements['0']));
+                    $this->set_filter('update_lt', strtotime((string)$elements[1]));
+                    $this->set_filter('update_gt', strtotime((string)$elements[0]));
                 } else {
                     $this->set_filter('update_gt', strtotime((string)$value));
                 }

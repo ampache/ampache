@@ -45,7 +45,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class CreateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'create';
+    public const string REQUEST_KEY = 'create';
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
@@ -100,7 +100,7 @@ final readonly class CreateAction implements ApplicationActionInterface
                 '<script>$(\'#share_qrcode\').qrcode({text: "' . $share->public_url . '", width: 128, height: 128});</script>' .
                 '<br /><br />' .
                 T_('You can also embed this share as a web player into your website, with the following HTML code:') . '<br />' .
-                '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url((int)$share->id, (string)$share->secret) . '&embed=true"></iframe>') . '</i><br />';
+                '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url($share->id, (string)$share->secret) . '&embed=true"></iframe>') . '</i><br />';
 
             $title = T_('No Problem');
             $this->ui->showConfirmation(
@@ -148,6 +148,7 @@ final readonly class CreateAction implements ApplicationActionInterface
                 );
             }
         }
+
         $this->ui->showFooter();
 
         return null;

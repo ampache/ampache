@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class SearchRules8Method
 {
-    public const ACTION = 'search_rules';
+    public const string ACTION = 'search_rules';
 
     /**
      * search_rules
@@ -47,7 +47,11 @@ final class SearchRules8Method
      *
      * filter = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video'
      *
-     * @param array<string, mixed> $input
+     * @param array{
+     *     filter:string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      */
     public static function search_rules(array $input, User $user): bool
     {

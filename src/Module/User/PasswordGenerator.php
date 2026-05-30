@@ -27,7 +27,7 @@ namespace Ampache\Module\User;
 
 final class PasswordGenerator implements PasswordGeneratorInterface
 {
-    public const DEFAULT_LENGTH = 8;
+    public const int DEFAULT_LENGTH = 8;
 
     /**
      * This generates a random password of the specified length
@@ -39,6 +39,7 @@ final class PasswordGenerator implements PasswordGeneratorInterface
         if ($length === null) {
             $length = mt_rand(14, 20);
         }
+
         $strong = true;
         $string = openssl_random_pseudo_bytes((int) ceil($length * 0.67), $strong);
         $encode = str_replace('=', '', base64_encode($string));

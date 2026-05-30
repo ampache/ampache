@@ -41,7 +41,7 @@ use Ampache\Repository\Model\User;
  */
 final class UpdateArt5Method
 {
-    public const ACTION = 'update_art';
+    public const string ACTION = 'update_art';
 
     /**
      * update_art
@@ -57,7 +57,7 @@ final class UpdateArt5Method
      * @param array{
      *     id: string,
      *     type: string,
-     *     overwrite: int,
+     *     overwrite?: int,
      *     api_format: string,
      *     auth: string,
      * } $input

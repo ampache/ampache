@@ -82,23 +82,26 @@ class Waveform
                 if ($media instanceof Song) {
                     $media->fill_ext_info('waveform');
                 }
+
                 $waveform = $media->waveform;
             }
-            if (empty($waveform)) {
+
+            if (in_array($waveform, [null, '', '0'], true)) {
                 $catalog = Catalog::create_from_id($media->catalog);
-                if ($catalog !== null && $catalog->get_type() == 'local') {
+                if ($catalog !== null && $catalog->get_type() === 'local') {
                     $transcode_to  = 'wav';
                     $transcode_cfg = AmpConfig::get('transcode', 'default');
                     $valid_types   = $media->get_stream_types();
 
-                    if ($media->type != $transcode_to) {
+                    if ($media->type !== $transcode_to) {
                         $basedir = Core::get_tmp_dir();
-                        if ($basedir) {
+                        if ($basedir !== '' && $basedir !== '0') {
                             if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
                                 $tmpfile = tempnam($basedir, $transcode_to);
                                 if (!$tmpfile) {
                                     return null;
                                 }
+
                                 $tfp = fopen($tmpfile, 'wb');
                                 if (!is_resource($tfp)) {
                                     debug_event(self::class, "Failed to open " . $tmpfile, 3);
@@ -108,11 +111,11 @@ class Waveform
 
                                 $transcode_settings = $media->get_transcode_settings($transcode_to);
                                 $transcoder         = Stream::start_transcode($media, $transcode_settings);
-                                if (empty($transcoder)) {
+                                if ($transcoder === []) {
                                     return null;
                                 }
 
-                                $filepointer = $transcoder['handle'];
+                                $filepointer = $transcoder['handle'] ?? null;
                                 if (!is_resource($filepointer)) {
                                     debug_event(self::class, "Failed to open " . $media->file . " for waveform.", 3);
 
@@ -147,7 +150,7 @@ class Waveform
                     }
                 }
 
-                if (!empty($waveform)) {
+                if (!in_array($waveform, [null, '', '0'], true)) {
                     if (AmpConfig::get('album_art_store_disk')) {
                         self::save_to_file($media->id, $object_type, $waveform);
                     } else {
@@ -171,6 +174,7 @@ class Waveform
 
             return null;
         }
+
         // Create subdirectory based on the 2 last digit of the Song Id. We prevent having thousands of file in one directory.
         $dir1 = substr((string)$object_id, -1, 1);
         $dir2 = substr((string)$object_id, -2, 1);
@@ -178,9 +182,10 @@ class Waveform
         if (!file_exists($path)) {
             mkdir($path, 0775, true);
         }
+
         $old_target_file = $path . "/waveform/" . $dir1 . '/' . $dir2 . "/" . $object_id . ".png";
         // move the song waveforms to the right place if they're in the old path
-        if ($object_type == 'song' && is_file($old_target_file)) {
+        if ($object_type === 'song' && is_file($old_target_file)) {
             rename($old_target_file, $path . $object_id . ".png");
             debug_event(self::class, 'Moved: ' . $object_id . ' from: {' . $old_target_file . '}' . ' to: {' . $path . $object_id . ".png" . '}', 5);
         }
@@ -194,7 +199,7 @@ class Waveform
     public static function get_from_file(int $object_id, string $object_type): ?string
     {
         $file = self::get_filepath($object_id, $object_type);
-        if (!empty($file) && file_exists($file)) {
+        if (!in_array($file, [null, '', '0'], true) && file_exists($file)) {
             debug_event(self::class, 'get_from_file ' . $file, 5);
             $waveform = file_get_contents($file);
 
@@ -212,7 +217,7 @@ class Waveform
     public static function save_to_file(int $object_id, string $object_type, string $waveform): void
     {
         $file = self::get_filepath($object_id, $object_type);
-        if (!empty($file)) {
+        if (!in_array($file, [null, '', '0'], true)) {
             file_put_contents($file, $waveform);
         }
     }
@@ -250,7 +255,7 @@ class Waveform
     protected static function create_waveform(string $filename): ?string
     {
         if (!file_exists($filename)) {
-            debug_event(self::class, 'File ' . $filename . ' doesn\'t exists', 1);
+            debug_event(self::class, 'File ' . $filename . " doesn't exists", 1);
 
             return null;
         }
@@ -271,7 +276,7 @@ class Waveform
         $draw_flat  = (bool)AmpConfig::get('waveform_drawflat', true);
 
         // generate foreground color
-        list($red, $green, $blue) = self::html2rgb($foreground);
+        [$red, $green, $blue] = self::html2rgb($foreground);
 
         $handle = fopen($filename, "r");
         if ($handle === false) {
@@ -331,7 +336,7 @@ class Waveform
         $transparentColor = (int)imagecolorallocatealpha($img, 0, 0, 0, 127);
         imagefill($img, 0, 0, $transparentColor);
         while (!feof($handle) && $data_point < $data_size) {
-            if ($data_point++ % $detail == 0) {
+            if ($data_point++ % $detail === 0) {
                 $bytes = [];
 
                 // get number of bytes depending on bitrate
@@ -346,12 +351,9 @@ class Waveform
                         break;
                     case 2:
                         // get value for 16-bit wav
-                        if (ord((string)$bytes[1]) & 128) {
-                            $temp = 0;
-                        } else {
-                            $temp = 128;
-                        }
-                        $temp = chr((ord((string)$bytes[1]) & 127) + $temp);
+                        $temp = (ord($bytes[1][0]) & 128) !== 0 ? 0 : 128;
+
+                        $temp = chr((ord($bytes[1][0]) & 127) + $temp);
                         $data = floor(self::findValues($bytes[0], $temp) / 256);
                         break;
                     default:
@@ -391,9 +393,9 @@ class Waveform
 
         ob_start();
         // want it resized?
-        if ($width) {
+        if ($width !== 0) {
             // resample the image to the proportions defined in the form
-            $rimg = imagecreatetruecolor((int) $width, (int) $height);
+            $rimg = imagecreatetruecolor((int) $width, $height);
             if ($rimg !== false) {
                 // save alpha from original image
                 imagesavealpha($rimg, true);
@@ -401,12 +403,11 @@ class Waveform
                 // copy to resized
                 imagecopyresampled($rimg, $img, 0, 0, 0, 0, $width, $height, imagesx($img), imagesy($img));
                 imagepng($rimg);
-                imagedestroy($rimg);
             }
         } else {
             imagepng($img);
         }
-        imagedestroy($img);
+
 
         $imgdata = ob_get_contents();
         ob_clean();
@@ -419,7 +420,7 @@ class Waveform
      */
     protected static function save_to_db(int $object_id, string $object_type, string $waveform): void
     {
-        $sql = ($object_type == 'podcast_episode')
+        $sql = ($object_type === 'podcast_episode')
             ? "UPDATE `podcast_episode` SET `waveform` = ? WHERE `id` = ?"
             : "UPDATE `song_data` SET `waveform` = ? WHERE `song_id` = ?";
 

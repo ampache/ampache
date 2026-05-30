@@ -39,18 +39,18 @@ use Generator;
 final readonly class SongRepository implements SongRepositoryInterface
 {
     public function __construct(
-        private DatabaseConnectionInterface $connection
+        private DatabaseConnectionInterface $connection,
     ) {
     }
 
     /**
      * gets the songs for an album takes an optional limit
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getByAlbum(
         int $albumId,
-        int $limit = 0
+        int $limit = 0,
     ): array {
         $user_id = Core::get_global('user')?->getId() ?? -1;
         $sql     = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
@@ -77,7 +77,7 @@ final readonly class SongRepository implements SongRepositoryInterface
      */
     public function getByAlbumDisk(
         int $albumDiskId,
-        int $limit = 0
+        int $limit = 0,
     ): array {
         $user_id = Core::get_global('user')?->getId() ?? -1;
         $sql     = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
@@ -103,7 +103,7 @@ final readonly class SongRepository implements SongRepositoryInterface
      * @return int[]
      */
     public function getByLabel(
-        string $labelName
+        string $labelName,
     ): array {
         $user_id = Core::get_global('user')?->getId() ?? -1;
         $sql     = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
@@ -125,7 +125,7 @@ final readonly class SongRepository implements SongRepositoryInterface
      * @return int[]
      */
     public function getRandomByArtist(
-        Artist $artist
+        Artist $artist,
     ): array {
         $user_id = Core::get_global('user')?->getId();
         $sql     = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
@@ -147,7 +147,7 @@ final readonly class SongRepository implements SongRepositoryInterface
      * @return int[]
      */
     public function getRandomByGenre(
-        Tag $genre
+        Tag $genre,
     ): array {
         if ($genre->isNew()) {
             return [];
@@ -166,7 +166,7 @@ final readonly class SongRepository implements SongRepositoryInterface
      */
     public function getTopSongsByArtist(
         Artist $artist,
-        int $count = 50
+        int $count = 50,
     ): array {
         $user_id = Core::get_global('user')?->getId();
         $sql     = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
@@ -188,7 +188,7 @@ final readonly class SongRepository implements SongRepositoryInterface
      * @return int[]
      */
     public function getByArtist(
-        int $artistId
+        int $artistId,
     ): array {
         $user_id = Core::get_global('user')?->getId();
         $sql     = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
@@ -210,7 +210,7 @@ final readonly class SongRepository implements SongRepositoryInterface
      * @return int[]
      */
     public function getAllByArtist(
-        int $artistId
+        int $artistId,
     ): array {
         $user_id = Core::get_global('user')?->getId();
         $sql     = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
@@ -259,7 +259,7 @@ final readonly class SongRepository implements SongRepositoryInterface
             [$songId]
         );
 
-        return $deleted !== false;
+        return $deleted !== null;
     }
 
     public function collectGarbage(Song $song): void

@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Query;
 
 final class UserQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'access',
         'alpha_match',
         'disabled',
@@ -111,6 +111,7 @@ final class UserQuery implements QueryInterface
                 foreach ($value as $uid) {
                     $filter_sql .= (int)$uid . ',';
                 }
+
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
                 break;
             case 'equal':
@@ -130,6 +131,7 @@ final class UserQuery implements QueryInterface
                         "`user`.`username` REGEXP '" . Dba::escape($value) . "' OR " .
                         "`user`.`email` REGEXP '" . Dba::escape($value) . "') AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
@@ -137,6 +139,7 @@ final class UserQuery implements QueryInterface
                         "`user`.`username` NOT REGEXP '" . Dba::escape($value) . "' OR " .
                         "`user`.`email` NOT REGEXP '" . Dba::escape($value) . "') AND ";
                 }
+
                 break;
             case 'starts_with':
                 $filter_sql = " (`user`.`fullname` LIKE '" . Dba::escape($value) . "%' OR `user`.`username` LIKE '" . Dba::escape($value) . "%' OR `user`.`email` LIKE '" . Dba::escape($value) . "%') AND ";
@@ -146,7 +149,7 @@ final class UserQuery implements QueryInterface
                 break;
             case 'access':
             case 'disabled':
-                $filter_sql = " `user`.`$filter` = " . (int)$value . " AND ";
+                $filter_sql = sprintf(' `user`.`%s` = ', $filter) . (int)$value . " AND ";
                 break;
         }
 
@@ -163,29 +166,15 @@ final class UserQuery implements QueryInterface
      */
     public function get_sql_sort($query, $field, $order): string
     {
-        switch ($field) {
-            case 'access':
-            case 'city':
-            case 'create_date':
-            case 'disabled':
-            case 'email':
-            case 'fullname_public':
-            case 'fullname':
-            case 'id':
-            case 'last_seen':
-            case 'state':
-            case 'username':
-            case 'website':
-                $sql = "`user`.`$field`";
-                break;
-            default:
-                $sql = '';
-        }
+        $sql = match ($field) {
+            'access', 'city', 'create_date', 'disabled', 'email', 'fullname_public', 'fullname', 'id', 'last_seen', 'state', 'username', 'website' => sprintf('`user`.`%s`', $field),
+            default => '',
+        };
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

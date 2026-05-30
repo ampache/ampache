@@ -29,7 +29,7 @@ use Ampache\Repository\Model\Query;
 
 final class BroadcastQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
     ];
 
     /** @var string[] $sorts */
@@ -96,25 +96,16 @@ final class BroadcastQuery implements QueryInterface
      */
     public function get_sql_sort($query, $field, $order): string
     {
-        switch ($field) {
-            case 'name':
-            case 'title':
-                $sql = "`broadcast`.`name`";
-                break;
-            case 'id':
-            case 'user':
-            case 'started':
-            case 'listeners':
-                $sql = "`broadcast`.`$field`";
-                break;
-            default:
-                $sql = '';
-        }
+        $sql = match ($field) {
+            'name', 'title' => "`broadcast`.`name`",
+            'id', 'user', 'started', 'listeners' => sprintf('`broadcast`.`%s`', $field),
+            default => '',
+        };
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

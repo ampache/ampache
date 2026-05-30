@@ -34,24 +34,15 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class LabelAction implements ApplicationActionInterface
+final readonly class LabelAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'label';
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'label';
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -73,9 +64,11 @@ final class LabelAction implements ApplicationActionInterface
         if (array_key_exists('catalog', $_SESSION)) {
             $browse->set_filter('catalog', (int)$_SESSION['catalog']);
         }
+
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
             $browse->set_filter('catalog_enabled', '1');
         }
+
         $browse->update_browse_from_session();
         $browse->show_objects();
 

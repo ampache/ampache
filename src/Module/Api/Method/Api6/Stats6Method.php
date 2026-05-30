@@ -47,7 +47,7 @@ use Ampache\Repository\Model\Userflag;
  */
 final class Stats6Method
 {
-    public const ACTION = 'stats';
+    public const string ACTION = 'stats';
 
     /**
      * stats

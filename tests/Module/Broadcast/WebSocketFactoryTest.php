@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Broadcast;
 
-use Override;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Override;
 use Ratchet\Server\EchoServer;
 
 class WebSocketFactoryTest extends MockeryTestCase

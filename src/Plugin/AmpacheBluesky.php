@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Override;
 use Ampache\Repository\Model\User;
+use Override;
 
 class AmpacheBluesky extends AmpachePlugin implements PluginExternalShareInterface
 {

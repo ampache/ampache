@@ -40,24 +40,15 @@ use Ampache\Repository\Model\Plugin;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class GrantAction implements ApplicationActionInterface
+final readonly class GrantAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'grant';
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'grant';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -97,6 +88,7 @@ final class GrantAction implements ApplicationActionInterface
                         $title = T_('There Was a Problem');
                         $text  = T_('Your account has not been updated') . ' : ' . $plugin_name;
                     }
+
                     $next_url = sprintf(
                         '%s/preferences.php?tab=plugins',
                         $this->configContainer->getWebPath()

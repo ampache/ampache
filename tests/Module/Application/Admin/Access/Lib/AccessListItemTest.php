@@ -25,12 +25,12 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access\Lib;
 
-use Override;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class AccessListItemTest extends MockeryTestCase
@@ -56,7 +56,7 @@ class AccessListItemTest extends MockeryTestCase
     #[DataProvider(methodName: 'levelNameDataProvider')]
     public function testGetLevelNameReturnsLabel(
         int $level,
-        string $label
+        string $label,
     ): void {
         $this->access->level = $level;
 
@@ -120,7 +120,7 @@ class AccessListItemTest extends MockeryTestCase
     #[DataProvider(methodName: 'typeNameDataProvider')]
     public function testGetTypeNameReturnLabel(
         string $typeId,
-        string $label
+        string $label,
     ): void {
         $this->access->type = $typeId;
 

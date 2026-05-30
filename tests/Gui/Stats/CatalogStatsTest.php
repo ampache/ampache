@@ -35,7 +35,7 @@ class CatalogStatsTest extends MockeryTestCase
         string $methodName,
         string $arrayKey,
         $testValue,
-        $defaultValue
+        $defaultValue,
     ): void {
         $subject = new CatalogStats([$arrayKey => $testValue]);
 

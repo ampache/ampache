@@ -37,24 +37,15 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class SendAction implements ApplicationActionInterface
+final readonly class SendAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'send';
-
-    private ConfigContainerInterface $configContainer;
-
-    private NewPasswordSenderInterface $newPasswordSender;
-
-    private UiInterface $ui;
+    public const string REQUEST_KEY = 'send';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        NewPasswordSenderInterface $newPasswordSender,
-        UiInterface $ui
+        private ConfigContainerInterface $configContainer,
+        private NewPasswordSenderInterface $newPasswordSender,
+        private UiInterface $ui,
     ) {
-        $this->configContainer   = $configContainer;
-        $this->newPasswordSender = $newPasswordSender;
-        $this->ui                = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -72,6 +63,7 @@ final class SendAction implements ApplicationActionInterface
             $current_ip = Core::get_user_ip();
             $this->newPasswordSender->send($email, $current_ip);
         }
+
         // Do not acknowledge a password has been sent or failed and go back to login
         $this->ui->show('show_login_form.inc.php');
 

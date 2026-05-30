@@ -38,7 +38,7 @@ use Ampache\Repository\PodcastRepositoryInterface;
  */
 final class PodcastEpisodes5Method
 {
-    public const ACTION = 'podcast_episodes';
+    public const string ACTION = 'podcast_episodes';
 
     /**
      * podcast_episodes

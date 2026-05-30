@@ -31,18 +31,12 @@ use Ampache\Repository\SongRepositoryInterface;
 /**
  * Builds exporter classes
  */
-final class CatalogExportFactory implements CatalogExportFactoryInterface
+final readonly class CatalogExportFactory implements CatalogExportFactoryInterface
 {
-    private SongRepositoryInterface $songRepository;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        SongRepositoryInterface $songRepository,
-        ModelFactoryInterface $modelFactory
+        private SongRepositoryInterface $songRepository,
+        private ModelFactoryInterface $modelFactory,
     ) {
-        $this->songRepository = $songRepository;
-        $this->modelFactory   = $modelFactory;
     }
 
     private function createCsvExporter(): CatalogExporterInterface

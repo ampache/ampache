@@ -22,6 +22,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\User;
@@ -45,7 +46,7 @@ interface WantedRepositoryInterface
     /**
      * Get wanted list.
      *
-     * @return list<int>
+     * @return int[]
      */
     public function findAll(?User $user = null): array;
 
@@ -59,7 +60,7 @@ interface WantedRepositoryInterface
      */
     public function deleteByMusicbrainzId(
         string $musicbrainzId,
-        ?User $user = null
+        ?User $user = null,
     ): void;
 
     /**

@@ -36,46 +36,37 @@ use Ampache\Module\System\InstallationHelperInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class WriteConfigAction implements ApplicationActionInterface
+final readonly class WriteConfigAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'write_config';
-
-    private ConfigContainerInterface $configContainer;
-
-    private InstallationHelperInterface $installationHelper;
-
-    private ResponseFactoryInterface $responseFactory;
+    public const string REQUEST_KEY = 'write_config';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        InstallationHelperInterface $installationHelper,
-        ResponseFactoryInterface $responseFactory
+        private ConfigContainerInterface $configContainer,
+        private InstallationHelperInterface $installationHelper,
+        private ResponseFactoryInterface $responseFactory,
     ) {
-        $this->configContainer    = $configContainer;
-        $this->installationHelper = $installationHelper;
-        $this->responseFactory    = $responseFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             throw new AccessDeniedException();
         }
 
         if ($this->installationHelper->write_config(__DIR__ . '/../../../../../config/ampache.cfg.php')) {
-            return $this->responseFactory->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            return $this->responseFactory->createResponse(RFC7231::FOUND)
                 ->withHeader(
                     'Location',
                     sprintf('%s/index.php', $this->configContainer->getWebPath())
                 );
         }
 
-        return $this->responseFactory->createResponse(StatusCode\RFC\RFC7231::FOUND)
+        return $this->responseFactory->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf('%s/error.php?permission=%s', $this->configContainer->getWebPath(), rawurlencode('config/ampache.cfg.php'))

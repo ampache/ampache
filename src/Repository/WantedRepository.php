@@ -47,7 +47,7 @@ final readonly class WantedRepository implements WantedRepositoryInterface
     /**
      * Get wanted list.
      *
-     * @return list<int>
+     * @return int[]
      */
     public function findAll(?User $user = null): array
     {
@@ -94,7 +94,7 @@ final readonly class WantedRepository implements WantedRepositoryInterface
      */
     public function deleteByMusicbrainzId(
         string $musicbrainzId,
-        ?User $user = null
+        ?User $user = null,
     ): void {
         $sql    = 'DELETE FROM `wanted` WHERE `mbid` = ?';
         $params = [$musicbrainzId];

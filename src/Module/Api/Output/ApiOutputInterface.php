@@ -46,7 +46,7 @@ interface ApiOutputInterface
      * Generate an empty api result
      */
     public function writeEmpty(
-        string $emptyType
+        string $emptyType,
     ): string;
 
     /**
@@ -56,7 +56,7 @@ interface ApiOutputInterface
         int $code,
         string $message,
         string $action,
-        string $type
+        string $type,
     ): string;
 
     /**
@@ -64,7 +64,7 @@ interface ApiOutputInterface
      */
     public function error3(
         int $code,
-        string $message
+        string $message,
     ): string;
 
     /**
@@ -72,7 +72,7 @@ interface ApiOutputInterface
      */
     public function error4(
         int $code,
-        string $message
+        string $message,
     ): string;
 
     /**
@@ -82,7 +82,7 @@ interface ApiOutputInterface
         int $code,
         string $message,
         string $action,
-        string $type
+        string $type,
     ): string;
 
     /**
@@ -92,7 +92,7 @@ interface ApiOutputInterface
         int $code,
         string $message,
         string $action,
-        string $type
+        string $type,
     ): string;
 
     /**
@@ -106,7 +106,7 @@ interface ApiOutputInterface
         User $user,
         string $auth,
         bool $encode = true,
-        bool $asObject = true
+        bool $asObject = true,
     ): string;
 
     /**

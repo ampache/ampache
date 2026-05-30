@@ -32,10 +32,6 @@ namespace Ampache\Module\Playback\Localplay\Vlc;
  */
 class VlcPlayer
 {
-    public string $host;
-    public int $port;
-    public string $password;
-
     /**
      * VlcPlayer
      * This is the constructor, it defaults to localhost
@@ -43,13 +39,10 @@ class VlcPlayer
      * i would change this to another value then standard 8080, it gets used by more things
      */
     public function __construct(
-        string $host = 'localhost',
-        string $password = '',
-        int $port = 8080
+        public string $host = 'localhost',
+        public string $password = '',
+        public int $port = 8080,
     ) {
-        $this->host     = $host;
-        $this->port     = $port;
-        $this->password = $password;
     }
 
     /**
@@ -67,7 +60,7 @@ class VlcPlayer
         $args    = ['command' => 'in_enqueue', '&input' => $aurl];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
+        return ($results !== null);
     }
 
     /**
@@ -107,7 +100,7 @@ class VlcPlayer
         $args    = ['command' => 'pl_next'];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
+        return ($results !== null);
     }
 
     /**
@@ -137,7 +130,7 @@ class VlcPlayer
         ];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
+        return ($results !== null);
     }
 
     /**
@@ -149,7 +142,7 @@ class VlcPlayer
         $args    = ['command' => 'pl_play'];
         $results = $this->sendCommand("status.xml?", $args);
 
-        return (!($results === null));
+        return ($results !== null);
     }
 
     /**
@@ -176,7 +169,7 @@ class VlcPlayer
         $args    = ['command' => 'pl_stop'];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
+        return ($results !== null);
     }
 
     /**
@@ -188,7 +181,7 @@ class VlcPlayer
         $args    = ['command' => 'pl_repeat'];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
+        return ($results !== null);
     }
 
     /**
@@ -200,7 +193,7 @@ class VlcPlayer
         $args    = ['command' => 'pl_random'];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
+        return ($results !== null);
     }
 
     /**
@@ -212,7 +205,7 @@ class VlcPlayer
         $args    = ['command' => 'pl_delete', '&id' => $track];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
+        return ($results !== null);
     }
 
     /**
@@ -230,9 +223,11 @@ class VlcPlayer
         if ($currentstat == 'playing') {
             $state = 'play';
         }
+
         if ($currentstat == 'stop') {
             $state = 'stop';
         }
+
         if ($currentstat == 'paused') {
             $state = 'pause';
         }
@@ -264,7 +259,7 @@ class VlcPlayer
         $args    = ['command' => 'volume', '&val' => '%2B20'];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
+        return ($results !== null);
     }
 
     /**
@@ -276,7 +271,7 @@ class VlcPlayer
         $args    = ['command' => 'volume', '&val' => '-20'];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
+        return ($results !== null);
     }
 
     /**
@@ -286,11 +281,11 @@ class VlcPlayer
     public function set_volume(int $value): bool
     {
         // Convert it to base 400
-        $value   = $value * 4;
+        $value *= 4;
         $args    = ['command' => 'volume', '&val' => $value];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
+        return ($results !== null);
     }
 
     /**
@@ -302,7 +297,7 @@ class VlcPlayer
         $args    = ['command' => 'pl_empty'];
         $results = $this->sendCommand('status.xml?', $args);
 
-        return (!($results === null));
+        return ($results !== null);
     }
 
     /**
@@ -315,12 +310,7 @@ class VlcPlayer
         // Gets complete playlist + medialib in VLC's case, needs to be looked at
         $args = [];
 
-        $results = $this->sendCommand('playlist.xml', $args);
-        if ($results === null) {
-            return null;
-        }
-
-        return $results;
+        return $this->sendCommand('playlist.xml', $args);
     }
 
     /**
@@ -331,33 +321,33 @@ class VlcPlayer
      */
     private function sendCommand(string $cmd, array $args): ?array
     {
-        $fsock = fsockopen($this->host, (int)$this->port, $errno, $errstr);
+        $fsock = fsockopen($this->host, $this->port, $errno, $errstr);
 
         if (!$fsock) {
-            debug_event(self::class, "VLCPlayer: $errstr ($errno)", 1);
+            debug_event(self::class, sprintf('VLCPlayer: %s (%d)', $errstr, $errno), 1);
 
             return null;
         }
 
         // Define the base message
-        $msg = "GET /requests/$cmd";
+        $msg = 'GET /requests/' . $cmd;
 
         // Foreach our arguments
         foreach ($args as $key => $val) {
-            $msg .= "$key=$val";
+            $msg .= sprintf('%s=%s', $key, $val);
         }
 
         $msg .= " HTTP/1.0\r\n";
 
         // Basic authentication
-        if (!empty($this->password)) {
+        if ($this->password !== '' && $this->password !== '0') {
             $b64pwd = base64_encode(':' . $this->password);
             $msg .= "Authorization: Basic " . $b64pwd . "\r\n";
         }
 
         $msg .= "\r\n";
 
-        fputs($fsock, $msg);
+        fwrite($fsock, $msg);
         $data   = '';
         $header = '';
         // here the header is split from the xml to avoid problems
@@ -365,7 +355,7 @@ class VlcPlayer
             // loop until the end of the header
 
             $header .= fgets($fsock);
-        } while (strpos($header, "\r\n\r\n") === false);
+        } while (!str_contains($header, "\r\n\r\n"));
 
         // now put the body in variable $data
         while (!feof($fsock)) {
@@ -407,7 +397,6 @@ class VlcPlayer
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
         xml_parse_into_struct($parser, trim($contents), $xml_values);
-        xml_parser_free($parser);
 
         if (!$xml_values) {
             return [];
@@ -458,15 +447,16 @@ class VlcPlayer
             }
 
             // See tag status and do the needed.
-            if ($type == "open") {
+            if ($type === "open") {
                 // The starting of the tag '<tag>'
                 $parent[$level - 1] = &$current;
                 // Insert New tag
                 if (!is_array($current) || (!in_array($tag, array_keys($current)))) {
                     $current[$tag] = $result;
-                    if ($attributes_data) {
+                    if ($attributes_data !== []) {
                         $current[$tag . '_attr'] = $attributes_data;
                     }
+
                     $repeated_tag_index[$tag . '_' . $level] = 1;
 
                     $current = &$current[$tag];
@@ -490,10 +480,11 @@ class VlcPlayer
                             unset($current[$tag . '_attr']);
                         }
                     }
+
                     $last_item_index = $repeated_tag_index[$tag . '_' . $level] - 1;
                     $current         = &$current[$tag][$last_item_index];
                 }
-            } elseif ($type == "complete") {
+            } elseif ($type === "complete") {
                 // Tags that ends in 1 line '<tag />'
                 // See if the key is already taken.
                 if (!isset($current[$tag])) {
@@ -510,6 +501,7 @@ class VlcPlayer
                     if ($priority == 'tag' && $get_attributes && $attributes_data) {
                         $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
                     }
+
                     $repeated_tag_index[$tag . '_' . $level]++;
                 } else {
                     // If it is not an array... Make it an array using using the existing value and the new value
@@ -525,13 +517,14 @@ class VlcPlayer
                             unset($current[$tag . '_attr']);
                         }
 
-                        if ($attributes_data) {
+                        if ($attributes_data !== []) {
                             $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
                         }
                     }
+
                     $repeated_tag_index[$tag . '_' . $level]++; // 0 and 1 index is already taken
                 }
-            } elseif ($type == 'close') {
+            } elseif ($type === 'close') {
                 // End of tag '</tag>'
                 $current = &$parent[$level - 1];
             }

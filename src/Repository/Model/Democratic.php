@@ -40,7 +40,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 class Democratic extends Tmp_Playlist
 {
-    protected const DB_TABLENAME = 'democratic';
+    protected const string DB_TABLENAME = 'democratic';
 
     public ?string $name = null;
 
@@ -189,7 +189,7 @@ class Democratic extends Tmp_Playlist
      * Sorting is highest to lowest vote count, then by oldest to newest
      * vote activity.
      *
-     * @return list<array{
+     * @return array<int, array{
      *   object_type: LibraryItemEnum,
      *   object_id: int,
      *   track_id: int,
@@ -271,7 +271,7 @@ class Democratic extends Tmp_Playlist
         }
         $sql = "SELECT `id` FROM `song` WHERE `enabled`='1'";
         if (AmpConfig::get('catalog_filter')) {
-            $sql .= " AND" . Catalog::get_user_filter("song", Core::get_global('user')?->id ?? -1);
+            $sql .= " AND" . Catalog::get_user_filter("song", Core::get_global('user')->id ?? -1);
         }
 
         $sql .= " ORDER BY RAND() LIMIT 1";
@@ -326,10 +326,10 @@ class Democratic extends Tmp_Playlist
     {
         /* Iterate through the objects if no vote, add to playlist and vote */
         foreach ($items as $element) {
-            $type      = array_shift($element);
-            $object_id = array_shift($element);
-            if (!$this->has_vote((int)$object_id, $type)) {
-                $this->_add_vote((int)$object_id, $type);
+            $type      = (string)array_shift($element);
+            $object_id = (int)array_shift($element);
+            if (!$this->has_vote($object_id, $type)) {
+                $this->_add_vote($object_id, $type);
             }
         }
     }

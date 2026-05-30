@@ -36,7 +36,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
-/** @var int[] $object_ids */
+/** @var list<int> $object_ids */
 /** @var array $hide_columns */
 /** @var string $argument_param */
 /** @var Artist $artist */

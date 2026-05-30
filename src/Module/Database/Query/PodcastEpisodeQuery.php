@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Query;
 
 final class PodcastEpisodeQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'add_gt',
         'add_lt',
         'alpha_match',
@@ -124,6 +124,7 @@ final class PodcastEpisodeQuery implements QueryInterface
                 foreach ($value as $uid) {
                     $filter_sql .= (int)$uid . ',';
                 }
+
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
                 break;
             case 'podcast':
@@ -144,11 +145,13 @@ final class PodcastEpisodeQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `podcast_episode`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
                     $filter_sql = " `podcast_episode`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'starts_with':
                 $filter_sql = " `podcast_episode`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -166,6 +169,7 @@ final class PodcastEpisodeQuery implements QueryInterface
                 if ($value != 0) {
                     $filter_sql = " (`podcast_episode`.`catalog` = '" . Dba::escape($value) . "') AND ";
                 }
+
                 break;
             case 'user_catalog':
                 $filter_sql = " `podcast_episode`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
@@ -185,9 +189,10 @@ final class PodcastEpisodeQuery implements QueryInterface
                 $filter_sql = " `catalog`.`enabled` = '1' AND ";
                 break;
             case 'unplayed':
-                if ((int)$value == 1) {
+                if ((int)$value === 1) {
                     $filter_sql = " `podcast_episode`.`played`='0' AND ";
                 }
+
                 break;
         }
 
@@ -210,7 +215,7 @@ final class PodcastEpisodeQuery implements QueryInterface
                 $sql = "`podcast_episode`.`title`";
                 break;
             case 'podcast':
-                $sql = "`podcast_episode`.`$field` $order, `podcast_episode`.`pubdate` ";
+                $sql = sprintf('`podcast_episode`.`%s` %s, `podcast_episode`.`pubdate` ', $field, $order);
                 break;
             case 'addition_time':
             case 'author':
@@ -221,10 +226,10 @@ final class PodcastEpisodeQuery implements QueryInterface
             case 'state':
             case 'time':
             case 'total_count':
-                $sql = "`podcast_episode`.`$field`";
+                $sql = sprintf('`podcast_episode`.`%s`', $field);
                 break;
             case 'rating':
-                $sql = "`rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast_episode`.`id`", "`rating`.`object_type`", "'podcast_episode'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
@@ -233,7 +238,7 @@ final class PodcastEpisodeQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`podcast_episode`.`id`", "`user_flag`.`object_type`", "'podcast_episode'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag_rating':
-                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`podcast_episode`.`id`", "`user_flag`.`object_type`", "'podcast_episode'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast_episode`.`id`", "`rating`.`object_type`", "'podcast_episode'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
@@ -241,10 +246,10 @@ final class PodcastEpisodeQuery implements QueryInterface
                 $sql = '';
         }
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

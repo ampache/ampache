@@ -38,28 +38,16 @@ use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAddMessageAction implements ApplicationActionInterface
+final readonly class ShowAddMessageAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_add_message';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private PrivateMessageRepositoryInterface $pmRepository;
+    public const string REQUEST_KEY = 'show_add_message';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        PrivateMessageRepositoryInterface $pmRepository
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private PrivateMessageRepositoryInterface $pmRepository,
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->pmRepository    = $pmRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

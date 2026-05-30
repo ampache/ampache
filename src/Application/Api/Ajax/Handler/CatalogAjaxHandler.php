@@ -36,7 +36,7 @@ use Ampache\Repository\Model\User;
 final readonly class CatalogAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
-        private RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser,
     ) {
     }
 

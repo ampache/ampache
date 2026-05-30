@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Album\Export;
 
-use Override;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -40,6 +39,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\SongRepositoryInterface;
 use Mockery\MockInterface;
 use org\bovigo\vfs\vfsStream;
+use Override;
 
 class AlbumArtExporterTest extends MockeryTestCase
 {

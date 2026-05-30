@@ -36,11 +36,11 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
         private RequestParserInterface $requestParser,
-        private UiInterface $ui
+        private UiInterface $ui,
     ) {
     }
 

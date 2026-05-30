@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -31,6 +33,6 @@ interface LabelListUpdaterInterface
     public function update(
         string $labelsComma,
         int $artistId,
-        bool $overwrite
+        bool $overwrite,
     ): bool;
 }

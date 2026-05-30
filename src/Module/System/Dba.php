@@ -44,6 +44,7 @@ class Dba
     public static $stats = ['query' => 0];
 
     private static $_sql;
+
     private static string $_error;
 
     /**
@@ -57,7 +58,7 @@ class Dba
     {
         // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
         //debug_event(self::class, $sql . ' ' . json_encode($params), 5);
-        if (empty(trim($sql))) {
+        if (in_array(trim($sql), ['', '0'], true)) {
             return null;
         }
 
@@ -86,7 +87,7 @@ class Dba
     private static function _query($sql, $params, $silent = false): ?PDOStatement
     {
         $dbh = self::dbh();
-        if (!$dbh) {
+        if (!$dbh instanceof PDO) {
             debug_event(self::class, 'Error: failed to get database handle', 1);
 
             return null;
@@ -101,12 +102,12 @@ class Dba
             } else {
                 $stmt = $dbh->query(self::$_sql);
             }
-        } catch (PDOException $error) {
+        } catch (PDOException $pdoException) {
             // are you trying to write to something that doesn't exist?
-            self::$_error = $error->getMessage();
+            self::$_error = $pdoException->getMessage();
             if (!$silent) {
                 debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
-                debug_event(self::class, 'Error_query MSG: ' . $error->getMessage(), 1);
+                debug_event(self::class, 'Error_query MSG: ' . $pdoException->getMessage(), 1);
             }
 
             return null;
@@ -120,7 +121,7 @@ class Dba
             }
 
             self::disconnect();
-        } elseif ($stmt->errorCode() && $stmt->errorCode() != '00000') {
+        } elseif ($stmt->errorCode() && $stmt->errorCode() !== '00000') {
             self::$_error = (string)json_encode($stmt->errorInfo());
             if (!$silent) {
                 debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
@@ -132,6 +133,7 @@ class Dba
 
             return null;
         }
+
         self::$stats['query']++;
 
         return $stmt ?: null;
@@ -168,14 +170,16 @@ class Dba
     public static function escape($var): ?string
     {
         $dbh = self::dbh();
-        if (!$dbh) {
+        if (!$dbh instanceof PDO) {
             debug_event(self::class, 'Wrong dbh.', 1);
 
             return '';
         }
+
         if ($var === null) {
             return '';
         }
+
         $out_var = $dbh->quote($var);
 
         // This is slightly less ugly than it was, but still ugly
@@ -191,7 +195,7 @@ class Dba
     public static function check_length($value, $length): string
     {
         $result = substr($value, 0, $length);
-        if (!$result) {
+        if ($result === '' || $result === '0') {
             return $value;
         }
 
@@ -267,21 +271,21 @@ class Dba
     public static function fetch_single_column(
         string $query,
         array $parameter = [],
-        bool $finish = true
+        bool $finish = true,
     ): ?string {
         $resource = self::query(
             $query,
             $parameter
         );
 
-        if (!$resource) {
+        if (!$resource instanceof PDOStatement) {
             return null;
         }
 
         $result = $resource->fetch(PDO::FETCH_COLUMN);
 
         if ($result === false) {
-            if ($finish === true) {
+            if ($finish) {
                 self::finish($resource);
             }
 
@@ -383,11 +387,8 @@ class Dba
         }
 
         // Build the data source name
-        if (strpos($hostname, '/') === 0) {
-            $dsn = 'mysql:unix_socket=' . $hostname;
-        } else {
-            $dsn = 'mysql:host=' . $hostname;
-        }
+        $dsn = str_starts_with((string) $hostname, '/') ? 'mysql:unix_socket=' . $hostname : 'mysql:host=' . $hostname;
+
         if ($port) {
             $dsn .= ';port=' . (int)($port);
         }
@@ -395,9 +396,9 @@ class Dba
         try {
             debug_event(self::class, 'Database connection...', 5);
             $dbh = new PDO($dsn, $username, $password);
-        } catch (PDOException $error) {
-            self::$_error = $error->getMessage();
-            debug_event(self::class, 'Connection failed: ' . $error->getMessage(), 1);
+        } catch (PDOException $pdoException) {
+            self::$_error = $pdoException->getMessage();
+            debug_event(self::class, 'Connection failed: ' . $pdoException->getMessage(), 1);
 
             return null;
         }
@@ -451,7 +452,7 @@ class Dba
         $dbh = self::_connect();
 
         if (!$dbh || $dbh->errorCode()) {
-            if ($dbh) {
+            if ($dbh instanceof PDO) {
                 self::$_error = (string)json_encode($dbh->errorInfo());
             }
 
@@ -484,7 +485,7 @@ class Dba
                 $sql        = "DESCRIBE `" . $item['table'] . "`";
                 $db_results = self::read($sql);
 
-                if (!$db_results) {
+                if (!$db_results instanceof PDOStatement) {
                     return false;
                 }
 
@@ -496,7 +497,7 @@ class Dba
                 $sql        = "SELECT COUNT(*) FROM `" . $item['table'] . "`";
                 $db_results = self::read($sql);
 
-                if (!$db_results) {
+                if (!$db_results instanceof PDOStatement) {
                     return false;
                 }
 
@@ -524,6 +525,7 @@ class Dba
             while ($row = self::fetch_row($res)) {
                 print '<tr><td>' . implode('</td><td>', $row) . '</td></tr>';
             }
+
             print '</table>';
         }
     }

@@ -41,7 +41,7 @@ use LogicException;
  */
 class Podcast extends database_object implements library_item, CatalogItemInterface
 {
-    protected const DB_TABLENAME = 'podcast';
+    protected const string DB_TABLENAME = 'podcast';
 
     private int $id = 0;
 
@@ -97,7 +97,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
@@ -194,7 +194,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     }
 
     /**
-     * @return array{podcast_episode: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{podcast_episode: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -211,7 +211,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -221,7 +221,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     }
 
     /**
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -531,10 +531,10 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      *
      * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getEpisodeIds(
-        ?PodcastEpisodeStateEnum $stateFilter = null
+        ?PodcastEpisodeStateEnum $stateFilter = null,
     ): array {
         return $this->getPodcastEpisodeRepository()->getEpisodes($this, $stateFilter);
     }

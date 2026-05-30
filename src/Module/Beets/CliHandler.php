@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Beets;
 
 use Ampache\Module\System\Core;
+use Override;
 
 /**
  * Start commands in CLI and dispatch them
@@ -34,8 +35,6 @@ use Ampache\Module\System\Core;
  */
 class CliHandler extends Handler
 {
-    protected Catalog $handler;
-
     /**
      * Field separator for beets field format
      */
@@ -69,11 +68,13 @@ class CliHandler extends Handler
     /**
      * Seperator between command and arguments
      */
+    #[Override]
     protected string $commandSeperator = ' ';
 
     /**
      * Defines the differences between beets and ampache fields
      */
+    #[Override]
     protected array $fieldMapping = [
         'disc' => ['disk', '%d'],
         'path' => ['file', '%s'],
@@ -85,9 +86,8 @@ class CliHandler extends Handler
     /**
      * CliHandler constructor.
      */
-    public function __construct(Catalog $handler)
+    public function __construct(protected Catalog $handler)
     {
-        $this->handler = $handler;
     }
 
     /**
@@ -168,7 +168,7 @@ class CliHandler extends Handler
      */
     protected function getFieldFormat(): string
     {
-        if (!empty($this->fieldFormat)) {
+        if ($this->fieldFormat !== '' && $this->fieldFormat !== '0') {
             $this->fields      = $this->getFields();
             $this->fieldFormat = '$' . implode($this->seperator . '$', $this->fields) . $this->itemEnd;
         }
@@ -185,7 +185,7 @@ class CliHandler extends Handler
         $fields          = null;
         $processedFields = [];
         exec($this->assembleCommand('fields', true), $fields);
-        foreach ((array) $fields as $field) {
+        foreach ($fields as $field) {
             $matches = [];
             if (preg_match('/^[\s]+([\w]+)$/', $field, $matches)) {
                 $processedFields[] = $matches[1];

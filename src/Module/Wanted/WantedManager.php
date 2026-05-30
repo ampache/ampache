@@ -43,7 +43,7 @@ final readonly class WantedManager implements WantedManagerInterface
     public function __construct(
         private WantedRepositoryInterface $wantedRepository,
         private MusicBrainz $musicBrainz,
-        private PluginRetrieverInterface $pluginRetriever
+        private PluginRetrieverInterface $pluginRetriever,
     ) {
     }
 
@@ -53,13 +53,13 @@ final readonly class WantedManager implements WantedManagerInterface
      */
     public function delete(
         string $mbid,
-        ?User $user = null
+        ?User $user = null,
     ): void {
         if ($this->wantedRepository->getAcceptedCount() > 0) {
             /** @var object{error?: string, release-group: string} $album */
             $album = $this->musicBrainz->lookup('release', $mbid, ['release-groups']);
 
-            if ($album !== null && $album->{'release-group'}) {
+            if ($album->{'release-group'}) {
                 $this->wantedRepository->deleteByMusicbrainzId(
                     print_r($album->{'release-group'}, true),
                     $user
@@ -77,7 +77,7 @@ final readonly class WantedManager implements WantedManagerInterface
         ?int $artist,
         ?string $artist_mbid,
         string $name,
-        int $year
+        int $year,
     ): void {
         Dba::write(
             "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -99,7 +99,7 @@ final readonly class WantedManager implements WantedManagerInterface
      */
     public function accept(
         Wanted $wanted,
-        User $user
+        User $user,
     ): void {
         if ($user->has_access(AccessLevelEnum::MANAGER)) {
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";

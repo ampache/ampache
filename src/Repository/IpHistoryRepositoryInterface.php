@@ -22,6 +22,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\User;
@@ -38,7 +39,7 @@ interface IpHistoryRepositoryInterface
      */
     public function getHistory(
         User $user,
-        ?bool $limited = true
+        ?bool $limited = true,
     ): Traversable;
 
     /**
@@ -59,6 +60,6 @@ interface IpHistoryRepositoryInterface
         string $ipAddress,
         string $userAgent,
         DateTimeInterface $date,
-        string $action
+        string $action,
     ): void;
 }

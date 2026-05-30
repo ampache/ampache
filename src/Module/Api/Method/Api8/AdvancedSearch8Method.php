@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class AdvancedSearch8Method
 {
-    public const ACTION = 'advanced_search';
+    public const string ACTION = 'advanced_search';
 
     /**
      * advanced_search
@@ -69,7 +69,17 @@ final class AdvancedSearch8Method
      * offset          = (integer) //optional
      * limit           = (integer) //optional
      *
-     * @param array<string, mixed> $input
+     * @param array{
+     *     operator: string,
+     *     rule_1: string,
+     *     rule_1_operator: int,
+     *     rule_1_input: mixed,
+     *     type?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      */
     public static function advanced_search(array $input, User $user): bool
     {

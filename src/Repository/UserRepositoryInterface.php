@@ -22,6 +22,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\User;
@@ -105,7 +106,7 @@ interface UserRepositoryInterface
      * updates the last seen data for this user
      */
     public function updateLastSeen(
-        int $userId
+        int $userId,
     ): void;
 
     /**

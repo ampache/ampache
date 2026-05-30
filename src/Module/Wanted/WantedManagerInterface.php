@@ -42,7 +42,7 @@ interface WantedManagerInterface
      */
     public function accept(
         Wanted $wanted,
-        User $user
+        User $user,
     ): void;
 
     /**
@@ -54,6 +54,6 @@ interface WantedManagerInterface
         ?int $artist,
         ?string $artist_mbid,
         string $name,
-        int $year
+        int $year,
     ): void;
 }

@@ -35,7 +35,7 @@ use Ampache\Repository\Model\User;
  */
 final class PlaylistAddSong4Method
 {
-    public const ACTION = 'playlist_add_song';
+    public const string ACTION = 'playlist_add_song';
 
     /**
      * playlist_add_song

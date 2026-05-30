@@ -22,6 +22,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Artist;
@@ -36,7 +37,7 @@ interface SongRepositoryInterface
     /**
      * gets the songs for an album takes an optional limit
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getByAlbum(int $albumId, int $limit = 0): array;
 
@@ -53,7 +54,7 @@ interface SongRepositoryInterface
      * @return int[]
      */
     public function getByLabel(
-        string $labelName
+        string $labelName,
     ): array;
 
     /**
@@ -62,7 +63,7 @@ interface SongRepositoryInterface
      * @return int[]
      */
     public function getRandomByArtist(
-        Artist $artist
+        Artist $artist,
     ): array;
 
     /**
@@ -71,7 +72,7 @@ interface SongRepositoryInterface
      * @return int[]
      */
     public function getRandomByGenre(
-        Tag $genre
+        Tag $genre,
     ): array;
 
     /**
@@ -81,7 +82,7 @@ interface SongRepositoryInterface
      */
     public function getTopSongsByArtist(
         Artist $artist,
-        int $count = 50
+        int $count = 50,
     ): array;
 
     /**
@@ -90,7 +91,7 @@ interface SongRepositoryInterface
      * @return int[]
      */
     public function getByArtist(
-        int $artistId
+        int $artistId,
     ): array;
 
     /**
@@ -99,7 +100,7 @@ interface SongRepositoryInterface
      * @return int[]
      */
     public function getAllByArtist(
-        int $artistId
+        int $artistId,
     ): array;
 
     /**

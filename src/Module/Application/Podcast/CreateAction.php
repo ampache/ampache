@@ -43,28 +43,16 @@ use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class CreateAction implements ApplicationActionInterface
+final readonly class CreateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'create';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private PodcastCreatorInterface $podcastCreator;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'create';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        PodcastCreatorInterface $podcastCreator,
-        RequestParserInterface $requestParser
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private PodcastCreatorInterface $podcastCreator,
+        private RequestParserInterface $requestParser,
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->podcastCreator  = $podcastCreator;
-        $this->requestParser   = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -75,7 +63,7 @@ final class CreateAction implements ApplicationActionInterface
 
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
             !$this->requestParser->verifyForm('add_podcast')
         ) {
             throw new AccessDeniedException();

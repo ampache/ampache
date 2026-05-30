@@ -37,26 +37,17 @@ use Ampache\Repository\Model\Democratic;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class CreateAction implements ApplicationActionInterface
+final readonly class CreateAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'create';
-
-    private ConfigContainerInterface $configContainer;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'create';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        ResponseFactoryInterface $responseFactory,
-        RequestParserInterface $requestParser
+        private ConfigContainerInterface $configContainer,
+        private ResponseFactoryInterface $responseFactory,
+        private RequestParserInterface $requestParser,
     ) {
-        $this->configContainer = $configContainer;
-        $this->responseFactory = $responseFactory;
-        $this->requestParser   = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -87,7 +78,7 @@ final class CreateAction implements ApplicationActionInterface
         }
 
         return $this->responseFactory
-            ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+            ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf(

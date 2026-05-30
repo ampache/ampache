@@ -40,7 +40,7 @@ final class PluginRetriever implements PluginRetrieverInterface
      */
     public function retrieveByType(
         PluginTypeEnum $pluginType,
-        User $user
+        User $user,
     ): Generator {
         foreach (Plugin::get_plugins($pluginType) as $plugin_name) {
             $plugin = new Plugin($plugin_name);

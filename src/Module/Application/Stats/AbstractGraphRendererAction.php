@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
 abstract readonly class AbstractGraphRendererAction implements ApplicationActionInterface
 {
     protected function __construct(
-        private LibraryItemLoaderInterface $libraryItemLoader
+        private LibraryItemLoaderInterface $libraryItemLoader,
     ) {
     }
 
@@ -46,7 +46,7 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
      * @throws ApplicationException
      */
     protected function renderGraph(
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): void {
         $object_type = Core::get_request('object_type');
         $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
@@ -85,15 +85,13 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
             ? (int)strtotime((string)$_REQUEST['start_date'])
             : ($end_date - 864000);
 
-        $f_end_date   = get_datetime((int)$end_date);
-        $f_start_date = get_datetime((int)$start_date);
+        $f_end_date   = get_datetime($end_date);
+        $f_start_date = get_datetime($start_date);
 
         $gtypes   = [];
         $gtypes[] = 'user_hits';
         if (
-            $object_type == null ||
-            $object_type == 'song' ||
-            $object_type == 'video'
+            in_array($object_type, [null, 'song', 'video'])
         ) {
             $gtypes[] = 'user_bandwidth';
         }
@@ -106,7 +104,7 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
         $blink = '';
         if ($libitem !== null) {
             $f_link = $libitem->get_f_link();
-            if (!empty($f_link)) {
+            if ($f_link !== '' && $f_link !== '0') {
                 $blink = $f_link;
             }
         } elseif ($user_id > 0) {

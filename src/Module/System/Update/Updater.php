@@ -37,28 +37,16 @@ use Psr\Container\ContainerInterface;
 /**
  * Provides several utility methods to perform updates
  */
-final class Updater implements UpdaterInterface
+final readonly class Updater implements UpdaterInterface
 {
-    private const MINIMUM_UPDATABLE_VERSION = 350008;
-
-    private UpdateHelperInterface $updateHelper;
-
-    private UpdateInfoRepositoryInterface $updateInfoRepository;
-
-    private ContainerInterface $dic;
-
-    private UpdateRunnerInterface $updateRunner;
+    private const int MINIMUM_UPDATABLE_VERSION = 350008;
 
     public function __construct(
-        UpdateHelperInterface $updateHelper,
-        UpdateInfoRepositoryInterface $updateInfoRepository,
-        ContainerInterface $dic,
-        UpdateRunnerInterface $updateRunner
+        private UpdateHelperInterface $updateHelper,
+        private UpdateInfoRepositoryInterface $updateInfoRepository,
+        private ContainerInterface $dic,
+        private UpdateRunnerInterface $updateRunner,
     ) {
-        $this->updateHelper         = $updateHelper;
-        $this->updateInfoRepository = $updateInfoRepository;
-        $this->dic                  = $dic;
-        $this->updateRunner         = $updateRunner;
     }
 
     /**
@@ -112,7 +100,7 @@ final class Updater implements UpdaterInterface
      * @throws UpdateFailedException
      */
     public function rollback(
-        ?Interactor $interactor = null
+        ?Interactor $interactor = null,
     ): void {
         if (!$this->hasOverUpdated()) {
             return;
@@ -132,7 +120,7 @@ final class Updater implements UpdaterInterface
      * @throws UpdateException
      */
     public function update(
-        ?Interactor $interactor = null
+        ?Interactor $interactor = null,
     ): void {
         $currentVersion = (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
 

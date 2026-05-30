@@ -36,7 +36,7 @@ use Ampache\Repository\Model\User;
  */
 final class UserPlaylists8Method
 {
-    public const ACTION = 'user_playlists';
+    public const string ACTION = 'user_playlists';
 
     /**
      * user_playlists

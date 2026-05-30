@@ -45,7 +45,7 @@ use Psr\Log\LoggerInterface;
 
 final class EditObjectAction extends AbstractEditAction
 {
-    public const REQUEST_KEY = 'edit_object';
+    public const string REQUEST_KEY = 'edit_object';
 
     private LabelRepositoryInterface $labelRepository;
 
@@ -54,7 +54,7 @@ final class EditObjectAction extends AbstractEditAction
     public function __construct(
         ConfigContainerInterface $configContainer,
         LabelRepositoryInterface $labelRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         parent::__construct($configContainer, $logger);
         $this->labelRepository = $labelRepository;
@@ -67,7 +67,7 @@ final class EditObjectAction extends AbstractEditAction
         string $object_type,
         library_item|Share $libitem,
         int $object_id,
-        ?Browse $browse = null
+        ?Browse $browse = null,
     ): ?ResponseInterface {
         // Scrub the data, walk recursive through array
         $entities = function (&$data) use (&$entities) {

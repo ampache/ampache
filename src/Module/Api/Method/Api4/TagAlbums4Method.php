@@ -33,7 +33,7 @@ use Ampache\Repository\Model\User;
  */
 final class TagAlbums4Method
 {
-    public const ACTION = 'tag_albums';
+    public const string ACTION = 'tag_albums';
 
     /**
      * tag_albums

@@ -39,15 +39,13 @@ class Registration
     /**
      * send_confirmation
      * This sends the confirmation e-mail for the specified user
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function send_confirmation(
         string $username,
         string $fullname,
         string $email,
         string $website,
-        string $validation
+        string $validation,
     ): bool {
         if (!Mailer::is_mail_enabled()) {
             return false;
@@ -64,10 +62,10 @@ class Registration
         $message = T_('Thank you for registering') . "\n";
         $message .= T_('Please keep this e-mail for your records. Your account information is as follows:') . "\n";
         $message .= "----------------------\n";
-        $message .= T_('Username') . ": $username" . "\n";
+        $message .= T_('Username') . (': ' . $username) . "\n";
         $message .= "----------------------\n";
         $message .= T_('To begin using your account, you must verify your e-mail address by vising the following link:') . "\n\n";
-        $message .= AmpConfig::get_web_path() . "/register.php?action=validate&username=" . urlencode($username) . "&auth=$validation";
+        $message .= AmpConfig::get_web_path() . "/register.php?action=validate&username=" . urlencode($username) . ('&auth=' . $validation);
 
         $mailer->setRecipient($email, $fullname);
         $mailer->setMessage($message);
@@ -85,12 +83,13 @@ class Registration
             $mailer->setSubject(sprintf(T_("New User Registration at %s"), AmpConfig::get('site_title')));
 
             $message = T_("A new user has registered, the following values were entered:") . "\n\n";
-            $message .= T_("Username") . ": $username\n";
-            $message .= T_("Fullname") . ": $fullname\n";
-            $message .= T_("E-mail") . ": $email\n";
-            if (!empty($website)) {
-                $message .= T_("Website") . ": $website\n";
+            $message .= T_("Username") . sprintf(': %s%s', $username, PHP_EOL);
+            $message .= T_("Fullname") . sprintf(': %s%s', $fullname, PHP_EOL);
+            $message .= T_("E-mail") . sprintf(': %s%s', $email, PHP_EOL);
+            if ($website !== '' && $website !== '0') {
+                $message .= T_("Website") . sprintf(': %s%s', $website, PHP_EOL);
             }
+
             $mailer->setMessage($message);
             $mailer->send_to_group('admins');
         }

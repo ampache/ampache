@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -47,7 +49,7 @@ interface AccessListManagerInterface
         string $name,
         int $userId,
         AccessLevelEnum $level,
-        AccessTypeEnum $type
+        AccessTypeEnum $type,
     ): void;
 
     /**
@@ -66,6 +68,6 @@ interface AccessListManagerInterface
         int $userId,
         AccessLevelEnum $level,
         AccessTypeEnum $type,
-        AccessTypeEnum $additionalType
+        AccessTypeEnum $additionalType,
     ): void;
 }

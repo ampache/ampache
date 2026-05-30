@@ -51,54 +51,21 @@ use Ampache\Repository\WantedRepositoryInterface;
  * This is a wrapper for all of the different database cleaning
  * functions, it runs them in an order that resembles correctness.
  */
-final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
+final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 {
-    private AlbumRepositoryInterface $albumRepository;
-
-    private BookmarkRepositoryInterface $bookmarkRepository;
-
-    private ShoutRepositoryInterface $shoutRepository;
-
-    private UserActivityRepositoryInterface $useractivityRepository;
-
-    private UserRepositoryInterface $userRepository;
-
-    private MetadataManagerInterface $metadataManager;
-
-    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
-
-    private WantedRepositoryInterface $wantedRepository;
-
-    private LabelRepositoryInterface $labelRepository;
-
-    private ArtCleanupInterface $artCleanup;
-
-    private ArtistRepositoryInterface $artistRepository;
-
     public function __construct(
-        AlbumRepositoryInterface $albumRepository,
-        BookmarkRepositoryInterface $bookmarkRepository,
-        ShoutRepositoryInterface $shoutRepository,
-        UserActivityRepositoryInterface $useractivityRepository,
-        UserRepositoryInterface $userRepository,
-        MetadataManagerInterface $metadataManager,
-        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
-        WantedRepositoryInterface $wantedRepository,
-        LabelRepositoryInterface $labelRepository,
-        ArtCleanupInterface $artCleanup,
-        ArtistRepositoryInterface $artistRepository
+        private AlbumRepositoryInterface $albumRepository,
+        private BookmarkRepositoryInterface $bookmarkRepository,
+        private ShoutRepositoryInterface $shoutRepository,
+        private UserActivityRepositoryInterface $useractivityRepository,
+        private UserRepositoryInterface $userRepository,
+        private MetadataManagerInterface $metadataManager,
+        private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        private WantedRepositoryInterface $wantedRepository,
+        private LabelRepositoryInterface $labelRepository,
+        private ArtCleanupInterface $artCleanup,
+        private ArtistRepositoryInterface $artistRepository,
     ) {
-        $this->albumRepository          = $albumRepository;
-        $this->bookmarkRepository       = $bookmarkRepository;
-        $this->shoutRepository          = $shoutRepository;
-        $this->useractivityRepository   = $useractivityRepository;
-        $this->userRepository           = $userRepository;
-        $this->metadataManager          = $metadataManager;
-        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
-        $this->wantedRepository         = $wantedRepository;
-        $this->labelRepository          = $labelRepository;
-        $this->artCleanup               = $artCleanup;
-        $this->artistRepository         = $artistRepository;
     }
 
     public function collect(): void

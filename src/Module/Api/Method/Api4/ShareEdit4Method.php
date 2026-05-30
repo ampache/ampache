@@ -35,7 +35,7 @@ use Ampache\Repository\ShareRepositoryInterface;
  */
 final class ShareEdit4Method
 {
-    public const ACTION = 'share_edit';
+    public const string ACTION = 'share_edit';
 
     /**
      * share_edit

@@ -35,17 +35,13 @@ use Psr\Log\LoggerInterface;
 
 final class RandomAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'random';
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'random';
 
     public function __construct(
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
-        $this->configContainer = $configContainer;
-
-        parent::__construct($logger, $configContainer);
+        parent::__construct($logger, $this->configContainer);
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -53,6 +49,7 @@ final class RandomAction extends AbstractStreamAction
         if ($this->preCheck($gatekeeper) === false) {
             return null;
         }
+
         $randomId   = (int)($request->getQueryParams()['random_id'] ?? 0);
         $randomType = $request->getQueryParams()['random_type'] ?? 'song';
         $urls       = [Random::get_play_url($randomType, $randomId)];

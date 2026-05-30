@@ -28,19 +28,16 @@ namespace Ampache\Module\Application\Preferences;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
+    public const string REQUEST_KEY = 'show';
 
-    private UiInterface $ui;
-
-    public function __construct(
-        UiInterface $ui
-    ) {
-        $this->ui = $ui;
+    public function __construct(private UiInterface $ui)
+    {
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -48,7 +45,7 @@ final class ShowAction implements ApplicationActionInterface
         $user = $gatekeeper->getUser();
 
         $this->ui->showHeader();
-        if ($user) {
+        if ($user instanceof User) {
             $this->ui->show(
                 'show_preferences.inc.php',
                 [
@@ -58,6 +55,7 @@ final class ShowAction implements ApplicationActionInterface
                 ]
             );
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

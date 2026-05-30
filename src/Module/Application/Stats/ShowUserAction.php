@@ -41,7 +41,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class ShowUserAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_user';
+    public const string REQUEST_KEY = 'show_user';
 
     public function __construct(
         private UiInterface $ui,
@@ -87,6 +87,7 @@ final readonly class ShowUserAction implements ApplicationActionInterface
             );
             show_table_render(false, true);
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

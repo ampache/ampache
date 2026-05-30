@@ -36,7 +36,7 @@ use Ampache\Repository\Model\User;
 
 final class PlaylistExporter implements PlaylistExporterInterface
 {
-    public const VALID_FILE_EXTENSIONS = [
+    public const array VALID_FILE_EXTENSIONS = [
         'm3u',
         'xspf',
         'pls',
@@ -49,15 +49,16 @@ final class PlaylistExporter implements PlaylistExporterInterface
         string $ext,
         string $playlistId,
         int $userId,
-        string $urltype
+        string $urltype,
     ): void {
         // Make sure the output dir is valid and writeable
-        if (!is_writeable($dirname)) {
+        if (!is_writable($dirname)) {
             $interactor->error(
                 sprintf(T_('There was a problem creating this directory: %s'), $dirname),
                 true
             );
         }
+
         $user = new User($userId);
 
         // Switch on the type of playlist dump we want to do here
@@ -68,6 +69,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 foreach ($ids as $albumid) {
                     $items[] = new Album($albumid);
                 }
+
                 break;
             case 'artists':
                 $items = Catalog::get_artists();
@@ -84,15 +86,17 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 } else {
                     $ids = [$playlistId];
                 }
+
                 $items = [];
                 foreach ($ids as $playlist_id) {
-                    $playlist = ($user->id)
+                    $playlist = ($user->id !== 0)
                         ? new Search((int)$playlist_id, 'song', $user)
                         : new Search((int)$playlist_id);
                     if ($playlist->isNew() === false) {
                         $items[] = $playlist;
                     }
                 }
+
                 break;
             case 'playlists':
             default:
@@ -108,6 +112,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 } else {
                     $ids = [(int)$playlistId];
                 }
+
                 $items = [];
                 foreach ($ids as $playlist_id) {
                     $playlist = new Playlist((int)$playlist_id);
@@ -115,8 +120,10 @@ final class PlaylistExporter implements PlaylistExporterInterface
                         $items[] = $playlist;
                     }
                 }
+
                 break;
         }
+
         $dirname = rtrim($dirname, "/");
 
         foreach ($items as $item) {
@@ -129,7 +136,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
             $medias          = $item->get_medias();
             $playlist        = new Stream_Playlist($userId);
             $playlist->title = $item->get_fullname();
-            $media_path      = ($urltype == 'web')
+            $media_path      = ($urltype === 'web')
                 ? ''
                 : $dirname;
             foreach ($medias as $media) {

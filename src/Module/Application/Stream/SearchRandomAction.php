@@ -33,19 +33,16 @@ use Psr\Log\LoggerInterface;
 
 final class SearchRandomAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'search_random';
+    public const string REQUEST_KEY = 'search_random';
 
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
+    private readonly ConfigContainerInterface $configContainer;
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
+        private readonly ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($logger, $configContainer);
-        $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
     }
 

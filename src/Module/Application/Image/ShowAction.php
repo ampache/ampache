@@ -44,7 +44,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class ShowAction extends AbstractShowAction
 {
-    public const REQUEST_ACTION = 'show';
+    public const string REQUEST_ACTION = 'show';
 
     public function __construct(
         RequestParserInterface $requestParser,
@@ -54,7 +54,7 @@ final readonly class ShowAction extends AbstractShowAction
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         parent::__construct(
             $requestParser,
@@ -90,7 +90,7 @@ final readonly class ShowAction extends AbstractShowAction
 
         $objectId = (int)($queryParams['object_id'] ?? 0);
 
-        if (!$objectId) {
+        if ($objectId === 0) {
             return null;
         }
 

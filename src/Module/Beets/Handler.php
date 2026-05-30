@@ -32,8 +32,11 @@ abstract class Handler
 {
     /** Seperator between command and arguments */
     protected string $commandSeperator;
+
     private Catalog $handler;
+
     private string $handlerCommand;
+
     protected array $fieldMapping = [];
 
     /**
@@ -64,10 +67,11 @@ abstract class Handler
     protected function mapFields(array $song): array
     {
         foreach ($this->fieldMapping as $from => $to) {
-            list($key, $format) = $to;
+            [$key, $format]     = $to;
             $song[$key]         = sprintf($format, $song[$from]);
         }
-        $song['genre'] = preg_split('/[\s]?[,|;][\s?]/', $song['genre']);
+
+        $song['genre'] = preg_split('/[\s]?[,|;][\s?]/', (string) $song['genre']);
 
         return $song;
     }

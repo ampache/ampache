@@ -38,28 +38,26 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowPlaylistAction extends AbstractLocalPlayAction
 {
-    public const REQUEST_KEY = 'show_playlist';
+    public const string REQUEST_KEY = 'show_playlist';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
+    private readonly ConfigContainerInterface $configContainer;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        private readonly UiInterface $ui,
     ) {
         parent::__construct($configContainer);
         $this->configContainer = $configContainer;
-        $this->ui              = $ui;
     }
 
     protected function handle(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
         if ($gatekeeper->mayAccess(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST) === false) {
             throw new AccessDeniedException();
         }
+
         // Init and then connect to our Localplay instance
         $localplay = new LocalPlay($this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_CONTROLLER));
         $localplay->connect();

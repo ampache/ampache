@@ -103,7 +103,7 @@ class Ajax
     public static function action(
         string $action,
         string $source,
-        ?string $post = ''
+        ?string $post = '',
     ): string {
         $url = self::url($action);
 
@@ -140,7 +140,7 @@ class Ajax
         string $source = '',
         string $post = '',
         string $class = '',
-        string $confirm = ''
+        string $confirm = '',
     ): string {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
@@ -174,7 +174,7 @@ class Ajax
         string $source = '',
         ?string $post = '',
         ?string $class = '',
-        ?string $confirm = ''
+        ?string $confirm = '',
     ): string {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
@@ -203,7 +203,7 @@ class Ajax
         string $text,
         string $source,
         ?string $post = '',
-        ?string $class = ''
+        ?string $class = '',
     ): string {
         // Temporary workaround to avoid sorting on custom base requests
         if (!defined("NO_BROWSE_SORTING") || strpos($source, "sort_") === false) {

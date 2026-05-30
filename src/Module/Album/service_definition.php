@@ -25,15 +25,21 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Album;
 
+use Ampache\Module\Album\Deletion\AlbumDeleter;
+use Ampache\Module\Album\Deletion\AlbumDeleterInterface;
 use Ampache\Module\Album\Export\AlbumArtExporter;
 use Ampache\Module\Album\Export\AlbumArtExporterInterface;
+use Ampache\Module\Album\Export\Writer\LinuxMetadataWriter;
+use Ampache\Module\Album\Export\Writer\WindowsMetadataWriter;
+use Ampache\Module\Album\Tag\AlbumTagUpdater;
+use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 
 use function DI\autowire;
 
 return [
     AlbumArtExporterInterface::class => autowire(AlbumArtExporter::class),
-    Export\Writer\LinuxMetadataWriter::class => autowire(),
-    Export\Writer\WindowsMetadataWriter::class => autowire(),
-    Deletion\AlbumDeleterInterface::class => autowire(Deletion\AlbumDeleter::class),
-    Tag\AlbumTagUpdaterInterface::class => autowire(Tag\AlbumTagUpdater::class),
+    LinuxMetadataWriter::class => autowire(),
+    WindowsMetadataWriter::class => autowire(),
+    AlbumDeleterInterface::class => autowire(AlbumDeleter::class),
+    AlbumTagUpdaterInterface::class => autowire(AlbumTagUpdater::class),
 ];

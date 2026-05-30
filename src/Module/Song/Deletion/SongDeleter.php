@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -33,40 +35,22 @@ use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
-final class SongDeleter implements SongDeleterInterface
+final readonly class SongDeleter implements SongDeleterInterface
 {
-    private LoggerInterface $logger;
-
-    private ShoutRepositoryInterface $shoutRepository;
-
-    private SongRepositoryInterface $songRepository;
-
-    private UserActivityRepositoryInterface $useractivityRepository;
-
-    private ArtCleanupInterface $artCleanup;
-
     public function __construct(
-        LoggerInterface $logger,
-        ShoutRepositoryInterface $shoutRepository,
-        SongRepositoryInterface $songRepository,
-        UserActivityRepositoryInterface $useractivityRepository,
-        ArtCleanupInterface $artCleanup
+        private LoggerInterface $logger,
+        private ShoutRepositoryInterface $shoutRepository,
+        private SongRepositoryInterface $songRepository,
+        private UserActivityRepositoryInterface $useractivityRepository,
+        private ArtCleanupInterface $artCleanup,
     ) {
-        $this->logger                 = $logger;
-        $this->shoutRepository        = $shoutRepository;
-        $this->songRepository         = $songRepository;
-        $this->useractivityRepository = $useractivityRepository;
-        $this->artCleanup             = $artCleanup;
     }
 
     public function delete(Song $song): bool
     {
-        if (!empty($song->file) && file_exists($song->file)) {
-            $deleted = unlink($song->file);
-        } else {
-            $deleted = true;
-        }
-        if ($deleted === true) {
+        $deleted = !in_array($song->file, [null, '', '0'], true) && file_exists($song->file) ? unlink($song->file) : true;
+
+        if ($deleted) {
             $songId  = $song->getId();
             $deleted = $this->songRepository->delete($songId);
             if ($deleted) {

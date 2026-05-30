@@ -59,7 +59,7 @@ use Ampache\Repository\Model\Wanted;
 final class ObjectTypeToClassNameMapper
 {
     /** @var array<string, class-string<database_object>> */
-    private const OBJECT_TYPE_MAPPING = [
+    private const array OBJECT_TYPE_MAPPING = [
         ObjectTypeEnum::ALBUM->value => Album::class,
         ObjectTypeEnum::ALBUM_ARTIST->value => Artist::class,
         ObjectTypeEnum::ALBUM_DISK->value => AlbumDisk::class,

@@ -33,23 +33,17 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ShowAddFilterAction extends AbstractFilterAction
 {
-    public const REQUEST_KEY = 'show_add_filter';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'show_add_filter';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        private readonly UiInterface $ui,
+        private readonly ConfigContainerInterface $configContainer,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 

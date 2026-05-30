@@ -37,27 +37,18 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class UpdateFilterAction extends AbstractFilterAction
 {
-    public const REQUEST_KEY = 'update_filter';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'update_filter';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser
+        private readonly UiInterface $ui,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly RequestParserInterface $requestParser,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->requestParser   = $requestParser;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
 
@@ -105,6 +96,7 @@ final class UpdateFilterAction extends AbstractFilterAction
             $catalog_status             = (int)filter_input(INPUT_POST, 'catalog_' . $catalog_id, FILTER_SANITIZE_NUMBER_INT);
             $catalog_array[$catalog_id] = $catalog_status;
         }
+
         // Attempt to modify the filter
         if (!Catalog::edit_catalog_filter($filter_id, $filter_name, $catalog_array)) {
             AmpError::add('general', T_("The filter was not modified"));

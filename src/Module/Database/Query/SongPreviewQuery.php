@@ -33,7 +33,7 @@ final class SongPreviewQuery implements QueryInterface
 
     protected string $base = "";
 
-    public const FILTERS = [
+    public const array FILTERS = [
     ];
 
     /** @var string[] $sorts */

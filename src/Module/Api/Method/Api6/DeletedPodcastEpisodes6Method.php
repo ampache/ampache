@@ -35,7 +35,7 @@ use Ampache\Repository\Model\User;
 
 final class DeletedPodcastEpisodes6Method
 {
-    public const ACTION = 'deleted_podcast_episodes';
+    public const string ACTION = 'deleted_podcast_episodes';
 
     /**
      * deleted_podcast_episodes

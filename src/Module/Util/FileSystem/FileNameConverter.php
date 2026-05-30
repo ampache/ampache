@@ -31,20 +31,16 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 
-final class FileNameConverter implements FileNameConverterInterface
+final readonly class FileNameConverter implements FileNameConverterInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->configContainer = $configContainer;
+    public function __construct(private ConfigContainerInterface $configContainer)
+    {
     }
 
     public function convert(
         Interactor $interactor,
         string $source_encoding,
-        bool $force = false
+        bool $force = false,
     ): void {
         $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
         $db_results = Dba::read($sql);
@@ -54,6 +50,7 @@ final class FileNameConverter implements FileNameConverterInterface
             if ($catalog === null) {
                 break;
             }
+
             /* HINT: %1 Catalog Name, %2 Catalog Path */
             $interactor->info(
                 sprintf(T_('Checking %1$s (%2$s)'), $catalog->name, $catalog->get_path()),
@@ -76,7 +73,7 @@ final class FileNameConverter implements FileNameConverterInterface
     private function charset_directory_correct(
         Interactor $interactor,
         string $path,
-        bool $force
+        bool $force,
     ): bool {
         /** @var string $source_encoding */
         $source_encoding = iconv_get_encoding('output_encoding') ?: 'UTF-8';
@@ -85,11 +82,7 @@ final class FileNameConverter implements FileNameConverterInterface
         }
 
         // Correctly detect the slash we need to use here
-        if (strstr($path, "/")) {
-            $slash_type = '/';
-        } else {
-            $slash_type = '\\';
-        }
+        $slash_type = strstr($path, "/") ? '/' : '\\';
 
         /* Open up the directory */
         $handle = opendir($path);
@@ -115,7 +108,7 @@ final class FileNameConverter implements FileNameConverterInterface
         $siteCharset = $this->configContainer->get('site_charset');
 
         while (false !== ($file = readdir($handle))) {
-            if ($file == '.' || $file == '..') {
+            if ($file === '.' || $file === '..') {
                 continue;
             }
 
@@ -126,18 +119,18 @@ final class FileNameConverter implements FileNameConverterInterface
                 continue;
             }
 
-            $verify_filename = iconv($siteCharset, $siteCharset . '//IGNORE', $full_file);
+            $verify_filename = iconv((string) $siteCharset, $siteCharset . '//IGNORE', $full_file);
             if (!$verify_filename) {
                 continue;
             }
 
-            if (strcmp($full_file, $verify_filename) != 0) {
+            if (strcmp($full_file, $verify_filename) !== 0) {
                 $translated_filename = iconv($source_encoding, $siteCharset . '//TRANSLIT', $full_file);
 
                 // Make sure the extension stayed the same
                 if (
                     $translated_filename &&
-                    substr($translated_filename, strlen($translated_filename) - 3, 3) != substr($full_file, strlen($full_file) - 3, 3)
+                    substr($translated_filename, strlen($translated_filename) - 3, 3) !== substr($full_file, strlen($full_file) - 3, 3)
                 ) {
                     $interactor->warn(
                         T_('Translation failure, stripping non-valid characters'),
@@ -147,7 +140,7 @@ final class FileNameConverter implements FileNameConverterInterface
                     $translated_filename = iconv($source_encoding, $siteCharset . '//IGNORE', $full_file);
                 }
 
-                if (empty($translated_filename)) {
+                if (in_array($translated_filename, ['', '0', false], true)) {
                     continue;
                 }
 
@@ -176,7 +169,7 @@ final class FileNameConverter implements FileNameConverterInterface
                         T_('Rename file (y/n)'),
                         'n'
                     );
-                    if ($input === true) {
+                    if ($input) {
                         $this->charset_rename_file($interactor, $full_file, $translated_filename);
                     } else {
                         $interactor->eol();
@@ -201,7 +194,7 @@ final class FileNameConverter implements FileNameConverterInterface
     private function charset_rename_file(
         Interactor $interactor,
         string $full_file,
-        string $translated_filename
+        string $translated_filename,
     ): bool {
         // First break out the base directory name and make sure it exists
         // in case our crap char is in the directory
@@ -246,7 +239,7 @@ final class FileNameConverter implements FileNameConverterInterface
         $old_sum = Core::get_filesize($full_file);
         $new_sum = Core::get_filesize($translated_filename);
 
-        if ($old_sum != $new_sum || $new_sum == 0) {
+        if ($old_sum !== $new_sum || $new_sum === 0) {
             $interactor->error(
                 sprintf(T_('Size comparison failed. Not deleting "%s"'), $full_file),
                 true
@@ -283,7 +276,7 @@ final class FileNameConverter implements FileNameConverterInterface
     {
         /* First remove any / or \ chars */
         $clean_string = (string)preg_replace('/[\/\\\]/', '-', $string);
-        $clean_string = (string)str_replace(':', ' ', $clean_string);
+        $clean_string = str_replace(':', ' ', $clean_string);
 
         return (string)preg_replace('/[\!\:\*]/', '_', $clean_string);
     }

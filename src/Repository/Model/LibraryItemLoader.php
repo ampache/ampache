@@ -41,7 +41,7 @@ use Psr\Container\ContainerInterface;
 final readonly class LibraryItemLoader implements LibraryItemLoaderInterface
 {
     public function __construct(
-        private ContainerInterface $dic
+        private ContainerInterface $dic,
     ) {
     }
 
@@ -60,7 +60,7 @@ final readonly class LibraryItemLoader implements LibraryItemLoaderInterface
     public function load(
         LibraryItemEnum $objectType,
         int $objectId,
-        array $allowedItems = [library_item::class]
+        array $allowedItems = [library_item::class],
     ): ?library_item {
         $object = match ($objectType) {
             LibraryItemEnum::ALBUM => new Album($objectId),

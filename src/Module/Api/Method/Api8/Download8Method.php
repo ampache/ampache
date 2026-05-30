@@ -40,7 +40,7 @@ use Ampache\Repository\Model\User;
  */
 final class Download8Method
 {
-    public const ACTION = 'download';
+    public const string ACTION = 'download';
 
     /**
      * download
@@ -68,14 +68,14 @@ final class Download8Method
      */
     public static function download(array $input, User $user): bool
     {
-        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
-        if (!Api::check_parameter($input, ['id', 'type'], self::ACTION)) {
+        $input['filter'] = $input['id'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['filter', 'type'], self::ACTION)) {
             http_response_code(400);
 
             return false;
         }
 
-        $object_id = (int) $input['id'];
+        $object_id = (int) $input['filter'];
         $type      = (string) $input['type'];
 
         if (
@@ -86,7 +86,7 @@ final class Download8Method
             )
         ) {
             // The API can use searches as playlists so check for those too
-            $object_id = (int)str_replace('smart_', '', ($input['id'] ?? '0'));
+            $object_id = (int)str_replace('smart_', '', ($input['filter'] ?? '0'));
             $type      = 'search';
         }
 

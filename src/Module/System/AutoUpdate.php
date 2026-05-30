@@ -47,9 +47,10 @@ class AutoUpdate
         $vspart     = explode('-', $version);
         $git_branch = self::is_force_git_branch();
 
-        if ($git_branch == 'develop') {
+        if ($git_branch === 'develop') {
             return true;
         }
+
         // if you are using a non-develop branch
         if ($git_branch !== '') {
             return false;
@@ -72,9 +73,10 @@ class AutoUpdate
     public static function is_force_git_branch(): string
     {
         $config_branch = (string)AmpConfig::get('github_force_branch');
-        if (!empty($config_branch)) {
+        if ($config_branch !== '' && $config_branch !== '0') {
             return $config_branch;
         }
+
         if (is_readable(__DIR__ . '/../../../.git/HEAD')) {
             $current = file_get_contents(__DIR__ . '/../../../.git/HEAD');
             $pattern = '/ref: refs\/heads\/(.*)/';
@@ -82,9 +84,9 @@ class AutoUpdate
             if (
                 is_string($current) &&
                 preg_match($pattern, $current, $matches) &&
-                !in_array((string)$matches[1], ['master', 'release5', 'release6', 'release7'])
+                !in_array($matches[1], ['master', 'release5', 'release6', 'release7'], true)
             ) {
-                return (string)$matches[1];
+                return $matches[1];
             }
         }
 
@@ -115,14 +117,15 @@ class AutoUpdate
 
                 return null;
             }
+
             debug_event(self::class, 'GitHub API request ' . $url, 5);
             $result = json_decode((string)$request->body);
 
             return (is_object($result))
                 ? $result
                 : null;
-        } catch (Exception $error) {
-            debug_event(self::class, 'Request error: ' . $error->getMessage(), 1);
+        } catch (Exception $exception) {
+            debug_event(self::class, 'Request error: ' . $exception->getMessage(), 1);
 
             return null;
         }
@@ -173,12 +176,13 @@ class AutoUpdate
         ) {
             if (
                 self::_is_develop() ||
-                $git_branch == 'develop'
+                $git_branch === 'develop'
             ) {
                 $commits = self::github_request('/commits/develop');
             } else {
                 $commits = self::github_request('/commits/' . $git_branch);
             }
+
             if (
                 !empty($commits) &&
                 isset($commits->sha)
@@ -190,14 +194,16 @@ class AutoUpdate
                 return $lastversion;
             }
         }
+
         // Otherwise it is stable version, get latest tag
         $tags = self::github_request('/tags');
-        if (!$tags) {
+        if ($tags === null) {
             return $lastversion;
         }
+
         foreach ($tags as $release) {
-            $str = strstr($release->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
-            if (empty($str)) {
+            $str = strstr((string) $release->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
+            if (in_array($str, ['', '0', false], true)) {
                 $lastversion = $release->name;
                 Preference::update_all('autoupdate_lastversion', $lastversion);
                 AmpConfig::set('autoupdate_lastversion', $lastversion, true);
@@ -231,7 +237,7 @@ class AutoUpdate
     public static function get_current_version(): string
     {
         $commit = self::get_current_commit();
-        if (!empty($commit)) {
+        if ($commit !== '' && $commit !== '0') {
             return $commit;
         }
 
@@ -250,6 +256,7 @@ class AutoUpdate
         ) {
             return trim((string)file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
         }
+
         if (self::_is_branch_develop_exists()) {
             return trim((string)file_get_contents(__DIR__ . '/../../../.git/refs/heads/develop'));
         }
@@ -280,12 +287,12 @@ class AutoUpdate
 
         debug_event(self::class, 'Checking latest version online...', 5);
         if (
-            !empty($latest) &&
+            $latest !== '' && $latest !== '0' &&
             $current !== $latest
         ) {
             if (
-                preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $current) &&
-                preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $latest)
+                preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $current) &&
+                preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $latest)
             ) {
                 $cpart = explode('-', $current);
                 $lpart = explode('-', $latest);
@@ -307,8 +314,8 @@ class AutoUpdate
                     !empty($lcommit)
                 ) {
                     // Comparison based on commit date
-                    $ctime = strtotime($ccommit->commit->author->date);
-                    $ltime = strtotime($lcommit->commit->author->date);
+                    $ctime = strtotime((string) $ccommit->commit->author->date);
+                    $ltime = strtotime((string) $lcommit->commit->author->date);
                     AmpConfig::set($current, $ctime, true);
                     AmpConfig::set($latest, $ltime, true);
 
@@ -366,11 +373,11 @@ class AutoUpdate
 
         // Don't show anything if the current version is newer than the second, (e.g. version_compare(7.0.0, 6.9.0) = 1)
         if (
-            empty($latest) ||
+            $latest === '' || $latest === '0' ||
             $current === $latest ||
             (
-                preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $current) &&
-                preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $latest) &&
+                preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $current) &&
+                preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $latest) &&
                 version_compare($current, $latest) === 1
             )
         ) {
@@ -379,10 +386,11 @@ class AutoUpdate
 
             return;
         }
+
         $git_branch    = self::is_force_git_branch();
-        $develop_check = self::_is_develop() || $git_branch != '';
-        $changelog     = ($git_branch == '') ? 'master' : $git_branch;
-        $zip_name      = ($git_branch == '') ? 'develop' : $git_branch;
+        $develop_check = self::_is_develop() || $git_branch !== '';
+        $changelog     = ($git_branch === '') ? 'master' : $git_branch;
+        $zip_name      = ($git_branch === '') ? 'develop' : $git_branch;
 
         echo '<div id="autoupdate">';
         echo '<span>' . T_('Update available') . '</span>';
@@ -393,10 +401,12 @@ class AutoUpdate
         } else {
             echo ' | <a href="' . self::get_zip_url() . '" target="_blank">' . T_('Download') . '</a>';
         }
+
         if (self::_is_git_repository()) {
             echo ' | <a class="nohtml" href="' . AmpConfig::get_web_path() . '/update.php?type=sources&action=update"> <b>' . T_('Update') . '</b></a>';
             echo ' | <a class="nohtml" href="' . AmpConfig::get_web_path() . '/update.php?type=sources&action=clear">' . T_('Ignore') . '</a>';
         }
+
         echo '</div>';
     }
 
@@ -412,19 +422,22 @@ class AutoUpdate
         } elseif (self::_is_develop()) {
             $cmd = 'git pull https://github.com/ampache/ampache.git develop';
         }
+
         if (!$api) {
             echo T_('Updating Ampache sources with `' . $cmd . '` ...') . '<br />';
         }
+
         ob_flush();
         chdir(__DIR__ . '/../../../');
         exec($cmd);
         if (!$api) {
             echo T_('Done') . '<br />';
         }
+
         ob_flush();
 
         $commit = self::get_current_commit();
-        if (!empty($commit)) {
+        if ($commit !== '' && $commit !== '0') {
             // reset the update status
             Preference::update_all('autoupdate_lastversion', $commit);
             AmpConfig::set('autoupdate_lastversion', $commit, true);
@@ -438,7 +451,7 @@ class AutoUpdate
      */
     public static function update_dependencies(
         ConfigContainerInterface $config,
-        bool $api = false
+        bool $api = false,
     ): void {
         $cmdComposer = sprintf(
             '%s install %s',

@@ -43,7 +43,7 @@ trait UserAdminConfirmationTestTrait
      * @param callable(int): void $confirmationExpectationsCallback
      */
     private function createConfirmationExpectations(
-        callable $confirmationExpectationsCallback
+        callable $confirmationExpectationsCallback,
     ): void {
         $request    = $this->createMock(ServerRequestInterface::class);
         $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);

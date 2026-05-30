@@ -44,7 +44,7 @@ use Ampache\Repository\Model\User;
  */
 final class GetExternalMetadata8Method
 {
-    public const ACTION = 'get_external_metadata';
+    public const string ACTION = 'get_external_metadata';
 
     /**
      * get_external_metadata

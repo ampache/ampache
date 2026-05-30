@@ -33,14 +33,10 @@ use Sabre\DAV\Exception;
 use Sabre\DAV\ICollection;
 use Sabre\DAV\Server;
 
-final class WebDavFactory implements WebDavFactoryInterface
+final readonly class WebDavFactory implements WebDavFactoryInterface
 {
-    private AuthenticationManagerInterface $authenticationManager;
-
-    public function __construct(
-        AuthenticationManagerInterface $authenticationManager
-    ) {
-        $this->authenticationManager = $authenticationManager;
+    public function __construct(private AuthenticationManagerInterface $authenticationManager)
+    {
     }
 
     public function createWebDavAuth(): WebDavAuth

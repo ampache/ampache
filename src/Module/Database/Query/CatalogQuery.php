@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Query;
 
 final class CatalogQuery implements QueryInterface
 {
-    public const FILTERS = [
+    public const array FILTERS = [
         'alpha_match',
         'enabled',
         'equal',
@@ -116,6 +116,7 @@ final class CatalogQuery implements QueryInterface
                 foreach ($value as $uid) {
                     $filter_sql .= (int)$uid . ',';
                 }
+
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
                 break;
             case 'equal':
@@ -133,11 +134,13 @@ final class CatalogQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `catalog`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
                     $filter_sql = " `catalog`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+
                 break;
             case 'starts_with':
                 $filter_sql = " `catalog`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -186,10 +189,10 @@ final class CatalogQuery implements QueryInterface
             case 'last_update':
             case 'rename_pattern':
             case 'sort_pattern':
-                $sql = "`catalog`.`$field`";
+                $sql = sprintf('`catalog`.`%s`', $field);
                 break;
             case 'rating':
-                $sql = "`rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`catalog`.`id`", "`rating`.`object_type`", "'catalog'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
@@ -198,7 +201,7 @@ final class CatalogQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`catalog`.`id`", "`user_flag`.`object_type`", "'catalog'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag_rating':
-                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`catalog`.`id`", "`user_flag`.`object_type`", "'catalog'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`catalog`.`id`", "`rating`.`object_type`", "'catalog'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
@@ -207,10 +210,10 @@ final class CatalogQuery implements QueryInterface
                 break;
         }
 
-        if (empty($sql)) {
+        if ($sql === '' || $sql === '0') {
             return '';
         }
 
-        return "$sql $order,";
+        return sprintf('%s %s,', $sql, $order);
     }
 }

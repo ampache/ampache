@@ -33,11 +33,11 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class GraphAction extends AbstractGraphRendererAction
 {
-    public const REQUEST_KEY = 'graph';
+    public const string REQUEST_KEY = 'graph';
 
     public function __construct(
         private UiInterface $ui,
-        LibraryItemLoaderInterface $libraryItemLoader
+        LibraryItemLoaderInterface $libraryItemLoader,
     ) {
         parent::__construct(
             $libraryItemLoader

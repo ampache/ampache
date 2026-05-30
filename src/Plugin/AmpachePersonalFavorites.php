@@ -22,7 +22,6 @@
 
 namespace Ampache\Plugin;
 
-use Override;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -33,6 +32,7 @@ use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
+use Override;
 
 class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHomeInterface
 {

@@ -43,25 +43,49 @@ use WpOrg\Requests\Requests;
 class AmazonSearch
 {
     public $base_url_default = 'webservices.amazon.com';
+
     public $url_suffix       = '/onca/xml';
+
     public $base_url;
+
     public $search;
-    public $public_key; // AWSAccessKeyId
-    public $private_key; // AWSSecretKey
-    public $associate_tag; // Amazon Affiliate Associate Tag
-    public $results = []; // Array of results
-    public $_parser; // The XML parser
-    public $_grabtags; // Tags to grab the contents of
-    public $_sourceTag; // source tag don't ask
-    public $_subTag; // Stupid hack to make things come our right
-    public $_currentTag; // Stupid hack to make things come out right
+
+    // Amazon Affiliate Associate Tag
+    public $results = [];
+
+    // Array of results
+    public $_parser;
+
+    // The XML parser
+    public $_grabtags;
+
+    // Tags to grab the contents of
+    public $_sourceTag;
+
+    // source tag don't ask
+    public $_subTag;
+
+    // Stupid hack to make things come our right
+    public $_currentTag;
+
+    // Stupid hack to make things come out right
     public $_currentTagContents;
+
     public $_currentPage           = 0;
+
     public $_maxPage               = 1;
+
     public $_default_results_pages = 1;
-    public $_proxy_host            = ""; // Proxy host
-    public $_proxy_port            = ""; // Proxy port
-    public $_proxy_user            = ""; // Proxy user
+
+    public $_proxy_host            = "";
+
+    // Proxy host
+    public $_proxy_port            = "";
+
+    // Proxy port
+    public $_proxy_user            = "";
+
+    // Proxy user
     public $_proxy_pass            = ""; // Proxy pass
 
     /**
@@ -69,10 +93,10 @@ class AmazonSearch
      * @param string $base_url_param
      */
     public function __construct(
-        $public_key,
-        $private_key,
-        $associate_tag,
-        $base_url_param = ''
+        public $public_key,
+        public $private_key,
+        public $associate_tag,
+        $base_url_param = '',
     ) {
         // If we have a base url then use it
         if ($base_url_param != '') {
@@ -82,11 +106,6 @@ class AmazonSearch
             $this->base_url = $this->base_url_default;
             debug_event(self::class, 'Retrieving from DEFAULT', 5);
         }
-
-        // AWS credentials
-        $this->public_key    = $public_key;
-        $this->private_key   = $private_key;
-        $this->associate_tag = $associate_tag;
 
         $this->_grabtags = [
             'ASIN',
@@ -125,12 +144,15 @@ class AmazonSearch
         if ($host) {
             $this->_proxy_host = $host;
         }
+
         if ($port) {
             $this->_proxy_port = $port;
         }
+
         if ($user) {
             $this->_proxy_user = $user;
         }
+
         if ($pass) {
             $this->_proxy_pass = $pass;
         }
@@ -171,11 +193,9 @@ class AmazonSearch
         $contents = $request->body;
 
         //debug_event(self::class, $contents, 5);
-        if (!xml_parse($this->_parser, $contents)) {
+        if (xml_parse($this->_parser, $contents) === 0) {
             debug_event(self::class, 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), 1);
         }
-
-        xml_parser_free($this->_parser);
     }
 
     /**
@@ -193,6 +213,7 @@ class AmazonSearch
                 $proxy[] = $this->_proxy_user;
                 $proxy[] = $this->_proxy_pass;
             }
+
             $options['proxy'] = $proxy;
         }
 
@@ -227,7 +248,7 @@ class AmazonSearch
 
         foreach ($params as $param => $value) {
             $param = str_replace("%7E", "~", rawurlencode($param));
-            $value = str_replace("%7E", "~", rawurlencode($value));
+            $value = str_replace("%7E", "~", rawurlencode((string) $value));
 
             $canonicalized_query[] = $param . "=" . $value;
         }
@@ -252,7 +273,7 @@ class AmazonSearch
     public function signString(string $string_to_sign): string
     {
         // hash and encode the query string
-        $signature = base64_encode(hash_hmac("sha256", $string_to_sign, $this->private_key, true));
+        $signature = base64_encode(hash_hmac("sha256", $string_to_sign, (string) $this->private_key, true));
 
         // urlencode the signed string, replace illegal char
         return str_replace("%7E", "~", rawurlencode($signature));
@@ -267,7 +288,7 @@ class AmazonSearch
     public function lookup($asin, $type = 'Music'): array
     {
         if (is_array($asin)) {
-            foreach ($asin as $key => $value) {
+            foreach (array_keys($asin) as $key) {
                 $this->runSearchAsin($key);
             }
         } else {
@@ -309,7 +330,7 @@ class AmazonSearch
         $canonicalized_query = [];
         foreach ($params as $param => $value) {
             $param = str_replace("%7E", "~", rawurlencode($param));
-            $value = str_replace("%7E", "~", rawurlencode($value));
+            $value = str_replace("%7E", "~", rawurlencode((string) $value));
 
             $canonicalized_query[] = $param . "=" . $value;
         }
@@ -324,11 +345,9 @@ class AmazonSearch
         $request  = Requests::get($url, [], $options);
         $contents = $request->body;
 
-        if (!xml_parse($this->_parser, $contents)) {
+        if (xml_parse($this->_parser, $contents) === 0) {
             debug_event(self::class, 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), 1);
         }
-
-        xml_parser_free($this->_parser);
     }
 
     /**
@@ -339,12 +358,13 @@ class AmazonSearch
         if ($tag == "ASIN") {
             $this->_sourceTag = $tag;
         }
-        if ($tag == "SmallImage" || $tag == "MediumImage" || $tag == "LargeImage") {
+
+        if (in_array($tag, ["SmallImage", "MediumImage", "LargeImage"])) {
             $this->_subTag = $tag;
         }
 
         // If it's in the tag list, don't grab our search results
-        if (strlen($this->_sourceTag)) {
+        if (strlen((string) $this->_sourceTag) !== 0) {
             $this->_currentTag = $tag;
         } elseif ($tag != "TotalPages") {
             $this->_currentTag = '';
@@ -364,19 +384,20 @@ class AmazonSearch
 
         switch ($tag) {
             case 'URL':
-                $this->results[$source][$subtag] = trim($cdata);
+                $this->results[$source][$subtag] = trim((string) $cdata);
                 break;
             case 'ASIN':
-                $this->_sourceTag = trim($cdata);
+                $this->_sourceTag = trim((string) $cdata);
                 break;
             case 'TotalPages':
-                debug_event(self::class, "TotalPages= " . trim($cdata), 5);
-                $this->_maxPage = trim($cdata);
+                debug_event(self::class, "TotalPages= " . trim((string) $cdata), 5);
+                $this->_maxPage = trim((string) $cdata);
                 break;
             default:
-                if (strlen($tag)) {
-                    $this->results[$source][$tag] = trim($cdata);
+                if (strlen((string) $tag) !== 0) {
+                    $this->results[$source][$tag] = trim((string) $cdata);
                 }
+
                 break;
         } // end switch
     }

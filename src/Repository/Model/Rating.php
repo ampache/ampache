@@ -40,9 +40,9 @@ use Exception;
  */
 class Rating extends database_object
 {
-    protected const DB_TABLENAME = 'rating';
+    protected const string DB_TABLENAME = 'rating';
 
-    private const RATING_TYPES = [
+    private const array RATING_TYPES = [
         'album_disk',
         'album',
         'artist',
@@ -67,7 +67,7 @@ class Rating extends database_object
      */
     public function __construct(
         ?int $rating_id,
-        string $type
+        string $type,
     ) {
         $this->id   = (int)$rating_id;
         $this->type = $type;
@@ -75,7 +75,7 @@ class Rating extends database_object
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public static function is_valid(string $type): bool
@@ -138,7 +138,7 @@ class Rating extends database_object
 
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
         }
 
         if ($user_id === 0) {
@@ -184,7 +184,7 @@ class Rating extends database_object
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
         }
 
         if ($user_id === 0) {
@@ -319,7 +319,7 @@ class Rating extends database_object
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user?->id ?? 0;
+            $user_id = $user->id ?? 0;
         }
 
         if ($user_id === 0) {
@@ -400,7 +400,7 @@ class Rating extends database_object
         string $input_type,
         ?User $user = null,
         int $since = 0,
-        int $before = 0
+        int $before = 0,
     ): string {
         $type = Stats::validate_type($input_type);
         $sql  = "SELECT DISTINCT(`rating`.`object_id`) AS `id`, `rating`.`rating`, `rating`.`object_type` AS `type`, MAX(`rating`.`user`) AS `user`, MAX(`rating`.`date`) AS `date` FROM `rating`";
@@ -450,7 +450,7 @@ class Rating extends database_object
         int $count = 0,
         int $offset = 0,
         int $since = 0,
-        int $before = 0
+        int $before = 0,
     ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);

@@ -35,6 +35,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
+use Deprecated;
 
 /**
  * Catalog parent for local and remote beets catalog
@@ -44,7 +45,9 @@ use Ampache\Repository\Model\Video;
 abstract class Catalog extends \Ampache\Repository\Model\Catalog
 {
     protected string $version;
+
     protected string $type;
+
     protected string $description;
 
     /** Added Songs counter */
@@ -116,6 +119,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             return;
         }
+
         if ($ignoreTicker || Ui::check_ticker()) {
             Ui::update_text($prefix . '_count_' . $this->id, $count);
             if (isset($song)) {
@@ -144,11 +148,12 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
             require Ui::find_template('show_adds_catalog.inc.php');
             flush();
         }
+
         set_time_limit(0);
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Beets Update'));
         }
-        /** @var Handler $parser */
+
         $parser = $this->getParser();
         /** @see self::addSong() */
         $parser->setHandler($this, 'addSong');
@@ -181,7 +186,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
             $song['album_id'] = $album_id;
             $songId           = $this->insertSong($song);
             if (
-                $songId !== false &&
                 $this->getMetadataManager()->isCustomMetadataEnabled()
             ) {
                 $songObj = new Song($songId);
@@ -224,8 +228,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         debug_event(self::class, 'Verify: Starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        $date = time();
-        /** @var Handler $parser */
+        $date   = time();
         $parser = $this->getParser();
         /** @see self::verifySong() */
         $parser->setHandler($this, 'verifySong');
@@ -250,6 +253,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
             if ($this->getMetadataManager()->isCustomMetadataEnabled()) {
                 $this->updateMetadata($song, $beetsSong);
             }
+
             $this->updateUi('verify', ++$this->verifiedSongs, $beetsSong);
         }
     }
@@ -261,12 +265,12 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     public function clean_catalog_proc(?Interactor $interactor = null): int
     {
-        /** @var Handler $parser */
         $parser      = $this->getParser();
         $this->songs = $this->getAllSongfiles();
         /** @see self::removeFromDeleteList() */
         $parser->setHandler($this, 'removeFromDeleteList');
         $parser->start($this->listCommand);
+
         $count = count($this->songs);
         if ($count > 0) {
             $this->deleteSongs($this->songs);
@@ -277,9 +281,10 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if ($metadataManager->isCustomMetadataEnabled()) {
             $metadataManager->collectGarbage();
         }
+
         $this->updateUi('clean', $this->cleanCounter, null, true);
 
-        return (int)$count;
+        return $count;
     }
 
     /**
@@ -327,7 +332,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     protected function deleteSongs($songs): void
     {
         $ids = implode(',', array_keys($songs));
-        $sql = "DELETE FROM `song` WHERE `id` IN ($ids)";
+        $sql = sprintf('DELETE FROM `song` WHERE `id` IN (%s)', $ids);
         Dba::write($sql);
     }
 
@@ -339,7 +344,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
         $db_results = Dba::read($sql, [$path]);
         $row        = Dba::fetch_row($db_results);
-        if (empty($row)) {
+        if ($row === []) {
             return 0;
         }
 
@@ -411,9 +416,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         return '';
     }
 
-    /**
-     * @deprecated inject dependency
-     */
+    #[Deprecated(message: 'inject dependency')]
     private function getMetadataManager(): MetadataManagerInterface
     {
         global $dic;

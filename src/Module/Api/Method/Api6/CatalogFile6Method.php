@@ -46,7 +46,7 @@ use Exception;
  */
 final class CatalogFile6Method
 {
-    public const ACTION = 'catalog_file';
+    public const string ACTION = 'catalog_file';
 
     /**
      * catalog_file

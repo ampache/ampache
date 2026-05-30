@@ -40,7 +40,7 @@ use Ampache\Repository\Model\User;
  */
 final class UpdateFromTags8Method
 {
-    public const ACTION = 'update_from_tags';
+    public const string ACTION = 'update_from_tags';
 
     /**
      * update_from_tags
@@ -61,13 +61,13 @@ final class UpdateFromTags8Method
      */
     public static function update_from_tags(array $input, User $user): bool
     {
-        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
-        if (!Api::check_parameter($input, ['type', 'id'], self::ACTION)) {
+        $input['filter'] = $input['id'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['type', 'filter'], self::ACTION)) {
             return false;
         }
         unset($user);
         $type      = (string) $input['type'];
-        $object_id = (int) $input['id'];
+        $object_id = (int) $input['filter'];
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['artist', 'album', 'song'])) {

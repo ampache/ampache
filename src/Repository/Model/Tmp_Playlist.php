@@ -73,7 +73,7 @@ class Tmp_Playlist extends database_object
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
@@ -140,7 +140,7 @@ class Tmp_Playlist extends database_object
     /**
      * get_items
      * Returns an array of all object_ids currently in this Tmp_Playlist.
-     * @return list<array{
+     * @return array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track_id: int,
@@ -307,7 +307,7 @@ class Tmp_Playlist extends database_object
     }
 
     /**
-     * @param list<array{object_type: LibraryItemEnum, object_id: int}> $medias
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int}> $medias
      */
     public function add_medias(array $medias): void
     {

@@ -36,16 +36,12 @@ use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowCatalogsAction implements ApplicationActionInterface
+final readonly class ShowCatalogsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_catalogs';
+    public const string REQUEST_KEY = 'show_catalogs';
 
-    private UiInterface $ui;
-
-    public function __construct(
-        UiInterface $ui
-    ) {
-        $this->ui = $ui;
+    public function __construct(private UiInterface $ui)
+    {
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

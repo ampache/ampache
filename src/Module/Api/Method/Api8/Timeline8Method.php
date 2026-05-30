@@ -40,7 +40,7 @@ use Ampache\Repository\UserActivityRepositoryInterface;
  */
 final class Timeline8Method
 {
-    public const ACTION = 'timeline';
+    public const string ACTION = 'timeline';
 
     /**
      * timeline
@@ -70,12 +70,12 @@ final class Timeline8Method
             return false;
         }
 
-        $input['username'] = $input['filter'] ?? $input['username'] ?? null;
-        if (!Api::check_parameter($input, ['username'], self::ACTION)) {
+        $input['filter'] = $input['username'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
 
-        $username = $input['username'];
+        $username = $input['filter'];
         $leadUser = (is_numeric($username))
             ? User::get_from_id((int)$username)
             : User::get_from_username((string)$username);

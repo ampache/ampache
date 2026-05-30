@@ -36,11 +36,11 @@ use Psr\Log\LoggerInterface;
 
 final class BasketAction extends AbstractStreamAction
 {
-    public const REQUEST_KEY = 'basket';
+    public const string REQUEST_KEY = 'basket';
 
     public function __construct(
         LoggerInterface $logger,
-        private readonly ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($logger, $configContainer);
     }

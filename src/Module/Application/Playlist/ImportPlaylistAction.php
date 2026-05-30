@@ -35,20 +35,14 @@ use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ImportPlaylistAction implements ApplicationActionInterface
+final readonly class ImportPlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'import_playlist';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
+    public const string REQUEST_KEY = 'import_playlist';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -57,8 +51,8 @@ final class ImportPlaylistAction implements ApplicationActionInterface
 
         // first we rename the file to it's original name before importing.
         // Otherwise the playlist name will have the $_FILES['filename']['tmp_name'] which doesn't look right...
-        $dir      = dirname($_FILES['filename']['tmp_name']) . "/";
-        $filename = $dir . basename($_FILES['filename']['name']);
+        $dir      = dirname((string) $_FILES['filename']['tmp_name']) . "/";
+        $filename = $dir . basename((string) $_FILES['filename']['name']);
         move_uploaded_file($_FILES['filename']['tmp_name'], $filename);
         // allow setting public or private for your imports
         $playlist_type = (string) filter_input(INPUT_POST, 'playlist_visibility', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -71,7 +65,7 @@ final class ImportPlaylistAction implements ApplicationActionInterface
         if ($result !== null) {
             $url   = 'show_playlist&playlist_id=' . $result['id'];
             $title = T_('No Problem');
-            $body  = basename($_FILES['filename']['name']);
+            $body  = basename((string) $_FILES['filename']['name']);
             $body .= '<br />' .
                 /* HINT: Number of songs */
                 sprintf(nT_("Successfully imported playlist with %d song.", "Successfully imported playlist with %d songs.", $result['count']), $result['count']);
@@ -83,8 +77,11 @@ final class ImportPlaylistAction implements ApplicationActionInterface
                     } else {
                         $body .= "<tr><td></td><td>" . scrub_out($file['file']) . "</td><td>" . T_('Failure') . "</td></tr>\n";
                     }
+
                     flush();
-                } // foreach songs
+                }
+
+                // foreach songs
                 $body .= "</tbody></table>\n";
             }
         } else {
@@ -92,6 +89,7 @@ final class ImportPlaylistAction implements ApplicationActionInterface
             $title = T_('There Was a Problem');
             $body  = T_('The Playlist could not be imported') . ': ' . T_('No valid songs found in playlist file');
         }
+
         $this->ui->showConfirmation(
             $title,
             $body,

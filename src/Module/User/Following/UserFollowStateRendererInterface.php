@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -32,6 +34,6 @@ interface UserFollowStateRendererInterface
      */
     public function render(
         User $user,
-        User $foreignUser
+        User $foreignUser,
     ): string;
 }

@@ -36,13 +36,13 @@ $libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
 
 /** @var Browse $browse */
 /** @var Playlist $playlist */
-/** @var list<array{object_type: LibraryItemEnum|string, object_id: int, track_id: int, track: int}> $object_ids */
+/** @var array<int, array{object_type: LibraryItemEnum|string, object_id: int, track_id: int, track: int}> $object_ids */
 /** @var bool $argument */
 
 $web_path = AmpConfig::get_web_path();
 
 // playlists and searches come from the same 'playlist_media' browse but you can't reorder a search
-$playlist_id    = $playlist->id ?? '';
+$playlist_id    = $playlist->id ?: '';
 $seconds        = $browse->duration;
 $duration       = ($browse->duration === null) ? '' : floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
 $show_ratings   = User::is_registered() && (AmpConfig::get('ratings'));

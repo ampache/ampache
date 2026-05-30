@@ -40,24 +40,15 @@ use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UpdateUserAction implements ApplicationActionInterface
+final readonly class UpdateUserAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_user';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
+    public const string REQUEST_KEY = 'update_user';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->requestParser   = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -71,10 +62,12 @@ final class UpdateUserAction implements ApplicationActionInterface
         ) {
             throw new AccessDeniedException();
         }
+
         // block updates from simple users
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SIMPLE_USER_MODE) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SIMPLE_USER_MODE)) {
             throw new AccessDeniedException();
         }
+
         $user = Core::get_global('user');
         if (!$user instanceof User) {
             $this->ui->showQueryStats();
@@ -94,12 +87,15 @@ final class UpdateUserAction implements ApplicationActionInterface
         if (in_array('fullname', $mandatory_fields) && !$_POST['fullname']) {
             AmpError::add('fullname', T_("Please fill in your full name (first name, last name)"));
         }
+
         if (in_array('website', $mandatory_fields) && !$_POST['website']) {
             AmpError::add('website', T_("Please fill in your website"));
         }
+
         if (in_array('state', $mandatory_fields) && !$_POST['state']) {
             AmpError::add('state', T_("Please fill in your state"));
         }
+
         if (in_array('city', $mandatory_fields) && !$_POST['city']) {
             AmpError::add('city', T_("Please fill in your city"));
         }
@@ -114,7 +110,7 @@ final class UpdateUserAction implements ApplicationActionInterface
         }
 
         $user = $gatekeeper->getUser();
-        if ($user) {
+        if ($user instanceof User) {
             $this->ui->show(
                 'show_preferences.inc.php',
                 [
@@ -124,6 +120,7 @@ final class UpdateUserAction implements ApplicationActionInterface
                 ]
             );
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

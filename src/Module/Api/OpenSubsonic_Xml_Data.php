@@ -1448,7 +1448,7 @@ class OpenSubsonic_Xml_Data
      * addShares
      *
      * https://opensubsonic.netlify.app/docs/responses/shares/
-     * @param list<int> $shares
+     * @param int[] $shares
      */
     public static function addShares(SimpleXMLElement $xml, array $shares): SimpleXMLElement
     {

@@ -37,18 +37,18 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class NewestAlbumAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'newest_album';
+    public const string REQUEST_KEY = 'newest_album';
 
     public function __construct(
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
-        private ConfigContainerInterface $configContainer
+        private ConfigContainerInterface $configContainer,
     ) {
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
 
         $this->ui->showHeader();
         $this->ui->show('show_form_newest.inc.php');

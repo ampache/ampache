@@ -30,36 +30,28 @@ use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
+use PHPMailer\PHPMailer\Exception;
 
-final class PrivateMessageCreator implements PrivateMessageCreatorInterface
+final readonly class PrivateMessageCreator implements PrivateMessageCreatorInterface
 {
-    private PrivateMessageRepositoryInterface $pmRepository;
-
-    private UtilityFactoryInterface $utilityFactory;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        PrivateMessageRepositoryInterface $pmRepository,
-        UtilityFactoryInterface $utilityFactory,
-        ConfigContainerInterface $configContainer
+        private PrivateMessageRepositoryInterface $pmRepository,
+        private UtilityFactoryInterface $utilityFactory,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->pmRepository    = $pmRepository;
-        $this->utilityFactory  = $utilityFactory;
-        $this->configContainer = $configContainer;
     }
 
     /**
      * Sends a private message to a user
      *
      * @throws Exception\PrivateMessageCreationException
-     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     public function create(
         ?User $recipient,
         User $sender,
         string $subject,
-        string $message
+        string $message,
     ): void {
         $messageId = $this->pmRepository->create(
             $recipient,
@@ -73,7 +65,7 @@ final class PrivateMessageCreator implements PrivateMessageCreatorInterface
             Preference::get_by_user($recipient->getId(), 'notify_email')
         ) {
             $mailer = $this->utilityFactory->createMailer();
-            if (!empty($recipient->email) && $mailer->isMailEnabled()) {
+            if (!in_array($recipient->email, [null, '', '0'], true) && $mailer->isMailEnabled()) {
                 /* HINT: User fullname */
                 $message = sprintf(
                     T_('You received a new private message from %s.'),
@@ -85,7 +77,7 @@ final class PrivateMessageCreator implements PrivateMessageCreatorInterface
                 $message .= $this->configContainer->getWebPath() . "/pvmsg.php?action=show&pvmsg_id=" . $messageId;
 
                 $mailer->set_default_sender();
-                $mailer->setRecipient((string) $recipient->email, (string) $recipient->get_fullname());
+                $mailer->setRecipient($recipient->email, (string) $recipient->get_fullname());
                 $mailer->setSubject(sprintf('[%s] %s', T_('Private Message'), $subject));
                 $mailer->setMessage($message);
                 $mailer->send();

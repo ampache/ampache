@@ -33,20 +33,14 @@ use Ampache\Repository\Model\Rating;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class HighestAlbumAction implements ApplicationActionInterface
+final readonly class HighestAlbumAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'highest_album';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'highest_album';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

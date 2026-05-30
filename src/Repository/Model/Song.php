@@ -61,7 +61,7 @@ class Song extends database_object implements
     CatalogItemInterface,
     MetadataEnabledInterface
 {
-    protected const DB_TABLENAME = 'song';
+    protected const string DB_TABLENAME = 'song';
 
     public int $id = 0;
 
@@ -594,7 +594,7 @@ class Song extends database_object implements
         string $album_name,
         string $song_mbid = '',
         string $artist_mbid = '',
-        string $album_mbid = ''
+        string $album_mbid = '',
     ): string {
         // by default require song, album, artist for any searches
         $sql    = "SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?)";
@@ -1474,7 +1474,7 @@ class Song extends database_object implements
     {
         if (empty($new_data)) {
             $sql = "DELETE FROM `song_map` WHERE `song_id` = ? AND `object_type` = ?;";
-            Dba::write($sql, [$song_id, $type]) !== false;
+            Dba::write($sql, [$song_id, $type]) !== null;
 
             return;
         }
@@ -1490,7 +1490,7 @@ class Song extends database_object implements
         }
         $sql = rtrim($sql, ',') . ');';
 
-        Dba::write($sql, [$song_id, $type]) !== false;
+        Dba::write($sql, [$song_id, $type]) !== null;
     }
 
     /**
@@ -1574,7 +1574,10 @@ class Song extends database_object implements
     {
         if ($check_owner && Core::get_global('user') instanceof User) {
             $item = new Song($song_id);
-            if (isset($item->id) && Core::get_global('user') instanceof User && $item->get_user_owner() == Core::get_global('user')->id) {
+            if (
+                $item->id &&
+                $item->get_user_owner() == Core::get_global('user')->id
+            ) {
                 $level = AccessLevelEnum::USER;
             }
         }
@@ -1591,7 +1594,7 @@ class Song extends database_object implements
 
         $sql = sprintf('UPDATE `song` SET `%s` = ? WHERE `id` = ?', $field);
 
-        return (Dba::write($sql, [$value, $song_id]) !== false);
+        return (Dba::write($sql, [$value, $song_id]) !== null);
     }
 
     /**
@@ -1610,7 +1613,7 @@ class Song extends database_object implements
 
         if (Access::check(AccessTypeEnum::INTERFACE, $level)) {
             $sql = sprintf('UPDATE `song_data` SET `%s` = ? WHERE `song_id` = ?', $field);
-            Dba::write($sql, [$value, $song_id]) !== false;
+            Dba::write($sql, [$value, $song_id]) !== null;
         }
     }
 
@@ -1925,7 +1928,7 @@ class Song extends database_object implements
     }
 
     /**
-     * @return array{string?: list<array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
@@ -1934,7 +1937,7 @@ class Song extends database_object implements
 
     /**
      * Search for direct children of an object
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -1946,7 +1949,7 @@ class Song extends database_object implements
     /**
      * Get all childrens and sub-childrens medias.
      *
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -2002,22 +2005,12 @@ class Song extends database_object implements
      */
     public function display_art(array $size, bool $force = false): void
     {
-        $object_id = null;
-        $type      = null;
-
         if (Art::has_db($this->id, 'song')) {
-            $object_id = $this->id;
-            $type      = 'song';
+            Art::display('song', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
         } elseif (Art::has_db($this->album, 'album')) {
-            $object_id = $this->album;
-            $type      = 'album';
+            Art::display('album', $this->album, (string)$this->get_fullname(), $size, $this->get_link());
         } elseif (($this->artist && Art::has_db($this->artist, 'artist')) || $force) {
-            $object_id = $this->artist;
-            $type      = 'artist';
-        }
-
-        if ($object_id !== null && $type !== null) {
-            Art::display($type, $object_id, (string)$this->get_fullname(), $size, $this->get_link());
+            Art::display('artist', $this->artist, (string)$this->get_fullname(), $size, $this->get_link());
         }
     }
 
@@ -2182,7 +2175,7 @@ class Song extends database_object implements
                     $lyrics = $plugin->_plugin->get_lyrics($this);
                     if (!empty($lyrics)) {
                         // save the lyrics if not set before
-                        if (array_key_exists('text', $lyrics) && !empty($lyrics['text'])) {
+                        if (!empty($lyrics['text'])) {
                             self::update_lyrics($lyrics['text'], $this->id);
                         }
 
@@ -2288,7 +2281,7 @@ class Song extends database_object implements
     /**
      * get_deleted
      * get items from the deleted_songs table
-     * @return list<array{
+     * @return array<int, array{
      *     id: int,
      *     addition_time: int,
      *     delete_time: int,

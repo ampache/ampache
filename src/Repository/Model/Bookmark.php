@@ -34,7 +34,7 @@ use Ampache\Module\System\Dba;
  */
 class Bookmark extends database_object
 {
-    protected const DB_TABLENAME = 'bookmark';
+    protected const string DB_TABLENAME = 'bookmark';
 
     // Public variables
     public int $id = 0;
@@ -61,7 +61,7 @@ class Bookmark extends database_object
     public function __construct(
         ?int $object_id = 0,
         ?string $object_type = null,
-        ?int $user_id = null
+        ?int $user_id = null,
     ) {
         if (!$object_id) {
             return;
@@ -72,7 +72,7 @@ class Bookmark extends database_object
         } else {
             if ($user_id === null) {
                 $user    = Core::get_global('user');
-                $user_id = $user?->id ?? 0;
+                $user_id = $user->id ?? 0;
             }
 
             if ($user_id === 0) {
@@ -113,7 +113,7 @@ class Bookmark extends database_object
      *     user: int,
      *     position?: int
      * } $data
-     * @return list<int>
+     * @return int[]
      */
     public static function getBookmarks(array $data): array
     {

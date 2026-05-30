@@ -38,7 +38,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 
-/** @var list<array{media: Media, client: User, agent: string,}> $results */
+/** @var array<int, array{media: Media, client: User, agent: string,}> $results */
 
 if (count($results)) {
     $user = (!empty(Core::get_global('user')))
@@ -63,7 +63,7 @@ if (count($results)) {
     foreach ($results as $item) {
         /** @var Song|Video $media */
         $media = $item['media'];
-        if (!is_object($media) || !in_array($media->catalog, $catalogs)) {
+        if (!in_array($media->catalog, $catalogs)) {
             continue;
         }
 

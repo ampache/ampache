@@ -41,7 +41,7 @@ interface PodcastEpisodeRepositoryInterface
      *
      * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
      *
-     * @return list<int>
+     * @return int[]
      */
     public function getEpisodes(Podcast $podcast, ?PodcastEpisodeStateEnum $stateFilter = null): array;
 
@@ -80,7 +80,7 @@ interface PodcastEpisodeRepositoryInterface
      */
     public function updateState(
         Podcast_Episode $episode,
-        PodcastEpisodeStateEnum $state
+        PodcastEpisodeStateEnum $state,
     ): void;
 
     /**

@@ -36,6 +36,6 @@ final class Migration800000 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('api_enable_8', 'Enable API8 responses', '1', AccessLevelEnum::USER->value, 'boolean', 'options');
+        $this->updatePreferences('api_enable_8', 'Allow Ampache API8 responses', '1', AccessLevelEnum::USER->value, 'boolean', 'options', 'api');
     }
 }

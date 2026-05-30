@@ -29,14 +29,10 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 
-final class InitializationHandlerGlobals implements InitializationHandlerInterface
+final readonly class InitializationHandlerGlobals implements InitializationHandlerInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->configContainer = $configContainer;
+    public function __construct(private ConfigContainerInterface $configContainer)
+    {
     }
 
     public function init(): void

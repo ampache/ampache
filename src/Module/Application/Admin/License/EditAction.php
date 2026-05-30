@@ -40,24 +40,15 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Actually updates or creates a license
  */
-final class EditAction implements ApplicationActionInterface
+final readonly class EditAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'edit';
-
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private LicenseRepositoryInterface $licenseRepository;
+    public const string REQUEST_KEY = 'edit';
 
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        LicenseRepositoryInterface $licenseRepository
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private LicenseRepositoryInterface $licenseRepository,
     ) {
-        $this->ui                = $ui;
-        $this->configContainer   = $configContainer;
-        $this->licenseRepository = $licenseRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

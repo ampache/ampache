@@ -34,7 +34,7 @@ use PDO;
  */
 final class Environment implements EnvironmentInterface
 {
-    public const PHP_VERSION = 8.5;
+    public const float PHP_VERSION = 8.5;
 
     public function check(): bool
     {
@@ -128,7 +128,7 @@ final class Environment implements EnvironmentInterface
      */
     public function check_mbstring_func_overload(): bool
     {
-        return (! (ini_get('mbstring.func_overload') > 0));
+        return (ini_get('mbstring.func_overload') <= 0);
     }
 
     /**
@@ -141,7 +141,7 @@ final class Environment implements EnvironmentInterface
         $current_memory = ini_get('memory_limit');
         $current_memory = substr($current_memory, 0, strlen((string) $current_memory) - 1);
 
-        return (! ((int) ($current_memory) < 48));
+        return ((int) ($current_memory) >= 48);
     }
 
     /**
@@ -152,7 +152,7 @@ final class Environment implements EnvironmentInterface
     {
         $current = (int) (ini_get('max_execution_time'));
 
-        return ($current >= 60 || $current == 0);
+        return ($current >= 60 || $current === 0);
     }
 
     /**
@@ -163,6 +163,7 @@ final class Environment implements EnvironmentInterface
         /* Check memory */
         $current_memory = ini_get('memory_limit');
         $current_memory = (int)substr($current_memory, 0, strlen((string) $current_memory) - 1);
+
         $new_limit      = ($current_memory + 16) . "M";
 
         /* Bump it by 16 megs (for getid3)*/
@@ -173,7 +174,7 @@ final class Environment implements EnvironmentInterface
         // Make sure it actually worked
         $new_memory = ini_get('memory_limit');
 
-        return (! ($new_limit != $new_memory));
+        return ($new_limit == $new_memory);
     }
 
     /**
@@ -184,7 +185,7 @@ final class Environment implements EnvironmentInterface
         $current = ini_get('max_execution_time');
         set_time_limit((int) $current + 60);
 
-        return (! ($current == ini_get('max_execution_time')));
+        return ($current != ini_get('max_execution_time'));
     }
 
     /**
@@ -235,7 +236,7 @@ final class Environment implements EnvironmentInterface
 
     public function isCli(): bool
     {
-        return php_sapi_name() === 'cli';
+        return PHP_SAPI === 'cli';
     }
 
     public function isSsl(): bool
@@ -243,11 +244,11 @@ final class Environment implements EnvironmentInterface
         return (
             (
                 isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-                Core::get_server('HTTP_X_FORWARDED_PROTO') == 'https'
+                Core::get_server('HTTP_X_FORWARDED_PROTO') === 'https'
             ) ||
             (
                 isset($_SERVER['HTTPS']) &&
-                Core::get_server('HTTPS') == 'on'
+                Core::get_server('HTTPS') === 'on'
             )
         );
     }
@@ -305,13 +306,13 @@ final class Environment implements EnvironmentInterface
     public function setUp(): void
     {
         // Set a new Error Handler
-        $old_error_handler = set_error_handler('ampache_error_handler');
+        set_error_handler(ampache_error_handler(...));
 
         // Check their PHP Vars to make sure we're cool here
         $post_size = @ini_get('post_max_size');
         if (
             $post_size &&
-            substr($post_size, strlen($post_size) - 1, strlen($post_size)) != 'M'
+            substr($post_size, strlen($post_size) - 1, strlen($post_size)) !== 'M'
         ) {
             // Sane value time
             ini_set('post_max_size', '8M');

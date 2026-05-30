@@ -36,7 +36,7 @@ class easy_captcha_persistent_grant extends easy_captcha
 {
     public function __construct(
         $captcha_id = null,
-        $ignore_expiration = 0
+        $ignore_expiration = 0,
     ) {
     }
 

@@ -22,6 +22,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -40,7 +41,7 @@ interface ShoutRepositoryInterface extends BaseRepositoryInterface
      */
     public function getBy(
         LibraryItemEnum $objectType,
-        int $objectId
+        int $objectId,
     ): Traversable;
 
     /**

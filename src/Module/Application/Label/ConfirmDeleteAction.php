@@ -37,28 +37,16 @@ use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ConfirmDeleteAction implements ApplicationActionInterface
+final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_delete';
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private LabelDeleterInterface $labelDeleter;
-
-    private LabelRepositoryInterface $labelRepository;
+    public const string REQUEST_KEY = 'confirm_delete';
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        LabelDeleterInterface $labelDeleter,
-        LabelRepositoryInterface $labelRepository
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private LabelDeleterInterface $labelDeleter,
+        private LabelRepositoryInterface $labelRepository,
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->labelDeleter    = $labelDeleter;
-        $this->labelRepository = $labelRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

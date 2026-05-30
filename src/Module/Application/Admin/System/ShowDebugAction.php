@@ -41,35 +41,23 @@ use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowDebugAction implements ApplicationActionInterface
+final readonly class ShowDebugAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_debug';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private UpdateInfoRepositoryInterface $updateInfoRepository;
+    public const string REQUEST_KEY = 'show_debug';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        UpdateInfoRepositoryInterface $updateInfoRepository
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private UpdateInfoRepositoryInterface $updateInfoRepository,
     ) {
-        $this->requestParser        = $requestParser;
-        $this->configContainer      = $configContainer;
-        $this->ui                   = $ui;
-        $this->updateInfoRepository = $updateInfoRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             throw new AccessDeniedException();
         }

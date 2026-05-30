@@ -41,7 +41,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  */
 final class Album8Method implements MethodInterface
 {
-    public const ACTION = 'album';
+    public const string ACTION = 'album';
 
     private ModelFactoryInterface $modelFactory;
 
@@ -49,7 +49,7 @@ final class Album8Method implements MethodInterface
 
     public function __construct(
         ModelFactoryInterface $modelFactory,
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
     ) {
         $this->modelFactory  = $modelFactory;
         $this->streamFactory = $streamFactory;
@@ -79,7 +79,7 @@ final class Album8Method implements MethodInterface
         ResponseInterface $response,
         ApiOutputInterface $output,
         array $input,
-        User $user
+        User $user,
     ): ResponseInterface {
         $objectId = $input['filter'] ?? null;
 

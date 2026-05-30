@@ -53,9 +53,9 @@ use WpOrg\Requests\Requests;
  */
 class Art extends database_object
 {
-    protected const DB_TABLENAME = 'image';
+    protected const string DB_TABLENAME = 'image';
 
-    public const VALID_TYPES = [
+    public const array VALID_TYPES = [
         'bmp',
         'gif',
         'jp2',
@@ -94,7 +94,7 @@ class Art extends database_object
     public function __construct(
         ?int $uid = 0,
         string $type = 'album',
-        string $kind = 'default'
+        string $kind = 'default',
     ) {
         if (!$uid || !$type || !$kind) {
             return;
@@ -137,7 +137,7 @@ class Art extends database_object
      * This attempts to reduce # of queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point
-     * @param list<int> $object_ids
+     * @param list<int|string> $object_ids
      */
     public static function build_cache(array $object_ids, ?string $type = null): bool
     {
@@ -171,7 +171,7 @@ class Art extends database_object
         }
 
         $data      = explode('/', $mime);
-        $extension = $data['1'] ?? '';
+        $extension = $data[1] ?? '';
 
         if ($extension == 'jpeg') {
             $extension = 'jpg';
@@ -350,7 +350,7 @@ class Art extends database_object
                 : [];
 
             // thumb wasn't generated
-            if ($data === []) {
+            if ($data === [] || !isset($data['thumb']) || !isset($data['thumb_mime'])) {
                 debug_event(self::class, 'Art id {' . $this->id . '} Unable to generate thumbnail for ' . $this->object_type . ': ' . $this->object_id, 1);
 
                 return false;
@@ -688,7 +688,7 @@ class Art extends database_object
         string $type,
         int $uid,
         string $kind,
-        ?string $mime
+        ?string $mime,
     ): bool {
         $path = self::get_dir_on_disk($type, $uid, $sizetext, $kind, true);
         if (!$path) {
@@ -1346,7 +1346,7 @@ class Art extends database_object
     /**
      * Gather metadata from plugin.
      * @param array<string, mixed> $options
-     * @return list<array{
+     * @return array<int, array{
      *     url: string,
      *     mime: string,
      *     title: string
@@ -1355,7 +1355,7 @@ class Art extends database_object
     public static function gather_metadata_plugin(
         AmpacheMusicBrainz|AmpacheTheaudiodb|AmpacheDiscogs $plugin,
         string $type,
-        array $options
+        array $options,
     ): array {
         $gtypes     = [];
         $media_info = [];
@@ -1522,7 +1522,7 @@ class Art extends database_object
         ?string $link = null,
         bool $show_default = true,
         bool $thumb_link = true,
-        string $kind = 'default'
+        string $kind = 'default',
     ): bool {
         if (!self::is_valid_type($object_type)) {
             return false;

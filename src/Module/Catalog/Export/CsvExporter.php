@@ -29,21 +29,13 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
-final class CsvExporter implements CatalogExporterInterface
+final readonly class CsvExporter implements CatalogExporterInterface
 {
-    private SongRepositoryInterface $songRepository;
-
-    private string $filePointer;
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        SongRepositoryInterface $songRepository,
-        ModelFactoryInterface $modelFactory,
-        string $filePointer = 'php://output'
+        private SongRepositoryInterface $songRepository,
+        private ModelFactoryInterface $modelFactory,
+        private string $filePointer = 'php://output',
     ) {
-        $this->songRepository = $songRepository;
-        $this->modelFactory   = $modelFactory;
-        $this->filePointer    = $filePointer;
     }
 
     /**
@@ -75,7 +67,8 @@ final class CsvExporter implements CatalogExporterInterface
                 'Bitrate',
                 'Played',
                 'File'
-            ]
+            ],
+            escape: '\\'
         );
         foreach ($result as $songId) {
             $song = $this->modelFactory->createSong((int)$songId);
@@ -94,7 +87,8 @@ final class CsvExporter implements CatalogExporterInterface
                     (int)($song->bitrate / 1024) . "-" . strtoupper((string)$song->mode),
                     $song->played,
                     $song->file
-                ]
+                ],
+                escape: '\\'
             );
         }
     }

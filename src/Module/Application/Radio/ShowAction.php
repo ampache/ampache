@@ -39,32 +39,17 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private LoggerInterface $logger;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        LoggerInterface $logger,
-        ModelFactoryInterface $modelFactory
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private LoggerInterface $logger,
+        private ModelFactoryInterface $modelFactory,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->logger          = $logger;
-        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -72,6 +57,7 @@ final class ShowAction implements ApplicationActionInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RADIO) === false) {
             throw new AccessDeniedException();
         }
+
         $this->ui->showHeader();
 
         $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
@@ -90,6 +76,7 @@ final class ShowAction implements ApplicationActionInterface
                 ['radio' => $radio]
             );
         }
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

@@ -22,6 +22,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Live_Stream;
@@ -34,10 +35,10 @@ interface LiveStreamRepositoryInterface
      *
      * If a user is provided, the result will be limited to catalogs the user has access to
      *
-     * @return list<int>
+     * @return int[]
      */
     public function findAll(
-        ?User $user = null
+        ?User $user = null,
     ): array;
 
     /**

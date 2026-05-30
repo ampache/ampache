@@ -36,7 +36,7 @@ use Ampache\Repository\Model\User;
  */
 final class Share4Method
 {
-    public const ACTION = 'share';
+    public const string ACTION = 'share';
 
     /**
      * share

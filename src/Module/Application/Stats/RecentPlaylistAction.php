@@ -33,20 +33,14 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class RecentPlaylistAction implements ApplicationActionInterface
+final readonly class RecentPlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'recent_playlist';
-
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
+    public const string REQUEST_KEY = 'recent_playlist';
 
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

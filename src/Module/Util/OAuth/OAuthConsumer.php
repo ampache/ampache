@@ -37,26 +37,21 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util\OAuth;
 
+use Stringable;
+
 /**
  * Class OAuthConsumer
  */
-class OAuthConsumer
+class OAuthConsumer implements Stringable
 {
-    public $key;
-    public $secret;
-    public $callback_url;
-
     /**
      * OAuthConsumer constructor.
      */
     public function __construct(
-        $key,
-        $secret,
-        $callback_url = null
+        public $key,
+        public $secret,
+        public $callback_url = null,
     ) {
-        $this->key          = $key;
-        $this->secret       = $secret;
-        $this->callback_url = $callback_url;
     }
 
     /**
@@ -64,6 +59,6 @@ class OAuthConsumer
      */
     public function __toString(): string
     {
-        return "OAuthConsumer[key=$this->key,secret=$this->secret]";
+        return sprintf('OAuthConsumer[key=%s,secret=%s]', $this->key, $this->secret);
     }
 }

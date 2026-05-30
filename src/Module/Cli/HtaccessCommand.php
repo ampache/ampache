@@ -29,16 +29,14 @@ use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\InstallationHelperInterface;
+use Override;
 
 final class HtaccessCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
-    private InstallationHelperInterface $installationHelper;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -46,17 +44,14 @@ final class HtaccessCommand extends Command
     }
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        InstallationHelperInterface $installationHelper
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly InstallationHelperInterface $installationHelper,
     ) {
         parent::__construct('htaccess', T_('Create .htaccess files'));
-
-        $this->configContainer = $configContainer;
 
         $this
             ->option('-e|--execute', T_('Execute the update'), 'boolval', false)
             ->usage('<bold>  htaccess -e</end> <comment> ## ' . T_('Recreate Ampache .htaccess files') . '</end><eol/>');
-        $this->installationHelper = $installationHelper;
     }
 
     public function execute(): void
@@ -86,6 +81,7 @@ final class HtaccessCommand extends Command
 
             return;
         }
+
         if (!check_htaccess_rest_writable()) {
             $interactor->error(
                 T_('Permission Denied') . ": " . $htaccess_rest_file,
@@ -98,6 +94,7 @@ final class HtaccessCommand extends Command
 
             return;
         }
+
         unlink($htaccess_play_file);
         unlink($htaccess_rest_file);
 
@@ -114,6 +111,7 @@ final class HtaccessCommand extends Command
 
             return;
         }
+
         if (!$this->installationHelper->install_rewrite_rules($htaccess_rest_file, $this->configContainer->getWebPath(), false)) {
             $interactor->error(
                 T_('Failed to write config file') . ": " . $htaccess_rest_file,
@@ -126,6 +124,7 @@ final class HtaccessCommand extends Command
 
             return;
         }
+
         // successfully created htaccess files
         $interactor->white(
             T_('Success'),

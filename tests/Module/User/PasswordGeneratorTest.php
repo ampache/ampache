@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User;
 
-use Override;
 use Ampache\MockeryTestCase;
+use Override;
 
 class PasswordGeneratorTest extends MockeryTestCase
 {

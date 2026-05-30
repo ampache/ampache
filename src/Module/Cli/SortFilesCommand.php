@@ -27,14 +27,14 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Song\SongSorterInterface;
+use Override;
 
 final class SortFilesCommand extends Command
 {
-    private SongSorterInterface $songSorter;
-
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
 
@@ -42,11 +42,9 @@ final class SortFilesCommand extends Command
     }
 
     public function __construct(
-        SongSorterInterface $songSorter
+        private readonly SongSorterInterface $songSorter,
     ) {
         parent::__construct('cleanup:sortSongs', T_('Sort songs files'));
-
-        $this->songSorter = $songSorter;
 
         $this
             ->option('-x|--execute', T_('Disables dry-run'), 'boolval', false)
@@ -54,13 +52,13 @@ final class SortFilesCommand extends Command
             ->option('-l|--limit', T_('Limit how many moves to allow before stopping'), 'intval', 0)
             ->option('-w|--windows', T_('Replace all Windows-incompatible characters with an underscore'), 'boolval', false)
             ->option('-n|--name', T_('Sets the default name for `Various Artists`'), 'strval')
-            ->option('-p|--path', T_('Sort a single file or folder path'), 'strval', null)
+            ->option('-p|--path', T_('Sort a single file or folder path'), 'strval')
             ->argument('[catalogName]', T_('Name of Catalog (optional)'))
             ->usage('<bold>  cleanup:sortSongs</end> <comment> ## ' . T_('Sort song files') . '<eol/>');
     }
 
     public function execute(
-        ?string $catalogName
+        ?string $catalogName,
     ): void {
         if ($this->app() === null) {
             return;
@@ -70,14 +68,14 @@ final class SortFilesCommand extends Command
         $values     = $this->values();
         $dryRun     = $values['execute'] === false;
 
-        if ($dryRun === true) {
+        if ($dryRun) {
             $interactor->info(
                 T_('Running in Test Mode. Use -x to execute'),
                 true
             );
         } else {
             $interactor->warn(
-                "***" . T_("WARNING") . "*** " . T_('Running in Write Mode. Make sure you\'ve tested first!'),
+                "***" . T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!"),
                 true
             );
         }

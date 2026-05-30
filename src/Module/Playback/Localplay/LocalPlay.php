@@ -34,9 +34,6 @@ use Ampache\Repository\Model\User;
 
 class LocalPlay
 {
-    /* Base Variables */
-    public string $type;
-
     /* Built Variables */
     private ?localplay_controller $_player = null;
 
@@ -46,10 +43,8 @@ class LocalPlay
      * file for the specified type and attempts to load in the function
      * map, the preferences and the template
      */
-    public function __construct(string $type)
+    public function __construct(public string $type)
     {
-        $this->type = $type;
-
         $this->_load_player();
     }
 
@@ -71,7 +66,7 @@ class LocalPlay
      */
     private function _load_player(): void
     {
-        if (!$this->type) {
+        if ($this->type === '' || $this->type === '0') {
             return;
         }
 
@@ -83,10 +78,6 @@ class LocalPlay
         }
 
         $this->_player = new $controller();
-        if (!($this->_player instanceof localplay_controller)) {
-            debug_event(self::class, $this->type . ' not an instance of controller abstract, unable to load', 1);
-            $this->_player = null;
-        }
     }
 
     /**
@@ -109,7 +100,7 @@ class LocalPlay
         // Load the controller and then check for its preferences
         $localplay = new LocalPlay($controller);
         // If we can't even load it no sense in going on
-        if (!isset($localplay->_player)) {
+        if ($localplay->_player === null) {
             return false;
         }
 
@@ -250,7 +241,7 @@ class LocalPlay
         );
 
         if (!$data) {
-            debug_event(self::class, "Error Unable to set Repeat to $state", 1);
+            debug_event(self::class, 'Error Unable to set Repeat to ' . $state, 1);
         }
 
         return $data;
@@ -269,7 +260,7 @@ class LocalPlay
         );
 
         if (!$data) {
-            debug_event(self::class, "Error Unable to set Random to $state", 1);
+            debug_event(self::class, 'Error Unable to set Random to ' . $state, 1);
         }
 
         return $data;
@@ -286,7 +277,7 @@ class LocalPlay
             ? $this->_player->status()
             : false;
 
-        if (empty($data) || !is_array($data)) {
+        if ($data === [] || $data === false || !is_array($data)) {
             debug_event(self::class, 'Error Unable to get status, check ' . $this->type . ' controller', 1);
 
             return null;
@@ -307,7 +298,7 @@ class LocalPlay
             ? $this->_player->get()
             : false;
 
-        if (empty($data) || !is_array($data)) {
+        if ($data === [] || $data === false || !is_array($data)) {
             debug_event(self::class, 'Error Unable to get song info, check ' . $this->type . ' controller', 1);
 
             return [];
@@ -579,7 +570,7 @@ class LocalPlay
      */
     public function set_block_clear(bool $bool): void
     {
-        if (isset($this->_player->block_clear)) {
+        if (property_exists($this->_player, 'block_clear') && $this->_player->block_clear !== null) {
             $this->_player->block_clear = $bool;
         }
     }
@@ -683,7 +674,7 @@ class LocalPlay
     public function get_user_playing(): string
     {
         $status = $this->status();
-        if (empty($status) || !is_array($status)) {
+        if ($status === null || $status === [] || !is_array($status)) {
             return '';
         }
 
@@ -691,7 +682,7 @@ class LocalPlay
         $track_name = $status['track_artist'] . ' - ' . $status['track_album'] . ' - ' . $status['track_title'];
 
         // Hacky fix for when we were unable to find an artist/album (or one wasn't provided)
-        $track_name = ltrim(ltrim((string)$track_name, ' - '), ' - ');
+        $track_name = ltrim(ltrim($track_name, ' - '), ' - ');
 
         return "[" . $status['track'] . "] - " . $track_name;
     }

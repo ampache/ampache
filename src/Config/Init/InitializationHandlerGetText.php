@@ -26,15 +26,17 @@ declare(strict_types=1);
 namespace Ampache\Config\Init;
 
 use Ampache\Config\Init\Exception\GetTextNotAvailableException;
+use Gettext\Translations;
 
 final class InitializationHandlerGetText implements InitializationHandlerInterface
 {
     public function init(): void
     {
         // Load gettext mojo
-        if (!class_exists('Gettext\Translations')) {
+        if (!class_exists(Translations::class)) {
             throw new GetTextNotAvailableException();
         }
+
         load_gettext();
     }
 }

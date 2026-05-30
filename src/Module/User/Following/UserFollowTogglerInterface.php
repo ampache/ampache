@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -32,6 +34,6 @@ interface UserFollowTogglerInterface
      */
     public function toggle(
         User $user,
-        User $followingUser
+        User $followingUser,
     ): void;
 }

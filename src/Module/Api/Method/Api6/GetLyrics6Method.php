@@ -40,7 +40,7 @@ use Ampache\Repository\Model\User;
  */
 final class GetLyrics6Method
 {
-    public const ACTION = 'get_lyrics';
+    public const string ACTION = 'get_lyrics';
 
     /**
      * get_lyrics

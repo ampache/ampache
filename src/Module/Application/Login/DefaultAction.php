@@ -46,46 +46,22 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Teapot\StatusCode;
+use Teapot\StatusCode\RFC\RFC7231;
 
-final class DefaultAction implements ApplicationActionInterface
+final readonly class DefaultAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'default';
-
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private AuthenticationManagerInterface $authenticationManager;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private LoggerInterface $logger;
-
-    private NetworkCheckerInterface $networkChecker;
-
-    private UiInterface $ui;
-
-    private UserTrackerInterface $userTracker;
+    public const string REQUEST_KEY = 'default';
 
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        AuthenticationManagerInterface $authenticationManager,
-        ResponseFactoryInterface $responseFactory,
-        LoggerInterface $logger,
-        NetworkCheckerInterface $networkChecker,
-        UiInterface $ui,
-        UserTrackerInterface $userTracker
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private AuthenticationManagerInterface $authenticationManager,
+        private ResponseFactoryInterface $responseFactory,
+        private LoggerInterface $logger,
+        private NetworkCheckerInterface $networkChecker,
+        private UiInterface $ui,
+        private UserTrackerInterface $userTracker,
     ) {
-        $this->requestParser         = $requestParser;
-        $this->configContainer       = $configContainer;
-        $this->authenticationManager = $authenticationManager;
-        $this->responseFactory       = $responseFactory;
-        $this->logger                = $logger;
-        $this->networkChecker        = $networkChecker;
-        $this->ui                    = $ui;
-        $this->userTracker           = $userTracker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -99,17 +75,18 @@ final class DefaultAction implements ApplicationActionInterface
             } elseif (Session::auth_remember()) {
                 $auth = true;
             }
+
             if ($auth) {
                 return $this->responseFactory
-                    ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+                    ->createResponse(RFC7231::FOUND)
                     ->withHeader(
                         'Location',
                         $this->configContainer->getWebPath()
                     );
             } elseif (array_key_exists($name, $_COOKIE)) {
                 // now auth so unset this cookie
-                setcookie($name, '', -1, (string)$this->configContainer->get('cookie_path'));
-                setcookie($name, '', -1);
+                setcookie($name, '', ['expires' => -1, 'path' => (string)$this->configContainer->get('cookie_path')]);
+                setcookie($name, '', ['expires' => -1]);
             }
         }
 
@@ -121,28 +98,26 @@ final class DefaultAction implements ApplicationActionInterface
          * even want them to be able to get to the login
          * page if they aren't in the ACL
          */
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ACCESS_CONTROL)) {
-            if (!$this->networkChecker->check(AccessTypeEnum::INTERFACE, null, AccessLevelEnum::GUEST)) {
-                throw new AccessDeniedException(
-                    sprintf(
-                        'Access denied: %s is not in the Interface Access list',
-                        Core::get_user_ip()
-                    )
-                );
-            }
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ACCESS_CONTROL) && !$this->networkChecker->check(AccessTypeEnum::INTERFACE, null, AccessLevelEnum::GUEST)) {
+            throw new AccessDeniedException(
+                sprintf(
+                    'Access denied: %s is not in the Interface Access list',
+                    Core::get_user_ip()
+                )
+            );
         } // access_control is enabled
 
         /* Clean Auth values */
         unset($auth);
 
-        if (empty($this->requestParser->getFromRequest('step'))) {
+        if (in_array($this->requestParser->getFromRequest('step'), ['', '0'], true)) {
             /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
             if (
                 (isset($_POST['username'])) ||
                 (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) && (isset($_SERVER['REMOTE_USER']) || isset($_SERVER['HTTP_REMOTE_USER'])))
             ) {
                 /* If we are in demo mode let's force auth success */
-                if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+                if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
                     $auth                         = [];
                     $auth['success']              = true;
                     $auth['info']['username']     = 'Admin - DEMO';
@@ -154,12 +129,13 @@ final class DefaultAction implements ApplicationActionInterface
                         $password = $_POST['password'] ?? '';
                     } else {
                         if (isset($_SERVER['REMOTE_USER'])) {
-                            $username = (string) Core::get_server('REMOTE_USER');
+                            $username = Core::get_server('REMOTE_USER');
                         } elseif (isset($_SERVER['HTTP_REMOTE_USER'])) {
-                            $username = (string) Core::get_server('HTTP_REMOTE_USER');
+                            $username = Core::get_server('HTTP_REMOTE_USER');
                         } else {
                             $username = '';
                         }
+
                         $password = '';
                     }
 
@@ -184,7 +160,7 @@ final class DefaultAction implements ApplicationActionInterface
                     }
                 }
             }
-        } elseif ($this->requestParser->getFromRequest('step') == '2') {
+        } elseif ($this->requestParser->getFromRequest('step') === '2') {
             $auth_mod = $this->requestParser->getFromRequest('auth_mod');
 
             $auth = $this->authenticationManager->postAuth($auth_mod);
@@ -306,21 +282,26 @@ final class DefaultAction implements ApplicationActionInterface
             // Update data from this auth if ours are empty or if config asks us to
             $external_auto_update = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::EXTERNAL_AUTO_UPDATE);
 
-            if (($external_auto_update || empty($user->fullname)) && !empty($auth['name'])) {
+            if (($external_auto_update || in_array($user->fullname, [null, '', '0'], true)) && !empty($auth['name'])) {
                 $user->update_fullname($auth['name']);
             }
-            if (($external_auto_update || empty($user->email)) && !empty($auth['email'])) {
+
+            if (($external_auto_update || in_array($user->email, [null, '', '0'], true)) && !empty($auth['email'])) {
                 $user->update_email($auth['email']);
             }
-            if (($external_auto_update || empty($user->website)) && !empty($auth['website'])) {
+
+            if (($external_auto_update || in_array($user->website, [null, '', '0'], true)) && !empty($auth['website'])) {
                 $user->update_website($auth['website']);
             }
-            if (($external_auto_update || empty($user->state)) && !empty($auth['state'])) {
+
+            if (($external_auto_update || in_array($user->state, [null, '', '0'], true)) && !empty($auth['state'])) {
                 $user->update_state($auth['state']);
             }
-            if (($external_auto_update || empty($user->city)) && !empty($auth['city'])) {
+
+            if (($external_auto_update || in_array($user->city, [null, '', '0'], true)) && !empty($auth['city'])) {
                 $user->update_city($auth['city']);
             }
+
             if (($external_auto_update || strpos($user->get_f_avatar('f_avatar'), '/images/blankuser.png')) && !empty($auth['avatar'])) {
                 $user->update_avatar($auth['avatar']['data'], $auth['avatar']['mime']);
             }
@@ -342,16 +323,16 @@ final class DefaultAction implements ApplicationActionInterface
              */
             $web_path = $this->configContainer->getWebPath();
             if (
-                (substr($_POST['referrer'], 0, strlen((string) $web_path)) == $web_path) &&
-                strpos($_POST['referrer'], 'install.php') === false &&
-                strpos($_POST['referrer'], 'login.php') === false &&
-                strpos($_POST['referrer'], 'logout.php') === false &&
-                strpos($_POST['referrer'], 'update.php') === false &&
-                strpos($_POST['referrer'], 'activate.php') === false &&
-                strpos($_POST['referrer'], 'admin') === false
+                (str_starts_with((string) $_POST['referrer'], $web_path)) &&
+                !str_contains((string) $_POST['referrer'], 'install.php') &&
+                !str_contains((string) $_POST['referrer'], 'login.php') &&
+                !str_contains((string) $_POST['referrer'], 'logout.php') &&
+                !str_contains((string) $_POST['referrer'], 'update.php') &&
+                !str_contains((string) $_POST['referrer'], 'activate.php') &&
+                !str_contains((string) $_POST['referrer'], 'admin')
             ) {
                 return $this->responseFactory
-                    ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+                    ->createResponse(RFC7231::FOUND)
                     ->withHeader(
                         'Location',
                         $_POST['referrer']
@@ -359,7 +340,7 @@ final class DefaultAction implements ApplicationActionInterface
             } // if we've got a referrer
 
             return $this->responseFactory
-                ->createResponse(StatusCode\RFC\RFC7231::FOUND)
+                ->createResponse(RFC7231::FOUND)
                 ->withHeader(
                     'Location',
                     sprintf('%s/index.php', $this->configContainer->getWebPath())

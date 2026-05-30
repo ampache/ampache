@@ -139,7 +139,7 @@ final class XmlOutput implements ApiOutputInterface
         User $user,
         string $auth,
         bool $encode = true,
-        bool $asObject = true
+        bool $asObject = true,
     ): string {
         return Xml8_Data::albums($albums, $include, $user, $auth, $encode);
     }

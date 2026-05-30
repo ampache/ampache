@@ -25,12 +25,19 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authorization;
 
+use Ampache\Module\Authorization\Check\FunctionChecker;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
+use Ampache\Module\Authorization\Check\NetworkChecker;
+use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
+use Ampache\Module\Authorization\Check\PrivilegeChecker;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+
 use function DI\autowire;
 
 return [
     GatekeeperFactoryInterface::class => autowire(GatekeeperFactory::class),
-    Check\PrivilegeCheckerInterface::class => autowire(Check\PrivilegeChecker::class),
-    Check\FunctionCheckerInterface::class => autowire(Check\FunctionChecker::class),
-    Check\NetworkCheckerInterface::class => autowire(Check\NetworkChecker::class),
+    PrivilegeCheckerInterface::class => autowire(PrivilegeChecker::class),
+    FunctionCheckerInterface::class => autowire(FunctionChecker::class),
+    NetworkCheckerInterface::class => autowire(NetworkChecker::class),
     AccessListManagerInterface::class => autowire(AccessListManager::class),
 ];

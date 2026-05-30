@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class PodcastEpisode5Method
 {
-    public const ACTION = 'podcast_episode';
+    public const string ACTION = 'podcast_episode';
 
     /**
      * podcast_episode
