@@ -568,7 +568,7 @@ class Upnp_Api
     {
         $root    = 'amp://music';
         $pathreq = explode('/', $prmPath);
-        if ($pathreq[0] == '' && count($pathreq) > 0) {
+        if ($pathreq[0] == '') {
             array_shift($pathreq);
         }
 
@@ -763,7 +763,7 @@ class Upnp_Api
         $parent    = 'amp://music' . $prmPath;
         $pathreq   = explode('/', $prmPath);
         $pathcount = count($pathreq);
-        if ($pathreq[0] == '' && $pathcount > 0) {
+        if ($pathreq[0] == '') {
             array_shift($pathreq);
         }
         debug_event(self::class, 'MusicChilds4: [' . $pathreq[0] . ']', 5);
@@ -974,7 +974,7 @@ class Upnp_Api
     {
         $root    = 'amp://video';
         $pathreq = explode('/', $prmPath);
-        if ($pathreq[0] == '' && count($pathreq) > 0) {
+        if ($pathreq[0] == '') {
             array_shift($pathreq);
         }
 
@@ -1027,7 +1027,7 @@ class Upnp_Api
 
         $parent  = 'amp://video' . $prmPath;
         $pathreq = explode('/', $prmPath);
-        if ($pathreq[0] == '' && count($pathreq) > 0) {
+        if ($pathreq[0] == '') {
             array_shift($pathreq);
         }
 

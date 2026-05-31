@@ -303,7 +303,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                     $this->wantedRepository->deleteByMusicbrainzId(
                         $mbid,
-                        ($user instanceof User && $user->has_access(AccessLevelEnum::MANAGER)) ? null : $user
+                        ($user->has_access(AccessLevelEnum::MANAGER)) ? null : $user
                     );
 
                     if ($walbum !== null) {

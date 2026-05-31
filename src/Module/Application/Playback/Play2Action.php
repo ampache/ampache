@@ -108,7 +108,7 @@ final readonly class Play2Action implements ApplicationActionInterface
                     // key name
                     $key = $v;
                     $i   = 1;
-                } else {
+                } elseif ($key !== null) {
                     // key value
                     $value = $v;
                     $i     = 0;
@@ -240,7 +240,6 @@ final readonly class Play2Action implements ApplicationActionInterface
 
         $is_download   = ($action === 'download');
         $maxbitrate    = 0;
-        $media_bitrate = 0;
         $quality       = 0;
         $resolution    = '';
         $subtitle      = '';
@@ -434,7 +433,7 @@ final readonly class Play2Action implements ApplicationActionInterface
             $user = new User($share->user);
         }
 
-        if ((!$user instanceof User || $user->isNew()) && (!$share_id && !$secret)) {
+        if ($user->isNew() && !$share_id && !$secret) {
             $this->logger->error(
                 'No user specified {' . print_r($user, true) . '}',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -625,15 +624,16 @@ final readonly class Play2Action implements ApplicationActionInterface
             );
         }
 
-        $transcode     = false;
-        $transcode_cfg = AmpConfig::get('transcode', 'default');
-        $cache_file    = false;
-        $mediaOwnerId  = ($media instanceof Song_Preview)
-            ? null
-            : $media->get_user_owner();
-        $mediaCatalogId = ($media instanceof Song_Preview)
-            ? null
-            : $media->catalog;
+        $transcode      = false;
+        $transcode_cfg  = AmpConfig::get('transcode', 'default');
+        $cache_file     = false;
+        if ($media instanceof Song_Preview) {
+            $mediaOwnerId   = null;
+            $mediaCatalogId = null;
+        } else {
+            $mediaOwnerId   = $media->get_user_owner();
+            $mediaCatalogId = $media->getCatalogId();
+        }
         if ($mediaCatalogId) {
             /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted

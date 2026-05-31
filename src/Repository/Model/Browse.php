@@ -271,7 +271,7 @@ class Browse extends Query
      * This takes an array of objects
      * and requires the correct template based on the
      * type that we are currently browsing
-     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|null $object_ids
+     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|array<Song_Preview>|null $object_ids
      */
     public function show_objects(?array $object_ids = [], bool|array|string $argument = false, ?bool $skip_cookies = false): void
     {
@@ -280,7 +280,8 @@ class Browse extends Query
 
         if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
             $object_ids = $this->get_saved();
-        } else {
+        } elseif ($type !== 'song_preview') {
+            /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
             $this->save_objects($object_ids);
 
             // build cache for new browses
@@ -473,6 +474,9 @@ class Browse extends Query
                 $box_title         = $this->get_title(T_('Shoutbox Records'));
                 $shouts            = [];
                 foreach ($object_ids as $shoutId) {
+                    if ($shoutId instanceof Song_Preview) {
+                        continue;
+                    }
                     $shout = (is_array($shoutId))
                         ? $shoutRepository->findById((int)$shoutId['object_id'])
                         : $shoutRepository->findById((int)$shoutId);
