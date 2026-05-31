@@ -390,13 +390,11 @@ class OpenSubsonic_Xml_Data
         $sub_id = OpenSubsonic_Api::getArtistSubId($child['id']);
         $xchild = self::_addChildToResultXml($xml, 'child');
         $xchild->addAttribute('id', $sub_id);
-        if (array_key_exists('catalog_id', $child)) {
-            $xchild->addAttribute('parent', (string)$child['catalog_id']);
-        }
+        $xchild->addAttribute('parent', (string)$child['catalog_id']);
         $xchild->addAttribute('isDir', 'true');
         $xchild->addAttribute('title', $child['f_name']);
         $xchild->addAttribute('artist', $child['f_name']);
-        if (array_key_exists('has_art', $child) && !empty($child['has_art'])) {
+        if ($child['has_art']) {
             $xchild->addAttribute('coverArt', $sub_id);
         }
     }
@@ -503,7 +501,7 @@ class OpenSubsonic_Xml_Data
         $xartist = self::_addChildToResultXml($xml, 'artist');
         $xartist->addAttribute('id', $sub_id);
         $xartist->addAttribute('name', $artist['f_name']);
-        if (array_key_exists('has_art', $artist) && !empty($artist['has_art'])) {
+        if ($artist['has_art']) {
             $xartist->addAttribute('coverArt', $sub_id);
         }
         $xartist->addAttribute('albumCount', (string)$artist['album_count']);
@@ -768,7 +766,7 @@ class OpenSubsonic_Xml_Data
         $data      = Artist::get_id_array($artist_id);
         $xdir      = self::_addChildToResultXml($xml, 'directory');
         $xdir->addAttribute('id', OpenSubsonic_Api::getArtistSubId($artist_id));
-        if (array_key_exists('catalog_id', $data)) {
+        if ($data['catalog_id']) {
             $xdir->addAttribute('parent', (string)$data['catalog_id']);
         }
         $xdir->addAttribute('name', (string)$data['f_name']);
@@ -878,7 +876,7 @@ class OpenSubsonic_Xml_Data
         $valid_types   = Stream::get_stream_types_for_type($video->type, 'api');
         if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
             $transcode_settings = $video->get_transcode_settings(null, 'api');
-            if (!empty($transcode_settings)) {
+            if (!empty($transcode_settings['format'])) {
                 $transcode_type = $transcode_settings['format'];
                 $xvideo->addAttribute('transcodedSuffix', (string)$transcode_type);
                 $xvideo->addAttribute('transcodedContentType', Video::type_to_mime($transcode_type));
@@ -1981,7 +1979,7 @@ class OpenSubsonic_Xml_Data
      */
     public static function addScanStatus(SimpleXMLElement $xml, User $user): SimpleXMLElement
     {
-        $counts = Catalog::get_server_counts($user->id ?? 0);
+        $counts = Catalog::get_server_counts($user->id);
         $count  = $counts['artist'] + $counts['album'] + $counts['song'] + $counts['podcast_episode'];
         $xscan  = self::_addChildToResultXml($xml, htmlspecialchars('scanStatus'));
         $xscan->addAttribute('scanning', "false");

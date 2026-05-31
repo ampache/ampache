@@ -82,9 +82,6 @@ final class CatalogFile6Method
 
         $file = html_entity_decode($input['file']);
         $task = explode(',', html_entity_decode((string)($input['task'])));
-        if (!is_array($task)) {
-            $task = [];
-        }
 
         // confirm that a valid task is going to happen
         if (!AmpConfig::get('delete_from_disk') && in_array('remove', $task)) {

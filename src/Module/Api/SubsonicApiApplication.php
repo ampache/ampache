@@ -285,7 +285,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 $decname        = urldecode($name);
                 $decvalue       = urldecode($value);
             }
-            if ($decname && $decvalue !== false && $decvalue !== '') {
+            if ($decname && $decvalue) {
                 // workaround for clementine/Qt5 bug
                 // see https://github.com/clementine-player/Clementine/issues/6080
                 $matches = [];
@@ -366,22 +366,22 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
     public static function decryptPassword(string $password): string
     {
-        $encpwd = strpos($password, "enc:");
-        if ($encpwd !== false) {
-            $hex = substr($password, 4);
-            // If the string has non-hex char
-            if (!ctype_xdigit($hex)) {
-                return $password;
-            }
-            $decpwd = '';
-            for ($count = 0; $count < strlen((string)$hex); $count += 2) {
-                $decpwd .= chr((int)hexdec(substr($hex, $count, 2)));
-            }
-
-            return $decpwd;
+        $encpwd = strpos($password, 'enc:');
+        if ($encpwd === false) {
+            return $password;
         }
 
-        return $password;
+        $hex = substr($password, 4);
+        if (!ctype_xdigit($hex)) {
+            return $password;
+        }
+
+        $decpwd = '';
+        for ($count = 0; $count < strlen($hex); $count += 2) {
+            $decpwd .= chr(hexdec(substr($hex, $count, 2)) & 0xFF);
+        }
+
+        return $decpwd;
     }
 
     private static function _setHeaders(string $action, string $format, string $site_charset): void

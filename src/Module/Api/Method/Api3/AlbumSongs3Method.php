@@ -55,7 +55,7 @@ class AlbumSongs3Method
     {
         $album   = new Album((int)$input['filter']);
         $results = [];
-        if (isset($album->id)) {
+        if ($album->isNew() === false) {
             $results = self::getAlbumRepository()->getSongs($album->id);
         }
 

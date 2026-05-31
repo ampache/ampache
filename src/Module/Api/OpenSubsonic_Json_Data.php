@@ -483,14 +483,11 @@ class OpenSubsonic_Json_Data
         $sub_id = OpenSubsonic_Api::getArtistSubId($child['id']);
         $json   = ['id' => $sub_id];
 
-        if (array_key_exists('catalog_id', $child)) {
-            $json['parent'] = OpenSubsonic_Api::getCatalogSubId($child['catalog_id']);
-        }
-
+        $json['parent'] = OpenSubsonic_Api::getCatalogSubId($child['catalog_id']);
         $json['isDir']  = true;
         $json['title']  = (string)$child['f_name'];
         $json['artist'] = (string)$child['f_name'];
-        if (array_key_exists('has_art', $child) && !empty($child['has_art'])) {
+        if ($child['has_art']) {
             $json['coverArt'] = $sub_id;
         }
 
@@ -950,7 +947,7 @@ class OpenSubsonic_Json_Data
             'name' => (string)$artist['f_name'],
         ];
 
-        if (array_key_exists('has_art', $artist) && !empty($artist['has_art'])) {
+        if ($artist['has_art']) {
             $json['coverArt'] = $sub_id;
         }
 
@@ -1793,7 +1790,7 @@ class OpenSubsonic_Json_Data
         $valid_types   = Stream::get_stream_types_for_type($video->type, 'api');
         if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
             $transcode_settings = $video->get_transcode_settings(null, 'api');
-            if (!empty($transcode_settings)) {
+            if (!empty($transcode_settings['format'])) {
                 $transcode_type                 = $transcode_settings['format'];
                 $json['transcodedSuffix'      ] = $transcode_type;
                 $json['transcodedContentType' ] = Video::type_to_mime($transcode_type);
@@ -1865,7 +1862,7 @@ class OpenSubsonic_Json_Data
         ];
 
         $data = Artist::get_id_array($artist_id);
-        if (array_key_exists('catalog_id', $data)) {
+        if ($data['catalog_id']) {
             $json['parent'] = OpenSubsonic_Api::getCatalogSubId($data['catalog_id']);
         }
 
@@ -3085,7 +3082,7 @@ class OpenSubsonic_Json_Data
      */
     public static function addScanStatus(array $response, User $user): array
     {
-        $counts = Catalog::get_server_counts($user->id ?? 0);
+        $counts = Catalog::get_server_counts($user->id);
         $count  = $counts['artist'] + $counts['album'] + $counts['song'] + $counts['podcast_episode'];
 
         $response['subsonic-response']['scanStatus'] = [
