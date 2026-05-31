@@ -87,7 +87,9 @@ final readonly class AjaxApplication implements ApplicationInterface
             throw new AccessDeniedException();
         }
 
-        $handlerClassName = self::HANDLER_LIST[$page] ?? DefaultAjaxHandler::class;
+        $handlerClassName = ($page)
+            ? self::HANDLER_LIST[$page]
+            : DefaultAjaxHandler::class;
 
         /** @var AjaxHandlerInterface $handler */
         $handler = $this->dic->get($handlerClassName);
