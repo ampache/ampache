@@ -42,17 +42,17 @@ final class XmlOutput implements ApiOutputInterface
         return Xml8_Data::podcast_episodes($result, $user, $auth);
     }
 
-    public function setOffset(int $offset): void
+    public function setOffset(int|string $offset): void
     {
         Xml8_Data::set_offset($offset);
     }
 
-    public function setLimit(int $limit): void
+    public function setLimit(int|string $limit): void
     {
         Xml8_Data::set_limit($limit);
     }
 
-    public function setCount(int $count): void
+    public function setCount(int|string $count): void
     {
         Xml8_Data::set_count($count);
     }

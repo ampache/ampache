@@ -131,8 +131,8 @@ final class PodcastEpisodes8Method implements MethodInterface
             return $response;
         }
 
-        $output->setOffset((int)($input['offset'] ?? 0));
-        $output->setLimit((int)($input['limit'] ?? 0));
+        $output->setOffset($input['offset'] ?? 0);
+        $output->setLimit($input['limit'] ?? 0);
         $output->setCount($browse->get_total());
 
         $response->getBody()->write(

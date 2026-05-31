@@ -27,11 +27,11 @@ use Ampache\Repository\Model\User;
 
 interface ApiOutputInterface
 {
-    public function setOffset(int $offset): void;
+    public function setOffset(int|string $offset): void;
 
-    public function setLimit(int $limit): void;
+    public function setLimit(int|string $limit): void;
 
-    public function setCount(int $count): void;
+    public function setCount(int|string $count): void;
 
     /**
      * @param array<int|string> $result
