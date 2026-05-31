@@ -1093,7 +1093,6 @@ class Stats
         return $results;
     }
 
-    #[Deprecated(message: 'inject dependency')]
     private static function getUserActivityPoster(): UserActivityPosterInterface
     {
         global $dic;

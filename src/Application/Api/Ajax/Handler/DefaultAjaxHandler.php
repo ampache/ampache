@@ -230,7 +230,6 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
         echo xoutput_from_array($results);
     }
 
-    #[Deprecated(message: 'Inject by constructor')]
     private function getSongRepository(): SongRepositoryInterface
     {
         global $dic;

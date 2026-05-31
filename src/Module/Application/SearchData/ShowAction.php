@@ -75,7 +75,6 @@ final readonly class ShowAction implements ApplicationActionInterface
             );
     }
 
-    #[Deprecated(message: 'json_encode should do the trick here')]
     private function arrayToJSON($array): string
     {
         if (function_exists('json_encode') && is_string(json_encode($array))) {

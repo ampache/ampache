@@ -589,7 +589,6 @@ class Ui implements UiInterface
      *
      * Shows the footer template and possibly profiling info.
      */
-    #[Deprecated(message: 'use non-static version')]
     public static function show_footer(): void
     {
         if (!defined("TABLE_RENDERED")) {
@@ -628,7 +627,6 @@ class Ui implements UiInterface
      *
      * This shows the top of the box.
      */
-    #[Deprecated(message: 'Use non-static version')]
     public static function show_box_top(string $title = '', string $class = ''): void
     {
         require self::find_template('show_box_top.inc.php');
@@ -639,7 +637,6 @@ class Ui implements UiInterface
      *
      * This shows the bottom of the box
      */
-    #[Deprecated(message: 'Use non-static version')]
     public static function show_box_bottom(): void
     {
         require self::find_template('show_box_bottom.inc.php');

@@ -686,7 +686,6 @@ class Catalog_Seafile extends Catalog
         ];
     }
 
-    #[Deprecated(message: 'Inject by constructor')]
     private function getUtilityFactory(): UtilityFactoryInterface
     {
         global $dic;

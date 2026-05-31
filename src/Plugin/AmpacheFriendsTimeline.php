@@ -174,7 +174,6 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
         return true;
     }
 
-    #[Deprecated]
     private function getUseractivityRepository(): UserActivityRepositoryInterface
     {
         global $dic;
@@ -182,7 +181,6 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
         return $dic->get(UserActivityRepositoryInterface::class);
     }
 
-    #[Deprecated]
     private function getUserActivityRenderer(): UserActivityRendererInterface
     {
         global $dic;

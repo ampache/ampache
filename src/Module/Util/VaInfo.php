@@ -2152,7 +2152,6 @@ final class VaInfo implements VaInfoInterface
         return $code_array[$code] ?? null;
     }
 
-    #[Deprecated(message: 'inject by constructor')]
     private static function getConfigContainer(): ConfigContainerInterface
     {
         global $dic;
