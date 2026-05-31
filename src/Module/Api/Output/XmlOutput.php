@@ -164,7 +164,7 @@ final class XmlOutput implements ApiOutputInterface
      * @param string[] $include
      *
      */
-    public function albums(
+    public function albums6(
         array $albums,
         array $include,
         User $user,
@@ -172,7 +172,7 @@ final class XmlOutput implements ApiOutputInterface
         bool $encode = true,
         bool $asObject = true,
     ): string {
-        return Xml8_Data::albums($albums, $include, $user, $auth, $encode);
+        return Xml6_Data::albums($albums, $include, $user, $auth, $encode);
     }
 
     /**
