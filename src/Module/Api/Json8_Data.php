@@ -1259,10 +1259,6 @@ class Json8_Data
     {
         self::$count  = self::$count ?? count($objects);
 
-        if ((self::$count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
-        }
-
         $JSON = self::albums_array($objects, $include, $user, $auth, $encode);
 
         if ($object) {
