@@ -2010,11 +2010,11 @@ class Subsonic_Api
     {
         $musicFolderId = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($input['musicFolderId']) : 0;
         $catalogs      = [];
-        if (!empty($musicFolderId) && $musicFolderId != 0) {
+        if ($musicFolderId) {
             $catalogs[] = $musicFolderId;
         }
 
-        $user_id = $user->id ?? 0;
+        $user_id = $user->id;
         $artists = Artist::get_id_arrays($catalogs, ((bool)Preference::get_by_user($user_id, 'subsonic_force_album_artist') === true));
         $format  = (string)($input['f'] ?? 'xml');
         if ($format === 'xml') {
@@ -2206,7 +2206,7 @@ class Subsonic_Api
             $out_size['width']  = $size;
             $out_size['height'] = $size;
             $thumb              = $art->get_thumb($out_size);
-            if (!empty($thumb)) {
+            if (!empty($thumb) && isset($thumb['thumb']) && isset($thumb['thumb_mime'])) {
                 header('Content-type: ' . $thumb['thumb_mime']);
                 header('Content-Length: ' . strlen((string) $thumb['thumb']));
                 echo $thumb['thumb'];
@@ -2257,7 +2257,7 @@ class Subsonic_Api
         $ifModifiedSince = $input['ifModifiedSince'] ?? '';
 
         $catalogs = [];
-        if (!empty($musicFolderId) && $musicFolderId != 0) {
+        if ($musicFolderId) {
             $catalogs[] = $musicFolderId;
         } else {
             $catalogs = $user->get_catalogs('music');
@@ -2636,7 +2636,7 @@ class Subsonic_Api
             ? User::get_from_username($input['username']) ?? $user
             : $user;
 
-        $user_id = $user->id ?? 0;
+        $user_id = $user->id;
 
         $browse = Api::getBrowse($user);
         $browse->set_type('playlist_search');
@@ -2834,7 +2834,7 @@ class Subsonic_Api
             ++$count;
         }
         if ($musicFolderId > 0) {
-            $type = ($sub_id) ? self::getAmpacheType($sub_id) : '';
+            $type = self::getAmpacheType($sub_id);
             if ($type === 'artist') {
                 $artist   = new Artist($musicFolderId);
                 $finput   = $artist->get_fullname();
@@ -3610,7 +3610,7 @@ class Subsonic_Api
                     Stream::garbage_collection();
                     Stream::insert_now_playing($media->getId(), $user_id, ($media->time - $position), (string)$user->username, $type, ($time - $position));
 
-                    if (array_key_exists('object_id', $previous) && $previous['object_id'] == $media->getId()) {
+                    if ($previous['object_id'] && $previous['object_id'] == $media->getId()) {
                         $time_diff = $time - $previous['date'];
                         $old_play  = $time_diff > $media->time * 5;
                         // shift the start time if it's an old play or has been pause/played
@@ -3703,7 +3703,7 @@ class Subsonic_Api
                     Stream::garbage_collection();
                     Stream::insert_now_playing($media->getId(), $user_id, ($media->time - $position), (string)$user->username, $type, ($time - $position));
 
-                    if (array_key_exists('object_id', $previous) && $previous['object_id'] == $media->getId()) {
+                    if ($previous['object_id'] && $previous['object_id'] == $media->getId()) {
                         $time_diff = $time - $previous['date'];
                         $old_play  = $time_diff > $media->time * 5;
                         // shift the start time if it's an old play or has been pause/played

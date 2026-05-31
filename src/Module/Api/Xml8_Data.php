@@ -756,9 +756,6 @@ class Xml8_Data
 
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         foreach ($objects as $object) {
-            if (!is_array($object)) {
-                continue;
-            }
             $trimmed  = Catalog::trim_prefix(trim((string)$object['name']), $pattern);
             $prefix   = $trimmed['prefix'] ?? null;
             $basename = $trimmed['string'];
@@ -1544,7 +1541,7 @@ class Xml8_Data
             $string .= "<song id=\"" . $song->id . "\">\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n" .
                 "\t<artist id=\"" . $song->artist . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_artist['basename'] . "]]></basename>\n</artist>\n" .
                 "\t<album id=\"" . $song->album . "\"><name><![CDATA[" . $song_album['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_album['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_album['basename'] . "]]></basename>\n</album>\n" .
-                "\t<genre id=\"" . ($tag->id ?? '') . "\"><name><![CDATA[" . ($tag->name ?? '') . "]]></name></genre>\n";
+                "\t<genre id=\"" . ($tag->id ?: '') . "\"><name><![CDATA[" . ($tag->name ?: '') . "]]></name></genre>\n";
             $string .= $tag_string . "\t<track>" . $song->track . "</track>\n\t<time><![CDATA[" . $song->time . "]]></time>\n\t<format>" . $songType . "</format>\n\t<bitrate>" . $songBitrate . "</bitrate>\n\t<mime><![CDATA[" . $songMime . "]]></mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($song->has_art() ? 1 : 0) . "</has_art>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n<playcount>" . $song->total_count . "</playcount>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
         } // end foreach
 
@@ -1629,7 +1626,7 @@ class Xml8_Data
      *
      * This handles creating a xml document for a shout list
      *
-     * @param list<Shoutbox> $shouts Shout identifier list
+     * @param array<Shoutbox> $shouts Shout identifier list
      */
     public static function shouts(array $shouts): string
     {

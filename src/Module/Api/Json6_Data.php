@@ -2206,7 +2206,7 @@ class Json6_Data
      *
      * This handles creating an JSON document for a shout list
      *
-     * @param list<Shoutbox> $shouts Shout id list
+     * @param array<Shoutbox> $shouts Shout id list
      * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function shouts(array $shouts, bool $object = true): string

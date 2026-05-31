@@ -840,7 +840,7 @@ class Json8_Data
      *             disksubtitle: string|null,
      *             track: int,
      *             filename: string|null,
-     *             genre: list<array<string, string>>,
+     *             genre: array<int, array{id: string, name: string}>,
      *             playlisttrack: int,
      *             time: int,
      *             year: int,
@@ -922,7 +922,7 @@ class Json8_Data
      *         disksubtitle: string|null,
      *         track: int,
      *         filename: string|null,
-     *         genre: list<array<string, string>>,
+     *         genre: array<int, array{id: string, name: string}>,
      *         playlisttrack: int,
      *         time: int,
      *         year: int,
@@ -1116,7 +1116,7 @@ class Json8_Data
      *      disksubtitle: string|null,
      *      track: int,
      *      filename: string|null,
-     *      genre: list<array<string, string>>,
+     *      genre: array<int, array{id: string, name: string}>,
      *      playlisttrack: int,
      *      time: int,
      *      year: int,
@@ -1939,7 +1939,7 @@ class Json8_Data
      *     disksubtitle: string|null,
      *     track: int,
      *     filename: string|null,
-     *     genre: list<array<string, string>>,
+     *     genre: array<int, array{id: string, name: string}>,
      *     playlisttrack: int,
      *     time: int,
      *     year: int,
@@ -2555,7 +2555,7 @@ class Json8_Data
      *
      * This handles creating an JSON document for a shout list
      *
-     * @param list<Shoutbox> $shouts Shout id list
+     * @param array<Shoutbox> $shouts Shout id list
      * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function shouts(array $shouts, bool $object = true): string

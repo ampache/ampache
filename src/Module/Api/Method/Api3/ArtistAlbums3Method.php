@@ -53,7 +53,7 @@ final class ArtistAlbums3Method
     {
         $artist  = new Artist((int)$input['filter']);
         $results = [];
-        if (isset($artist->id)) {
+        if ($artist->isNew() === false) {
             $results = self::getAlbumRepository()->getAlbumByArtist($artist->id);
         }
 

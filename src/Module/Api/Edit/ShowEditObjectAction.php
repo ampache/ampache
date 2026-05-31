@@ -68,7 +68,7 @@ final class ShowEditObjectAction extends AbstractEditAction
         library_item|Share $libitem,
         int $object_id,
         ?Browse $browse = null,
-    ): ?ResponseInterface {
+    ): ResponseInterface {
         ob_start();
         $users     = self::getUserRepository()->getValidArray();
         $users[-1] = T_('System');

@@ -113,7 +113,7 @@ final class Player8Method
         }
 
         $time     = time();
-        $position = (array_key_exists('time', $input) && is_numeric(scrub_in((string) $input['time'])))
+        $position = (array_key_exists('time', $input))
             ? (int) scrub_in((string) $input['time'])
             : 0;
         // validate client string or fall back to 'api'

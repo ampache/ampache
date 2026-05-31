@@ -71,7 +71,7 @@ final class ShowEditPlaylistAction extends AbstractEditAction
         library_item $libitem,
         int $object_id,
         ?Browse $browse = null,
-    ): ?ResponseInterface {
+    ): ResponseInterface {
         /**
          * Actually, object_id is not used - this is a design flaw.
          * This action allows to submit multiple ids but the abstract app
