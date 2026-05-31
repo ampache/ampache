@@ -27,7 +27,7 @@ use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Shoutbox;
 
-/** @var list<Shoutbox> $shouts */
+/** @var array<Shoutbox> $shouts */
 /** @var ShoutRendererInterface $shoutRenderer */
 
 Ui::show_box_top(T_('Shoutbox')); ?>
