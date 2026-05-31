@@ -107,10 +107,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         // if you didn't set a label_id or name, show the add label form
-        if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)
-        ) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
             $this->ui->show(
                 'show_add_label.inc.php'
             );

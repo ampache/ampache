@@ -42,7 +42,7 @@ final readonly class ShowAction implements ApplicationActionInterface
     ) {
     }
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         return $this->responseFactory
             ->createResponse()

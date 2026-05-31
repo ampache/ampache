@@ -95,12 +95,15 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA)) {
             foreach ($song->getMetadata() as $metadata) {
                 $field = $metadata->getField();
+                $name  = $field?->getName();
 
-                if ($field !== null) {
-                    $ndata[$field->getName()] = $metadata->getData();
+                if (is_string($name) && !empty($name)) {
+                    $ndata[$name] = $metadata->getData();
                 }
             }
         }
+
+        $ndata['text'] = [];
 
         $vainfo = $this->utilityFactory->createVaInfo(
             $song->file
@@ -464,12 +467,14 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         $cnt = count($apics);
         for ($i = 0; $i < $cnt; $i++) {
             if ($new_pic['picturetypeid'] == $apics[$i][$apic_typeid]) {
-                $ndata['attached_picture'][$i]['description']   = $new_pic['description'];
-                $ndata['attached_picture'][$i]['data']          = $new_pic['data'];
-                $ndata['attached_picture'][$i]['mime']          = $new_pic['mime'];
-                $ndata['attached_picture'][$i]['picturetypeid'] = $new_pic['picturetypeid'];
-                $ndata['attached_picture'][$i]['encodingid']    = $new_pic['encodingid'];
-                $idx                                            = $i;
+                $ndata['attached_picture'][$i] = [
+                    'data' => $new_pic['data'],
+                    'description' => $new_pic['description'] ?? null,
+                    'mime' => $new_pic['mime'] ?? null,
+                    'picturetypeid' => $new_pic['picturetypeid'],
+                ];
+
+                $idx = $i;
             }
         }
 

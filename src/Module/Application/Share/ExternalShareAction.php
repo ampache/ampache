@@ -59,7 +59,7 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
     ) {
     }
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE)) {
             throw new AccessDeniedException('Access Denied: sharing features are not enabled.');

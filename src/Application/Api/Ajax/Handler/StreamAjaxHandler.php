@@ -113,7 +113,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
 
                     if (array_key_exists('subtitle', $_REQUEST) && !empty($_REQUEST['subtitle'])) {
                         $_SESSION['iframe']['subtitle'] = $_REQUEST['subtitle'];
-                    } elseif (array_key_exists('iframe', $_SESSION) && array_key_exists('subtitle', $_SESSION['iframe'])) {
+                    } elseif (array_key_exists('subtitle', $_SESSION['iframe'])) {
                         unset($_SESSION['iframe']['subtitle']);
                     }
 

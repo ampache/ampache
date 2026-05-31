@@ -57,6 +57,8 @@ final class DownloadAction extends AbstractStreamAction
                 'object_type' => LibraryItemEnum::PODCAST_EPISODE,
                 'object_id' => (int) $_REQUEST['podcast_episode_id']
             ];
+        } else {
+            return null;
         }
 
         // add the missing request parts

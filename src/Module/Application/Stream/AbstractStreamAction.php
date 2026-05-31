@@ -71,7 +71,8 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
     /**
      * @throws ApplicationException
      *
-     * @param array<int, array{object_type: LibraryItemEnum, object_id: int}> $mediaIds
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int, client?: string, player?: string, cache?: string, format?: string, transcode_to?: string}> $mediaIds
+     * @param list<string> $urls
      */
     protected function stream(
         array $mediaIds,

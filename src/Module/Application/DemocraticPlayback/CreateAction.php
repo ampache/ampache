@@ -50,7 +50,7 @@ final readonly class CreateAction implements ApplicationActionInterface
     ) {
     }
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         /* Make sure they have access to this */
         if (
@@ -67,7 +67,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         if ($democratic->isNew()) {
             // Create the playlist
             Democratic::create([
-                'name' => $_POST['name'],
+                'name' => (string)$_POST['name'],
                 'democratic' => (int)$_POST['democratic'],
                 'cooldown' => (int)$_POST['cooldown'],
                 'level' => (int)$_POST['level'],
