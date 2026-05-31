@@ -27,19 +27,32 @@ use Ampache\Repository\Model\User;
 
 interface ApiOutputInterface
 {
+    public function setOffset6(int|string $offset): void;
+
     public function setOffset(int|string $offset): void;
 
+    public function setLimit6(int|string $limit): void;
+
     public function setLimit(int|string $limit): void;
+
+    public function setCount6(int|string $count): void;
 
     public function setCount(int|string $count): void;
 
     /**
      * @param array<int|string> $result
      */
-    public function podcastEpisodes(
+    public function podcastEpisodes6(
         array $result,
         User $user,
         string $auth,
+    ): string;
+
+    /**
+     * Generate an empty api result
+     */
+    public function writeEmpty6(
+        string $emptyType,
     ): string;
 
     /**
@@ -100,6 +113,20 @@ interface ApiOutputInterface
      * @param string[] $include
      *
      */
+    public function albums6(
+        array $albums,
+        array $include,
+        User $user,
+        string $auth,
+        bool $encode = true,
+        bool $asObject = true,
+    ): string;
+
+    /**
+     * @param array<int|string> $albums
+     * @param string[] $include
+     *
+     */
     public function albums(
         array $albums,
         array $include,
@@ -108,6 +135,15 @@ interface ApiOutputInterface
         bool $encode = true,
         bool $asObject = true,
     ): string;
+
+    /**
+     * This generates a standard JSON Success message
+     * nothing fancy here...
+     *
+     * @param string $string success message
+     * @param array<string, string> $return_data
+     */
+    public function success6(string $string, array $return_data = []): string;
 
     /**
      * This generates a standard JSON Success message

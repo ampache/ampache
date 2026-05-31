@@ -34,6 +34,44 @@ use Ampache\Repository\Model\User;
 
 final class XmlOutput implements ApiOutputInterface
 {
+    public function setOffset6(int|string $offset): void
+    {
+        Xml6_Data::set_offset($offset);
+    }
+
+    public function setOffset(int|string $offset): void
+    {
+        Xml8_Data::set_offset($offset);
+    }
+
+    public function setLimit6(int|string $limit): void
+    {
+        Xml6_Data::set_limit($limit);
+    }
+
+    public function setLimit(int|string $limit): void
+    {
+        Xml8_Data::set_limit($limit);
+    }
+
+    public function setCount6(int|string $count): void
+    {
+        Xml6_Data::set_count($count);
+    }
+
+    public function setCount(int|string $count): void
+    {
+        Xml8_Data::set_count($count);
+    }
+
+    /**
+     * @param array<int|string> $result
+     */
+    public function podcastEpisodes6(array $result, User $user, string $auth): string
+    {
+        return Xml6_Data::podcast_episodes($result, $user, $auth);
+    }
+
     /**
      * @param array<int|string> $result
      */
@@ -42,19 +80,12 @@ final class XmlOutput implements ApiOutputInterface
         return Xml8_Data::podcast_episodes($result, $user, $auth);
     }
 
-    public function setOffset(int|string $offset): void
+    /**
+     * Generate an empty api result
+     */
+    public function writeEmpty6(string $emptyType): string
     {
-        Xml8_Data::set_offset($offset);
-    }
-
-    public function setLimit(int|string $limit): void
-    {
-        Xml8_Data::set_limit($limit);
-    }
-
-    public function setCount(int|string $count): void
-    {
-        Xml8_Data::set_count($count);
+        return Xml6_Data::empty();
     }
 
     /**
@@ -145,7 +176,37 @@ final class XmlOutput implements ApiOutputInterface
     }
 
     /**
-     * This generates a standard JSON Success message
+     * At the moment, this method just acts as a proxy
+     *
+     * @param array<int|string> $albums
+     * @param string[] $include
+     *
+     */
+    public function albums(
+        array $albums,
+        array $include,
+        User $user,
+        string $auth,
+        bool $encode = true,
+        bool $asObject = true,
+    ): string {
+        return Xml8_Data::albums($albums, $include, $user, $auth, $encode);
+    }
+
+    /**
+     * This generates a standard XML Success message
+     * nothing fancy here...
+     *
+     * @param string $string success message
+     * @param array<string, string> $return_data
+     */
+    public function success6(string $string, array $return_data = []): string
+    {
+        return Xml6_Data::success($string, $return_data);
+    }
+
+    /**
+     * This generates a standard XML Success message
      * nothing fancy here...
      *
      * @param string $string success message
