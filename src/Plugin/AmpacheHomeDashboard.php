@@ -316,7 +316,6 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         return true;
     }
 
-    #[Deprecated(message: 'Inject by constructor')]
     private function getAlbumRepository(): AlbumRepositoryInterface
     {
         global $dic;

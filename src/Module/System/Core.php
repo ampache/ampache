@@ -51,7 +51,6 @@ class Core
      * get_request
      * Return a $REQUEST variable instead of calling directly
      */
-    #[Deprecated(message: 'Use RequestParser')]
     public static function get_request(string $variable): string
     {
         if (!array_key_exists($variable, $_REQUEST)) {
@@ -86,7 +85,6 @@ class Core
      * get_cookie
      * Return a $COOKIE variable instead of calling directly
      */
-    #[Deprecated(message: 'Not in use')]
     public static function get_cookie(string $variable): string
     {
         if (!array_key_exists($variable, $_COOKIE)) {

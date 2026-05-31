@@ -831,7 +831,6 @@ class Graph
         return false;
     }
 
-    #[Deprecated]
     private function getUserRepository(): UserRepositoryInterface
     {
         global $dic;

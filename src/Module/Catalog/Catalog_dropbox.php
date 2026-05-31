@@ -817,7 +817,6 @@ class Catalog_dropbox extends Catalog
         return true;
     }
 
-    #[Deprecated(message: 'Inject by constructor')]
     private function getUtilityFactory(): UtilityFactoryInterface
     {
         global $dic;

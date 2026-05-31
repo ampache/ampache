@@ -415,7 +415,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         return '';
     }
 
-    #[Deprecated(message: 'inject dependency')]
     private function getMetadataManager(): MetadataManagerInterface
     {
         global $dic;
