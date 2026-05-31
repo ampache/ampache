@@ -666,9 +666,6 @@ class Json6_Data
     public static function labels(array $objects, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
-        }
 
         $JSON = self::labels_array($objects);
 
@@ -752,9 +749,6 @@ class Json6_Data
     public static function genres(array $objects, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
-        }
 
         $JSON = self::genres_array($objects);
 
@@ -800,10 +794,7 @@ class Json6_Data
      */
     public static function artists_array(array $objects, array $include, User $user, string $auth, bool $encode = true): array
     {
-        $count = self::$count ?? count($objects);
-        if (($count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
-        }
+        self::$count = self::$count ?? count($objects);
 
         Rating::build_cache('artist', $objects);
         $JSON = [];
@@ -1014,7 +1005,7 @@ class Json6_Data
      */
     public static function albums(array $objects, array $include, User $user, string $auth, bool $encode = true, bool $object = true): string
     {
-        self::$count  = self::$count ?? count($objects);
+        self::$count = self::$count ?? count($objects);
 
         $JSON = self::albums_array($objects, $include, $user, $auth, $encode);
 
@@ -1150,9 +1141,6 @@ class Json6_Data
     public static function playlists(array $objects, User $user, string $auth, bool $songs = false, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
 
         $JSON = self::playlists_array($objects, $user, $auth, $songs);
 
@@ -1470,17 +1458,13 @@ class Json6_Data
      */
     public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false, bool $object = true): string
     {
-        $count  = self::$count ?? count($objects);
-
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
-        }
+        self::$count = self::$count ?? count($objects);
 
         $JSON = self::podcasts_array($objects, $user, $auth, $episodes);
 
         if ($object) {
             $output = [
-                "total_count" => $count,
+                "total_count" => self::$count,
                 "md5" => md5(serialize($objects)),
                 "podcast" => $JSON
             ];
@@ -1770,10 +1754,7 @@ class Json6_Data
      */
     public static function songs(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): string
     {
-        self::$count  = self::$count ?? count($objects);
-        if ((self::$count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        self::$count = self::$count ?? count($objects);
 
         $JSON = self::songs_array($objects, $user, $auth);
 
@@ -1963,9 +1944,6 @@ class Json6_Data
     public static function videos(array $objects, User $user, string $auth, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
 
         $JSON = self::videos_array($objects, $user, $auth);
 
@@ -2144,9 +2122,6 @@ class Json6_Data
     public static function users(array $objects, bool $encode = true, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
-        }
 
         $JSON = self::users_array($objects);
 
