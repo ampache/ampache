@@ -150,7 +150,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
 
             $results             = [];
             $results['reloader'] = '<script>reloadRedirect("' . $target . '")</script>';
-            echo (string)xoutput_from_array($results);
+            echo xoutput_from_array($results);
         } else {
             /* Redirect them to the login page */
             header('Location: ' . $target);

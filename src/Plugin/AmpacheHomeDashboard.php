@@ -35,7 +35,6 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Deprecated;
 use Override;
 
 class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInterface
@@ -266,7 +265,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
 
         $object_ids = [];
         if ($this->popular) {
-            $object_ids = ($this->user->getId() < 1 && is_array($hold_ids))
+            $object_ids = ($this->user->getId() < 1 && !empty($hold_ids))
                 ? $hold_ids
                 : Stats::get_top($object_type, 100, $threshold, 0, ($this->user->getId() > 0) ? $this->user : null);
         }
@@ -316,7 +315,6 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         return true;
     }
 
-    #[Deprecated(message: 'Inject by constructor')]
     private function getAlbumRepository(): AlbumRepositoryInterface
     {
         global $dic;

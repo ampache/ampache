@@ -36,7 +36,6 @@ use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Deprecated;
 
 /**
  * AmpacheHttpq Class
@@ -565,7 +564,6 @@ class AmpacheHttpq extends localplay_controller
         return ($this->_httpq->version()); // Test our connection by retrieving the version
     }
 
-    #[Deprecated(message: 'Inject dependency')]
     private function getLibraryItemLoader(): LibraryItemLoaderInterface
     {
         global $dic;

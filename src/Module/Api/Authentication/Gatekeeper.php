@@ -117,6 +117,6 @@ final class Gatekeeper implements GatekeeperInterface
             $this->auth = $token;
         }
 
-        return $this->auth;
+        return $this->auth ?? '';
     }
 }

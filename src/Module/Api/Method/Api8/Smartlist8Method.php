@@ -59,8 +59,8 @@ final class Smartlist8Method
         if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $object_id = $input['filter'];
-        $smartlist = new Search((int) str_replace('smart_', '', $object_id), 'song', $user);
+        $object_id = (string)$input['filter'];
+        $smartlist = new Search((int)str_replace('smart_', '', $object_id), 'song', $user);
         if ($smartlist->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);

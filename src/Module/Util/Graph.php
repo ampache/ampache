@@ -36,7 +36,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use CpChart\Data;
 use CpChart\Image;
-use Deprecated;
 
 class Graph
 {
@@ -831,7 +830,6 @@ class Graph
         return false;
     }
 
-    #[Deprecated]
     private function getUserRepository(): UserRepositoryInterface
     {
         global $dic;

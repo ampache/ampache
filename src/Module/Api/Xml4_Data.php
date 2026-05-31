@@ -252,7 +252,7 @@ class Xml4_Data
      * This takes an array of object_ids and return XML based on the type of object
      * we want
      *
-     * @param list<int|string> $objects Array of object_ids (Mixed string|int)
+     * @param array<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'
      * @param bool $full_xml whether to return a full XML document or just the node
      * @param bool $include include episodes from podcasts or tracks in a playlist
@@ -376,7 +376,7 @@ class Xml4_Data
      *
      * This returns licenses to the user, in a pretty xml document with the information
      *
-     * @param list<int|string> $licenses
+     * @param array<int|string> $licenses
      */
     public static function licenses(array $licenses): string
     {
@@ -402,7 +402,7 @@ class Xml4_Data
      *
      * This returns tags to the user, in a pretty xml document with the information
      *
-     * @param list<int|string> $tags
+     * @param array<int|string> $tags
      */
     public static function tags(array $tags): string
     {
@@ -425,7 +425,7 @@ class Xml4_Data
      * This takes an array of artists and then returns a pretty xml document with the information
      * we want
      *
-     * @param list<int|string> $artists
+     * @param array<int|string> $artists
      * @param string[] $include Array of other items to include
      * @param bool $full_xml whether to return a full XML document or just the node
      */
@@ -475,7 +475,7 @@ class Xml4_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param list<int|string> $albums
+     * @param array<int|string> $albums
      * @param string[] $include Array of other items to include
      * @param bool $full_xml whether to return a full XML document or just the node
      */
@@ -507,7 +507,7 @@ class Xml4_Data
                 $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[" . $album->get_artist_fullname() . "]]></artist>\n";
             }
             // Handle includes
-            if (in_array("songs", $include) && isset($album->id)) {
+            if (in_array("songs", $include)) {
                 $songs = self::songs(self::getAlbumRepository()->getSongs($album->id), $user, $auth, false);
             } else {
                 $songs = $album->song_count;
@@ -524,7 +524,7 @@ class Xml4_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param list<int|string> $playlists Playlist id's to include
+     * @param array<int|string> $playlists Playlist id's to include
      */
     public static function playlists(array $playlists, User $user, string $auth): string
     {
@@ -577,7 +577,7 @@ class Xml4_Data
      *
      * This returns shares to the user, in a pretty xml document with the information
      *
-     * @param list<int|string> $shares
+     * @param array<int|string> $shares
      * @param bool $full_xml whether to return a full XML document or just the node, bool $full_xml = true
      */
     public static function shares(array $shares, bool $full_xml = true): string
@@ -625,7 +625,7 @@ class Xml4_Data
      *
      * This returns podcasts to the user, in a pretty xml document with the information
      *
-     * @param list<int|string> $podcasts
+     * @param array<int|string> $podcasts
      * @param bool $episodes include the episodes of the podcast //optional
      * @param bool $full_xml whether to return a full XML document or just the node
      */
@@ -665,7 +665,7 @@ class Xml4_Data
      *
      * This returns podcasts to the user, in a pretty xml document with the information
      *
-     * @param list<int|string> $podcast_episodes Podcast_Episode id's to include
+     * @param array<int|string> $podcast_episodes Podcast_Episode id's to include
      * @param bool $full_xml whether to return a full XML document or just the node
      */
     public static function podcast_episodes(array $podcast_episodes, User $user, string $auth, bool $full_xml = true): string
@@ -695,7 +695,7 @@ class Xml4_Data
      * songs
      *
      * This returns an xml document from an array of song ids. (Spiffy isn't it!)
-     * @param list<int|string> $songs
+     * @param array<int|string> $songs
      */
     public static function songs(array $songs, User $user, string $auth, bool $full_xml = true): string
     {
@@ -762,7 +762,7 @@ class Xml4_Data
      *
      * This builds the xml document for displaying video objects
      *
-     * @param list<int|string> $videos
+     * @param array<int|string> $videos
      * @param bool $full_xml whether to return a full XML document or just the node
      */
     public static function videos(array $videos, User $user, string $auth, bool $full_xml = true): string
@@ -825,7 +825,7 @@ class Xml4_Data
             $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->title . "]]></name>\n" .
                 "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_fullname() . "]]></artist>\n" .
                 "\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_fullname() . "]]></album>\n" .
-                "\t<genre id=\"" . ($tag->id ?? '') . "\"><![CDATA[" . ($tag->name ?? '') . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n\t<time><![CDATA[" . $song->time . "]]></time>\n\t<mime><![CDATA[" . $songMime . "]]></mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($rating->get_user_rating($user->id) ?? null) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating($user->id) ?? null) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?? null) . "</averagerating>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
+                "\t<genre id=\"" . ($tag->id ?: '') . "\"><![CDATA[" . ($tag->name ?: '') . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n\t<time><![CDATA[" . $song->time . "]]></time>\n\t<mime><![CDATA[" . $songMime . "]]></mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($rating->get_user_rating($user->id) ?? null) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating($user->id) ?? null) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?? null) . "</averagerating>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
         } // end foreach
 
         return Xml8_Data::output_xml($string);
@@ -856,7 +856,7 @@ class Xml4_Data
      *
      * This handles creating an xml document for a user list
      *
-     * @param list<int|string> $users    User identifier list
+     * @param array<int|string> $users    User identifier list
      */
     public static function users(array $users): string
     {

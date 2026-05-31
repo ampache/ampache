@@ -149,7 +149,7 @@ class Video extends database_object implements
     /**
      * build_cache
      * Build a cache based on the array of ids passed, saves lots of little queries
-     * @param list<int|string> $ids
+     * @param array<int|string> $ids
      */
     public static function build_cache(array $ids): bool
     {

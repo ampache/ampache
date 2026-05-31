@@ -51,7 +51,7 @@ final class Download4Method
      *     id: string,
      *     type: string,
      *     bitrate?: int,
-     *     format?: int,
+     *     format?: string,
      *     stats?: string,
      *     api_format: string,
      *     auth: string,

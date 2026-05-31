@@ -645,7 +645,7 @@ class AmpacheVlc extends localplay_controller
     public function connect(): bool
     {
         $options = self::get_instance();
-        if ($options === []) {
+        if ($options === [] || !isset($options['host']) || !isset($options['password']) || !isset($options['port'])) {
             return false;
         }
 

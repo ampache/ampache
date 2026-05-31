@@ -277,7 +277,7 @@ class LocalPlay
             ? $this->_player->status()
             : false;
 
-        if ($data === [] || $data === false || !is_array($data)) {
+        if (!is_array($data) || empty($data)) {
             debug_event(self::class, 'Error Unable to get status, check ' . $this->type . ' controller', 1);
 
             return null;
@@ -298,7 +298,7 @@ class LocalPlay
             ? $this->_player->get()
             : false;
 
-        if ($data === [] || $data === false || !is_array($data)) {
+        if (!is_array($data) || empty($data)) {
             debug_event(self::class, 'Error Unable to get song info, check ' . $this->type . ' controller', 1);
 
             return [];
@@ -570,7 +570,7 @@ class LocalPlay
      */
     public function set_block_clear(bool $bool): void
     {
-        if (property_exists($this->_player, 'block_clear') && $this->_player->block_clear !== null) {
+        if ($this->_player && property_exists($this->_player, 'block_clear') && $this->_player->block_clear !== null) {
             $this->_player->block_clear = $bool;
         }
     }
@@ -674,7 +674,7 @@ class LocalPlay
     public function get_user_playing(): string
     {
         $status = $this->status();
-        if ($status === null || $status === [] || !is_array($status)) {
+        if (!is_array($status) || empty($status)) {
             return '';
         }
 

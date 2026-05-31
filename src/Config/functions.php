@@ -139,7 +139,7 @@ function make_bool($string): bool
  */
 function invert_bool($value): bool
 {
-    return make_bool($value) ? false : true;
+    return !make_bool($value);
 }
 
 /**
@@ -366,9 +366,6 @@ function get_datetime($time, $date_format = 'short', $time_format = 'short', $ov
  */
 function check_config_values(array $conf): bool
 {
-    if (!is_array($conf)) {
-        return false;
-    }
     if (!$conf['database_hostname']) {
         return false;
     }

@@ -59,7 +59,7 @@ final class Smartlist6Method
         if (!Api6::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $object_id = $input['filter'];
+        $object_id = (string)$input['filter'];
         $smartlist = new Search((int) str_replace('smart_', '', $object_id), 'song', $user);
         if ($smartlist->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

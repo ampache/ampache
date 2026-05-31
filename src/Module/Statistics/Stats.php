@@ -38,7 +38,6 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\UserActivityRepositoryInterface;
-use Deprecated;
 use PDOStatement;
 
 /**
@@ -240,15 +239,9 @@ class Stats
             return false;
         }
 
-        $latitude  = (isset($location['latitude'])) ? (float)$location['latitude'] : null;
-        $longitude = (isset($location['longitude'])) ? (float)$location['longitude'] : null;
-        $geoname   = $location['name'] ?? null;
-
-        // allow setting date for scrobbles
-        if (!is_numeric($date)) {
-            $date = time();
-        }
-
+        $latitude   = (isset($location['latitude'])) ? (float)$location['latitude'] : null;
+        $longitude  = (isset($location['longitude'])) ? (float)$location['longitude'] : null;
+        $geoname    = $location['name'] ?? null;
         $sql        = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, [$type, $object_id, $count_type, $date, $user_id, $agent, $latitude, $longitude, $geoname]);
 
@@ -1093,7 +1086,6 @@ class Stats
         return $results;
     }
 
-    #[Deprecated(message: 'inject dependency')]
     private static function getUserActivityPoster(): UserActivityPosterInterface
     {
         global $dic;

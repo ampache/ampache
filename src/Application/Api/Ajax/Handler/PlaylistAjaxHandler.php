@@ -140,6 +140,6 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 }
         }
 
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 }

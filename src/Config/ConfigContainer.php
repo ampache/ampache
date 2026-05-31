@@ -89,7 +89,7 @@ final class ConfigContainer implements ConfigContainerInterface
     /**
      * Return a list of types which are zip-able
      *
-     * @return list<string>
+     * @return array<string>
      */
     public function getTypesAllowedForZip(): array
     {

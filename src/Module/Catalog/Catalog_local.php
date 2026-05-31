@@ -46,7 +46,6 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
-use Deprecated;
 use Exception;
 
 /**
@@ -1822,7 +1821,6 @@ class Catalog_local extends Catalog
         return true;
     }
 
-    #[Deprecated(message: 'Inject by constructor')]
     private function getUtilityFactory(): UtilityFactoryInterface
     {
         global $dic;
@@ -1830,7 +1828,6 @@ class Catalog_local extends Catalog
         return $dic->get(UtilityFactoryInterface::class);
     }
 
-    #[Deprecated(message: 'Inject by constructor')]
     private function getPodcastSyncer(): PodcastSyncerInterface
     {
         global $dic;
@@ -1838,7 +1835,6 @@ class Catalog_local extends Catalog
         return $dic->get(PodcastSyncerInterface::class);
     }
 
-    #[Deprecated(message: 'inject dependency')]
     private function getMetadataManager(): MetadataManagerInterface
     {
         global $dic;
@@ -1846,7 +1842,6 @@ class Catalog_local extends Catalog
         return $dic->get(MetadataManagerInterface::class);
     }
 
-    #[Deprecated(message: 'inject dependency')]
     private function getArtistRepository(): ArtistRepositoryInterface
     {
         global $dic;

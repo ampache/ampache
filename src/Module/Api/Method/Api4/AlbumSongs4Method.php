@@ -69,10 +69,10 @@ class AlbumSongs4Method
 
         ob_end_clean();
 
-        if (isset($album->id)) {
-            // songs for all disks
+        if ($album->isNew() === false) {
             $results = self::getAlbumRepository()->getSongs($album->id);
         }
+
         if (!empty($results)) {
             switch ($input['api_format']) {
                 case 'json':

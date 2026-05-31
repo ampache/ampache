@@ -67,7 +67,7 @@ final class SmartlistSongs8Method
             return false;
         }
 
-        $object_id = $input['filter'];
+        $object_id = (string)$input['filter'];
         $random    = (array_key_exists('random', $input) && (int)$input['random'] == 1);
         $smartlist = new Search((int) str_replace('smart_', '', $object_id), 'song', $user);
 

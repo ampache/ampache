@@ -30,7 +30,6 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Deprecated;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -48,7 +47,7 @@ final readonly class ShowAction implements ApplicationActionInterface
     ) {
     }
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         $search = $this->modelFactory->createSearch(
             null,
@@ -75,7 +74,6 @@ final readonly class ShowAction implements ApplicationActionInterface
             );
     }
 
-    #[Deprecated(message: 'json_encode should do the trick here')]
     private function arrayToJSON($array): string
     {
         if (function_exists('json_encode') && is_string(json_encode($array))) {

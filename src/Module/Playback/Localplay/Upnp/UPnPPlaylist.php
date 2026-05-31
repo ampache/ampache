@@ -42,9 +42,6 @@ class UPnPPlaylist
     public function __construct(private readonly string $_deviceGUID)
     {
         $this->PlayListRead();
-        if (!is_array($this->_songs)) {
-            $this->Clear();
-        }
     }
 
     public function Add(string $name, string $link): void
@@ -161,8 +158,8 @@ class UPnPPlaylist
         $sid      = 'upnp_pls_' . $this->_deviceGUID;
         $pls_data = json_decode(Session::read($sid), true);
 
-        $this->_songs   = $pls_data['upnp_playlist'];
-        $this->_current = $pls_data['upnp_current'];
+        $this->_songs   = (is_array($pls_data['upnp_playlist'])) ? $pls_data['upnp_playlist'] : [];
+        $this->_current = (int)($pls_data['upnp_current'] ?? 0);
     }
 
     private function PlayListSave(): void

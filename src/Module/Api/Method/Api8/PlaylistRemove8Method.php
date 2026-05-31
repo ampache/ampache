@@ -113,6 +113,7 @@ final class PlaylistRemove8Method
      * @param array{
      *     filter: string,
      *     song?: string,
+     *     type: string,
      *     track?: string,
      *     clear?: int,
      *     api_format: string,
