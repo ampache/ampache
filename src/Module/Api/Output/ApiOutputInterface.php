@@ -49,6 +49,15 @@ interface ApiOutputInterface
     ): string;
 
     /**
+     * @param array<int|string> $result
+     */
+    public function podcastEpisodes(
+        array $result,
+        User $user,
+        string $auth,
+    ): string;
+
+    /**
      * Generate an empty api result
      */
     public function writeEmpty6(
