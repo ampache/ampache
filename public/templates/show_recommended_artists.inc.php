@@ -73,7 +73,7 @@ $cel_counter = "cel_counter"; ?>
         </tr>
     </thead>
     <tbody>
-<?php if (AmpConfig::get('ratings')) {
+<?php if ($show_ratings) {
     // Cache the ratings we are going to use
     Rating::build_cache('artist', $object_ids);
     // Cache the userflags we are going to use

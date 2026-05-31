@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\User\PrivateMessage;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\User\PrivateMessage\Exception\PrivateMessageCreationException;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
