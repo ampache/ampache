@@ -17,7 +17,6 @@ global $dic;
 $environment = $dic->get(EnvironmentInterface::class);
 
 /** @var bool $isVideo  */
-/** @var bool $isRadio */
 /** @var bool $isDemocratic */
 /** @var bool $isRandom */
 /** @var bool $isShare */
@@ -137,8 +136,6 @@ echo implode(',', $solutions); ?>",
                 <?php } ?>
                 cssClass: "jp-video-360p"
                 <?php
-                } elseif ($isRadio) {
-                    // No size
                 } else {
                     if ($isRandom) { ?>
                     visibility: "hidden",
@@ -252,7 +249,6 @@ echo implode(',', $solutions); ?>",
 
                     <?php if (
                         $isVideo === false &&
-                        $isRadio === false &&
                         $isShare === false
                     ) {
                         if ($iframed) {
@@ -289,7 +285,6 @@ echo implode(',', $solutions); ?>",
                     $('.playing_artist').html(artistobj);
                     <?php if (
                         $iframed &&
-                        $isRadio === false &&
                         $isRandom === false &&
                         $isDemocratic === false
                     ) { ?>
@@ -519,7 +514,7 @@ if ($isVideo === false) {
             </div>
             <?php if ($isShare === false && !$environment->isMobile()) { ?>
                 <div class="player_actions">
-                    <?php if ($iframed && ($isRadio === false && $isRandom === false && $isDemocratic === false)) { ?>
+                    <?php if ($iframed && ($isRandom === false && $isDemocratic === false)) { ?>
                             <div class="action_button">
                         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                                 <a href="javascript:SaveToExistingPlaylist(event);">
