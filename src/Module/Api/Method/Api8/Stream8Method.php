@@ -63,7 +63,7 @@ final class Stream8Method
      *     id?: string,
      *     type: string,
      *     bitrate?: int,
-     *     format?: int,
+     *     format?: string,
      *     offset?: int,
      *     length?: int,
      *     stats?: string,
@@ -73,14 +73,14 @@ final class Stream8Method
      */
     public static function stream(array $input, User $user): bool
     {
-        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
-        if (!Api::check_parameter($input, ['id', 'type'], self::ACTION)) {
+        $input['filter'] = $input['id'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['filter', 'type'], self::ACTION)) {
             http_response_code(400);
 
             return false;
         }
 
-        $object_id = (int)$input['id'];
+        $object_id = (int)$input['filter'];
         $type      = (string) $input['type'];
 
         if (

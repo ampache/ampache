@@ -525,7 +525,7 @@ class Upnp_Api
         $prmNumRet,
         $prmTotMatches,
         $prmResponseType = 'u:BrowseResponse',
-        $prmUpdateID = '0'
+        $prmUpdateID = '0',
     ): DOMDocument {
         /**
         * $prmDIDL is DIDL XML string
@@ -568,7 +568,7 @@ class Upnp_Api
     {
         $root    = 'amp://music';
         $pathreq = explode('/', $prmPath);
-        if ($pathreq[0] == '' && count($pathreq) > 0) {
+        if ($pathreq[0] == '') {
             array_shift($pathreq);
         }
 
@@ -717,7 +717,7 @@ class Upnp_Api
                         break;
                     case 3:
                         $episode = new Podcast_Episode((int)$pathreq[2]);
-                        if (isset($episode->id)) {
+                        if ($episode->isNew() === false) {
                             $meta = self::_itemPodcastEpisode($episode, $root . '/podcasts/' . $pathreq[1]);
                         }
                         break;
@@ -760,9 +760,10 @@ class Upnp_Api
 
         debug_event(self::class, 'MusicChilds: [' . $prmPath . '] [' . $prmQuery . ']' . '[' . $start . '] [' . $count . ']', 5);
 
-        $parent  = 'amp://music' . $prmPath;
-        $pathreq = explode('/', $prmPath);
-        if ($pathreq[0] == '' && count($pathreq) > 0) {
+        $parent    = 'amp://music' . $prmPath;
+        $pathreq   = explode('/', $prmPath);
+        $pathcount = count($pathreq);
+        if ($pathreq[0] == '') {
             array_shift($pathreq);
         }
         debug_event(self::class, 'MusicChilds4: [' . $pathreq[0] . ']', 5);
@@ -770,7 +771,7 @@ class Upnp_Api
 
         switch ($pathreq[0]) {
             case 'artists':
-                switch (count($pathreq)) {
+                switch ($pathcount) {
                     case 1: // Get artists list
                         $artists              = Catalog::get_artists(null, $count, $start);
                         [$maxCount, $artists] = [$counts['artist'], $artists];
@@ -796,7 +797,7 @@ class Upnp_Api
                 }
                 break;
             case 'albums':
-                switch (count($pathreq)) {
+                switch ($pathcount) {
                     case 1: // Get albums list
                         $album_ids              = Catalog::get_albums($count, $start);
                         [$maxCount, $album_ids] = [$counts['album'], $album_ids];
@@ -811,7 +812,7 @@ class Upnp_Api
                         break;
                     case 2: // Get album's songs list
                         $album = new Album((int)$pathreq[1]);
-                        if (isset($album->id)) {
+                        if ($album->isNew() === false) {
                             $song_ids              = self::getSongRepository()->getByAlbum($album->id);
                             [$maxCount, $song_ids] = self::_slice($song_ids, $start, $count);
                             foreach ($song_ids as $song_id) {
@@ -827,7 +828,7 @@ class Upnp_Api
                 break;
             case 'songs':
                 // Get songs list
-                if (count($pathreq) == 1) {
+                if ($pathcount == 1) {
                     $catalogs = Catalog::get_catalogs();
                     foreach ($catalogs as $catalog_id) {
                         $catalog = Catalog::create_from_id($catalog_id);
@@ -846,7 +847,7 @@ class Upnp_Api
                 }
                 break;
             case 'playlists':
-                switch (count($pathreq)) {
+                switch ($pathcount) {
                     case 1: // Get playlists list
                         $pl_ids              = Playlist::get_playlists();
                         [$maxCount, $pl_ids] = self::_slice($pl_ids, $start, $count);
@@ -874,7 +875,7 @@ class Upnp_Api
                 }
                 break;
             case 'smartplaylists':
-                switch (count($pathreq)) {
+                switch ($pathcount) {
                     case 1: // Get playlists list
                         $searches              = Search::get_searches();
                         [$maxCount, $searches] = self::_slice($searches, $start, $count);
@@ -903,7 +904,7 @@ class Upnp_Api
                 break;
             case 'live_streams':
                 // Get radios list
-                if (count($pathreq) == 1) {
+                if ($pathcount == 1) {
                     /** @var User|null $user */
                     $user   = (!empty(Core::get_global('user'))) ? Core::get_global('user') : null;
                     $radios = self::getLiveStreamRepository()->findAll(
@@ -918,7 +919,7 @@ class Upnp_Api
                 }
                 break;
             case 'podcasts':
-                switch (count($pathreq)) {
+                switch ($pathcount) {
                     case 1: // Get podcasts list
                         $podcasts              = Catalog::get_podcasts();
                         [$maxCount, $podcasts] = self::_slice($podcasts, $start, $count);
@@ -973,7 +974,7 @@ class Upnp_Api
     {
         $root    = 'amp://video';
         $pathreq = explode('/', $prmPath);
-        if ($pathreq[0] == '' && count($pathreq) > 0) {
+        if ($pathreq[0] == '') {
             array_shift($pathreq);
         }
 
@@ -1026,7 +1027,7 @@ class Upnp_Api
 
         $parent  = 'amp://video' . $prmPath;
         $pathreq = explode('/', $prmPath);
-        if ($pathreq[0] == '' && count($pathreq) > 0) {
+        if ($pathreq[0] == '') {
             array_shift($pathreq);
         }
 
@@ -1556,7 +1557,9 @@ class Upnp_Api
         $art_url     = Art::url($radio->id, 'live_stream', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
-        $arrFileType    = $fileTypesByExt[$radio->codec];
+        $arrFileType    = ($radio->codec)
+            ? $fileTypesByExt[$radio->codec]
+            : 'object.item.unknownItem';
 
         return [
             'id' => 'amp://music/live_streams/' . $radio->id,

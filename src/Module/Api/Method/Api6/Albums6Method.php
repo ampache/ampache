@@ -48,7 +48,7 @@ final class Albums6Method implements MethodInterface
 
     public function __construct(
         StreamFactoryInterface $streamFactory,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->streamFactory = $streamFactory;
         $this->modelFactory  = $modelFactory;
@@ -88,7 +88,7 @@ final class Albums6Method implements MethodInterface
         ResponseInterface $response,
         ApiOutputInterface $output,
         array $input,
-        User $user
+        User $user,
     ): ResponseInterface {
         $browse = $this->modelFactory->createBrowse(null, false);
         $browse->set_user_id($user);
@@ -142,11 +142,11 @@ final class Albums6Method implements MethodInterface
 
         ob_end_clean();
 
-        $output->setOffset($input['offset'] ?? 0);
-        $output->setLimit($input['limit'] ?? 0);
-        $output->setCount($browse->get_total());
+        $output->setOffset6($input['offset'] ?? 0);
+        $output->setLimit6($input['limit'] ?? 0);
+        $output->setCount6($browse->get_total());
 
-        $result = $output->albums(
+        $result = $output->albums6(
             $results,
             $include,
             $user,

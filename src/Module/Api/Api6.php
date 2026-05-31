@@ -416,7 +416,7 @@ class Api6
             return [];
         }
 
-        $counts    = Catalog::get_server_counts($client->id ?? 0);
+        $counts    = Catalog::get_server_counts($client->id);
         $playlists = (AmpConfig::get('hide_search', false))
             ? $counts['playlist']
             : $counts['playlist'] + $counts['search'];

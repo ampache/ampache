@@ -77,13 +77,20 @@ final class ApiHandler implements ApiHandlerInterface
         'tags',
     ];
 
+    /** @var string[] */
+    private array $deprecated8 = [
+        'get_indexes',
+        'playlist_add_song',
+        'user_update',
+    ];
+
     public function __construct(
         StreamFactoryInterface $streamFactory,
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
         NetworkCheckerInterface $networkChecker,
         UserRepositoryInterface $userRepository,
-        ContainerInterface $dic
+        ContainerInterface $dic,
     ) {
         $this->streamFactory   = $streamFactory;
         $this->logger          = $logger;
@@ -96,7 +103,7 @@ final class ApiHandler implements ApiHandlerInterface
     public function handle(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        ApiOutputInterface $output
+        ApiOutputInterface $output,
     ): ?ResponseInterface {
         $gatekeeper = new Gatekeeper(
             $this->userRepository,
@@ -144,7 +151,7 @@ final class ApiHandler implements ApiHandlerInterface
         $user = (!empty($input['auth']))
             ? $gatekeeper->getUser()
             : null;
-        $userId      = $user?->id ?? -1;
+        $userId      = $user->id ?? -1;
         $api_version = (int)Preference::get_by_user($userId, 'api_force_version');
         if (!in_array($api_version, Api::API_VERSIONS)) {
             $api_session = Session::get_api_version($input['auth']);
@@ -554,7 +561,7 @@ final class ApiHandler implements ApiHandlerInterface
                 break;
             case 8:
             default:
-                if (in_array($action, $this->deprecated)) {
+                if (in_array($action, $this->deprecated8)) {
                     ob_end_clean();
 
                     return $response->withBody(
@@ -619,7 +626,7 @@ final class ApiHandler implements ApiHandlerInterface
     public function normalizeAction(
         string $action,
         ?string $type,
-        bool $hasFilter
+        bool $hasFilter,
     ): string {
         $action = match ($action) {
             'add-song' => 'add_song',
@@ -771,7 +778,7 @@ final class ApiHandler implements ApiHandlerInterface
         array $input,
         ?User $user,
         ResponseInterface $response,
-        ApiOutputInterface $output
+        ApiOutputInterface $output,
     ): ?ResponseInterface {
         try {
             /**
@@ -955,7 +962,7 @@ final class ApiHandler implements ApiHandlerInterface
         array $input,
         ?User $user,
         ResponseInterface $response,
-        ApiOutputInterface $output
+        ApiOutputInterface $output,
     ): ?ResponseInterface {
         /**
          * This condition allows the `new` approach and the legacy one to co-exist.

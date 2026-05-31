@@ -122,7 +122,7 @@ final class Browse8Method
             $catalog = ($object_id !== null)
                 ? Catalog::create_from_id($object_id)
                 : null;
-            if ($catalog === null || $object_id === null) {
+            if ($catalog === null) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
@@ -164,7 +164,7 @@ final class Browse8Method
             $catalog = ($catalog_id !== null)
                 ? Catalog::create_from_id($catalog_id)
                 : null;
-            if ($catalog === null || $catalog_id === null) {
+            if ($catalog === null) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf('Not Found: %s', $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
 

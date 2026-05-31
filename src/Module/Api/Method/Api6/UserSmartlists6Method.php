@@ -78,7 +78,7 @@ final class UserSmartlists6Method
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
-        $results = preg_filter('/^/', 'smart_', $browse->get_objects());
+        $results = array_values(preg_filter('/^/', 'smart_', $browse->get_objects()));
         if (empty($results)) {
             Api6::empty('playlist', $input['api_format']);
 
@@ -91,12 +91,14 @@ final class UserSmartlists6Method
                 Json6_Data::set_offset((int)($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
                 Json6_Data::set_count($browse->get_total());
+                /** @var array<string> $results */
                 echo Json6_Data::playlists($results, $user, $input['auth'], $include);
                 break;
             default:
                 Xml6_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
                 Xml6_Data::set_count($browse->get_total());
+                /** @var array<string> $results */
                 echo Xml6_Data::playlists($results, $user, $input['auth'], $include);
         }
 

@@ -55,7 +55,7 @@ final class ShowEditPlaylistAction extends AbstractEditAction
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
         TalFactoryInterface $talFactory,
-        GuiFactoryInterface $guiFactory
+        GuiFactoryInterface $guiFactory,
     ) {
         parent::__construct($configContainer, $logger);
         $this->responseFactory = $responseFactory;
@@ -70,8 +70,8 @@ final class ShowEditPlaylistAction extends AbstractEditAction
         string $object_type,
         library_item $libitem,
         int $object_id,
-        ?Browse $browse = null
-    ): ?ResponseInterface {
+        ?Browse $browse = null,
+    ): ResponseInterface {
         /**
          * Actually, object_id is not used - this is a design flaw.
          * This action allows to submit multiple ids but the abstract app

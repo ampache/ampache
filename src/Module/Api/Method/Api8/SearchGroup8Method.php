@@ -69,7 +69,17 @@ final class SearchGroup8Method
      * offset          = (integer) //optional
      * limit           = (integer) //optional
      *
-     * @param array<string, mixed> $input
+     * @param array{
+     *     operator: string,
+     *     rule_1: string,
+     *     rule_1_operator: int,
+     *     rule_1_input: mixed,
+     *     type?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      */
     public static function search_group(array $input, User $user): bool
     {
@@ -166,7 +176,9 @@ final class SearchGroup8Method
                 Json8_Data::set_offset($offset);
                 Json8_Data::set_limit($limit);
                 foreach ($results as $key => $search) {
-                    Json8_Data::set_count($count[$key]);
+                    if (array_key_exists($key, $count)) {
+                        Json8_Data::set_count($count[$key]);
+                    }
                     switch ($key) {
                         case 'album':
                             if ((count($search) > $limit || $offset > 0) && $limit) {

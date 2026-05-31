@@ -1,5 +1,19 @@
 # API CHANGELOG
 
+## API 6.9.2 Build 1
+
+This version is being released for Ampache7 **only**
+
+To ensure that there are no issues with clients checking for single int versions
+we will keep on 6.9.x and resume build number versioning until Ampache 8
+
+**NOTE** API8 has been added to the code but is not enabled for use.
+
+### Fixed (692001)
+
+* API6
+  * JSON output objects being filtered twice
+
 ## API 6.9.1 Build 15
 
 This version is being released for Ampache7 **only**

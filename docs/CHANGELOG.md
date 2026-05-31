@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## Ampache 7.9.6
+
+Fixes to changes on the backend and a few issues found during code analysis
+
+### Changed (7.9.6)
+
+* Update Composer and NPM dependencies
+* Add more rules to phpstan
+
+### Fixed (7.9.6)
+
+* Art `id` error when unset
+* Playlist collaborator checks not exploding ints properly
+
 ## Ampache 7.9.5
 
 Cleanup has begun!
