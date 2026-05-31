@@ -33,6 +33,44 @@ use Ampache\Repository\Model\User;
 
 final class JsonOutput implements ApiOutputInterface
 {
+    public function setOffset6(int|string $offset): void
+    {
+        Json6_Data::set_offset($offset);
+    }
+
+    public function setOffset(int|string $offset): void
+    {
+        Json8_Data::set_offset($offset);
+    }
+
+    public function setLimit6(int|string $limit): void
+    {
+        Json6_Data::set_limit($limit);
+    }
+
+    public function setLimit(int|string $limit): void
+    {
+        Json8_Data::set_limit($limit);
+    }
+
+    public function setCount6(int|string $count): void
+    {
+        Json6_Data::set_count($count);
+    }
+
+    public function setCount(int|string $count): void
+    {
+        Json8_Data::set_count($count);
+    }
+
+    /**
+     * @param array<int|string> $result
+     */
+    public function podcastEpisodes6(array $result, User $user, string $auth): string
+    {
+        return Json6_Data::podcast_episodes($result, $user, $auth);
+    }
+
     /**
      * @param array<int|string> $result
      */
@@ -41,19 +79,12 @@ final class JsonOutput implements ApiOutputInterface
         return Json8_Data::podcast_episodes($result, $user, $auth);
     }
 
-    public function setOffset(int $offset): void
+    /**
+     * Generate an empty api result
+     */
+    public function writeEmpty6(string $emptyType): string
     {
-        Json8_Data::set_offset($offset);
-    }
-
-    public function setLimit(int $limit): void
-    {
-        Json8_Data::set_limit($limit);
-    }
-
-    public function setCount(int $count): void
-    {
-        Json8_Data::set_count($count);
+        return Json6_Data::empty($emptyType);
     }
 
     /**
@@ -129,6 +160,24 @@ final class JsonOutput implements ApiOutputInterface
      * @param string[] $include
      *
      */
+    public function albums6(
+        array $albums,
+        array $include,
+        User $user,
+        string $auth,
+        bool $encode = true,
+        bool $asObject = true,
+    ): string {
+        return Json6_Data::albums($albums, $include, $user, $auth, $encode, $asObject);
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param array<int|string> $albums
+     * @param string[] $include
+     *
+     */
     public function albums(
         array $albums,
         array $include,
@@ -138,6 +187,18 @@ final class JsonOutput implements ApiOutputInterface
         bool $asObject = true,
     ): string {
         return Json8_Data::albums($albums, $include, $user, $auth, $encode, $asObject);
+    }
+
+    /**
+     * This generates a standard JSON Success message
+     * nothing fancy here...
+     *
+     * @param string $string success message
+     * @param array<string, string> $return_data
+     */
+    public function success6(string $string, array $return_data = []): string
+    {
+        return Json6_Data::success($string, $return_data);
     }
 
     /**

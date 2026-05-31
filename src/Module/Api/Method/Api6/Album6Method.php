@@ -106,7 +106,7 @@ final class Album6Method implements MethodInterface
             }
         }
 
-        $result = $output->albums(
+        $result = $output->albums6(
             [$album->getId()],
             $include,
             $user,
