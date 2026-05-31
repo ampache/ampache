@@ -44,15 +44,13 @@ $object_type = 'live_stream'; ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
-    <?php if (AmpConfig::get('play_type') !== 'democratc') {
-        if (AmpConfig::get('directplay')) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id, 'play_circle', T_('Play'), 'play_live_stream_' . $libitem->id);
-            if (Stream_Playlist::check_autoplay_next()) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_live_stream_' . $libitem->id);
-            }
-            if (Stream_Playlist::check_autoplay_append()) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_live_stream_' . $libitem->id);
-            }
+    <?php if (AmpConfig::get('directplay')) {
+        echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id, 'play_circle', T_('Play'), 'play_live_stream_' . $libitem->id);
+        if (Stream_Playlist::check_autoplay_next()) {
+            echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_live_stream_' . $libitem->id);
+        }
+        if (Stream_Playlist::check_autoplay_append()) {
+            echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_live_stream_' . $libitem->id);
         }
     } ?>
     </div>
