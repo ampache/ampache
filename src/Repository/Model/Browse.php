@@ -98,6 +98,29 @@ class Browse extends Query
     }
 
     /**
+     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids
+     * @return array<int|string>
+     */
+    private function _squashList(array $object_ids): array
+    {
+        if ($object_ids === []) {
+            return [];
+        }
+
+        $results = [];
+        foreach ($object_ids as $value) {
+            if (is_int($value) || is_string($value)) {
+                $results[] = $value;
+            }
+            if (is_array($value)) {
+                $results[] = $value['object_id'];
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * set_sort_order
      *
      * Try to clean up sorts into something valid before sending to the Query
@@ -260,29 +283,27 @@ class Browse extends Query
         } else {
             $this->save_objects($object_ids);
 
-            if (!is_array($object_ids[0])) {
-                // build cache for new browses
-                switch ($type) {
-                    case 'song':
-                        Song::build_cache($object_ids, $limit_threshold);
-                        break;
-                    case 'album':
-                        Album::build_cache($object_ids);
-                        break;
-                    case 'artist':
-                        Artist::build_cache($object_ids, true, $limit_threshold);
-                        break;
-                    case 'playlist':
-                        Playlist::build_cache($object_ids);
-                        break;
-                    case 'tag':
-                    case 'tag_hidden':
-                        Tag::build_cache($object_ids);
-                        break;
-                    case 'video':
-                        Video::build_cache($object_ids);
-                        break;
-                }
+            // build cache for new browses
+            switch ($type) {
+                case 'song':
+                    Song::build_cache($this->_squashList($object_ids), $limit_threshold);
+                    break;
+                case 'album':
+                    Album::build_cache($this->_squashList($object_ids));
+                    break;
+                case 'artist':
+                    Artist::build_cache($this->_squashList($object_ids), true, $limit_threshold);
+                    break;
+                case 'playlist':
+                    Playlist::build_cache($this->_squashList($object_ids));
+                    break;
+                case 'tag':
+                case 'tag_hidden':
+                    Tag::build_cache($this->_squashList($object_ids));
+                    break;
+                case 'video':
+                    Video::build_cache($this->_squashList($object_ids));
+                    break;
             }
         }
 

@@ -833,9 +833,9 @@ class mpd
         $this->_debug('Shutdown', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_SHUTDOWN);
 
-        $this->connected = false;
-        unset($this->mpd_version);
-        unset($this->err_str);
+        $this->connected   = false;
+        $this->mpd_version = "(unknown)";
+        $this->err_str     = '';
         unset($this->_mpd_sock);
 
         $this->_debug('Shutdown', 'return: ' . $response, 5);
@@ -1075,9 +1075,9 @@ class mpd
             fclose($this->_mpd_sock);
         }
 
-        $this->connected = false;
-        unset($this->mpd_version);
-        unset($this->err_str);
+        $this->connected   = false;
+        $this->mpd_version = "(unknown)";
+        $this->err_str     = '';
         unset($this->_mpd_sock);
     }
 

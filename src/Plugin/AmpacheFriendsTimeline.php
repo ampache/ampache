@@ -35,7 +35,6 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\UserActivityRepositoryInterface;
-use Deprecated;
 use Override;
 
 class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeInterface

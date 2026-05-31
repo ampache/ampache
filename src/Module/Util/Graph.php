@@ -36,7 +36,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use CpChart\Data;
 use CpChart\Image;
-use Deprecated;
 
 class Graph
 {

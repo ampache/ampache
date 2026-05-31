@@ -623,7 +623,7 @@ class AmpacheMpd extends localplay_controller
     {
         // Look at the current instance and pull the options for said instance
         $options = self::get_instance();
-        if ($options === []) {
+        if ($options === [] || !isset($options['host'], $options['port'])) {
             return false;
         }
 

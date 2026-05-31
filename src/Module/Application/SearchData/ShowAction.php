@@ -30,7 +30,6 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Deprecated;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

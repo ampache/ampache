@@ -36,7 +36,6 @@ use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Deprecated;
 
 /**
  * AmpacheHttpq Class

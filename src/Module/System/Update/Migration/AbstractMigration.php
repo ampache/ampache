@@ -80,7 +80,7 @@ abstract class AbstractMigration implements MigrationInterface
     /**
      * Performs database migrations
      *
-     * @param array<mixed> $params
+     * @param list<mixed> $params
      * @throws DatabaseException
      */
     protected function updateDatabase(string $sql, array $params = []): void

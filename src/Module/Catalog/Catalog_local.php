@@ -46,7 +46,6 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
-use Deprecated;
 use Exception;
 
 /**

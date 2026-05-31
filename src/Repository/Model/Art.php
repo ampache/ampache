@@ -579,11 +579,14 @@ class Art extends database_object
         $cnt = count($apics);
         for ($i = 0; $i < $cnt; ++$i) {
             if ($new_pic['picturetypeid'] == $apics[$i][$apic_typeid]) {
-                $ndata['attached_picture'][$i]['data']          = $new_pic['data'];
-                $ndata['attached_picture'][$i]['description']   = $new_pic['description'];
-                $ndata['attached_picture'][$i]['mime']          = $new_pic['mime'];
-                $ndata['attached_picture'][$i]['picturetypeid'] = $new_pic['picturetypeid'];
-                $idx                                            = $i;
+                $ndata['attached_picture'][$i] = [
+                    'data' => $new_pic['data'],
+                    'description' => $new_pic['description'] ?? null,
+                    'mime' => $new_pic['mime'] ?? null,
+                    'picturetypeid' => $new_pic['picturetypeid'],
+                ];
+
+                $idx = $i;
                 break;
             }
         }

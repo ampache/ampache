@@ -36,7 +36,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
-use Deprecated;
 use Exception;
 use getID3;
 use getid3_writetags;
@@ -138,10 +137,6 @@ final class VaInfo implements VaInfoInterface
     /** @var array{dirname?: string, basename: string, extension?: string, filename: string}  */
     private array $_pathinfo;
 
-    private readonly ConfigContainerInterface $configContainer;
-
-    private readonly LoggerInterface $logger;
-
     /**
      * Constructor
      *
@@ -150,8 +145,8 @@ final class VaInfo implements VaInfoInterface
      */
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
-        ConfigContainerInterface $configContainer,
-        LoggerInterface $logger,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly LoggerInterface $logger,
         public string $filename,
         public array $gatherTypes = [],
         ?string $encoding = null,
@@ -206,7 +201,7 @@ final class VaInfo implements VaInfoInterface
 
             if ($configContainer->get(ConfigurationKeyEnum::MB_DETECT_ORDER)) {
                 $mb_order = $configContainer->get(ConfigurationKeyEnum::MB_DETECT_ORDER);
-            } elseif (function_exists('mb_detect_order') && is_array(mb_detect_order())) {
+            } elseif (function_exists('mb_detect_order') && mb_detect_order()) {
                 $mb_order = implode(", ", mb_detect_order());
             } else {
                 $mb_order = 'auto';
@@ -241,9 +236,6 @@ final class VaInfo implements VaInfoInterface
                 $this->_getID3->encoding = $this->encodingId3v2;
             }
         }
-
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
     }
 
     /**
@@ -673,7 +665,7 @@ final class VaInfo implements VaInfoInterface
             $info['publisher'] = (!$info['publisher'] && array_key_exists('publisher', $tags)) ? trim((string)$tags['publisher']) : $info['publisher'];
 
             // genre is an array treat it as one
-            $info['genre'] = (!$info['genre'] && array_key_exists('genre', $tags) && is_array($tags['genre']) && (isset($tags['genre']) && $tags['genre'] !== []))
+            $info['genre'] = (!$info['genre'] && array_key_exists('genre', $tags) && is_array($tags['genre']) && (!empty($tags['genre'])))
                 ? $tags['genre']
                 : $info['genre'];
 
@@ -1008,7 +1000,7 @@ final class VaInfo implements VaInfoInterface
     {
         //$this->logger->debug('_parse_general: ' . print_r($tags, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
         $parsed          = [];
-        $parsed['title'] = (isset($this->_pathinfo['filename']))
+        $parsed['title'] = ($this->_pathinfo['filename'])
             ? urldecode($this->_pathinfo['filename'])
             : '';
         if (array_key_exists('audio', $tags)) {
@@ -1033,7 +1025,7 @@ final class VaInfo implements VaInfoInterface
             $parsed['video_bitrate'] = $tags['video']['bitrate'] ?? null;
         }
 
-        $parsed['size']     = $this->_forcedSize ?? $tags['filesize'] ?? null;
+        $parsed['size']     = $this->_forcedSize ?: $tags['filesize'] ?? null;
         $parsed['encoding'] = $tags['encoding'] ?? null;
         $parsed['mime']     = $tags['mime_type'] ?? null;
         if (($parsed['size'] && array_key_exists('avdataoffset', $tags) && array_key_exists('bitrate', $tags))) {
@@ -1045,7 +1037,7 @@ final class VaInfo implements VaInfoInterface
             $parsed['time'] = 0;
         }
 
-        if (isset($tags['ape']) && isset($tags['ape']['items'])) {
+        if (isset($tags['ape']['items'])) {
             foreach ($tags['ape']['items'] as $key => $tag) {
                 switch (strtolower((string) $key)) {
                     case 'replaygain_track_gain':
@@ -2052,7 +2044,7 @@ final class VaInfo implements VaInfoInterface
         $result = [];
         if (is_array($data)) {
             foreach ($data as $row) {
-                if (!empty($row)) {
+                if (!empty($row) && is_string($row)) {
                     foreach (self::splitSlashedlist(str_replace("\x00", ';', str_replace('Folk, World, & Country', 'Folk World & Country', $row))) as $genre) {
                         $result[] = $genre;
                     }

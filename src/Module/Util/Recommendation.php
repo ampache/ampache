@@ -132,7 +132,7 @@ class Recommendation
     protected static function delete_recommendation_cache(string $type, int $object_id): void
     {
         $cache = self::get_recommendation_cache($type, $object_id);
-        if ($cache !== null && array_key_exists('id', $cache)) {
+        if ($cache !== null && $cache['id']) {
             Dba::write('DELETE FROM `recommendation_item` WHERE `recommendation` = ?', [$cache['id']]);
             Dba::write('DELETE FROM `recommendation` WHERE `id` = ?', [$cache['id']]);
         }
@@ -210,7 +210,7 @@ class Recommendation
         }
 
         $cache = self::get_recommendation_cache('song', $song_id, true);
-        if ($cache === null || !array_key_exists('id', $cache)) {
+        if ($cache === null || !$cache['id']) {
             $similars = [];
             try {
                 $xml = self::get_lastfm_results('track.getsimilar', $query);
@@ -307,7 +307,7 @@ class Recommendation
         }
 
         $cache = self::get_recommendation_cache('artist', $artist_id, true);
-        if ($cache === null || !array_key_exists('id', $cache)) {
+        if ($cache === null || !$cache['id']) {
             $artist   = new Artist($artist_id);
             $similars = [];
             $fullname = (string)$artist->get_fullname();
@@ -503,7 +503,7 @@ class Recommendation
 
         if ($artist->isNew() === false) {
             $results['id'] = $artist->id;
-            if (isset($results['summary']) && ($results['summary'] !== '' && $results['summary'] !== '0')) {
+            if (!empty($results['summary'])) {
                 $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
             }
 

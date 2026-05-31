@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\User\PrivateMessage;
 
 use Ampache\Repository\Model\User;
+use Ampache\Module\User\PrivateMessage\Exception\PrivateMessageCreationException;
 use PHPMailer\PHPMailer\Exception;
 
 interface PrivateMessageCreatorInterface
@@ -33,7 +34,7 @@ interface PrivateMessageCreatorInterface
     /**
      * Sends a private message to a user
      *
-     * @throws Exception\PrivateMessageCreationException
+     * @throws PrivateMessageCreationException
      * @throws Exception
      */
     public function create(

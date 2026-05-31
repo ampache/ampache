@@ -27,7 +27,6 @@ namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\User;
-use Deprecated;
 use Exception;
 
 /**
