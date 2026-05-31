@@ -248,7 +248,7 @@ class Browse extends Query
      * This takes an array of objects
      * and requires the correct template based on the
      * type that we are currently browsing
-     * @param array<int|string>|null $object_ids
+     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|null $object_ids
      */
     public function show_objects(?array $object_ids = [], bool|array|string $argument = false, ?bool $skip_cookies = false): void
     {
@@ -259,27 +259,30 @@ class Browse extends Query
             $object_ids = $this->get_saved();
         } else {
             $this->save_objects($object_ids);
-            // build cache for new browses
-            switch ($type) {
-                case 'song':
-                    Song::build_cache($object_ids, $limit_threshold);
-                    break;
-                case 'album':
-                    Album::build_cache($object_ids);
-                    break;
-                case 'artist':
-                    Artist::build_cache($object_ids, true, $limit_threshold);
-                    break;
-                case 'playlist':
-                    Playlist::build_cache($object_ids);
-                    break;
-                case 'tag':
-                case 'tag_hidden':
-                    Tag::build_cache($object_ids);
-                    break;
-                case 'video':
-                    Video::build_cache($object_ids);
-                    break;
+
+            if (!is_array($object_ids[0])) {
+                // build cache for new browses
+                switch ($type) {
+                    case 'song':
+                        Song::build_cache($object_ids, $limit_threshold);
+                        break;
+                    case 'album':
+                        Album::build_cache($object_ids);
+                        break;
+                    case 'artist':
+                        Artist::build_cache($object_ids, true, $limit_threshold);
+                        break;
+                    case 'playlist':
+                        Playlist::build_cache($object_ids);
+                        break;
+                    case 'tag':
+                    case 'tag_hidden':
+                        Tag::build_cache($object_ids);
+                        break;
+                    case 'video':
+                        Video::build_cache($object_ids);
+                        break;
+                }
             }
         }
 
