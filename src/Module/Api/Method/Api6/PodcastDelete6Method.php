@@ -121,7 +121,7 @@ final class PodcastDelete6Method implements MethodInterface
         $this->podcastDeleter->delete($podcast);
 
         $response->getBody()->write(
-            $output->success(sprintf('podcast %d deleted', $podcastId))
+            $output->success6(sprintf('podcast %d deleted', $podcastId))
         );
 
         return $response;
