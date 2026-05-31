@@ -275,7 +275,7 @@ class Xml6_Data
      * This takes an array of object_ids and return XML based on the type of object
      * we want
      *
-     * @param list<int|string> $objects Array of object_ids (Mixed string|int)
+     * @param array<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $object_type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param bool $include include children from objects that have them
      */
@@ -412,7 +412,7 @@ class Xml6_Data
      * This takes an array of object_ids and return XML based on the type of object
      * we want
      *
-     * @param list<int|string> $objects Array of object_ids (Mixed string|int)
+     * @param array<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $object_type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param bool $full_xml whether to return a full XML document or just the node.
      * @param bool $include include episodes from podcasts or tracks in a playlist
@@ -555,7 +555,7 @@ class Xml6_Data
      * This takes an array of object_ids and return XML based on the type of object
      * we want
      *
-     * @param array{string?: list<int|string>} $searches Array of object_ids by object type
+     * @param array{string?: array<int|string>} $searches Array of object_ids by object type
      * @param array{string?: int} $counts Array of counts for each object type
      */
     public static function searches(array $searches, array $counts, User $user, string $auth): string
@@ -686,9 +686,6 @@ class Xml6_Data
 
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         foreach ($objects as $object) {
-            if (!is_array($object)) {
-                continue;
-            }
             $trimmed  = Catalog::trim_prefix(trim((string)$object['name']), $pattern);
             $prefix   = $trimmed['prefix'] ?? null;
             $basename = $trimmed['string'];
@@ -706,7 +703,7 @@ class Xml6_Data
      *
      * This takes a name array of objects and return the data in XML format
      *
-     * @param list<array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @param array<int, array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
      */
     public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
     {
@@ -739,7 +736,7 @@ class Xml6_Data
      *
      * This returns licenses to the user, in a pretty xml document with the information
      *
-     * @param list<int|string> $objects Licence id's assigned to songs and artists
+     * @param array<int|string> $objects Licence id's assigned to songs and artists
      */
     public static function licenses(array $objects, User $user): string
     {
@@ -767,7 +764,7 @@ class Xml6_Data
      *
      * This returns labels to the user, in a pretty xml document with the information
      *
-     * @param list<int|string> $objects
+     * @param array<int|string> $objects
      */
     public static function labels(array $objects, User $user): string
     {
@@ -798,7 +795,7 @@ class Xml6_Data
      *
      * This returns live_streams to the user, in a pretty xml document with the information
      *
-     * @param list<int|string> $objects
+     * @param array<int|string> $objects
      */
     public static function live_streams(array $objects, User $user, bool $full_xml = true): string
     {
@@ -823,7 +820,7 @@ class Xml6_Data
      *
      * This returns genres to the user, in a pretty xml document with the information
      *
-     * @param list<int|string> $objects Genre id's to include
+     * @param array<int|string> $objects Genre id's to include
      */
     public static function genres(array $objects, User $user): string
     {
@@ -858,7 +855,7 @@ class Xml6_Data
      * This takes an array of artists and then returns a pretty xml document with the information
      * we want
      *
-     * @param list<int|string> $objects Artist id's to include
+     * @param array<int|string> $objects Artist id's to include
      * @param string[] $include Array of other items to include.
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
@@ -902,7 +899,7 @@ class Xml6_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param list<int|string> $objects Album id's to include
+     * @param array<int|string> $objects Album id's to include
      * @param string[] $include Array of other items to include.
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
@@ -967,7 +964,7 @@ class Xml6_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param list<int|string> $objects Playlist id's to include
+     * @param array<int|string> $objects Playlist id's to include
      */
     public static function playlists(array $objects, User $user, string $auth, bool $songs = false): string
     {
@@ -1045,7 +1042,7 @@ class Xml6_Data
      *
      * This returns shares to the user, in a pretty xml document with the information
      *
-     * @param list<int|string> $objects Share id's to include
+     * @param array<int|string> $objects Share id's to include
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
     public static function shares(array $objects, User $user, bool $full_xml = true): string
@@ -1070,7 +1067,7 @@ class Xml6_Data
      *
      * This returns bookmarks to the user, in a pretty xml document with the information
      *
-     * @param list<int> $bookmarks Bookmark id's to include
+     * @param int[] $bookmarks Bookmark id's to include
      * @param bool $include if true include the object in the bookmark
      */
     public static function bookmarks(array $bookmarks, string $auth, bool $include = false): string
@@ -1113,7 +1110,7 @@ class Xml6_Data
      *
      * This returns catalogs to the user, in a pretty xml document with the information
      *
-     * @param list<int|string> $objects group of catalog id's
+     * @param array<int|string> $objects group of catalog id's
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
     public static function catalogs(array $objects, User $user, bool $full_xml = true): string
@@ -1141,7 +1138,7 @@ class Xml6_Data
      *
      * This returns podcasts to the user, in a pretty xml document with the information
      *
-     * @param list<int|string> $objects Podcast id's to include
+     * @param array<int|string> $objects Podcast id's to include
      * @param bool $episodes include the episodes of the podcast //optional
      */
     public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false): string
@@ -1184,7 +1181,7 @@ class Xml6_Data
      *
      * This returns podcasts to the user, in a pretty xml document with the information
      *
-     * @param list<int|string> $objects Podcast_Episode id's to include
+     * @param array<int|string> $objects Podcast_Episode id's to include
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
     public static function podcast_episodes(array $objects, User $user, string $auth, bool $full_xml = true): string
@@ -1217,7 +1214,7 @@ class Xml6_Data
      *
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
-     * @param list<int|string> $objects
+     * @param array<int|string> $objects
      */
     public static function songs(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
@@ -1301,7 +1298,7 @@ class Xml6_Data
      *
      * This returns an array of song tags populated from an array of song ids.
      *
-     * @param list<int|string> $objects
+     * @param array<int|string> $objects
      */
     public static function song_tags(array $objects, string $auth): string
     {
@@ -1405,7 +1402,7 @@ class Xml6_Data
      *
      * This builds the xml document for displaying video objects
      *
-     * @param list<int|string> $objects Video id's to include
+     * @param array<int|string> $objects Video id's to include
      */
     public static function videos(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
@@ -1438,7 +1435,7 @@ class Xml6_Data
      * This handles creating an xml document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param list<array{
+     * @param array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track_id: int,
@@ -1474,7 +1471,7 @@ class Xml6_Data
             $string .= "<song id=\"" . $song->id . "\">\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n" .
                 "\t<artist id=\"" . $song->artist . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_artist['basename'] . "]]></basename>\n</artist>\n" .
                 "\t<album id=\"" . $song->album . "\"><name><![CDATA[" . $song_album['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_album['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_album['basename'] . "]]></basename>\n</album>\n" .
-                "\t<genre id=\"" . ($tag->id ?? '') . "\"><name><![CDATA[" . ($tag->name ?? '') . "]]></name></genre>\n";
+                "\t<genre id=\"" . ($tag->id ?: '') . "\"><name><![CDATA[" . ($tag->name ?: '') . "]]></name></genre>\n";
             $string .= $tag_string . "\t<track>" . $song->track . "</track>\n\t<time><![CDATA[" . $song->time . "]]></time>\n\t<format>" . $songType . "</format>\n\t<bitrate>" . $songBitrate . "</bitrate>\n\t<mime><![CDATA[" . $songMime . "]]></mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($song->has_art() ? 1 : 0) . "</has_art>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n<playcount>" . $song->total_count . "</playcount>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
         } // end foreach
 
@@ -1507,7 +1504,7 @@ class Xml6_Data
      *
      * This handles creating an xml document for a user list
      *
-     * @param list<int|string> $objects User identifier list
+     * @param array<int|string> $objects User identifier list
      */
     public static function users(array $objects): string
     {
@@ -1531,7 +1528,7 @@ class Xml6_Data
      *
      * This handles creating a xml document for a now_playing list
      *
-     * @param list<array{
+     * @param array<int, array{
      *     media: library_item,
      *     client: User,
      *     agent: string,
@@ -1559,7 +1556,7 @@ class Xml6_Data
      *
      * This handles creating a xml document for a shout list
      *
-     * @param list<Shoutbox> $shouts Shout identifier list
+     * @param array<Shoutbox> $shouts Shout identifier list
      */
     public static function shouts(array $shouts): string
     {
@@ -1633,7 +1630,7 @@ class Xml6_Data
      * we want
      *
      * @param string $object_type ('song', 'podcast_episode', 'video')
-     * @param list<array{
+     * @param array<int, array{
      *     id: int,
      *     addition_time: int,
      *     delete_time: int,

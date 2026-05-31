@@ -42,7 +42,7 @@ final class RefreshPlaylistMediasAction implements ApplicationActionInterface
 
     public function __construct(
         RequestParserInterface $requestParser,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
     ) {
         $this->requestParser = $requestParser;
         $this->modelFactory  = $modelFactory;

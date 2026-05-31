@@ -52,7 +52,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
@@ -60,7 +60,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
 
     public function run(
         ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
         $this->logger->debug(
             'Called for action: {' . Core::get_request('action') . '}',
@@ -132,6 +132,6 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         string $object_type,
         library_item $libitem,
         int $object_id,
-        ?Browse $browse = null
+        ?Browse $browse = null,
     ): ?ResponseInterface;
 }

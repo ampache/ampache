@@ -54,7 +54,7 @@ final class EditObjectAction extends AbstractEditAction
     public function __construct(
         ConfigContainerInterface $configContainer,
         LabelRepositoryInterface $labelRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         parent::__construct($configContainer, $logger);
         $this->labelRepository = $labelRepository;
@@ -67,7 +67,7 @@ final class EditObjectAction extends AbstractEditAction
         string $object_type,
         library_item|Share $libitem,
         int $object_id,
-        ?Browse $browse = null
+        ?Browse $browse = null,
     ): ?ResponseInterface {
         // Scrub the data, walk recursive through array
         $entities = function (&$data) use (&$entities) {
@@ -169,7 +169,7 @@ final class EditObjectAction extends AbstractEditAction
 
         xoutput_headers();
 
-        echo (string) xoutput_from_array(['id' => $object_id]);
+        echo xoutput_from_array(['id' => $object_id]);
 
         return null;
     }

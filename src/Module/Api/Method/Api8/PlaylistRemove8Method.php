@@ -31,22 +31,22 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 
 /**
- * Class PlaylistRemoveSong8Method
+ * Class PlaylistRemove8Method
  * @package Lib\Api8Methods
  */
-final class PlaylistRemoveSong8Method
+final class PlaylistRemove8Method
 {
-    public const ACTION = 'playlist_remove_song';
+    public const ACTION = 'playlist_remove';
 
-    public const REST_ACTION = 'playlist_remove_song_edit';
+    public const REST_ACTION = 'playlist_remove_edit';
 
     /**
-     * playlist_remove_song
+     * playlist_remove
      * MINIMUM_API_VERSION=380001
      * CHANGED_IN_API_VERSION=400001
      * CHANGED_IN_API_VERSION=420000
      *
-     * This removes a song from a playlist using track number in the list or song ID.
+     * This removes an object from a playlist using track number in the list or song ID.
      * Pre-400001 the api required 'track' instead of 'song'.
      * 420000+: added clear to allow you to clear a playlist without getting all the tracks.
      *
@@ -54,19 +54,21 @@ final class PlaylistRemoveSong8Method
      *
      * filter = (string) UID of playlist
      * song   = (string) UID of song to remove from the playlist //optional
+     * type   = (string) 'song', 'album', 'artist', 'playlist' //optional, default = song
      * track  = (string) track number to remove from the playlist //optional
      * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
      *
      * @param array{
      *     filter: string,
      *     song?: string,
+     *     type: string,
      *     track?: string,
      *     clear?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
      */
-    public static function playlist_remove_song(array $input, User $user): bool
+    public static function playlist_remove(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
@@ -111,14 +113,15 @@ final class PlaylistRemoveSong8Method
      * @param array{
      *     filter: string,
      *     song?: string,
+     *     type: string,
      *     track?: string,
      *     clear?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
      */
-    public static function playlist_remove_song_edit(array $input, User $user): bool
+    public static function playlist_remove_edit(array $input, User $user): bool
     {
-        return self::playlist_remove_song($input, $user);
+        return self::playlist_remove($input, $user);
     }
 }

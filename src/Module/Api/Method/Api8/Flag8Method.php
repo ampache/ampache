@@ -72,14 +72,14 @@ final class Flag8Method
             return false;
         }
 
-        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
-        if (!Api::check_parameter($input, ['type', 'id', 'flag'], self::ACTION)) {
+        $input['filter'] = $input['id'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['type', 'filter', 'flag'], self::ACTION)) {
             return false;
         }
 
         ob_end_clean();
         $type      = (string) $input['type'];
-        $object_id = (int) $input['id'];
+        $object_id = (int) $input['filter'];
         $flag      = make_bool($input['flag']);
         $date      = (int)($input['date'] ?? time());
 
@@ -96,7 +96,7 @@ final class Flag8Method
             $object_id === 0
         ) {
             $type      = 'search';
-            $object_id = (int) str_replace('smart_', '', (string)$input['id']);
+            $object_id = (int) str_replace('smart_', '', (string)$input['filter']);
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);

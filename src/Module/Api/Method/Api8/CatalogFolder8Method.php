@@ -74,15 +74,12 @@ final class CatalogFolder8Method
             return false;
         }
 
-        $input['catalog'] = $input['filter'] ?? $input['catalog'] ?? null;
-        if (!Api::check_parameter($input, ['catalog', 'folder', 'task'], self::ACTION)) {
+        $input['filter'] = $input['catalog'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['filter', 'folder', 'task'], self::ACTION)) {
             return false;
         }
         $folder = html_entity_decode($input['folder']);
         $task   = explode(',', html_entity_decode((string)($input['task'])));
-        if (!is_array($task)) {
-            $task = [];
-        }
 
         // confirm that a valid task is going to happen
         if (!AmpConfig::get('delete_from_disk') && in_array('remove', $task)) {
@@ -107,7 +104,7 @@ final class CatalogFolder8Method
             $output_task .= $item . ', ';
         }
         $output_task = rtrim($output_task, ', ');
-        $catalog_id  = (int) $input['catalog'];
+        $catalog_id  = (int) $input['filter'];
         $catalog     = Catalog::create_from_id($catalog_id);
         if ($catalog === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -146,7 +143,7 @@ final class CatalogFolder8Method
             }
             // Run commands on the current files in the folder path
             foreach ($file_ids as $file_id) {
-                /** @var Song|Podcast_Episode|Video $className */
+                /** @var Song|Podcast_Episode|Video $media */
                 $media = new $className($file_id);
                 if ($media->isNew()) {
                     continue;

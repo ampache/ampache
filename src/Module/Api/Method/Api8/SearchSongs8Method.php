@@ -52,16 +52,28 @@ final class SearchSongs8Method
      * operator        = (string) 'and', 'or' (whether to match one rule or all)
      * rule_1          = (string)
      * rule_1_operator = (integer) 0|1|2|3|4|5|6
-     * rule_1_input    = (mixed) The string, date, integer you are searching for
+     * filter          = (string) The string, date, integer you are searching for
      * type            = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' (song by default) //optional
      * random          = (boolean)  0, 1 (random order of results; default to 0) //optional
      * offset          = (integer) //optional
      * limit           = (integer) //optional
      *
-     * @param array<string, mixed> $input
+     * @param array{
+     *     operator: string,
+     *     rule_1: string,
+     *     rule_1_operator: int,
+     *     rule_1_input?: string,
+     *     filter?: string,
+     *     type?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
      */
     public static function search_songs(array $input, User $user): bool
     {
+        $input['filter'] = $input['rule_1_input'] ?? $input['filter'] ?? null;
         if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }

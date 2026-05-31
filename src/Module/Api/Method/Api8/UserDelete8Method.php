@@ -65,12 +65,12 @@ final class UserDelete8Method
             return false;
         }
 
-        $input['username'] = $input['filter'] ?? $input['username'] ?? null;
-        if (!Api::check_parameter($input, ['username'], self::ACTION)) {
+        $input['filter'] = $input['username'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
 
-        $username = $input['username'];
+        $username = $input['filter'];
         $del_user = (is_numeric($username))
             ? User::get_from_id((int)$username)
             : User::get_from_username((string)$username);
@@ -83,7 +83,7 @@ final class UserDelete8Method
         }
 
         // don't delete yourself or admins
-        if ($del_user instanceof User && $del_user->username !== $user->username && $del_user->access < 100 && $del_user->delete()) {
+        if ($del_user->username !== $user->username && $del_user->access < 100 && $del_user->delete()) {
             Api::message('successfully deleted: ' . $username, $input['api_format']);
             Catalog::count_table('user');
 

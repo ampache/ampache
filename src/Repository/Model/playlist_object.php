@@ -181,9 +181,13 @@ abstract class playlist_object extends database_object implements library_item
      */
     private function _update_collaborate(array $new_list, int|string $playlist_id): void
     {
-        $collaborate = implode(',', $new_list);
+        /** @var int[] $ids */
+        $ids = array_filter(
+            array_map('intval', $new_list)
+        );
+
+        $collaborate = implode(',', $ids);
         if ($this->update_item('collaborate', $collaborate)) {
-            $this->collaborate = $collaborate;
 
             $sql = (empty($collaborate))
                 ? "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;"
@@ -229,7 +233,7 @@ abstract class playlist_object extends database_object implements library_item
         return (bool)(
             $user instanceof User &&
             !empty($this->collaborate) &&
-            in_array($user->getId(), explode(',', (string)$this->collaborate))
+            in_array($user->getId(), array_map('intval', explode(',', (string)$this->collaborate)))
         );
     }
 

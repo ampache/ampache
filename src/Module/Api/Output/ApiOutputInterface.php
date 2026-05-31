@@ -27,16 +27,22 @@ use Ampache\Repository\Model\User;
 
 interface ApiOutputInterface
 {
-    public function setOffset(int $offset): void;
+    public function setOffset6(int|string $offset): void;
 
-    public function setLimit(int $limit): void;
+    public function setOffset(int|string $offset): void;
 
-    public function setCount(int $count): void;
+    public function setLimit6(int|string $limit): void;
+
+    public function setLimit(int|string $limit): void;
+
+    public function setCount6(int|string $count): void;
+
+    public function setCount(int|string $count): void;
 
     /**
-     * @param list<int|string> $result
+     * @param array<int|string> $result
      */
-    public function podcastEpisodes(
+    public function podcastEpisodes6(
         array $result,
         User $user,
         string $auth,
@@ -45,8 +51,15 @@ interface ApiOutputInterface
     /**
      * Generate an empty api result
      */
+    public function writeEmpty6(
+        string $emptyType,
+    ): string;
+
+    /**
+     * Generate an empty api result
+     */
     public function writeEmpty(
-        string $emptyType
+        string $emptyType,
     ): string;
 
     /**
@@ -56,7 +69,7 @@ interface ApiOutputInterface
         int $code,
         string $message,
         string $action,
-        string $type
+        string $type,
     ): string;
 
     /**
@@ -64,7 +77,7 @@ interface ApiOutputInterface
      */
     public function error3(
         int $code,
-        string $message
+        string $message,
     ): string;
 
     /**
@@ -72,7 +85,7 @@ interface ApiOutputInterface
      */
     public function error4(
         int $code,
-        string $message
+        string $message,
     ): string;
 
     /**
@@ -82,7 +95,7 @@ interface ApiOutputInterface
         int $code,
         string $message,
         string $action,
-        string $type
+        string $type,
     ): string;
 
     /**
@@ -92,11 +105,25 @@ interface ApiOutputInterface
         int $code,
         string $message,
         string $action,
-        string $type
+        string $type,
     ): string;
 
     /**
-     * @param list<int|string> $albums
+     * @param array<int|string> $albums
+     * @param string[] $include
+     *
+     */
+    public function albums6(
+        array $albums,
+        array $include,
+        User $user,
+        string $auth,
+        bool $encode = true,
+        bool $asObject = true,
+    ): string;
+
+    /**
+     * @param array<int|string> $albums
      * @param string[] $include
      *
      */
@@ -106,8 +133,17 @@ interface ApiOutputInterface
         User $user,
         string $auth,
         bool $encode = true,
-        bool $asObject = true
+        bool $asObject = true,
     ): string;
+
+    /**
+     * This generates a standard JSON Success message
+     * nothing fancy here...
+     *
+     * @param string $string success message
+     * @param array<string, string> $return_data
+     */
+    public function success6(string $string, array $return_data = []): string;
 
     /**
      * This generates a standard JSON Success message

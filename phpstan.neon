@@ -1,5 +1,6 @@
 parameters:
   level: 8
+  reportUnmatchedIgnoredErrors: false
   paths:
     - public
     - src
@@ -7,8 +8,8 @@ parameters:
     - public/lib
     - public/themes
     - public/upnp
-    - public/ample
-    - public/foam
+    - public/ample (?)
+    - public/foam (?)
     - src/Module/Playback/Scrobble/ScrobblerAsync.php
     - tests
 includes:
