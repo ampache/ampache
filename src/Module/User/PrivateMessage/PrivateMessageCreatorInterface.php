@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\PrivateMessage;
 
-use Ampache\Repository\Model\User;
 use Ampache\Module\User\PrivateMessage\Exception\PrivateMessageCreationException;
+use Ampache\Repository\Model\User;
 use PHPMailer\PHPMailer\Exception;
 
 interface PrivateMessageCreatorInterface
