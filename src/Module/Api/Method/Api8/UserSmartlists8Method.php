@@ -78,7 +78,7 @@ final class UserSmartlists8Method
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
-        $results = preg_filter('/^/', 'smart_', $browse->get_objects());
+        $results = array_values(preg_filter('/^/', 'smart_', $browse->get_objects()));
         if (empty($results)) {
             Api::empty('playlist', $input['api_format']);
 
@@ -91,12 +91,14 @@ final class UserSmartlists8Method
                 Json8_Data::set_offset((int)($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
                 Json8_Data::set_count($browse->get_total());
+                /** @var array<string> $results */
                 echo Json8_Data::playlists($results, $user, $input['auth'], $include);
                 break;
             default:
                 Xml8_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
                 Xml8_Data::set_count($browse->get_total());
+                /** @var array<string> $results */
                 echo Xml8_Data::playlists($results, $user, $input['auth'], $include);
         }
 

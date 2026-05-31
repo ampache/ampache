@@ -178,7 +178,7 @@ class Json4_Data
      *
      * This takes an array of object_ids and return JSON based on the type of object
      *
-     * @param list<int|string> $objects Array of object_ids (Mixed string|int)
+     * @param array<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"
@@ -235,7 +235,7 @@ class Json4_Data
      *
      * This returns licenses to the user, in a pretty JSON document with the information
      *
-     * @param list<int|string> $licenses
+     * @param array<int|string> $licenses
      */
     public static function licenses(array $licenses): string
     {
@@ -265,7 +265,7 @@ class Json4_Data
      *
      * This returns tags to the user, in a pretty JSON document with the information
      *
-     * @param list<int|string> $tags
+     * @param array<int|string> $tags
      */
     public static function tags(array $tags): string
     {
@@ -302,7 +302,7 @@ class Json4_Data
      * This takes an array of artists and then returns a pretty JSON document with the information
      * we want
      *
-     * @param list<int|string> $artists
+     * @param array<int|string> $artists
      * @param string[] $include
      * @return array|string return JSON
      */
@@ -374,7 +374,7 @@ class Json4_Data
      *
      * This echos out a standard albums JSON document, it pays attention to the limit
      *
-     * @param list<int|string> $albums
+     * @param array<int|string> $albums
      * @param string[] $include
      */
     public static function albums(array $albums, array $include, User $user, string $auth, bool $encode = true): array|string
@@ -412,7 +412,7 @@ class Json4_Data
             }
 
             // Handle includes
-            if (in_array("songs", $include) && isset($album->id)) {
+            if (in_array("songs", $include)) {
                 $songs = self::songs(self::getAlbumRepository()->getSongs($album->id), $user, $auth, false);
             } else {
                 $songs = $album->song_count;
@@ -447,7 +447,7 @@ class Json4_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
-     * @param list<int|string> $playlists Playlist id's to include
+     * @param array<int|string> $playlists Playlist id's to include
      */
     public static function playlists(array $playlists, User $user, string $auth, bool $songs = false): string
     {
@@ -524,7 +524,7 @@ class Json4_Data
      *
      * This returns shares to the user, in a pretty json document with the information
      *
-     * @param list<int|string> $shares
+     * @param array<int|string> $shares
      */
     public static function shares(array $shares): string
     {
@@ -625,7 +625,7 @@ class Json4_Data
      *
      * This returns podcasts to the user, in a pretty json document with the information
      *
-     * @param list<int|string> $podcasts Podcast id's to include
+     * @param array<int|string> $podcasts Podcast id's to include
      * @param bool $episodes include the episodes of the podcast
      */
     public static function podcasts(array $podcasts, User $user, string $auth, bool $episodes = false): string
@@ -693,7 +693,7 @@ class Json4_Data
      *
      * This returns podcasts to the user, in a pretty json document with the information
      *
-     * @param list<int|string> $podcast_episodes Podcast_Episode id's to include
+     * @param array<int|string> $podcast_episodes Podcast_Episode id's to include
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast_episode"
      */
@@ -751,7 +751,7 @@ class Json4_Data
      *
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
-     * @param list<int|string> $songs
+     * @param array<int|string> $songs
      * @param bool $encode return JSON encoded string
      */
     public static function songs(array $songs, User $user, string $auth, bool $encode = true): array|string
@@ -1012,7 +1012,7 @@ class Json4_Data
      *
      * This handles creating an JSON document for a user list
      *
-     * @param list<int|string> $users    User identifier list
+     * @param array<int|string> $users    User identifier list
      */
     public static function users(array $users): string
     {

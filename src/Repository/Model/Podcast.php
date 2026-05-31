@@ -467,6 +467,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 
     /**
      * Returns the last sync-date
+     * @throws \DateMalformedStringException
      */
     public function getLastSyncDate(): DateTimeInterface
     {
@@ -487,6 +488,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 
     /**
      * Returns the last build-date
+     * @throws \DateMalformedStringException
      */
     public function getLastBuildDate(): DateTimeInterface
     {
@@ -519,7 +521,6 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     /**
      * update
      * This takes a key'd array of data and updates the current podcast
-     * @param array<mixed> $data
      */
     public function update(array $data): never
     {
@@ -531,7 +532,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      *
      * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getEpisodeIds(
         ?PodcastEpisodeStateEnum $stateFilter = null,

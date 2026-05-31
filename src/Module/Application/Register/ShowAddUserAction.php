@@ -58,7 +58,6 @@ final readonly class ShowAddUserAction implements ApplicationActionInterface
 
         // Check for confirmation email requirements when mail is disabled
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false &&
             !Mailer::is_mail_enabled()
         ) {

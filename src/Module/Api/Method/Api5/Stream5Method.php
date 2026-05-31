@@ -59,7 +59,7 @@ final class Stream5Method
      *     id: string,
      *     type: string,
      *     bitrate?: int,
-     *     format?: int,
+     *     format?: string,
      *     offset?: int,
      *     length?: int,
      *     stats?: string,

@@ -41,7 +41,7 @@ interface PodcastEpisodeRepositoryInterface
      *
      * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getEpisodes(Podcast $podcast, ?PodcastEpisodeStateEnum $stateFilter = null): array;
 

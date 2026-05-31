@@ -106,9 +106,7 @@ final class PlayItemAction extends AbstractStreamAction
 
                 if (array_key_exists('custom_play_action', $_REQUEST)) {
                     foreach ($mediaIds as $mediaId) {
-                        if (is_array($mediaId)) {
-                            $mediaId['custom_play_action'] = $_REQUEST['custom_play_action'];
-                        }
+                        $mediaId['custom_play_action'] = $_REQUEST['custom_play_action'];
                     }
                 }
 

@@ -83,7 +83,7 @@ final class UserDelete8Method
         }
 
         // don't delete yourself or admins
-        if ($del_user instanceof User && $del_user->username !== $user->username && $del_user->access < 100 && $del_user->delete()) {
+        if ($del_user->username !== $user->username && $del_user->access < 100 && $del_user->delete()) {
             Api::message('successfully deleted: ' . $username, $input['api_format']);
             Catalog::count_table('user');
 

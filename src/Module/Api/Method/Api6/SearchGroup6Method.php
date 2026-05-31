@@ -166,7 +166,9 @@ final class SearchGroup6Method
                 Json6_Data::set_offset($offset);
                 Json6_Data::set_limit($limit);
                 foreach ($results as $key => $search) {
-                    Json6_Data::set_count($count[$key]);
+                    if (array_key_exists($key, $count)) {
+                        Json6_Data::set_count($count[$key]);
+                    }
                     switch ($key) {
                         case 'album':
                             if ((count($search) > $limit || $offset > 0) && $limit) {

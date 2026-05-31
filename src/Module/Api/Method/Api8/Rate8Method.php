@@ -95,7 +95,7 @@ final class Rate8Method
             $object_id === 0
         ) {
             $type      = 'search';
-            $object_id = (int) str_replace('smart_', '', (string)$input['id']);
+            $object_id = (int) str_replace('smart_', '', (string)$input['filter']);
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);

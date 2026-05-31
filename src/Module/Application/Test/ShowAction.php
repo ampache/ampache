@@ -63,12 +63,14 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         // Make sure the config file is set up and parsable
-        $results = (is_readable($configfile)) ? parse_ini_file($configfile) : '';
-        if ($results === [] || $results === false || ($results === '' || $results === '0')) {
+        $results = (is_readable($configfile) && parse_ini_file($configfile))
+            ? parse_ini_file($configfile)
+            : false;
+        if (!$results) {
             $link = __DIR__ . '/../../public/client/test.php?action=config';
         }
 
-        if (is_array($results)) {
+        if (!empty($results)) {
             /* Temp Fixes */
             $results = Preference::fix_preferences($results);
             $this->configContainer->updateConfig($results);

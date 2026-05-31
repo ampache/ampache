@@ -108,7 +108,6 @@ class Access
      *
      * This checks if specific functionality is enabled.
      */
-    #[Deprecated(message: 'See FunctionChecker::check')]
     public static function check_function(AccessFunctionEnum $type): bool
     {
         global $dic;
@@ -127,7 +126,6 @@ class Access
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
      * always used.
      */
-    #[Deprecated(message: 'See PrivilegeChecker::check')]
     public static function check(AccessTypeEnum $type, AccessLevelEnum $level, ?int $user_id = null): bool
     {
         global $dic;

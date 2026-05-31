@@ -54,7 +54,7 @@ final class UpdateInstanceAction extends AbstractLocalPlayAction
     protected function handle(
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
-    ): ?ResponseInterface {
+    ): ResponseInterface {
         // This requires 75 or better!
         if ($gatekeeper->mayAccess(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();

@@ -90,7 +90,7 @@ final class RecordPlay8Method
         }
         ob_end_clean();
         $object_id = (int) $input['filter'];
-        $date      = (array_key_exists('date', $input) && is_numeric(scrub_in((string) $input['date']))) ? (int) scrub_in((string) $input['date']) : time(); //optional
+        $date      = (array_key_exists('date', $input)) ? (int) scrub_in((string) $input['date']) : time(); //optional
 
         // validate client string or fall back to 'api'
         $agent = scrub_in((string)($input['client'] ?? 'api'));

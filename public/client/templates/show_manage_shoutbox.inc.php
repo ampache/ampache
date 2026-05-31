@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Shoutbox;
 
 /** @var ShoutObjectLoaderInterface $shoutObjectLoader */
-/** @var list<Shoutbox> $shouts */
+/** @var array<Shoutbox> $shouts */
 
 $web_path = AmpConfig::get_web_path('/client');
 

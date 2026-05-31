@@ -38,22 +38,6 @@ use Ampache\Repository\Model\Video;
 class WebPlayer
 {
     /**
-     * Check if the playlist is a radio playlist.
-     */
-    public static function is_playlist_radio(Stream_Playlist $playlist): bool
-    {
-        $radios = [];
-
-        foreach ($playlist->urls as $item) {
-            if ($item->type == "radio") {
-                $radios[] = $item;
-            }
-        }
-
-        return (count($playlist->urls) === 1 && $radios !== [] && AmpConfig::get('webplayer_flash'));
-    }
-
-    /**
      * Check if the playlist is a video playlist.
      */
     public static function is_playlist_video(Stream_Playlist $playlist): bool

@@ -838,7 +838,7 @@ class Query
     /**
      * get_saved
      * This looks in the session for the saved stuff and returns what it finds.
-     * @return int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>
+     * @return array<int|string>|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>
      */
     public function get_saved(): array
     {
@@ -874,7 +874,7 @@ class Query
      * get_objects
      * This gets an array of the ids of the objects that we are
      * currently browsing by it applies the sql and logic based filters
-     * @return list<int|string>
+     * @return array<int|string>
      */
     public function get_objects(): array
     {

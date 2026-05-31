@@ -188,7 +188,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * build_cache
      * This takes an array of object ids and caches all of their information
      * with a single query
-     * @param list<int|string> $ids
+     * @param array<int|string> $ids
      */
     public static function build_cache(array $ids): bool
     {

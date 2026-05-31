@@ -87,7 +87,7 @@ class Userflag extends database_object
      * build_cache
      * This attempts to get everything we'll need for this page load in a
      * single query, saving on connection overhead
-     * @param list<int|string> $ids
+     * @param array<int|string> $ids
      */
     public static function build_cache(string $type, array $ids, ?int $user_id = null): bool
     {

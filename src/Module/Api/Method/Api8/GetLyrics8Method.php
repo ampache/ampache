@@ -89,11 +89,9 @@ final class GetLyrics8Method
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->_plugin instanceof PluginGetLyricsInterface && $plugin->load($user)) {
                     $lyrics = $plugin->_plugin->get_lyrics($libitem);
-                    if (!empty($lyrics)) {
-                        // save the lyrics if not set before
-                        if (array_key_exists('text', $lyrics) && !empty($lyrics['text'])) {
-                            $results['plugin'][$plugin_name] = $lyrics;
-                        }
+                    // save the lyrics if not set before
+                    if ($lyrics && !empty($lyrics['text'])) {
+                        $results['plugin'][$plugin_name] = $lyrics;
                     }
                 }
             }

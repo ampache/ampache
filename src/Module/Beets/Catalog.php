@@ -35,7 +35,6 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
-use Deprecated;
 
 /**
  * Catalog parent for local and remote beets catalog
@@ -416,7 +415,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         return '';
     }
 
-    #[Deprecated(message: 'inject dependency')]
     private function getMetadataManager(): MetadataManagerInterface
     {
         global $dic;

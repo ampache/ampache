@@ -45,7 +45,7 @@ final readonly class RefreshPlaylistAction implements ApplicationActionInterface
     ) {
     }
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         $userId     = $request->getQueryParams()['user_id'] ?? null;
         $playlistId = $request->getQueryParams()['playlist_id'] ?? null;

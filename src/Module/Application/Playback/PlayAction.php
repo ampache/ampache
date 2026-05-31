@@ -108,7 +108,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                     // key name
                     $key = $v;
                     $i   = 1;
-                } else {
+                } elseif ($key !== null) {
                     // key value
                     $value = $v;
                     $i     = 0;
@@ -413,7 +413,7 @@ final readonly class PlayAction implements ApplicationActionInterface
             $user = new User($share->user);
         }
 
-        if ((!$user instanceof User || $user->isNew()) && (!$share_id && !$secret)) {
+        if ($user->isNew() && !$share_id && !$secret) {
             $this->logger->error(
                 'No user specified {' . print_r($user, true) . '}',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -607,12 +607,13 @@ final readonly class PlayAction implements ApplicationActionInterface
         $transcode     = false;
         $transcode_cfg = AmpConfig::get('transcode', 'default');
         $cache_file    = false;
-        $mediaOwnerId  = ($media instanceof Song_Preview)
-            ? null
-            : $media->get_user_owner();
-        $mediaCatalogId = ($media instanceof Song_Preview)
-            ? null
-            : $media->catalog;
+        if ($media instanceof Song_Preview) {
+            $mediaOwnerId   = null;
+            $mediaCatalogId = null;
+        } else {
+            $mediaOwnerId   = $media->get_user_owner();
+            $mediaCatalogId = $media->getCatalogId();
+        }
         if ($mediaCatalogId) {
             /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted

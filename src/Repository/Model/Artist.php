@@ -149,7 +149,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * this attempts to build a cache of the data from the passed albums all in one query
-     * @param list<int|string> $ids
+     * @param array<int|string> $ids
      */
     public static function build_cache(array $ids, bool $extra = false, string $limit_threshold = ''): bool
     {

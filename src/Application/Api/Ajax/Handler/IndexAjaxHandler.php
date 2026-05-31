@@ -303,7 +303,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                     $this->wantedRepository->deleteByMusicbrainzId(
                         $mbid,
-                        ($user instanceof User && $user->has_access(AccessLevelEnum::MANAGER)) ? null : $user
+                        ($user->has_access(AccessLevelEnum::MANAGER)) ? null : $user
                     );
 
                     if ($walbum !== null) {
@@ -364,7 +364,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 $user_id = (isset($_REQUEST['user_id']))
                     ? (int)$this->requestParser->getFromRequest('user_id')
-                    : $user->id ?: -1;
+                    : ($user->id ?: -1);
                 $user_only = isset($_REQUEST['user_only']);
                 $ajax_page = 'index';
                 if (AmpConfig::get('home_recently_played_all')) {
@@ -545,6 +545,6 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
         } // switch on action;
 
         // We always do this
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 }

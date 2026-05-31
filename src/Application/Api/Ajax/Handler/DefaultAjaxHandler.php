@@ -42,7 +42,6 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\SongRepositoryInterface;
-use Deprecated;
 
 final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 {
@@ -227,10 +226,9 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
         } // end switch action
 
         // Go ahead and do the echo
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 
-    #[Deprecated(message: 'Inject by constructor')]
     private function getSongRepository(): SongRepositoryInterface
     {
         global $dic;

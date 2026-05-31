@@ -123,7 +123,7 @@ final class Stats6Method
             }
         }
 
-        if (!$user instanceof User || $user->isNew()) {
+        if ($user->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api6::error(sprintf('Bad Request: %s', 'user'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
