@@ -142,8 +142,8 @@ final class Albums8Method implements MethodInterface
 
         ob_end_clean();
 
-        $output->setOffset($input['offset'] ?? 0);
-        $output->setLimit($input['limit'] ?? 0);
+        $output->setOffset((int)($input['offset'] ?? 0));
+        $output->setLimit((int)($input['limit'] ?? 0));
         $output->setCount($browse->get_total());
 
         $result = $output->albums(
