@@ -27,6 +27,7 @@ namespace Ampache\Module\User\PrivateMessage;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Module\User\PrivateMessage\Exception\PrivateMessageCreationException;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
@@ -44,7 +45,7 @@ final readonly class PrivateMessageCreator implements PrivateMessageCreatorInter
     /**
      * Sends a private message to a user
      *
-     * @throws Exception\PrivateMessageCreationException
+     * @throws PrivateMessageCreationException
      * @throws Exception
      */
     public function create(

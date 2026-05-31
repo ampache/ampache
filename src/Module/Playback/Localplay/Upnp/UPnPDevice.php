@@ -76,8 +76,11 @@ class UPnPDevice
         debug_event('upnpdevice', 'parseDescriptionUrl: ' . $descriptionUrl, 5);
 
         $curl = curl_init();
+        if (empty($descriptionUrl)) {
+            return;
+        }
         curl_setopt($curl, CURLOPT_URL, $descriptionUrl);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($curl);
         //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
 
@@ -114,7 +117,7 @@ class UPnPDevice
      */
     public function sendRequestToDevice($method, $arguments, $type = 'RenderingControl'): string
     {
-        if (!array_key_exists('host', $this->_settings) || !array_key_exists('controlURLs', $this->_settings)) {
+        if (!$this->_settings['host'] || !$this->_settings['controlURLs'][$type]) {
             return '';
         }
 
@@ -144,7 +147,7 @@ class UPnPDevice
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $controlUrl);
-        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HEADER, true);

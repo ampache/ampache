@@ -95,37 +95,35 @@ class Stream_Url extends MemoryObject
 
         $results['base_url'] = $url;
 
-        if (is_array($elements)) {
-            foreach ($elements as $element) {
-                if (strpos($element, '=')) {
-                    [$key, $value] = explode('=', $element);
-                    switch ($key) {
-                        case 'oid':
-                            $key = 'id';
-                            break;
-                        case 'video':
-                            if (make_bool($value)) {
-                                $results['type'] = 'video';
-                            }
+        foreach ($elements as $element) {
+            if (strpos($element, '=')) {
+                [$key, $value] = explode('=', $element);
+                switch ($key) {
+                    case 'oid':
+                        $key = 'id';
+                        break;
+                    case 'video':
+                        if (make_bool($value)) {
+                            $results['type'] = 'video';
+                        }
 
-                            break;
-                        case 'demo_id':
-                            if (make_bool($value)) {
-                                $results['type'] = 'democratic';
-                            }
+                        break;
+                    case 'demo_id':
+                        if (make_bool($value)) {
+                            $results['type'] = 'democratic';
+                        }
 
-                            break;
-                        case 'random_id':
-                            if (make_bool($value)) {
-                                $results['type'] = 'random';
-                            }
+                        break;
+                    case 'random_id':
+                        if (make_bool($value)) {
+                            $results['type'] = 'random';
+                        }
 
-                            break;
-                    }
+                        break;
+                }
 
-                    if ($value !== '' && $value !== '0') {
-                        $results[$key] = $value;
-                    }
+                if ($value !== '' && $value !== '0') {
+                    $results[$key] = $value;
                 }
             }
         }

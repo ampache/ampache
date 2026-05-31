@@ -42,7 +42,6 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\SongRepositoryInterface;
-use Deprecated;
 
 final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 {

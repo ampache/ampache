@@ -43,7 +43,6 @@ use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
-use Deprecated;
 
 /**
  * A collection of methods related to the user interface
@@ -193,7 +192,7 @@ class Ui implements UiInterface
             return false;
         }
 
-        if (!isset(self::$_ticker) || (time() > self::$_ticker + 1)) {
+        if (!self::$_ticker || (time() > self::$_ticker + 1)) {
             self::$_ticker = time();
 
             return true;

@@ -238,7 +238,7 @@ class UPnPPlayer
     private function CallAsyncURL(string $url): void
     {
         $curl = curl_init();
-        if ($curl) {
+        if ($curl && !empty($url)) {
             curl_setopt($curl, CURLOPT_URL, $url);
             curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
             curl_setopt($curl, CURLOPT_HEADER, false);

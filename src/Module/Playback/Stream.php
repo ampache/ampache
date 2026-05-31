@@ -360,7 +360,7 @@ class Stream
         }
 
         // Bail out early if we're unutterably broken
-        if ($transcode_settings === []) {
+        if ($transcode_settings === [] || !array_key_exists('command', $transcode_settings) || !array_key_exists('format', $transcode_settings)) {
             debug_event(self::class, 'Transcode requested, but get_transcode_settings failed', 2);
 
             return [];
