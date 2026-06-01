@@ -131,7 +131,6 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
         imagejpeg($this->img, null, $this->quality);
         $jpeg = ob_get_contents();
         ob_end_clean();
-        imagedestroy($this->img);
         unset($this->img);
 
         return ($jpeg);

@@ -1071,8 +1071,6 @@ class Art extends database_object
 
         if (!imagecopyresampled($thumbnail, $source, 0, 0, $src_x, $src_y, $dst_width, $dst_height, $new_width, $new_height)) {
             debug_event(self::class, 'Unable to create resized image', 1);
-            imagedestroy($source);
-            imagedestroy($thumbnail);
 
             return [];
         }
@@ -1120,8 +1118,6 @@ class Art extends database_object
 
         $data = (string) ob_get_contents();
         ob_end_clean();
-
-        imagedestroy($thumbnail);
 
         if ($data === '') {
             debug_event(self::class, 'Unknown Error resizing art', 1);
