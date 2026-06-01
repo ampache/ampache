@@ -73,7 +73,7 @@ final class SystemPreference8Method
         }
 
         $preference = [
-            "id" => $results[0]['id'],
+            "id" => (string)$results[0]['id'],
             "name" => $results[0]['name'],
             "level" => $results[0]['level'],
             "description" => $results[0]['description'],
