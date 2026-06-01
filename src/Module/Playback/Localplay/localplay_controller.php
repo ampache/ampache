@@ -121,34 +121,6 @@ abstract class localplay_controller
     abstract public function get_active_instance(): ?int;
 
     /**
-     * get_url
-     * This returns the URL for the passed object
-     */
-    public function get_url($object): string
-    {
-        // This might not be an object!
-        if (!is_object($object)) {
-            // Stupidly we'll just blindly add it for now
-            return $object;
-        }
-
-        /** @var Media $class */
-        $class = $object::class;
-
-        /** @var library_item $object */
-        return $class->play_url($object->getId());
-    }
-
-    /**
-     * get_file
-     * This returns the Filename for the passed object, not
-     * always possible
-     */
-    public function get_file($object)
-    {
-    }
-
-    /**
      * parse_url
      * This takes an Ampache URL and then returns the 'primary' part of it
      * So that it's easier for Localplay modules to return valid song information
@@ -178,7 +150,7 @@ abstract class localplay_controller
             }
 
             preg_match_all('#\b(random_id|random_type)=([^&]*)#', $url, $match);
-            if (array_key_exists(1, $match) && $match[1] && array_key_exists(2, $match) && $match[2]) {
+            if ($match[1] && $match[2]) {
                 $result = array_combine($match[1], $match[2]);
 
                 return [

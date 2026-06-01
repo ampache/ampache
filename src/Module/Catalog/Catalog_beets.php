@@ -159,7 +159,7 @@ class Catalog_beets extends Catalog
         $date       = new DateTime($song['added']);
         $last_added = date("Y-m-d H:i:s", $this->last_add);
         $last_date  = new DateTime($last_added);
-        if (date_diff($date, $last_date) < 0) {
+        if ($date < $last_date) {
             debug_event(self::class, 'Skipping ' . $song['file'] . ' File modify time before last add run', 3);
 
             return true;

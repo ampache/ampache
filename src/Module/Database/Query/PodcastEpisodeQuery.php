@@ -246,7 +246,7 @@ final class PodcastEpisodeQuery implements QueryInterface
                 $sql = '';
         }
 
-        if ($sql === '' || $sql === '0') {
+        if ($sql === '') {
             return '';
         }
 

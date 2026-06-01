@@ -106,7 +106,7 @@ final class FollowerQuery implements QueryInterface
             default => '',
         };
 
-        if ($sql === '' || $sql === '0') {
+        if ($sql === '') {
             return '';
         }
 

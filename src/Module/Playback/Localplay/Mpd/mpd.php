@@ -774,12 +774,6 @@ class mpd
      */
     public function PLRemove($id)
     {
-        if (!is_numeric($id)) {
-            $this->_error('PLRemove', 'id must be numeric: ' . $id);
-
-            return false;
-        }
-
         $response = $this->SendCommand(self::COMMAND_DELETE, $id);
         $this->_debug('PLRemove', 'return: ' . $response, 5);
 
@@ -940,17 +934,6 @@ class mpd
     public function SeekTo($pos, $track = -1)
     {
         $this->_debug('SeekTo', 'start', 5);
-        if (!is_numeric($pos)) {
-            $this->_error('SeekTo', 'pos must be numeric: ' . $pos);
-
-            return false;
-        }
-
-        if (!is_numeric($track)) {
-            $this->_error('SeekTo', 'track must be numeric: ' . $track);
-
-            return false;
-        }
 
         if ($track == -1) {
             $track = $this->current_track_id;
