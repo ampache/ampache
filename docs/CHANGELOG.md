@@ -13,6 +13,8 @@ Fixes to changes on the backend and a few issues found during code analysis
 
 * Art `id` error when unset
 * Playlist collaborator checks not exploding ints properly
+* Subsonic
+  * StructuredLyrics value when missing `start` in XML
 
 ## Ampache 7.9.5
 
