@@ -33,8 +33,6 @@ jobs:
 
       - name: Run test suite
         run: composer run-script qa
-        env:
-          PHP_CS_FIXER_IGNORE_ENV: 1
 
       - name: Run NPM audit (production)
         run: npm audit --production
