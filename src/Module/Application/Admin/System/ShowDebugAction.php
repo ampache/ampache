@@ -83,7 +83,7 @@ final class ShowDebugAction implements ApplicationActionInterface
             'show_debug.inc.php',
             [
                 'configuration' => $configuration,
-                'latestVersion' => $latest_version,
+                'latest_version' => $latest_version,
                 'lastCronDate' => (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::CRON_DATE)
             ]
         );

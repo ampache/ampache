@@ -18,7 +18,7 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 * API6
   * Let `search_songs` use `rule_1_input` to match other search methods
 
-### Chaned (692001)
+### Changed (692001)
 
 * API8
   * Method `playlist_remove_song` is deprecated and will be removed in **API9** (Use playlist_remove)
