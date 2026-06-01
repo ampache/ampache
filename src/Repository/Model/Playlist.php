@@ -790,28 +790,28 @@ class Playlist extends playlist_object
      * has_item
      * look for the track id or the object id in a playlist (TODO song only so extend this to other types)
      */
-    public function has_item(?int $object = null, ?int $track = null): bool
+    public function has_item(?int $object = null, ?int $track = null, $object_type = 'song'): bool
     {
-        if ($object === null && $track === null) {
+        if (!$object && !$track) {
             return false;
         }
 
-        if ($object === null && $track !== null) {
+        if (!$object && $track > 0) {
             // searching by track
-            $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? AND `playlist_data`.`object_type` = 'song' LIMIT 1";
-            $db_results = Dba::read($sql, [$this->id, $track]);
-        } elseif ($track !== null) {
-            $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' AND `track` <= ? LIMIT 1";
-            $db_results = Dba::read($sql, [$this->id, $object, $track]);
+            $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? AND `playlist_data`.`object_type` = ? LIMIT 1";
+            $db_results = Dba::read($sql, [$this->id, $object_type, $track]);
+        } elseif ($track > 0) {
+            $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = ? AND `track` <= ? LIMIT 1";
+            $db_results = Dba::read($sql, [$this->id, $object, $object_type, $track]);
         } else {
             // Search object and optionally check by track
-            $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' LIMIT 1";
-            $db_results = Dba::read($sql, [$this->id, $object]);
+            $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = ? LIMIT 1";
+            $db_results = Dba::read($sql, [$this->id, $object_type, $object]);
         }
 
         $results = Dba::fetch_assoc($db_results);
         if (isset($results['object_id']) || isset($results['track'])) {
-            debug_event(self::class, $this->id . ' has_item: ' . ($results['object_id'] ?? $results['track']), 5);
+            debug_event(self::class, $this->id . ' has_item: ' . $object_type . ' ' . ($results['object_id'] ?? $results['track']), 5);
 
             return true;
         }
