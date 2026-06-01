@@ -176,7 +176,6 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         }
 
         // simply overwrite ->img
-        imagedestroy($image);
         $this->img = $dest;
     }
 

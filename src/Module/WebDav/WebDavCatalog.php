@@ -39,8 +39,11 @@ use Sabre\DAV\Node;
  */
 class WebDavCatalog extends Collection
 {
-    public function __construct(private readonly int $catalog_id)
+    private int $catalog_id;
+
+    public function __construct(int $catalog_id)
     {
+        $this->catalog_id = $catalog_id;
     }
 
     /**

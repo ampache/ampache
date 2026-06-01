@@ -58,14 +58,14 @@ class Catalog_dropbox extends Catalog
 
     private int $count          = 0;
 
-    private readonly int $catalog_id;
+    private int $catalog_id;
 
     private string $apikey = '';
 
-    private readonly string $secret;
+    private string $secret;
 
     //private string $authcode;
-    private readonly string $authtoken;
+    private string $authtoken;
 
     public string $path;
 
