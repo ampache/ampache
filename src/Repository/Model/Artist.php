@@ -438,7 +438,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
             return [
                 "id" => (string)$row['id'],
                 "name" => (string)$row['name'],
-                "prefix" => (string)$row['prefix'],
+                "prefix" => $row['prefix'],
                 "basename" => (string)$row['basename']
             ];
         }
