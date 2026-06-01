@@ -1075,8 +1075,6 @@ class Art extends database_object
             return [];
         }
 
-        imagedestroy($source);
-
         $data = explode('/', (string) $mime);
         $type = ((string)($data[1] ?? '') !== '') ? strtolower($data[1]) : 'jpg';
 
