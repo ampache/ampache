@@ -50,7 +50,7 @@ final class PlaylistRemoveSong8Method
      * Pre-400001 the api required 'track' instead of 'song'.
      * 420000+: added clear to allow you to clear a playlist without getting all the tracks.
      *
-     * This method is deprecated and will be removed in **API9** (Use playlist_add)
+     * This method is deprecated and will be removed in **API9** (Use playlist_remove)
      *
      * filter = (string) UID of playlist
      * song   = (string) UID of song to remove from the playlist //optional
