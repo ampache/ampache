@@ -73,7 +73,7 @@ final class SystemPreference6Method
         }
 
         $preference = [
-            "id" => $results[0]['id'],
+            "id" => (string)$results[0]['id'],
             "name" => $results[0]['name'],
             "level" => $results[0]['level'],
             "description" => $results[0]['description'],
@@ -99,7 +99,7 @@ final class SystemPreference6Method
                 echo json_encode($preference, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::object_array($preference, 'preference');
+                echo Xml6_Data::object_array([$preference], 'preference');
         }
 
         return true;
