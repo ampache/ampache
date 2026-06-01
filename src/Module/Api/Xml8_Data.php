@@ -109,7 +109,7 @@ class Xml8_Data
      *
      * Set the total count of returned objects
      */
-    public static function set_count(int $count): void
+    public static function set_count(int|string $count): void
     {
         self::$count = (int)$count;
     }
