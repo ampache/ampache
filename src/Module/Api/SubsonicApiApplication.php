@@ -285,7 +285,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 $decname        = urldecode($name);
                 $decvalue       = urldecode($value);
             }
-            if ($decname && $decvalue) {
+            if ($decname && $decvalue && $decvalue !== '') {
                 // workaround for clementine/Qt5 bug
                 // see https://github.com/clementine-player/Clementine/issues/6080
                 $matches = [];

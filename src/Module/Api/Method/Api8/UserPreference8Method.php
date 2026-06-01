@@ -94,7 +94,7 @@ final class UserPreference8Method
                 echo json_encode($preference, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml8_Data::object_array($preference, 'preference');
+                echo Xml8_Data::object_array([$preference], 'preference');
         }
 
         return true;
