@@ -104,7 +104,7 @@ final class WantedQuery implements QueryInterface
             default => '',
         };
 
-        if ($sql === '' || $sql === '0') {
+        if ($sql === '') {
             return '';
         }
 

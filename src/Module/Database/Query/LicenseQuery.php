@@ -160,7 +160,7 @@ final class LicenseQuery implements QueryInterface
             default => '',
         };
 
-        if ($sql === '' || $sql === '0') {
+        if ($sql === '') {
             return '';
         }
 

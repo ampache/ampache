@@ -68,7 +68,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
-            if (property_exists($catalog, 'path') && $catalog->path !== null && !Core::is_readable($catalog->path)) {
+            if ($catalog && property_exists($catalog, 'path') && !Core::is_readable($catalog->path)) {
                 $interactor->error(
                     T_('Catalog root unreadable, stopping check'),
                     true
@@ -177,7 +177,6 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
             $file_test = is_file($filePath);
             // deleted file but it was valid media in the database
             if (
-                $media->isNew() === false &&
                 !$file_test &&
                 $cleanupMode == 1
             ) {

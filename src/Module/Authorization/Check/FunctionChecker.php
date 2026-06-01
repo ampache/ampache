@@ -60,7 +60,6 @@ final readonly class FunctionChecker implements FunctionCheckerInterface
                     return false;
                 }
 
-                /** @var User $user */
                 $user = Core::get_global('user');
 
                 if (

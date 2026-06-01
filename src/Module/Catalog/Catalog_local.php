@@ -817,7 +817,6 @@ class Catalog_local extends Catalog
                 $media_ids[] = $row['id'];
             }
 
-            /** @var Song|Album|Video $className */
             $className::build_cache($media_ids);
         }
 
@@ -1342,7 +1341,7 @@ class Catalog_local extends Catalog
         if (array_key_exists('album_id', $options) && (int)$options['album_id'] > 0) {
             $results['album_id'] = $options['album_id'];
             $album               = new Album($results['album_id']);
-            if (isset($album->id)) {
+            if ($album->isNew() === false) {
                 $results['album'] = $album->name;
             }
         }
@@ -1387,7 +1386,7 @@ class Catalog_local extends Catalog
                 if (!in_array($song->file, [null, '', '0'], true) && !is_file($fullpath) && $song->file != $fullpath && strlen($fullpath)) {
                     debug_event(self::class, 'Destin: ' . $fullpath, 5);
                     $info      = pathinfo($fullpath);
-                    $directory = ($info['dirname'] ?? '');
+                    $directory = $info['dirname'];
                     $file      = $info['basename'];
 
                     if (!Core::is_readable($directory)) {

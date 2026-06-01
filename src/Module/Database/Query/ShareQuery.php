@@ -107,7 +107,7 @@ final class ShareQuery implements QueryInterface
             default => '',
         };
 
-        if ($sql === '' || $sql === '0') {
+        if ($sql === '') {
             return '';
         }
 

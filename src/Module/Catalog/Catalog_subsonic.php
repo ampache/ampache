@@ -271,10 +271,14 @@ class Catalog_subsonic extends Catalog
      *
      * Gathers tags from a remote song JSON element
      * @param array<string, mixed> $song
-     * @return array<string, mixed>
+     * @return array<string, mixed>|null
      */
-    private function _gather_tags(array $song): array
+    private function _gather_tags(array $song): ?array
     {
+        if (!$this->subsonic) {
+            return null;
+        }
+
         $album       = $this->subsonic->querySubsonic('getAlbum', ['id' => $song['parent']]);
         $albumartist = (is_array($album) && isset($album['data']['album']['parent']))
             ? $this->subsonic->querySubsonic('getArtist', ['id' => $album['data']['album']['parent']])
@@ -396,12 +400,12 @@ class Catalog_subsonic extends Catalog
                                 }
 
                                 $data = $this->_gather_tags($song);
-                                if ($data === []) {
+                                if (!$data) {
                                     debug_event('subsonic.catalog', 'Unable to gather song data ' . $child['id'], 5);
                                     continue;
                                 }
 
-                                if ($action === 'add' && !$existing_song) {
+                                if ($action === 'add') {
                                     debug_event('subsonic.catalog', 'Adding song ' . $data['path'], 5);
                                     $song_id = Song::insert($data);
                                     if (!$song_id) {

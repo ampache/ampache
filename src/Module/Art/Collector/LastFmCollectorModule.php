@@ -118,7 +118,11 @@ final readonly class LastFmCollectorModule implements CollectorModuleInterface
 
                 // HACK: we shouldn't rely on the extension to determine file type
                 $results = pathinfo($url);
-                if (is_array($results) && array_key_exists('extension', $results) && (isset($results['extension']) && ($results['extension'] !== '' && $results['extension'] !== '0'))) {
+                if (
+                    array_key_exists('extension', $results) &&
+                    $results['extension'] !== '' &&
+                    $results['extension'] !== '0'
+                ) {
                     $mime     = 'image/' . $results['extension'];
                     $images[] = [
                         'url' => $url,

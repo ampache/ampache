@@ -555,7 +555,7 @@ class AmpacheHttpq extends localplay_controller
     public function connect(): bool
     {
         $options = self::get_instance();
-        if ($options === []) {
+        if ($options === [] || !isset($options['host'], $options['password'], $options['port'])) {
             return false;
         }
 

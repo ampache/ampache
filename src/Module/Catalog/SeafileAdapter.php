@@ -72,10 +72,10 @@ class SeafileAdapter
      * SeafileAdapter constructor.
      */
     public function __construct(
-        private $server,
-        private $library_name,
-        private $call_delay,
-        private $api_key,
+        private string|null $server,
+        private string|null $library_name,
+        private int|null $call_delay,
+        private string|null $api_key,
     ) {
     }
 

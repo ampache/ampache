@@ -57,7 +57,7 @@ class Catalog_Seafile extends Catalog
     /** @var SeafileAdapter seafile */
     private $seafile;
 
-    private readonly int $catalog_id;
+    private int $catalog_id = 0;
 
     private int $count = 0;
 
