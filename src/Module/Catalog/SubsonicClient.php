@@ -129,10 +129,10 @@ class SubsonicClient
                 curl_setopt_array(
                     $curl,
                     [
-                        CURLOPT_HEADER => 0,
+                        CURLOPT_HEADER => false,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_CONNECTTIMEOUT => 8,
-                        CURLOPT_SSL_VERIFYPEER => 0,
+                        CURLOPT_SSL_VERIFYPEER => false,
                         CURLOPT_FOLLOWLOCATION => true,
                         CURLOPT_PORT => (int)($this->_serverPort)
                     ]
@@ -159,7 +159,7 @@ class SubsonicClient
             $protocol = "https://";
         }
 
-        if ($protocol === '' || $protocol === '0') {
+        if ($protocol === '') {
             if (!preg_match("/^http\:\/\//", $server)) {
                 $server = "http://" . $server;
             }

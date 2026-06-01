@@ -380,7 +380,7 @@ class Catalog_remote extends Catalog
                 $key = (string)$name;
                 if (count($song_tags->$name) > 1) {
                     // Key in XML multiple times so it's an array
-                    if (!isset($data[$key]) || !$data[$key] || !is_array($data[$key])) {
+                    if (!is_array($data[$key])) {
                         $data[$key] = [];
                     }
 
@@ -638,10 +638,7 @@ class Catalog_remote extends Catalog
                     $songs->song->count() > 0
                 ) {
                     foreach ($songs->song as $song) {
-                        if (
-                            !$song instanceof SimpleXMLElement ||
-                            !$song->url
-                        ) {
+                        if (!$song->url) {
                             continue;
                         }
 
@@ -710,7 +707,7 @@ class Catalog_remote extends Catalog
                         }
 
                         $song_id = null;
-                        if ($action === 'add' && !$existing_song) {
+                        if ($action === 'add') {
                             $song_id = Song::insert($data);
                             if (!$song_id) {
                                 debug_event('remote.catalog', 'Insert failed for ' . $old_url, 1);
@@ -792,10 +789,7 @@ class Catalog_remote extends Catalog
                     $artists->artist->count() > 0
                 ) {
                     foreach ($artists->artist as $artist) {
-                        if (
-                            !$artist instanceof SimpleXMLElement ||
-                            !$artist->art
-                        ) {
+                        if (!$artist->art) {
                             continue;
                         }
 

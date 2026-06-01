@@ -375,8 +375,7 @@ class HttpQPlayer
 
         if (
             !$results ||
-            !is_string($results) ||
-            $results === '0'
+            !is_string($results)
         ) {
             return null;
         }
@@ -421,6 +420,8 @@ class HttpQPlayer
         // Explode the results by line break and take 4th line (results)
         $data = explode("\n", $data);
 
-        return $data['4'];
+        return (isset($data[4]))
+            ? $data[4]
+            : false;
     }
 }

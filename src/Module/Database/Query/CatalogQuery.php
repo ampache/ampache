@@ -210,7 +210,7 @@ final class CatalogQuery implements QueryInterface
                 break;
         }
 
-        if ($sql === '' || $sql === '0') {
+        if ($sql === '') {
             return '';
         }
 

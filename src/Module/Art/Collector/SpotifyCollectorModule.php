@@ -127,10 +127,7 @@ final readonly class SpotifyCollectorModule implements CollectorModuleInterface
                 if (array_key_exists('year_filter', $data)) {
                     $filter[] = $data['year_filter'];
                 }
-            } elseif (
-                !is_null($this->configContainer->get('spotify_art_filter')) ||
-                $this->configContainer->get('spotify_art_filter') !== null
-            ) {
+            } elseif ($this->configContainer->get('spotify_art_filter') !== null) {
                 $filter = explode(',', $this->configContainer->get('spotify_art_filter'));
             }
 
