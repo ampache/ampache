@@ -46,22 +46,18 @@ final class PlaylistRemove8Method
      * CHANGED_IN_API_VERSION=400001
      * CHANGED_IN_API_VERSION=420000
      *
-     * This removes an object from a playlist using track number in the list or song ID.
-     * Pre-400001 the api required 'track' instead of 'song'.
-     * 420000+: added clear to allow you to clear a playlist without getting all the tracks.
-     *
-     * This method is deprecated and will be removed in **API9** (Use playlist_add)
+     * This removes an object from a playlist using track number in the list or object id and type
      *
      * filter = (string) UID of playlist
-     * song   = (string) UID of song to remove from the playlist //optional
+     * id     = (string) $object_id
      * type   = (string) 'song', 'album', 'artist', 'playlist' //optional, default = song
      * track  = (string) track number to remove from the playlist //optional
      * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
      *
      * @param array{
      *     filter: string,
-     *     song?: string,
-     *     type: string,
+     *     id?: string,
+     *     type?: string,
      *     track?: string,
      *     clear?: int,
      *     api_format: string,
@@ -83,14 +79,15 @@ final class PlaylistRemove8Method
 
         if (array_key_exists('clear', $input) && (int)$input['clear'] === 1) {
             $playlist->delete_all();
-            Api::message('all songs removed from playlist', $input['api_format']);
-        } elseif (array_key_exists('song', $input)) {
-            $track = (int) scrub_in((string) $input['song']);
-            if (!$playlist->has_item($track)) {
+            Api::message('all items removed from playlist', $input['api_format']);
+        } elseif (array_key_exists('id', $input)) {
+            $track = (int) scrub_in((string) $input['id']);
+            if (!$playlist->has_item($track, null, (string)($input['type'] ?? 'song'))) {
                 Api::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
 
                 return false;
             }
+
             $playlist->delete_song($track);
             $playlist->regenerate_track_numbers();
             Api::message('song removed from playlist', $input['api_format']);
