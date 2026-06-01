@@ -2,9 +2,9 @@ name: qa
 
 on:
   push:
-    branches: [ develop, master, patch7 ]
+    branches: [ develop, master, patch8 ]
   pull_request:
-    branches: [ develop, patch7, release7 ]
+    branches: [ develop, patch8, release8 ]
 
 jobs:
   build:
@@ -12,8 +12,7 @@ jobs:
     strategy:
       matrix:
         os: ['ubuntu-latest']
-        php: ['8.2', '8.3', '8.4']
-    continue-on-error: ${{ matrix.php == '8.3' || matrix.php == '8.4' }}
+        php: ['8.5']
     steps:
       - uses: actions/checkout@v4
 
@@ -35,25 +34,14 @@ jobs:
             ${{ runner.os }}-php-
 
       - name: Install dependencies
-        if: ${{ matrix.php != '8.3' }}
         uses: nick-fields/retry@v3
         with:
           timeout_minutes: 5
           max_attempts: 3
           command: composer update --no-interaction --no-progress
 
-      - name: Install Dependencies (ignore platform)
-        if: ${{ matrix.php == '8.3' || matrix.php == '8.4' }}
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 5
-          max_attempts: 3
-          command: composer update --no-interaction --no-progress --ignore-platform-req=php
-
       - name: Run test suite
         run: composer run-script qa
-        env:
-          PHP_CS_FIXER_IGNORE_ENV: 1
 
       - name: Run NPM audit (production)
         run: npm audit --production
