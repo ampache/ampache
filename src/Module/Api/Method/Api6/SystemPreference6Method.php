@@ -99,7 +99,7 @@ final class SystemPreference6Method
                 echo json_encode($preference, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::object_array($preference, 'preference');
+                echo Xml6_Data::object_array([$preference], 'preference');
         }
 
         return true;
