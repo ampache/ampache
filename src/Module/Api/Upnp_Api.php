@@ -1537,7 +1537,7 @@ class Upnp_Api
             'upnp:genre' => Tag::get_display($song->get_tags(), false, 'song'),
             'upnp:originalTrackNumber' => $song->track,
             'res' => $song->play_url('', 'api', true), // For upnp, use local
-            'protocolInfo' => (isset($arrFileType['mime'])) ? $arrFileType['mime'] : '',
+            'protocolInfo' => $arrFileType['mime'],
             'size' => $song->size,
             'duration' => $song->get_f_time(true) . '.0',
             'bitrate' => $song->bitrate,
@@ -1570,7 +1570,7 @@ class Upnp_Api
             'upnp:albumArtURI' => $art_url,
 
             'res' => $radio->url,
-            'protocolInfo' => (isset($arrFileType['mime'])) ? $arrFileType['mime'] : '',
+            'protocolInfo' => $arrFileType['mime'],
         ];
     }
 
