@@ -790,7 +790,7 @@ class Playlist extends playlist_object
      * has_item
      * look for the track id or the object id in a playlist
      */
-    public function has_item(?int $object = null, ?int $track = null, $object_type = 'song'): bool
+    public function has_item(?int $object = null, ?int $track = null, string $object_type = 'song'): bool
     {
         if (!$object && !$track) {
             return false;
