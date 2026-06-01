@@ -25,8 +25,6 @@ namespace Ampache\Module\Playback\Localplay;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream_Url;
-use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\Media;
 
 /**
  * localplay_controller Class
