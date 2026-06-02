@@ -444,6 +444,15 @@ class AmpacheVlc extends localplay_controller
      * Warning ! if you got files in VLC medialibary those files will be sent to the php xml parser
      * to, not to your browser but still this can take a lot of work for your server.
      * The xml files of VLC need work, not much documentation on them....
+     * @return array<int, array{
+     *     id: int,
+     *     vlid: int,
+     *     raw: string,
+     *     oid?: int,
+     *     name?: string,
+     *     link?: string|null,
+     *     track: int,
+     * }>
      */
     public function get(): array
     {
@@ -600,7 +609,7 @@ class AmpacheVlc extends localplay_controller
             $oid      = (array_key_exists('oid', $url_data)) ? $url_data['oid'] : '';
 
             foreach ($listtracks as $track) {
-                if ($track['oid'] == $oid) {
+                if (isset($track['oid']) && $track['oid'] == $oid) {
                     $array['track'] = $track['track'];
                     break;
                 }
@@ -614,7 +623,7 @@ class AmpacheVlc extends localplay_controller
             foreach ($listtracks as $track) {
                 if ($track['vlid'] == $numtrack) {
                     $array['track'] = $track['track'];
-                    $oid            = $track['oid'];
+                    $oid            = $track['oid'] ?? null;
                     break;
                 }
             }
