@@ -103,7 +103,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                                 case 'album':
                                     foreach ($objects as $object) {
                                         $songs = (is_array($object))
-                                            ? array_merge($songs, $this->getSongRepository()->getByAlbum($object['object_id']))
+                                            ? array_merge($songs, $this->getSongRepository()->getByAlbum($object['object_id'] ?? 0))
                                             : array_merge($songs, $this->getSongRepository()->getByAlbum((int)$object));
                                     }
 
@@ -111,7 +111,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                                 case 'artist':
                                     foreach ($objects as $object) {
                                         $songs = (is_array($object))
-                                            ? array_merge($songs, $this->getSongRepository()->getAllByArtist($object['object_id']))
+                                            ? array_merge($songs, $this->getSongRepository()->getAllByArtist($object['object_id'] ?? 0))
                                             : array_merge($songs, $this->getSongRepository()->getAllByArtist((int)$object));
                                     }
 
@@ -127,7 +127,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 
                             foreach ($songs as $object) {
                                 $user->playlist?->add_object(
-                                    (is_array($object)) ? $object['object_id'] : (int)$object,
+                                    (is_array($object) && isset($object['object_id'])) ? $object['object_id'] : (int)$object,
                                     LibraryItemEnum::SONG
                                 );
                             }

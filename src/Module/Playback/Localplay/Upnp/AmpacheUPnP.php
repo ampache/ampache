@@ -459,6 +459,12 @@ class AmpacheUPnP extends localplay_controller
      * This functions returns an array containing information about
      * The songs that UPnP currently has in it's playlist. This must be
      * done in a standardized fashion
+     * @return array<int, array{
+     *     name: string|null,
+     *     link: string,
+     *     id: int,
+     *     track: int
+     * }>
      */
     public function get(): array
     {

@@ -651,6 +651,13 @@ class AmpacheXbmc extends localplay_controller
      * This functions returns an array containing information about
      * The songs that XBMC currently has in it's playlist. This must be
      * done in a standardized fashion
+     * @return array<int, array{
+     *     link: string,
+     *     id: int,
+     *     oid?: int,
+     *     name: string,
+     *     track: int,
+     * }>
      */
     public function get(): array
     {
@@ -676,7 +683,7 @@ class AmpacheXbmc extends localplay_controller
                 $data['track'] = $i + 1;
 
                 $url_data = $this->parse_url(rawurldecode((string) $data['link']));
-                if ($url_data != null) {
+                if (isset($url_data['oid'])) {
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
                     if ($song->isNew() === false) {
