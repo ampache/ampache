@@ -2297,7 +2297,7 @@ class Json8_Data
         $JSON = self::videos_array($objects, $user, $auth);
 
         if ($object) {
-            $output["video"] = [
+            $output = [
                 "total_count" => self::$count,
                 "md5" => md5(serialize($objects)),
                 "video" => $JSON
