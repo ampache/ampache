@@ -236,16 +236,17 @@ class Waveform
     /**
      * Great function slightly modified as posted by Minux at
      * http://forums.clantemplates.com/showthread.php?t=133805
-     * @return array{float|int, float|int, float|int}
+     * Converts a hex color string (#RRGGBB or RRGGBB) to its RGB components.
+     * @return array{0: int<0,255>, 1: int<0,255>, 2: int<0,255>} [red, green, blue], each in the range 0–255
      */
     protected static function html2rgb(string $input): array
     {
         $input = ($input[0] == "#") ? substr($input, 1, 6) : substr($input, 0, 6);
 
         return [
-            hexdec(substr($input, 0, 2)),
-            hexdec(substr($input, 2, 2)),
-            hexdec(substr($input, 4, 2)),
+            min(255, max(0, (int)hexdec(substr($input, 0, 2)))),
+            min(255, max(0, (int)hexdec(substr($input, 2, 2)))),
+            min(255, max(0, (int)hexdec(substr($input, 4, 2)))),
         ];
     }
 
@@ -379,7 +380,7 @@ class Waveform
                         $height - $value, // x2
                         (int)($data_point / $detail), // y2: same as y1, but from the bottom of the image
                         $height - ($height - $value),
-                        (int)imagecolorallocate($img, (int)$red, (int)$green, (int)$blue)
+                        (int)imagecolorallocate($img, $red, $green, $blue)
                     );
                 }
             } else {
@@ -393,9 +394,9 @@ class Waveform
 
         ob_start();
         // want it resized?
-        if ($width !== 0) {
+        if ($width > 0) {
             // resample the image to the proportions defined in the form
-            $rimg = imagecreatetruecolor((int) $width, $height);
+            $rimg = imagecreatetruecolor($width, $height);
             if ($rimg !== false) {
                 // save alpha from original image
                 imagesavealpha($rimg, true);
