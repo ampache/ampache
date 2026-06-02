@@ -67,7 +67,8 @@ final class UserPreference6Method
             return false;
         }
 
-        $preference = [
+        $results   = [];
+        $results[] = [
             "id" => (string)$results[0]['id'],
             "name" => $results[0]['name'],
             "level" => $results[0]['level'],
@@ -80,21 +81,21 @@ final class UserPreference6Method
             "values" => [],
         ];
 
-        if ($preference['type'] == 'special') {
-            $values = Preference::get_special_values($preference['name'], $user);
+        if ($results[0]['type'] == 'special') {
+            $values = Preference::get_special_values($results[0]['name'], $user);
             if ($values) {
-                $preference['values'] = $values;
+                $results[0]['values'] = $values;
             }
         } else {
-            unset($preference['values']);
+            unset($results[0]['values']);
         }
 
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($preference, JSON_PRETTY_PRINT);
+                echo json_encode($results[0], JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::object_array([$preference], 'preference');
+                echo Xml6_Data::object_array($results, 'preference');
         }
 
         return true;
