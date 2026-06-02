@@ -1069,11 +1069,7 @@ class Art extends database_object
 
         $thumbnail = imagecreatetruecolor($dst_width, $dst_height);
 
-        if (!imagecopyresampled($thumbnail, $source, 0, 0, $src_x, $src_y, $dst_width, $dst_height, $new_width, $new_height)) {
-            debug_event(self::class, 'Unable to create resized image', 1);
-
-            return [];
-        }
+        imagecopyresampled($thumbnail, $source, 0, 0, $src_x, $src_y, $dst_width, $dst_height, $new_width, $new_height);
 
         $data = explode('/', (string) $mime);
         $type = ((string)($data[1] ?? '') !== '') ? strtolower($data[1]) : 'jpg';

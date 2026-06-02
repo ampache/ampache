@@ -188,12 +188,14 @@ final readonly class SpotifyCollectorModule implements CollectorModuleInterface
                     return $images;
                 }
 
-                foreach ($result->images as $image) {
-                    $images[] = [
-                        'url' => $image->url,
-                        'mime' => 'image/jpeg',
-                        'title' => 'Spotify'
-                    ];
+                if (!is_array($result) && property_exists($result, 'images')) {
+                    foreach ($result->images as $image) {
+                        $images[] = [
+                            'url' => $image->url,
+                            'mime' => 'image/jpeg',
+                            'title' => 'Spotify'
+                        ];
+                    }
                 }
             }
         }
