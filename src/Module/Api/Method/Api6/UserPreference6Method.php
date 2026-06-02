@@ -58,43 +58,44 @@ final class UserPreference6Method
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
-        $pref_name = (string)($input['filter'] ?? '');
-        $results   = Preference::get($pref_name, $user->id);
-        if (empty($results)) {
+        $pref_name  = (string)($input['filter'] ?? '');
+        $preference = Preference::get($pref_name, -1);
+        if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api6::error(sprintf('Not Found: %s', $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
-        $preference = [
-            "id" => (string)$results[0]['id'],
-            "name" => $results[0]['name'],
-            "level" => $results[0]['level'],
-            "description" => $results[0]['description'],
-            "value" => $results[0]['value'],
-            "type" => $results[0]['type'],
-            "category" => $results[0]['category'],
-            "subcategory" => $results[0]['subcategory'],
-            "has_access" => (((int)$results[0]['level']) <= $user->access),
+        $results   = [];
+        $results[] = [
+            "id" => (string)$preference[0]['id'],
+            "name" => $preference[0]['name'],
+            "level" => $preference[0]['level'],
+            "description" => $preference[0]['description'],
+            "value" => $preference[0]['value'],
+            "type" => $preference[0]['type'],
+            "category" => $preference[0]['category'],
+            "subcategory" => $preference[0]['subcategory'],
+            "has_access" => (((int)$preference[0]['level']) <= $user->access),
             "values" => [],
         ];
 
-        if ($preference['type'] == 'special') {
-            $values = Preference::get_special_values($preference['name'], $user);
+        if ($preference[0]['type'] == 'special') {
+            $values = Preference::get_special_values($preference[0]['name'], $user);
             if ($values) {
-                $preference['values'] = $values;
+                $results[0]['values'] = $values;
             }
         } else {
-            unset($preference['values']);
+            unset($results[0]['values']);
         }
 
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($preference, JSON_PRETTY_PRINT);
+                echo json_encode($results[0], JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::object_array([$preference], 'preference');
+                echo Xml6_Data::object_array($results, 'preference');
         }
 
         return true;
