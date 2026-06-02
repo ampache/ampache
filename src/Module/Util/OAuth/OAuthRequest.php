@@ -212,7 +212,9 @@ class OAuthRequest implements Stringable
 
         $parts = OAuthUtil::urlencode_rfc3986($parts);
 
-        return implode('&', $parts);
+        return (is_array($parts))
+            ? implode('&', $parts)
+            : $parts;
     }
 
     /**
