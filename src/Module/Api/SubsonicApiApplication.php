@@ -285,7 +285,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 $decname        = urldecode($name);
                 $decvalue       = urldecode($value);
             }
-            if ($decname && $decvalue && $decvalue !== '') {
+            if ($decname && $decvalue) {
                 // workaround for clementine/Qt5 bug
                 // see https://github.com/clementine-player/Clementine/issues/6080
                 $matches = [];
@@ -311,14 +311,14 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 }
 
                 if (array_key_exists($decname, $input)) {
-                    if (is_array($input[$decname]) === false) {
-                        $oldvalue          = $input[$decname];
-                        $input[$decname]   = [];
-                        $input[$decname][] = $oldvalue;
+                    if (is_array($input[$decname])) {
+                        $input[$decname] = $decvalue;
                     }
-                    $input[$decname][] = $decvalue;
                 } else {
-                    $input[$decname] = $decvalue;
+                    $oldvalue          = $input[$decname];
+                    $input[$decname]   = [];
+                    $input[$decname][] = $oldvalue;
+                    $input[$decname][] = $decvalue;
                 }
             }
         }
