@@ -50,6 +50,9 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
   * download: Type for `format` listed as int
   * stream: Type for `format` listed as int
   * update_art: Docstring had `overwrite` as mandatory
+  * preference object `id` not cast to string
+  * forced string for prefix when it should be null
+  * video objects being inserted into double video arrays
 * API6
   * JSON lists could be doubl filtered incorrectly splicing results
   * album, albums, podcast_delete and podcast_episodes output sent to JSON8 classes
