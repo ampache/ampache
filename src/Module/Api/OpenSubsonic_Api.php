@@ -4143,7 +4143,6 @@ class OpenSubsonic_Api
      */
     public static function updateplaylist(array $input, User $user): void
     {
-        unset($user);
         $sub_id = self::_check_parameter($input, 'playlistId', __FUNCTION__);
         if ($sub_id === false) {
             return;
@@ -4162,6 +4161,11 @@ class OpenSubsonic_Api
         }
 
         if ($object instanceof Playlist) {
+            if (!$object->has_access($user)) {
+                self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+
+                return;
+            }
             if (is_string($songIdToAdd)) {
                 $songIdToAdd = explode(',', $songIdToAdd);
             }
