@@ -41,6 +41,7 @@ This is a large backend change as we work towards supporting Ampache8
   * Song Search not applying column `id` for `my_flagged_album`, `my_flagged_artist`
   * Artist Search not applying column `id` for `my_flagged_album`, `my_flagged_song`
 * Subsonic
+  * updatePlaylist ownership not being checked
   * Send artistInfo2 response correctly
 
 ## Ampache 7.9.4
