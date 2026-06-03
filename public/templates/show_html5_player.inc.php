@@ -35,7 +35,7 @@ $embed        = $embed ?? false;
 $loop         = ($isRandom || $isDemocratic);
 $jp_volume    = (float)AmpConfig::get('jp_volume', 0.80);
 $removeCount  = (int)AmpConfig::get('webplayer_removeplayed', 0);
-$waveform     = AmpConfig::get('waveform');
+$waveform     = AmpConfig::get('waveform', false) && $isShare === false;
 $canSlideshow = Preference::exists('flickr_api_key');
 $removePlayed = ($removeCount > 0);
 if ($removePlayed && $removeCount === 999) {
@@ -292,7 +292,7 @@ echo implode(',', $solutions); ?>",
                     <?php if (AmpConfig::get('show_lyrics')) { ?>
                     $('.playing_lyrics').html(lyricsobj);
                     <?php }
-                    if ($waveform && $isShare === false) { ?>
+                    if ($waveform) { ?>
                     $('.waveform').html(waveformobj);
                     <?php }
                     }
@@ -304,7 +304,7 @@ if (AmpConfig::get('song_page_title') && $isShare === false) {
 } ?>
                 }
             });
-            <?php if ($waveform && $isShare === false) { ?>
+            <?php if ($waveform) { ?>
             HideWaveform();
             <?php } ?>
 
@@ -317,7 +317,7 @@ if (AmpConfig::get('song_page_title') && $isShare === false) {
             if (brkey != '') {
                 sendBroadcastMessage('SONG_POSITION', event.jPlayer.status.currentTime);
             }
-            <?php if ($waveform && $isShare === false) { ?>
+            <?php if ($waveform) { ?>
             var int_position = Math.floor(event.jPlayer.status.currentTime);
             if (int_position != last_int_position && event.jPlayer.status.currentTime > 0) {
                 last_int_position = int_position;
@@ -506,7 +506,7 @@ if ($isVideo === false) {
                             <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="<?php echo $repeaton; ?>"><?php echo $repeaton; ?></a></li>
                             <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="<?php echo $repeatoff; ?>"><?php echo $repeatoff; ?></a></li>
                         </ul>
-                        <?php if ($waveform && $isShare === false) { ?>
+                        <?php if ($waveform) { ?>
                             <div class="waveform"></div>
                         <?php } ?>
                     <?php } ?>
