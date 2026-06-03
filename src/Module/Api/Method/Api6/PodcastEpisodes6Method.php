@@ -51,7 +51,7 @@ final class PodcastEpisodes6Method implements MethodInterface
     public function __construct(
         ModelFactoryInterface $modelFactory,
         PodcastRepositoryInterface $podcastRepository,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->modelFactory      = $modelFactory;
         $this->podcastRepository = $podcastRepository;
@@ -85,11 +85,11 @@ final class PodcastEpisodes6Method implements MethodInterface
         ResponseInterface $response,
         ApiOutputInterface $output,
         array $input,
-        User $user
+        User $user,
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::PODCAST)) {
             $response->getBody()->write(
-                $output->error(
+                $output->error6(
                     ErrorCodeEnum::ACCESS_DENIED,
                     T_('Enable: podcast'),
                     self::ACTION,
@@ -125,18 +125,18 @@ final class PodcastEpisodes6Method implements MethodInterface
         $results = $browse->get_objects();
         if ($results === []) {
             $response->getBody()->write(
-                $output->writeEmpty('podcast_episode')
+                $output->writeEmpty6('podcast_episode')
             );
 
             return $response;
         }
 
-        $output->setOffset((int)($input['offset'] ?? 0));
-        $output->setLimit((int)($input['limit'] ?? 0));
-        $output->setCount($browse->get_total());
+        $output->setOffset6($input['offset'] ?? 0);
+        $output->setLimit6($input['limit'] ?? 0);
+        $output->setCount6($browse->get_total());
 
         $response->getBody()->write(
-            $output->podcastEpisodes($results, $user, $input['auth'])
+            $output->podcastEpisodes6($results, $user, $input['auth'])
         );
 
         return $response;

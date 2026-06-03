@@ -63,22 +63,38 @@ final class SystemPreference6Method
         if (!Api6::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $pref_name = $input['filter'];
-        $results   = Preference::get($pref_name, -1);
-        if (empty($results)) {
+        $pref_name  = $input['filter'];
+        $preference = Preference::get($pref_name, -1);
+        if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api6::error(sprintf('Not Found: %s', $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
-        $results[0]['has_access'] = true;
-        if ($results[0]['type'] == 'special') {
-            $values = Preference::get_special_values($results[0]['name'], $user);
+        $results   = [];
+        $results[] = [
+            "id" => (string)$preference[0]['id'],
+            "name" => $preference[0]['name'],
+            "level" => $preference[0]['level'],
+            "description" => $preference[0]['description'],
+            "value" => $preference[0]['value'],
+            "type" => $preference[0]['type'],
+            "category" => $preference[0]['category'],
+            "subcategory" => $preference[0]['subcategory'],
+            "has_access" => (((int)$preference[0]['level']) <= $user->access),
+            "values" => [],
+        ];
+
+        if ($preference[0]['type'] == 'special') {
+            $values = Preference::get_special_values($preference[0]['name'], $user);
             if ($values) {
                 $results[0]['values'] = $values;
             }
+        } else {
+            unset($results[0]['values']);
         }
+
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results[0], JSON_PRETTY_PRINT);

@@ -51,7 +51,7 @@ final class PodcastEpisodes8Method implements MethodInterface
     public function __construct(
         ModelFactoryInterface $modelFactory,
         PodcastRepositoryInterface $podcastRepository,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->modelFactory      = $modelFactory;
         $this->podcastRepository = $podcastRepository;
@@ -85,7 +85,7 @@ final class PodcastEpisodes8Method implements MethodInterface
         ResponseInterface $response,
         ApiOutputInterface $output,
         array $input,
-        User $user
+        User $user,
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::PODCAST)) {
             $response->getBody()->write(
@@ -131,8 +131,8 @@ final class PodcastEpisodes8Method implements MethodInterface
             return $response;
         }
 
-        $output->setOffset((int)($input['offset'] ?? 0));
-        $output->setLimit((int)($input['limit'] ?? 0));
+        $output->setOffset($input['offset'] ?? 0);
+        $output->setLimit($input['limit'] ?? 0);
         $output->setCount($browse->get_total());
 
         $response->getBody()->write(

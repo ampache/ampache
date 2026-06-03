@@ -80,9 +80,6 @@ final class CatalogFolder6Method
         }
         $folder = html_entity_decode($input['folder']);
         $task   = explode(',', html_entity_decode((string)($input['task'])));
-        if (!is_array($task)) {
-            $task = [];
-        }
 
         // confirm that a valid task is going to happen
         if (!AmpConfig::get('delete_from_disk') && in_array('remove', $task)) {
@@ -146,7 +143,7 @@ final class CatalogFolder6Method
             }
             // Run commands on the current files in the folder path
             foreach ($file_ids as $file_id) {
-                /** @var Song|Podcast_Episode|Video $className */
+                /** @var Song|Podcast_Episode|Video $media */
                 $media = new $className($file_id);
                 if ($media->isNew()) {
                     continue;

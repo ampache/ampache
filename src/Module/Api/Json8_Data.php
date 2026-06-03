@@ -56,6 +56,7 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use DateMalformedStringException;
 
 /**
  * Json8_Data Class
@@ -78,9 +79,9 @@ class Json8_Data
      *
      * This takes an int and changes the offset
      *
-     * @param int $offset Change the starting position of your results. (e.g 5001 when selecting in groups of 5000)
+     * @param int|string $offset Change the starting position of your results. (e.g 5001 when selecting in groups of 5000)
      */
-    public static function set_offset(int $offset): void
+    public static function set_offset(int|string $offset): void
     {
         self::$offset = (int)$offset;
     }
@@ -109,7 +110,7 @@ class Json8_Data
      * Set the total count of returned objects
      *
      */
-    public static function set_count(int $count): void
+    public static function set_count(int|string $count): void
     {
         self::$count = (int)$count;
     }
@@ -221,7 +222,7 @@ class Json8_Data
      *
      * This takes an array of object_ids and return JSON based on the type of object
      *
-     * @param list<int|string> $objects Array of object_ids (Mixed string|int)
+     * @param array<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param bool $include (add child id's of the object (in sub array by type))
      * @return string JSON Object "catalog"|"artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
@@ -362,10 +363,11 @@ class Json8_Data
      *
      * This takes an array of object_ids and return JSON based on the type of object
      *
-     * @param list<int|string> $objects Array of object_ids (Mixed string|int)
+     * @param array<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
+     * @throws DateMalformedStringException
      */
     public static function indexes(array $objects, string $type, User $user, string $auth, bool $include = false): string
     {
@@ -494,7 +496,7 @@ class Json8_Data
     /**
      * live_streams_array
      *
-     * @param list<int|string> $objects
+     * @param array<int|string> $objects
      * @return array<int, array{
      *     "id": string,
      *     "name": null|string,
@@ -536,7 +538,7 @@ class Json8_Data
      *
      * This returns live_streams to the user, in a pretty JSON document with the information
      *
-     * @param list<int|string> $objects
+     * @param array<int|string> $objects
      * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function live_streams(array $objects, bool $object = true): string
@@ -566,7 +568,7 @@ class Json8_Data
      *
      * This returns licenses to the user, in a pretty JSON document with the information
      *
-     * @param list<int|string> $objects Licence id's assigned to songs and artists
+     * @param array<int|string> $objects Licence id's assigned to songs and artists
      * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function licenses(array $objects, bool $object = true): string
@@ -608,7 +610,7 @@ class Json8_Data
     /**
      * labels_array
      *
-     * @param list<int|string> $objects
+     * @param array<int|string> $objects
      * @return array<int, array{
      *     "id": string,
      *     "name": null|string,
@@ -659,16 +661,13 @@ class Json8_Data
     /**
      * labels_string
      *
-     * @param list<int|string> $objects
+     * @param array<int|string> $objects
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "label"
      */
     public static function labels(array $objects, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
-        }
 
         $JSON = self::labels_array($objects);
 
@@ -688,7 +687,7 @@ class Json8_Data
     /**
      * genres_array
      *
-     * @param list<int|string> $objects Genre id's to include
+     * @param array<int|string> $objects Genre id's to include
      * @return array<int, array{
      *     "id": string,
      *     "name": null|string,
@@ -745,16 +744,13 @@ class Json8_Data
      *
      * This returns genres to the user, in a pretty JSON document with the information
      *
-     * @param list<int|string> $objects Genre id's to include
+     * @param array<int|string> $objects Genre id's to include
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "label"
      */
     public static function genres(array $objects, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
-        }
 
         $JSON = self::genres_array($objects);
 
@@ -774,18 +770,191 @@ class Json8_Data
     /**
      * artists_array
      *
-     * @param list<int|string> $objects Artist id's to include
+     * @param array<int|string> $objects Artist id's to include
      * @param string[] $include
      * @return array <int, array{
      *     "id": string,
      *     "name": null|string,
      *     "prefix": null|string,
      *     "basename": null|string,
-     *     "albums": array<mixed>,
+     *     "albums": array<int, array{
+     *         "id": string,
+     *         "name": null|string,
+     *         "prefix": null|string,
+     *         "basename": null|string,
+     *         "artist"?: array{
+     *             "id": string,
+     *             "name": null|string,
+     *             "prefix": null|string,
+     *             "basename": null|string,
+     *         }|null,
+     *         "artists"?: array<int, array{
+     *             "id": string,
+     *             "name": null|string,
+     *             "prefix": null|string,
+     *             "basename": null|string,
+     *         }>,
+     *         "songartists"?: array<int, array{
+     *             "id": string,
+     *             "name": null|string,
+     *             "prefix": null|string,
+     *             "basename": null|string,
+     *         }>,
+     *         "time": int,
+     *         "year": int,
+     *         "tracks": array<int, array{
+     *             id: string,
+     *             title: string|null,
+     *             name: string|null,
+     *             artist: array{
+     *                 id: string,
+     *                 name: string,
+     *                 prefix: string,
+     *                 basename: string
+     *             },
+     *             artists: array<int, array{
+     *                 id: string,
+     *                 name: string,
+     *                 prefix: string,
+     *                 basename: string
+     *             }>,
+     *             album: array{
+     *                 id: string,
+     *                 name: string,
+     *                 prefix: string,
+     *                 basename: string
+     *             },
+     *             albumartist?: array{
+     *                 id: string,
+     *                 name: string,
+     *                 prefix: string,
+     *                 basename: string
+     *             },
+     *             disk: int,
+     *             disksubtitle: string|null,
+     *             track: int,
+     *             filename: string|null,
+     *             genre: array<int, array{id: string, name: string}>,
+     *             playlisttrack: int,
+     *             time: int,
+     *             year: int,
+     *             format: string|null,
+     *             stream_format: string|null,
+     *             bitrate: int|null,
+     *             stream_bitrate: int|null,
+     *             rate: int,
+     *             mode: string|null,
+     *             mime: string|null,
+     *             stream_mime: string|null,
+     *             url: string,
+     *             size: int,
+     *             mbid: string|null,
+     *             art: string|null,
+     *             has_art: bool,
+     *             flag: bool,
+     *             rating: int|null,
+     *             averagerating: float|null,
+     *             playcount: int,
+     *             catalog: string,
+     *             composer: string|null,
+     *             channels: int|null,
+     *             comment: string|null,
+     *             license: string|null,
+     *             publisher: string|null,
+     *             language: string|null,
+     *             lyrics: string|null,
+     *             replaygain_album_gain: float|null,
+     *             replaygain_album_peak: float|null,
+     *             replaygain_track_gain: float|null,
+     *             replaygain_track_peak: float|null,
+     *             r128_album_gain: float|null,
+     *             r128_track_gain: float|null,
+     *             metadata?: array<string, string>
+     *         }>,
+     *         "songcount": int,
+     *         "diskcount": int,
+     *         "type": null|string,
+     *         "genre": array<int, array{id: string, name: string}>,
+     *         "art": null|string,
+     *         "has_art": bool,
+     *         "flag": bool,
+     *         "rating": int|null,
+     *         "averagerating": float|null,
+     *         "mbid": null|string,
+     *         "mbid_group": null|string,
+     *     }>,
      *     "albumcount": int,
-     *     "songs": array<mixed>,
+     *     "songs": array<int, array{
+     *         id: string,
+     *         title: string|null,
+     *         name: string|null,
+     *         artist: array{
+     *             id: string,
+     *             name: string,
+     *             prefix: string,
+     *             basename: string
+     *         },
+     *         artists: array<int, array{
+     *             id: string,
+     *             name: string,
+     *             prefix: string,
+     *             basename: string
+     *         }>,
+     *         album: array{
+     *             id: string,
+     *             name: string,
+     *             prefix: string,
+     *             basename: string
+     *         },
+     *         albumartist?: array{
+     *             id: string,
+     *             name: string,
+     *             prefix: string,
+     *             basename: string
+     *         },
+     *         disk: int,
+     *         disksubtitle: string|null,
+     *         track: int,
+     *         filename: string|null,
+     *         genre: array<int, array{id: string, name: string}>,
+     *         playlisttrack: int,
+     *         time: int,
+     *         year: int,
+     *         format: string|null,
+     *         stream_format: string|null,
+     *         bitrate: int|null,
+     *         stream_bitrate: int|null,
+     *         rate: int,
+     *         mode: string|null,
+     *         mime: string|null,
+     *         stream_mime: string|null,
+     *         url: string,
+     *         size: int,
+     *         mbid: string|null,
+     *         art: string|null,
+     *         has_art: bool,
+     *         flag: bool,
+     *         rating: int|null,
+     *         averagerating: float|null,
+     *         playcount: int,
+     *         catalog: string,
+     *         composer: string|null,
+     *         channels: int|null,
+     *         comment: string|null,
+     *         license: string|null,
+     *         publisher: string|null,
+     *         language: string|null,
+     *         lyrics: string|null,
+     *         replaygain_album_gain: float|null,
+     *         replaygain_album_peak: float|null,
+     *         replaygain_track_gain: float|null,
+     *         replaygain_track_peak: float|null,
+     *         r128_album_gain: float|null,
+     *         r128_track_gain: float|null,
+     *         metadata?: array<string, string>
+     *     }>,
      *     "songcount": int,
-     *     "genre": array<mixed>,
+     *     "genre": array<int, array{id: string, name: string}>,
      *     "art": null|string,
      *     "has_art": bool,
      *     "flag": bool,
@@ -855,7 +1024,7 @@ class Json8_Data
     }
 
     /**
-     * @param list<int|string> $objects Artist id's to include
+     * @param array<int|string> $objects Artist id's to include
      * @param string[] $include
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "artist"
@@ -882,7 +1051,7 @@ class Json8_Data
     /**
      * albums_array
      *
-     * @param list<int|string> $objects Album id's to include
+     * @param array<int|string> $objects Album id's to include
      * @param string[] $include
      * @return array<int, array{
      *     "id": string,
@@ -909,11 +1078,79 @@ class Json8_Data
      *     }>,
      *     "time": int,
      *     "year": int,
-     *     "tracks": array<mixed>,
+     *     "tracks": array<int, array{
+     *         id: string,
+     *         title: string|null,
+     *         name: string|null,
+     *         artist: array{
+     *             id: string,
+     *             name: string,
+     *             prefix: string,
+     *             basename: string
+     *         },
+     *         artists: array<int, array{
+     *             id: string,
+     *             name: string,
+     *             prefix: string,
+     *             basename: string
+     *         }>,
+     *         album: array{
+     *             id: string,
+     *             name: string,
+     *             prefix: string,
+     *             basename: string
+     *         },
+     *         albumartist?: array{
+     *             id: string,
+     *             name: string,
+     *             prefix: string,
+     *             basename: string
+     *         },
+     *         disk: int,
+     *         disksubtitle: string|null,
+     *         track: int,
+     *         filename: string|null,
+     *         genre: array<int, array{id: string, name: string}>,
+     *         playlisttrack: int,
+     *         time: int,
+     *         year: int,
+     *         format: string|null,
+     *         stream_format: string|null,
+     *         bitrate: int|null,
+     *         stream_bitrate: int|null,
+     *         rate: int,
+     *         mode: string|null,
+     *         mime: string|null,
+     *         stream_mime: string|null,
+     *         url: string,
+     *         size: int,
+     *         mbid: string|null,
+     *         art: string|null,
+     *         has_art: bool,
+     *         flag: bool,
+     *         rating: int|null,
+     *         averagerating: float|null,
+     *         playcount: int,
+     *         catalog: string,
+     *         composer: string|null,
+     *         channels: int|null,
+     *         comment: string|null,
+     *         license: string|null,
+     *         publisher: string|null,
+     *         language: string|null,
+     *         lyrics: string|null,
+     *         replaygain_album_gain: float|null,
+     *         replaygain_album_peak: float|null,
+     *         replaygain_track_gain: float|null,
+     *         replaygain_track_peak: float|null,
+     *         r128_album_gain: float|null,
+     *         r128_track_gain: float|null,
+     *         metadata?: array<string, string>
+     *     }>,
      *     "songcount": int,
      *     "diskcount": int,
      *     "type": null|string,
-     *     "genre": array<mixed>,
+     *     "genre": array<int, array{id: string, name: string}>,
      *     "art": null|string,
      *     "has_art": bool,
      *     "flag": bool,
@@ -1007,18 +1244,14 @@ class Json8_Data
      *
      * This echos out a standard albums JSON document, it pays attention to the limit
      *
-     * @param list<int|string> $objects Album id's to include
+     * @param array<int|string> $objects Album id's to include
      * @param string[] $include
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "album"
      */
     public static function albums(array $objects, array $include, User $user, string $auth, bool $encode = true, bool $object = true): string
     {
-        self::$count  = self::$count ?? count($objects);
-
-        if ((self::$count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
-        }
+        self::$count = self::$count ?? count($objects);
 
         $JSON = self::albums_array($objects, $include, $user, $auth, $encode);
 
@@ -1038,7 +1271,7 @@ class Json8_Data
     /**
      * playlists_array
      *
-     * @param list<int|string> $objects Playlist id's to include
+     * @param array<int|string> $objects Playlist id's to include
      * @return array<int, array{
      *     "id": string,
      *     "name": null|string,
@@ -1147,16 +1380,13 @@ class Json8_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
-     * @param list<int|string> $objects Playlist id's to include
+     * @param array<int|string> $objects Playlist id's to include
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "playlist"
      */
     public static function playlists(array $objects, User $user, string $auth, bool $songs = false, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
 
         $JSON = self::playlists_array($objects, $user, $auth, $songs);
 
@@ -1178,7 +1408,7 @@ class Json8_Data
      *
      * This returns shares to the user, in a pretty json document with the information
      *
-     * @param list<int|string> $objects Share id's to include
+     * @param array<int|string> $objects Share id's to include
      * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function shares(array $objects, bool $object = true): string
@@ -1321,7 +1551,7 @@ class Json8_Data
      *
      * This returns catalogs to the user, in a pretty json document with the information
      *
-     * @param list<int|string> $objects group of catalog id's
+     * @param array<int|string> $objects group of catalog id's
      * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function catalogs(array $objects, bool $object = true): string
@@ -1379,7 +1609,7 @@ class Json8_Data
     /**
      * podcasts_array
      *
-     * @param list<int|string> $objects Podcast id's to include
+     * @param array<int|string> $objects Podcast id's to include
      * @param bool $episodes include the episodes of the podcast
      * @return array<int, array{
      *     "id": string,
@@ -1398,8 +1628,42 @@ class Json8_Data
      *     "flag": bool,
      *     "rating": int|null,
      *     "averagerating": float|null,
-     *     "podcast_episode": array<mixed>
+     *     "podcast_episode": array<int, array{
+     *         "id": string,
+     *         "title": null|string,
+     *         "name": null|string,
+     *         "podcast": array{"id": string, "name": string},
+     *         "description": null|string,
+     *         "category": null|string,
+     *         "author": null|string,
+     *         "author_full": null|string,
+     *         "website": null|string,
+     *         "pubdate": null|string,
+     *         "state": string,
+     *         "filelength": string,
+     *         "filesize": string,
+     *         "filename": string,
+     *         "mime": null|string,
+     *         "time": int,
+     *         "size": int,
+     *         "bitrate": int,
+     *         "stream_bitrate": int,
+     *         "rate": int,
+     *         "mode": null|string,
+     *         "channels": int|null,
+     *         "public_url": string,
+     *         "url": string,
+     *         "catalog": string,
+     *         "art": null|string,
+     *         "has_art": bool,
+     *         "flag": bool,
+     *         "rating": int|null,
+     *         "averagerating": float|null,
+     *         "playcount": int,
+     *         "played": string
+     *     }>
      * }>
+     * @throws DateMalformedStringException
      */
     public static function podcasts_array(array $objects, User $user, string $auth, bool $episodes = false): array
     {
@@ -1467,24 +1731,21 @@ class Json8_Data
      *
      * This returns podcasts to the user, in a pretty json document with the information
      *
-     * @param list<int|string> $objects Podcast id's to include
+     * @param array<int|string> $objects Podcast id's to include
      * @param bool $episodes include the episodes of the podcast
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "podcast"
+     * @throws DateMalformedStringException
      */
     public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false, bool $object = true): string
     {
-        $count  = self::$count ?? count($objects);
-
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
-        }
+        self::$count = self::$count ?? count($objects);
 
         $JSON = self::podcasts_array($objects, $user, $auth, $episodes);
 
         if ($object) {
             $output = [
-                "total_count" => $count,
+                "total_count" => self::$count,
                 "md5" => md5(serialize($objects)),
                 "podcast" => $JSON
             ];
@@ -1498,7 +1759,7 @@ class Json8_Data
     /**
      * podcast_episodes_array
      *
-     * @param list<int|string> $objects Podcast_Episode id's to include
+     * @param array<int|string> $objects Podcast_Episode id's to include
      * @return array<int, array{
      *     "id": string,
      *     "title": null|string,
@@ -1536,10 +1797,7 @@ class Json8_Data
      */
     public static function podcast_episodes_array(array $objects, User $user, string $auth, bool $encode = true): array
     {
-        $count = self::$count ?? count($objects);
-        if (($count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
-        }
+        self::$count = self::$count ?? count($objects);
 
         $JSON = [];
         foreach ($objects as $episode_id) {
@@ -1599,7 +1857,7 @@ class Json8_Data
      *
      * This returns podcasts to the user, in a pretty json document with the information
      *
-     * @param list<int|string> $objects Podcast_Episode id's to include
+     * @param array<int|string> $objects Podcast_Episode id's to include
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "podcast_episode"
      */
@@ -1628,8 +1886,8 @@ class Json8_Data
     /**
      * songs_array
      *
-     * @param list<int|string> $objects
-     * @return list<array{
+     * @param array<int|string> $objects
+     * @return array<int, array{
      *     id: string,
      *     title: string|null,
      *     name: string|null,
@@ -1639,7 +1897,7 @@ class Json8_Data
      *         prefix: string,
      *         basename: string
      *     },
-     *     artists: list<array{
+     *     artists: array<int, array{
      *         id: string,
      *         name: string,
      *         prefix: string,
@@ -1661,7 +1919,7 @@ class Json8_Data
      *     disksubtitle: string|null,
      *     track: int,
      *     filename: string|null,
-     *     genre: list<array<string, string>>,
+     *     genre: array<int, array{id: string, name: string}>,
      *     playlisttrack: int,
      *     time: int,
      *     year: int,
@@ -1724,7 +1982,7 @@ class Json8_Data
             $play_url     = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $song_album   = self::getAlbumRepository()->getNames($song->album);
             $song_artist  = Artist::get_name_array_by_id($song->artist);
-            /** @var list<array{id: string, name: string, prefix: string, basename: string}> $song_artists */
+            /** @var array<int, array{id: string, name: string, prefix: string, basename: string}> $song_artists */
             $song_artists = [];
             foreach ($song->get_artists() as $artist_id) {
                 $artist = Artist::get_name_array_by_id($artist_id);
@@ -1839,16 +2097,13 @@ class Json8_Data
      *
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
-     * @param list<int|string> $objects
+     * @param array<int|string> $objects
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "song"
      */
     public static function songs(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): string
     {
-        self::$count  = self::$count ?? count($objects);
-        if ((self::$count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        self::$count = self::$count ?? count($objects);
 
         $JSON = self::songs_array($objects, $user, $auth);
 
@@ -1870,7 +2125,7 @@ class Json8_Data
      *
      * This returns an array of song tags populated from an array of song ids.
      *
-     * @param list<int|string> $objects
+     * @param array<int|string> $objects
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "song"
      */
@@ -1971,7 +2226,7 @@ class Json8_Data
     /**
      * videos_array
      *
-     * @param list<int|string> $objects Video id's to include
+     * @param array<int|string> $objects Video id's to include
      * @return array<int, array{
      *     "id": string,
      *     "title": null|string,
@@ -2031,21 +2286,18 @@ class Json8_Data
     /**
      * videos_string
      *
-     * @param list<int|string> $objects Video id's to include
+     * @param array<int|string> $objects Video id's to include
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "video"
      */
     public static function videos(array $objects, User $user, string $auth, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
 
         $JSON = self::videos_array($objects, $user, $auth);
 
         if ($object) {
-            $output["video"] = [
+            $output = [
                 "total_count" => self::$count,
                 "md5" => md5(serialize($objects)),
                 "video" => $JSON
@@ -2063,7 +2315,7 @@ class Json8_Data
      * This handles creating an JSON document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param list<array{
+     * @param array<int, array{
      *    object_type: LibraryItemEnum,
      *    object_id: int,
      *    track_id: int,
@@ -2181,7 +2433,7 @@ class Json8_Data
     /**
      * users_array
      *
-     * @param list<int|string> $objects User id list
+     * @param array<int|string> $objects User id list
      * @return array<int, array{id: string, username: null|string}>
      */
     public static function users_array(array $objects): array
@@ -2211,7 +2463,7 @@ class Json8_Data
      *
      * This handles creating an JSON document for a user list
      *
-     * @param list<int|string> $objects User id list
+     * @param array<int|string> $objects User id list
      * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "user"
@@ -2219,9 +2471,6 @@ class Json8_Data
     public static function users(array $objects, bool $encode = true, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
-        }
 
         $JSON = self::users_array($objects);
 
@@ -2239,7 +2488,7 @@ class Json8_Data
      *
      * This handles creating an JSON document for a now_playing list
      *
-     * @param list<array{
+     * @param array<int, array{
      *     media: library_item,
      *     client: User,
      *     agent: string,
@@ -2277,7 +2526,7 @@ class Json8_Data
      *
      * This handles creating an JSON document for a shout list
      *
-     * @param list<Shoutbox> $shouts Shout id list
+     * @param array<Shoutbox> $shouts Shout id list
      * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function shouts(array $shouts, bool $object = true): string
@@ -2342,7 +2591,7 @@ class Json8_Data
      * This handles creating a JSON document for deleted items
      *
      * @param string $object_type ('song', 'podcast_episode', 'video')
-     * @param list<array{
+     * @param array<int, array{
      *     id: int,
      *     addition_time: int,
      *     delete_time: int,

@@ -59,7 +59,7 @@ final class UpdateArt8Method
      *     filter?: string,
      *     id?: string,
      *     type: string,
-     *     overwrite: int,
+     *     overwrite?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -69,13 +69,14 @@ final class UpdateArt8Method
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $input['id'] = $input['filter'] ?? $input['id'] ?? null;
-        if (!Api::check_parameter($input, ['type', 'id'], self::ACTION)) {
+
+        $input['filter'] = $input['id'] ?? $input['filter'] ?? null;
+        if (!Api::check_parameter($input, ['filter', 'type'], self::ACTION)) {
             return false;
         }
 
         $type      = (string)$input['type'];
-        $object_id = (int)$input['id'];
+        $object_id = (int)$input['filter'];
         $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
         $art_url   = Art::url($object_id, $type, $input['auth']);
 

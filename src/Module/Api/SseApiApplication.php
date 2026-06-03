@@ -39,7 +39,7 @@ final class SseApiApplication implements ApiApplicationInterface
     private UiInterface $ui;
 
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
     ) {
         $this->ui = $ui;
     }

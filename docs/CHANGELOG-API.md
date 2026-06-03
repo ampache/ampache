@@ -1,5 +1,71 @@
 # API CHANGELOG
 
+## API 6.9.2 Build 1
+
+This version is being released for Ampache7 **only**
+
+To ensure that there are no issues with clients checking for single int versions
+we will keep on 6.9.x and resume build number versioning until Ampache 8
+
+**NOTE** API8 has been added to the code but is not enabled for use.
+
+### Added (692001)
+
+* API8
+  * New Method: playlist_remove (remove items from a playlist)
+  * Typing for `array<mixed>` JSON objects
+  * Let `search_songs` use `rule_1_input` to match other search methods
+* API6
+  * Let `search_songs` use `rule_1_input` to match other search methods
+
+### Changed (692001)
+
+* API8
+  * Method `playlist_remove_song` is deprecated and will be removed in **API9** (Use playlist_remove)
+  * Deprecated parameters that will be removed in **API9**
+    * catalog_action: parameter `catalog`, use `filter`
+    * catalog_file: parameter `catalog`, use `filter`
+    * catalog_folder: parameter `catalog`, use `filter`
+    * flag: parameter `id`, use `filter`
+    * rate: parameter `id`, use `filter`
+    * record_play: parameter `id`, use `filter`
+    * update_art: parameter `id`, use `filter`
+    * update_artist:_info parameter `id`, use `filter`
+    * update_from_tags: parameter `id`, use `filter`
+    * url_to_song: parameter `url`, use `filter`
+    * download: parameter `id`, use `filter`
+    * get_art: parameter `id`, use `filter`
+    * stream: parameter `id`, use `filter`
+    * localplay: parameter `oid`, use `filter`
+    * last_shouts: parameter `username`, use `filter`
+    * timeline: parameter `username`, use `filter`
+    * user_delete: parameter `username`, use `filter`
+    * user_edit: parameter `username`, use `filter`
+  * Optional parameters
+    * playlist_add: Use 'song' as default `type`
+
+### Fixed (692001)
+
+* ALL
+  * download: Type for `format` listed as int
+  * stream: Type for `format` listed as int
+  * update_art: Docstring had `overwrite` as mandatory
+  * preference object `id` not cast to string
+  * forced string for prefix when it should be null
+  * video objects being inserted into double video arrays
+* API6
+  * JSON lists could be doubl filtered incorrectly splicing results
+  * album, albums, podcast_delete and podcast_episodes output sent to JSON8 classes
+  * download: Type for `format` listed as int
+  * toggle_follow using incorrect logic for username
+
+### Removed (692001)
+
+* API8
+  * Remove `get_indexes`
+  * Remove `playlist_add_song`
+  * Remove `user_update`
+
 ## API 6.9.1 Build 15
 
 This version is being released for Ampache7 **only**

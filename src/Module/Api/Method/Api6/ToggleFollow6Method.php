@@ -69,7 +69,7 @@ final class ToggleFollow6Method
         }
 
         $username = $input['username'];
-        if (!empty($username)) {
+        if (empty($username)) {
             Api6::error(sprintf('Bad Request: %s', 'username'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
 
             return false;

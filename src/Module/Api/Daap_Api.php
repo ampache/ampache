@@ -47,7 +47,7 @@ class Daap_Api
     public const AMPACHEID_SMARTPL = 400000000;
     public const BASE_LIBRARY      = 0;
 
-    /** @var list<string> */
+    /** @var array<string> */
     public static array $metas = [
         'dmap.itemid',
         'dmap.itemname',
