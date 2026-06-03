@@ -654,7 +654,6 @@ final readonly class PlayAction implements ApplicationActionInterface
                 if (
                     $catalog instanceof Catalog_local &&
                     $file_target &&
-                    $cache_target &&
                     (bool)AmpConfig::get('cache_' . $cache_target, false)
                 ) {
                     $catalog->cache_catalog_file($file_target, $media, $cache_target);

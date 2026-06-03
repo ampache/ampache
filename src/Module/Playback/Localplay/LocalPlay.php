@@ -291,6 +291,15 @@ class LocalPlay
      * This calls the get function of the player and then returns
      * the array of current songs for display or whatever
      * an empty array is passed on failure
+     * @return array<int, array{
+     *     id: int,
+     *     raw: string,
+     *     vlid?: int,
+     *     oid?: int,
+     *     name?: string|null,
+     *     link?: string|null,
+     *     track: int,
+     * }>
      */
     public function get(): array
     {

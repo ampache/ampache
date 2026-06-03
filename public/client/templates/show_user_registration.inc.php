@@ -27,8 +27,9 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\Registration;
-use Ampache\Module\Util\Captcha\captcha;
 use Ampache\Module\Util\Ui;
+use Gregwar\Captcha\CaptchaBuilder;
+use Gregwar\Captcha\PhraseBuilder;
 
 /** @var Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer */
 
@@ -154,9 +155,27 @@ $city            = scrub_in(Core::get_request('city')); ?>
                     </div>
 
                     <?php if (AmpConfig::get('captcha_public_reg')) {
-                        echo captcha::form("&nbsp;");
-                        echo AmpError::display('captcha');
-                    } ?>
+                        $phraseBuilder = new PhraseBuilder(10, '23456789ABCDEFGHJKMNPQRSTVWXYZ');
+                        $builder       = new CaptchaBuilder(null, $phraseBuilder);
+                        $builder->setMaxBehindLines(8);
+                        $builder->setMaxFrontLines(8);
+                        try {
+                            $builder->buildAgainstOCR(280, 128);
+                        } catch (Exception $error) {
+                            debug_event('register.inc', 'Captcha OCR error: ' . $error->getMessage(), 3);
+                            $builder->build(280, 128);
+                        } ?>
+                    <div class="registerfield require">
+                        <label for="captcha_user"><?php echo T_('Captcha'); ?>:</label>
+                        <input id="captcha_user" type="text" name="captcha_user" maxlength="20" />
+                        <?php echo AmpError::display('captcha_user'); ?>
+                    </div>
+                    <div class="registerfield">
+                        <img src="<?php echo $builder->inline(); ?>"  alt="captcha"/>
+                        <input type="hidden" name="captcha_phrase" value="<?php echo $builder->getPhrase() ?>" />
+                    </div>
+                    <?php } ?>
+
                     <div class="submit-registration">
                         <?php if (AmpConfig::get('user_agreement')) { ?>
                             <div id="agreementCheckbox">

@@ -122,7 +122,7 @@ class Query
         'use_pages' => false,
     ];
 
-    /** @var int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}> $_cache */
+    /** @var int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}> $_cache */
     protected array $_cache = [];
 
     private ?QueryInterface $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
@@ -838,7 +838,7 @@ class Query
     /**
      * get_saved
      * This looks in the session for the saved stuff and returns what it finds.
-     * @return array<int|string>|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>
+     * @return int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>
      */
     public function get_saved(): array
     {
@@ -1361,7 +1361,7 @@ class Query
     /**
      * save_objects
      * This takes the full array of object ids, often passed into show and if necessary it saves them
-     * @param int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}> $object_ids
+     * @param int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}> $object_ids
      */
     public function save_objects(array $object_ids): bool
     {

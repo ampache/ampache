@@ -254,6 +254,7 @@ class Xml5_Data
      *   <$object_type> //optional
      *     <$item id="123">
      *       <data></data>
+     * @param array<int, array<string, mixed>> $array
      */
     public static function object_array(array $array, string $item, string $object_type = ''): string
     {

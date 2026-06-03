@@ -35,13 +35,13 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\Registration;
 use Ampache\Module\User\Registration\RegistrationAgreementRendererInterface;
-use Ampache\Module\Util\Captcha\captcha;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use Gregwar\Captcha\PhraseBuilder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -95,11 +95,13 @@ final class AddUserAction implements ApplicationActionInterface
 
         /* If we're using the captcha stuff */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG)) {
-            $captcha = captcha::solved();
-            if ($captcha) {
-                $msg = "SUCCESS";
-            } else {
-                AmpError::add('captcha', T_('Captcha failed'));
+            $captcha_phrase = $_POST['captcha_phrase'] ?? false;
+            $captcha_user   = $_POST['captcha_user'] ?? '';
+            if (
+                $captcha_user !== '' &&
+                !PhraseBuilder::comparePhrases($captcha_phrase, $captcha_user)
+            ) {
+                AmpError::add('captcha_user', T_('Captcha failed'));
             }
         } // end if it's enabled
 

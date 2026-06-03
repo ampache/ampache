@@ -271,7 +271,7 @@ class Browse extends Query
      * This takes an array of objects
      * and requires the correct template based on the
      * type that we are currently browsing
-     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|array<Song_Preview>|null $object_ids
+     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids
      */
     public function show_objects(?array $object_ids = [], bool|array|string $argument = false, ?bool $skip_cookies = false): void
     {
@@ -477,7 +477,7 @@ class Browse extends Query
                     if ($shoutId instanceof Song_Preview) {
                         continue;
                     }
-                    $shout = (is_array($shoutId))
+                    $shout = (is_array($shoutId) && isset($shoutId['object_id']))
                         ? $shoutRepository->findById((int)$shoutId['object_id'])
                         : $shoutRepository->findById((int)$shoutId);
                     if ($shout !== null) {
