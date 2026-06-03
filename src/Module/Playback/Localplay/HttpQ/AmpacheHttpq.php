@@ -430,6 +430,14 @@ class AmpacheHttpq extends localplay_controller
      * This functions returns an array containing information about
      * The songs that httpQ currently has in its playlist. This must be
      * done in a standardized fashion
+     * @return array<int, array{
+     *     id: int,
+     *     raw: string,
+     *     oid?: int,
+     *     name?: string,
+     *     link?: string|null,
+     *     track: int,
+     * }>
      */
     public function get(): array
     {
