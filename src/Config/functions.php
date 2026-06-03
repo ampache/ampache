@@ -70,7 +70,7 @@ function set_memory_limit(int|string $new_limit): void
  * @param TType $input
  * @return TType
  */
-function scrub_in($input)
+function scrub_in($input): array|string
 {
     if (!is_array($input)) {
         return stripslashes(htmlspecialchars(strip_tags((string) $input), ENT_NOQUOTES, AmpConfig::get('site_charset', 'UTF-8')));
@@ -1072,7 +1072,9 @@ function get_theme(string $name): ?array
             $results['base'] = explode(',', (string)$results['base']);
             $nbbases         = count($results['base']);
             for ($count = 0; $count < $nbbases; $count++) {
-                $results['base'][$count] = explode('|', $results['base'][$count]);
+                $results['base'][$count] = (is_array($results['base'][$count]))
+                        ? $results['base'][$count]
+                        : explode('|', $results['base'][$count]);
             }
             $results['colors'] = explode(',', (string)$results['colors']);
         } else {
