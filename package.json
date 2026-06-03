@@ -26,7 +26,7 @@
     "copy:contextmenu": "copyfiles --up 3 \"node_modules/jquery-contextmenu/dist/*\" public/client/lib/components/jquery-contextmenu",
     "copy:datetimepicker": "copyfiles --up 3 node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js node_modules/jquery-datetimepicker/build/jquery.datetimepicker.min.css public/client/lib/components/datetimepicker",
     "copy:filepond": "copyfiles --up 3 node_modules/filepond/dist/filepond.min.js node_modules/filepond/dist/filepond.min.css public/client/lib/components/filepond",
-    "copy:jscookie": "copyfiles --up 3 node_modules/js-cookie/src/js.cookie.js public/client/lib/components/js-cookie",
+    "copy:jscookie": "copyfiles --up 3 node_modules/js-cookie/dist/js.cookie.js public/client/lib/components/js-cookie",
     "copy:jscroll": "copyfiles --up 3 \"node_modules/jscroll/dist/**/*\" public/client/lib/components/jscroll",
     "copy:jquery": "copyfiles --up 3 node_modules/jquery/dist/jquery.min.js public/client/lib/components/jquery",
     "copy:jqueryui": "copyfiles --up 3 \"node_modules/jquery-ui/dist/*\" public/client/lib/components/jquery-ui",
