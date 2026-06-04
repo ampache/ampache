@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Ampache 7.9.8
+
+I'm making a lot of mistakes this week! Sorry!
+
+### Fixed (7.9.8)
+
+* Subsonic
+
 ## Ampache 7.9.7
 
 Change in a JS path would break the Web Player on new installs/docker
