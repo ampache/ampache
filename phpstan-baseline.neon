@@ -637,6 +637,12 @@ parameters:
 			path: src/Module/Api/Method/MethodInterface.php
 
 		-
+			message: '#^Strict comparison using \=\=\= between false and false will always evaluate to true\.$#'
+			identifier: identical.alwaysTrue
+			count: 1
+			path: src/Module/Api/SubsonicApiApplication.php
+
+		-
 			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
 			identifier: greater.alwaysTrue
 			count: 1
