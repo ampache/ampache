@@ -11,7 +11,7 @@ Change in a JS path would break the Web Player on new installs/docker
 
 ### Fixed (7.9.7)
 
-* js-cookie npm copy
+* js-cookie NPM copy
 
 ## Ampache 7.9.6
 
