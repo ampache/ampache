@@ -798,14 +798,14 @@ class Playlist extends playlist_object
 
         if (!$object && $track > 0) {
             // searching by track
-            $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? AND `playlist_data`.`object_type` = ? LIMIT 1";
+            $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = ? AND `playlist_data`.`track` = ? LIMIT 1";
             $db_results = Dba::read($sql, [$this->id, $object_type, $track]);
         } elseif ($track > 0) {
-            $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = ? AND `track` <= ? LIMIT 1";
-            $db_results = Dba::read($sql, [$this->id, $object, $object_type, $track]);
+            $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = ? AND `playlist_data`.`object_id` = ? AND `track` <= ? LIMIT 1";
+            $db_results = Dba::read($sql, [$this->id, $object_type, $object, $track]);
         } else {
             // Search object and optionally check by track
-            $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = ? LIMIT 1";
+            $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = ? AND `playlist_data`.`object_id` = ? LIMIT 1";
             $db_results = Dba::read($sql, [$this->id, $object_type, $object]);
         }
 
