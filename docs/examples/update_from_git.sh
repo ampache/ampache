@@ -7,8 +7,8 @@
 AMPACHEDIR="/var/www/ampache"
 
 BRANCH='develop'
-#BRANCH='patch7'
-#BRANCH='release7'
+#BRANCH='patch8'
+#BRANCH='release8'
 
 ### What's the folder being updated
 echo $AMPACHEDIR
@@ -48,9 +48,10 @@ if [ "$OLD_HASH" != "$NEW_HASH" ]; then
 
   ### You don't always need to do this but some people might want to keep composer packages updated here
   ### You might want the dev packages as well so you can remove '--no-dev' to install those
-  #composer install --no-dev --prefer-source --no-interaction
+  ### If the git version of php doesn't match yours, fall back to composer update to get the correct packages
+  #composer install --no-dev --prefer-source --no-interaction || composer update --no-dev --prefer-source --no-interaction
 
   ### NPM is now required to handle all the javascript packages
-  npm install
-  npm run build
+  npm install || exit 1
+  npm run build || exit 1
 fi
