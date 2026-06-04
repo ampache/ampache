@@ -22,6 +22,7 @@
     "dev": "vite --port 5177",
     "build": "vite build --minify false",
     "postinstall": "npm-run-all copy:*",
+    "verify:install": "node resources/scripts/verify-install.js",
     "copy:bootstrap": "copyfiles --error --up 3 \"node_modules/bootstrap/dist/**/*\" lib/components/bootstrap",
     "copy:contextmenu": "copyfiles --error --up 3 \"node_modules/jquery-contextmenu/dist/*\" lib/components/jquery-contextmenu",
     "copy:datetimepicker": "copyfiles --error --up 3 node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js node_modules/jquery-datetimepicker/build/jquery.datetimepicker.min.css lib/components/datetimepicker",
