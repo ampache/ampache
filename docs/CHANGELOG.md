@@ -7,6 +7,7 @@ I'm making a lot of mistakes this week! Sorry!
 ### Fixed (7.9.8)
 
 * Subsonic
+* Playlist item removal lookup
 
 ## Ampache 7.9.7
 
