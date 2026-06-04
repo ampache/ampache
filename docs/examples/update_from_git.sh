@@ -7,8 +7,8 @@
 AMPACHEDIR="/var/www/ampache"
 
 BRANCH='develop'
-#BRANCH='patch7'
-#BRANCH='release7'
+#BRANCH='patch8'
+#BRANCH='release8'
 
 ### What's the folder being updated
 echo $AMPACHEDIR
