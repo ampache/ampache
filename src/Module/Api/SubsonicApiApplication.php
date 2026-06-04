@@ -311,14 +311,14 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 }
 
                 if (array_key_exists($decname, $input)) {
-                    if (is_array($input[$decname])) {
-                        $input[$decname] = $decvalue;
+                    if (is_array($input[$decname]) === false) {
+                        $oldvalue          = $input[$decname];
+                        $input[$decname]   = [];
+                        $input[$decname][] = $oldvalue;
                     }
-                } else {
-                    $oldvalue          = $input[$decname];
-                    $input[$decname]   = [];
-                    $input[$decname][] = $oldvalue;
                     $input[$decname][] = $decvalue;
+                } else {
+                    $input[$decname] = $decvalue;
                 }
             }
         }
