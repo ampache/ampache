@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## Ampache 7.9.7
+
+Change in a JS path would break the Web Player on new installs/docker
+
+### Added (7.9.7)
+
+* NPM command `verify:install`
+* NPM error on copyfiles failure
+
+### Fixed (7.9.7)
+
+* js-cookie npm copy
+
 ## Ampache 7.9.6
 
 Fixes to changes on the backend and a few issues found during code analysis
