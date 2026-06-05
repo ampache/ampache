@@ -166,7 +166,7 @@ $city            = scrub_in(Core::get_request('city')); ?>
                             $builder->build(280, 128);
                         } ?>
                     <div class="registerfield require">
-                        <label for="captcha_user"><?php echo T_('Captcha'); ?>:</label>
+                        <label for="captcha_user"><?php echo T_('Captcha is required'); ?>:</label>
                         <input id="captcha_user" type="text" name="captcha_user" maxlength="20" />
                         <?php echo AmpError::display('captcha_user'); ?>
                     </div>
