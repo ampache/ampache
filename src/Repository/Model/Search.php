@@ -83,6 +83,8 @@ class Search extends playlist_object
 
     public int $limit = 0;
 
+    public ?int $catalog_id = null; // filter a search for a single catalog
+
     public string $objectType; // the type of object you want to return (self::VALID_TYPES)
 
     public User $search_user; // user running the search
@@ -1977,6 +1979,10 @@ class Search extends playlist_object
 
         if (isset($data['playlist_type'])) {
             $this->type = (string)$data['playlist_type'];
+        }
+
+        if (isset($data['catalog_id'])) {
+            $this->catalog_id = (int)$data['catalog_id'];
         }
 
         // check that a limit or random flag and operator have been sent

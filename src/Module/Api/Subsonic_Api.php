@@ -566,8 +566,8 @@ class Subsonic_Api
                     : Catalog::get_albums_by_artist($size, $offset, $catalogs);
                 break;
             case 'byYear':
-                $fromYear = (int)min($input['fromYear'], $input['toYear']);
-                $toYear   = (int)max($input['fromYear'], $input['toYear']);
+                $fromYear = (int)min(($input['fromYear'] ?? 0), ($input['toYear'] ?? 0));
+                $toYear   = (int)max(($input['fromYear'] ?? 0), ($input['toYear'] ?? 0));
 
                 if ($fromYear || $toYear) {
                     $data   = Search::year_search($fromYear, $toYear, $size, $offset);
@@ -681,9 +681,7 @@ class Subsonic_Api
                 $ruleCount++;
             }
             if ($musicFolderId > 0) {
-                $data['rule_' . $ruleCount . '_input']    = $musicFolderId;
-                $data['rule_' . $ruleCount . '_operator'] = 0;
-                $data['rule_' . $ruleCount . '']          = 'catalog';
+                $data['catalog_id'] = $musicFolderId;
             }
             $artists = Search::run($data, $user);
         }
@@ -701,9 +699,7 @@ class Subsonic_Api
                 $ruleCount++;
             }
             if ($musicFolderId > 0) {
-                $data['rule_2_input']    = $musicFolderId;
-                $data['rule_2_operator'] = 0;
-                $data['rule_2']          = 'catalog';
+                $data['catalog_id'] = $musicFolderId;
             }
             $albums = Search::run($data, $user);
         }
@@ -721,9 +717,7 @@ class Subsonic_Api
                 $ruleCount++;
             }
             if ($musicFolderId > 0) {
-                $data['rule_2_input']    = $musicFolderId;
-                $data['rule_2_operator'] = 0;
-                $data['rule_2']          = 'catalog';
+                $data['catalog_id'] = $musicFolderId;
             }
             $songs = Search::run($data, $user);
         }
