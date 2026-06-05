@@ -170,7 +170,7 @@ $city            = scrub_in(Core::get_request('city')); ?>
                         <input id="captcha_user" type="text" name="captcha_user" maxlength="20" />
                         <?php echo AmpError::display('captcha_user'); ?>
                     </div>
-                    <div class="registerfield">
+                    <div class="registerfield center">
                         <img src="<?php echo $builder->inline(); ?>"  alt="captcha"/>
                         <input type="hidden" name="captcha_phrase" value="<?php echo $builder->getPhrase() ?>" />
                     </div>
