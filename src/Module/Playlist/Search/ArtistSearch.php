@@ -553,7 +553,8 @@ final class ArtistSearch implements SearchInterface
             $table['4_album_map']  = "LEFT JOIN `album_map` ON `album_map`.`object_id` = `artist`.`id` AND `artist_map`.`object_type` = `album_map`.`object_type`";
             $table['album']        = "LEFT JOIN `album` ON `album_map`.`album_id` = `album`.`id`";
         }
-        if ($join['catalog']) {
+
+        if ($join['catalog'] || $search->catalog_id) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_artist` ON `catalog_map_artist`.`object_id` = `artist`.`id` AND `catalog_map_artist`.`object_type` = 'artist'";
             $table['3_catalog']     = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `catalog_map_artist`.`catalog_id`";
             if (!empty($where_sql)) {
@@ -562,6 +563,15 @@ final class ArtistSearch implements SearchInterface
                 $where_sql = "`catalog_se`.`enabled` = '1'";
             }
         }
+
+        if ($search->catalog_id) {
+            if ($where_sql !== '' && $where_sql !== '0') {
+                $where_sql = "(" . $where_sql . ") AND `catalog_map_artist`.`catalog_id` = " . $search->catalog_id;
+            } else {
+                $where_sql = "`catalog_map_artist`.`catalog_id` = " . $search->catalog_id;
+            }
+        }
+
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
                 $where_sql = ($search_user_id > 0)

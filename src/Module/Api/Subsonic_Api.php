@@ -681,9 +681,7 @@ class Subsonic_Api
                 $ruleCount++;
             }
             if ($musicFolderId > 0) {
-                $data['rule_' . $ruleCount . '_input']    = $musicFolderId;
-                $data['rule_' . $ruleCount . '_operator'] = 0;
-                $data['rule_' . $ruleCount . '']          = 'catalog';
+                $data['catalog_id'] = $musicFolderId;
             }
             $artists = Search::run($data, $user);
         }
@@ -701,9 +699,7 @@ class Subsonic_Api
                 $ruleCount++;
             }
             if ($musicFolderId > 0) {
-                $data['rule_2_input']    = $musicFolderId;
-                $data['rule_2_operator'] = 0;
-                $data['rule_2']          = 'catalog';
+                $data['catalog_id'] = $musicFolderId;
             }
             $albums = Search::run($data, $user);
         }
@@ -721,9 +717,7 @@ class Subsonic_Api
                 $ruleCount++;
             }
             if ($musicFolderId > 0) {
-                $data['rule_2_input']    = $musicFolderId;
-                $data['rule_2_operator'] = 0;
-                $data['rule_2']          = 'catalog';
+                $data['catalog_id'] = $musicFolderId;
             }
             $songs = Search::run($data, $user);
         }

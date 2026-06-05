@@ -679,13 +679,11 @@ class OpenSubsonic_Api
             foreach ($query as $token) {
                 $data['rule_' . $ruleCount . '_input']    = $token['value'];
                 $data['rule_' . $ruleCount . '_operator'] = $token['operator'];
-                $data['rule_' . $ruleCount . '']          = 'title';
+                $data['rule_' . $ruleCount]               = 'title';
                 $ruleCount++;
             }
             if ($musicFolderId > 0) {
-                $data['rule_' . $ruleCount . '_input']    = $musicFolderId;
-                $data['rule_' . $ruleCount . '_operator'] = 0;
-                $data['rule_' . $ruleCount . '']          = 'catalog';
+                $data['catalog_id'] = $musicFolderId;
             }
             $artists = Search::run($data, $user);
         }
@@ -700,13 +698,11 @@ class OpenSubsonic_Api
             foreach ($query as $token) {
                 $data['rule_' . $ruleCount . '_input']    = $token['value'];
                 $data['rule_' . $ruleCount . '_operator'] = $token['operator'];
-                $data['rule_' . $ruleCount . '']          = 'title';
+                $data['rule_' . $ruleCount]               = 'title';
                 $ruleCount++;
             }
             if ($musicFolderId > 0) {
-                $data['rule_2_input']    = $musicFolderId;
-                $data['rule_2_operator'] = 0;
-                $data['rule_2']          = 'catalog';
+                $data['catalog_id'] = $musicFolderId;
             }
             $albums = Search::run($data, $user);
         }
@@ -721,13 +717,11 @@ class OpenSubsonic_Api
             foreach ($query as $token) {
                 $data['rule_' . $ruleCount . '_input']    = $token['value'];
                 $data['rule_' . $ruleCount . '_operator'] = $token['operator'];
-                $data['rule_' . $ruleCount . '']          = 'title';
+                $data['rule_' . $ruleCount]               = 'title';
                 $ruleCount++;
             }
             if ($musicFolderId > 0) {
-                $data['rule_2_input']    = $musicFolderId;
-                $data['rule_2_operator'] = 0;
-                $data['rule_2']          = 'catalog';
+                $data['catalog_id'] = $musicFolderId;
             }
             $songs = Search::run($data, $user);
         }
