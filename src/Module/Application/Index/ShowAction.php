@@ -28,8 +28,6 @@ namespace Ampache\Module\Application\Index;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
@@ -51,19 +49,6 @@ final readonly class ShowAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if (
-            $this->configContainer->isAuthenticationEnabled()
-        ) {
-            $default_auth_level = $this->configContainer->get('default_auth_level');
-            $defaultAuthLevel = ($default_auth_level) ? AccessLevelEnum::fromTextual($default_auth_level) : AccessLevelEnum::GUEST;
-            if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, $defaultAuthLevel) === false) {
-                    // User not logged in, redirecting to login page
-                    header("Location: " . $this->configContainer->getWebPath() . '/login.php');
-
-                    return null;
-            }
-        }
-
         $this->ui->showHeader();
 
         $action = $this->requestParser->getFromRequest('action');
