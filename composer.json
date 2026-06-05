@@ -59,7 +59,6 @@
         "doctrine/cache": "^2",
         "gettext/gettext": "^5",
         "gettext/translator": "^1.2",
-        "gregwar/captcha": "dev-master",
         "idleberg/vite-manifest": "^1.0",
         "james-heinrich/getid3": "dev-master",
         "jwilsson/spotify-web-api-php": "^6",
