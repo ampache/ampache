@@ -26,12 +26,12 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\User\Registration;
+use Ampache\Module\User\Registration\RegistrationAgreementRendererInterface;
 use Ampache\Module\Util\Ui;
 use Gregwar\Captcha\CaptchaBuilder;
 use Gregwar\Captcha\PhraseBuilder;
 
-/** @var Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer */
+/** @var RegistrationAgreementRendererInterface $registrationAgreementRenderer */
 
 $t_ampache = T_('Ampache');
 $htmllang  = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));

@@ -25,11 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Config\Init\Exception;
 
-use Override;
-
 final class RequireAuthException extends InitializationException
 {
     /** @var string */
-    #[Override]
     protected $message = 'Authentication is required to proceed';
 }
