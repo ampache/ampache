@@ -654,32 +654,9 @@ class Subsonic_Api
      */
     private static function _search(string $query, array $input, User $user): array
     {
-        $operator = 0; // contains
-        $original = unhtmlentities($query);
-        $query    = $original;
-        if (str_starts_with($original, '"') && (str_ends_with($original, '"'))) {
-            $query = substr($original, 1, -1);
-            // query is non-optional, but some clients send empty queries to fetch
-            // all items. Fall back on default contains in such cases.
-            if (strlen($query) > 0) {
-                $operator = 4; // equals
-            }
-        }
-        if (str_starts_with($original, '"') && str_ends_with($original, '"*')) {
-            $query    = substr($original, 1, -2);
-            $operator = 4; // equals
-        }
         $artists = [];
         $albums  = [];
         $songs   = [];
-
-        if (strlen($query) > 1) {
-            // if we didn't catch a "wrapped" query it might just be a starts with
-            if (str_ends_with($original, "*") && $operator == 0) {
-                $query    = substr($query, 0, -1);
-                $operator = 2; // Starts with
-            }
-        }
 
         $artistCount   = $input['artistCount'] ?? 20;
         $artistOffset  = $input['artistOffset'] ?? 0;
@@ -689,30 +666,40 @@ class Subsonic_Api
         $songOffset    = $input['songOffset'] ?? 0;
         $musicFolderId = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($input['musicFolderId']) : 0;
 
+        $original = unhtmlentities($query);
+        $query    = SubsonicApiApplication::parseSearchQuery($original);
         if ($artistCount > 0) {
-            $data                    = [];
-            $data['limit']           = $artistCount;
-            $data['offset']          = $artistOffset;
-            $data['type']            = 'artist';
-            $data['rule_1_input']    = $query;
-            $data['rule_1_operator'] = $operator;
-            $data['rule_1']          = 'title';
+            $data           = [];
+            $data['limit']  = $artistCount;
+            $data['offset'] = $artistOffset;
+            $data['type']   = 'artist';
+            $ruleCount      = 1;
+            foreach ($query as $token) {
+                $data['rule_' . $ruleCount . '_input']    = $token['value'];
+                $data['rule_' . $ruleCount . '_operator'] = $token['operator'];
+                $data['rule_' . $ruleCount . '']          = 'title';
+                $ruleCount++;
+            }
             if ($musicFolderId > 0) {
-                $data['rule_2_input']    = $musicFolderId;
-                $data['rule_2_operator'] = 0;
-                $data['rule_2']          = 'catalog';
+                $data['rule_' . $ruleCount . '_input']    = $musicFolderId;
+                $data['rule_' . $ruleCount . '_operator'] = 0;
+                $data['rule_' . $ruleCount . '']          = 'catalog';
             }
             $artists = Search::run($data, $user);
         }
 
         if ($albumCount > 0) {
-            $data                    = [];
-            $data['limit']           = $albumCount;
-            $data['offset']          = $albumOffset;
-            $data['type']            = 'album';
-            $data['rule_1_input']    = $query;
-            $data['rule_1_operator'] = $operator;
-            $data['rule_1']          = 'title';
+            $data           = [];
+            $data['limit']  = $albumCount;
+            $data['offset'] = $albumOffset;
+            $data['type']   = 'album';
+            $ruleCount      = 1;
+            foreach ($query as $token) {
+                $data['rule_' . $ruleCount . '_input']    = $token['value'];
+                $data['rule_' . $ruleCount . '_operator'] = $token['operator'];
+                $data['rule_' . $ruleCount . '']          = 'title';
+                $ruleCount++;
+            }
             if ($musicFolderId > 0) {
                 $data['rule_2_input']    = $musicFolderId;
                 $data['rule_2_operator'] = 0;
@@ -722,13 +709,17 @@ class Subsonic_Api
         }
 
         if ($songCount > 0) {
-            $data                    = [];
-            $data['limit']           = $songCount;
-            $data['offset']          = $songOffset;
-            $data['type']            = 'song';
-            $data['rule_1_input']    = $query;
-            $data['rule_1_operator'] = $operator;
-            $data['rule_1']          = 'title';
+            $data           = [];
+            $data['limit']  = $songCount;
+            $data['offset'] = $songOffset;
+            $data['type']   = 'song';
+            $ruleCount      = 1;
+            foreach ($query as $token) {
+                $data['rule_' . $ruleCount . '_input']    = $token['value'];
+                $data['rule_' . $ruleCount . '_operator'] = $token['operator'];
+                $data['rule_' . $ruleCount . '']          = 'title';
+                $ruleCount++;
+            }
             if ($musicFolderId > 0) {
                 $data['rule_2_input']    = $musicFolderId;
                 $data['rule_2_operator'] = 0;
