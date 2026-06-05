@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0d71912f91dd9f80ea5e9067e44acfef",
+    "content-hash": "3ee0261f7c0659e8d45f9ce8733116a3",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -675,63 +675,6 @@
                 }
             ],
             "time": "2025-01-09T09:20:22+00:00"
-        },
-        {
-            "name": "gregwar/captcha",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/lachlan-00/Captcha.git",
-                "reference": "3bcf60dd203fbb5caef8807413e40d179b8f3556"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/lachlan-00/Captcha/zipball/3bcf60dd203fbb5caef8807413e40d179b8f3556",
-                "reference": "3bcf60dd203fbb5caef8807413e40d179b8f3556",
-                "shasum": ""
-            },
-            "require": {
-                "ext-fileinfo": "*",
-                "ext-gd": "*",
-                "ext-mbstring": "*",
-                "php": ">=5.3.0",
-                "symfony/finder": "*"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8.35 || ^5.7.21 || ^6.4 || ^7.0 || ^8.0 || ^9.0"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Gregwar\\": "src/Gregwar"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Grégoire Passault",
-                    "email": "g.passault@gmail.com",
-                    "homepage": "http://www.gregwar.com/"
-                },
-                {
-                    "name": "Jeremy Livingston",
-                    "email": "jeremy.j.livingston@gmail.com"
-                }
-            ],
-            "description": "Captcha generator",
-            "homepage": "https://github.com/Gregwar/Captcha",
-            "keywords": [
-                "bot",
-                "captcha",
-                "spam"
-            ],
-            "support": {
-                "source": "https://github.com/lachlan-00/Captcha/tree/master"
-            },
-            "time": "2026-06-02T09:07:11+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1524,6 +1467,68 @@
                 "source": "https://github.com/kunalvarma05/dropbox-php-sdk/tree/v0.4.2"
             },
             "time": "2023-03-02T04:58:28+00:00"
+        },
+        {
+            "name": "lachlan-00/captcha",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lachlan-00/Captcha.git",
+                "reference": "b3507998f9f03d357a0e001cdc49621eb7af185a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lachlan-00/Captcha/zipball/b3507998f9f03d357a0e001cdc49621eb7af185a",
+                "reference": "b3507998f9f03d357a0e001cdc49621eb7af185a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "ext-mbstring": "*",
+                "php": ">=8.0",
+                "symfony/finder": "*"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^4.8.35 || ^5.7.21 || ^6.4 || ^7.0 || ^8.0 || ^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Gregwar\\": "src/Gregwar"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Grégoire Passault",
+                    "email": "g.passault@gmail.com",
+                    "homepage": "http://www.gregwar.com/"
+                },
+                {
+                    "name": "Jeremy Livingston",
+                    "email": "jeremy.j.livingston@gmail.com"
+                },
+                {
+                    "name": "Lachlan de Waard",
+                    "email": "lachlan.00@gmail.com",
+                    "homepage": "https://github.com/lachlan-00",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Captcha generator",
+            "homepage": "https://github.com/lachlan-00/Captcha",
+            "keywords": [
+                "bot",
+                "captcha",
+                "spam"
+            ],
+            "support": {
+                "source": "https://github.com/lachlan-00/Captcha/tree/2.0.1"
+            },
+            "time": "2026-06-05T02:48:21+00:00"
         },
         {
             "name": "lachlan-00/musicbrainz",
@@ -5323,16 +5328,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.95.3",
+            "version": "v3.95.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "3d681493acc0e93283481b1c63c263737df78687"
+                "reference": "3f8f68856837a77e1f1d870354eca3c8747f2f72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/3d681493acc0e93283481b1c63c263737df78687",
-                "reference": "3d681493acc0e93283481b1c63c263737df78687",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/3f8f68856837a77e1f1d870354eca3c8747f2f72",
+                "reference": "3f8f68856837a77e1f1d870354eca3c8747f2f72",
                 "shasum": ""
             },
             "require": {
@@ -5416,7 +5421,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.95.3"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.95.4"
             },
             "funding": [
                 {
@@ -5424,7 +5429,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-29T20:35:26+00:00"
+            "time": "2026-06-03T18:02:44+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -9079,7 +9084,6 @@
     "stability-flags": {
         "ampache/ampacheapi-php": 20,
         "ampache/php-discogs-api": 20,
-        "gregwar/captcha": 20,
         "james-heinrich/getid3": 20,
         "krixon/xbmc-php-rpc": 20,
         "lachlan-00/musicbrainz": 20
@@ -9123,5 +9127,5 @@
         "ext-xmlreader": "1.0",
         "lib-libxml": "2.7.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
