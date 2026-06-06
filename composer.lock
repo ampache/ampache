@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "150e7a1a69066b0a0d4a0b828a3670bb",
+    "content-hash": "7cadf80ec40a8de2dda7e869bcb15fc3",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -1288,12 +1288,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "239a9b0dbe00d7c4cd27a166773bb5858386e452"
+                "reference": "73f37b2a37c5968a0bc7e6cb6f019a11d24dad07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/239a9b0dbe00d7c4cd27a166773bb5858386e452",
-                "reference": "239a9b0dbe00d7c4cd27a166773bb5858386e452",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/73f37b2a37c5968a0bc7e6cb6f019a11d24dad07",
+                "reference": "73f37b2a37c5968a0bc7e6cb6f019a11d24dad07",
                 "shasum": ""
             },
             "require": {
@@ -1348,7 +1348,7 @@
                 "issues": "https://github.com/JamesHeinrich/getID3/issues",
                 "source": "https://github.com/JamesHeinrich/getID3/tree/master"
             },
-            "time": "2026-04-30T11:37:07+00:00"
+            "time": "2026-06-05T23:08:53+00:00"
         },
         {
             "name": "jwilsson/spotify-web-api-php",
@@ -1498,6 +1498,7 @@
                     "Gregwar\\": "src/Gregwar"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
