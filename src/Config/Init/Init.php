@@ -30,6 +30,7 @@ use Ampache\Config\Init\Exception\ConfigFileNotParsableException;
 use Ampache\Config\Init\Exception\DatabaseOutdatedException;
 use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
 use Ampache\Config\Init\Exception\GetTextNotAvailableException;
+use Ampache\Config\Init\Exception\RequireAuthException;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\EnvironmentInterface;
 
@@ -62,6 +63,8 @@ final readonly class Init
             $redirectionUrl = 'test.php';
         } catch (DatabaseOutdatedException $error) {
             $redirectionUrl = 'update.php';
+        } catch (RequireAuthException $error) {
+            $redirectionUrl = 'login.php';
         } finally {
             if ($error == null) {
                 return;

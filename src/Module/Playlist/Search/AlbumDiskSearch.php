@@ -607,6 +607,14 @@ final class AlbumDiskSearch implements SearchInterface
             }
         }
 
+        if ($search->catalog_id) {
+            if ($where_sql !== '' && $where_sql !== '0') {
+                $where_sql = "(" . $where_sql . ") AND `album_disk`.`catalog` = " . $search->catalog_id;
+            } else {
+                $where_sql = "`album_disk`.`catalog` = " . $search->catalog_id;
+            }
+        }
+
         if ($join['catalog_map']) {
             if ($where_sql !== '' && $where_sql !== '0') {
                 $where_sql = ($search_user_id > 0)
