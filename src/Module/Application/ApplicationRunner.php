@@ -37,26 +37,14 @@ use Psr\Log\LoggerInterface;
 use Slim\ResponseEmitter;
 use Throwable;
 
-final class ApplicationRunner
+final readonly class ApplicationRunner
 {
-    private ContainerInterface $dic;
-
-    private LoggerInterface $logger;
-
-    private GatekeeperFactoryInterface $gatekeeperFactory;
-
-    private UiInterface $ui;
-
     public function __construct(
-        ContainerInterface $dic,
-        LoggerInterface $logger,
-        GatekeeperFactoryInterface $gatekeeperFactory,
-        UiInterface $ui
+        private ContainerInterface $dic,
+        private LoggerInterface $logger,
+        private GatekeeperFactoryInterface $gatekeeperFactory,
+        private UiInterface $ui,
     ) {
-        $this->dic               = $dic;
-        $this->logger            = $logger;
-        $this->gatekeeperFactory = $gatekeeperFactory;
-        $this->ui                = $ui;
     }
 
     /**
@@ -66,7 +54,7 @@ final class ApplicationRunner
     public function run(
         ServerRequestInterface $request,
         array $action_list,
-        string $default_action
+        string $default_action,
     ): void {
         $body        = (array)$request->getParsedBody();
         $action_name = htmlspecialchars($body['action'] ?? $request->getQueryParams()['action'] ?? '');
@@ -116,7 +104,7 @@ final class ApplicationRunner
                     LegacyLogger::CONTEXT_TYPE => sprintf(
                         '"%s" for "%s"',
                         self::class,
-                        get_class($handler)
+                        $handler::class
                     )
                 ]
             );
@@ -131,7 +119,7 @@ final class ApplicationRunner
                     LegacyLogger::CONTEXT_TYPE => sprintf(
                         '"%s" for "%s"',
                         self::class,
-                        get_class($handler)
+                        $handler::class
                     ),
                     'objectId' => $error->getObjectId()
                 ]
