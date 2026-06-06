@@ -26,12 +26,12 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\User\Registration;
+use Ampache\Module\User\Registration\RegistrationAgreementRendererInterface;
 use Ampache\Module\Util\Ui;
 use Gregwar\Captcha\CaptchaBuilder;
 use Gregwar\Captcha\PhraseBuilder;
 
-/** @var Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer */
+/** @var RegistrationAgreementRendererInterface $registrationAgreementRenderer */
 
 $t_ampache = T_('Ampache');
 $htmllang  = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
@@ -166,11 +166,11 @@ $city            = scrub_in(Core::get_request('city')); ?>
                             $builder->build(280, 128);
                         } ?>
                     <div class="registerfield require">
-                        <label for="captcha_user"><?php echo T_('Captcha'); ?>:</label>
+                        <label for="captcha_user"><?php echo T_('Captcha is required'); ?>:</label>
                         <input id="captcha_user" type="text" name="captcha_user" maxlength="20" />
                         <?php echo AmpError::display('captcha_user'); ?>
                     </div>
-                    <div class="registerfield">
+                    <div class="registerfield center">
                         <img src="<?php echo $builder->inline(); ?>"  alt="captcha"/>
                         <input type="hidden" name="captcha_phrase" value="<?php echo $builder->getPhrase() ?>" />
                     </div>

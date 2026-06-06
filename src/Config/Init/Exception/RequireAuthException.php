@@ -23,24 +23,10 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Config\Init;
+namespace Ampache\Config\Init\Exception;
 
-use Ampache\Config\Init\Exception\ConfigFileNotFoundException;
-use Ampache\Config\Init\Exception\ConfigFileNotParsableException;
-use Ampache\Config\Init\Exception\DatabaseOutdatedException;
-use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
-use Ampache\Config\Init\Exception\GetTextNotAvailableException;
-use Ampache\Config\Init\Exception\RequireAuthException;
-
-interface InitializationHandlerInterface
+final class RequireAuthException extends InitializationException
 {
-    /**
-     * @throws ConfigFileNotFoundException
-     * @throws ConfigFileNotParsableException
-     * @throws EnvironmentNotSuitableException
-     * @throws DatabaseOutdatedException
-     * @throws GetTextNotAvailableException
-     * @throws RequireAuthException
-     */
-    public function init(): void;
+    /** @var string */
+    protected $message = 'Authentication is required to proceed';
 }

@@ -592,13 +592,21 @@ final readonly class ArtistSearch implements SearchInterface
             $table['album']        = "LEFT JOIN `album` ON `album_map`.`album_id` = `album`.`id`";
         }
 
-        if ($join['catalog']) {
+        if ($join['catalog'] || $search->catalog_id) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_artist` ON `catalog_map_artist`.`object_id` = `artist`.`id` AND `catalog_map_artist`.`object_type` = 'artist'";
             $table['3_catalog']     = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `catalog_map_artist`.`catalog_id`";
             if ($where_sql !== '' && $where_sql !== '0') {
                 $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
             } else {
                 $where_sql = "`catalog_se`.`enabled` = '1'";
+            }
+        }
+
+        if ($search->catalog_id) {
+            if ($where_sql !== '' && $where_sql !== '0') {
+                $where_sql = "(" . $where_sql . ") AND `catalog_map_artist`.`catalog_id` = " . $search->catalog_id;
+            } else {
+                $where_sql = "`catalog_map_artist`.`catalog_id` = " . $search->catalog_id;
             }
         }
 

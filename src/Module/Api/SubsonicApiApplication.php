@@ -397,4 +397,91 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             header("Access-Control-Allow-Origin: *");
         }
     }
+
+    /**
+     * Parse a Subsonic/OpenSubsonic query into search tokens.
+     *
+     * Rules:
+     * - spaces split ungrouped words
+     * - quoted strings are literal
+     * - quoted strings followed immediately by * are non-exact/prefix matches
+     * - quoted strings without trailing * are exact matches
+     * - plus signs join words into grouped exact phrases only when no spaces are involved
+     * - plus signs inside quotes are preserved literally
+     *
+     * @return array<int, array{value: string, operator: bool}>
+     */
+    public static function parseSearchQuery(string $query): array
+    {
+        $query = trim(unhtmlentities($query));
+        if ($query === '') {
+            return [];
+        }
+
+        preg_match_all('/"[^"]*"\\*?|[^\\s"]+/', $query, $matches);
+
+        $tokens = [];
+        foreach ($matches[0] as $parts) {
+            $part = trim($parts);
+            if ($part === '' || $part === '+') {
+                continue;
+            }
+
+            // Quoted literal exact: "foo"
+            // Quoted literal prefix: "foo"*
+            if (preg_match('/^"([^"]*)"(\*)?$/', $part, $quotedMatch) === 1) {
+                $value = trim(preg_replace('/\\s+/', ' ', $quotedMatch[1]) ?? $quotedMatch[1]);
+
+                if ($value !== '') {
+                    $tokens[] = [
+                        'value' => $value,
+                        'operator' => (isset($quotedMatch[2]))
+                            ? 2 // starts with
+                            : 4 // equals
+                    ];
+                }
+
+                continue;
+            }
+
+            // Outside quotes, plus joins adjacent non-space parts into an exact group
+            if (str_contains($part, '+')) {
+                $segments = array_values(array_filter(
+                    array_map('trim', explode('+', $part)),
+                    static fn (string $segment): bool => $segment !== ''
+                ));
+
+                if (count($segments) > 1) {
+                    $tokens[] = [
+                        'value' => implode(' ', $segments),
+                        'operator' => 4, // equals
+                    ];
+                    continue;
+                }
+
+                if (count($segments) === 1) {
+                    $part = $segments[0];
+                } else {
+                    continue;
+                }
+            }
+
+            // Optional legacy suffix star for non-quoted plain tokens
+            if (str_ends_with($part, '*')) {
+                $part  = substr($part, 0, -1);
+            }
+
+            $part = trim(preg_replace('/\\s+/', ' ', $part) ?? $part);
+            if ($part === '') {
+                continue;
+            }
+
+            $tokens[] = [
+                'value' => $part,
+                'operator' => 2, // Starts with
+            ];
+        }
+
+        return $tokens;
+    }
 }
