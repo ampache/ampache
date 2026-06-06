@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ee0261f7c0659e8d45f9ce8733116a3",
+    "content-hash": "57553e6b2b411fbb4ad0473ef2d71272",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -1288,12 +1288,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "239a9b0dbe00d7c4cd27a166773bb5858386e452"
+                "reference": "73f37b2a37c5968a0bc7e6cb6f019a11d24dad07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/239a9b0dbe00d7c4cd27a166773bb5858386e452",
-                "reference": "239a9b0dbe00d7c4cd27a166773bb5858386e452",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/73f37b2a37c5968a0bc7e6cb6f019a11d24dad07",
+                "reference": "73f37b2a37c5968a0bc7e6cb6f019a11d24dad07",
                 "shasum": ""
             },
             "require": {
@@ -1348,7 +1348,7 @@
                 "issues": "https://github.com/JamesHeinrich/getID3/issues",
                 "source": "https://github.com/JamesHeinrich/getID3/tree/master"
             },
-            "time": "2026-04-30T11:37:07+00:00"
+            "time": "2026-06-05T23:08:53+00:00"
         },
         {
             "name": "jwilsson/spotify-web-api-php",
@@ -1498,6 +1498,7 @@
                     "Gregwar\\": "src/Gregwar"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5903,11 +5904,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/dea9c8f2d25cc849391042b71e429c1a4bf82660",
-                "reference": "dea9c8f2d25cc849391042b71e429c1a4bf82660",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e5cc34d491a90e79c216d824f60fe21fd4d93bd6",
+                "reference": "e5cc34d491a90e79c216d824f60fe21fd4d93bd6",
                 "shasum": ""
             },
             "require": {
@@ -5963,7 +5964,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-28T14:44:12+00:00"
+            "time": "2026-06-05T09:00:01+00:00"
         },
         {
             "name": "phpstan/phpstan-mockery",
@@ -9127,5 +9128,5 @@
         "ext-xmlreader": "1.0",
         "lib-libxml": "2.7.0"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
