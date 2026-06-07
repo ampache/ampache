@@ -67,7 +67,7 @@ Please see [the wiki](https://ampache.org/docs/installation/) and don't forget t
 
 **NOTE** That Ampache8 supports php8.5+ only.
 
-**NOTE** That php7.4 is not be supported for Ampache6 but can still be built.
+**NOTE** That php7.4 is not supported for Ampache6 but can still be built.
 
 * PHP modules:
   * PDO
