@@ -40,6 +40,7 @@
         "php": ">=8.5",
         "ext-curl": "*",
         "ext-dom": "*",
+        "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-iconv": "*",
         "ext-intl": "*",
@@ -149,8 +150,8 @@
     },
     "suggest": {
         "szymach/c-pchart": "Enable graphical statistics",
-        "ext-ldap": "Needed to support ldap authentication",
         "ext-gd": "Needed for graphical statistics",
+        "ext-ldap": "Needed to support ldap authentication",
         "ext-pthreads": "Needed to support async functions",
         "ext-sockets": "Needed for upnp functions",
         "ext-xmlreader": "Needed for upnp functions"
