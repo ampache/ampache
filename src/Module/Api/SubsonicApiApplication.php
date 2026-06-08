@@ -413,12 +413,12 @@ final class SubsonicApiApplication implements ApiApplicationInterface
      */
     public static function parseSearchQuery(string $query): array
     {
-        $query = trim(unhtmlentities($query));
+        $query = trim(html_entity_decode($query));
         if ($query === '') {
             return [];
         }
 
-        preg_match_all('/"[^"]*"\\*?|[^\\s"]+/', $query, $matches);
+        preg_match_all('/"[^"]*"[*%]?|[^\\s"]+/', $query, $matches);
 
         $tokens = [];
         foreach ($matches[0] as $parts) {
