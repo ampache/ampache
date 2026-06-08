@@ -409,7 +409,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
      * - plus signs join words into grouped exact phrases only when no spaces are involved
      * - plus signs inside quotes are preserved literally
      *
-     * @return array<int, array{value: string, operator: bool}>
+     * @return array<int, array{value: string, operator: int}>
      */
     public static function parseSearchQuery(string $query): array
     {
