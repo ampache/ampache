@@ -447,7 +447,13 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
             // Outside quotes, plus joins adjacent non-space parts into an exact group
             if (str_contains($part, '+')) {
-                $segments = array_values(array_filter(
+                $operator = 4; // equals
+                if (str_ends_with($part, '*') || str_ends_with($part, '%')) {
+                    $part     = substr($part, 0, -1);
+                    $operator = 0; // contains
+                }
+
+            $segments = array_values(array_filter(
                     array_map('trim', explode('+', $part)),
                     static fn (string $segment): bool => $segment !== ''
                 ));
@@ -455,7 +461,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 if (count($segments) > 1) {
                     $tokens[] = [
                         'value' => implode(' ', $segments),
-                        'operator' => 4, // equals
+                        'operator' => $operator,
                     ];
                     continue;
                 }
