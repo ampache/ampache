@@ -75,6 +75,7 @@ Please see [the wiki](https://ampache.org/docs/installation/) and don't forget t
   * hash
   * session
   * json (included in php8+)
+  * fileinfo ([Required](https://ampache.org/docs/help/troubleshooting/ampache8-for-admins#php-fileinfo-extension-is-required) in Ampache 8.0.0 and higher usually included in PHP)
   * intl
   * simplexml
   * curl
