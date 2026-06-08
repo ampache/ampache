@@ -429,7 +429,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
             // Quoted literal exact: "foo"
             // Quoted literal prefix: "foo"*
-            if (preg_match('/^"([^"]*)"(\*)?$/', $part, $quotedMatch) === 1) {
+            if (preg_match('/^"([^"]*)"([*%])?$/', $part, $quotedMatch) === 1) {
                 $value = trim(preg_replace('/\\s+/', ' ', $quotedMatch[1]) ?? $quotedMatch[1]);
 
                 if ($value !== '') {
