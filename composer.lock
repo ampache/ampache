@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "57553e6b2b411fbb4ad0473ef2d71272",
+    "content-hash": "d3cf33df97d71a5aa2ce6317f92088b4",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -675,6 +675,67 @@
                 }
             ],
             "time": "2025-01-09T09:20:22+00:00"
+        },
+        {
+            "name": "gregwar/captcha",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Gregwar/Captcha.git",
+                "reference": "35ca999bb5009b235ddd785d791621a51981a54c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Gregwar/Captcha/zipball/35ca999bb5009b235ddd785d791621a51981a54c",
+                "reference": "35ca999bb5009b235ddd785d791621a51981a54c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "ext-gd": "*",
+                "ext-mbstring": "*",
+                "php": "^8.2",
+                "symfony/finder": "*"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "2.1.17",
+                "phpstan/phpstan-phpunit": "2.0.6",
+                "phpunit/phpunit": "^9.6",
+                "squizlabs/php_codesniffer": "4.0.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Gregwar\\": "src/Gregwar"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Grégoire Passault",
+                    "email": "g.passault@gmail.com",
+                    "homepage": "http://www.gregwar.com/"
+                },
+                {
+                    "name": "Jeremy Livingston",
+                    "email": "jeremy.j.livingston@gmail.com"
+                }
+            ],
+            "description": "Captcha generator",
+            "homepage": "https://github.com/Gregwar/Captcha",
+            "keywords": [
+                "bot",
+                "captcha",
+                "spam"
+            ],
+            "support": {
+                "issues": "https://github.com/Gregwar/Captcha/issues",
+                "source": "https://github.com/Gregwar/Captcha/tree/v2.0.0"
+            },
+            "time": "2026-06-08T10:20:35+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -9095,6 +9156,7 @@
         "php": ">=8.5",
         "ext-curl": "*",
         "ext-dom": "*",
+        "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-iconv": "*",
         "ext-intl": "*",
@@ -9109,24 +9171,25 @@
     },
     "platform-dev": {},
     "platform-overrides": {
+        "ext-ctype": "1.0",
         "ext-curl": "1.0",
         "ext-date": "1.0",
         "ext-dom": "1.0",
+        "ext-fileinfo": "1.0",
         "ext-gd": "1.0",
         "ext-gmp": "1.0",
         "ext-http": "1.0",
+        "ext-iconv": "1.0",
+        "ext-libxml": "1.0",
         "ext-mbstring": "1.0",
         "ext-openssl": "1.0",
         "ext-pcre": "1.0",
-        "ext-spl": "1.0",
         "ext-simplexml": "1.0",
-        "ext-ctype": "1.0",
-        "ext-iconv": "1.0",
-        "ext-libxml": "1.0",
+        "ext-spl": "1.0",
         "ext-xml": "1.0",
-        "ext-xmlwriter": "1.0",
         "ext-xmlreader": "1.0",
+        "ext-xmlwriter": "1.0",
         "lib-libxml": "2.7.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
