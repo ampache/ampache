@@ -402,12 +402,12 @@ final class SubsonicApiApplication implements ApiApplicationInterface
      * Parse a Subsonic/OpenSubsonic query into search tokens.
      *
      * Rules:
-     * - spaces split ungrouped words
-     * - quoted strings are literal
-     * - quoted strings followed immediately by * are non-exact/prefix matches
-     * - quoted strings without trailing * are exact matches
-     * - plus signs join words into grouped exact phrases only when no spaces are involved
-     * - plus signs inside quotes are preserved literally
+     * - Search only by `name`/`title` for the object type
+     * - Split all words by space (` `) into individual (**OR**) search terms
+     * - Search terms ending with `*`|`%` are prefix (**LIKE**) matched
+     * - Wrap multiple words with quotes (`"`) to group them together
+     * - Join multiple words with plus (`+`) to group them together
+     * - Special characters (`*`|`%`) inside group strings are literal
      *
      * @return array<int, array{value: string, operator: int}>
      */
@@ -445,7 +445,9 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 continue;
             }
 
-            // Outside quotes, plus joins adjacent non-space parts into an exact group
+            // Outside quotes, plus joins into an exact group
+            // example+search
+            // example+sear*
             if (str_contains($part, '+')) {
                 $operator = 4; // equals
                 if (str_ends_with($part, '*') || str_ends_with($part, '%')) {
@@ -453,7 +455,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                     $operator = 0; // contains
                 }
 
-            $segments = array_values(array_filter(
+                $segments = array_values(array_filter(
                     array_map('trim', explode('+', $part)),
                     static fn (string $segment): bool => $segment !== ''
                 ));
