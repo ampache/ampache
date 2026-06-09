@@ -79,6 +79,7 @@ class UPnPDevice
         if (empty($descriptionUrl)) {
             return;
         }
+
         curl_setopt($curl, CURLOPT_URL, $descriptionUrl);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($curl);

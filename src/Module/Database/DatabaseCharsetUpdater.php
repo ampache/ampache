@@ -66,7 +66,7 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
                 if (
                     (str_contains((string) $table['Type'], 'varchar')) ||
                     (str_contains((string) $table['Type'], 'enum')) ||
-                    (str_contains((string) $table['Table'], 'text'))
+                    (str_contains((string) $table['Type'], 'text'))
                 ) {
                     $sql             = "ALTER TABLE `" . $row['0'] . "` MODIFY `" . $table['Field'] . "` " . $table['Type'] . " CHARACTER SET " . $target_charset . (' COLLATE ' . $target_collation);
                     $charset_results = Dba::write($sql);
