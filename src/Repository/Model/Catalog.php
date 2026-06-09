@@ -182,13 +182,13 @@ abstract class Catalog extends database_object
 
     /* Used in functions */
 
-    /** @var array $albums */
+    /**  */
     protected static array $albums = [];
 
-    /** @var array $artists */
+    /**  */
     protected static array $artists = [];
 
-    /** @var array $tags */
+    /**  */
     protected static array $tags = [];
 
     /**
