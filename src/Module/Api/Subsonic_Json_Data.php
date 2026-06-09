@@ -66,16 +66,13 @@ use Exception;
 class Subsonic_Json_Data
 {
     /**
-     * _createResponse [OS]
+     * _createResponse
      *
      * Common answer wrapper.Subsonic
      * @return array{
      *     'subsonic-response': array{
      *         'status': string,
-     *         'version': string,
-     *         'type': string,
-     *         'serverVersion': string,
-     *         'openSubsonic': bool
+     *         'version': string
      *     }
      * }
      */
@@ -85,10 +82,7 @@ class Subsonic_Json_Data
         return [
             'subsonic-response' => [
                 'status' => 'ok',
-                'version' => Subsonic_Api::API_VERSION,
-                'type' => 'ampache',
-                'serverVersion' => Api::$version,
-                'openSubsonic' => true,
+                'version' => Subsonic_Api::API_VERSION
             ]
         ];
     }
@@ -98,10 +92,7 @@ class Subsonic_Json_Data
      * @return array{
      *     'subsonic-response': array{
      *         'status': string,
-     *         'version': string,
-     *         'type': string,
-     *         'serverVersion': string,
-     *         'openSubsonic': bool
+     *         'version': string
      *     }
      * }
      */
@@ -118,13 +109,9 @@ class Subsonic_Json_Data
      *     'subsonic-response': array{
      *         'status': string,
      *         'version': string,
-     *         'type': string,
-     *         'serverVersion': string,
-     *         'openSubsonic': bool,
      *         'error': array{
      *             'code': int,
-     *             'message': string,
-     *             'helpUrl': string
+     *             'message': string
      *         }
      *     }
      * }
@@ -137,13 +124,9 @@ class Subsonic_Json_Data
             'subsonic-response' => [
                 'status' => 'failed',
                 'version' => Subsonic_Api::API_VERSION,
-                'type' => 'ampache',
-                'serverVersion' => Api::$version,
-                'openSubsonic' => true,
                 'error' => [
                     'code' => Subsonic_Api::SSERROR_GENERIC,
-                    'message' => 'Error creating response.',
-                    'helpUrl' => 'https://ampache.org/api/subsonic'
+                    'message' => 'Error creating response.'
                 ]
             ]
         ];
@@ -186,13 +169,15 @@ class Subsonic_Json_Data
      * @return array{
      *     'id': string,
      *     'name': string,
-     *     'owner': string,
-     *     'public': bool,
+     *     'comment'?: string,
+     *     'owner'?: string,
+     *     'public'?: bool,
      *     'songCount': int,
      *     'duration': int,
      *     'created': string,
      *     'changed': string,
      *     'coverArt'?: string,
+     *     'allowedUser'?: string[],
      *     'entry'?: array<int, array<string, mixed>>
      * } // todo add allowedUser Array of string
      */
@@ -244,6 +229,7 @@ class Subsonic_Json_Data
      *     'created': string,
      *     'changed': string,
      *     'coverArt'?: string,
+     *     'allowedUser'?: string[],
      *     'entry'?: array<int, array<string, mixed>>
      * } // todo add allowedUser Array of string
      */
@@ -436,7 +422,7 @@ class Subsonic_Json_Data
      *     'coverArt'?: string
      * }
      */
-    private static function _getChildArray(array $child): array
+    private static function _getChildArtistArray(array $child): array
     {
         $sub_id = Subsonic_Api::getArtistSubId($child['id']);
         $json   = ['id' => $sub_id];
@@ -474,9 +460,6 @@ class Subsonic_Json_Data
      *     'transcodedSuffix'?: string,
      *     'duration'?: int,
      *     'bitRate'?: int,
-     *     'bitDepth'?: int,
-     *     'samplingRate'?: int,
-     *     'channelCount'?: int,
      *     'path'?: string,
      *     'isVideo'?: bool,
      *     'userRating'?: int,
@@ -488,68 +471,9 @@ class Subsonic_Json_Data
      *     'albumId'?: string,
      *     'artistId'?: string,
      *     'type'?: string,
-     *     'mediaType'?: string,
      *     'bookmarkPosition'?: int,
      *     'originalWidth'?: int,
-     *     'originalHeight'?: int,
-     *     'played'?: string,
-     *     'bpm'?: int,
-     *     'comment'?: string,
-     *     'sortName'?: string,
-     *     'musicBrainzId'?: string,
-     *     'isrc'?: string[],
-     *     'genres'?: array<'name', string>,
-     *     'artists'?: array<int, array{
-     *         'id': string,
-     *         'name': string,
-     *         'coverArt'?: string,
-     *         'artistImageUrl'?: string,
-     *         'albumCount'?: int,
-     *         'starred'?: string,
-     *         'musicBrainzId'?: string,
-     *         'sortName'?: string,
-     *         'roles'?: string[]
-     * }>,
-     *     'displayArtist'?: string,
-     *     'albumArtists'?: array<int, array{
-     *         'id': string,
-     *         'name': string,
-     *         'coverArt'?: string,
-     *         'artistImageUrl'?: string,
-     *         'albumCount'?: int,
-     *         'starred'?: string,
-     *         'musicBrainzId'?: string,
-     *         'sortName'?: string,
-     *         'roles'?: string[]
-     *     }>,
-     *     'displayAlbumArtist'?: string,
-     *     'contributors'?: array{
-     *         'contributor', array{
-     *             'role': string,
-     *             'subRole': string,
-     *             'artist': array<int, array{
-     *                 'id': string,
-     *                 'name': string,
-     *                 'coverArt'?: string,
-     *                 'artistImageUrl'?: string,
-     *                 'albumCount'?: int,
-     *                 'starred'?: string,
-     *                 'musicBrainzId'?: string,
-     *                 'sortName'?: string,
-     *                 'roles'?: string[]
-     *             }>
-     *         }
-     *     },
-     *     'displayComposer'?: string,
-     *     'moods'?: string[],
-     *     'replayGain'?: array{
-     *         'trackGain': float,
-     *         'albumGain': float,
-     *         'trackPeak': float,
-     *         'albumPeak': float,
-     *         'baseGain': float
-     *     },
-     *     'explicitStatus'?: string
+     *     'originalHeight'?: int
      * }
      */
     private static function _getChildAlbum(Album $album): array
@@ -616,53 +540,13 @@ class Subsonic_Json_Data
      * @return array{
      *     'id': string,
      *     'name': string,
-     *     'version'?: string,
      *     'artist'?: string,
      *     'artistId'?: string,
      *     'coverArt'?: string,
-     *     'songCount': int,
-     *     'duration': int,
      *     'playCount'?: int,
-     *     'created': string,
      *     'starred'?: string,
      *     'year'?: int,
      *     'genre'?: string,
-     *     'genres'?: array{'name': string},
-     *     'played'?: string,
-     *     'userRating'?: int,
-     *     'recordLabels'?: array{'name': string},
-     *     'musicBrainzId'?: string,
-     *     'artists'?: array<int, array{
-     *         'id': string,
-     *         'name': string,
-     *         'coverArt'?: string,
-     *         'artistImageUrl'?: string,
-     *         'albumCount'?: int,
-     *         'starred'?: string,
-     *         'musicBrainzId'?: string,
-     *         'sortName'?: string,
-     *         'roles'?: string[]
-     *     }>,
-     *     'displayArtist'?: string,
-     *     'releaseTypes'?: string[],
-     *     'moods'?: string[],
-     *     'sortName'?: string,
-     *     'originalReleaseDate'?: array{
-     *         'year'?: int,
-     *         'month'?: int,
-     *         'day'?: int
-     *     },
-     *     'releaseDate'?: array{
-     *         'year'?: int,
-     *         'month'?: int,
-     *         'day'?: int
-     *     },
-     *     'isCompilation'?: bool,
-     *     'explicitStatus'?: string,
-     *     'discTitles'?: array{
-     *         'disc': int,
-     *         'title': string
-     *     },
      *     'song'?: array<array<string, mixed>>
      * }
      */
@@ -756,6 +640,7 @@ class Subsonic_Json_Data
      *     'id': string,
      *     'name': string,
      *     'coverArt'?: string,
+     *     'artistImageUrl'?: string,
      *     'albumCount': int,
      *     'starred'?: string
      * }
@@ -991,9 +876,6 @@ class Subsonic_Json_Data
      *         'transcodedSuffix'?: string,
      *         'duration'?: int,
      *         'bitRate'?: int,
-     *         'bitDepth'?: int,
-     *         'samplingRate'?: int,
-     *         'channelCount'?: int,
      *         'path'?: string,
      *         'isVideo'?: bool,
      *         'userRating'?: int,
@@ -1005,68 +887,9 @@ class Subsonic_Json_Data
      *         'albumId'?: string,
      *         'artistId'?: string,
      *         'type'?: string,
-     *         'mediaType'?: string,
      *         'bookmarkPosition'?: int,
      *         'originalWidth'?: int,
-     *         'originalHeight'?: int,
-     *         'played'?: string,
-     *         'bpm'?: int,
-     *         'comment'?: string,
-     *         'sortName'?: string,
-     *         'musicBrainzId'?: string,
-     *         'isrc'?: string[],
-     *         'genres'?: array<'name', string>,
-     *         'artists'?: array<int, array{
-     *             'id': string,
-     *             'name': string,
-     *             'coverArt'?: string,
-     *             'artistImageUrl'?: string,
-     *             'albumCount'?: int,
-     *             'starred'?: string,
-     *             'musicBrainzId'?: string,
-     *             'sortName'?: string,
-     *             'roles'?: string[]
-     *         }>,
-     *         'displayArtist'?: string,
-     *         'albumArtists'?: array<int, array{
-     *             'id': string,
-     *             'name': string,
-     *             'coverArt'?: string,
-     *             'artistImageUrl'?: string,
-     *             'albumCount'?: int,
-     *             'starred'?: string,
-     *             'musicBrainzId'?: string,
-     *             'sortName'?: string,
-     *             'roles'?: string[]
-     *         }>,
-     *         'displayAlbumArtist'?: string,
-     *         'contributors'?: array{
-     *             'contributor', array{
-     *                 'role': string,
-     *                 'subRole': string,
-     *                 'artist': array<int, array{
-     *                     'id': string,
-     *                     'name': string,
-     *                     'coverArt'?: string,
-     *                     'artistImageUrl'?: string,
-     *                     'albumCount'?: int,
-     *                     'starred'?: string,
-     *                     'musicBrainzId'?: string,
-     *                     'sortName'?: string,
-     *                     'roles'?: string[]
-     *                 }>
-     *             }
-     *         },
-     *         'displayComposer'?: string,
-     *         'moods'?: string[],
-     *         'replayGain'?: array{
-     *             'trackGain': float,
-     *             'albumGain': float,
-     *             'trackPeak': float,
-     *             'albumPeak': float,
-     *             'baseGain': float
-     *         },
-     *         'explicitStatus'?: string
+     *         'originalHeight'?: int
      *     }
      * }
      */
@@ -1186,9 +1009,6 @@ class Subsonic_Json_Data
      *     'transcodedSuffix'?: string,
      *     'duration'?: int,
      *     'bitRate'?: int,
-     *     'bitDepth'?: int,
-     *     'samplingRate'?: int,
-     *     'channelCount'?: int,
      *     'path'?: string,
      *     'isVideo'?: bool,
      *     'userRating'?: int,
@@ -1200,68 +1020,9 @@ class Subsonic_Json_Data
      *     'albumId'?: string,
      *     'artistId'?: string,
      *     'type'?: string,
-     *     'mediaType'?: string,
      *     'bookmarkPosition'?: int,
      *     'originalWidth'?: int,
-     *     'originalHeight'?: int,
-     *     'played'?: string,
-     *     'bpm'?: int,
-     *     'comment'?: string,
-     *     'sortName'?: string,
-     *     'musicBrainzId'?: string,
-     *     'isrc'?: string[],
-     *     'genres'?: array<'name', string>,
-     *     'artists'?: array<int, array{
-     *         'id': string,
-     *         'name': string,
-     *         'coverArt'?: string,
-     *         'artistImageUrl'?: string,
-     *         'albumCount'?: int,
-     *         'starred'?: string,
-     *         'musicBrainzId'?: string,
-     *         'sortName'?: string,
-     *         'roles'?: string[]
-     *     }>,
-     *     'displayArtist'?: string,
-     *     'albumArtists'?: array<int, array{
-     *         'id': string,
-     *         'name': string,
-     *         'coverArt'?: string,
-     *         'artistImageUrl'?: string,
-     *         'albumCount'?: int,
-     *         'starred'?: string,
-     *         'musicBrainzId'?: string,
-     *         'sortName'?: string,
-     *         'roles'?: string[]
-     *     }>,
-     *     'displayAlbumArtist'?: string,
-     *     'contributors'?: array{
-     *         'contributor', array{
-     *             'role': string,
-     *             'subRole': string,
-     *             'artist': array<int, array{
-     *                 'id': string,
-     *                 'name': string,
-     *                 'coverArt'?: string,
-     *                 'artistImageUrl'?: string,
-     *                 'albumCount'?: int,
-     *                 'starred'?: string,
-     *                 'musicBrainzId'?: string,
-     *                 'sortName'?: string,
-     *                 'roles'?: string[]
-     *             }>
-     *         }
-     *     },
-     *     'displayComposer'?: string,
-     *     'moods'?: string[],
-     *     'replayGain'?: array{
-     *         'trackGain': float,
-     *         'albumGain': float,
-     *         'trackPeak': float,
-     *         'albumPeak': float,
-     *         'baseGain': float
-     *     },
-     *     'explicitStatus'?: string
+     *     'originalHeight'?: int
      * }
      */
     private static function _getChildSong(Song $song): array
@@ -1370,9 +1131,6 @@ class Subsonic_Json_Data
      *     'transcodedSuffix'?: string,
      *     'duration'?: int,
      *     'bitRate'?: int,
-     *     'bitDepth'?: int,
-     *     'samplingRate'?: int,
-     *     'channelCount'?: int,
      *     'path'?: string,
      *     'isVideo'?: bool,
      *     'userRating'?: int,
@@ -1384,68 +1142,9 @@ class Subsonic_Json_Data
      *     'albumId'?: string,
      *     'artistId'?: string,
      *     'type'?: string,
-     *     'mediaType'?: string,
      *     'bookmarkPosition'?: int,
      *     'originalWidth'?: int,
-     *     'originalHeight'?: int,
-     *     'played'?: string,
-     *     'bpm'?: int,
-     *     'comment'?: string,
-     *     'sortName'?: string,
-     *     'musicBrainzId'?: string,
-     *     'isrc'?: string[],
-     *     'genres'?: array<'name', string>,
-     *     'artists'?: array<int, array{
-     *         'id': string,
-     *         'name': string,
-     *         'coverArt'?: string,
-     *         'artistImageUrl'?: string,
-     *         'albumCount'?: int,
-     *         'starred'?: string,
-     *         'musicBrainzId'?: string,
-     *         'sortName'?: string,
-     *         'roles'?: string[]
-     *     }>,
-     *     'displayArtist'?: string,
-     *     'albumArtists'?: array<int, array{
-     *         'id': string,
-     *         'name': string,
-     *         'coverArt'?: string,
-     *         'artistImageUrl'?: string,
-     *         'albumCount'?: int,
-     *         'starred'?: string,
-     *         'musicBrainzId'?: string,
-     *         'sortName'?: string,
-     *         'roles'?: string[]
-     *     }>,
-     *     'displayAlbumArtist'?: string,
-     *     'contributors'?: array{
-     *         'contributor', array{
-     *             'role': string,
-     *             'subRole': string,
-     *             'artist': array<int, array{
-     *                 'id': string,
-     *                 'name': string,
-     *                 'coverArt'?: string,
-     *                 'artistImageUrl'?: string,
-     *                 'albumCount'?: int,
-     *                 'starred'?: string,
-     *                 'musicBrainzId'?: string,
-     *                 'sortName'?: string,
-     *                 'roles'?: string[]
-     *             }>
-     *         }
-     *     },
-     *     'displayComposer'?: string,
-     *     'moods'?: string[],
-     *     'replayGain'?: array{
-     *         'trackGain': float,
-     *         'albumGain': float,
-     *         'trackPeak': float,
-     *         'albumPeak': float,
-     *         'baseGain': float
-     *     },
-     *     'explicitStatus'?: string
+     *     'originalHeight'?: int
      * }
      */
     private static function _getChildPodcastEpisode(Podcast_Episode $episode): array
@@ -1526,9 +1225,6 @@ class Subsonic_Json_Data
      *     'transcodedSuffix'?: string,
      *     'duration'?: int,
      *     'bitRate'?: int,
-     *     'bitDepth'?: int,
-     *     'samplingRate'?: int,
-     *     'channelCount'?: int,
      *     'path'?: string,
      *     'isVideo'?: bool,
      *     'userRating'?: int,
@@ -1540,68 +1236,9 @@ class Subsonic_Json_Data
      *     'albumId'?: string,
      *     'artistId'?: string,
      *     'type'?: string,
-     *     'mediaType'?: string,
      *     'bookmarkPosition'?: int,
      *     'originalWidth'?: int,
-     *     'originalHeight'?: int,
-     *     'played'?: string,
-     *     'bpm'?: int,
-     *     'comment'?: string,
-     *     'sortName'?: string,
-     *     'musicBrainzId'?: string,
-     *     'isrc'?: string[],
-     *     'genres'?: array<'name', string>,
-     *     'artists'?: array<int, array{
-     *         'id': string,
-     *         'name': string,
-     *         'coverArt'?: string,
-     *         'artistImageUrl'?: string,
-     *         'albumCount'?: int,
-     *         'starred'?: string,
-     *         'musicBrainzId'?: string,
-     *         'sortName'?: string,
-     *         'roles'?: string[]
-     *     }>,
-     *     'displayArtist'?: string,
-     *     'albumArtists'?: array<int, array{
-     *         'id': string,
-     *         'name': string,
-     *         'coverArt'?: string,
-     *         'artistImageUrl'?: string,
-     *         'albumCount'?: int,
-     *         'starred'?: string,
-     *         'musicBrainzId'?: string,
-     *         'sortName'?: string,
-     *         'roles'?: string[]
-     *     }>,
-     *     'displayAlbumArtist'?: string,
-     *     'contributors'?: array{
-     *         'contributor', array{
-     *             'role': string,
-     *             'subRole': string,
-     *             'artist': array<int, array{
-     *                 'id': string,
-     *                 'name': string,
-     *                 'coverArt'?: string,
-     *                 'artistImageUrl'?: string,
-     *                 'albumCount'?: int,
-     *                 'starred'?: string,
-     *                 'musicBrainzId'?: string,
-     *                 'sortName'?: string,
-     *                 'roles'?: string[]
-     *             }>
-     *         }
-     *     },
-     *     'displayComposer'?: string,
-     *     'moods'?: string[],
-     *     'replayGain'?: array{
-     *         'trackGain': float,
-     *         'albumGain': float,
-     *         'trackPeak': float,
-     *         'albumPeak': float,
-     *         'baseGain': float
-     *     },
-     *     'explicitStatus'?: string
+     *     'originalHeight'?: int
      * }
      */
     private static function _getChildVideo(Video $video): array
@@ -1780,7 +1417,7 @@ class Subsonic_Json_Data
         $allartists    = Catalog::get_artist_arrays([$catalog_id]);
         $json['child'] = [];
         foreach ($allartists as $artist) {
-            $json['child'][] = self::_getChildArray($artist);
+            $json['child'][] = self::_getChildArtistArray($artist);
         }
 
         return $json;
@@ -1826,7 +1463,7 @@ class Subsonic_Json_Data
      *
      * Generate a subsonic-response
      * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
-     * @return array{'subsonic-response': array{'status': string, 'version': string, 'type': string, 'serverVersion': string, 'openSubsonic': bool}}
+     * @return array{'subsonic-response': array{'status': string, 'version': string}}
      */
     public static function addResponse(string $function): array
     {
@@ -2189,13 +1826,9 @@ class Subsonic_Json_Data
      *     'subsonic-response': array{
      *         'status': string,
      *         'version': string,
-     *         'type': string,
-     *         'serverVersion': string,
-     *         'openSubsonic': bool,
      *         'error': array{
      *             'code': int,
-     *             'message': string,
-     *             'helpUrl': string
+     *             'message': string
      *         }
      *     }
      * }
@@ -2596,32 +2229,6 @@ class Subsonic_Json_Data
      * NowPlayingEntry.Subsonic
      * @see self::_getChildSong()
      */
-
-    /**
-     * addSubsonicExtension
-     *
-     * A supported Subsonic API extension.Subsonic
-     * @param array{'subsonic-response': array<string, mixed>} $response
-     * @param array<string, int[]> $extensions
-     * @return array{'subsonic-response': array<string, mixed>}
-     */
-    public static function addSubsonicExtensions(array $response, array $extensions): array
-    {
-        $json = [];
-        // https://opensubsonic.netlify.app/docs/responses/opensubsonicextension/
-        foreach ($extensions as $name => $versions) {
-            $json[] = [
-                'name' => $name,
-                'versions' => $versions,
-            ];
-        }
-
-        if (!empty($json)) {
-            $response['subsonic-response']['openSubsonicExtensions'] = $json;
-        }
-
-        return $response;
-    }
 
     /**
      * addPlaylist

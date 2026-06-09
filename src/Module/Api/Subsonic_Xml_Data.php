@@ -68,7 +68,7 @@ use SimpleXMLElement;
 class Subsonic_Xml_Data
 {
     /**
-     * _createResponse [OS]
+     * _createResponse
      */
     private static function _createResponse(string $status = 'ok'): SimpleXMLElement
     {
@@ -76,15 +76,12 @@ class Subsonic_Xml_Data
         $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
         $response->addAttribute('status', (string)$status);
         $response->addAttribute('version', Subsonic_Api::API_VERSION);
-        $response->addAttribute('type', 'ampache');
-        $response->addAttribute('serverVersion', Api::$version);
-        $response->addAttribute('openSubsonic', "1");
 
         return $response;
     }
 
     /**
-     * _createSuccessResponse [OS]
+     * _createSuccessResponse
      */
     private static function _createSuccessResponse(string $function = ''): SimpleXMLElement
     {
@@ -95,7 +92,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * _createFailedResponse [OS]
+     * _createFailedResponse
      */
     private static function _createFailedResponse(string $function = ''): SimpleXMLElement
     {
@@ -109,7 +106,6 @@ class Subsonic_Xml_Data
      * addResponse
      *
      * Generate a subsonic-response
-     * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
      */
     public static function addResponse(string $function): SimpleXMLElement
     {
@@ -117,7 +113,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addError [OS]
+     * addError
      * Add a failed subsonic-response with error information.
      */
     public static function addError(int $code, string $function): SimpleXMLElement
@@ -152,18 +148,8 @@ class Subsonic_Xml_Data
             case Subsonic_Api::SSERROR_DATA_NOTFOUND:
                 $message = "The requested data was not found.";
                 break;
-            case Subsonic_Api::SSERROR_AUTHMETHODNOTSUPPORTED:
-                $message = "Provided authentication mechanism not supported.";
-                break;
-            case Subsonic_Api::SSERROR_AUTHMETHODCONFLICT:
-                $message = "Multiple conflicting authentication mechanisms provided.";
-                break;
-            case Subsonic_Api::SSERROR_BADAPIKEY:
-                $message = "Invalid API key.";
-                break;
         }
         $xerr->addAttribute('message', $message);
-        $xerr->addAttribute('helpUrl', 'https://ampache.org/api/subsonic');
 
         return $xml;
     }
@@ -280,23 +266,6 @@ class Subsonic_Xml_Data
                 self::_addArtistArray($xsharpcat, $artist);
             }
         }
-    }
-
-    /**
-     * addSubsonicExtension
-     * @param array<string, int[]> $extensions
-     */
-    public static function addSubsonicExtensions(SimpleXMLElement $xml, array $extensions): SimpleXMLElement
-    {
-        foreach ($extensions as $name => $versions) {
-            $xextension = self::_addChildToResultXml($xml, 'openSubsonicExtensions');
-            $xextension->addAttribute('name', $name);
-            foreach ($versions as $version) {
-                $xextension->addChild('versions', (string)$version);
-            }
-        }
-
-        return $xml;
     }
 
     /**
@@ -417,7 +386,6 @@ class Subsonic_Xml_Data
 
     /**
      * addAlbumList2
-     * https://opensubsonic.netlify.app/docs/responses/albumList2/
      * @param int[] $albums
      */
     public static function addAlbumList2(SimpleXMLElement $xml, array $albums): SimpleXMLElement
@@ -435,7 +403,6 @@ class Subsonic_Xml_Data
      * addAlbumID3
      *
      * An album from ID3 tags.
-     * https://opensubsonic.netlify.app/docs/responses/albumid3/
      */
     public static function addAlbumID3(SimpleXMLElement $xml, Album $album, bool $songs = false, string $elementName = 'album'): SimpleXMLElement
     {
@@ -1124,7 +1091,6 @@ class Subsonic_Xml_Data
 
     /**
      * addSearchResult2
-     * https://opensubsonic.netlify.app/docs/responses/searchresult2/
      * @param int[] $artists
      * @param int[] $albums
      * @param int[] $songs
@@ -1153,7 +1119,6 @@ class Subsonic_Xml_Data
 
     /**
      * addSearchResult3
-     * https://opensubsonic.netlify.app/docs/responses/searchresult3/
      * @param int[] $artists
      * @param int[] $albums
      * @param int[] $songs

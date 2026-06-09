@@ -95,7 +95,6 @@ use WpOrg\Requests\Requests;
  */
 class Subsonic_Api
 {
-    // TODO remove openSubsonic extensions in Ampache 8.0
     public const string API_VERSION = "1.16.1";
 
     /**
@@ -151,12 +150,6 @@ class Subsonic_Api
     public const int SSERROR_BADAUTH = 40; // Wrong username or password.
 
     public const int SSERROR_TOKENAUTHNOTSUPPORTED = 41; // Token authentication not supported for LDAP users.
-
-    public const int SSERROR_AUTHMETHODNOTSUPPORTED = 42; // TODO remove for pure subsonic (openSubsonic only)
-
-    public const int SSERROR_AUTHMETHODCONFLICT = 43; // TODO remove for pure subsonic (openSubsonic only)
-
-    public const int SSERROR_BADAPIKEY = 44; // TODO remove for pure subsonic (openSubsonic only)
 
     public const int SSERROR_UNAUTHORIZED = 50; // User is not authorized for the given operation.
 
@@ -933,8 +926,8 @@ class Subsonic_Api
 
         // saving xml can fail
         if (!$output) {
-            $output = "<subsonic-response status=\"failed\" " . "version=\"1.16.1\" " . "type=\"ampache\" " . "serverVersion=\"" . Api::$version . "\" " . "openSubsonic=\"1\" " . ">" .
-                "<error code=\"" . Subsonic_Api::SSERROR_GENERIC . "\" message=\"Error creating response.\" helpUrl=\"https://ampache.org/api/subsonic\"/>" .
+            $output = "<subsonic-response status=\"failed\" " . "version=\"1.16.1\">" .
+                "<error code=\"" . Subsonic_Api::SSERROR_GENERIC . "\" message=\"Error creating response.\"/>" .
                 "</subsonic-response>";
         }
 
@@ -1000,7 +993,7 @@ class Subsonic_Api
      * _addJsonResponse
      *
      * Generate a subsonic-response
-     * @return array{'subsonic-response': array{'status': string, 'version': string, 'type': string, 'serverVersion': string, 'openSubsonic': bool}}
+     * @return array{'subsonic-response': array{'status': string, 'version': string}}
      */
     private static function _addJsonResponse(string $function): array
     {
@@ -2393,38 +2386,6 @@ class Subsonic_Api
     }
 
     /**
-     * getLyricsBySongId [OS]
-     *
-     * Add support for synchronized lyrics, multiple languages, and retrieval by song ID
-     * https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/
-     * @param array<string, mixed> $input
-     */
-    public static function getlyricsbysongid(array $input, User $user): void
-    {
-        unset($user);
-        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if ($sub_id === false) {
-            return;
-        }
-        $song = self::getAmpacheObject($sub_id);
-        if (!$song instanceof Song || $song->isNew()) {
-            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-
-            return;
-        }
-
-        $format = (string)($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addLyricsList($response, $song);
-        } else {
-            $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addLyricsList($response, $song);
-        }
-        self::_responseOutput($input, __FUNCTION__, $response);
-    }
-
-    /**
      * getMusicDirectory
      *
      * Returns a listing of all files in a music directory.
@@ -2541,37 +2502,6 @@ class Subsonic_Api
     }
 
     /**
-     * getOpenSubsonicExtensions [OS]
-     *
-     * List the Subsonic extensions supported by this server.
-     * https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/
-     * @param array<string, mixed> $input
-     */
-    public static function getopensubsonicextensions(array $input, User $user): void
-    {
-        unset($user);
-
-        $extensions = [
-            'apiKeyAuthentication' => [1],
-            'getPodcastEpisode' => [1],
-            'indexBasedQueue' => [1],
-            'formPost' => [1],
-            'songLyrics' => [1],
-            'transcodeOffset' => [1],
-        ];
-
-        $format = (string)($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addSubsonicExtensions($response, $extensions);
-        } else {
-            $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addSubsonicExtensions($response, $extensions);
-        }
-        self::_responseOutput($input, __FUNCTION__, $response);
-    }
-
-    /**
      * getPlaylist
      *
      * Returns a listing of files in a saved playlist.
@@ -2669,68 +2599,6 @@ class Subsonic_Api
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
             $response = Subsonic_Json_Data::addPlayQueue($response, $playQueue, (string)$user->username);
-        }
-        self::_responseOutput($input, __FUNCTION__, $response);
-    }
-
-    /**
-     * getPlayQueueByIndex [OS]
-     *
-     * Returns the state of the play queue for this user.
-     * https://opensubsonic.netlify.app/docs/endpoints/getplayqueuebyindex/
-     * @param array<string, mixed> $input
-     */
-    public static function getplayqueuebyindex(array $input, User $user): void
-    {
-        $client    = scrub_in((string) ($input['c'] ?? 'Subsonic'));
-        $playQueue = new User_Playlist($user->id, $client);
-
-        $format = (string)($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addPlayQueueByIndex($response, $playQueue, (string)$user->username);
-        } else {
-            $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addPlayQueueByIndex($response, $playQueue, (string)$user->username);
-        }
-        self::_responseOutput($input, __FUNCTION__, $response);
-    }
-
-    /**
-     * getPodcastEpisode
-     *
-     * Returns details for a podcast episode.
-     * https://www.subsonic.org/pages/api.jsp#getpodcastepisode
-     * @param array<string, mixed> $input
-     */
-    public static function getpodcastepisode(array $input, User $user): void
-    {
-        unset($user);
-        $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
-        if ($sub_id === false) {
-            return;
-        }
-
-        $episode_id = self::getAmpacheId($sub_id);
-        if (!$episode_id) {
-            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-
-            return;
-        }
-        $episode = new Podcast_Episode($episode_id);
-        if ($episode->isNew()) {
-            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-
-            return;
-        }
-
-        $format = (string)($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addPodcastEpisode($response, $episode);
-        } else {
-            $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addPodcastEpisode($response, $episode);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3565,8 +3433,15 @@ class Subsonic_Api
      */
     public static function saveplayqueue(array $input, User $user): void
     {
+        // current required by Subsonic https://opensubsonic.netlify.app/docs/endpoints/saveplayqueue/
+        if (isset($input['current'])) {
+            $current = (string)$input['current'];
+        } else {
+            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+
+            return;
+        }
         $id_list  = $input['id'] ?? '';
-        $current  = (string)($input['current'] ?? '');
         $position = (array_key_exists('position', $input))
             ? (int)(((int)$input['position']) / 1000)
             : 0;
@@ -3617,96 +3492,6 @@ class Subsonic_Api
             $sub_ids = (is_array($id_list))
                 ? $id_list
                 : [$id_list];
-            $playlist = self::_getAmpacheIdArrays($sub_ids);
-
-            // clear the old list
-            $playQueue->clear();
-            // set the new items
-            $playQueue->add_items($playlist, $time);
-
-            if (
-                isset($type) &&
-                isset($media->id)
-            ) {
-                $playQueue->set_current_object($type, $media->id, $position);
-            }
-
-            // subsonic cares about queue dates so set them (and set them together)
-            User::set_user_data($user_id, 'playqueue_time', $time);
-            User::set_user_data($user_id, 'playqueue_client', $client);
-        }
-
-        self::_responseOutput($input, __FUNCTION__);
-    }
-
-    /**
-     * savePlayQueueByIndex
-     *
-     * Saves the state of the play queue for this user.
-     * https://www.subsonic.org/pages/api.jsp#saveplayqueuebyindex
-     * @param array<string, mixed> $input
-     */
-    public static function saveplayqueuebyindex(array $input, User $user): void
-    {
-        $id_list = $input['id'] ?? '';
-        $sub_ids = (is_array($id_list))
-            ? $id_list
-            : [$id_list];
-        $index    = (int)($input['currentIndex'] ?? 0);
-        if ($index < 0 || $index >= count($sub_ids)) {
-            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
-
-            return;
-        }
-
-        $current  = $sub_ids[$index];
-        $position = (array_key_exists('position', $input))
-            ? (int)(((int)$input['position']) / 1000)
-            : 0;
-        $client    = scrub_in((string) ($input['c'] ?? 'Subsonic'));
-        $user_id   = $user->id;
-        $time      = time();
-        $playQueue = new User_Playlist($user_id, $client);
-        if (empty($id_list)) {
-            $playQueue->clear();
-        } else {
-            $media = (!empty($current))
-                ? self::getAmpacheObject($current)
-                : null;
-            if (
-                $media instanceof library_item &&
-                $media instanceof Media &&
-                $media->isNew() === false &&
-                isset($media->time)
-            ) {
-                $playqueue_time = (int)User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
-                // wait a few seconds before smashing out play times
-                if ($playqueue_time < ($time - 2)) {
-                    $previous = Stats::get_last_play($user_id, $client);
-                    $type     = self::getAmpacheType($current);
-                    // long pauses might cause your now_playing to hide
-                    Stream::garbage_collection();
-                    Stream::insert_now_playing($media->getId(), $user_id, ($media->time - $position), (string)$user->username, $type, ($time - $position));
-
-                    if ($previous['object_id'] && $previous['object_id'] == $media->getId()) {
-                        $time_diff = $time - $previous['date'];
-                        $old_play  = $time_diff > $media->time * 5;
-                        // shift the start time if it's an old play or has been pause/played
-                        if ($position >= 1 || $old_play) {
-                            Stats::shift_last_play($user_id, $client, $previous['date'], ($time - $position));
-                        }
-                        // track has just started. repeated plays aren't called by scrobble so make sure we call this too
-                        if (($position < 1 && $time_diff > 5) && !$old_play) {
-                            $media->set_played($user_id, $client, [], $time);
-                        }
-                    }
-                }
-            } else {
-                self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-
-                return;
-            }
-
             $playlist = self::_getAmpacheIdArrays($sub_ids);
 
             // clear the old list
@@ -3893,7 +3678,14 @@ class Subsonic_Api
      */
     public static function search3(array $input, User $user): void
     {
-        $query   = $input['query'] ?? '';
+        // query required by Subsonic https://opensubsonic.netlify.app/docs/endpoints/search3/
+        if (isset($input['query'])) {
+            $query = (string)$input['query'];
+        } else {
+            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+
+            return;
+        }
         $results = self::_search($query, $input, $user);
 
         $format = (string)($input['f'] ?? 'xml');
@@ -4013,32 +3805,12 @@ class Subsonic_Api
             $params .= '&frame=' . $timeOffset;
         }
 
-        // No scrobble for streams using open subsonic https://www.subsonic.org/pages/api.jsp#stream/
+        // No scrobble for streams using opensubsonic https://www.subsonic.org/pages/api.jsp#stream/
         if (AmpConfig::get('subsonic_always_download')) {
             $params .= '&cache=1';
         }
 
         self::_follow_stream($object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken));
-    }
-
-    /**
-     * tokenInfo [OS]
-     *
-     * Returns information about an API key.
-     * https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/
-     * @param array<string, mixed> $input
-     */
-    public static function tokeninfo(array $input, User $user): void
-    {
-        $format = (string)($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addTokenInfo($response, $user);
-        } else {
-            $response = self::_addJsonResponse(__FUNCTION__);
-            $response = Subsonic_Json_Data::addTokenInfo($response, $user);
-        }
-        self::_responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -4253,6 +4025,75 @@ class Subsonic_Api
         } else {
             self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
+    }
+
+    /**
+     * getLyricsBySongId [OS] REMOVED
+     * @param array<string, mixed> $input
+     */
+    public static function getlyricsbysongid(array $input, User $user): void
+    {
+        unset($user);
+
+        self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+    }
+
+    /**
+     * getOpenSubsonicExtensions [OS] REMOVED
+     * @param array<string, mixed> $input
+     */
+    public static function getopensubsonicextensions(array $input, User $user): void
+    {
+        unset($user);
+
+        self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+    }
+
+    /**
+     * getPlayQueueByIndex [OS] REMOVED
+     * @param array<string, mixed> $input
+     */
+    public static function getplayqueuebyindex(array $input, User $user): void
+    {
+        unset($user);
+
+        self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+    }
+
+    /**
+     * getPodcastEpisode [OS] REMOVED
+     * @param array<string, mixed> $input
+     */
+    public static function getpodcastepisode(array $input, User $user): void
+    {
+        unset($user);
+
+        self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+    }
+
+    /**
+     * savePlayQueueByIndex [OS] REMOVED
+     * @param array<string, mixed> $input
+     */
+    public static function saveplayqueuebyindex(array $input, User $user): void
+    {
+        unset($user);
+
+        self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+    }
+
+    /**
+     * tokenInfo [OS] REMOVED
+     *
+     * Returns information about an API key.
+     * https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/
+     * @param array<string, mixed> $input
+     */
+    public static function tokeninfo(array $input, User $user): void
+    {
+        unset($user);
+
+        self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
     }
 
     /**
