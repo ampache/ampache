@@ -462,7 +462,6 @@ class Catalog_dropbox extends Catalog
         }
 
         /* Create the vainfo object and get info */
-        $readfile = true;
         $meta     = $dropbox->getMetadata($path);
         $outfile  = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
@@ -478,8 +477,7 @@ class Catalog_dropbox extends Catalog
                 '',
                 '',
                 (string) $this->sort_pattern,
-                (string) $this->rename_pattern,
-                $readfile
+                (string) $this->rename_pattern
             );
             $vainfo->gather_tags();
 
@@ -775,36 +773,28 @@ class Catalog_dropbox extends Catalog
 
         $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
         $dropbox = new Dropbox($app);
-        $songs   = $this->get_songs();
+        $songs   = $this->get_songs() ?? [];
 
         // Prevent the script from timing out
         set_time_limit(0);
 
         $search_count = 0;
-        $searches     = [];
-        if ($songs == null) {
-            $searches['album']  = $this->get_album_ids();
-            $searches['artist'] = $this->get_artist_ids();
-        } else {
-            $searches['album']  = [];
-            $searches['artist'] = [];
-            foreach ($songs as $song) {
-                if ($song->isNew() === false && !empty($song->file)) {
-                    $meta    = $dropbox->getMetadata($song->file);
-                    $outfile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
+        foreach ($songs as $song) {
+            if ($song->isNew() === false && !empty($song->file)) {
+                $meta    = $dropbox->getMetadata($song->file);
+                $outfile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
-                    // Download File
-                    $res = $this->download($dropbox, $song->file, 40960, $outfile);
-                    if ($res) {
-                        $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
-                        Dba::write($sql, [$outfile, $song->id]);
-                        parent::gather_art([$song->id]);
-                        $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
-                        Dba::write($sql, [$song->file, $song->id]);
-                        $search_count++;
-                        if (Ui::check_ticker()) {
-                            Ui::update_text('count_art_' . $this->id, $search_count);
-                        }
+                // Download File
+                $res = $this->download($dropbox, $song->file, 40960, $outfile);
+                if ($res) {
+                    $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
+                    Dba::write($sql, [$outfile, $song->id]);
+                    parent::gather_art([$song->id]);
+
+                    Dba::write($sql, [$song->file, $song->id]);
+                    $search_count++;
+                    if (Ui::check_ticker()) {
+                        Ui::update_text('count_art_' . $this->id, $search_count);
                     }
                 }
             }

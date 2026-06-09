@@ -224,7 +224,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             }
 
             if (
-                property_exists($media, 'enabled') && $media->enabled !== null &&
+                property_exists($media, 'enabled') &&
                 $media->enabled &&
                 !empty($media->file)
             ) {

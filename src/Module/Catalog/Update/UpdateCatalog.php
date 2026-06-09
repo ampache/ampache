@@ -99,7 +99,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 sprintf(T_('Reading Catalog: "%s"'), $catalog->name),
                 true
             );
-            if (property_exists($catalog, 'path') && $catalog->path !== null && !Core::is_readable($catalog->path)) {
+            if (property_exists($catalog, 'path') && $catalog->path && !Core::is_readable($catalog->path)) {
                 $interactor->error(
                     T_('Catalog root unreadable, stopping check'),
                     true
@@ -416,7 +416,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             $interactor->eol(2);
 
             // Migrate a catalog from the current path to a new one.
-            if (property_exists($catalog, 'path') && $catalog->path !== null) {
+            if (property_exists($catalog, 'path') && $catalog->path) {
                 if ($catalog->move_catalog_proc($newPath)) {
                     $interactor->info(
                         sprintf('- %s -', T_('The Catalog path has changed')),

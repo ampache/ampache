@@ -101,7 +101,6 @@ class OAuthServer
 
     /**
      * verify an api call, checks all the parameters
-     * @return array
      * @throws OAuthException
      */
     public function verify_request(&$request): array
