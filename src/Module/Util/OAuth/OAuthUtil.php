@@ -35,7 +35,7 @@ class OAuthUtil
     /**
      * @return array|string|string[]
      */
-    public static function urlencode_rfc3986($input)
+    public static function urlencode_rfc3986($input): array|string
     {
         if (is_array($input)) {
             return array_map(
@@ -66,11 +66,9 @@ class OAuthUtil
      * Has to do some unescaping and can filter out any non-oauth parameters if needed (default behaviour)
      * May 28th, 2010 - method updated to tjerk.meesters for a speed improvement.
      * see http://code.google.com/p/oauth/issues/detail?id=163
-     * @param string $header
-     * @param bool $oauth_parameters
-     * @return array
+     * @return array<string, string>
      */
-    public static function split_header($header, $oauth_parameters = true)
+    public static function split_header(string $header, bool $oauth_parameters = true): array
     {
         $params = [];
         if (preg_match_all('/(' . (($oauth_parameters) ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', $header, $matches)) {
@@ -93,9 +91,9 @@ class OAuthUtil
     // helper to try to sort out headers for people who aren't running apache
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public static function get_headers()
+    public static function get_headers(): array
     {
         if (function_exists('apache_request_headers')) {
             // we need this to get the actual Authorization: header
@@ -124,11 +122,11 @@ class OAuthUtil
             }
 
             foreach ($_SERVER as $key => $value) {
-                if (str_starts_with((string) $key, "HTTP_")) {
+                if (is_string($key) && str_starts_with($key, "HTTP_")) {
                     // this is chaos, basically it is just there to capitalize the first
                     // letter of every word that is not an initial HTTP and strip HTTP
                     // code from przemek
-                    $key       = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr((string) $key, 5)))));
+                    $key       = (string)str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr((string) $key, 5)))));
                     $out[$key] = $value;
                 }
             }
@@ -137,13 +135,13 @@ class OAuthUtil
         return $out;
     }
 
-    // This function takes a input like a=b&a=c&d=e and returns the parsed
-    // parameters like this
-    // array('a' => array('b', 'c'), 'd' => 'e')
     /**
-     * @return array
+     * This function takes a input like a=b&a=c&d=e and returns the parsed
+     * parameters like this
+     * array('a' => array('b', 'c'), 'd' => 'e')
+     * @return array<string, string|string[]>
      */
-    public static function parse_parameters($input)
+    public static function parse_parameters($input = null): array
     {
         if (!isset($input) || !$input) {
             return [];

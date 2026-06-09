@@ -76,8 +76,7 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
      * Useful e.g. for counting-queries
      *
      * @param list<mixed> $params
-     *
-     * @return mixed Will return `false` if row is empty
+     * @throws QueryFailedException
      */
     public function fetchOne(
         string $sql,
@@ -92,11 +91,12 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
      * @param list<mixed> $params
      *
      * @return false|array<string, mixed> Will return `false` if row is empty
+     * @throws QueryFailedException
      */
     public function fetchRow(
         string $sql,
         array $params = [],
-    ) {
+    ): array|bool {
         return $this->query($sql, $params)->fetch(PDO::FETCH_ASSOC);
     }
 

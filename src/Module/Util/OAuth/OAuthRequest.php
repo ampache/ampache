@@ -34,12 +34,12 @@ use Stringable;
  */
 class OAuthRequest implements Stringable
 {
-    protected $parameters;
+    protected array $parameters = [];
 
-    protected $http_url;
+    protected ?string $http_url = null;
 
     // for debug purposes
-    public $base_string;
+    public string $base_string = '';
 
     public static $version    = '1.0';
 
@@ -71,7 +71,7 @@ class OAuthRequest implements Stringable
      * @param array $parameters
      * @return OAuthRequest
      */
-    public static function from_request($http_method = null, $http_url = null, $parameters = null)
+    public static function from_request($http_method = null, $http_url = null, $parameters = null): OAuthRequest
     {
         $scheme      = (!isset($_SERVER['HTTPS']) || Core::get_server('HTTPS') !== "on") ? 'http' : 'https';
         $http_url    = $http_url ?: $scheme . '://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
@@ -115,7 +115,7 @@ class OAuthRequest implements Stringable
      * @param array $parameters
      * @return OAuthRequest
      */
-    public static function from_consumer_and_token($consumer, $token, $http_method, $http_url, $parameters = null)
+    public static function from_consumer_and_token($consumer, $token, $http_method, $http_url, $parameters = null): OAuthRequest
     {
         $parameters = $parameters ?: [];
         $defaults   = [
@@ -137,7 +137,7 @@ class OAuthRequest implements Stringable
      * @param string $name
      * @param bool $allow_duplicates
      */
-    public function set_parameter($name, $value, $allow_duplicates = true)
+    public function set_parameter($name, $value, $allow_duplicates = true): void
     {
         if ($allow_duplicates && isset($this->parameters[$name])) {
             // We have already added parameter(s) with this name, so add to the list
@@ -170,10 +170,7 @@ class OAuthRequest implements Stringable
         return $this->parameters;
     }
 
-    /**
-     * @param string $name
-     */
-    public function unset_parameter($name)
+    public function unset_parameter(string $name): void
     {
         unset($this->parameters[$name]);
     }
@@ -306,7 +303,7 @@ class OAuthRequest implements Stringable
         return $this->to_url();
     }
 
-    public function sign_request($signature_method, $consumer, $token)
+    public function sign_request($signature_method, $consumer, $token): void
     {
         $this->set_parameter("oauth_signature_method", $signature_method->get_name(), false);
         $signature = $this->build_signature($signature_method, $consumer, $token);

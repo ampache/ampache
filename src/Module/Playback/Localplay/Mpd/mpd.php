@@ -281,16 +281,12 @@ class mpd
      * Builds the MPD object, connects to the server, and refreshes all
      * local object properties.
      * mpd constructor.
-     * @param string $server
-     * @param string|int $port
-     * @param string $password
-     * @param string $debug_callback
      */
     public function __construct(
-        $server,
-        $port,
-        private $password = null,
-        $debug_callback = null,
+        string $server,
+        string|int $port,
+        private ?string $password = null,
+        ?string $debug_callback = null,
     ) {
         $this->host     = trim($server);
         $this->port     = (int)$port;
@@ -385,10 +381,8 @@ class mpd
      * Sends a generic command to the MPD server. Several command constants
      * are pre-defined for use (see self::COMMAND_* constant definitions above).
      * @param array<string|int, scalar>|string|float|int|null $arguments
-     * @param bool $refresh_info
-     * @return string|bool
      */
-    public function SendCommand(string $command, $arguments = null, $refresh_info = true)
+    public function SendCommand(string $command, array|string|float|int|null $arguments = null, bool $refresh_info = true): bool|string
     {
         $this->_debug('SendCommand', sprintf('cmd: %s, args: ', $command) . json_encode($arguments), 5);
         if (
@@ -453,10 +447,9 @@ class mpd
      * CommandQueue can hold as many commands as needed, and are sent all
      * at once, in the order they were queued, using the SendCommandQueue
      * method. The syntax for queueing commands is identical to SendCommand.
-     * @param string $command
      * @param string|array|null $arguments
      */
-    public function QueueCommand($command, $arguments = null): bool
+    public function QueueCommand(string $command, $arguments = null): bool
     {
         $this->_debug('QueueCommand', sprintf('start; cmd: %s args: ', $command) . json_encode($arguments), 5);
         if (!$this->connected) {
@@ -490,9 +483,8 @@ class mpd
      * SendCommandQueue
      *
      * Sends all commands in the Command Queue to the MPD server.
-     * @return string|bool
      */
-    public function SendCommandQueue()
+    public function SendCommandQueue(): bool|string
     {
         $this->_debug('SendCommandQueue', 'start', 5);
         if (!$this->connected) {
@@ -547,9 +539,8 @@ class mpd
      * Adjusts the mixer volume on the MPD by <value>, which can be a
      * positive (volume increase) or negative (volume decrease) value.
      * @param float|int|string $value
-     * @return bool|string
      */
-    public function AdjustVolume($value)
+    public function AdjustVolume($value): bool|string
     {
         $this->_debug('AdjustVolume', 'start', 5);
         if (!is_numeric($value)) {
@@ -572,9 +563,8 @@ class mpd
      *
      * Sets the mixer volume to <value>, which should be between 1 - 100.
      * @param float|int|string $value
-     * @return bool|string
      */
-    public function SetVolume($value)
+    public function SetVolume($value): bool|string
     {
         $this->_debug('SetVolume', 'start', 5);
         if (!is_numeric($value)) {
@@ -618,10 +608,9 @@ class mpd
      * Retrieves a database directory listing of the <dir> directory and
      * places the results into a multidimensional array. If no directory is
      * specified the directory listing is at the base of the MPD music path.
-     * @param string $dir
-     * @return array|bool
+     * @return array<int, array<string, string>>|bool
      */
-    public function GetDir($dir = '')
+    public function GetDir(string $dir = ''): array|bool
     {
         $this->_debug('GetDir', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_LSDIR, $dir, false);
@@ -637,9 +626,8 @@ class mpd
      * Adds each track listed in a single-dimensional <trackArray>, which
      * contains filenames of tracks to add to the end of the playlist. This
      * is used to add many, many tracks to the playlist in one swoop.
-     * @return bool|string
      */
-    public function PLAddBulk($trackArray)
+    public function PLAddBulk($trackArray): bool|string
     {
         $this->_debug('PLAddBulk', 'start', 5);
         $num_files = count($trackArray);
@@ -658,10 +646,8 @@ class mpd
      *
      * Adds the file <file> to the end of the playlist. <file> must be a
      * track in the MPD database.
-     * @param string $filename
-     * @return bool|string
      */
-    public function PLAdd($filename)
+    public function PLAdd(string $filename): bool|string
     {
         $this->_debug('PLAdd', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_ADD, $filename);
@@ -707,9 +693,8 @@ class mpd
      * PLShuffle
      *
      * Randomly reorders the songs in the playlist.
-     * @return bool|string
      */
-    public function PLShuffle()
+    public function PLShuffle(): bool|string
     {
         $this->_debug('PLShuffle', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PLSHUFFLE);
@@ -723,9 +708,8 @@ class mpd
      *
      * Retrieves the playlist from <file>.m3u and loads it into the current
      * playlist.
-     * @return bool|string
      */
-    public function PLLoad($file)
+    public function PLLoad($file): bool|string
     {
         $this->_debug('PLLoad', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PLLOAD, $file);
@@ -739,9 +723,8 @@ class mpd
      *
      * Saves the playlist to <file>.m3u for later retrieval. The file is
      * saved in the MPD playlist directory.
-     * @return bool|string
      */
-    public function PLSave($file)
+    public function PLSave($file): bool|string
     {
         $this->_debug('PLSave', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PLSAVE, $file, false);
@@ -754,9 +737,8 @@ class mpd
      * PLClear
      *
      * Empties the playlist.
-     * @return bool|string
      */
-    public function PLClear()
+    public function PLClear(): bool|string
     {
         $this->_debug('PLClear', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_CLEAR);
@@ -770,9 +752,8 @@ class mpd
      *
      * Removes track <id> from the playlist.
      * @param int $id
-     * @return bool|string
      */
-    public function PLRemove($id)
+    public function PLRemove($id): bool|string
     {
         $response = $this->SendCommand(self::COMMAND_DELETE, $id);
         $this->_debug('PLRemove', 'return: ' . $response, 5);
@@ -785,9 +766,8 @@ class mpd
      *
      * Enables 'loop' mode -- tells MPD continually loop the playlist. The
      * <repVal> parameter is either 1 (on) or 0 (off).
-     * @return bool|string
      */
-    public function SetRepeat($value)
+    public function SetRepeat($value): bool|string
     {
         $this->_debug('SetRepeat', 'start', 5);
         $value    = ($value) ? 1 : 0;
@@ -802,9 +782,8 @@ class mpd
      *
      * Enables 'randomize' mode -- tells MPD to play songs in the playlist
      * in random order. The parameter is either 1 (on) or 0 (off).
-     * @return bool|string
      */
-    public function SetRandom($value)
+    public function SetRandom($value): bool|string
     {
         $this->_debug('SetRandom', 'start', 5);
         $value    = ($value) ? 1 : 0;
@@ -820,9 +799,8 @@ class mpd
      * Shuts down the MPD server (aka sends the KILL command). This closes
      * the current connection and prevents future communication with the
      * server.
-     * @return bool|string
      */
-    public function Shutdown()
+    public function Shutdown(): bool|string
     {
         $this->_debug('Shutdown', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_SHUTDOWN);
@@ -843,9 +821,8 @@ class mpd
      * Tells MPD to rescan the music directory for new tracks and refresh
      * the Database. Tracks cannot be played unless they are in the MPD
      * database.
-     * @return bool|string
      */
-    public function DBRefresh()
+    public function DBRefresh(): bool|string
     {
         $this->_debug('DBRefresh', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_REFRESH);
@@ -858,9 +835,8 @@ class mpd
      * Play
      *
      * Begins playing the songs in the MPD playlist.
-     * @return bool|string
      */
-    public function Play()
+    public function Play(): bool|string
     {
         $this->_debug('Play', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PLAY);
@@ -873,9 +849,8 @@ class mpd
      * Stop
      *
      * Stops playback.
-     * @return bool|string
      */
-    public function Stop()
+    public function Stop(): bool|string
     {
         $this->_debug('Stop', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_STOP);
@@ -888,9 +863,8 @@ class mpd
      * Pause
      *
      * Toggles pausing.
-     * @return bool|string
      */
-    public function Pause()
+    public function Pause(): bool|string
     {
         $this->_debug('Pause', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PAUSE);
@@ -950,9 +924,8 @@ class mpd
      *
      * Skips to the next song in the MPD playlist. If not playing, returns
      * an error.
-     * @return bool|string
      */
-    public function Next()
+    public function Next(): bool|string
     {
         $this->_debug('Next', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_NEXT);
@@ -966,9 +939,8 @@ class mpd
      *
      * Skips to the previous song in the MPD playlist. If not playing,
      * returns an error.
-     * @return bool|string
      */
-    public function Previous()
+    public function Previous(): bool|string
     {
         $this->_debug('Previous', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PREVIOUS);
@@ -985,11 +957,9 @@ class mpd
      *     self::SEARCH_ARTIST, self::SEARCH_TITLE, self::SEARCH_ALBUM
      * The search <string> is a case-insensitive locator string. Anything
      * that contains <string> will be returned in the results.
-     * @param string $type
-     * @param string $string
-     * @return array|bool
+     * @return array<int, array<string, string>>|bool
      */
-    public function Search($type, $string)
+    public function Search(string $type, string $string): array|bool
     {
         $this->_debug('Search', 'start', 5);
 
@@ -1020,11 +990,9 @@ class mpd
      *    self::SEARCH_ARTIST, self::SEARCH_TITLE, self::SEARCH_ALBUM
      * The find <string> is a case-insensitive locator string. Anything that
      * exactly matches <string> will be returned in the results.
-     * @param string $type
-     * @param string $string
-     * @return array|bool
+     * @return array<int, array<string, string>>|bool
      */
-    public function Find($type, $string)
+    public function Find(string $type, string $string): array|bool
     {
         $this->_debug('Find', 'start', 5);
         if (!in_array($type, [self::SEARCH_ARTIST, self::SEARCH_ALBUM, self::SEARCH_TITLE])) {
@@ -1068,9 +1036,9 @@ class mpd
      * GetArtists
      *
      * Returns the list of artists in the database in an associative array.
-     * @return array|bool
+     * @return string[]|bool
      */
-    public function GetArtists()
+    public function GetArtists(): array|bool
     {
         $this->_debug('GetArtists', 'start', 5);
         if (!$response = $this->SendCommand(self::COMMAND_TABLE, self::TABLE_ARTIST, false)) {
@@ -1101,9 +1069,9 @@ class mpd
      * Returns the list of albums in the database in an associative array.
      * Optional parameter is an artist Name which will list all albums by a
      * particular artist.
-     * @return array|bool
+     * @return string[]|bool
      */
-    public function GetAlbums($artist = null)
+    public function GetAlbums($artist = null): array|bool
     {
         $this->_debug('GetAlbums', 'start', 5);
 
@@ -1137,11 +1105,8 @@ class mpd
      * _computeVersionValue
      *
      * Computes numeric value from a version string
-     *
-     * @param string $string
-     * @return float|int
      */
-    private function _computeVersionValue($string)
+    private function _computeVersionValue(string $string): float|int
     {
         $parts = explode('.', $string);
 
@@ -1194,10 +1159,9 @@ class mpd
      * _parseFileListResponse
      *
      * Builds a multidimensional array with MPD response lists.
-     * @param bool|string $response
-     * @return array|bool
+     * @return array<int, array<string, string>>|bool
      */
-    private function _parseFileListResponse($response)
+    private function _parseFileListResponse(bool|string $response): array|bool
     {
         if (is_bool($response)) {
             return false;
@@ -1222,9 +1186,9 @@ class mpd
     /**
      * _parseResponse
      * Turns a response into an array
-     * @return array|bool
+     * @return array<string, string>|bool
      */
-    private function _parseResponse($response)
+    private function _parseResponse($response): array|bool
     {
         if (!$response) {
             return false;
@@ -1245,11 +1209,8 @@ class mpd
      * _error
      *
      * Set error state
-     * @param string $source
-     * @param string $message
-     * @param int $level
      */
-    private function _error($source, $message, $level = 1): void
+    private function _error(string $source, string $message, int $level = 1): void
     {
         $this->err_str = sprintf('%s: %s', $source, $message);
         $this->_debug($source, $message, $level);
@@ -1259,11 +1220,8 @@ class mpd
      * _debug
      *
      * Do the debugging boogaloo
-     * @param string $source
-     * @param string $message
-     * @param int $level
      */
-    private function _debug($source, $message, $level): void
+    private function _debug(string $source, string $message, int $level): void
     {
         if ($this->debugging) {
             echo sprintf('%s / %s%s', $source, $message, PHP_EOL);
