@@ -180,16 +180,16 @@ final readonly class FileNameConverter implements FileNameConverterInterface
                         'n'
                     );
                     if ($input) {
-                        $this->charset_rename_file($interactor, $full_file, $translated_filename);
-                    } else {
-                        $interactor->eol();
-                        $interactor->warn(
-                            T_('Not renaming...'),
-                            true
-                        );
+                        return $this->charset_rename_file($interactor, $full_file, $translated_filename);
                     }
+
+                    $interactor->eol();
+                    $interactor->warn(
+                        T_('Not renaming...'),
+                        true
+                    );
                 } else {
-                    $this->charset_rename_file($interactor, $full_file, $translated_filename);
+                    return $this->charset_rename_file($interactor, $full_file, $translated_filename);
                 }
             }
         }

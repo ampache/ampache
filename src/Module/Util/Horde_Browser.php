@@ -169,11 +169,6 @@ class Horde_Browser
             $this->setFeature('javascript');
             $this->setQuirk('no_filename_spaces');
 
-            /* Opera Mobile reports its screen resolution in the user
-             * agent strings. */
-            if (preg_match('/; (120x160|240x280|240x320|320x320)\)/', $agent)) {
-            }
-
             if ($this->_majorVersion >= 7) {
                 if ($this->_majorVersion >= 8) {
                     $this->setFeature('xmlhttpreq');
@@ -217,12 +212,6 @@ class Horde_Browser
              * in PNG images. */
             if (($this->_majorVersion < 7) && preg_match('/windows/i', $agent)) {
                 $this->setQuirk('png_transparency');
-            }
-
-            /* Some Handhelds have their screen resolution in the user
-             * agent string, which we can use to look for mobile
-             * agents. */
-            if (preg_match('/; (120x160|240x280|240x320|320x320)\)/', $agent)) {
             }
 
             $this->setFeature('xmlhttpreq');

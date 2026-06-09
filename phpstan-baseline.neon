@@ -1321,42 +1321,6 @@ parameters:
 			path: src/Module/Broadcast/Broadcast_Server.php
 
 		-
-			message: '#^Cannot access an offset on Ratchet\\ConnectionInterface\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: '#^Method Ampache\\Module\\Broadcast\\Broadcast_Server\:\:getListeners\(\) should return array\<Ratchet\\ConnectionInterface\> but returns Ratchet\\ConnectionInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: '#^Parameter \#1 \$clients of method Ampache\\Module\\Broadcast\\Broadcast_Server\:\:broadcastMessage\(\) expects array\<Ratchet\\ConnectionInterface\>, ArrayAccess&Ratchet\\ConnectionInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, Ratchet\\ConnectionInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function array_search expects array, Ratchet\\ConnectionInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: '#^Property Ampache\\Module\\Broadcast\\Broadcast_Server\:\:\$listeners \(array\<Ratchet\\ConnectionInterface\>\) does not accept array\<array\|Ratchet\\ConnectionInterface\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
 			message: '#^Property Ampache\\Module\\Broadcast\\Broadcast_Server\:\:\$verbose has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -1567,32 +1531,8 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
 		-
-			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:Find\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:GetAlbums\(\) has parameter \$artist with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:GetAlbums\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:GetArtists\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:GetDir\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
@@ -1633,12 +1573,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:Search\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:SeekTo\(\) has parameter \$pos with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -1669,20 +1603,8 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:_parseFileListResponse\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:_parseResponse\(\) has parameter \$response with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:_parseResponse\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
@@ -1875,12 +1797,6 @@ parameters:
 		-
 			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Vlc\\VlcPlayer\:\:sendCommand\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Vlc\\VlcPlayer\:\:xmltoarray\(\) has parameter \$contents with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
@@ -2587,12 +2503,6 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthRequest.php
 
 		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:build_signature\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
 			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:build_signature\(\) has parameter \$consumer with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -2629,24 +2539,6 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthRequest.php
 
 		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:set_parameter\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:set_parameter\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:sign_request\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
 			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:sign_request\(\) has parameter \$consumer with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -2671,31 +2563,7 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthRequest.php
 
 		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:unset_parameter\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
 			message: '#^Property Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:\$POST_INPUT has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:\$base_string has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:\$http_url has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:\$parameters has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: src/Module/Util/OAuth/OAuthRequest.php
@@ -2713,20 +2581,8 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthServer.php
 
 		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:add_signature_method\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
 			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:add_signature_method\(\) has parameter \$signature_method with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:check_nonce\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Module/Util/OAuth/OAuthServer.php
 
@@ -2755,12 +2611,6 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthServer.php
 
 		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:check_signature\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
 			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:check_signature\(\) has parameter \$consumer with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -2775,12 +2625,6 @@ parameters:
 		-
 			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:check_signature\(\) has parameter \$token with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:check_timestamp\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Module/Util/OAuth/OAuthServer.php
 
@@ -2959,26 +2803,8 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthUtil.php
 
 		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthUtil\:\:get_headers\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Util/OAuth/OAuthUtil.php
-
-		-
 			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthUtil\:\:parse_parameters\(\) has parameter \$input with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthUtil.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthUtil\:\:parse_parameters\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Util/OAuth/OAuthUtil.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthUtil\:\:split_header\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Util/OAuth/OAuthUtil.php
 
