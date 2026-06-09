@@ -28,7 +28,6 @@ namespace Ampache\Module\Authorization;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\Dba;
-use Deprecated;
 
 /**
  * Access Class
