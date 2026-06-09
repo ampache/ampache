@@ -92,9 +92,8 @@ class JsonHandler extends Handler
 
     /**
      * Assemble the URI from the different parts
-     * @param string $command
      */
-    protected function assembleUri($command): string
+    protected function assembleUri(string $command): string
     {
         $uriParts = [
             $this->uri,
@@ -106,9 +105,8 @@ class JsonHandler extends Handler
 
     /**
      * Check if the Json is complete to get a song
-     * @param string $item
      */
-    public function itemIsComlete($item): bool
+    public function itemIsComlete(string $item): bool
     {
         $item = $this->removeUnwantedStrings($item);
 
@@ -117,9 +115,8 @@ class JsonHandler extends Handler
 
     /**
      * Remove the beginning and the end of the json string so we can access the object in it.
-     * @param string $item
      */
-    public function removeUnwantedStrings($item): string
+    public function removeUnwantedStrings(string $item): string
     {
         $toRemove = [
             '{"items":[',
@@ -132,9 +129,8 @@ class JsonHandler extends Handler
 
     /**
      * Compare the braces to ensure that we have a complete song object
-     * @param string $item
      */
-    public function compareBraces($item): bool
+    public function compareBraces(string $item): bool
     {
         $start = $this->countChar('{', $item);
         $end   = $this->countChar('}', $item);
@@ -152,9 +148,8 @@ class JsonHandler extends Handler
 
     /**
      * convert the json string into a song array
-     * @param string $item
      */
-    public function parse($item): array
+    public function parse(string $item): array
     {
         $item         = $this->removeUnwantedStrings($item);
         $song         = json_decode($item, true);

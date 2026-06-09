@@ -898,7 +898,8 @@ final readonly class PlayAction implements ApplicationActionInterface
             }
         }
 
-        $troptions = [];
+        $troptions  = [];
+        $transcoder = [];
         if ($transcode) {
             $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
             if ($bitrate !== 0) {

@@ -920,6 +920,7 @@ final readonly class Play2Action implements ApplicationActionInterface
 
         $transcode_settings = [];
         $troptions          = [];
+        $transcoder         = [];
         if ($transcode) {
             $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
             if ($bitrate !== 0) {

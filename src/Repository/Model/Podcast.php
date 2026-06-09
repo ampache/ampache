@@ -30,6 +30,7 @@ use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepository;
 use Ampache\Repository\PodcastRepositoryInterface;
+use DateMalformedStringException;
 use DateTime;
 use DateTimeInterface;
 use LogicException;
@@ -467,7 +468,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 
     /**
      * Returns the last sync-date
-     * @throws \DateMalformedStringException
+     * @throws DateMalformedStringException
      */
     public function getLastSyncDate(): DateTimeInterface
     {
@@ -488,7 +489,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 
     /**
      * Returns the last build-date
-     * @throws \DateMalformedStringException
+     * @throws DateMalformedStringException
      */
     public function getLastBuildDate(): DateTimeInterface
     {

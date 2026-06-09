@@ -213,9 +213,8 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
      * get_session
      * This call the getSession method and properly updates the preferences as needed.
      * This requires a userid so it knows whose crap to update.
-     * @param string $token
      */
-    public function get_session($token): bool
+    public function get_session(?string $token = null): bool
     {
         $scrobbler   = new Scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
         $session_key = $scrobbler->get_session_key($token);

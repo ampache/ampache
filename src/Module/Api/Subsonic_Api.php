@@ -677,7 +677,7 @@ class Subsonic_Api
             foreach ($query as $token) {
                 $data['rule_' . $ruleCount . '_input']    = $token['value'];
                 $data['rule_' . $ruleCount . '_operator'] = $token['operator'];
-                $data['rule_' . $ruleCount . '']          = 'title';
+                $data['rule_' . $ruleCount]          = 'title';
                 $ruleCount++;
             }
             if ($musicFolderId > 0) {
@@ -695,7 +695,7 @@ class Subsonic_Api
             foreach ($query as $token) {
                 $data['rule_' . $ruleCount . '_input']    = $token['value'];
                 $data['rule_' . $ruleCount . '_operator'] = $token['operator'];
-                $data['rule_' . $ruleCount . '']          = 'title';
+                $data['rule_' . $ruleCount]          = 'title';
                 $ruleCount++;
             }
             if ($musicFolderId > 0) {
@@ -713,7 +713,7 @@ class Subsonic_Api
             foreach ($query as $token) {
                 $data['rule_' . $ruleCount . '_input']    = $token['value'];
                 $data['rule_' . $ruleCount . '_operator'] = $token['operator'];
-                $data['rule_' . $ruleCount . '']          = 'title';
+                $data['rule_' . $ruleCount]          = 'title';
                 $ruleCount++;
             }
             if ($musicFolderId > 0) {
