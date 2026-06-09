@@ -156,7 +156,7 @@ final class VaInfo implements VaInfoInterface
         protected string $_file_pattern = '',
         public bool $islocal = true,
     ) {
-        $this->encoding    = $encoding ?? $configContainer->get(ConfigurationKeyEnum::SITE_CHARSET) ?? 'UTF-8';
+        $this->encoding = $encoding ?? $configContainer->get(ConfigurationKeyEnum::SITE_CHARSET) ?? 'UTF-8';
 
         // FIXME: This looks ugly and probably wrong
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
