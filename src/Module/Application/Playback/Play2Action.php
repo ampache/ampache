@@ -634,6 +634,7 @@ final readonly class Play2Action implements ApplicationActionInterface
             $mediaOwnerId   = $media->get_user_owner();
             $mediaCatalogId = $media->getCatalogId();
         }
+
         if ($mediaCatalogId) {
             /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted

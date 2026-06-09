@@ -13,6 +13,8 @@ All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.or
 
 ## News
 
+Ampache8 will release with a new API (API8) based on API6. Changes will be kept to a minimum to allow using API8 as a drop in replacement for API6
+
 As of 7.7.1 (API 6.9.0) Ampache fully supports POST data requests for all API methods.
 
 POST requests offer more privacy than a regular GET request because data is sent in the body, not the URL, avoiding exposure in browser history and logs.
@@ -21,6 +23,7 @@ POST requests offer more privacy than a regular GET request because data is sent
 
 After each release, a documentation page will be created to allow pruning old features from the current version.
 
+* [API 6.9 Documentation](https://ampache.org/api/api-6)
 * [API 5.6 Documentation](https://ampache.org/api/api-5)
 * [API 4.4 Documentation](https://ampache.org/api/api-4)
 * [API 3.9 Documentation](https://ampache.org/api/api-3)
@@ -266,7 +269,7 @@ All Data methods return HTTP 200 responses
 * genre_songs
 * get_bookmark
 * get_external_metadata **Ampache 7.4.0+**
-* get_indexes
+* get_indexes (**Removed** in Ampache 8.0.0+)
 * get_lyrics **Ampache 7.8.0+**
 * get_similar
 * index **Ampache 6.3.0+**
@@ -294,7 +297,8 @@ All Data methods return HTTP 200 responses
 * playlist_edit
 * playlist_generate
 * playlist_hash **Ampache 6.6.0+**
-* playlist_remove_song
+* playlist_remove (Replaces playlist_remove_song) **Ampache 8.0.0**
+* playlist_remove_song (**Removed** in Ampache 8.0.0+)
 * playlist_songs
 * podcasts
 * podcast
@@ -340,7 +344,7 @@ All Data methods return HTTP 200 responses
 * user_playlists **Ampache 6.3.0+**
 * user_preference
 * user_smartlists **Ampache 6.3.0+**
-* user_update
+* user_update (**Removed** in Ampache 8.0.0+)
 * videos
 * video
 
